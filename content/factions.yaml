@@ -1,0 +1,11 @@
+silver_covenant:
+  name: {es: El Pacto de Plata, en: The Silver Covenant}
+  description:
+    es: Orden de paladines y guardianes. Protegen Crownreach, aunque a veces confunden justicia con obediencia.
+    en: Order of paladins and wardens. They protect Crownreach, though they sometimes mistake justice for obedience.
+
+crimson_syndicate:
+  name: {es: El Sindicato Carmesí, en: The Crimson Syndicate}
+  description:
+    es: Contrabandistas y espías. Venden lo que nadie más se atreve a vender, incluida la verdad.
+    en: Smugglers and spies. They sell what no one else dares to, including the truth.

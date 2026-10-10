@@ -1,0 +1,187 @@
+"""Free-text pipeline and NPC conversation.
+
+    read context (short tx)  ->  LLM interprets  ->  lock + validate + resolve (tx)  ->  LLM narrates
+
+Row locks are never held while waiting on the model.
+"""
+
+import random
+from dataclasses import dataclass, field
+
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from oathforge.ai import intent_parser, narrator, npc_dialogue
+from oathforge.ai.client import LLM
+from oathforge.ai.intent_parser import ActionContext, Intent
+from oathforge.content import get_content
+from oathforge.database.models import Character, User
+from oathforge.database.session import session_scope
+from oathforge.engine.checks import clamp_tier
+from oathforge.engine.combat import Action, EncounterState
+from oathforge.i18n import t
+from oathforge.services import audit, characters, combat_service, exploration, inventory, npcs, quests
+from oathforge.services.events import Outcome, facts
+
+
+@dataclass
+class FreeTextResult:
+    outcome: Outcome = field(default_factory=Outcome)
+    narration: str | None = None
+    talk_to: str | None = None
+    intent: Intent | None = None
+
+
+async def _load(session: AsyncSession, user_id: int, lock: bool = False) -> tuple[User | None, Character | None]:
+    user = await session.get(User, user_id)
+    char = await characters.get_character(session, user_id, lock=lock) if user else None
+    return user, char
+
+
+def describe_character(char: Character) -> str:
+    c = get_content()
+    return (f"{char.name}, level {char.level} {c.lineages[char.lineage].name.en} "
+            f"{c.classes[char.class_key].name.en}, HP {char.hp}/{char.max_hp}")
+
+
+async def build_context(session: AsyncSession, char: Character, lang: str) -> ActionContext:
+    c = get_content()
+    loc = c.locations[char.location]
+    ctx = ActionContext(lang=lang, character=describe_character(char), location=loc.name.en,
+                        scene=loc.description.en, skills={k: s.name.en for k, s in c.skills.items()})
+    for inst in await inventory.items_of(session, char):
+        ctx.items[inst.item_key] = c.items[inst.item_key].name.en
+    enc = await combat_service.active_encounter(session, char)
+    if enc is not None:
+        state = EncounterState.model_validate(enc.state)
+        ctx.in_combat = True
+        ctx.enemies = {cb.id: f"{cb.name['en']} (HP {cb.hp}/{cb.max_hp}, {cb.row} row)"
+                       for cb in state.side("enemy")}
+        p = state.combatants["p1"]
+        ctx.weapons = {a.key: a.name["en"] for a in p.attacks}
+        defs = combat_service.ability_defs(char)
+        ctx.abilities = {k: defs[k].name.en for k, uses in p.abilities.items() if uses is None or uses > 0}
+        ctx.objects = {k: loc.scene_objects[k].name.en for k in state.scene_objects if k in loc.scene_objects}
+        return ctx
+    present = exploration.npcs_present(char.location)
+    ctx.exits = {e.to: c.locations[e.to].name.en for e in exploration.exits(char)}
+    ctx.npcs = {k: f"{c.npcs[k].name.en}, {c.npcs[k].title.en}" for k in present}
+    for a in await quests.available_actions(session, char, present):
+        ctx.quest_actions[a.ref] = a.action.label.en
+    return ctx
+
+
+async def handle_free_text(llm: LLM, user_id: int, text: str, rng: random.Random) -> FreeTextResult:
+    async with session_scope() as session:
+        user, char = await _load(session, user_id)
+        if char is None:
+            return FreeTextResult(Outcome.refused("start.need_character"))
+        lang = user.language
+        ctx = await build_context(session, char, lang)
+
+    intent = await intent_parser.parse(llm, ctx, text, user_id)
+    if intent is None:
+        return FreeTextResult(Outcome.refused("freetext.unavailable"))
+    if intent.type == "talk":
+        return FreeTextResult(talk_to=intent.target, intent=intent)
+
+    async with session_scope() as session:
+        user, char = await _load(session, user_id, lock=True)
+        enc = await combat_service.active_encounter(session, char, lock=True)
+        if (enc is not None) != ctx.in_combat:
+            return FreeTextResult(Outcome.refused("freetext.stale"), intent=intent)
+        outcome = await resolve(session, char, enc, intent, rng)
+        await audit.log(session, user_id=user_id, character_id=char.id, verb=f"free:{intent.type}",
+                        payload={"text": text[:600], "intent": intent.model_dump()},
+                        result={"ok": outcome.ok, "events": [e.key for e in outcome.events]})
+        scene = get_content().locations[char.location].name.en
+        who = describe_character(char)
+
+    narration = await narrator.narrate(llm, lang=lang, scene=scene, character=who, player_text=text,
+                                       facts=facts(outcome), user_id=user_id)
+    return FreeTextResult(outcome, narration, intent=intent)
+
+
+async def resolve(session: AsyncSession, char: Character, enc, intent: Intent, rng: random.Random) -> Outcome:
+    """Map a validated intent onto game services. Only engine/services change state."""
+    kind = intent.type
+    if enc is not None:
+        action = {
+            "attack": lambda: Action(kind="attack", weapon=intent.weapon, target=intent.target),
+            "ability": lambda: Action(kind="ability", ability=intent.ability, target=intent.target),
+            "use_item": lambda: Action(kind="heal_item"),
+            "defend": lambda: Action(kind="defend"),
+            "flee": lambda: Action(kind="flee"),
+            "environment_interaction": lambda: Action(kind="interact", object=intent.target),
+        }.get(kind)
+        if action is None:
+            return Outcome().add("freetext.no_effect")
+        return await combat_service.act(session, char, enc, action(), rng)
+
+    present = exploration.npcs_present(char.location)
+    if kind == "move":
+        return await exploration.travel(session, char, intent.target, rng)
+    if kind == "use_item":
+        return await inventory.use_item_outside_combat(session, char, intent.target, rng)
+    if kind == "skill_check":
+        out, _ = await exploration.check_skill(session, char, intent.skill, clamp_tier(intent.tier), rng,
+                                              f"free:{intent.skill}:{char.location}")
+        return out
+    if kind == "environment_interaction":
+        out, _ = await exploration.check_skill(session, char, intent.skill, clamp_tier(intent.tier), rng,
+                                              f"env:{char.location}")
+        return out
+    if kind == "inspect":
+        return await exploration.investigate(session, char, rng)
+    if kind == "steal":
+        if intent.target not in present:
+            return Outcome.refused("freetext.not_here")
+        return await npcs.steal(session, char, intent.target, rng)
+    if kind == "rest":
+        return await exploration.rest(session, char)
+    if kind == "quest_action":
+        return await quests.perform(session, char, intent.target, present, rng)
+    if kind == "ooc_question":
+        return Outcome().add("freetext.ooc")
+    return Outcome().add("freetext.no_effect")
+
+
+# ---------------------------------------------------------------- conversation
+
+async def talk(llm: LLM, user_id: int, npc_key: str, text: str) -> tuple[str, Outcome]:
+    c = get_content()
+    npc = c.npcs.get(npc_key)
+    async with session_scope() as session:
+        user, char = await _load(session, user_id)
+        if char is None:
+            return "", Outcome.refused("start.need_character")
+        lang = user.language
+        if npc is None or npc_key not in exploration.npcs_present(char.location):
+            return "", Outcome.refused("talk.err.not_here")
+        rel = await npcs.relationship(session, npc_key, char)
+        trust = rel.trust
+        memories = [m.text for m in await npcs.recall(session, npc_key, char)]
+        rumors = [r.get("en", "") for r in await npcs.recent_rumors(session)]
+        rep = await npcs.reputation_with(session, char, npc.faction) if npc.faction else None
+        who = describe_character(char)
+
+    reply = await npc_dialogue.reply(
+        llm, npc=npc, lang=lang, player=who, player_text=text, trust=trust, reputation=rep,
+        memories=memories, rumors=rumors, time_of_day="night" if exploration.is_night() else "day",
+        user_id=user_id,
+    )
+    out = Outcome()
+    if reply is None:
+        return t(lang, "talk.fallback", npc=npc.name.get(lang)), out
+
+    async with session_scope() as session:
+        _, char = await _load(session, user_id, lock=True)
+        if reply.memory_note.strip():
+            await npcs.remember(session, npc_key, char, reply.memory_note.strip(), reply.importance)
+        if reply.trust_delta:
+            new_trust = await npcs.adjust_trust(session, npc_key, char, reply.trust_delta)
+            out.add("talk.trust_up" if reply.trust_delta > 0 else "talk.trust_down",
+                    npc=npc.name.model_dump(), trust=new_trust)
+        await audit.log(session, user_id=user_id, character_id=char.id, verb="talk",
+                        payload={"npc": npc_key, "text": text[:600]},
+                        result={"line": reply.line[:1000], "memory": reply.memory_note, "trust": reply.trust_delta})
+    return reply.line, out

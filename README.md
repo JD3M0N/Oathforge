@@ -1,0 +1,92 @@
+# Oathforge
+
+RPG narrativo multijugador para Telegram, ambientado en **Aetherfall**. Un Dungeon Master con IA (Gemini) narra; un motor d20 determinista decide.
+
+> Regla de oro: **la IA nunca decide resultados.** Convierte el texto libre en una intención estructurada; el motor la valida, tira los dados y guarda el resultado; después la IA narra *exactamente* lo que pasó.
+
+## Estado: vertical slice en solitario (fases 1–2)
+
+- Creación de personaje: 4 linajes, 4 trasfondos, 2 clases (Paladín, Pícaro) con habilidades hasta nivel 5.
+- Crownreach (plaza, taberna La Corona Rota, mercado), el Camino del Viejo Rey, el Bosque de los Susurros y la Cripta Hundida (5 salas + jefe).
+- Combate por turnos: iniciativa, acción/acción adicional/movimiento, vanguardia/retaguardia, críticos, ataque furtivo, estados alterados y objetos del escenario.
+- Misión ramificada «El relicario sellado»: devolverlo al Pacto de Plata, venderlo al Sindicato Carmesí o abrirlo tú mismo.
+- NPC con memoria (Bram, Mira, Holt, Tessa), confianza, reputación con facciones, robos que se recuerdan, tiendas con precios según reputación.
+- Rumores del mundo: cuando alguien derrota al guardián, las tabernas lo cuentan a los demás jugadores.
+- Español e inglés desde el primer día (`/language`).
+- Tablas preparadas para grupos (`parties`, `party_members`, `encounter_participants`); el juego cooperativo es la fase 3.
+
+## Puesta en marcha (Windows)
+
+1. **PostgreSQL**
+   ```powershell
+   winget install PostgreSQL.PostgreSQL.17
+   # luego, con la contraseña elegida durante la instalación:
+   & "C:\Program Files\PostgreSQL\17\bin\createdb.exe" -U postgres oathforge
+   & "C:\Program Files\PostgreSQL\17\bin\createdb.exe" -U postgres oathforge_test
+   ```
+2. **Bot de Telegram**: habla con [@BotFather](https://t.me/BotFather), `/newbot`, copia el token.
+3. **Clave de Gemini**: <https://aistudio.google.com/apikey>. Sin clave el juego funciona igual, pero sin narración ni acciones libres.
+4. **Configuración**
+   ```powershell
+   copy .env.example .env   # rellena BOT_TOKEN, DATABASE_URL y GEMINI_API_KEY
+   py -3.12 -m venv .venv
+   .venv\Scripts\pip install -e ".[dev]"
+   .venv\Scripts\alembic upgrade head
+   ```
+5. **Jugar**
+   ```powershell
+   .venv\Scripts\python -m oathforge.main
+   ```
+   Abre tu bot en Telegram y escribe `/start`.
+
+## Tests
+
+```powershell
+.venv\Scripts\python -m pytest
+```
+
+Usan `TEST_DATABASE_URL` (Postgres) si está disponible; si no, SQLite. La prueba de concurrencia (dos compras simultáneas de la última poción) solo corre con Postgres.
+
+## Arquitectura
+
+```
+oathforge/
+  engine/     reglas puras: dados, pruebas, combate, progresión (sin E/S, RNG inyectable)
+  services/   las ÚNICAS escrituras de estado; transacciones con SELECT … FOR UPDATE + versión
+  ai/         cliente Gemini con presupuesto, intérprete de intenciones, narrador, diálogo de NPC
+  bot/        handlers de Telegram, teclados y render HTML
+  i18n/       locales es/en
+  database/   modelos SQLAlchemy y sesión
+content/      todo el contenido del juego en YAML validado al arrancar
+migrations/   Alembic
+```
+
+Flujo de una acción libre:
+
+```
+leer contexto (tx corta) → Gemini interpreta → bloquear + validar + resolver (tx) → Gemini narra
+```
+
+Nunca se mantiene un bloqueo de fila mientras se espera al modelo.
+
+**Seguridad y robustez**
+- El texto del jugador va delimitado como datos (`<player_text>`), nunca dentro de las instrucciones.
+- Los ids que propone la IA deben existir en el contexto; si no, la acción pasa a `narrate_only`.
+- Las dificultades sugeridas por la IA se limitan a un rango permitido.
+- Cada botón lleva un nonce: un doble toque o un menú antiguo no ejecuta la acción dos veces (`action_logs.idempotency_key`).
+- Presupuesto diario de IA por usuario y global, comprobado **antes** de cada llamada (`ai_usage`).
+- Si la IA falla o se agota el presupuesto, el juego sigue con textos de plantilla.
+- Límite de frecuencia por usuario y registro auditable de cada acción.
+
+## Añadir contenido
+
+Todo vive en `content/*.yaml`. Cada texto visible es `{es: ..., en: ...}`. Al arrancar se validan las referencias cruzadas (objetos, lugares, NPC, etapas de misión). Si algo está mal, el bot no arranca y dice qué es. `pytest tests/test_content.py` hace la misma comprobación.
+
+Las misiones son máquinas de estados: `stages`, `actions` (botones o acciones libres con tirada opcional) y `triggers` (p. ej. derrotar a un monstruo). Los efectos disponibles son `give_item`, `take_item`, `gold`, `xp`, `reputation`, `set_flag`, `npc_memory`, `trust`, `damage` y `world_rumor`.
+
+## Pendiente (siguientes fases)
+
+- Grupos cooperativos, combate en grupo y PvP (fase 3).
+- Elección de especialización a nivel 5 (los datos ya existen).
+- Temporizador de turnos con JobQueue (innecesario en solitario: los enemigos solo actúan tras el jugador).
+- Profesiones, mercado entre jugadores, eventos mundiales encadenados, TTS y Mini App.

@@ -1,0 +1,76 @@
+bram:
+  name: {es: Bram, en: Bram}
+  title: {es: tabernero de La Corona Rota, en: keeper of the Broken Crown}
+  schedule: {day: broken_crown_tavern, night: broken_crown_tavern}
+  greeting:
+    es: "«Bienvenido. Esta noche hay problemas al norte... y buenas monedas para quien se atreva a investigarlos.»"
+    en: "\"Welcome. There's trouble up north tonight... and good coin for whoever dares look into it.\""
+  persona: >-
+    Bram is a broad, bald, middle-aged tavern keeper. Warm with paying customers, gruff with troublemakers,
+    loves gossip and repeats every rumor he hears (often embellished). Speaks plainly with tavern humor.
+    Never forgets a thief.
+  goals: Keep the tavern profitable and safe; hear every story first.
+  secrets: Owes money to the Crimson Syndicate and lets Mira use the back room to settle the debt.
+  knowledge: >-
+    Silver Guard patrols have gone missing near the Whispering Woods. Old folks say a crypt lies under the
+    forest. Mira sits in the corner at night. Tessa the smith is the best in the city.
+  passive_perception: 13
+  steal_gold: 2d6+4
+
+mira:
+  name: {es: Mira, en: Mira}
+  title: {es: la encapuchada, en: the hooded woman}
+  faction: crimson_syndicate
+  schedule: {day: crownreach_market, night: broken_crown_tavern}
+  greeting:
+    es: "«No te he visto antes. Eso es bueno... o muy malo.»"
+    en: "\"Haven't seen you before. That's good... or very bad.\""
+  persona: >-
+    Mira is a sharp, soft-spoken informant of the Crimson Syndicate. Speaks in short, dry sentences,
+    answers questions with questions, never gives information for free, respects competence and despises
+    sanctimony.
+  goals: Get the sealed reliquary from the Silver Guard before the Covenant does; the Syndicate believes it opens a crypt full of relics.
+  secrets: The Syndicate ambushed the Silver Guard courier in the woods. She knows the courier carried the reliquary.
+  knowledge: >-
+    The reliquary is the key to the Sunken Crypt. Sergeant Holt is honest but rigid. Bram owes the Syndicate.
+  passive_perception: 15
+  shop:
+    items: [dagger, rope, healing_potion]
+    buys: true
+
+holt:
+  name: {es: Sargento Holt, en: Sergeant Holt}
+  title: {es: de la Guardia de Plata, en: of the Silver Guard}
+  faction: silver_covenant
+  schedule: {day: crownreach_plaza, night: broken_crown_tavern}
+  greeting:
+    es: "«Ciudadano. Si tienes noticias del bosque, habla rápido. Si no, circula.»"
+    en: "\"Citizen. If you have news from the forest, speak quickly. If not, move along.\""
+  persona: >-
+    Sergeant Holt is a weathered, rigid but honest officer of the Silver Guard. Formal, terse, dutiful.
+    Grieves silently for missing soldiers. Values oaths and truth; distrusts thieves and the Syndicate.
+  goals: Find the courier who vanished in the Whispering Woods carrying the sealed reliquary, and keep the crypt sealed.
+  secrets: The Covenant fears that whoever opens the reliquary will wake Ser Aldren, the Crypt Warden.
+  knowledge: >-
+    A courier, Private Edda, carried a sealed reliquary through the Whispering Woods three days ago and never
+    arrived. The Sunken Crypt lies under the woods; the reliquary holds the key that opens it.
+  passive_perception: 14
+
+tessa:
+  name: {es: Tessa, en: Tessa}
+  title: {es: herrera de Crownreach, en: smith of Crownreach}
+  schedule: {day: crownreach_market, night: broken_crown_tavern}
+  greeting:
+    es: "«Si vas a pelear, pelea con acero decente. Mira lo que tengo.»"
+    en: "\"If you're going to fight, fight with decent steel. Take a look.\""
+  persona: >-
+    Tessa is a cheerful, soot-covered smith with burn-scarred forearms. Proud of her craft, blunt about bad
+    gear, fond of brave fools. Speaks fast and laughs loud.
+  goals: Get iron from Frosthold despite the closed roads; make a blade worthy of a legend.
+  secrets: She forged the lock of the sealed reliquary years ago and knows it can be opened without breaking the seal.
+  knowledge: >-
+    Iron prices are rising because the northern roads are dangerous. The Silver Guard buys her armor.
+  passive_perception: 11
+  shop:
+    items: [longsword, dagger, shortbow, chain_mail, leather_armor, shield, healing_potion, torch, rope]
+    buys: true

@@ -1,0 +1,37 @@
+human:
+  name: {es: Humano, en: Human}
+  description:
+    es: Adaptables y ambiciosos, los humanos fundaron Crownreach y pueblan cada rincón de Aetherfall.
+    en: Adaptable and ambitious, humans founded Crownreach and live in every corner of Aetherfall.
+  bonuses: {str: 1, dex: 1, con: 1, int: 1, wis: 1, cha: 1}
+  traits: [versatile]
+  trait_text: {es: "Versátil: +1 a todos los atributos.", en: "Versatile: +1 to every ability."}
+
+elf:
+  name: {es: Elfo, en: Elf}
+  description:
+    es: Longevos y atentos, los elfos recuerdan Thornwood cuando aún no tenía caminos.
+    en: Long-lived and watchful, elves remember Thornwood before it had roads.
+  bonuses: {dex: 2, wis: 1}
+  skills: [perception]
+  traits: [keen_senses]
+  trait_text: {es: "Sentidos agudos: competencia en Percepción.", en: "Keen senses: proficient in Perception."}
+
+dwarf:
+  name: {es: Enano, en: Dwarf}
+  description:
+    es: Tercos como la roca de Frosthold, los enanos resisten lo que derribaría a otros.
+    en: Stubborn as Frosthold stone, dwarves endure what would fell others.
+  bonuses: {con: 2, str: 1}
+  traits: [poison_resilience]
+  trait_text: {es: "Resistencia al veneno: inmune al estado envenenado.", en: "Poison resilience: immune to the poisoned condition."}
+
+orc:
+  name: {es: Orco, en: Orc}
+  description:
+    es: Fuertes y resistentes, los orcos han sido mercenarios, eruditos y reyes.
+    en: Strong and enduring, orcs have been mercenaries, scholars and kings.
+  bonuses: {str: 2, con: 1}
+  skills: [intimidation]
+  traits: [relentless]
+  trait_text: {es: "Resistencia implacable: una vez por combate, quedas a 1 PV en lugar de caer.", en: "Relentless endurance: once per fight, drop to 1 HP instead of falling."}

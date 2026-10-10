@@ -1,0 +1,24 @@
+abilities:
+  str: {name: {es: Fuerza, en: Strength}, short: {es: FUE, en: STR}}
+  dex: {name: {es: Destreza, en: Dexterity}, short: {es: DES, en: DEX}}
+  con: {name: {es: Constitución, en: Constitution}, short: {es: CON, en: CON}}
+  int: {name: {es: Inteligencia, en: Intelligence}, short: {es: INT, en: INT}}
+  wis: {name: {es: Sabiduría, en: Wisdom}, short: {es: SAB, en: WIS}}
+  cha: {name: {es: Carisma, en: Charisma}, short: {es: CAR, en: CHA}}
+
+skills:
+  athletics: {ability: str, name: {es: Atletismo, en: Athletics}}
+  acrobatics: {ability: dex, name: {es: Acrobacias, en: Acrobatics}}
+  sleight_of_hand: {ability: dex, name: {es: Juego de manos, en: Sleight of Hand}}
+  stealth: {ability: dex, name: {es: Sigilo, en: Stealth}}
+  arcana: {ability: int, name: {es: Arcanos, en: Arcana}}
+  history: {ability: int, name: {es: Historia, en: History}}
+  investigation: {ability: int, name: {es: Investigación, en: Investigation}}
+  religion: {ability: int, name: {es: Religión, en: Religion}}
+  insight: {ability: wis, name: {es: Perspicacia, en: Insight}}
+  medicine: {ability: wis, name: {es: Medicina, en: Medicine}}
+  perception: {ability: wis, name: {es: Percepción, en: Perception}}
+  survival: {ability: wis, name: {es: Supervivencia, en: Survival}}
+  deception: {ability: cha, name: {es: Engaño, en: Deception}}
+  intimidation: {ability: cha, name: {es: Intimidación, en: Intimidation}}
+  persuasion: {ability: cha, name: {es: Persuasión, en: Persuasion}}

@@ -1,0 +1,190 @@
+"""Loads and cross-validates the YAML content. Fails fast at startup."""
+
+from dataclasses import dataclass
+from functools import lru_cache
+from pathlib import Path
+
+import yaml
+
+from oathforge.config import CONTENT_DIR
+from oathforge.content.schemas import (
+    ABILITIES,
+    AbilityInfo,
+    Background,
+    Faction,
+    GameClass,
+    Item,
+    Lineage,
+    Location,
+    Monster,
+    Npc,
+    Quest,
+    Skill,
+)
+
+EFFECT_KINDS = {
+    "give_item", "take_item", "gold", "reputation", "set_flag", "xp",
+    "npc_memory", "trust", "damage", "world_rumor",
+}
+
+
+@dataclass(frozen=True)
+class Content:
+    abilities: dict[str, AbilityInfo]
+    skills: dict[str, Skill]
+    lineages: dict[str, Lineage]
+    backgrounds: dict[str, Background]
+    classes: dict[str, GameClass]
+    items: dict[str, Item]
+    monsters: dict[str, Monster]
+    locations: dict[str, Location]
+    npcs: dict[str, Npc]
+    factions: dict[str, Faction]
+    quests: dict[str, Quest]
+    start_location: str
+    respawn_location: str
+
+
+def _read(directory: Path, name: str) -> dict:
+    with open(directory / f"{name}.yaml", encoding="utf-8") as fh:
+        return yaml.safe_load(fh) or {}
+
+
+def _parse(model, raw: dict) -> dict:
+    return {key: model.model_validate(value) for key, value in raw.items()}
+
+
+def load_content(directory: Path = CONTENT_DIR) -> Content:
+    rules = _read(directory, "abilities")
+    world = _read(directory, "locations")
+    locations = _parse(Location, world["locations"])
+    respawn = [k for k, loc in locations.items() if loc.respawn]
+    content = Content(
+        abilities=_parse(AbilityInfo, rules["abilities"]),
+        skills=_parse(Skill, rules["skills"]),
+        lineages=_parse(Lineage, _read(directory, "lineages")),
+        backgrounds=_parse(Background, _read(directory, "backgrounds")),
+        classes=_parse(GameClass, _read(directory, "classes")),
+        items=_parse(Item, _read(directory, "items")),
+        monsters=_parse(Monster, _read(directory, "monsters")),
+        locations=locations,
+        npcs=_parse(Npc, _read(directory, "npcs")),
+        factions=_parse(Faction, _read(directory, "factions")),
+        quests=_parse(Quest, _read(directory, "quests")),
+        start_location=world["start"],
+        respawn_location=respawn[0] if respawn else world["start"],
+    )
+    validate_references(content)
+    return content
+
+
+def validate_references(c: Content) -> None:
+    errors: list[str] = []
+
+    def need(kind: str, key: str | None, pool: dict, where: str) -> None:
+        if key is not None and key not in pool:
+            errors.append(f"{where}: unknown {kind} '{key}'")
+
+    if sorted(c.abilities) != sorted(ABILITIES):
+        errors.append("abilities.yaml must define exactly the six abilities")
+    need("location", c.start_location, c.locations, "locations.start")
+    for key, lin in c.lineages.items():
+        for s in lin.skills:
+            need("skill", s, c.skills, f"lineage {key}")
+        for a in lin.bonuses:
+            need("ability", a, c.abilities, f"lineage {key}")
+    for key, bg in c.backgrounds.items():
+        for s in bg.skills:
+            need("skill", s, c.skills, f"background {key}")
+        for i in bg.items:
+            need("item", i, c.items, f"background {key}")
+    for key, cls in c.classes.items():
+        for s in cls.skills:
+            need("skill", s, c.skills, f"class {key}")
+        for i in [*cls.items, *cls.equip]:
+            need("item", i, c.items, f"class {key}")
+        need("ability", cls.primary, c.abilities, f"class {key}")
+    for key, item in c.items.items():
+        if item.type == "weapon" and item.weapon is None:
+            errors.append(f"item {key}: weapon without stats")
+        if item.type in ("weapon", "armor", "shield") and item.slot is None:
+            errors.append(f"item {key}: equippable without slot")
+    for key, mon in c.monsters.items():
+        for loot in mon.loot:
+            need("item", loot.item, c.items, f"monster {key}")
+    for key, loc in c.locations.items():
+        for ex in loc.exits:
+            need("location", ex.to, c.locations, f"location {key} exit")
+        for enc in [*loc.encounters, *loc.fixed_encounters]:
+            for m in enc.monsters:
+                need("monster", m, c.monsters, f"location {key} encounter")
+        for okey, obj in loc.scene_objects.items():
+            need("skill", obj.skill, c.skills, f"location {key} object {okey}")
+        for dkey, disc in loc.discoveries.items():
+            need("skill", disc.skill, c.skills, f"location {key} discovery {dkey}")
+            for i in disc.gives:
+                need("item", i, c.items, f"location {key} discovery {dkey}")
+    for key, npc in c.npcs.items():
+        need("faction", npc.faction, c.factions, f"npc {key}")
+        for loc in npc.schedule.values():
+            need("location", loc, c.locations, f"npc {key} schedule")
+        if npc.shop:
+            for i in npc.shop.items:
+                need("item", i, c.items, f"npc {key} shop")
+    for key, quest in c.quests.items():
+        need("stage", quest.start_stage, quest.stages, f"quest {key}")
+        effect_lists = []
+        for akey, action in quest.actions.items():
+            where = f"quest {key} action {akey}"
+            need("location", action.location, c.locations, where)
+            need("npc", action.npc, c.npcs, where)
+            need("item", action.requires_item, c.items, where)
+            need("stage", action.to_stage, quest.stages, where)
+            for s in action.stages:
+                need("stage", s, quest.stages, where)
+            effect_lists.append((where, action.effects))
+            if action.check:
+                need("skill", action.check.skill, c.skills, where)
+                effect_lists.append((where, action.check.success_effects))
+                effect_lists.append((where, action.check.failure_effects))
+        for trig in quest.triggers:
+            where = f"quest {key} trigger {trig.target}"
+            need("monster", trig.target, c.monsters, where)
+            need("stage", trig.to_stage, quest.stages, where)
+            for s in trig.stages:
+                need("stage", s, quest.stages, where)
+            effect_lists.append((where, trig.effects))
+        for where, effects in effect_lists:
+            for eff in effects:
+                _validate_effect(c, eff, where, errors)
+        for skey, stage in quest.stages.items():
+            for lkey in stage.location_text:
+                need("location", lkey, c.locations, f"quest {key} stage {skey}")
+
+    if errors:
+        raise ValueError("Content validation failed:\n  " + "\n  ".join(errors))
+
+
+def _validate_effect(c: Content, eff: dict, where: str, errors: list[str]) -> None:
+    if len(eff) != 1:
+        errors.append(f"{where}: effect must have exactly one key: {eff}")
+        return
+    (kind, arg), = eff.items()
+    if kind not in EFFECT_KINDS:
+        errors.append(f"{where}: unknown effect '{kind}'")
+    elif kind in ("give_item", "take_item"):
+        for item in arg:
+            if item not in c.items:
+                errors.append(f"{where}: unknown item '{item}'")
+    elif kind == "reputation":
+        for fac in arg:
+            if fac not in c.factions:
+                errors.append(f"{where}: unknown faction '{fac}'")
+    elif kind in ("npc_memory", "trust"):
+        if arg.get("npc") not in c.npcs:
+            errors.append(f"{where}: unknown npc in {kind}")
+
+
+@lru_cache
+def get_content() -> Content:
+    return load_content()

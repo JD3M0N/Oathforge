@@ -1,0 +1,88 @@
+paladin:
+  name: {es: Paladín, en: Paladin}
+  description:
+    es: Combatiente de primera línea con armadura pesada, juramentos y magia sagrada.
+    en: Front-line fighter in heavy armor, bound by oaths and holy magic.
+  hit_die: 10
+  primary: str
+  array: {str: 15, con: 14, cha: 13, wis: 12, dex: 10, int: 8}
+  skills: [athletics, persuasion]
+  items: {longsword: 1, chain_mail: 1, shield: 1, healing_potion: 1}
+  equip: [longsword, chain_mail, shield]
+  abilities:
+    consecrated_strike:
+      name: {es: Golpe Consagrado, en: Consecrated Strike}
+      description: {es: Un ataque con arma que añade 1d8 de daño radiante., en: A weapon attack that adds 1d8 radiant damage.}
+      level: 1
+      kind: strike
+      uses: 2
+      extra_damage: 1d8
+      damage_type: radiant
+    lay_on_hands:
+      name: {es: Imposición de Manos, en: Lay on Hands}
+      description: {es: "Acción adicional: recuperas 5 PV por nivel.", en: "Bonus action: recover 5 HP per level."}
+      level: 2
+      kind: heal
+      action: bonus
+      uses: 1
+      heal_per_level: 5
+    aura_of_resolve:
+      name: {es: Aura de Resolución, en: Aura of Resolve}
+      description: {es: "+1 a la CA e inmunidad al miedo.", en: "+1 AC and immunity to fear."}
+      level: 3
+      kind: passive
+      action: none
+      ac_bonus: 1
+      immune: [frightened]
+    extra_attack:
+      name: {es: Ataque Extra, en: Extra Attack}
+      description: {es: Atacas dos veces con tu acción de ataque., en: You attack twice with your attack action.}
+      level: 5
+      kind: passive
+      action: none
+      extra_attack: true
+  specializations:
+    vengeance: {es: Juramento de Venganza, en: Oath of Vengeance}
+    protection: {es: Guardián Sagrado, en: Sacred Guardian}
+    redemption: {es: Redentor, en: Redeemer}
+    inquisition: {es: Inquisidor, en: Inquisitor}
+
+rogue:
+  name: {es: Pícaro, en: Rogue}
+  description:
+    es: Ágil y astuto, golpea donde más duele y desaparece antes de la respuesta.
+    en: Quick and cunning, strikes where it hurts and is gone before the answer.
+  hit_die: 8
+  primary: dex
+  array: {dex: 15, con: 14, wis: 13, cha: 12, int: 10, str: 8}
+  skills: [sleight_of_hand, perception]
+  items: {dagger: 1, shortbow: 1, leather_armor: 1, healing_potion: 1}
+  equip: [dagger, shortbow, leather_armor]
+  abilities:
+    sneak_attack:
+      name: {es: Ataque Furtivo, en: Sneak Attack}
+      description:
+        es: Una vez por turno, daño extra con armas sutiles o a distancia si tienes ventaja o el objetivo sufre un estado.
+        en: Once per turn, extra damage with finesse or ranged weapons when you have advantage or the target has a condition.
+      level: 1
+      kind: passive
+      action: none
+      sneak_dice: {1: 1, 3: 2, 5: 3}
+    cunning_hide:
+      name: {es: Esconderse, en: Hide}
+      description: {es: "Acción adicional: tirada de Sigilo; si tienes éxito, tu próximo ataque tiene ventaja.", en: "Bonus action: Stealth roll; on success your next attack has advantage."}
+      level: 2
+      kind: hide
+      action: bonus
+    uncanny_dodge:
+      name: {es: Esquiva Asombrosa, en: Uncanny Dodge}
+      description: {es: El primer golpe que recibes cada ronda hace la mitad de daño., en: The first hit you take each round deals half damage.}
+      level: 3
+      kind: passive
+      action: none
+      halve_first_hit: true
+  specializations:
+    assassin: {es: Asesino, en: Assassin}
+    spy: {es: Espía, en: Spy}
+    duelist: {es: Duelista, en: Duelist}
+    trapper: {es: Trampero, en: Trapper}

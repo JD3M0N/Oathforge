@@ -1,0 +1,276 @@
+# Event templates (check, combat, loot, ...) are escaped before sending: no HTML there.
+# View templates (create, scene, sheet, help) may use Telegram HTML.
+
+cmd:
+  start: "Start or return to the scene"
+  look: "Look around"
+  sheet: "Character sheet"
+  inventory: "Inventory"
+  journal: "Adventure journal"
+  language: "Change language"
+  help: "How to play"
+
+help:
+  text: |-
+    <b>How to play Oathforge</b>
+
+    Use the buttons to travel, investigate, talk and fight.
+    You can also <b>type whatever you want to do</b>: "I hide behind the bar and listen", "I try to lift the keeper's purse", "I push the cart onto the bandit".
+    The Dungeon Master interprets your action, the engine rolls the dice, and you see what really happened.
+
+    Commands: /look /sheet /inventory /journal /language
+
+lang:
+  choose: "Choose your language:"
+  changed: "Language set to English."
+
+start:
+  need_character: "You don't have a character yet. Use /start to create one."
+
+create:
+  welcome: |-
+    ⚔️ <b>Welcome to Aetherfall.</b>
+
+    A world that existed before you and will go on after you leave. Taverns remember, factions scheme, and your deeds leave marks.
+  ask_name: "What is your character's name? (2–24 letters)"
+  bad_name: "That name won't do. Use 2 to 24 letters, spaces, apostrophes or hyphens."
+  ask_lineage: "<b>{name}</b>, what lineage do you come from?"
+  ask_background: "Who were you before you became an adventurer?"
+  ask_class: "Choose your class:"
+  summary: |-
+    <b>{name}</b>
+    {lineage} · {background} · {cls}
+
+    {stats}
+    Hit points: {hp}
+
+    Confirm?
+  done: "✨ <b>{name}</b> enters Crownreach. May your oaths guide you."
+  cancelled: "Creation cancelled. Use /start whenever you like."
+
+btn:
+  travel: "🧭 Travel"
+  investigate: "🔎 Investigate"
+  talk: "💬 Talk"
+  shop: "🛒 Trade"
+  rest: "🛏️ Rest ({cost} 🪙)"
+  inventory: "🎒 Inventory"
+  sheet: "🧙 Sheet"
+  journal: "📜 Journal"
+  back: "⬅️ Back"
+  leave: "👋 Say goodbye"
+  sell: "💰 Sell"
+  equip: "Equip {item}"
+  unequip: "Unequip {item}"
+  use: "Use {item}"
+  confirm: "✅ Confirm"
+  restart: "🔄 Start over"
+  continue: "▶️ Continue"
+  defend: "🛡️ Defend"
+  potion: "🧪 Potion"
+  move_back: "↩️ To the back"
+  move_front: "↪️ To the front"
+  flee: "🏃 Flee"
+  end_turn: "⏭️ End turn"
+
+scene:
+  day: "☀️ Day"
+  night: "🌙 Night"
+  status: "{time} · ❤️ {hp}/{max_hp} · 🪙 {gold}"
+  people: "👥 Here: {names}"
+  hint: "Type any action or use the buttons."
+
+travel:
+  title: "🧭 Where are you heading?"
+
+talk:
+  title: "💬 Who do you want to talk to?"
+  hint: "Type what you say to {npc}."
+  fallback: "{npc} looks at you for a moment, thoughtful, and says nothing."
+  trust_up: "{npc} trusts you more ({trust})."
+  trust_down: "{npc} trusts you less ({trust})."
+  err:
+    not_here: "That person isn't here."
+
+shop:
+  choose: "🛒 Who do you want to trade with?"
+  title: "🛒 <b>{npc}'s shop</b> · you have {gold} 🪙"
+  sell_title: "💰 What do you want to sell?"
+  nothing_to_sell: "You have nothing this merchant wants to buy."
+  bought: "You buy {item} for {price} gold. {gold} left."
+  sold: "You sell {item} for {price} gold. You now have {gold}."
+  err:
+    not_sold: "That isn't sold here."
+    no_gold: "You don't have enough gold (you need {price})."
+    no_buy: "This merchant doesn't buy anything."
+    cant_sell: "You can't sell that (is it equipped?)."
+
+inv:
+  title: "🎒 <b>Inventory</b> · 🪙 {gold}"
+  equipped: "You equip: {item}."
+  unequipped: "You unequip: {item}."
+  healed: "You use {item} and recover {amount} HP ({hp}/{max_hp})."
+  err:
+    not_found: "You don't have that item."
+    not_equippable: "That item can't be equipped."
+    not_usable: "That item can't be used that way."
+    full_hp: "You are as healthy as you can be right now."
+    in_combat: "You can't change gear in the middle of a fight."
+    in_combat_use: "In combat, use the potion button on the panel."
+    no_potion: "You have no potions left."
+
+sheet:
+  identity: "Level {level} · {lineage} · {cls} · {background}"
+  vitals: "❤️ {hp}/{max_hp} · 🛡️ AC {ac} · 🪙 {gold} · Proficiency +{pb}"
+  xp: "✨ XP {xp} · to next level: {next}"
+  skills: "Skills"
+  abilities: "Class abilities"
+  reputation: "Reputation"
+  injured: "🩹 Injured (rest at an inn)"
+
+journal:
+  title: "📜 <b>Adventure journal</b>"
+  rumors: "Recent rumors"
+
+check:
+  result: "{skill}: {roll} → {total} vs DC {dc} {result}"
+
+explore:
+  arrived: "You reach {place} after {minutes} minutes on the road."
+  ambush: "Ambush!"
+  nothing_more: "There is nothing left to discover here."
+  found_nothing: "You find nothing out of the ordinary."
+  new_route: "You have discovered a new path."
+  rested: "You rest through the night ({cost} gold). You recover your strength: {hp} HP."
+  err:
+    in_combat: "You are in the middle of a fight!"
+    no_route: "You can't go there from here."
+    no_rest: "There is nowhere to rest here."
+
+quest:
+  updated: "Journal updated: {quest}."
+  completed: "Quest completed: {quest}."
+  failed: "Quest failed: {quest}."
+  err:
+    unavailable: "That is no longer possible."
+
+loot:
+  gold: "+{gold} gold."
+  item: "You receive: {item} ×{qty}."
+  lost_item: "You hand over: {item} ×{qty}."
+  damage: "You take {amount} damage ({hp} HP left)."
+
+rep:
+  changed: "Reputation with {faction}: {delta} (now {value})."
+
+progress:
+  xp: "+{amount} XP."
+  level_up: "You reach level {level}! Max HP: {max_hp}."
+  new_ability: "New ability: {ability}."
+  asi: "Your {ability} increases by 2."
+  skill_rank: "Your mastery of {skill} improves (rank {rank})."
+  specialization_soon: "You reached level 5. Soon you will be able to choose a specialization."
+
+steal:
+  success: "You lift {gold} gold from {npc} without being noticed."
+  suspected: "{npc} frowns and pats their purse. They suspect something."
+  caught: "{npc} catches you with your hand in their purse!"
+  err:
+    nothing: "There is nothing to steal there."
+
+freetext:
+  unavailable: "The Dungeon Master can't interpret free actions right now. Use the buttons."
+  stale: "The situation changed while you were thinking. Try again."
+  not_here: "That isn't here."
+  no_effect: "Nothing changes in the world."
+  ooc: "Out-of-character question: use /help to see how to play."
+
+combat:
+  panel_title: "⚔️ <b>Combat</b> · Round {round}"
+  your_turn: "Your turn"
+  hint: "You can also type a free action."
+  start: "Fighting: {enemies}."
+  initiative: "Initiative: {order}"
+  adv: " with advantage"
+  dis: " with disadvantage"
+  sneak: " (+{amount} sneak)"
+  hit: "{actor} hits {target} with {weapon} ({roll} → {total} vs AC {ac}{mod}){extra}."
+  crit: "CRITICAL! {actor} hits {target} with {weapon} ({roll} → {total}{mod}){extra}."
+  miss: "{actor} misses {target} with {weapon} ({roll} → {total} vs AC {ac}{mod})."
+  damage: "{target} takes {amount} {type} damage."
+  defeated: "{target} falls."
+  relentless: "{target} refuses to fall and stays up with 1 HP."
+  status: "{target} suffers {status} ({turns} turns)."
+  immune: "{target} is immune to {status}."
+  dot: "{target} suffers from {status}."
+  stunned: "{target} is stunned and loses their turn."
+  move: "{actor} moves to the {row}."
+  defend: "{actor} takes a defensive stance."
+  potion: "{actor} drinks a potion and recovers {amount} HP."
+  ability: "{actor} uses {ability}."
+  heal: "{actor} uses {ability} and recovers {amount} HP."
+  hide: "{actor} tries to hide: {roll} → {total} vs DC {dc} {result}"
+  flee: "{actor} tries to flee: {roll} → {total} vs DC {dc} {result}"
+  interact: "{actor} uses the {object} ({skill}): {roll} → {total} vs DC {dc} {result}"
+  enemy_flees: "{actor} flees in terror."
+  defeat_penalty: "You wake up in {place}, injured. You lost {gold} gold."
+  end:
+    victory: "🏆 Victory!"
+    defeat: "💀 You have fallen..."
+    fled: "🏃 You escaped."
+  err:
+    over: "The fight is over."
+    not_your_turn: "It isn't your turn."
+    already_moved: "You already moved this turn."
+    no_bonus: "You already used your bonus action."
+    no_action: "You already used your action this turn."
+    invalid: "Invalid action."
+    no_weapon: "You don't have a suitable weapon."
+    too_far: "You are too far away for a melee attack."
+    unknown_ability: "You don't know that ability."
+    no_uses: "No uses left for that ability. Rest to recover them."
+    full_hp: "You are already at full health."
+    passive: "That ability is passive."
+    no_object: "That object is no longer available."
+    no_target: "No targets in reach."
+    bad_target: "You can't reach that target."
+
+row:
+  front: "front"
+  back: "back"
+
+status:
+  bleeding: "bleeding"
+  burning: "burning"
+  poisoned: "poison"
+  frightened: "fear"
+  stunned: "stun"
+  vulnerable: "vulnerability"
+  hidden: "hidden"
+  defending: "on guard"
+  icon:
+    bleeding: "🩸"
+    burning: "🔥"
+    poisoned: "🤢"
+    frightened: "😱"
+    stunned: "💫"
+    vulnerable: "🎯"
+    hidden: "👤"
+    defending: "🛡️"
+
+dmg:
+  slashing: "slashing"
+  piercing: "piercing"
+  bludgeoning: "bludgeoning"
+  radiant: "radiant"
+  necrotic: "necrotic"
+  cold: "cold"
+  poison: "poison"
+  bleeding: "bleeding"
+  burning: "fire"
+
+err:
+  generic: "Something went wrong. Please try again."
+  rate: "Slow down, adventurer."
+  stale: "That menu is no longer valid. Here is the current one:"
+  unknown: "I don't understand that action."

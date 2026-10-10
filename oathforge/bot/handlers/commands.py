@@ -1,0 +1,49 @@
+"""/sheet /inventory /journal /look /language /help."""
+
+from telegram import Update
+from telegram.ext import CommandHandler, ContextTypes
+
+from oathforge.bot import render
+from oathforge.bot.handlers.common import current_view, load, send
+from oathforge.bot.keyboards import btn, cb, markup
+from oathforge.database.session import session_scope
+from oathforge.i18n import t
+
+
+def _view(builder):
+    async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        async with session_scope() as session:
+            user, char = await load(session, update)
+            lang = context.user_data["lang"] = user.language
+            if char is None:
+                text, kb = t(lang, "start.need_character"), None
+            else:
+                text, kb = await builder(session, char, lang)
+        await send(update, text, kb)
+    return handle
+
+
+async def language(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    async with session_scope() as session:
+        user, _ = await load(session, update)
+        lang = user.language
+    kb = markup([[btn("🇪🇸 Español", cb("lang", "es")), btn("🇬🇧 English", cb("lang", "en"))]])
+    await send(update, t(lang, "lang.choose"), kb)
+
+
+async def help_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    async with session_scope() as session:
+        user, _ = await load(session, update)
+        lang = user.language
+    await send(update, t(lang, "help.text"))
+
+
+def handlers() -> list[CommandHandler]:
+    return [
+        CommandHandler("look", _view(current_view)),
+        CommandHandler("sheet", _view(render.sheet)),
+        CommandHandler("inventory", _view(render.inventory_view)),
+        CommandHandler("journal", _view(render.journal)),
+        CommandHandler("language", language),
+        CommandHandler("help", help_cmd),
+    ]
