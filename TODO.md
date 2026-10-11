@@ -9,7 +9,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 ## 🤖 IA y costes · [ia-y-narracion.md](planning/ia-y-narracion.md)
 
 - [ ] 🔴 ◐ **Al menos dos modelos de IA**: uno rápido para interpretar y decidir qué tirada pedir, y otro para agentes y memoria. *Hoy hay rápido + narrativo; falta el de memoria y resúmenes en segundo plano.*
-- [ ] 🔴 ◐ **Límite de llamadas**: por minuto, por usuario y global, con longitud máxima de escena. *Hecho (v0.2.2): 150 llamadas/día por jugador, aviso al agotarse y contador en `/hero`. Falta: límite de IA por minuto y longitud máxima de escena.*
+- [ ] 🔴 ◐ **Límite de llamadas**: por minuto, por usuario y global, con longitud máxima de escena. *Hecho (v0.2.2): 150 llamadas/día por jugador, aviso al agotarse y contador en la ficha completa (`/sheet`). Falta: límite de IA por minuto y longitud máxima de escena.*
 - [ ] 🟡 Medir el coste de IA por jugador y hora, y por función (interpretar, narrar, resumir).
 - [ ] 🟡 Caché de narraciones de escenas estáticas («escena + versión de contexto»).
 - [ ] 🟡 Memoria de NPC en tres capas: episódica, relacional y semántica.
@@ -18,7 +18,6 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 ## ⚔️ Combate y balance · [combate.md](planning/combate.md)
 
 - [ ] 🔴 **Simulación de batallas** para probar el balance: `python -m oathforge.tools.simulate`, cientos de combates clase × enemigo, estadísticas en `artifacts/simulations/`.
-- [ ] 🟡 Tiradas de salvación y CD de conjuro (necesarias para el Mago).
 - [ ] 🟡 IA enemiga táctica (proteger al sanador, priorizar amenazas) y jefes por fases con aviso previo.
 - [ ] 🟡 Botones con `encounter.version` + `turn_index` para que un doble clic no ataque dos veces.
 - [ ] 🟢 Nuevos tipos de acción: defender a un aliado, negociar una tregua, rendirse.
@@ -26,15 +25,16 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 
 ## 🧙 Clases y progresión · [clases.md](planning/clases.md) · [progresion.md](planning/progresion.md)
 
-- [ ] 🔴 Elegir especialización a nivel 5 (0.4.0).
-- [ ] 🟡 Siguiente clase: Mago, Explorador o Bardo.
+- [ ] 🔴 Elegir especialización a nivel 5. *La ficha completa ya muestra la especialización cuando exista.*
+- [ ] 🟡 Siguiente clase: Explorador (Mago, Druida y Bardo hechos en v0.4.0).
 - [ ] 🟢 Juramentos con consecuencias, títulos y cicatrices en la ficha.
 - [ ] 🟢 Ranuras de equipo y objetos con procedencia (quién los fabricó o encontró).
-- [ ] 🟢 ◐ Mejorar ficha de personaje, tanto creación como atributos. *Hoja de héroe hecha (v0.2.2); falta la creación.*
+- [ ] 🟢 ◐ Mejorar ficha de personaje, tanto creación como atributos. *Hecho: hoja de héroe (v0.2.2), resumen `/hero` y ficha completa `/sheet` con retrato (v0.4.1); falta la creación.*
 
 ## 🎨 Audiovisual · [audiovisual.md](planning/audiovisual.md)
 
-- [ ] 🟡 ◐ **Sistema de imágenes**: catálogo de activos + `file_id` de Telegram; una imagen por lugar y retratos de NPC. *Hecho en v0.3.0: carpetas del mundo, catálogo, caché de `file_id` y «Ver ciudad» en Crownreach; faltan las imágenes de cada lugar («Ver lugar») y los retratos de NPC.*
+- [ ] 🟡 ◐ **Sistema de imágenes**: catálogo de activos + `file_id` de Telegram; una imagen por lugar y retratos de NPC. *Hecho en v0.3.0: carpetas del mundo, catálogo, caché de `file_id` y «Ver ciudad» en Crownreach; retratos de Paladín, Guerrero, Pícaro y Sacerdote en v0.4.1. Faltan retratos de Mago, Druida y Bardo, las imágenes de cada lugar («Ver lugar») y los retratos de NPC.*
+- [ ] 🟡 **Retratos masculinos y femeninos** de cada clase, para que el jugador elija el suyo al crear el personaje.
 - [ ] 🟡 **Canciones en las tabernas**: botón «Escuchar ambiente» con música en bucle (empezar por La Corona Rota).
 - [ ] 🟡 **Voces para personajes importantes** (Bram, Tessa, el Guardián de la Cripta) como notas de voz OGG/Opus.
 - [ ] 🟢 **Stickers por personaje**: pack con los retratos y expresiones de los NPC.
@@ -76,3 +76,6 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] Guerrero y Sacerdote; tipos de daño y de criatura (v0.2.0).
 - [x] Documentos de diseño en `planning/referencias/` y planning ampliado (v0.2.1).
 - [x] Hoja de héroe (`/hero`) y límite de 150 llamadas de IA al día por jugador (v0.2.2).
+- [x] Mundo en carpetas, catálogo de imágenes con caché de `file_id` y «Ver ciudad» en Crownreach (v0.3.0).
+- [x] Mago, Druida y Bardo; tiradas de salvación y CD de conjuro, área y control (v0.4.0).
+- [x] Retratos de 4 clases; `/hero` como resumen y `/sheet` como ficha completa con retrato (v0.4.1).
