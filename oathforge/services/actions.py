@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from oathforge import recorder
 from oathforge.ai import intent_parser, narrator, npc_dialogue
 from oathforge.ai.client import LLM
 from oathforge.ai.intent_parser import ActionContext, Intent
@@ -95,9 +96,12 @@ async def handle_free_text(llm: LLM, user_id: int, text: str, rng: random.Random
                         result={"ok": outcome.ok, "events": [e.key for e in outcome.events]})
         scene = get_content().locations[char.location].name.en
         who = describe_character(char)
+        char_id = char.id
 
     narration = await narrator.narrate(llm, lang=lang, scene=scene, character=who, player_text=text,
                                        facts=facts(outcome), user_id=user_id)
+    recorder.action(user_id=user_id, character_id=char_id, text=text, intent=intent.model_dump(),
+                    ok=outcome.ok, events=[e.key for e in outcome.events], narration=narration)
     return FreeTextResult(outcome, narration, intent=intent)
 
 

@@ -21,6 +21,20 @@ Antes de editar nada, comprueba la rama (`git branch --show-current`) y el usuar
 
 - No añadas `Co-Authored-By` ni ninguna atribución a Claude en commits ni en PR.
 
+## Versionado (obligatorio en cada commit)
+
+- La versión vive solo en `oathforge/__init__.py` (`__version__`); `pyproject.toml` la lee de ahí.
+- Cada commit con cambios sube la versión: **parche** `0.1.1 → 0.1.2` para arreglos y cambios pequeños; **menor** `0.1.x → 0.2.0` para una feature grande. `1.0.0` queda reservado para la primera versión pública estable.
+- En el mismo commit, añade la entrada en `CHANGELOG.md` (Añadido / Cambiado / Arreglado) y, si cambia el plan, `planning/roadmap.md`.
+- Asunto del commit: `vX.Y.Z: resumen corto`. Cuerpo: la misma lista de cambios que el CHANGELOG.
+- Los commits automáticos de la Action de TODO no suben versión.
+- `CHANGELOG.md` sirve de contexto: léelo para saber qué cambió y cuándo.
+
+## planning/ y artifacts/
+
+- `planning/`: ideas y decisiones de diseño por tema (clases, combate, comercio…). Actualízala cuando una idea se implemente o se decida algo.
+- `artifacts/` (ignorada por git): registro local de partidas para depurar y analizar: conversaciones, eventos, combates, llamadas a Gemini y errores (`oathforge/recorder.py`). **No la leas salvo que la tarea lo requiera** (depurar un bug concreto, analizar una partida o el balance). Si hace falta, localiza el archivo concreto por fecha, `telegram_id` o id de combate y lee solo ese; nunca la recorras entera.
+
 ## Reglas del proyecto
 
 - **La IA nunca decide resultados.** Interpreta texto → intención; el motor valida, tira dados y guarda; la IA narra lo que pasó.

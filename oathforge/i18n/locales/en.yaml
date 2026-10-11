@@ -19,6 +19,7 @@ help:
     The Dungeon Master interprets your action, the engine rolls the dice, and you see what really happened.
 
     Commands: /look /sheet /inventory /journal /language
+  version: "<i>Oathforge v{version}</i>"
 
 lang:
   choose: "Choose your language:"

@@ -84,6 +84,17 @@ Todo vive en `content/*.yaml`. Cada texto visible es `{es: ..., en: ...}`. Al ar
 
 Las misiones son máquinas de estados: `stages`, `actions` (botones o acciones libres con tirada opcional) y `triggers` (p. ej. derrotar a un monstruo). Los efectos disponibles son `give_item`, `take_item`, `gold`, `xp`, `reputation`, `set_flag`, `npc_memory`, `trust`, `damage` y `world_rumor`.
 
+## Versiones, planning y artifacts
+
+- **Versión** en `oathforge/__init__.py`; cambios en [CHANGELOG.md](CHANGELOG.md). Cada commit sube la versión (`0.1.1 → 0.1.2`; `0.2.0` para features grandes) y su asunto empieza por `vX.Y.Z:`.
+- **[planning/](planning/)**: ideas y decisiones por tema (clases, combate, comercio, roadmap…).
+- **`artifacts/`** (local, no se sube): cada partida queda registrada para depurar y analizar.
+  - `conversations/<día>/<telegram_id>.md`: lo que escribe el jugador y lo que responde el bot.
+  - `battles/<día>/<id>-<lugar>.md` y `.json`: combates turno a turno con tiradas y resultado.
+  - `ai/<día>/…json`: cada llamada a Gemini con prompt, respuesta, modelo, tokens y latencia.
+  - `events/<día>.jsonl` (todo en crudo) y `errors/<día>.log`.
+  - Se desactiva con `ARTIFACTS_ENABLED=false` en `.env`.
+
 ## Cómo colaborar
 
 Cada persona trabaja en su rama: `josue-development`, `rayko-development` o `edian-development`.

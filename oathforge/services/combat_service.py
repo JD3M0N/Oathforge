@@ -5,6 +5,7 @@ import random
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from oathforge import recorder
 from oathforge.content import get_content
 from oathforge.database.models import Character, CombatAction, Encounter, EncounterParticipant
 from oathforge.engine import combat as engine
@@ -12,7 +13,7 @@ from oathforge.engine.combat import Action, AttackProfile, Combatant, CombatErro
 from oathforge.engine.dice import roll
 from oathforge.i18n import t
 from oathforge.services import characters, inventory, quests
-from oathforge.services.events import Event, Outcome
+from oathforge.services.events import Event, Outcome, render_event
 
 
 def ability_defs(char: Character) -> dict:
@@ -70,6 +71,7 @@ async def start_encounter(
     out.add("combat.start", enemies=_names_list([state.combatants[k] for k in state.combatants if k != "p1"]))
     out.events += [log_event(state, e) for e in logs]
     await _sync_and_maybe_finish(session, char, enc, state, rng, out)
+    _record(enc, char, state, None, logs)
     return enc, out
 
 
@@ -94,7 +96,19 @@ async def act(
     out = Outcome(encounter_id=enc.id)
     out.events += [log_event(state, e) for e in logs]
     await _sync_and_maybe_finish(session, char, enc, state, rng, out)
+    _record(enc, char, state, action, logs)
     return out
+
+
+def _record(enc: Encounter, char: Character, state: EncounterState, action: Action | None,
+            logs: list[LogEntry]) -> None:
+    """Debug copy of the encounter in artifacts/battles/ (full log, not the 30-entry window)."""
+    recorder.battle(
+        enc.id, enc.location, character=f"{char.name} ({char.class_key} {char.level})",
+        actor_action=action.model_dump(exclude_none=True) if action else None,
+        lines=[render_event(log_event(state, e), "es") for e in logs],
+        raw=[e.model_dump(mode="json") for e in logs], state=state.model_dump(mode="json"),
+    )
 
 
 async def _sync_and_maybe_finish(session, char, enc, state: EncounterState, rng, out: Outcome) -> None:

@@ -15,6 +15,7 @@ from typing import Literal, Protocol, TypeVar
 from pydantic import BaseModel, ValidationError
 from sqlalchemy import func, select
 
+from oathforge import recorder
 from oathforge.config import Settings, get_settings
 from oathforge.database.models import AiUsage
 from oathforge.database.session import session_scope
@@ -126,8 +127,12 @@ class GeminiLLM:
         )
 
     async def _generate(self, tier: Tier, system: str, prompt: str, user_id: int | None, schema=None):
+        purpose = schema.__name__ if schema else "text"
         if not await self.budget.allow(user_id):
+            self._record(tier, None, purpose, system, prompt, None, "budget exhausted", None, None, user_id)
             return None
+        started = time.monotonic()
+        error = None
         models = self._candidates(tier)
         for attempt, model in enumerate(models):
             if attempt and model == models[attempt - 1]:
@@ -139,9 +144,11 @@ class GeminiLLM:
                     timeout=self.s.ai_timeout_seconds,
                 )
             except Exception as e:  # network, quota, timeout: degrade gracefully
+                error = f"{model}: {str(e) or type(e).__name__}"
                 code = getattr(e, "code", None)
                 if isinstance(code, int) and code not in TRANSIENT_CODES:
                     log.error("gemini call to %s rejected (%s), check the configuration: %s", model, code, e)
+                    self._record(tier, model, purpose, system, prompt, None, error, None, started, user_id)
                     return None
                 self._cooldown_until[model] = time.monotonic() + self.s.ai_model_cooldown_seconds
                 log.warning("gemini call to %s failed (attempt %d): %s", model, attempt + 1,
@@ -153,8 +160,22 @@ class GeminiLLM:
                 getattr(usage, "prompt_token_count", 0) or 0,
                 (getattr(usage, "candidates_token_count", 0) or 0) + (getattr(usage, "thoughts_token_count", 0) or 0),
             )
+            self._record(tier, model, purpose, system, prompt, resp.text, error, usage, started, user_id)
             return resp.text
+        self._record(tier, None, purpose, system, prompt, None, error, None, started, user_id)
         return None
+
+    @staticmethod
+    def _record(tier, model, purpose, system, prompt, response, error, usage, started, user_id) -> None:
+        """Debug copy of the call in artifacts/ai/ (error = earlier failed attempt, if any)."""
+        recorder.ai_call(
+            tier=tier, model=model, purpose=purpose, system=system, prompt=prompt, response=response,
+            error=error, user_id=user_id,
+            prompt_tokens=getattr(usage, "prompt_token_count", 0) or 0,
+            output_tokens=(getattr(usage, "candidates_token_count", 0) or 0)
+            + (getattr(usage, "thoughts_token_count", 0) or 0),
+            latency_ms=int((time.monotonic() - started) * 1000) if started else 0,
+        )
 
     async def json(self, *, tier: Tier, system: str, prompt: str, schema: type[M], user_id: int | None) -> M | None:
         raw = await self._generate(tier, system, prompt, user_id, schema)

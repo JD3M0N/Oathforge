@@ -28,6 +28,14 @@ async def _pick_url(tmp_dir) -> str:
         return f"sqlite+aiosqlite:///{tmp_dir}/test.db"
 
 
+@pytest.fixture(scope="session", autouse=True)
+def artifacts_dir(tmp_path_factory):
+    """Debug artifacts from tests go to a temp dir, never to the repo's artifacts/."""
+    settings = get_settings()
+    settings.artifacts_dir = tmp_path_factory.mktemp("artifacts")
+    return settings.artifacts_dir
+
+
 @pytest.fixture
 async def database(tmp_path_factory):
     global _URL

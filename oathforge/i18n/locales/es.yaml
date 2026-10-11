@@ -19,6 +19,7 @@ help:
     El Dungeon Master interpreta tu acción, el motor tira los dados y tú ves el resultado real.
 
     Comandos: /look /sheet /inventory /journal /language
+  version: "<i>Oathforge v{version}</i>"
 
 lang:
   choose: "Elige tu idioma:"

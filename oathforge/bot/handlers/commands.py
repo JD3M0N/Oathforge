@@ -3,6 +3,7 @@
 from telegram import Update
 from telegram.ext import CommandHandler, ContextTypes
 
+from oathforge import __version__
 from oathforge.bot import render
 from oathforge.bot.handlers.common import current_view, load, send
 from oathforge.bot.keyboards import btn, cb, markup
@@ -35,7 +36,9 @@ async def help_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     async with session_scope() as session:
         user, _ = await load(session, update)
         lang = user.language
-    await send(update, t(lang, "help.text"))
+    await send(update, t(lang, "help.text") + "
+
+" + t(lang, "help.version", version=__version__))
 
 
 def handlers() -> list[CommandHandler]:

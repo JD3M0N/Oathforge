@@ -25,6 +25,10 @@ class Settings(BaseSettings):
     ai_timeout_seconds: float = 20.0
     ai_model_cooldown_seconds: float = 120.0
 
+    # debug artifacts (conversations, battles, AI calls); git-ignored, see oathforge/recorder.py
+    artifacts_enabled: bool = True
+    artifacts_dir: Path = ROOT_DIR / "artifacts"
+
     default_language: str = "es"
     supported_languages: tuple[str, ...] = ("es", "en")
 

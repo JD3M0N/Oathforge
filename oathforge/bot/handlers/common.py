@@ -8,6 +8,7 @@ from telegram import Chat, InlineKeyboardMarkup, Update
 from telegram.constants import ChatAction, ParseMode
 from telegram.ext import ContextTypes
 
+from oathforge import recorder
 from oathforge.bot import render
 from oathforge.database.models import Character, User
 from oathforge.services import characters, combat_service
@@ -66,9 +67,16 @@ async def current_view(session: AsyncSession, char: Character, lang: str) -> tup
     return await render.scene(session, char, lang)
 
 
+def _record(update: Update, text: str, kb: InlineKeyboardMarkup | None, edited: bool) -> None:
+    if update.effective_user is not None:
+        buttons = [b.text for row in kb.inline_keyboard for b in row] if kb else []
+        recorder.outgoing(update.effective_user.id, text, buttons, edited=edited)
+
+
 async def send(update: Update, text: str, kb: InlineKeyboardMarkup | None = None) -> None:
     await update.effective_chat.send_message(text, parse_mode=ParseMode.HTML, reply_markup=kb,
                                              disable_web_page_preview=True)
+    _record(update, text, kb, edited=False)
 
 
 async def edit_or_send(update: Update, text: str, kb: InlineKeyboardMarkup | None = None) -> None:
@@ -77,6 +85,7 @@ async def edit_or_send(update: Update, text: str, kb: InlineKeyboardMarkup | Non
         try:
             await q.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=kb,
                                       disable_web_page_preview=True)
+            _record(update, text, kb, edited=True)
             return
         except Exception:  # message too old / not modified: fall back to a new message
             pass
