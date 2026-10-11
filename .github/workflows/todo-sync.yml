@@ -1,0 +1,39 @@
+# Testers push their TODO file to their own branch; this copies only that file to main.
+name: todo-sync
+
+on:
+  push:
+    branches: [rayko-development, edian-development]
+    paths: ["TODO-*.md"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: todo-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Copy the tester's TODO into main
+        env:
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          name="${BRANCH%-development}"
+          file="TODO-${name}.md"
+          git fetch origin "$BRANCH"
+          git checkout "origin/$BRANCH" -- "$file"
+          if git diff --cached --quiet; then
+            echo "$file unchanged"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "todo: sync $file from $BRANCH"
+          git push origin HEAD:main

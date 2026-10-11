@@ -84,6 +84,23 @@ Todo vive en `content/*.yaml`. Cada texto visible es `{es: ..., en: ...}`. Al ar
 
 Las misiones son máquinas de estados: `stages`, `actions` (botones o acciones libres con tirada opcional) y `triggers` (p. ej. derrotar a un monstruo). Los efectos disponibles son `give_item`, `take_item`, `gold`, `xp`, `reputation`, `set_flag`, `npc_memory`, `trust`, `damage` y `world_rumor`.
 
+## Cómo colaborar
+
+Cada persona trabaja en su rama: `josue-development`, `rayko-development` o `edian-development`.
+
+- **TODO de testers:** edita tu `TODO-<nombre>.md` en tu rama y haz `git push`. Una GitHub Action copia ese archivo a `main` al momento.
+- **Código:** abre un pull request de tu rama a `main`. Necesita la aprobación de Josue.
+- **Mantente al día:** `git fetch` y `git merge origin/main` en tu rama antes de empezar.
+
+```powershell
+git clone https://github.com/JD3M0N/Oathforge.git
+cd Oathforge
+git switch rayko-development   # o edian-development
+# ...edita TODO-rayko.md...
+git commit -am "todo: bugs de la cripta"
+git push
+```
+
 ## Pendiente (siguientes fases)
 
 - Grupos cooperativos, combate en grupo y PvP (fase 3).
