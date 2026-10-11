@@ -11,4 +11,5 @@ Edita este archivo en tu rama `rayko-development` y haz `git push`: se copia sol
 <!-- - [ ] ... -->
 
 ## Probado y OK
+- [x] Prueba de sincronización del TODO (puedes borrar esta línea)
 <!-- - [x] Creación de personaje Paladín -->
