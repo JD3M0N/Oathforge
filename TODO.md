@@ -9,7 +9,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 ## 🤖 IA y costes · [ia-y-narracion.md](planning/ia-y-narracion.md)
 
 - [ ] 🔴 ◐ **Al menos dos modelos de IA**: uno rápido para interpretar y decidir qué tirada pedir, y otro para agentes y memoria. *Hoy hay rápido + narrativo; falta el de memoria y resúmenes en segundo plano.*
-- [ ] 🔴 ◐ **Límite de llamadas**: por minuto, por usuario y global, con longitud máxima de escena. *El presupuesto diario ya existe en `oathforge/ai/client.py`.*
+- [ ] 🔴 ◐ **Límite de llamadas**: por minuto, por usuario y global, con longitud máxima de escena. *Hecho (v0.2.2): 150 llamadas/día por jugador, aviso al agotarse y contador en `/hero`. Falta: límite de IA por minuto y longitud máxima de escena.*
 - [ ] 🟡 Medir el coste de IA por jugador y hora, y por función (interpretar, narrar, resumir).
 - [ ] 🟡 Caché de narraciones de escenas estáticas («escena + versión de contexto»).
 - [ ] 🟡 Memoria de NPC en tres capas: episódica, relacional y semántica.
@@ -30,6 +30,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🟡 Siguiente clase: Mago, Explorador o Bardo.
 - [ ] 🟢 Juramentos con consecuencias, títulos y cicatrices en la ficha.
 - [ ] 🟢 Ranuras de equipo y objetos con procedencia (quién los fabricó o encontró).
+- [ ] 🟢 ◐ Mejorar ficha de personaje, tanto creación como atributos. *Hoja de héroe hecha (v0.2.2); falta la creación.*
 
 ## 🎨 Audiovisual · [audiovisual.md](planning/audiovisual.md)
 
@@ -74,3 +75,4 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] Registro de partidas en `artifacts/` para depurar y analizar (v0.1.1).
 - [x] Guerrero y Sacerdote; tipos de daño y de criatura (v0.2.0).
 - [x] Documentos de diseño en `planning/referencias/` y planning ampliado (v0.2.1).
+- [x] Hoja de héroe (`/hero`) y límite de 150 llamadas de IA al día por jugador (v0.2.2).

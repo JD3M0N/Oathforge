@@ -4,6 +4,16 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.2.2] - 2026-10-11
+
+### Añadido
+- **Hoja de héroe**: el botón «🦸 Héroe» y el nuevo comando `/hero` (`/sheet` sigue funcionando) muestran una ficha detallada con barras de PV y XP, atributos en tabla (★ en el principal de la clase), equipo con daño y CA, competencias con su bonificador, habilidades de clase con usos y las de niveles futuros bloqueadas, reputación con etiqueta (hostil, neutral, amistoso…) y rasgo del linaje. Botones directos a Inventario y Diario.
+- La hoja muestra las llamadas al Dungeon Master usadas hoy y las que quedan.
+- Aviso al jugador cuando agota su presupuesto diario de IA, en acciones libres y en conversaciones.
+
+### Cambiado
+- Límite de IA en la fase de testeo: **150 llamadas al día por jugador** (antes 200).
+
 ## [0.2.1] - 2026-10-11
 
 ### Añadido

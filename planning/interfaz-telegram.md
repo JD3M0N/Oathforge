@@ -4,7 +4,7 @@ Cómo se ve y se siente el juego dentro del chat. Fuente: [GDD](referencias/gdd-
 
 ## Estado actual
 
-- Comandos: `/start` (crear personaje), `/look`, `/sheet`, `/inventory`, `/journal`, `/language`, `/help` y `/cancel` (`oathforge/bot/handlers/commands.py`, `creation.py`).
+- Comandos: `/start` (crear personaje), `/look`, `/hero` (alias `/sheet`: hoja de héroe con barras de PV y XP, atributos, equipo, habilidades bloqueadas por nivel, reputación y uso diario de IA, v0.2.2), `/inventory`, `/journal`, `/language`, `/help` y `/cancel` (`oathforge/bot/handlers/commands.py`, `creation.py`).
 - Escenas con botones inline y texto libre que interpreta Gemini; el panel de combate es un mensaje con botones.
 - Solo chat privado.
 

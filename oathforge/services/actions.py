@@ -12,7 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from oathforge import recorder
 from oathforge.ai import intent_parser, narrator, npc_dialogue
-from oathforge.ai.client import LLM
+from oathforge.ai.client import LLM, usage_today, user_exhausted
 from oathforge.ai.intent_parser import ActionContext, Intent
 from oathforge.content import get_content
 from oathforge.database.models import Character, User
@@ -77,6 +77,8 @@ async def handle_free_text(llm: LLM, user_id: int, text: str, rng: random.Random
         if char is None:
             return FreeTextResult(Outcome.refused("start.need_character"))
         lang = user.language
+        if user_exhausted(*await usage_today(session, user_id)):
+            return FreeTextResult(Outcome.refused("ai.budget_exhausted"))
         ctx = await build_context(session, char, lang)
 
     intent = await intent_parser.parse(llm, ctx, text, user_id)
@@ -161,6 +163,8 @@ async def talk(llm: LLM, user_id: int, npc_key: str, text: str) -> tuple[str, Ou
         lang = user.language
         if npc is None or npc_key not in exploration.npcs_present(char.location):
             return "", Outcome.refused("talk.err.not_here")
+        if user_exhausted(*await usage_today(session, user_id)):
+            return t(lang, "talk.fallback", npc=npc.name.get(lang)), Outcome().add("ai.budget_exhausted")
         rel = await npcs.relationship(session, npc_key, char)
         trust = rel.trust
         memories = [m.text for m in await npcs.recall(session, npc_key, char)]

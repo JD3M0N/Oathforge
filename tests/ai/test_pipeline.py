@@ -130,3 +130,14 @@ async def test_budget_blocks_after_limit():
     async with session_scope() as s:
         row = await s.scalar(select(AiUsage).where(AiUsage.user_id == uid, AiUsage.day == date.today()))
         assert row.calls == 2 and row.prompt_tokens == 20
+
+
+async def test_exhausted_budget_tells_the_player(llm):
+    uid, _ = await setup_char()
+    budget = Budget(Settings())
+    for _ in range(Settings().ai_user_daily_calls):
+        await budget.record(uid, "m", 1, 1)
+    res = await actions.handle_free_text(llm, uid, "salgo a la plaza", random.Random(0))
+    assert res.outcome.error == "ai.budget_exhausted" and not llm.prompts
+    line, out = await actions.talk(llm, uid, "bram", "hola")
+    assert line and out.events[0].key == "ai.budget_exhausted" and not llm.prompts

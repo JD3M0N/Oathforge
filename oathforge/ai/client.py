@@ -41,6 +41,21 @@ class NullLLM:
         return None
 
 
+async def usage_today(session, user_id: int) -> tuple[int, int]:
+    """(calls, tokens) the player has spent today. Read-only; the hero sheet shows it."""
+    row = (await session.execute(
+        select(func.coalesce(func.sum(AiUsage.calls), 0),
+               func.coalesce(func.sum(AiUsage.prompt_tokens + AiUsage.output_tokens), 0))
+        .where(AiUsage.day == date.today(), AiUsage.user_id == user_id)
+    )).one()
+    return int(row[0]), int(row[1])
+
+
+def user_exhausted(calls: int, tokens: int, settings: Settings | None = None) -> bool:
+    s = settings or get_settings()
+    return calls >= s.ai_user_daily_calls or tokens >= s.ai_user_daily_tokens
+
+
 class Budget:
     def __init__(self, settings: Settings):
         self.s = settings
@@ -60,12 +75,7 @@ class Budget:
                 log.warning("global AI budget at %d/%d calls today", global_calls, self.s.ai_global_daily_calls)
             if user_id is None:
                 return True
-            row = (await session.execute(
-                select(func.coalesce(func.sum(AiUsage.calls), 0),
-                       func.coalesce(func.sum(AiUsage.prompt_tokens + AiUsage.output_tokens), 0))
-                .where(AiUsage.day == today, AiUsage.user_id == user_id)
-            )).one()
-            return row[0] < self.s.ai_user_daily_calls and row[1] < self.s.ai_user_daily_tokens
+            return not user_exhausted(*await usage_today(session, user_id), self.s)
 
     async def record(self, user_id: int | None, model: str, prompt_tokens: int, output_tokens: int) -> None:
         today = date.today()

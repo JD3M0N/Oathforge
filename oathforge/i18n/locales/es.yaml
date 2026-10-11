@@ -4,6 +4,7 @@
 cmd:
   start: "Empezar o volver a la escena"
   look: "Mirar alrededor"
+  hero: "Hoja de héroe"
   sheet: "Ficha del personaje"
   inventory: "Inventario"
   journal: "Diario de aventuras"
@@ -18,7 +19,7 @@ help:
     También puedes <b>escribir lo que quieras hacer</b>: «me escondo tras la barra y escucho», «intento robarle la bolsa al tabernero», «empujo el carro sobre el bandido».
     El Dungeon Master interpreta tu acción, el motor tira los dados y tú ves el resultado real.
 
-    Comandos: /look /sheet /inventory /journal /language
+    Comandos: /look /hero /inventory /journal /language
   version: "<i>Oathforge v{version}</i>"
 
 lang:
@@ -56,7 +57,7 @@ btn:
   shop: "🛒 Comerciar"
   rest: "🛏️ Descansar ({cost} 🪙)"
   inventory: "🎒 Inventario"
-  sheet: "🧙 Ficha"
+  sheet: "🦸 Héroe"
   journal: "📜 Diario"
   back: "⬅️ Volver"
   leave: "👋 Despedirse"
@@ -121,13 +122,31 @@ inv:
     no_potion: "No te quedan pociones."
 
 sheet:
-  identity: "Nivel {level} · {lineage} · {cls} · {background}"
-  vitals: "❤️ {hp}/{max_hp} · 🛡️ CA {ac} · 🪙 {gold} · Competencia +{pb}"
-  xp: "✨ XP {xp} · para el siguiente nivel: {next}"
-  skills: "Competencias"
-  abilities: "Habilidades de clase"
-  reputation: "Reputación"
+  identity: "{cls} · nivel {level}"
+  hp: "❤️ PV {hp}/{max_hp}  {bar}"
+  xp: "✨ XP {xp}/{next}  {bar}"
+  xp_max: "✨ XP {xp} · nivel máximo"
+  vitals: "🛡️ CA {ac} · 🎯 Competencia +{pb} · 🪙 {gold}"
   injured: "🩹 Herido (descansa en una posada)"
+  attributes: "⚖️ Atributos"
+  gear: "⚔️ Equipo"
+  no_gear: "Nada equipado."
+  armor_ac: "CA base {ac}"
+  shield_ac: "+{ac} CA"
+  skills: "🎓 Competencias"
+  abilities: "✨ Habilidades de clase"
+  locked: "Nivel {level}: {name}"
+  reputation: "🏛️ Reputación"
+  rep:
+    hated: "odiado"
+    hostile: "hostil"
+    neutral: "neutral"
+    friendly: "amistoso"
+    honored: "venerado"
+  ai_usage: "🤖 Dungeon Master hoy: {calls}/{limit} · quedan {left}  {bar}"
+
+ai:
+  budget_exhausted: "🤖 El Dungeon Master ha agotado sus fuerzas por hoy. Sigue jugando con los botones; se recupera a medianoche."
 
 journal:
   title: "📜 <b>Diario de aventuras</b>"

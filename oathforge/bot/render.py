@@ -5,12 +5,14 @@ from html import escape
 from sqlalchemy.ext.asyncio import AsyncSession
 from telegram import InlineKeyboardMarkup
 
+from oathforge.ai.client import usage_today
 from oathforge.bot.keyboards import btn, cb, grid, markup, nonce
+from oathforge.config import get_settings
 from oathforge.content import get_content
 from oathforge.database.models import Character
 from oathforge.engine.checks import modifier, proficiency_bonus
 from oathforge.engine.combat import EncounterState, available_bonus_actions, valid_targets
-from oathforge.engine.progression import skill_rank, xp_to_next
+from oathforge.engine.progression import MAX_LEVEL, XP_THRESHOLDS, skill_rank
 from oathforge.i18n import t
 from oathforge.services import characters, combat_service, exploration, inventory, npcs, quests
 from oathforge.services.events import Outcome, render_event
@@ -155,41 +157,107 @@ async def sell_menu(session: AsyncSession, char: Character, npc_key: str, lang: 
 
 # ---------------------------------------------------------------- character
 
+SLOT_ICONS = {"main_hand": "🗡️", "ranged": "🏹", "off_hand": "🛡️", "body": "🥋"}
+RULE = "━━━━━━━━━━━━━━━━"
+
+
+def rep_label(value: int, lang: str) -> str:
+    tier = ("hated" if value <= -50 else "hostile" if value <= -10 else "neutral" if value < 10
+            else "friendly" if value < 50 else "honored")
+    return t(lang, f"sheet.rep.{tier}")
+
+
+def _gear_line(inst, lang: str) -> str:
+    item = get_content().items[inst.item_key]
+    if item.weapon:
+        detail = f"{item.weapon.damage} {t(lang, 'dmg.' + item.weapon.damage_type)}"
+    elif item.base_ac is not None:
+        detail = t(lang, "sheet.armor_ac", ac=item.base_ac)
+    elif item.ac_bonus:
+        detail = t(lang, "sheet.shield_ac", ac=item.ac_bonus)
+    else:
+        detail = ""
+    detail = f" · <i>{escape(detail)}</i>" if detail else ""
+    return f"{SLOT_ICONS.get(inst.equipped_slot, '•')} {escape(item.name.get(lang))}{detail}"
+
+
 async def sheet(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
     c = get_content()
     cls = c.classes[char.class_key]
     gear = await characters.equipped(session, char)
     skills = await characters.skills_of(session, char)
-    nxt = xp_to_next(char.xp)
+
+    # header + vitals
     lines = [
-        f"🧙 <b>{escape(char.name)}</b>",
-        t(lang, "sheet.identity", level=char.level, lineage=c.lineages[char.lineage].name.get(lang),
-          cls=cls.name.get(lang), background=c.backgrounds[char.background].name.get(lang)),
-        t(lang, "sheet.vitals", hp=char.hp, max_hp=char.max_hp, ac=characters.armor_class(char, gear),
-          gold=char.gold, pb=proficiency_bonus(char.level)),
-        t(lang, "sheet.xp", xp=char.xp, next=nxt if nxt is not None else "—"),
-        "",
-        " · ".join(f"{c.abilities[a].short.get(lang)} {char.abilities[a]} ({modifier(char.abilities[a]):+d})"
-                   for a in c.abilities),
-        "",
-        f"<b>{t(lang, 'sheet.skills')}</b>",
+        f"🦸 <b>{escape(char.name)}</b>",
+        t(lang, "sheet.identity", level=char.level, cls=cls.name.get(lang)),
+        f"<i>{escape(c.lineages[char.lineage].name.get(lang))} · "
+        f"{escape(c.backgrounds[char.background].name.get(lang))}</i>",
+        RULE,
+        t(lang, "sheet.hp", hp=char.hp, max_hp=char.max_hp, bar=hp_bar(char.hp, char.max_hp)),
     ]
+    if char.level < MAX_LEVEL:
+        lo, hi = XP_THRESHOLDS[char.level - 1], XP_THRESHOLDS[char.level]
+        lines.append(t(lang, "sheet.xp", xp=char.xp, next=hi, bar=hp_bar(char.xp - lo, hi - lo)))
+    else:
+        lines.append(t(lang, "sheet.xp_max", xp=char.xp))
+    lines.append(t(lang, "sheet.vitals", ac=characters.armor_class(char, gear), pb=proficiency_bonus(char.level),
+                   gold=char.gold))
+    if char.conditions.get("injured"):
+        lines.append(t(lang, "sheet.injured"))
+
+    # ability scores, two per row in a monospace block
+    cells = []
+    for a in c.abilities:
+        star = "★" if a == cls.primary else " "
+        score = char.abilities[a]
+        cells.append(f"{c.abilities[a].short.get(lang):<3} {score:>2} ({modifier(score):+d}){star}")
+    pairs = ["  ".join(cells[i:i + 2]) for i in range(0, len(cells), 2)]
+    lines += ["", f"<b>{t(lang, 'sheet.attributes')}</b>", "<code>" + escape("\n".join(pairs)) + "</code>"]
+
+    # equipment
+    lines += ["", f"<b>{t(lang, 'sheet.gear')}</b>"]
+    order = ("main_hand", "ranged", "off_hand", "body")
+    worn = [gear[slot] for slot in order if slot in gear]
+    lines += [_gear_line(inst, lang) for inst in worn] or [f"<i>{t(lang, 'sheet.no_gear')}</i>"]
+
+    # skills
+    lines += ["", f"<b>{t(lang, 'sheet.skills')}</b>"]
     for key, row in skills.items():
         if row.proficient or row.xp:
             mark = "●" if row.proficient else "○"
-            rank = f" ★{skill_rank(row.xp)}" if skill_rank(row.xp) else ""
-            lines.append(f"{mark} {c.skills[key].name.get(lang)} {characters.skill_bonus(char, skills, key):+d}{rank}")
+            rank = "★" * skill_rank(row.xp)
+            lines.append(f"{mark} {escape(c.skills[key].name.get(lang))} "
+                         f"<b>{characters.skill_bonus(char, skills, key):+d}</b> {rank}".rstrip())
+
+    # class abilities: unlocked with uses, locked ones show the level they unlock at
     lines += ["", f"<b>{t(lang, 'sheet.abilities')}</b>"]
     for key, a in cls.abilities.items():
         if a.level <= char.level:
             uses = char.resources.get(key)
-            suffix = f" ({uses}/{a.uses})" if a.uses else ""
-            lines.append(f"• {a.name.get(lang)}{suffix}: {a.description.get(lang)}")
-    lines += ["", f"<b>{t(lang, 'sheet.reputation')}</b>"]
-    for fac, value in (await npcs.reputations(session, char)).items():
-        lines.append(f"• {c.factions[fac].name.get(lang)}: {value:+d}")
-    lines += ["", f"<i>{c.lineages[char.lineage].trait_text.get(lang)}</i>"]
-    return "\n".join(lines), markup([[btn(t(lang, "btn.back"), cb("scene"))]])
+            suffix = f" ({a.uses if uses is None else uses}/{a.uses})" if a.uses else ""
+            lines.append(f"✨ <b>{escape(a.name.get(lang))}</b>{suffix}: {escape(a.description.get(lang))}")
+        else:
+            lines.append(f"🔒 <i>{t(lang, 'sheet.locked', level=a.level, name=escape(a.name.get(lang)))}</i>")
+
+    # reputation
+    reps = await npcs.reputations(session, char)
+    if reps:
+        lines += ["", f"<b>{t(lang, 'sheet.reputation')}</b>"]
+        for fac, value in reps.items():
+            lines.append(f"• {escape(c.factions[fac].name.get(lang))}: {value:+d} · {rep_label(value, lang)}")
+
+    lines += ["", f"🧬 <i>{escape(c.lineages[char.lineage].trait_text.get(lang))}</i>"]
+
+    # today's AI budget
+    limit = get_settings().ai_user_daily_calls
+    calls, _ = await usage_today(session, char.user_id)
+    left = max(0, limit - calls)
+    lines += [RULE, t(lang, "sheet.ai_usage", calls=calls, limit=limit, left=left, bar=hp_bar(left, limit))]
+
+    kb = markup([[btn(t(lang, "btn.inventory"), cb("inv")), btn(t(lang, "btn.journal"), cb("jr"))],
+                 [btn(t(lang, "btn.back"), cb("scene"))]])
+    return "\n".join(lines)[:MAX_MESSAGE], kb
 
 
 async def inventory_view(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:

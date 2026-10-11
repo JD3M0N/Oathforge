@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     gemini_model_narrative: str = "gemini-flash-latest"
     gemini_thinking_level: str = "low"  # narrative tier only; "" leaves the model default
 
-    ai_user_daily_calls: int = 200
+    ai_user_daily_calls: int = 150  # testing phase (0.2.x)
     ai_user_daily_tokens: int = 200_000
     ai_global_daily_calls: int = 5_000
     ai_timeout_seconds: float = 20.0

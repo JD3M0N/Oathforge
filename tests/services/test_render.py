@@ -86,3 +86,24 @@ async def test_all_views_render(lang):
         # the panel log must not leak raw i18n keys
         text, _ = render.combat_panel(char, enc.state, lang)
         assert "combat." not in text and "status." not in text and "dmg." not in text
+
+
+@pytest.mark.parametrize("lang", ["es", "en"])
+async def test_hero_sheet_shows_gear_and_ai_budget(lang):
+    from oathforge.ai.client import Budget
+    from oathforge.config import Settings
+
+    async with session_scope() as s:
+        user = await characters.get_or_create_user(s, 6, lang)
+        char = await characters.create_character(s, user, "Edda", "dwarf", "acolyte", "paladin")
+        user_id = user.id
+    await Budget(Settings()).record(user_id, "m", 1, 1)
+    async with session_scope() as s:
+        char = await characters.get_character(s, user_id)
+        text, kb = await render.sheet(s, char, lang)
+    check((text, kb))
+    limit = Settings().ai_user_daily_calls
+    assert f"1/{limit}" in text
+    assert Settings.model_fields["ai_user_daily_calls"].default == 150  # testing phase (0.2.x)
+    assert get_content().items["longsword"].name.get(lang) in text
+    assert "🔒" in text  # higher-level abilities appear locked

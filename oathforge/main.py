@@ -44,7 +44,7 @@ async def post_init(app: Application) -> None:
     for lang in ("es", "en"):
         await app.bot.set_my_commands(
             [BotCommand(cmd, t(lang, f"cmd.{cmd}")) for cmd in
-             ("start", "look", "sheet", "inventory", "journal", "language", "help")],
+             ("start", "look", "hero", "inventory", "journal", "language", "help")],
             language_code=lang,
         )
 

@@ -4,6 +4,7 @@
 cmd:
   start: "Start or return to the scene"
   look: "Look around"
+  hero: "Hero sheet"
   sheet: "Character sheet"
   inventory: "Inventory"
   journal: "Adventure journal"
@@ -18,7 +19,7 @@ help:
     You can also <b>type whatever you want to do</b>: "I hide behind the bar and listen", "I try to lift the keeper's purse", "I push the cart onto the bandit".
     The Dungeon Master interprets your action, the engine rolls the dice, and you see what really happened.
 
-    Commands: /look /sheet /inventory /journal /language
+    Commands: /look /hero /inventory /journal /language
   version: "<i>Oathforge v{version}</i>"
 
 lang:
@@ -56,7 +57,7 @@ btn:
   shop: "🛒 Trade"
   rest: "🛏️ Rest ({cost} 🪙)"
   inventory: "🎒 Inventory"
-  sheet: "🧙 Sheet"
+  sheet: "🦸 Hero"
   journal: "📜 Journal"
   back: "⬅️ Back"
   leave: "👋 Say goodbye"
@@ -121,13 +122,31 @@ inv:
     no_potion: "You have no potions left."
 
 sheet:
-  identity: "Level {level} · {lineage} · {cls} · {background}"
-  vitals: "❤️ {hp}/{max_hp} · 🛡️ AC {ac} · 🪙 {gold} · Proficiency +{pb}"
-  xp: "✨ XP {xp} · to next level: {next}"
-  skills: "Skills"
-  abilities: "Class abilities"
-  reputation: "Reputation"
+  identity: "{cls} · level {level}"
+  hp: "❤️ HP {hp}/{max_hp}  {bar}"
+  xp: "✨ XP {xp}/{next}  {bar}"
+  xp_max: "✨ XP {xp} · max level"
+  vitals: "🛡️ AC {ac} · 🎯 Proficiency +{pb} · 🪙 {gold}"
   injured: "🩹 Injured (rest at an inn)"
+  attributes: "⚖️ Attributes"
+  gear: "⚔️ Equipment"
+  no_gear: "Nothing equipped."
+  armor_ac: "base AC {ac}"
+  shield_ac: "+{ac} AC"
+  skills: "🎓 Skills"
+  abilities: "✨ Class abilities"
+  locked: "Level {level}: {name}"
+  reputation: "🏛️ Reputation"
+  rep:
+    hated: "hated"
+    hostile: "hostile"
+    neutral: "neutral"
+    friendly: "friendly"
+    honored: "honored"
+  ai_usage: "🤖 Dungeon Master today: {calls}/{limit} · {left} left  {bar}"
+
+ai:
+  budget_exhausted: "🤖 The Dungeon Master is spent for today. Keep playing with the buttons; it recovers at midnight."
 
 journal:
   title: "📜 <b>Adventure journal</b>"

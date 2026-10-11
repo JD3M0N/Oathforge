@@ -5,7 +5,7 @@
 - Gemini (`google-genai`): modelo rápido para interpretar intenciones y modelo narrativo para narrar. Si el narrativo falla, se usa el rápido con un enfriamiento.
 - **Regla de oro: la IA nunca decide resultados.** Interpreta → el motor valida y tira → la IA narra los hechos.
 - El texto del jugador va delimitado como datos; los ids se validan contra el contexto; las dificultades están acotadas.
-- Presupuesto diario por usuario y global; si se agota, se usan plantillas.
+- Presupuesto diario por usuario y global. En la fase de testeo (0.2.x), **150 llamadas al día por jugador** (`AI_USER_DAILY_CALLS`). Si se agota, se avisa al jugador y se juega con botones y plantillas; la hoja de héroe (`/hero`) muestra las llamadas usadas y las que quedan (v0.2.2).
 - NPC con persona, objetivos, secretos y memoria.
 - v0.1.1: cada llamada se guarda en `artifacts/ai/` (prompt, respuesta, modelo, tokens, latencia).
 
@@ -17,7 +17,7 @@
 - Medir el coste medio por jugador y hora con `artifacts/events/`.
 - Voz (TTS) para los NPC importantes (ver `audiovisual.md`).
 - **Un tercer modelo para memoria y agentes**: hoy hay uno rápido (intención) y uno narrativo. Un tercer uso, más barato y en segundo plano, resumiría recuerdos de NPC, rumores y el periódico, sin bloquear el turno del jugador. Siempre Gemini.
-- **Límites más finos**: además del presupuesto diario (por usuario y global, en `oathforge/ai/client.py`), un límite por minuto, una longitud máxima de escena y un registro del coste por función (interpretar, narrar, resumir, dialogar).
+- **Límites más finos**: además del presupuesto diario (por usuario y global, en `oathforge/ai/client.py`) y del límite de mensajes por minuto (`rate_ok` en `bot/handlers/common.py`), un límite por minuto específico de IA, una longitud máxima de escena y un registro del coste por función (interpretar, narrar, resumir, dialogar).
 
 ### Roles lógicos del DM (GDD §10.1)
 
