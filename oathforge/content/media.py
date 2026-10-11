@@ -3,7 +3,8 @@
 Convention, no manifest needed: every node folder (continent, zone, location) and every
 ``content/classes/<class>/`` folder (class portraits) may have an
 ``images/`` folder; files are sorted by name and a ``.night`` suffix (``panorama.night.jpg``)
-marks the night variant. Optional ``images/media.yaml`` holds credits and license per file.
+marks the night variant and ``.male`` / ``.female`` (``portrait.female.jpg``) a class
+portrait for that gender. Optional ``images/media.yaml`` holds credits and license per file.
 Telegram ``file_id``s are cached in the database by ``oathforge.services.media``.
 """
 
@@ -17,6 +18,7 @@ import yaml
 log = logging.getLogger(__name__)
 
 IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp"}
+GENDERS = ("male", "female")
 
 
 @dataclass(frozen=True)
@@ -25,6 +27,7 @@ class MediaAsset:
     path: Path
     night: bool
     checksum: str  # sha256: replacing the file invalidates the cached file_id
+    gender: str | None = None  # male | female; None: fits anyone
 
 
 @dataclass(frozen=True)
@@ -40,8 +43,14 @@ class MediaCatalog:
     def location_images(self, location: str, night: bool = False) -> list[MediaAsset]:
         return _pick(self.locations.get(location, ()), night)
 
-    def class_images(self, class_key: str) -> list[MediaAsset]:
-        return list(self.classes.get(class_key, ()))
+    def class_images(self, class_key: str, gender: str | None = None) -> list[MediaAsset]:
+        """One portrait: the character's gender, else a neutral one, else whatever the class has."""
+        assets = self.classes.get(class_key, ())
+        for match in ([a for a in assets if gender and a.gender == gender], [a for a in assets if a.gender is None],
+                      list(assets)):
+            if match:
+                return match[:1]
+        return []
 
 
 def _pick(assets: tuple[MediaAsset, ...], night: bool) -> list[MediaAsset]:
@@ -65,6 +74,7 @@ def scan_images(folder: Path, root: Path) -> tuple[MediaAsset, ...]:
             key=p.relative_to(root).as_posix(),
             path=p,
             night=".night" in p.suffixes,
+            gender=next((g for g in GENDERS if f".{g}" in p.suffixes), None),
             checksum=hashlib.sha256(p.read_bytes()).hexdigest(),
         )
         for p in files

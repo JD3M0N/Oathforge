@@ -13,10 +13,11 @@ from pydantic import BaseModel, Field
 from oathforge.engine.checks import check, dc_for
 from oathforge.engine.dice import d20, roll
 
-NEGATIVE_STATUSES = {"bleeding", "burning", "poisoned", "frightened", "stunned", "vulnerable", "asleep", "restrained"}
+NEGATIVE_STATUSES = {"bleeding", "burning", "poisoned", "frightened", "stunned", "vulnerable", "asleep", "restrained", "hexed"}
 DOT = {"bleeding": "1d4", "burning": "1d6"}
 BLESS_BONUS = 2
 INSPIRATION_DIE = "1d6"
+HEX_DIE = "1d6"  # necrotic, on every hit against a hexed target
 SKIP_TURN = ("stunned", "asleep")
 
 
@@ -321,6 +322,11 @@ def _use_ability(state, actor, action, ability, rng) -> list[LogEntry]:
                 logs += _apply_damage(state, t, amount // 2 if saved else amount, ability.damage_type or "force")
             if ability.status and not saved and t.active:
                 logs += _apply_status(t, ability.status, ability.status_turns)
+    elif ability.kind == "curse":
+        target = _resolve_target(state, actor, action.target, ranged=True)
+        logs.append(LogEntry(key="combat.ability", params={"actor": actor.id, "ability": action.ability}))
+        if ability.status:
+            logs += _apply_status(target, ability.status, ability.status_turns)
     elif ability.kind == "turn":
         targets = [e for e in state.enemies_of(actor) if e.creature_type == ability.targets_type]
         if not targets:
@@ -476,6 +482,8 @@ def _attack(state, attacker, target, profile: AttackProfile, rng, extra, weapon:
     if weapon and attacker.bonus_damage and not attacker.bonus_damage_used and not profile.ranged:
         attacker.bonus_damage_used = True
         extras.append((roll(attacker.bonus_damage, rng, crit).total, attacker.bonus_damage_type))
+    if attacker.side == "player" and "hexed" in target.statuses:
+        extras.append((roll(HEX_DIE, rng, crit).total, "necrotic"))
     sneak = 0
     if (
         attacker.sneak_dice and not attacker.sneak_used

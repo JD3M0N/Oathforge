@@ -399,3 +399,31 @@ def test_vicious_mockery_frightens_but_undead_are_immune():
     logs = cb.player_act(st, "p1", Action(kind="ability", ability="vicious_mockery", target="m1"),
                          FixedRng(2), ABILITIES)
     assert st.combatants["m1"].hp == 100 - 2 and any(e.key == "combat.immune" for e in logs)
+
+
+# ---------------------------------------------------------------- v0.4.4: warlock
+
+def test_hex_curses_without_save_and_uses_the_bonus_action():
+    st = started(player(abilities={"hex": 2}), monster(hp=100, max_hp=100))
+    logs = cb.player_act(st, "p1", Action(kind="ability", ability="hex", target="m1"), FixedRng(1), ABILITIES)
+    assert not any(e.key == "combat.save" for e in logs)
+    assert st.combatants["m1"].statuses["hexed"] == 3
+    p = st.combatants["p1"]
+    assert p.abilities["hex"] == 1 and p.bonus_used and not p.action_used
+
+
+def test_hits_on_a_hexed_target_add_necrotic_damage():
+    st = started(player(), monster(hp=100, max_hp=100, ac=1, statuses={"hexed": 3}))
+    logs = cb.player_act(st, "p1", Action(kind="attack", weapon="main", target="m1"), FixedRng(2), ABILITIES)
+    assert any(e.key == "combat.damage" and e.params["type"] == "necrotic" and e.params["amount"] == 2 for e in logs)
+    assert st.combatants["m1"].hp == 100 - (2 + 3) - 2
+    st = started(player(spell_to_hit=5, abilities={"eldritch_blast": None}),
+                 monster(hp=100, max_hp=100, ac=1, statuses={"hexed": 3}))
+    cb.player_act(st, "p1", Action(kind="ability", ability="eldritch_blast", target="m1"), FixedRng(2), ABILITIES)
+    assert st.combatants["m1"].hp == 100 - 2 - 2
+
+
+def test_hex_respects_immunity():
+    st = started(player(abilities={"hex": 2}), monster(hp=100, max_hp=100, immune=["hexed"]))
+    logs = cb.player_act(st, "p1", Action(kind="ability", ability="hex", target="m1"), FixedRng(1), ABILITIES)
+    assert any(e.key == "combat.immune" for e in logs) and "hexed" not in st.combatants["m1"].statuses

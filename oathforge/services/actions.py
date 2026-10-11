@@ -40,7 +40,8 @@ async def _load(session: AsyncSession, user_id: int, lock: bool = False) -> tupl
 
 def describe_character(char: Character) -> str:
     c = get_content()
-    return (f"{char.name}, level {char.level} {c.lineages[char.lineage].name.en} "
+    who = {"male": "man, ", "female": "woman, "}.get(char.gender or "", "")
+    return (f"{char.name}, {who}level {char.level} {c.lineages[char.lineage].name.en} "
             f"{c.classes[char.class_key].name.en}, HP {char.hp}/{char.max_hp}")
 
 

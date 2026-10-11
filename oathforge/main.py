@@ -16,6 +16,9 @@ from oathforge.i18n import t
 
 log = logging.getLogger("oathforge")
 
+# Telegram's "/" menu; each needs a cmd.<name> description in every locale.
+MENU_COMMANDS = ("start", "look", "hero", "sheet", "inventory", "journal", "language", "help")
+
 
 async def on_error(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
     log.exception("unhandled error", exc_info=context.error)
@@ -47,8 +50,7 @@ async def post_init(app: Application) -> None:
     init_engine()
     for lang in ("es", "en"):
         await app.bot.set_my_commands(
-            [BotCommand(cmd, t(lang, f"cmd.{cmd}")) for cmd in
-             ("start", "look", "hero", "inventory", "journal", "language", "help")],
+            [BotCommand(cmd, t(lang, f"cmd.{cmd}")) for cmd in MENU_COMMANDS],
             language_code=lang,
         )
 

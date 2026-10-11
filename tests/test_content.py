@@ -23,7 +23,7 @@ def test_content_loads_and_references_resolve():
     c = load_content()
     assert c.start_location in c.locations
     assert c.respawn_location in c.locations
-    assert len(c.classes) == 7 and len(c.monsters) == 6 and len(c.items) == 16 and len(c.npcs) == 4
+    assert len(c.classes) == 8 and len(c.monsters) == 6 and len(c.items) == 16 and len(c.npcs) == 4
 
 
 def test_every_text_has_both_languages():
@@ -123,6 +123,11 @@ def test_class_portraits_and_unknown_class_folder(tmp_path):
     for cls in ("paladin", "warrior", "rogue", "priest"):
         assert [a.key for a in c.media.class_images(cls)] == [f"classes/{cls}/images/portrait.jpg"]
     assert c.media.class_images("mage") == []  # no portrait yet: the sheet goes without photo
+    portrait = "classes/warlock/images/portrait.{}.jpg"
+    for gender in ("male", "female"):
+        assert [a.key for a in c.media.class_images("warlock", gender)] == [portrait.format(gender)]
+    assert [a.key for a in c.media.class_images("warlock")] == [portrait.format("female")]  # no gender: first file
+    assert [a.key for a in c.media.class_images("paladin", "female")] == ["classes/paladin/images/portrait.jpg"]
 
     shutil.copytree(CONTENT_DIR / "classes", tmp_path / "classes")
     (tmp_path / "classes/necromancer").mkdir()

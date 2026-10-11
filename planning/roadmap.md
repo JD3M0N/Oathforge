@@ -11,12 +11,13 @@ Versionado `0.x.y`: sube **y** (parche) en arreglos y cambios pequeños; sube **
 - **0.2.2**: hoja de héroe y límite de 150 llamadas de IA al día.
 - **0.3.0**: mundo en carpetas (continente → zona → lugar), catálogo de imágenes, caché de `file_id` y «Ver ciudad» en Crownreach.
 - **0.4.0**: Mago, Druida y Bardo; tiradas de salvación (DES/SAB), conjuros de área por fila, PV temporales.
+- **0.4.4**: Brujo (Maleficio y maldiciones sin salvación), elección de hombre o mujer con retrato por sexo y `/sheet` en el menú de comandos.
 
 ## Próximo (candidatos)
 
 - **0.2.x**: balance con datos de `artifacts/battles/` y ajustes de los testers.
 - **0.3.x**: imagen por lugar («Ver lugar») y retratos de NPC sobre el catálogo de 0.3.0.
-- **0.4.x**: balance de las 7 clases con datos de `artifacts/battles/`.
+- **0.4.x**: balance de las 8 clases con datos de `artifacts/battles/`.
 - **0.5.0**: especializaciones a nivel 5 (los datos ya existen).
 - **0.6.0**: economía: profesiones/crafteo y sumideros de oro (ver `comercio.md`).
 - **0.7.0**: grupos cooperativos y combate en grupo (fase 3, ver `multijugador.md`).

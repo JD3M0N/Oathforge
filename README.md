@@ -6,7 +6,7 @@ RPG narrativo multijugador para Telegram, ambientado en **Aetherfall**. Un Dunge
 
 ## Estado: v0.4.0, vertical slice en solitario (fases 1–2)
 
-- Creación de personaje: 4 linajes, 4 trasfondos, 7 clases (Paladín, Pícaro, Guerrero, Sacerdote, Mago, Druida, Bardo) con habilidades hasta nivel 5.
+- Creación de personaje: hombre o mujer, 4 linajes, 4 trasfondos, 8 clases (Paladín, Pícaro, Guerrero, Sacerdote, Mago, Druida, Bardo, Brujo) con habilidades hasta nivel 5.
 - Crownreach (plaza, taberna La Corona Rota, mercado), el Camino del Viejo Rey, el Bosque de los Susurros y la Cripta Hundida (5 salas + jefe).
 - Combate por turnos: iniciativa, acción/acción adicional/movimiento, vanguardia/retaguardia, críticos, ataque furtivo, conjuros, tiradas de salvación, área por filas, PV temporales, estados alterados y objetos del escenario.
 - Tipos de daño y de criatura: resistencias, vulnerabilidades e inmunidades (los esqueletos temen el contundente y lo radiante).

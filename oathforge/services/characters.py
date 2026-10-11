@@ -51,7 +51,8 @@ def starting_scores(class_key: str, lineage_key: str) -> dict[str, int]:
 
 
 async def create_character(
-    session: AsyncSession, user: User, name: str, lineage: str, background: str, class_key: str
+    session: AsyncSession, user: User, name: str, lineage: str, background: str, class_key: str,
+    gender: str | None = None,
 ) -> Character:
     c = get_content()
     cls, bg, lin = c.classes[class_key], c.backgrounds[background], c.lineages[lineage]
@@ -59,7 +60,7 @@ async def create_character(
     hp = progression.max_hp(cls.hit_die, modifier(scores["con"]), 1)
     char = Character(
         user_id=user.id, name=name.strip()[:NAME_MAX], lineage=lineage, background=background,
-        class_key=class_key, abilities=scores, level=1, xp=0, hp=hp, max_hp=hp, gold=bg.gold,
+        class_key=class_key, gender=gender, abilities=scores, level=1, xp=0, hp=hp, max_hp=hp, gold=bg.gold,
         location=c.start_location, state="idle", flags={}, conditions={},
         resources=full_resources(class_key, 1),
     )

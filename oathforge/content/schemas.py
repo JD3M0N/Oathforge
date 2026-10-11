@@ -71,8 +71,9 @@ class ClassAbility(Strict):
     # strike: weapon attack + extra_damage · spell: ranged spell attack for `damage`
     # turn: `damage` + `status` to every enemy of `targets_type` · buff: `status` on self
     # save: target (or the target's whole row) rolls a saving throw against `damage` / `status`
-    # surge: bonus action that gives the action back · heal · hide · passive
-    kind: Literal["strike", "spell", "turn", "buff", "surge", "heal", "hide", "save", "passive"]
+    # curse: `status` on one enemy, no save (Hex) · surge: bonus action that gives the action back
+    # heal · hide · passive
+    kind: Literal["strike", "spell", "turn", "buff", "surge", "heal", "hide", "save", "curse", "passive"]
     action: Literal["action", "bonus", "none"] = "action"
     uses: int | None = None  # per rest; None = unlimited
     damage: str | None = None
@@ -82,7 +83,7 @@ class ClassAbility(Strict):
     heal_dice: str | None = None
     heal_add: Literal["level", "casting"] | None = None
     status: Literal[
-        "blessed", "stunned", "frightened", "asleep", "restrained", "inspired", "wild_shape",
+        "blessed", "stunned", "frightened", "asleep", "restrained", "inspired", "wild_shape", "hexed",
     ] | None = None
     status_turns: int = 1
     targets_type: CreatureType | None = None

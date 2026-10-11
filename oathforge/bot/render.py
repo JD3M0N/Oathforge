@@ -195,7 +195,8 @@ def _sheet_top(c, cls, char: Character, gear: dict, lang: str) -> list[str]:
     lines = [
         f"🦸 <b>{escape(char.name)}</b>",
         t(lang, "sheet.identity", level=char.level, cls=cls.name.get(lang)),
-        f"<i>{escape(c.lineages[char.lineage].name.get(lang))} · "
+        f"<i>{t(lang, 'gender.' + char.gender) + ' · ' if char.gender else ''}"
+        f"{escape(c.lineages[char.lineage].name.get(lang))} · "
         f"{escape(c.backgrounds[char.background].name.get(lang))}</i>",
         RULE,
         t(lang, "sheet.hp", hp=char.hp, max_hp=char.max_hp, bar=hp_bar(char.hp, char.max_hp)),
@@ -400,7 +401,7 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
 
     if target_menu:
         kind, _, arg = target_menu.partition(":")
-        spell = kind == "abl" and arg in defs and defs[arg].kind in ("spell", "save")
+        spell = kind == "abl" and arg in defs and defs[arg].kind in ("spell", "save", "curse")
         ranged = any(a.key == arg and a.ranged for a in me.attacks) or kind == "obj" or spell
         for foe in valid_targets(state, me, ranged):
             rows.append([btn(f"🎯 {foe.name[lang]} ({foe.hp}/{foe.max_hp})", cb("cb", f"{target_menu}:{foe.id}", n))])

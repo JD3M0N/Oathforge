@@ -225,7 +225,7 @@ def _describe(table: str, op: str, row: dict, diff: dict) -> str:
     if table == "item_instances" and op != "update":
         return f"{'+' if op == 'insert' else '−'}{label} ×{row.get('qty')}"
     if op == "insert" and table == "characters":
-        return (f"personaje creado: {label} ({row.get('class_key')}, {row.get('lineage')}, {row.get('background')}) "
+        return (f"personaje creado: {label} ({row.get('class_key')}, {row.get('gender')}, {row.get('lineage')}, {row.get('background')}) "
                 f"PV {row.get('hp')}/{row.get('max_hp')}, oro {row.get('gold')}, en {row.get('location')}")
     noun = _NOUN.get(table, table)
     if op == "delete":

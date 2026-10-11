@@ -391,3 +391,67 @@ bard:
     diplomat: {es: Diplomático, en: Diplomat}
     war_chanter: {es: Cantor de Guerra, en: War Chanter}
     trickster: {es: Embaucador, en: Trickster}
+
+warlock:
+  name: {es: Brujo, en: Warlock}
+  description:
+    es: Selló un pacto con un poder oscuro; maldice a sus enemigos y los quiebra con energía sobrenatural.
+    en: Bound by a pact with a dark power; curses foes and breaks them with eldritch energy.
+  hit_die: 8
+  primary: cha
+  casting: cha
+  array: {cha: 15, con: 14, dex: 13, wis: 12, int: 10, str: 8}
+  skills: [arcana, intimidation]
+  items: {quarterstaff: 1, dagger: 1, leather_armor: 1, healing_potion: 1}
+  equip: [quarterstaff, leather_armor]
+  abilities:
+    eldritch_blast:
+      name: {es: Estallido Sobrenatural, en: Eldritch Blast}
+      description: {es: "Ataque de conjuro a distancia (CAR): 1d10 de daño de fuerza. Ilimitado.", en: "Ranged spell attack (CHA): 1d10 force damage. Unlimited."}
+      level: 1
+      kind: spell
+      damage: 1d10
+      damage_type: force
+    hex:
+      name: {es: Maleficio, en: Hex}
+      description: {es: "Acción adicional: maldices a un enemigo 3 turnos, sin salvación; cada golpe que le das suma 1d6 de daño necrótico.", en: "Bonus action: you curse one enemy for 3 turns, no save; each hit you land on it adds 1d6 necrotic damage."}
+      level: 1
+      kind: curse
+      action: bonus
+      uses: 2
+      status: hexed
+      status_turns: 3
+    shadow_armor:
+      name: {es: Armadura de Sombras, en: Shadow Armor}
+      description: {es: "Acción adicional: las sombras te envuelven y ganas 2d4 + CAR PV temporales.", en: "Bonus action: shadows wrap around you and you gain 2d4 + CHA temporary HP."}
+      level: 2
+      kind: buff
+      action: bonus
+      uses: 1
+      temp_hp: 2d4
+      heal_add: casting
+    void_whispers:
+      name: {es: Susurros del Vacío, en: Void Whispers}
+      description: {es: "Toda la fila del objetivo hace una salvación de SAB: 2d6 de daño psíquico, la mitad si la supera; quien falla queda con miedo 1 turno.", en: "The target's whole row makes a WIS save: 2d6 psychic damage, half on a success; those who fail are frightened for 1 turn."}
+      level: 3
+      kind: save
+      uses: 1
+      area: row
+      save: wis
+      damage: 2d6
+      damage_type: psychic
+      half_on_save: true
+      status: frightened
+      status_turns: 1
+    agonizing_blast:
+      name: {es: Estallido Agónico, en: Agonizing Blast}
+      description: {es: Sumas tu CAR al daño de tus conjuros., en: You add your CHA to the damage of your spells.}
+      level: 5
+      kind: passive
+      action: none
+      spell_damage_bonus: true
+  specializations:
+    fiend: {es: Pactista Infernal, en: Fiend Pact}
+    necromancer: {es: Nigromante, en: Necromancer}
+    hexblade: {es: Filo Maldito, en: Hexblade}
+    void: {es: Vacío, en: Void}

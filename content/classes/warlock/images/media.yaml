@@ -1,0 +1,11 @@
+# Créditos y licencia de cada archivo de esta carpeta (planning/audiovisual.md §Licencias).
+portrait.female.jpg:
+  author: Josue
+  source: generada con IA y aportada por Josue (2026-10-11)
+  license: uso propio del proyecto
+  notes: original 864x1184; recorte central y escala a 768x1024 con tools/prepare_image.py --kind portrait
+portrait.male.jpg:
+  author: Josue
+  source: generada con IA y aportada por Josue (2026-10-11)
+  license: uso propio del proyecto
+  notes: original 864x1184; quitada la franja inferior de 48 px (texto falso generado por la IA), luego recorte central y escala a 768x1024 con tools/prepare_image.py --kind portrait

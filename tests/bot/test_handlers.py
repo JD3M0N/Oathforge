@@ -96,10 +96,12 @@ class Player:
         await text.on_text(self.update(message=message), self.ctx)
 
 
-async def create(p: Player, cls="paladin"):
+async def create(p: Player, cls="paladin", gender="male"):
     assert await creation.start(p.update(message="/start"), p.ctx) == creation.NAME
     assert await creation.got_name(p.update(message="x"), p.ctx) == creation.NAME  # invalid name
-    assert await creation.got_name(p.update(message="Aldric"), p.ctx) == creation.LINEAGE
+    assert await creation.got_name(p.update(message="Aldric"), p.ctx) == creation.GENDER
+    assert await creation.got_gender(p.update(data="cc|gen:robot"), p.ctx) == creation.GENDER  # unknown
+    assert await creation.got_gender(p.update(data=f"cc|gen:{gender}"), p.ctx) == creation.LINEAGE
     assert await creation.got_lineage(p.update(data="cc|lin:human"), p.ctx) == creation.BACKGROUND
     assert await creation.got_background(p.update(data="cc|bg:soldier"), p.ctx) == creation.CLASS
     assert await creation.got_class(p.update(data=f"cc|cls:{cls}"), p.ctx) == creation.CONFIRM
@@ -235,6 +237,39 @@ async def test_mage_fireball_asks_for_a_target_and_rolls_saves(llm):
     assert any(t_ and "DEX save" in t_ for t_, _ in p.chat.sent)
 
 
+async def test_warlock_hex_is_a_bonus_action_with_a_target(llm):
+    p = Player(llm, tg_id=14, lang="en")
+    await create(p, cls="warlock")
+    async with session_scope() as s:
+        char = await s.scalar(select(Character).with_for_update())
+        char.location, char.flags = "whispering_woods", {"crypt_unlocked": True}
+        char.hp = char.max_hp = 400
+    await p.press("scene|-|-")
+    await p.press(p.find("trv"))
+    await p.press(p.find("go", "crypt_entrance"))
+    assert p.find("cb", "abl:eldritch_blast")
+    await p.press(p.find("cb", "abl:hex"))
+    if any(parse(b)[1].count(":") == 2 for b in p.buttons()):  # target menu shown
+        await p.press(next(b for b in p.buttons() if parse(b)[0] == "cb" and parse(b)[1].count(":") == 2))
+    async with session_scope() as s:
+        enc = await s.scalar(select(Encounter))
+        assert any("hexed" in c["statuses"] for c in enc.state["combatants"].values() if c["side"] == "enemy")
+    assert p.find("cb", "abl:eldritch_blast")  # the action is still free
+
+
+def test_sheet_is_in_the_telegram_command_menu():
+    from oathforge.bot.handlers import commands
+    from oathforge.i18n import t
+    from oathforge.main import MENU_COMMANDS
+
+    handled = {c for h in commands.handlers() for c in getattr(h, "commands", ())}
+    assert "sheet" in MENU_COMMANDS
+    for cmd in MENU_COMMANDS:
+        assert cmd == "start" or cmd in handled
+        for lang in ("es", "en"):
+            assert t(lang, f"cmd.{cmd}") != f"cmd.{cmd}"
+
+
 async def test_free_text_combat_and_injection(llm):
     p = Player(llm, tg_id=9)
     await create(p, cls="rogue")
@@ -299,3 +334,16 @@ async def test_full_sheet_without_portrait_shows_spellcasting(llm):
     await p.press("sheet|-|-")
     assert not p.chat.photos
     assert "Conjuros" in p.last[0] and "CD" in p.last[0]
+
+
+async def test_gender_picks_the_class_portrait_and_shows_on_the_sheet(llm):
+    from oathforge.content import get_content
+
+    p = Player(llm, tg_id=15)
+    await create(p, cls="warlock", gender="female")
+    char = await char_row()
+    assert char.gender == "female"
+    await p.press("sheet|-|-")
+    sent = get_content().media.class_images("warlock", "female")[0].path.read_bytes()
+    assert p.chat.photos == [sent]  # only her portrait, not both
+    assert "Mujer" in p.last[0]

@@ -115,6 +115,21 @@ async def test_create_mage_druid_bard():
         assert cb.casting_mod == 3 and [a.finesse for a in cb.attacks] == [True]
 
 
+async def test_create_warlock():
+    _, cid = await new_character(cls="warlock")  # human: every ability +1
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        assert char.gender is None  # created without choosing (as before v0.4.4)
+        assert char.resources == {"eldritch_blast": None, "hex": 2}
+        cb = await characters.build_combatant(s, char)
+        assert cb.row == "back" and cb.casting_mod == 3 and cb.spell_dc == 8 + 3 + 2 and cb.spell_damage_bonus == 0
+        from oathforge.services.events import Outcome
+        characters.grant_xp(char, 6500, Outcome())
+        assert {"shadow_armor", "void_whispers"} <= set(char.resources) and "agonizing_blast" not in char.resources
+        cb = await characters.build_combatant(s, char)
+        assert cb.spell_damage_bonus == cb.casting_mod > 0
+
+
 async def test_user_language_normalized():
     async with session_scope() as s:
         u = await characters.get_or_create_user(s, 99, "en-GB")

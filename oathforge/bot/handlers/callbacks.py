@@ -65,7 +65,7 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             await send(update, text, kb)  # the scene again, so its buttons stay below the photo
             return
         if verb == "sheet":
-            images = get_content().media.class_images(char.class_key)
+            images = get_content().media.class_images(char.class_key, char.gender)
             if images:  # portrait first, then the sheet as a new message so its buttons stay below
                 await send_photos(session, update, context, images, render.portrait_caption(char, lang))
                 text, kb = await render.sheet(session, char, lang)
@@ -246,7 +246,7 @@ def _needs_target(state, me, kind: str, key: str, defs) -> bool:
         return len(valid_targets(state, me, ranged)) > 1
     if kind == "abl":
         a = defs.get(key)
-        if a is None or a.kind not in ("strike", "spell", "save"):
+        if a is None or a.kind not in ("strike", "spell", "save", "curse"):
             return False
         return len(valid_targets(state, me, ranged=a.kind != "strike")) > 1
     if kind == "obj":

@@ -33,7 +33,7 @@ async def sheet(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         if char is None:
             text, kb = t(lang, "start.need_character"), None
         else:
-            images = get_content().media.class_images(char.class_key)
+            images = get_content().media.class_images(char.class_key, char.gender)
             if images:
                 await send_photos(session, update, context, images, render.portrait_caption(char, lang))
             text, kb = await render.sheet(session, char, lang)

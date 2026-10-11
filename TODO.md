@@ -26,15 +26,15 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 ## 🧙 Clases y progresión · [clases.md](planning/clases.md) · [progresion.md](planning/progresion.md)
 
 - [ ] 🔴 Elegir especialización a nivel 5. *La ficha completa ya muestra la especialización cuando exista.*
-- [ ] 🟡 Siguiente clase: Explorador (Mago, Druida y Bardo hechos en v0.4.0).
+- [ ] 🟡 Siguiente clase: Explorador (Mago, Druida y Bardo en v0.4.0; Brujo en v0.4.4).
 - [ ] 🟢 Juramentos con consecuencias, títulos y cicatrices en la ficha.
 - [ ] 🟢 Ranuras de equipo y objetos con procedencia (quién los fabricó o encontró).
 - [ ] 🟢 ◐ Mejorar ficha de personaje, tanto creación como atributos. *Hecho: hoja de héroe (v0.2.2), resumen `/hero` y ficha completa `/sheet` con retrato (v0.4.1); falta la creación.*
 
 ## 🎨 Audiovisual · [audiovisual.md](planning/audiovisual.md)
 
-- [ ] 🟡 ◐ **Sistema de imágenes**: catálogo de activos + `file_id` de Telegram; una imagen por lugar y retratos de NPC. *Hecho en v0.3.0: carpetas del mundo, catálogo, caché de `file_id` y «Ver ciudad» en Crownreach; retratos de Paladín, Guerrero, Pícaro y Sacerdote en v0.4.1. Faltan retratos de Mago, Druida y Bardo, las imágenes de cada lugar («Ver lugar») y los retratos de NPC.*
-- [ ] 🟡 **Retratos masculinos y femeninos** de cada clase, para que el jugador elija el suyo al crear el personaje.
+- [ ] 🟡 ◐ **Sistema de imágenes**: catálogo de activos + `file_id` de Telegram; una imagen por lugar y retratos de NPC. *Hecho en v0.3.0: carpetas del mundo, catálogo, caché de `file_id` y «Ver ciudad» en Crownreach; retratos de Paladín, Guerrero, Pícaro y Sacerdote en v0.4.1 y de Brujo y Bruja en v0.4.4. Faltan retratos de Mago, Druida y Bardo, las imágenes de cada lugar («Ver lugar») y los retratos de NPC.*
+- [ ] 🟡 ◐ **Retratos masculinos y femeninos** de cada clase, para que el jugador elija el suyo al crear el personaje. *Hecho (v0.4.4): elegir hombre o mujer al crear y retrato por sexo; el Brujo tiene los dos. Faltan las variantes del resto de clases.*
 - [ ] 🟡 **Canciones en las tabernas**: botón «Escuchar ambiente» con música en bucle (empezar por La Corona Rota).
 - [ ] 🟡 **Voces para personajes importantes** (Bram, Tessa, el Guardián de la Cripta) como notas de voz OGG/Opus.
 - [ ] 🟢 **Stickers por personaje**: pack con los retratos y expresiones de los NPC.
@@ -79,3 +79,4 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] Mundo en carpetas, catálogo de imágenes con caché de `file_id` y «Ver ciudad» en Crownreach (v0.3.0).
 - [x] Mago, Druida y Bardo; tiradas de salvación y CD de conjuro, área y control (v0.4.0).
 - [x] Retratos de 4 clases; `/hero` como resumen y `/sheet` como ficha completa con retrato (v0.4.1).
+- [x] Brujo jugable (Maleficio, `kind: curse`) con retrato de hombre y mujer, elección de sexo al crear y `/sheet` en el menú de comandos de Telegram (v0.4.4).

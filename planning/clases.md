@@ -13,8 +13,11 @@ Cada clase vive en `content/classes.yaml`: dado de golpe, característica princi
 | Mago (v0.4.0) | Daño de área y control | d6 | INT | Retaguardia | Rayo de Fuego, Armadura de Mago, Dormir, Bola de Fuego, Proyectil Mágico |
 | Druida (v0.4.0) | Control, curación y forma de bestia | d8 | SAB | Retaguardia | Látigo de Espinas, Curar Heridas, Enredar, Forma Salvaje, Furia Elemental |
 | Bardo (v0.4.0) | Apoyo, burla e hipnosis | d8 | CAR | Retaguardia | Burla Cruel, Inspiración Bárdica, Canción Sanadora, Patrón Hipnótico, Palabras Cortantes |
+| Brujo (v0.4.4) | Maldiciones y daño sostenido | d8 | CAR | Retaguardia | Estallido Sobrenatural, Maleficio, Armadura de Sombras, Susurros del Vacío, Estallido Agónico |
 
 Desde v0.4.0 hay **tiradas de salvación**: la CD de conjuro es 8 + competencia + característica de la clase, y los monstruos salvan con DES o SAB (las únicas que tienen). Las habilidades `save` afectan a un objetivo o a toda su fila (`area: row`).
+
+Desde v0.4.4 hay **maldiciones** (`kind: curse`): ponen un estado a un enemigo sin salvación. El Maleficio del Brujo deja al objetivo `hexed` 3 turnos y cada golpe con tirada de ataque (arma o conjuro) que recibe suma 1d6 necrótico.
 
 Especializaciones previstas (nivel 5):
 
@@ -25,13 +28,14 @@ Especializaciones previstas (nivel 5):
 - Mago: Piromante, Criomante, Arcanista, Cronomante.
 - Druida: Cambiaformas, Guardián, Invocador, Esporas.
 - Bardo: Ilusionista, Diplomático, Cantor de Guerra, Embaucador.
+- Brujo: Pactista Infernal, Nigromante, Filo Maldito, Vacío.
 
 ## Ideas
 
 - **Explorador**: enemigo predilecto por tipo de criatura (los monstruos ya tienen `type`), compañero animal, ventaja en el bosque.
 - **Bardo en grupo**: cuando llegue el combate en grupo, la Inspiración debería darse a un aliado; fuera de combate, ventaja en diálogo con NPC.
 - **Forma Salvaje** completa: hoy son PV temporales; podría cambiar los ataques por los de una bestia.
-- **Brujo**: pacto con una facción (Sindicato Carmesí), poderes que cambian con la reputación.
+- **Brujo con pacto de facción**: el patrón como facción (Sindicato Carmesí) y poderes que cambian con la reputación; hoy el Brujo es jugable sin pacto.
 - Especializaciones con una decisión real: cada una cambia una habilidad o añade un recurso, no solo números.
 - Multiclase: probablemente no; mejor especializaciones profundas.
 - Rasgos de linaje que interactúen con la clase (orco + guerrero, enano + sacerdote).
@@ -49,7 +53,7 @@ El GDD imagina 12 clases con 4 especializaciones cada una. Es una **visión**, n
 | Mago | Piromante, Criomante, Arcanista, Cronomante | Hechizos, área, preparación | ✅ |
 | Explorador | Cazador, Francotirador, Acechador, Trampero Salvaje | Rastreo, distancia, terreno | idea |
 | Bardo | Ilusionista, Diplomático, Cantor de Guerra, Embaucador | Inspiración, conversación, engaño | ✅ |
-| Brujo | Pactista Infernal, Nigromante, Hexblade, Vacío | Pactos, maldiciones, riesgo | idea |
+| Brujo | Pactista Infernal, Nigromante, Hexblade, Vacío | Pactos, maldiciones, riesgo | ✅ |
 | Druida | Cambiaformas, Guardián, Invocador, Esporas | Naturaleza, formas, control | ✅ |
 | Monje | Puño de Hierro, Espiritual, Sombra, Elemental | Recursos internos y combos | nueva |
 | Hechicero | Sangre Dracónica, Magia Salvaje, Tormenta, Astral | Poder innato | nueva |
@@ -73,6 +77,6 @@ Concentración, furia, fe, maná, preparación o inspiración. **Como máximo do
 - ¿Nivel máximo 5 o ampliamos a 10 antes de añadir más clases?
 - ¿Los conjuros usan espacios (estilo D&D) o una barra de fe/maná más simple para Telegram?
 - ¿Cuántos botones caben en el panel de combate antes de que sea incómodo? (hoy ~8–10)
-- ¿Qué clase entra después: Explorador (aprovecha los tipos de criatura) o Brujo (pactos con facciones)?
+- ¿El Explorador es la siguiente clase (aprovecha los tipos de criatura)?
 - ¿Entran algún día Monje, Hechicero o Artífice, o nos quedamos en 9 clases?
 - ¿Cada especialización tiene un árbol de 3 talentos (como en el GDD) o un único cambio fuerte?

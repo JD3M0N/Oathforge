@@ -26,6 +26,10 @@ lang:
   choose: "Choose your language:"
   changed: "Language set to English."
 
+gender:
+  male: "Man"
+  female: "Woman"
+
 start:
   need_character: "You don't have a character yet. Use /start to create one."
 
@@ -36,12 +40,16 @@ create:
     A world that existed before you and will go on after you leave. Taverns remember, factions scheme, and your deeds leave marks.
   ask_name: "What is your character's name? (2–24 letters)"
   bad_name: "That name won't do. Use 2 to 24 letters, spaces, apostrophes or hyphens."
+  ask_gender: "<b>{name}</b>, is your character a man or a woman? It sets their portrait and how the world speaks to them."
+  gender_btn:
+    male: "♂️ Man"
+    female: "♀️ Woman"
   ask_lineage: "<b>{name}</b>, what lineage do you come from?"
   ask_background: "Who were you before you became an adventurer?"
   ask_class: "Choose your class:"
   summary: |-
     <b>{name}</b>
-    {lineage} · {background} · {cls}
+    {gender} · {lineage} · {background} · {cls}
 
     {stats}
     Hit points: {hp}
@@ -297,6 +305,7 @@ status:
   restrained: "entangled"
   inspired: "inspiration"
   wild_shape: "wild shape"
+  hexed: "hexed"
   icon:
     bleeding: "🩸"
     burning: "🔥"
@@ -311,6 +320,7 @@ status:
     restrained: "🌿"
     inspired: "🎵"
     wild_shape: "🐻"
+    hexed: "🕯️"
 
 dmg:
   slashing: "slashing"

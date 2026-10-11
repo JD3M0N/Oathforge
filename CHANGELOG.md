@@ -4,6 +4,17 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.4.4] - 2026-10-11
+
+### Añadido
+- **Brujo** (d8, CAR, retaguardia): Estallido Sobrenatural (1d10 de fuerza, ilimitado), Maleficio (acción adicional: maldice a un enemigo 3 turnos sin salvación y cada golpe que recibe suma 1d6 necrótico), Armadura de Sombras (2d4 + CAR PV temporales), Susurros del Vacío (salvación de SAB de toda una fila: 2d6 psíquico, la mitad si salva, miedo a quien falla) y Estallido Agónico (+CAR al daño de conjuros). Especializaciones previstas: Pactista Infernal, Nigromante, Filo Maldito y Vacío.
+- Habilidades de maldición (`kind: curse`): ponen un estado a un enemigo elegido, sin tirada de salvación; estado `hexed` (🕯️).
+- **Hombre o mujer** al crear el personaje (paso nuevo tras el nombre): se guarda en `characters.gender` (migración `0003`), sale en el resumen de creación y en la ficha, y la IA lo recibe para narrar con el género correcto.
+- Retratos por sexo: `portrait.male.jpg` / `portrait.female.jpg` en `content/classes/<clase>/images/`; `/sheet` envía el del personaje, o el neutro (`portrait.jpg`) si no hay. Retratos de Brujo y Bruja (768 × 1024).
+
+### Arreglado
+- `/sheet` no aparecía en el menú de comandos de Telegram (`MENU_COMMANDS` en `oathforge/main.py`).
+
 ## [0.4.3] - 2026-10-11
 
 ### Añadido

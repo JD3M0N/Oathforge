@@ -47,6 +47,7 @@ class Character(Base):
     lineage: Mapped[str] = mapped_column(String(32))
     background: Mapped[str] = mapped_column(String(32))
     class_key: Mapped[str] = mapped_column(String(32))
+    gender: Mapped[str | None] = mapped_column(String(8), nullable=True)  # male | female; None: created before 0.4.4
     specialization: Mapped[str | None] = mapped_column(String(32), nullable=True)
     abilities: Mapped[dict] = mapped_column(Json)
     level: Mapped[int] = mapped_column(Integer, default=1)
