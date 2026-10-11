@@ -4,8 +4,8 @@
 cmd:
   start: "Start or return to the scene"
   look: "Look around"
-  hero: "Hero sheet"
-  sheet: "Character sheet"
+  hero: "Hero summary"
+  sheet: "Full sheet with portrait"
   inventory: "Inventory"
   journal: "Adventure journal"
   language: "Change language"
@@ -19,7 +19,7 @@ help:
     You can also <b>type whatever you want to do</b>: "I hide behind the bar and listen", "I try to lift the keeper's purse", "I push the cart onto the bandit".
     The Dungeon Master interprets your action, the engine rolls the dice, and you see what really happened.
 
-    Commands: /look /hero /inventory /journal /language
+    Commands: /look /hero /sheet /inventory /journal /language
   version: "<i>Oathforge v{version}</i>"
 
 lang:
@@ -51,6 +51,8 @@ create:
   cancelled: "Creation cancelled. Use /start whenever you like."
 
 btn:
+  full_sheet: "📜 Full sheet"
+  hero_summary: "🦸 Summary"
   travel: "🧭 Travel"
   investigate: "🔎 Investigate"
   talk: "💬 Talk"
@@ -123,6 +125,14 @@ inv:
     no_potion: "You have no potions left."
 
 sheet:
+  specialization: "🎖️ {name}"
+  hit_die: "🎲 Hit die d{die}"
+  combat: "⚔️ Combat"
+  attack: "{name}: {to_hit} to hit · {damage} {type}"
+  spellcasting: "Spells ({ability}): {to_hit} to hit · DC {dc}"
+  passive_perception: "👁️ Passive perception {value}"
+  immune: "🛡️ Immune to: {list}"
+  origins: "🧬 Origins"
   identity: "{cls} · level {level}"
   hp: "❤️ HP {hp}/{max_hp}  {bar}"
   xp: "✨ XP {xp}/{next}  {bar}"

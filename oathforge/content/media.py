@@ -1,6 +1,7 @@
 """Read-only catalog of images found next to the world content.
 
-Convention, no manifest needed: every node folder (continent, zone, location) may have an
+Convention, no manifest needed: every node folder (continent, zone, location) and every
+``content/classes/<class>/`` folder (class portraits) may have an
 ``images/`` folder; files are sorted by name and a ``.night`` suffix (``panorama.night.jpg``)
 marks the night variant. Optional ``images/media.yaml`` holds credits and license per file.
 Telegram ``file_id``s are cached in the database by ``oathforge.services.media``.
@@ -31,12 +32,16 @@ class MediaCatalog:
     zones: dict[str, tuple[MediaAsset, ...]] = field(default_factory=dict)
     locations: dict[str, tuple[MediaAsset, ...]] = field(default_factory=dict)
     continents: dict[str, tuple[MediaAsset, ...]] = field(default_factory=dict)
+    classes: dict[str, tuple[MediaAsset, ...]] = field(default_factory=dict)  # content/classes/<class>/images
 
     def zone_images(self, zone: str, night: bool = False) -> list[MediaAsset]:
         return _pick(self.zones.get(zone, ()), night)
 
     def location_images(self, location: str, night: bool = False) -> list[MediaAsset]:
         return _pick(self.locations.get(location, ()), night)
+
+    def class_images(self, class_key: str) -> list[MediaAsset]:
+        return list(self.classes.get(class_key, ()))
 
 
 def _pick(assets: tuple[MediaAsset, ...], night: bool) -> list[MediaAsset]:

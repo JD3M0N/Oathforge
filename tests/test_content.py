@@ -108,3 +108,23 @@ def test_night_variant_and_duplicate_ids(tmp_path):
                     tmp_path / "world/terra_coronata/thornwood/crownreach_market")
     with pytest.raises(ValueError, match="duplicate location 'crownreach_market'"):
         load_world(tmp_path)
+
+
+def test_class_portraits_and_unknown_class_folder(tmp_path):
+    import shutil
+
+    import pytest
+
+    from oathforge.config import CONTENT_DIR
+    from oathforge.content.loader import scan_class_media
+    from oathforge.content.media import MediaCatalog
+
+    c = load_content()
+    for cls in ("paladin", "warrior", "rogue", "priest"):
+        assert [a.key for a in c.media.class_images(cls)] == [f"classes/{cls}/images/portrait.jpg"]
+    assert c.media.class_images("mage") == []  # no portrait yet: the sheet goes without photo
+
+    shutil.copytree(CONTENT_DIR / "classes", tmp_path / "classes")
+    (tmp_path / "classes/necromancer").mkdir()
+    with pytest.raises(ValueError, match="necromancer"):
+        scan_class_media(tmp_path, c.classes, MediaCatalog())

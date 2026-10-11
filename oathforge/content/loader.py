@@ -100,6 +100,18 @@ def load_world(directory: Path) -> World:
     return World(meta["start"], continents, zones, locations, media)
 
 
+def scan_class_media(directory: Path, classes: dict, media: MediaCatalog) -> None:
+    """Class portraits live in content/classes/<class>/images/; a folder must name a real class."""
+    root = directory / "classes"
+    if not root.is_dir():
+        return
+    unknown = [d.name for d in sorted(root.iterdir()) if d.is_dir() and d.name not in classes]
+    if unknown:
+        raise ValueError(f"content/classes: folders for unknown classes {unknown}")
+    for key in classes:
+        media.classes[key] = scan_images(root / key, directory)
+
+
 def _parse(model, raw: dict) -> dict:
     return {key: model.model_validate(value) for key, value in raw.items()}
 
@@ -109,12 +121,14 @@ def load_content(directory: Path = CONTENT_DIR) -> Content:
     world = load_world(directory)
     locations = world.locations
     respawn = [k for k, loc in locations.items() if loc.respawn]
+    classes = _parse(GameClass, _read(directory, "classes"))
+    scan_class_media(directory, classes, world.media)
     content = Content(
         abilities=_parse(AbilityInfo, rules["abilities"]),
         skills=_parse(Skill, rules["skills"]),
         lineages=_parse(Lineage, _read(directory, "lineages")),
         backgrounds=_parse(Background, _read(directory, "backgrounds")),
-        classes=_parse(GameClass, _read(directory, "classes")),
+        classes=classes,
         items=_parse(Item, _read(directory, "items")),
         monsters=_parse(Monster, _read(directory, "monsters")),
         locations=locations,

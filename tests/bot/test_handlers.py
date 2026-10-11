@@ -270,3 +270,32 @@ async def test_view_city_sends_panorama_once_then_reuses_file_id(llm, monkeypatc
     await p.press(p.find("trv"))
     await p.press(p.find("go", "broken_crown_tavern"))
     assert not any(parse(d)[0] == "city" for d in p.buttons())  # the tavern is not a hub
+
+
+async def test_hero_summary_and_full_sheet_with_portrait(llm):
+    from oathforge.bot.handlers import commands
+
+    p = Player(llm, tg_id=12)
+    await create(p)
+    await p.press(p.find("hero"))  # the scene's 🦸 button: summary, no photo
+    assert "Aldric" in p.last[0] and "CD" not in p.last[0] and not p.chat.photos
+    full = p.find("sheet")
+
+    await p.press(full)
+    assert isinstance(p.chat.photos[-1], bytes)  # first time: upload the portrait
+    assert "Aldric" in p.chat.sent[-2][0]  # caption, then the full sheet below it
+    sheet = p.last[0]
+    assert "Combate" in sheet and "al impacto" in sheet and "Percepción pasiva" in sheet
+    assert "Orígenes" in sheet and p.find("hero")
+
+    await commands.sheet(p.update(message="/sheet"), p.ctx)
+    assert p.chat.photos[-1] == "FILE1"  # cached file_id, no upload
+    assert "Combate" in p.last[0]
+
+
+async def test_full_sheet_without_portrait_shows_spellcasting(llm):
+    p = Player(llm, tg_id=13)
+    await create(p, cls="mage")
+    await p.press("sheet|-|-")
+    assert not p.chat.photos
+    assert "Conjuros" in p.last[0] and "CD" in p.last[0]

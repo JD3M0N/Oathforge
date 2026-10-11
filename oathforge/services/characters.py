@@ -135,6 +135,19 @@ def class_passives(char: Character) -> list:
     return [a for a in cls.abilities.values() if a.kind == "passive" and a.level <= char.level]
 
 
+def immunities(char: Character) -> list[str]:
+    poison = {"poisoned"} if "poison_resilience" in get_content().lineages[char.lineage].traits else set()
+    return sorted({s for p in class_passives(char) for s in p.immune} | poison)
+
+
+def spell_stats(char: Character) -> tuple[int, int, int]:
+    """(casting modifier, spell attack bonus, save DC); casting is 0 for classes without spells."""
+    cls = get_content().classes[char.class_key]
+    casting = mods(char)[cls.casting] if cls.casting else 0
+    pb = proficiency_bonus(char.level)
+    return casting, casting + pb, 8 + casting + pb
+
+
 def armor_class(char: Character, gear: dict[str, ItemInstance]) -> int:
     c = get_content()
     dex = mods(char)["dex"]
@@ -181,29 +194,26 @@ async def build_combatant(session: AsyncSession, char: Character, cid: str = "p1
     skills = await skills_of(session, char)
     passives = class_passives(char)
     lineage = c.lineages[char.lineage]
-    immune = sorted({s for p in passives for s in p.immune} | ({"poisoned"} if "poison_resilience" in lineage.traits else set()))
     sneak = 0
     for p in passives:
         for lvl, dice in sorted(p.sneak_dice.items()):
             if char.level >= lvl:
                 sneak = dice
     cls = c.classes[char.class_key]
-    m = mods(char)
-    casting_mod = m[cls.casting] if cls.casting else 0
+    casting_mod, spell_to_hit, spell_dc = spell_stats(char)
     bonus = next((p for p in passives if p.bonus_damage), None)
     return Combatant(
         id=cid, side="player", ref=str(char.id), name={"es": char.name, "en": char.name},
         hp=char.hp, max_hp=char.max_hp, ac=armor_class(char, gear),
         row="front" if cls.primary == "str" else "back",
         dex_mod=mods(char)["dex"], passive_perception=10 + skill_bonus(char, skills, "perception"),
-        attacks=attack_profiles(char, gear), immune=immune, level=char.level,
+        attacks=attack_profiles(char, gear), immune=immunities(char), level=char.level,
         skill_bonus=all_skill_bonuses(char, skills), abilities=dict(char.resources),
         sneak_dice=sneak, extra_attack=any(p.extra_attack for p in passives),
         halve_first_hit=any(p.halve_first_hit for p in passives),
         relentless="relentless" in lineage.traits,
         crit_range=min([p.crit_range for p in passives if p.crit_range] or [20]),
-        casting_mod=casting_mod, spell_to_hit=casting_mod + proficiency_bonus(char.level),
-        spell_dc=8 + casting_mod + proficiency_bonus(char.level),
+        casting_mod=casting_mod, spell_to_hit=spell_to_hit, spell_dc=spell_dc,
         spell_damage_bonus=casting_mod if any(p.spell_damage_bonus for p in passives) else 0,
         bonus_damage=bonus.bonus_damage if bonus else None,
         bonus_damage_type=(bonus.bonus_damage_type or "radiant") if bonus else "radiant",

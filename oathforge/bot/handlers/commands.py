@@ -1,12 +1,13 @@
-"""/hero (/sheet) /inventory /journal /look /language /help."""
+"""/hero /sheet /inventory /journal /look /language /help."""
 
 from telegram import Update
 from telegram.ext import CommandHandler, ContextTypes
 
 from oathforge import __version__
 from oathforge.bot import render
-from oathforge.bot.handlers.common import current_view, load, send
+from oathforge.bot.handlers.common import current_view, load, send, send_photos
 from oathforge.bot.keyboards import btn, cb, markup
+from oathforge.content import get_content
 from oathforge.database.session import session_scope
 from oathforge.i18n import t
 
@@ -22,6 +23,21 @@ def _view(builder):
                 text, kb = await builder(session, char, lang)
         await send(update, text, kb)
     return handle
+
+
+async def sheet(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """The class portrait (when the class has one), then the full sheet below it."""
+    async with session_scope() as session:
+        user, char = await load(session, update)
+        lang = context.user_data["lang"] = user.language
+        if char is None:
+            text, kb = t(lang, "start.need_character"), None
+        else:
+            images = get_content().media.class_images(char.class_key)
+            if images:
+                await send_photos(session, update, context, images, render.portrait_caption(char, lang))
+            text, kb = await render.sheet(session, char, lang)
+    await send(update, text, kb)
 
 
 async def language(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -42,7 +58,8 @@ async def help_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 def handlers() -> list[CommandHandler]:
     return [
         CommandHandler("look", _view(current_view)),
-        CommandHandler(["hero", "sheet"], _view(render.sheet)),
+        CommandHandler("hero", _view(render.hero)),
+        CommandHandler("sheet", sheet),
         CommandHandler("inventory", _view(render.inventory_view)),
         CommandHandler("journal", _view(render.journal)),
         CommandHandler("language", language),

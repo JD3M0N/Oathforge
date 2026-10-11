@@ -19,7 +19,7 @@ from oathforge.services.events import Outcome
 log = logging.getLogger(__name__)
 
 # verbs that only show something (no nonce, no state change)
-VIEWS = {"scene", "trv", "talkm", "talk", "bye", "inv", "sheet", "jr", "shopm", "shop", "sellm", "cbp", "lang",
+VIEWS = {"scene", "trv", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "shopm", "shop", "sellm", "cbp", "lang",
          "city"}
 
 
@@ -64,6 +64,13 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             text, kb = await current_view(session, char, lang)
             await send(update, text, kb)  # the scene again, so its buttons stay below the photo
             return
+        if verb == "sheet":
+            images = get_content().media.class_images(char.class_key)
+            if images:  # portrait first, then the sheet as a new message so its buttons stay below
+                await send_photos(session, update, context, images, render.portrait_caption(char, lang))
+                text, kb = await render.sheet(session, char, lang)
+                await send(update, text, kb)
+                return
         if verb == "talk" and not in_combat and arg in exploration.npcs_present(char.location):
             context.user_data["talk"] = arg
             text, kb = await render.conversation(session, char, arg, lang)
@@ -73,6 +80,8 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             text, kb = render.talk_menu(char, lang)
         elif verb == "inv":
             text, kb = await render.inventory_view(session, char, lang)
+        elif verb == "hero":
+            text, kb = await render.hero(session, char, lang)
         elif verb == "sheet":
             text, kb = await render.sheet(session, char, lang)
         elif verb == "jr":

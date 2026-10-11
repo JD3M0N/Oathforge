@@ -4,8 +4,8 @@
 cmd:
   start: "Empezar o volver a la escena"
   look: "Mirar alrededor"
-  hero: "Hoja de héroe"
-  sheet: "Ficha del personaje"
+  hero: "Resumen del héroe"
+  sheet: "Ficha completa con retrato"
   inventory: "Inventario"
   journal: "Diario de aventuras"
   language: "Cambiar idioma"
@@ -19,7 +19,7 @@ help:
     También puedes <b>escribir lo que quieras hacer</b>: «me escondo tras la barra y escucho», «intento robarle la bolsa al tabernero», «empujo el carro sobre el bandido».
     El Dungeon Master interpreta tu acción, el motor tira los dados y tú ves el resultado real.
 
-    Comandos: /look /hero /inventory /journal /language
+    Comandos: /look /hero /sheet /inventory /journal /language
   version: "<i>Oathforge v{version}</i>"
 
 lang:
@@ -51,6 +51,8 @@ create:
   cancelled: "Creación cancelada. Usa /start cuando quieras."
 
 btn:
+  full_sheet: "📜 Ficha completa"
+  hero_summary: "🦸 Resumen"
   travel: "🧭 Viajar"
   investigate: "🔎 Investigar"
   talk: "💬 Hablar"
@@ -123,6 +125,14 @@ inv:
     no_potion: "No te quedan pociones."
 
 sheet:
+  specialization: "🎖️ {name}"
+  hit_die: "🎲 Dado de golpe d{die}"
+  combat: "⚔️ Combate"
+  attack: "{name}: {to_hit} al impacto · {damage} {type}"
+  spellcasting: "Conjuros ({ability}): {to_hit} al impacto · CD {dc}"
+  passive_perception: "👁️ Percepción pasiva {value}"
+  immune: "🛡️ Inmune a: {list}"
+  origins: "🧬 Orígenes"
   identity: "{cls} · nivel {level}"
   hp: "❤️ PV {hp}/{max_hp}  {bar}"
   xp: "✨ XP {xp}/{next}  {bar}"

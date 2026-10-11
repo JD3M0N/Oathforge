@@ -73,7 +73,7 @@ async def scene(session: AsyncSession, char: Character, lang: str) -> tuple[str,
     for a in await quests.available_actions(session, char, present):
         if a.action.npc is None:
             rows.append([btn(a.action.label.get(lang), cb("qa", a.ref, n))])
-    rows.append([btn(t(lang, "btn.inventory"), cb("inv")), btn(t(lang, "btn.sheet"), cb("sheet")),
+    rows.append([btn(t(lang, "btn.inventory"), cb("inv")), btn(t(lang, "btn.sheet"), cb("hero")),
                  btn(t(lang, "btn.journal"), cb("jr"))])
     return "\n".join(lines), markup(rows)
 
@@ -190,13 +190,8 @@ def _gear_line(inst, lang: str) -> str:
     return f"{SLOT_ICONS.get(inst.equipped_slot, '•')} {escape(item.name.get(lang))}{detail}"
 
 
-async def sheet(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
-    c = get_content()
-    cls = c.classes[char.class_key]
-    gear = await characters.equipped(session, char)
-    skills = await characters.skills_of(session, char)
-
-    # header + vitals
+def _sheet_top(c, cls, char: Character, gear: dict, lang: str) -> list[str]:
+    """Name, identity, HP/XP bars and vitals: shared by the summary and the full sheet."""
     lines = [
         f"🦸 <b>{escape(char.name)}</b>",
         t(lang, "sheet.identity", level=char.level, cls=cls.name.get(lang)),
@@ -214,38 +209,99 @@ async def sheet(session: AsyncSession, char: Character, lang: str) -> tuple[str,
                    gold=char.gold))
     if char.conditions.get("injured"):
         lines.append(t(lang, "sheet.injured"))
+    return lines
 
-    # ability scores, two per row in a monospace block
+
+def _sheet_attributes(c, cls, char: Character, lang: str) -> list[str]:
+    """Ability scores, two per row in a monospace block; ★ marks the class's primary."""
     cells = []
     for a in c.abilities:
         star = "★" if a == cls.primary else " "
         score = char.abilities[a]
         cells.append(f"{c.abilities[a].short.get(lang):<3} {score:>2} ({modifier(score):+d}){star}")
     pairs = ["  ".join(cells[i:i + 2]) for i in range(0, len(cells), 2)]
-    lines += ["", f"<b>{t(lang, 'sheet.attributes')}</b>", "<code>" + escape("\n".join(pairs)) + "</code>"]
+    return ["", f"<b>{t(lang, 'sheet.attributes')}</b>", "<code>" + escape("\n".join(pairs)) + "</code>"]
 
-    # equipment
-    lines += ["", f"<b>{t(lang, 'sheet.gear')}</b>"]
+
+def _sheet_gear(gear: dict, lang: str) -> list[str]:
     order = ("main_hand", "ranged", "off_hand", "body")
     worn = [gear[slot] for slot in order if slot in gear]
-    lines += [_gear_line(inst, lang) for inst in worn] or [f"<i>{t(lang, 'sheet.no_gear')}</i>"]
+    return ["", f"<b>{t(lang, 'sheet.gear')}</b>",
+            *([_gear_line(inst, lang) for inst in worn] or [f"<i>{t(lang, 'sheet.no_gear')}</i>"])]
 
-    # skills
+
+def _uses(char: Character, key: str, a) -> str:
+    uses = char.resources.get(key)
+    return f" ({a.uses if uses is None else uses}/{a.uses})" if a.uses else ""
+
+
+async def hero(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+    """Summary: vitals, attributes, gear and unlocked abilities by name. /sheet has everything."""
+    c = get_content()
+    cls = c.classes[char.class_key]
+    gear = await characters.equipped(session, char)
+    lines = _sheet_top(c, cls, char, gear, lang) + _sheet_attributes(c, cls, char, lang) + _sheet_gear(gear, lang)
+    unlocked = [escape(a.name.get(lang)) + _uses(char, key, a)
+                for key, a in cls.abilities.items() if a.level <= char.level]
+    if unlocked:
+        lines += ["", f"<b>{t(lang, 'sheet.abilities')}</b>", "✨ " + " · ".join(unlocked)]
+    kb = markup([[btn(t(lang, "btn.full_sheet"), cb("sheet"))],
+                 [btn(t(lang, "btn.inventory"), cb("inv")), btn(t(lang, "btn.journal"), cb("jr"))],
+                 [btn(t(lang, "btn.back"), cb("scene"))]])
+    return "\n".join(lines)[:MAX_MESSAGE], kb
+
+
+def portrait_caption(char: Character, lang: str) -> str:
+    """Caption for the class portrait sent before the full sheet."""
+    cls = get_content().classes[char.class_key]
+    return f"🦸 <b>{escape(char.name)}</b> · {escape(t(lang, 'sheet.identity', level=char.level, cls=cls.name.get(lang)))}"
+
+
+async def sheet(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+    """The full character sheet: everything the engine knows about the hero."""
+    c = get_content()
+    cls = c.classes[char.class_key]
+    gear = await characters.equipped(session, char)
+    skills = await characters.skills_of(session, char)
+    lines = _sheet_top(c, cls, char, gear, lang)
+    extra = [f"<i>{escape(cls.description.get(lang))}</i>"]
+    if char.specialization in cls.specializations:
+        extra.insert(0, t(lang, "sheet.specialization", name=escape(cls.specializations[char.specialization].get(lang))))
+    lines[2:2] = extra
+    lines.append(t(lang, "sheet.hit_die", die=cls.hit_die))
+    lines += _sheet_attributes(c, cls, char, lang)
+
+    # combat numbers: attacks, spellcasting, passive perception, immunities
+    lines += ["", f"<b>{t(lang, 'sheet.combat')}</b>"]
+    for a in characters.attack_profiles(char, gear):
+        lines.append(("🏹 " if a.ranged else "🗡️ ") + escape(t(
+            lang, "sheet.attack", name=a.name[lang], to_hit=f"{a.to_hit:+d}", damage=a.damage,
+            type=t(lang, "dmg." + a.damage_type))))
+    if cls.casting:
+        _, to_hit, dc = characters.spell_stats(char)
+        lines.append("🔮 " + escape(t(lang, "sheet.spellcasting", ability=c.abilities[cls.casting].name.get(lang),
+                                      to_hit=f"{to_hit:+d}", dc=dc)))
+    lines.append(t(lang, "sheet.passive_perception", value=10 + characters.skill_bonus(char, skills, "perception")))
+    immune = characters.immunities(char)
+    if immune:
+        lines.append(t(lang, "sheet.immune", list=", ".join(t(lang, "status." + s) for s in immune)))
+
+    lines += _sheet_gear(gear, lang)
+
+    # every skill: ● proficient, ○ practiced, · untrained
     lines += ["", f"<b>{t(lang, 'sheet.skills')}</b>"]
-    for key, row in skills.items():
-        if row.proficient or row.xp:
-            mark = "●" if row.proficient else "○"
-            rank = "★" * skill_rank(row.xp)
-            lines.append(f"{mark} {escape(c.skills[key].name.get(lang))} "
-                         f"<b>{characters.skill_bonus(char, skills, key):+d}</b> {rank}".rstrip())
+    for key, skill in c.skills.items():
+        row = skills.get(key)
+        mark = "●" if row and row.proficient else "○" if row and row.xp else "·"
+        rank = "★" * skill_rank(row.xp) if row else ""
+        lines.append(f"{mark} {escape(skill.name.get(lang))} "
+                     f"<b>{characters.skill_bonus(char, skills, key):+d}</b> {rank}".rstrip())
 
     # class abilities: unlocked with uses, locked ones show the level they unlock at
     lines += ["", f"<b>{t(lang, 'sheet.abilities')}</b>"]
     for key, a in cls.abilities.items():
         if a.level <= char.level:
-            uses = char.resources.get(key)
-            suffix = f" ({a.uses if uses is None else uses}/{a.uses})" if a.uses else ""
-            lines.append(f"✨ <b>{escape(a.name.get(lang))}</b>{suffix}: {escape(a.description.get(lang))}")
+            lines.append(f"✨ <b>{escape(a.name.get(lang))}</b>{_uses(char, key, a)}: {escape(a.description.get(lang))}")
         else:
             lines.append(f"🔒 <i>{t(lang, 'sheet.locked', level=a.level, name=escape(a.name.get(lang)))}</i>")
 
@@ -256,7 +312,10 @@ async def sheet(session: AsyncSession, char: Character, lang: str) -> tuple[str,
         for fac, value in reps.items():
             lines.append(f"• {escape(c.factions[fac].name.get(lang))}: {value:+d} · {rep_label(value, lang)}")
 
-    lines += ["", f"🧬 <i>{escape(c.lineages[char.lineage].trait_text.get(lang))}</i>"]
+    # origins
+    lines += ["", f"<b>{t(lang, 'sheet.origins')}</b>",
+              f"🧬 <i>{escape(c.lineages[char.lineage].trait_text.get(lang))}</i>",
+              f"📖 <i>{escape(c.backgrounds[char.background].description.get(lang))}</i>"]
 
     # today's AI budget
     limit = get_settings().ai_user_daily_calls
@@ -264,7 +323,8 @@ async def sheet(session: AsyncSession, char: Character, lang: str) -> tuple[str,
     left = max(0, limit - calls)
     lines += [RULE, t(lang, "sheet.ai_usage", calls=calls, limit=limit, left=left, bar=hp_bar(left, limit))]
 
-    kb = markup([[btn(t(lang, "btn.inventory"), cb("inv")), btn(t(lang, "btn.journal"), cb("jr"))],
+    kb = markup([[btn(t(lang, "btn.hero_summary"), cb("hero"))],
+                 [btn(t(lang, "btn.inventory"), cb("inv")), btn(t(lang, "btn.journal"), cb("jr"))],
                  [btn(t(lang, "btn.back"), cb("scene"))]])
     return "\n".join(lines)[:MAX_MESSAGE], kb
 

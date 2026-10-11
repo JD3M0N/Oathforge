@@ -4,6 +4,17 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.4.1] - 2026-10-11
+
+### Añadido
+- **Retratos de clase** (768 × 1024) para Paladín, Guerrero, Pícaro y Sacerdote en `content/classes/<clase>/images/`, con créditos en `media.yaml`; el catálogo de medios los carga (`class_images`) y rechaza carpetas de clases que no existen.
+- **Ficha completa** con `/sheet` y el botón «📜 Ficha completa»: envía el retrato de la clase (si lo hay, con caché de `file_id`) y debajo la ficha con descripción y especialización de la clase, dado de golpe, ataques con bonificador al impacto y daño, conjuros (característica, ataque y CD), percepción pasiva, inmunidades, todas las competencias (● competente, ○ practicada, · sin entrenar), habilidades de clase, reputación, rasgo del linaje y trasfondo, y el uso de IA del día.
+
+### Cambiado
+- `/hero` y el botón «🦸 Héroe» muestran ahora un **resumen** (PV, XP, CA, atributos, equipo y habilidades desbloqueadas) con un botón a la ficha completa; `/sheet` deja de ser un alias de `/hero`.
+- `services/characters.py`: `spell_stats` e `immunities` calculan la CD de conjuro y las inmunidades en un solo sitio (combate y ficha).
+- Ayuda y descripciones de comandos mencionan `/sheet`.
+
 ## [0.4.0] - 2026-10-11
 
 ### Añadido
