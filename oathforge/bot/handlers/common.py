@@ -1,9 +1,11 @@
+import asyncio
 import random
 import time
+from contextlib import asynccontextmanager
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from telegram import InlineKeyboardMarkup, Update
-from telegram.constants import ParseMode
+from telegram import Chat, InlineKeyboardMarkup, Update
+from telegram.constants import ChatAction, ParseMode
 from telegram.ext import ContextTypes
 
 from oathforge.bot import render
@@ -28,6 +30,25 @@ def rate_ok(context: ContextTypes.DEFAULT_TYPE, telegram_id: int) -> bool:
         return False
     buckets[telegram_id] = recent + [now]
     return True
+
+
+@asynccontextmanager
+async def keep_typing(chat: Chat):
+    """Telegram drops the typing indicator after ~5 s; resend it while the AI is thinking."""
+
+    async def loop():
+        while True:
+            try:
+                await chat.send_action(ChatAction.TYPING)
+            except Exception:  # cosmetic only
+                pass
+            await asyncio.sleep(4)
+
+    task = asyncio.create_task(loop())
+    try:
+        yield
+    finally:
+        task.cancel()
 
 
 async def load(session: AsyncSession, update: Update, lock: bool = False) -> tuple[User, Character | None]:

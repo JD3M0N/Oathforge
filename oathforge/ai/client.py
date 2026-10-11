@@ -8,6 +8,7 @@ deterministic templates.
 
 import asyncio
 import logging
+import time
 from datetime import date
 from typing import Literal, Protocol, TypeVar
 
@@ -42,6 +43,7 @@ class NullLLM:
 class Budget:
     def __init__(self, settings: Settings):
         self.s = settings
+        self._warned_day: date | None = None
 
     async def allow(self, user_id: int | None) -> bool:
         today = date.today()
@@ -52,6 +54,9 @@ class Budget:
             if global_calls >= self.s.ai_global_daily_calls:
                 log.warning("global AI budget exhausted")
                 return False
+            if global_calls >= 0.8 * self.s.ai_global_daily_calls and self._warned_day != today:
+                self._warned_day = today
+                log.warning("global AI budget at %d/%d calls today", global_calls, self.s.ai_global_daily_calls)
             if user_id is None:
                 return True
             row = (await session.execute(
@@ -77,39 +82,70 @@ class Budget:
             row.output_tokens += output_tokens
 
 
-class GeminiLLM:
-    def __init__(self, settings: Settings | None = None):
-        from google import genai
+# HTTP codes worth another try (on this model later, or on the fallback now).
+TRANSIENT_CODES = {408, 429, 500, 502, 503, 504}
 
+
+class GeminiLLM:
+    def __init__(self, settings: Settings | None = None, client=None):
         self.s = settings or get_settings()
-        self.client = genai.Client(api_key=self.s.gemini_api_key)
+        if client is None:
+            from google import genai
+
+            client = genai.Client(api_key=self.s.gemini_api_key)
+        self.client = client
         self.budget = Budget(self.s)
+        self._cooldown_until: dict[str, float] = {}
 
     def _model(self, tier: Tier) -> str:
         return self.s.gemini_model_fast if tier == "fast" else self.s.gemini_model_narrative
 
-    async def _generate(self, tier: Tier, system: str, prompt: str, user_id: int | None, schema=None):
+    def _candidates(self, tier: Tier) -> list[str]:
+        """Models to try in order. Narrative falls back to the fast model; fast retries itself once.
+
+        A model that recently failed with an overload/quota error is skipped while
+        another one is available, so players don't wait for a timeout on every call.
+        """
+        primary = self._model(tier)
+        fallback = self.s.gemini_model_fast if tier == "narrative" else primary
+        now = time.monotonic()
+        if primary != fallback and self._cooldown_until.get(primary, 0) > now:
+            return [fallback]
+        return [primary, fallback]
+
+    def _config(self, tier: Tier, system: str, schema):
         from google.genai import types
 
-        if not await self.budget.allow(user_id):
-            return None
-        model = self._model(tier)
-        config = types.GenerateContentConfig(
+        level = self.s.gemini_thinking_level if tier == "narrative" else ""
+        return types.GenerateContentConfig(
             system_instruction=system,
             temperature=0.2 if schema else 0.9,
             response_mime_type="application/json" if schema else None,
             response_schema=schema,
+            thinking_config=types.ThinkingConfig(thinking_level=level) if level else None,
         )
-        for attempt in range(2):
+
+    async def _generate(self, tier: Tier, system: str, prompt: str, user_id: int | None, schema=None):
+        if not await self.budget.allow(user_id):
+            return None
+        models = self._candidates(tier)
+        for attempt, model in enumerate(models):
+            if attempt and model == models[attempt - 1]:
+                await asyncio.sleep(0.5)
+            config = self._config(tier if model == self._model(tier) else "fast", system, schema)
             try:
                 resp = await asyncio.wait_for(
                     self.client.aio.models.generate_content(model=model, contents=prompt, config=config),
                     timeout=self.s.ai_timeout_seconds,
                 )
             except Exception as e:  # network, quota, timeout: degrade gracefully
-                log.warning("gemini call failed (attempt %d): %s", attempt + 1, e)
-                if attempt == 0:
-                    await asyncio.sleep(0.5)
+                code = getattr(e, "code", None)
+                if isinstance(code, int) and code not in TRANSIENT_CODES:
+                    log.error("gemini call to %s rejected (%s), check the configuration: %s", model, code, e)
+                    return None
+                self._cooldown_until[model] = time.monotonic() + self.s.ai_model_cooldown_seconds
+                log.warning("gemini call to %s failed (attempt %d): %s", model, attempt + 1,
+                            str(e) or type(e).__name__)
                 continue
             usage = resp.usage_metadata
             await self.budget.record(
