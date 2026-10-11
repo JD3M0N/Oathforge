@@ -6,8 +6,50 @@ Imágenes, música, voces, mapas y efectos. Fuente principal: [Guía de recursos
 
 ## Estado actual
 
-- No hay nada audiovisual: el juego es solo texto con botones inline.
+- **v0.3.0**: el mundo vive en carpetas (`content/world/<continente>/<zona>/<lugar>/`) y cada carpeta puede tener `images/` y `audio/`. Catálogo por convención (`oathforge/content/media.py`), caché de `file_id` por bot en la tabla `media_files` y botón «🏙️ Ver ciudad» en la plaza de Crownreach con su panorámica.
+- Aún no hay imagen por lugar, retratos de NPC ni audio.
 - Todo texto visible existe en es/en; cualquier audio necesitará también su equivalente en texto.
+
+## Decidido
+
+### Dónde se guarda cada cosa
+
+```
+content/world/
+  world.yaml                      # start y orden de continentes
+  terra_coronata/                 # continente
+    continent.yaml
+    images/map.jpg                # (futuro) mapa del continente
+    crownreach/                   # zona: city | wilds | dungeon
+      zone.yaml
+      images/panorama.jpg         # «Ver ciudad»; panorama.night.jpg = variante nocturna
+      images/media.yaml           # créditos y licencia por archivo
+      audio/                      # (futuro) tema de la ciudad
+      crownreach_plaza/           # lugar (hub: true → muestra «Ver ciudad»)
+        place.yaml
+        images/cover.jpg          # (futuro) «Ver lugar»
+content/npcs/<npc>/portrait.jpg   # (futuro) retratos
+```
+
+- Texto y medios de cada nodo van juntos en su carpeta. Los ids de lugar son globales y no cambian al mover carpetas.
+- Imágenes por convención de nombre, ordenadas alfabéticamente (2–10 forman álbum). Sufijo `.night` para la noche; si no existe, se usa la de día.
+- En git solo va la **versión de entrega** optimizada; los originales grandes y los PSD/Krita se guardan fuera (Drive).
+- `file_id` en la base de datos por `(bot_id, asset_key)` con checksum: cada bot (Josue, Rayko, Edian) sube la imagen una vez, y si el archivo cambia se vuelve a subir sola.
+
+### Escala de las imágenes
+
+Telegram recomprime `sendPhoto` a **1280 px en el lado largo**; subir más grande solo gasta disco. Límite de la API: 10 MB por foto. `tools/prepare_image.py` recorta, escala y optimiza.
+
+| Tipo | Proporción | Entrega (git) | Original (fuera de git) | Formato |
+|---|---|---|---|---|
+| Ciudad, zona, lugar, evento | 16:9 horizontal | **1280 × 720** | 2560 × 1440 o nativo del modelo (1344 × 768) | JPEG 85 progresivo, sin EXIF, ≤ 350 KB |
+| Retrato de NPC | 3:4 vertical | **768 × 1024** | 1536 × 2048 | JPEG 85 |
+| Ficha de personaje | 3:4 | 900 × 1200 | — (Pillow) | JPEG/PNG |
+| Mapa de continente/ciudad | libre | 2048 px lado largo, por `sendDocument` | SVG/PNG | PNG |
+| Iconos de objeto | 1:1 | 128 × 128 | 512 | PNG transparente |
+| Stickers | 1:1 | 512 × 512 | — | WEBP/PNG |
+
+Sin texto dentro de la imagen: los nombres van en el caption o se añaden con Pillow.
 
 ## Ideas
 
@@ -62,7 +104,7 @@ Pack de stickers de Telegram con los retratos y expresiones de los NPC principal
 - **Macro**: continente con Azgaar (exporta SVG/PNG/GeoJSON, uso comercial).
 - **Meso**: plano de Crownreach con Watabou (taberna, mercado, puerto, castillo).
 - **Micro**: taberna o mazmorra en un editor táctico (Tiled + Krita).
-- El mapa es solo una **vista del grafo** de `content/locations.yaml`; los desplazamientos los valida el código, no la imagen.
+- El mapa es solo una **vista del grafo** de `content/world/`; los desplazamientos los valida el código, no la imagen.
 - Capas automáticas con Pillow/SVG sobre el mismo mapa base: posición actual, niebla de guerra por personaje, rutas bloqueadas, misiones y peligro.
 
 ### Efectos de sonido (Guía §6)
@@ -114,8 +156,8 @@ Presupuesto de espacio orientativo: unos 63 MB para 12 pistas, 30 voces, 50 imá
 
 ## Preguntas abiertas
 
-- ¿Los activos van en git (unos 60 MB) o en almacenamiento externo con solo el manifiesto en git?
-- ¿Catálogo en tablas de la base de datos o en YAML, como el resto del contenido?
+- ~~¿Los activos van en git?~~ Sí, solo la versión de entrega optimizada (v0.3.0). Revisar con el audio (si pasa de ~100 MB, Git LFS).
+- ~~¿Catálogo en tablas o en YAML?~~ Por convención de carpetas + `media.yaml` de créditos; en la base de datos solo la caché de `file_id`.
 - ¿Audio por defecto apagado (modo silencioso) y que el jugador lo active?
 - ¿Las voces existen en es y en en, o solo en un idioma con subtítulos?
 - ¿Quién revisa y aprueba los activos generados?

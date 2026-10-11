@@ -26,7 +26,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 
 ## 🧙 Clases y progresión · [clases.md](planning/clases.md) · [progresion.md](planning/progresion.md)
 
-- [ ] 🔴 Elegir especialización a nivel 5 (0.3.0).
+- [ ] 🔴 Elegir especialización a nivel 5 (0.4.0).
 - [ ] 🟡 Siguiente clase: Mago, Explorador o Bardo.
 - [ ] 🟢 Juramentos con consecuencias, títulos y cicatrices en la ficha.
 - [ ] 🟢 Ranuras de equipo y objetos con procedencia (quién los fabricó o encontró).
@@ -34,7 +34,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 
 ## 🎨 Audiovisual · [audiovisual.md](planning/audiovisual.md)
 
-- [ ] 🟡 **Sistema de imágenes**: catálogo de activos + `file_id` de Telegram; una imagen por lugar y retratos de NPC.
+- [ ] 🟡 ◐ **Sistema de imágenes**: catálogo de activos + `file_id` de Telegram; una imagen por lugar y retratos de NPC. *Hecho en v0.3.0: carpetas del mundo, catálogo, caché de `file_id` y «Ver ciudad» en Crownreach; faltan las imágenes de cada lugar («Ver lugar») y los retratos de NPC.*
 - [ ] 🟡 **Canciones en las tabernas**: botón «Escuchar ambiente» con música en bucle (empezar por La Corona Rota).
 - [ ] 🟡 **Voces para personajes importantes** (Bram, Tessa, el Guardián de la Cripta) como notas de voz OGG/Opus.
 - [ ] 🟢 **Stickers por personaje**: pack con los retratos y expresiones de los NPC.
@@ -46,14 +46,14 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 ## 📱 Telegram y multijugador · [interfaz-telegram.md](planning/interfaz-telegram.md) · [multijugador.md](planning/multijugador.md)
 
 - [ ] 🟡 **Canales de Telegram**: canal de noticias con el periódico *Herald of Aetherfall* (eventos y rumores confirmados).
-- [ ] 🔴 Grupos de expedición y combate en grupo (0.5.0).
+- [ ] 🔴 Grupos de expedición y combate en grupo (0.6.0).
 - [ ] 🟡 Comandos nuevos: `/map`, `/quests`, `/rest`, `/party`.
 - [ ] 🟡 Mensaje de estado que se edita en lugar de mandar muchos mensajes.
 - [ ] 🟢 Duelos PvP con consentimiento y sin pérdidas.
 
 ## 🌍 Mundo, misiones y economía · [mundo-y-misiones.md](planning/mundo-y-misiones.md) · [comercio.md](planning/comercio.md)
 
-- [ ] 🟡 Primera profesión (herrería con Tessa o alquimia con hierbas del Bosque) y recetas (0.4.0).
+- [ ] 🟡 Primera profesión (herrería con Tessa o alquimia con hierbas del Bosque) y recetas (0.5.0).
 - [ ] 🟡 Sumideros de oro: reparaciones, tasas, viajes.
 - [ ] 🟡 `world_facts` y eventos encadenados (por ejemplo, la crisis del hierro).
 - [ ] 🟢 Rumores con veracidad (verdadero, falso, incompleto) que se puedan investigar.

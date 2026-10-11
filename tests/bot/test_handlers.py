@@ -34,9 +34,16 @@ def test_rate_limit_window():
 class Chat:
     def __init__(self):
         self.sent: list[tuple[str, object]] = []
+        self.photos: list[object] = []  # what was sent: bytes (upload) or a cached file_id
 
     async def send_message(self, text, parse_mode=None, reply_markup=None, **_):
         self.sent.append((text, reply_markup))
+
+    async def send_photo(self, photo, caption=None, **_):
+        self.photos.append(photo)
+        self.sent.append((caption, None))
+        size = SimpleNamespace(file_id=f"FILE{len(self.photos)}", file_unique_id=f"U{len(self.photos)}")
+        return SimpleNamespace(photo=[size])
 
     async def send_action(self, *_):
         pass
@@ -59,7 +66,7 @@ class Player:
     def __init__(self, llm, tg_id=42, lang="es"):
         self.chat = Chat()
         self.user = SimpleNamespace(id=tg_id, language_code=lang)
-        self.ctx = SimpleNamespace(bot_data={"llm": llm}, user_data={})
+        self.ctx = SimpleNamespace(bot_data={"llm": llm}, user_data={}, bot=SimpleNamespace(id=999))
 
     def update(self, data=None, message=None):
         q = Query(data, self.chat) if data else None
@@ -218,3 +225,28 @@ async def test_free_text_combat_and_injection(llm):
     after = await char_row()
     assert after.gold == before.gold
     assert any("arte de magia" in t_ for t_, _ in p.chat.sent[-2:])
+
+
+async def test_view_city_sends_panorama_once_then_reuses_file_id(llm, monkeypatch):
+    from oathforge.content.media import MediaCatalog
+
+    p = Player(llm, tg_id=11)
+    await create(p)
+    city = p.find("city")
+    await p.press(city)
+    assert isinstance(p.chat.photos[-1], bytes)  # first time: upload the file
+    assert "Crownreach" in p.chat.sent[-2][0]  # caption, then the scene again below it
+    assert "Plaza de Crownreach" in p.last[0] and p.find("city")
+
+    await p.press(city)
+    assert p.chat.photos[-1] == "FILE1"  # second time: cached file_id, no upload
+
+    # no images in the catalog -> no button
+    monkeypatch.setattr(MediaCatalog, "zone_images", lambda self, zone, night=False: [])
+    await p.press("scene|-|-")
+    assert not any(parse(d)[0] == "city" for d in p.buttons())
+    monkeypatch.undo()
+
+    await p.press(p.find("trv"))
+    await p.press(p.find("go", "broken_crown_tavern"))
+    assert not any(parse(d)[0] == "city" for d in p.buttons())  # the tavern is not a hub

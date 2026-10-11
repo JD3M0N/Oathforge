@@ -59,6 +59,7 @@ btn:
   inventory: "🎒 Inventario"
   sheet: "🦸 Héroe"
   journal: "📜 Diario"
+  view_city: "🏙️ Ver ciudad"
   back: "⬅️ Volver"
   leave: "👋 Despedirse"
   sell: "💰 Vender"

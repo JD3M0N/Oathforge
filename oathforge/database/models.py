@@ -202,7 +202,7 @@ class QuestProgress(Base):
 
 
 class LocationState(Base):
-    """Runtime state of a location; static data lives in content/locations.yaml."""
+    """Runtime state of a location; static data lives in content/world/."""
 
     __tablename__ = "location_state"
 
@@ -245,3 +245,20 @@ class AiUsage(Base):
     calls: Mapped[int] = mapped_column(Integer, default=0)
     prompt_tokens: Mapped[int] = mapped_column(Integer, default=0)
     output_tokens: Mapped[int] = mapped_column(Integer, default=0)
+
+
+class MediaFile(Base):
+    """Telegram file_id of an uploaded image, so it is sent again without re-uploading.
+
+    A file_id only works for the bot that uploaded it, hence ``bot_id``; a new ``checksum``
+    (the file was replaced) means the cached id is stale.
+    """
+
+    __tablename__ = "media_files"
+
+    bot_id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    asset_key: Mapped[str] = mapped_column(String(255), primary_key=True)
+    checksum: Mapped[str] = mapped_column(String(64))
+    file_id: Mapped[str] = mapped_column(String(255))
+    file_unique_id: Mapped[str] = mapped_column(String(64))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)

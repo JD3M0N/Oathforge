@@ -31,7 +31,7 @@
   | Sunscar | Desierto, oasis, caravanas | Comercio, arqueología | Saqueadores y tormentas |
   | Stormport | Puerto libre | Navegación, pesca, contrabando | Piratas y política mercante |
 
-- **El mundo es un grafo** (§3.1): nodos con región, tipo, peligros, servicios y NPC; aristas con distancia, coste, riesgo y condiciones (rutas cortadas por eventos o reputación). Una ciudad se abre en distritos sin necesidad de cuadrícula. Encaja con `content/locations.yaml`.
+- **El mundo es un grafo** (§3.1): nodos con región, tipo, peligros, servicios y NPC; aristas con distancia, coste, riesgo y condiciones (rutas cortadas por eventos o reputación). Una ciudad se abre en distritos sin necesidad de cuadrícula. Encaja con `content/world/`, organizado como **mundo → continente → zona (ciudad, territorio salvaje, mazmorra) → lugar**; cada nivel es una carpeta (v0.3.0).
 - **Estados de descubrimiento por personaje** (§3.3): `undiscovered`, `rumored`, `discovered`, `visited`, `mapped`. «Rumored» deja seguir una pista sin conocer el camino exacto.
 - **Tipos de exploración** (§3.3): dirigida, por pistas, arriesgada, social (zonas que se abren con reputación), histórica y competitiva.
 - **Viajes con decisiones** (§3.4): ruta segura, atajo, viajar con mercaderes, contratar guía, acampar. Encuentros aleatorios de tablas según región, hora, estación y reputación.

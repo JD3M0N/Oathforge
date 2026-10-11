@@ -1,0 +1,32 @@
+name: {es: Camino del Viejo Rey, en: Old King's Road}
+kind: wild
+description:
+  es: >-
+    Una calzada antigua y agrietada que une Crownreach con el bosque. Los carros abandonados
+    cuentan historias que nadie quiere escuchar.
+  en: >-
+    An old, cracked causeway linking Crownreach to the forest. Abandoned carts tell stories no one
+    wants to hear.
+exits:
+  - {to: crownreach_plaza, minutes: 30, danger: 1}
+  - {to: whispering_woods, minutes: 40, danger: 2}
+encounters:
+  - {monsters: [bandit], weight: 3}
+  - {monsters: [bandit, bandit], weight: 2}
+  - {monsters: [goblin_scout, goblin_scout], weight: 2}
+  - {monsters: [bandit_captain, bandit], weight: 1}
+scene_objects:
+  overturned_cart:
+    name: {es: Carro volcado, en: Overturned cart}
+    description: {es: Un carro cargado de barriles en precario equilibrio., en: A cart loaded with barrels in a precarious balance.}
+    skill: athletics
+    tier: medium
+    effect: {damage: 2d6, targets: one}
+discoveries:
+  bandit_tracks:
+    skill: survival
+    tier: medium
+    sets_flag: found_bandit_tracks
+    text:
+      es: Huellas frescas salen del camino hacia el bosque. Alguien ha estado vigilando a los viajeros.
+      en: Fresh tracks leave the road toward the forest. Someone has been watching travelers.

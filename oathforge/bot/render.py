@@ -67,6 +67,8 @@ async def scene(session: AsyncSession, char: Character, lang: str) -> tuple[str,
         buttons.append(btn(t(lang, "btn.shop"), cb("shopm")))
     if loc.rest_cost is not None:
         buttons.append(btn(t(lang, "btn.rest", cost=loc.rest_cost), cb("rest", "-", n)))
+    if loc.hub and c.media.zone_images(loc.zone, night):
+        buttons.append(btn(t(lang, "btn.view_city"), cb("city")))
     rows = grid(buttons)
     for a in await quests.available_actions(session, char, present):
         if a.action.npc is None:
@@ -74,6 +76,13 @@ async def scene(session: AsyncSession, char: Character, lang: str) -> tuple[str,
     rows.append([btn(t(lang, "btn.inventory"), cb("inv")), btn(t(lang, "btn.sheet"), cb("sheet")),
                  btn(t(lang, "btn.journal"), cb("jr"))])
     return "\n".join(lines), markup(rows)
+
+
+def zone_caption(zone_key: str, lang: str) -> str:
+    """Caption for the zone's images ("View city"): name and day/night description."""
+    zone = get_content().zones[zone_key]
+    desc = zone.night if exploration.is_night() and zone.night else zone.description
+    return f"🏙️ <b>{escape(zone.name.get(lang))}</b>\n\n{escape(desc.get(lang))}"
 
 
 def travel_menu(char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:

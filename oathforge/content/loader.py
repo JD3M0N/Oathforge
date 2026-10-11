@@ -7,10 +7,12 @@ from pathlib import Path
 import yaml
 
 from oathforge.config import CONTENT_DIR
+from oathforge.content.media import MediaCatalog, scan_images
 from oathforge.content.schemas import (
     ABILITIES,
     AbilityInfo,
     Background,
+    Continent,
     Faction,
     GameClass,
     Item,
@@ -20,6 +22,7 @@ from oathforge.content.schemas import (
     Npc,
     Quest,
     Skill,
+    Zone,
 )
 
 EFFECT_KINDS = {
@@ -41,13 +44,60 @@ class Content:
     npcs: dict[str, Npc]
     factions: dict[str, Faction]
     quests: dict[str, Quest]
+    continents: dict[str, Continent]
+    zones: dict[str, Zone]
+    media: MediaCatalog
     start_location: str
     respawn_location: str
 
 
 def _read(directory: Path, name: str) -> dict:
-    with open(directory / f"{name}.yaml", encoding="utf-8") as fh:
+    return _read_file(directory / f"{name}.yaml")
+
+
+def _read_file(path: Path) -> dict:
+    with open(path, encoding="utf-8") as fh:
         return yaml.safe_load(fh) or {}
+
+
+@dataclass(frozen=True)
+class World:
+    start: str
+    continents: dict[str, Continent]
+    zones: dict[str, Zone]
+    locations: dict[str, Location]
+    media: MediaCatalog
+
+
+def load_world(directory: Path) -> World:
+    """Walks world/<continent>/<zone>/<location>/place.yaml into flat dicts keyed by id."""
+    root = directory / "world"
+    meta = _read_file(root / "world.yaml")
+    continents: dict[str, Continent] = {}
+    zones: dict[str, Zone] = {}
+    locations: dict[str, Location] = {}
+    media = MediaCatalog()
+    errors: list[str] = []
+    for ckey in meta["continents"]:
+        cdir = root / ckey
+        continents[ckey] = Continent.model_validate(_read_file(cdir / "continent.yaml"))
+        media.continents[ckey] = scan_images(cdir, root)
+        for zdir in sorted(p for p in cdir.iterdir() if (p / "zone.yaml").is_file()):
+            zkey = zdir.name
+            if zkey in zones:
+                errors.append(f"duplicate zone '{zkey}' in {cdir}")
+            zones[zkey] = Zone.model_validate(_read_file(zdir / "zone.yaml"))
+            media.zones[zkey] = scan_images(zdir, root)
+            for ldir in sorted(p for p in zdir.iterdir() if (p / "place.yaml").is_file()):
+                lkey = ldir.name
+                if lkey in locations:
+                    errors.append(f"duplicate location '{lkey}' in {zdir}")
+                raw = {**_read_file(ldir / "place.yaml"), "zone": zkey, "continent": ckey}
+                locations[lkey] = Location.model_validate(raw)
+                media.locations[lkey] = scan_images(ldir, root)
+    if errors:
+        raise ValueError("World validation failed:\n  " + "\n  ".join(errors))
+    return World(meta["start"], continents, zones, locations, media)
 
 
 def _parse(model, raw: dict) -> dict:
@@ -56,8 +106,8 @@ def _parse(model, raw: dict) -> dict:
 
 def load_content(directory: Path = CONTENT_DIR) -> Content:
     rules = _read(directory, "abilities")
-    world = _read(directory, "locations")
-    locations = _parse(Location, world["locations"])
+    world = load_world(directory)
+    locations = world.locations
     respawn = [k for k, loc in locations.items() if loc.respawn]
     content = Content(
         abilities=_parse(AbilityInfo, rules["abilities"]),
@@ -71,7 +121,10 @@ def load_content(directory: Path = CONTENT_DIR) -> Content:
         npcs=_parse(Npc, _read(directory, "npcs")),
         factions=_parse(Faction, _read(directory, "factions")),
         quests=_parse(Quest, _read(directory, "quests")),
-        start_location=world["start"],
+        continents=world.continents,
+        zones=world.zones,
+        media=world.media,
+        start_location=world.start,
         respawn_location=respawn[0] if respawn else world["start"],
     )
     validate_references(content)
@@ -113,6 +166,8 @@ def validate_references(c: Content) -> None:
         for loot in mon.loot:
             need("item", loot.item, c.items, f"monster {key}")
     for key, loc in c.locations.items():
+        if loc.hub and c.zones[loc.zone].kind != "city":
+            errors.append(f"location {key}: hub outside a city zone")
         for ex in loc.exits:
             need("location", ex.to, c.locations, f"location {key} exit")
         for enc in [*loc.encounters, *loc.fixed_encounters]:
@@ -124,6 +179,9 @@ def validate_references(c: Content) -> None:
             need("skill", disc.skill, c.skills, f"location {key} discovery {dkey}")
             for i in disc.gives:
                 need("item", i, c.items, f"location {key} discovery {dkey}")
+    for zkey, zone in c.zones.items():
+        if c.media.zones.get(zkey) and not any(loc.hub for loc in c.locations.values() if loc.zone == zkey):
+            errors.append(f"zone {zkey}: has images but no hub location to show them from")
     for key, npc in c.npcs.items():
         need("faction", npc.faction, c.factions, f"npc {key}")
         for loc in npc.schedule.values():

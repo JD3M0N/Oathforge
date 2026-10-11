@@ -232,6 +232,24 @@ class Location(Strict):
     discoveries: dict[str, Discovery] = {}
     rest_cost: int | None = None
     respawn: bool = False
+    hub: bool = False  # the zone's overview point (city plaza): shows "View city" when the zone has images
+    # filled by the loader from the folder: world/<continent>/<zone>/<location>/place.yaml
+    zone: str = ""
+    continent: str = ""
+
+
+class Zone(Strict):
+    """A city, a wild area or a dungeon: a group of locations sharing images and audio."""
+
+    name: Text
+    description: Text
+    night: Text | None = None
+    kind: Literal["city", "wilds", "dungeon"]
+
+
+class Continent(Strict):
+    name: Text
+    description: Text
 
 
 class Shop(Strict):

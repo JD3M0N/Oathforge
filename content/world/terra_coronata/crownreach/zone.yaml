@@ -1,0 +1,12 @@
+name: {es: Crownreach, en: Crownreach}
+kind: city
+description:
+  es: >-
+    La capital se derrama sobre el río entre catedrales, puentes de piedra y tejados rojos. Desde la
+    colina, el castillo vigila a nobles, gremios y guardias por igual.
+  en: >-
+    The capital spills over the river among cathedrals, stone bridges and red roofs. From the hill, the
+    castle watches over nobles, guilds and guards alike.
+night:
+  es: Las campanas callan y el río refleja mil farolas. En lo alto, solo el castillo sigue despierto.
+  en: The bells fall silent and the river mirrors a thousand lamps. Up on the hill, only the castle stays awake.

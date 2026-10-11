@@ -1,0 +1,6 @@
+# Créditos y licencia de cada archivo de esta carpeta (planning/audiovisual.md §Licencias).
+panorama.jpg:
+  author: Josue
+  source: generada con IA y aportada por Josue (2026-10-11)
+  license: uso propio del proyecto
+  notes: original 1344x768; recorte central y escala a 1280x720 con tools/prepare_image.py

@@ -1,0 +1,10 @@
+name: {es: Mercado de Crownreach, en: Crownreach Market}
+kind: city
+description:
+  es: Toldos de colores, el martilleo de la herrería y mercaderes que juran que su precio es el más justo.
+  en: Colorful awnings, the hammering of the smithy, and merchants swearing their price is the fairest.
+night:
+  es: Los puestos están cerrados. Solo las ratas y algún comprador discreto recorren los pasillos.
+  en: The stalls are shut. Only rats and the odd discreet buyer walk the aisles.
+exits:
+  - {to: crownreach_plaza, minutes: 3}

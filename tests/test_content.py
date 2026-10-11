@@ -66,3 +66,45 @@ def test_every_static_key_in_code_exists():
     missing = sorted(k for k in keys | dynamic if k not in translator.flat("es"))
     assert not missing, missing
     assert len(keys) > 100
+
+
+def test_world_hierarchy():
+    c = load_content()
+    assert "terra_coronata" in c.continents
+    assert c.zones["crownreach"].kind == "city"
+    for key, loc in c.locations.items():
+        assert loc.zone in c.zones and loc.continent in c.continents, key
+    hubs = [k for k, loc in c.locations.items() if loc.hub]
+    assert hubs == ["crownreach_plaza"]
+    assert c.locations["broken_crown_tavern"].zone == "crownreach"
+    assert c.locations["crypt_sanctum"].zone == "sunken_crypt"
+
+
+def test_media_catalog_finds_city_panorama_and_falls_back_at_night():
+    c = load_content()
+    day = c.media.zone_images("crownreach", night=False)
+    assert [a.key for a in day] == ["terra_coronata/crownreach/images/panorama.jpg"]
+    assert day[0].path.is_file() and len(day[0].checksum) == 64
+    assert c.media.zone_images("crownreach", night=True) == day  # no night variant yet
+    assert c.media.zone_images("thornwood") == []
+
+
+def test_night_variant_and_duplicate_ids(tmp_path):
+    import shutil
+
+    import pytest
+
+    from oathforge.config import CONTENT_DIR
+    from oathforge.content.loader import load_world
+
+    shutil.copytree(CONTENT_DIR / "world", tmp_path / "world")
+    images = tmp_path / "world/terra_coronata/crownreach/images"
+    shutil.copy(images / "panorama.jpg", images / "panorama.night.jpg")
+    world = load_world(tmp_path)
+    assert [a.night for a in world.media.zone_images("crownreach", night=True)] == [True]
+    assert [a.night for a in world.media.zone_images("crownreach", night=False)] == [False]
+
+    shutil.copytree(tmp_path / "world/terra_coronata/crownreach/crownreach_market",
+                    tmp_path / "world/terra_coronata/thornwood/crownreach_market")
+    with pytest.raises(ValueError, match="duplicate location 'crownreach_market'"):
+        load_world(tmp_path)

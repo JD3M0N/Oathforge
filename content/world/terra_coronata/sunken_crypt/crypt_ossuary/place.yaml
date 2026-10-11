@@ -1,0 +1,27 @@
+name: {es: "Cripta Hundida: osario", en: "Sunken Crypt: ossuary"}
+kind: dungeon
+description:
+  es: Miles de cráneos ordenados con un cuidado inquietante cubren las paredes.
+  en: Thousands of skulls, arranged with unsettling care, cover the walls.
+exits:
+  - {to: crypt_hall, minutes: 2}
+discoveries:
+  warden_epitaph:
+    skill: history
+    tier: medium
+    sets_flag: warden_lore
+    text:
+      es: >-
+        Un epitafio cuenta que Ser Aldren juró custodiar el relicario hasta que «una mano honesta»
+        lo devolviera. Murió esperando.
+      en: >-
+        An epitaph tells how Ser Aldren swore to guard the reliquary until "an honest hand" returned it.
+        He died waiting.
+  ossuary_coins:
+    skill: investigation
+    tier: easy
+    sets_flag: found_ossuary_coins
+    gold: 25
+    text:
+      es: Entre los huesos, ofrendas olvidadas. Recoges veinticinco monedas antiguas.
+      en: Among the bones, forgotten offerings. You gather twenty-five old coins.

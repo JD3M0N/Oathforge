@@ -1,0 +1,11 @@
+name: {es: "Cripta Hundida: entrada", en: "Sunken Crypt: entrance"}
+kind: dungeon
+description:
+  es: Escalones resbaladizos bajan hasta una puerta de bronce. El aire huele a tierra húmeda y a hierro viejo.
+  en: Slippery steps lead down to a bronze door. The air smells of damp earth and old iron.
+exits:
+  - {to: whispering_woods, minutes: 20}
+  - {to: crypt_hall, minutes: 2}
+fixed_encounters:
+  - {monsters: [crypt_skeleton], flag: cleared_crypt_entrance, unless_flag: syndicate_in_crypt}
+  - {monsters: [bandit, bandit], flag: cleared_crypt_entrance, if_flag: syndicate_in_crypt}

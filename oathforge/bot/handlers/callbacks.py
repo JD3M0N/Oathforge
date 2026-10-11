@@ -7,7 +7,7 @@ from telegram import Update
 from telegram.ext import CallbackQueryHandler, ContextTypes
 
 from oathforge.bot import render
-from oathforge.bot.handlers.common import current_view, edit_or_send, load, rate_ok, rng, send
+from oathforge.bot.handlers.common import current_view, edit_or_send, load, rate_ok, rng, send, send_photos
 from oathforge.bot.keyboards import parse
 from oathforge.content import get_content
 from oathforge.database.session import session_scope
@@ -19,7 +19,8 @@ from oathforge.services.events import Outcome
 log = logging.getLogger(__name__)
 
 # verbs that only show something (no nonce, no state change)
-VIEWS = {"scene", "trv", "talkm", "talk", "bye", "inv", "sheet", "jr", "shopm", "shop", "sellm", "cbp", "lang"}
+VIEWS = {"scene", "trv", "talkm", "talk", "bye", "inv", "sheet", "jr", "shopm", "shop", "sellm", "cbp", "lang",
+         "city"}
 
 
 async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -55,6 +56,14 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             await edit_or_send(update, t(lang, "start.need_character"))
             return
         in_combat = char.state == "in_combat"
+        loc = get_content().locations[char.location]
+        if verb == "city" and not in_combat and loc.hub:
+            images = get_content().media.zone_images(loc.zone, exploration.is_night())
+            if images:
+                await send_photos(session, update, context, images, render.zone_caption(loc.zone, lang))
+            text, kb = await current_view(session, char, lang)
+            await send(update, text, kb)  # the scene again, so its buttons stay below the photo
+            return
         if verb == "talk" and not in_combat and arg in exploration.npcs_present(char.location):
             context.user_data["talk"] = arg
             text, kb = await render.conversation(session, char, arg, lang)

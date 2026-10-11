@@ -4,6 +4,19 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.3.0] - 2026-10-11
+
+### Añadido
+- **Mundo en carpetas**: `content/world/<continente>/<zona>/<lugar>/place.yaml`, con `world.yaml`, `continent.yaml` y `zone.yaml` (zona = ciudad, territorio salvaje o mazmorra). Primer continente: **Terra Coronata**, con Crownreach, Thornwood y la Cripta Hundida.
+- **Catálogo de imágenes** por convención: cada carpeta puede tener `images/` (el sufijo `.night` marca la variante nocturna) y un `media.yaml` opcional con créditos y licencia (`oathforge/content/media.py`).
+- **Caché de `file_id` de Telegram** por bot y checksum (tabla `media_files`, migración `0002`, `services/media.py`): cada imagen se sube una sola vez y se vuelve a subir sola si cambia el archivo.
+- Botón **«🏙️ Ver ciudad»** en la plaza de Crownreach (lugar `hub`), solo si la ciudad tiene imágenes: envía la panorámica con su descripción de día o de noche y vuelve a mostrar la escena.
+- Panorámica de Crownreach (1280 × 720).
+- `tools/prepare_image.py` (Pillow, extra `dev`): recorta, escala y optimiza imágenes a la escala del juego.
+
+### Cambiado
+- `content/locations.yaml` se reparte en la nueva estructura; los ids de lugar no cambian.
+
 ## [0.2.2] - 2026-10-11
 
 ### Añadido

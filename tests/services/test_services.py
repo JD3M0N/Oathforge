@@ -373,3 +373,28 @@ async def test_recall_limit_and_order():
         mems = await npcs.recall(s, "tessa", char)
         assert len(mems) == 5 and mems[0].importance == 5
         assert await npcs.recall(s, "bram", char) == []
+
+
+# ---------------------------------------------------------------- media
+
+async def test_media_file_id_cache_per_bot_and_checksum():
+    from dataclasses import replace
+
+    from oathforge.content import get_content
+    from oathforge.services import media
+
+    asset = get_content().media.zone_images("crownreach")[0]
+    async with session_scope() as s:
+        assert await media.get_file_id(s, 1, asset) is None
+        await media.remember(s, 1, asset, "FILE_A", "UA")
+    async with session_scope() as s:
+        assert await media.get_file_id(s, 1, asset) == "FILE_A"
+        assert await media.get_file_id(s, 2, asset) is None  # file_ids belong to one bot
+        changed = replace(asset, checksum="0" * 64)
+        assert await media.get_file_id(s, 1, changed) is None  # file replaced: upload again
+        await media.remember(s, 1, changed, "FILE_B", "UB")
+    async with session_scope() as s:
+        assert await media.get_file_id(s, 1, changed) == "FILE_B"
+        await media.forget(s, 1, changed)
+    async with session_scope() as s:
+        assert await media.get_file_id(s, 1, changed) is None

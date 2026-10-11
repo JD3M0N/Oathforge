@@ -1,0 +1,24 @@
+name: {es: Taberna La Corona Rota, en: The Broken Crown Tavern}
+kind: city
+rest_cost: 5
+description:
+  es: >-
+    El olor a madera quemada y carne asada llena el salón. Dos mercenarios discuten junto a la
+    chimenea y el suelo cruje con cada paso.
+  en: >-
+    The smell of burning wood and roast meat fills the hall. Two mercenaries argue by the fireplace
+    and the floor creaks with every step.
+night:
+  es: La taberna está llena. Entre el humo y las risas, alguien observa la puerta sin parpadear.
+  en: The tavern is packed. Between the smoke and the laughter, someone watches the door without blinking.
+exits:
+  - {to: crownreach_plaza, minutes: 2}
+discoveries:
+  loose_floorboard:
+    skill: investigation
+    tier: hard
+    sets_flag: found_floorboard_stash
+    gold: 15
+    text:
+      es: Una tabla suelta junto a la chimenea esconde una bolsita con quince monedas de oro.
+      en: A loose board by the fireplace hides a small pouch with fifteen gold coins.

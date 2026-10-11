@@ -1,0 +1,38 @@
+name: {es: Bosque de los Susurros, en: Whispering Woods}
+kind: wild
+description:
+  es: >-
+    La lluvia golpea las hojas de los robles de Thornwood. Entre los troncos, el viento parece
+    pronunciar nombres.
+  en: >-
+    Rain beats on the leaves of the Thornwood oaks. Between the trunks, the wind seems to speak names.
+exits:
+  - {to: old_kings_road, minutes: 40, danger: 2}
+  - {to: crypt_entrance, minutes: 20, requires_flag: crypt_unlocked}
+encounters:
+  - {monsters: [grey_wolf], weight: 3}
+  - {monsters: [grey_wolf, grey_wolf], weight: 2}
+  - {monsters: [goblin_scout, bandit], weight: 1}
+scene_objects:
+  hornet_nest:
+    name: {es: Avispero, en: Hornet nest}
+    description: {es: Un enorme avispero cuelga de una rama baja., en: A huge hornet nest hangs from a low branch.}
+    skill: athletics
+    tier: easy
+    effect: {damage: 1d4, damage_type: poison, targets: all_enemies, status: {status: poisoned, turns: 2}}
+discoveries:
+  healing_herbs:
+    skill: medicine
+    tier: easy
+    sets_flag: found_healing_herbs
+    gives: {healing_potion: 1}
+    text:
+      es: Reconoces raíz de sangre entre los helechos y preparas un ungüento curativo.
+      en: You spot bloodroot among the ferns and prepare a healing salve.
+  hidden_stairs:
+    skill: perception
+    tier: very_hard
+    sets_flag: crypt_unlocked
+    text:
+      es: Bajo un manto de hiedra descubres unos peldaños de piedra que descienden hacia la oscuridad.
+      en: Beneath a curtain of ivy you find stone steps descending into darkness.

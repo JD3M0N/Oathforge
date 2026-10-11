@@ -59,6 +59,8 @@ oathforge/
   i18n/       locales es/en
   database/   modelos SQLAlchemy y sesión
 content/      todo el contenido del juego en YAML validado al arrancar
+  world/      mundo → continente → zona → lugar, con images/ y audio/ en cada carpeta
+tools/        utilidades (prepare_image.py: escala y optimiza imágenes)
 migrations/   Alembic
 ```
 
