@@ -36,9 +36,9 @@ RPG narrativo multijugador para Telegram, ambientado en **Aetherfall**. Un Dunge
    ```
 5. **Jugar**
    ```powershell
-   .venv\Scripts\python -m oathforge.main
+   .venv\Scripts\oathforge bot
    ```
-   Abre tu bot en Telegram y escribe `/start`.
+   Abre tu bot en Telegram y escribe `/start`. `.venv\Scripts\oathforge help` lista todos los comandos de consola (con el venv activado basta `oathforge help`).
 
 ## Tests
 
@@ -98,7 +98,7 @@ Las misiones son máquinas de estados: `stages`, `actions` (botones o acciones l
   - `events/<día>.jsonl` (todo en crudo, incluidos los cambios de estado), `errors/<día>.log` y `logs/<día>.log` (avisos).
   - Cada cambio de estado (PV, oro, objetos, misiones, memorias de PNJ, acciones de botón…) aparece también como «⚙️ estado» dentro de la conversación.
   - Se desactiva con `ARTIFACTS_ENABLED=false` en `.env`.
-- **Ronda de pruebas limpia:** para el bot y ejecuta `.venv\Scripts\python scripts\reset_players.py --yes` (sin `--yes` solo muestra qué borraría).
+- **Ronda de pruebas limpia:** para el bot y ejecuta `.venv\Scripts\oathforge reset-players --yes` (sin `--yes` solo muestra qué borraría).
 
 ## Cómo colaborar
 

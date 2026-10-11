@@ -46,6 +46,9 @@ Antes de editar nada, comprueba la rama (`git branch --show-current`) y el usuar
 
 ```powershell
 .venv\Scripts\python -m pytest          # tests (Postgres si TEST_DATABASE_URL conecta; si no, SQLite)
-.venv\Scripts\python -m oathforge.main  # arrancar el bot
+.venv\Scripts\oathforge bot            # arrancar el bot
+.venv\Scripts\oathforge reset-players   # borrar jugadores (--yes para confirmar)
 .venv\Scripts\alembic upgrade head      # migraciones
 ```
+
+`oathforge help` lista los comandos de consola (`oathforge/cli.py`); si añades uno, añádelo a `COMMANDS`.

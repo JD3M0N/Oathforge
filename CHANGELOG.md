@@ -4,6 +4,14 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.4.3] - 2026-10-11
+
+### Añadido
+- **Comandos de consola** `oathforge` (`oathforge/cli.py`, también `python -m oathforge`): `oathforge help` lista los comandos con una descripción breve, `oathforge bot` arranca el bot y `oathforge reset-players [--yes]` borra los jugadores.
+
+### Cambiado
+- `scripts/reset_players.py` pasa a ser `oathforge reset-players`.
+
 ## [0.4.2] - 2026-10-11
 
 ### Añadido
