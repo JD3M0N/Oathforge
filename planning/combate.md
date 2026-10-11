@@ -24,8 +24,33 @@ Motor puro en `oathforge/engine/combat.py`, persistido como JSON en `encounters.
 - **Temporizador de turno** (JobQueue) cuando haya grupos.
 - Salvaciones contra muerte en vez de derrota inmediata.
 
+### Del GDD
+
+- **Tipos de acción** (§5.3.1). Ya tenemos ataque, habilidad, interacción y huida; faltan:
+
+  | Tipo | Ejemplos | Validación |
+  |---|---|---|
+  | Defensa | Bloqueo, esquiva preparada, proteger a un aliado | Coste de acción, posición |
+  | Apoyo | Curar, inspirar, quitar veneno | Aliado válido, recursos |
+  | Social | Intimidar, negociar una tregua, rendirse | Disposición del enemigo, tirada |
+  | Retirada | Cubrir la retirada, rendirse | Ruta, amenaza, consecuencias |
+
+- **Cobertura** como tercera posición junto a vanguardia y retaguardia (§5.3): reduce la probabilidad de impacto. Más elementos del escenario: barriles, puertas, puentes, cuerdas (ejemplo de la lámpara sobre los goblins, §5.8).
+- **Estados nuevos** (§5.4): ralentizado, derribado, silenciado y concentración. Cada estado con `source`, `duration`, `stacking_rule`, `dispel_type` y momento en que se activa. Evitar bloqueos infinitos: inmunidad temporal tras un control.
+- **IA enemiga en tres niveles** (§5.5), sin LLM, con reglas o árboles de comportamiento:
+  - *Básica*: ataca lo que alcanza, huye con poca vida, usa una habilidad según el contexto (lo que hay hoy).
+  - *Táctica*: protege al sanador, busca cobertura, prioriza amenazas y aprovecha estados.
+  - *Jefe*: fases, **avisos previos** del ataque fuerte («el Guardián alza la espada…»), entorno que cambia y objetivos alternativos.
+- **Roles de enemigo** (§5.6): tanque, atacante, invocador, sanador y controlador, para que los encuentros premien la cooperación.
+- **Botín** (§5.6): botín por jugador como base; los objetos únicos de evento, con reglas anunciadas antes del combate.
+- **Anti-duplicado** (§15.5): `encounter.version` + `turn_index` en cada botón para que un callback viejo o un doble clic no ejecute dos ataques en el mismo turno.
+- **Repetición de combates** (idea 78): historial de dados y acciones legible por el jugador para entender una derrota. La base ya está en `artifacts/battles/`.
+- Críticos, ventaja, desventaja y reacciones con una única especificación y tests; no deben depender de cómo redacte la IA.
+
 ## Preguntas abiertas
 
 - ¿Cuánto debe durar un combate normal? Objetivo tentativo: 3–5 rondas. Medirlo con `artifacts/battles/`.
 - ¿La derrota debe costar más que oro y el estado «herido»?
 - ¿Mostrar siempre los números de la tirada o solo en un modo detallado?
+- ¿Añadimos la cobertura como tercera posición o basta con vanguardia y retaguardia?
+- ¿Qué enemigo estrena la IA táctica: el capitán bandido (proteger a los suyos) o los esqueletos de la Cripta (rodear al sanador)?
