@@ -13,8 +13,10 @@ ABILITIES = ("str", "dex", "con", "int", "wis", "cha")
 DC_TIERS = {"trivial": 5, "easy": 10, "medium": 13, "hard": 16, "very_hard": 19}
 STATUSES = (
     "bleeding", "burning", "poisoned", "frightened", "stunned",
-    "vulnerable", "hidden", "defending",
+    "vulnerable", "hidden", "defending", "blessed",
 )
+DamageType = Literal["slashing", "piercing", "bludgeoning", "radiant", "necrotic", "cold", "fire", "poison"]
+CreatureType = Literal["humanoid", "beast", "undead"]
 
 Tier = Literal["trivial", "easy", "medium", "hard", "very_hard"]
 Row = Literal["front", "back"]
@@ -63,17 +65,29 @@ class ClassAbility(Strict):
     name: Text
     description: Text
     level: int
-    kind: Literal["strike", "heal", "hide", "passive"]
+    # strike: weapon attack + extra_damage · spell: ranged spell attack for `damage`
+    # turn: `damage` + `status` to every enemy of `targets_type` · buff: `status` on self
+    # surge: bonus action that gives the action back · heal · hide · passive
+    kind: Literal["strike", "spell", "turn", "buff", "surge", "heal", "hide", "passive"]
     action: Literal["action", "bonus", "none"] = "action"
     uses: int | None = None  # per rest; None = unlimited
+    damage: str | None = None
     extra_damage: str | None = None
-    damage_type: str | None = None
+    damage_type: DamageType | None = None
     heal_per_level: int | None = None
+    heal_dice: str | None = None
+    heal_add: Literal["level", "casting"] | None = None
+    status: Literal["blessed", "stunned", "frightened"] | None = None
+    status_turns: int = 1
+    targets_type: CreatureType | None = None
     ac_bonus: int = 0
     immune: list[str] = []
     sneak_dice: dict[int, int] = {}  # level -> d6 count
     extra_attack: bool = False
     halve_first_hit: bool = False
+    crit_range: int | None = None  # e.g. 19: critical on 19-20
+    bonus_damage: str | None = None  # once per turn on a melee weapon hit
+    bonus_damage_type: DamageType | None = None
 
 
 class GameClass(Strict):
@@ -81,6 +95,7 @@ class GameClass(Strict):
     description: Text
     hit_die: int
     primary: str
+    casting: Literal["int", "wis", "cha"] | None = None  # spell attacks and healing use this modifier
     array: dict[str, int]
     skills: list[str]
     items: dict[str, int]
@@ -154,7 +169,11 @@ class Monster(Strict):
     gold: str = "0"
     loot: list[LootEntry] = []
     cowardly: bool = False
-    immune: list[str] = []
+    immune: list[str] = []  # statuses
+    type: CreatureType = "humanoid"
+    resist: list[DamageType] = []
+    vulnerable: list[DamageType] = []
+    immune_damage: list[DamageType] = []
 
 
 class SceneEffect(Strict):

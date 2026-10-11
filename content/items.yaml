@@ -14,6 +14,30 @@ dagger:
   value: 2
   weapon: {damage: 1d4, damage_type: piercing, finesse: true}
 
+warhammer:
+  name: {es: Martillo de guerra, en: Warhammer}
+  description: {es: "Hierro macizo: no corta, aplasta. Los huesos lo temen.", en: "Solid iron: it doesn't cut, it crushes. Bones fear it."}
+  type: weapon
+  slot: main_hand
+  value: 15
+  weapon: {damage: 1d8, damage_type: bludgeoning}
+
+mace:
+  name: {es: Maza, en: Mace}
+  description: {es: Una maza sencilla con el símbolo de la fe grabado., en: A plain mace engraved with a holy symbol.}
+  type: weapon
+  slot: main_hand
+  value: 5
+  weapon: {damage: 1d6, damage_type: bludgeoning}
+
+handaxe:
+  name: {es: Hacha de mano, en: Handaxe}
+  description: {es: Ligera y equilibrada para lanzarla., en: Light and balanced for throwing.}
+  type: weapon
+  slot: ranged
+  value: 5
+  weapon: {damage: 1d6, damage_type: slashing, ranged: true}
+
 shortbow:
   name: {es: Arco corto, en: Shortbow}
   description: {es: Un arco de tejo para atacar desde la distancia., en: A yew bow for striking from a distance.}
@@ -30,6 +54,15 @@ chain_mail:
   value: 75
   base_ac: 16
   dex_cap: 0
+
+scale_mail:
+  name: {es: Cota de escamas, en: Scale mail}
+  description: {es: Escamas de acero cosidas sobre cuero., en: Steel scales sewn over leather.}
+  type: armor
+  slot: body
+  value: 50
+  base_ac: 14
+  dex_cap: 2
 
 leather_armor:
   name: {es: Armadura de cuero, en: Leather armor}

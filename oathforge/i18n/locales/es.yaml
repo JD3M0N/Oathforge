@@ -198,7 +198,11 @@ combat:
   hit: "{actor} golpea a {target} con {weapon} ({roll} → {total} contra CA {ac}{mod}){extra}."
   crit: "¡CRÍTICO! {actor} golpea a {target} con {weapon} ({roll} → {total}{mod}){extra}."
   miss: "{actor} falla contra {target} con {weapon} ({roll} → {total} contra CA {ac}{mod})."
-  damage: "{target} recibe {amount} de daño {type}."
+  damage: "{target} recibe {amount} de daño {type}{effect}."
+  effect:
+    weak: " (¡débil!)"
+    resist: " (resiste)"
+    immune: " (inmune)"
   defeated: "{target} cae."
   relentless: "{target} se niega a caer y queda en pie con 1 PV."
   status: "{target} sufre {status} ({turns} turnos)."
@@ -210,6 +214,9 @@ combat:
   potion: "{actor} bebe una poción y recupera {amount} PV."
   ability: "{actor} usa {ability}."
   heal: "{actor} usa {ability} y recupera {amount} PV."
+  turn: "{actor} usa {ability}: la luz sagrada abrasa a los no-muertos."
+  buff: "{actor} usa {ability}: {status} durante {turns} turnos."
+  surge: "{actor} usa {ability} y recupera su acción."
   hide: "{actor} intenta esconderse: {roll} → {total} contra CD {dc} {result}"
   flee: "{actor} intenta huir: {roll} → {total} contra CD {dc} {result}"
   interact: "{actor} usa {object} ({skill}): {roll} → {total} contra CD {dc} {result}"
@@ -235,6 +242,8 @@ combat:
     no_object: "Ese objeto ya no está disponible."
     no_target: "No hay objetivos a tu alcance."
     bad_target: "No puedes alcanzar a ese objetivo."
+    no_type_targets: "No hay enemigos a los que afecte."
+    surge_unused: "Primero usa tu acción."
 
 row:
   front: "vanguardia"
@@ -249,6 +258,7 @@ status:
   vulnerable: "vulnerabilidad"
   hidden: "oculto"
   defending: "en guardia"
+  blessed: "bendición"
   icon:
     bleeding: "🩸"
     burning: "🔥"
@@ -258,6 +268,7 @@ status:
     vulnerable: "🎯"
     hidden: "👤"
     defending: "🛡️"
+    blessed: "🙏"
 
 dmg:
   slashing: "cortante"
@@ -269,6 +280,7 @@ dmg:
   poison: "de veneno"
   bleeding: "por sangrado"
   burning: "por fuego"
+  fire: "de fuego"
 
 err:
   generic: "Algo salió mal. Inténtalo de nuevo."

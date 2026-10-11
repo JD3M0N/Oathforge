@@ -86,3 +86,120 @@ rogue:
     spy: {es: Espía, en: Spy}
     duelist: {es: Duelista, en: Duelist}
     trapper: {es: Trampero, en: Trapper}
+
+warrior:
+  name: {es: Guerrero, en: Warrior}
+  description:
+    es: Maestro de las armas y la armadura; aguanta en primera línea y remata cuando cuenta.
+    en: Master of arms and armor; holds the front line and finishes the fight when it counts.
+  hit_die: 10
+  primary: str
+  array: {str: 15, con: 14, dex: 13, wis: 12, cha: 10, int: 8}
+  skills: [athletics, intimidation]
+  items: {warhammer: 1, handaxe: 1, chain_mail: 1, shield: 1, healing_potion: 1}
+  equip: [warhammer, handaxe, chain_mail, shield]
+  abilities:
+    second_wind:
+      name: {es: Segundo Aliento, en: Second Wind}
+      description: {es: "Acción adicional: recuperas 1d10 + tu nivel en PV.", en: "Bonus action: recover 1d10 + your level in HP."}
+      level: 1
+      kind: heal
+      action: bonus
+      uses: 1
+      heal_dice: 1d10
+      heal_add: level
+    defense_style:
+      name: {es: "Estilo de combate: Defensa", en: "Fighting Style: Defense"}
+      description: {es: "+1 a la CA.", en: "+1 AC."}
+      level: 1
+      kind: passive
+      action: none
+      ac_bonus: 1
+    action_surge:
+      name: {es: Oleada de Acción, en: Action Surge}
+      description: {es: "Acción adicional, tras usar tu acción: recuperas la acción y puedes actuar otra vez.", en: "Bonus action, after using your action: you get your action back and can act again."}
+      level: 2
+      kind: surge
+      action: bonus
+      uses: 1
+    improved_critical:
+      name: {es: Crítico Mejorado, en: Improved Critical}
+      description: {es: Tus ataques son críticos con 19 o 20., en: Your attacks score a critical hit on a 19 or 20.}
+      level: 3
+      kind: passive
+      action: none
+      crit_range: 19
+    extra_attack:
+      name: {es: Ataque Extra, en: Extra Attack}
+      description: {es: Atacas dos veces con tu acción de ataque., en: You attack twice with your attack action.}
+      level: 5
+      kind: passive
+      action: none
+      extra_attack: true
+  specializations:
+    champion: {es: Campeón, en: Champion}
+    battle_master: {es: Maestro de Batalla, en: Battle Master}
+    guardian: {es: Guardián, en: Guardian}
+    berserker: {es: Berserker, en: Berserker}
+
+priest:
+  name: {es: Sacerdote, en: Priest}
+  description:
+    es: Canaliza la luz de su fe para sanar a los suyos y abrasar a los no-muertos.
+    en: Channels the light of their faith to heal allies and sear the undead.
+  hit_die: 8
+  primary: wis
+  casting: wis
+  array: {wis: 15, con: 14, str: 13, dex: 12, cha: 10, int: 8}
+  skills: [medicine, religion]
+  items: {mace: 1, scale_mail: 1, shield: 1, healing_potion: 1}
+  equip: [mace, scale_mail, shield]
+  abilities:
+    sacred_flame:
+      name: {es: Llama Sagrada, en: Sacred Flame}
+      description: {es: "Ataque de conjuro a distancia (SAB): 1d8 de daño radiante. Ilimitado.", en: "Ranged spell attack (WIS): 1d8 radiant damage. Unlimited."}
+      level: 1
+      kind: spell
+      damage: 1d8
+      damage_type: radiant
+    healing_word:
+      name: {es: Palabra Sanadora, en: Healing Word}
+      description: {es: "Acción adicional: recuperas 2d4 + SAB PV.", en: "Bonus action: recover 2d4 + WIS HP."}
+      level: 1
+      kind: heal
+      action: bonus
+      uses: 2
+      heal_dice: 2d4
+      heal_add: casting
+    turn_undead:
+      name: {es: Expulsar No-muertos, en: Turn Undead}
+      description: {es: "Todos los no-muertos enemigos sufren 2d6 de daño radiante y quedan aturdidos un turno.", en: "Every undead enemy takes 2d6 radiant damage and is stunned for a turn."}
+      level: 2
+      kind: turn
+      uses: 1
+      damage: 2d6
+      damage_type: radiant
+      status: stunned
+      status_turns: 1
+      targets_type: undead
+    bless:
+      name: {es: Bendición, en: Bless}
+      description: {es: "+2 a tus tiradas de ataque durante 3 turnos.", en: "+2 to your attack rolls for 3 turns."}
+      level: 3
+      kind: buff
+      uses: 1
+      status: blessed
+      status_turns: 3
+    divine_strike:
+      name: {es: Golpe Divino, en: Divine Strike}
+      description: {es: "Una vez por turno, tus golpes con arma cuerpo a cuerpo añaden 1d8 de daño radiante.", en: "Once per turn, your melee weapon hits add 1d8 radiant damage."}
+      level: 5
+      kind: passive
+      action: none
+      bonus_damage: 1d8
+      bonus_damage_type: radiant
+  specializations:
+    life: {es: Dominio de la Vida, en: Life Domain}
+    light: {es: Dominio de la Luz, en: Light Domain}
+    war: {es: Dominio de la Guerra, en: War Domain}
+    grave: {es: Dominio de la Tumba, en: Grave Domain}

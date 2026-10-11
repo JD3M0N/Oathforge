@@ -36,9 +36,7 @@ async def help_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     async with session_scope() as session:
         user, _ = await load(session, update)
         lang = user.language
-    await send(update, t(lang, "help.text") + "
-
-" + t(lang, "help.version", version=__version__))
+    await send(update, f'{t(lang, "help.text")}\n\n{t(lang, "help.version", version=__version__)}')
 
 
 def handlers() -> list[CommandHandler]:

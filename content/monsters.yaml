@@ -53,6 +53,7 @@ grey_wolf:
   attacks:
     - {name: {es: Mordisco, en: Bite}, to_hit: 4, damage: 2d4+2, damage_type: piercing, applies: {status: bleeding, turns: 2, chance: 0.25}}
   xp: 50
+  type: beast
 
 crypt_skeleton:
   name: {es: Esqueleto de la cripta, en: Crypt skeleton}
@@ -65,6 +66,9 @@ crypt_skeleton:
   xp: 50
   gold: 1d4
   immune: [poisoned, frightened, bleeding]
+  type: undead
+  vulnerable: [bludgeoning, radiant]
+  immune_damage: [poison]
 
 crypt_warden:
   name: {es: Guardián de la Cripta, en: Crypt Warden}
@@ -83,3 +87,7 @@ crypt_warden:
   loot:
     - {item: healing_potion, chance: 1.0, qty: 2}
   immune: [poisoned, frightened, bleeding]
+  type: undead
+  vulnerable: [radiant]
+  resist: [necrotic, cold]
+  immune_damage: [poison]

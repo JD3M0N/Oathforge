@@ -10,7 +10,7 @@ Motor puro en `oathforge/engine/combat.py`, persistido como JSON en `encounters.
 - Estados: sangrado, quemadura, envenenado, asustado, aturdido, vulnerable, oculto, defendiendo y bendecido.
 - Objetos del escenario (empujar un carro, tirar una lámpara) con prueba de habilidad.
 - Huir: Atletismo o Acrobacias contra 10 + 2 por enemigo.
-- **v0.2.0, tipos de daño y criaturas**: los monstruos tienen tipo (humanoide, bestia, no-muerto), resistencias (½ daño), vulnerabilidades (×2) e inmunidades. El panel avisa «¡débil!» o «resiste». Los esqueletos sufren el doble con contundente y radiante y resisten el perforante.
+- **v0.2.0, tipos de daño y criaturas**: los monstruos tienen tipo (humanoide, bestia, no-muerto), resistencias (½ daño), vulnerabilidades (×2) e inmunidades. El panel avisa «¡débil!» o «resiste». Los esqueletos sufren el doble con contundente y radiante; el Guardián de la Cripta, con radiante, y resiste necrótico y frío. El daño extra de otro tipo (Golpe Consagrado, Golpe Divino) se aplica aparte para que cuente la debilidad.
 - Enemigos: atacan al jugador con menos PV con su primer ataque válido; los cobardes huyen con ¼ de PV.
 
 ## Ideas

@@ -6,7 +6,9 @@ from oathforge.content import get_content
 from oathforge.engine import combat as cb
 from oathforge.engine.combat import Action, AttackProfile, Combatant, CombatError, EncounterState
 
-ABILITIES = get_content().classes["paladin"].abilities | get_content().classes["rogue"].abilities
+_CLASSES = get_content().classes
+ABILITIES = (_CLASSES["paladin"].abilities | _CLASSES["rogue"].abilities
+             | _CLASSES["warrior"].abilities | _CLASSES["priest"].abilities)
 SWORD = AttackProfile(key="main", name={"es": "Espada", "en": "Sword"}, to_hit=5, damage="1d8+3", damage_type="slashing")
 BOW = AttackProfile(key="ranged", name={"es": "Arco", "en": "Bow"}, to_hit=5, damage="1d6+3", damage_type="piercing", ranged=True)
 DAGGER = AttackProfile(key="main", name={"es": "Daga", "en": "Dagger"}, to_hit=5, damage="1d4+3", damage_type="piercing", finesse=True)
@@ -209,3 +211,114 @@ def test_state_roundtrips_through_json():
     st = encounter(player(), monster())
     again = EncounterState.model_validate(st.model_dump(mode="json"))
     assert again == st
+
+
+# ---------------------------------------------------------------- v0.2.0: damage types, warrior, priest
+
+class FixedRng(random.Random):
+    """Every die shows ``value`` (capped at the die size)."""
+
+    def __init__(self, value: int):
+        super().__init__(0)
+        self.value = value
+
+    def randint(self, a, b):
+        return min(b, max(a, self.value))
+
+
+def started(*cs) -> EncounterState:
+    """Encounter where the player acts first, without rolling initiative."""
+    st = EncounterState(location="t", combatants={c.id: c for c in cs}, order=[c.id for c in cs])
+    return st
+
+
+def test_damage_types_weak_resist_immune():
+    m = monster(hp=100, max_hp=100, weak_to=["radiant"], resist=["slashing"], immune_damage=["poison"])
+    st = EncounterState(location="t", combatants={"m1": m})
+    weak = cb._apply_damage(st, m, 10, "radiant")[0]
+    resist = cb._apply_damage(st, m, 10, "slashing")[0]
+    immune = cb._apply_damage(st, m, 10, "poison")[0]
+    plain = cb._apply_damage(st, m, 10, "piercing")[0]
+    assert [e.params["amount"] for e in (weak, resist, immune, plain)] == [20, 5, 0, 10]
+    assert [e.params["effect"] for e in (weak, resist, immune, plain)] == ["weak", "resist", "immune", ""]
+    assert m.hp == 100 - 35
+
+
+def test_extra_radiant_damage_is_applied_separately():
+    st = started(player(abilities={"consecrated_strike": 1}), monster(hp=100, max_hp=100, ac=1, weak_to=["radiant"]))
+    logs = cb.player_act(st, "p1", Action(kind="ability", ability="consecrated_strike", target="m1"),
+                         FixedRng(4), ABILITIES)
+    dmg = [e.params for e in logs if e.key == "combat.damage" and e.params["target"] == "m1"]
+    assert [(d["type"], d["amount"], d["effect"]) for d in dmg] == [("slashing", 4 + 3, ""), ("radiant", 8, "weak")]
+
+
+def test_improved_critical_on_19():
+    st = started(player(crit_range=19), monster(hp=100, max_hp=100, ac=30))
+    logs = cb.player_act(st, "p1", Action(kind="attack", weapon="main", target="m1"), FixedRng(19), ABILITIES)
+    assert any(e.key == "combat.crit" for e in logs)
+    st = started(player(), monster(hp=100, max_hp=100, ac=10))
+    logs = cb.player_act(st, "p1", Action(kind="attack", weapon="main", target="m1"), FixedRng(19), ABILITIES)
+    assert not any(e.key == "combat.crit" for e in logs) and any(e.key == "combat.hit" for e in logs)
+
+
+def test_action_surge_gives_the_action_back():
+    st = started(player(abilities={"action_surge": 1, "second_wind": 1}), monster(hp=100, max_hp=100))
+    with pytest.raises(CombatError) as e:
+        cb.player_act(st, "p1", Action(kind="ability", ability="action_surge"), FixedRng(10), ABILITIES)
+    assert e.value.key == "combat.err.surge_unused"
+    cb.player_act(st, "p1", Action(kind="defend"), FixedRng(10), ABILITIES)
+    assert st.current.id == "p1" and "action_surge" in cb.available_bonus_actions(st, st.current, ABILITIES)
+    cb.player_act(st, "p1", Action(kind="ability", ability="action_surge"), FixedRng(10), ABILITIES)
+    p = st.combatants["p1"]
+    assert not p.action_used and p.bonus_used and p.abilities["action_surge"] == 0
+    logs = cb.player_act(st, "p1", Action(kind="attack", weapon="main", target="m1"), FixedRng(10), ABILITIES)
+    assert any(e.key == "combat.hit" for e in logs) and st.round == 2  # second action, then the turn ends
+
+
+def test_second_wind_heals_dice_plus_level():
+    st = started(player(hp=1, level=3, abilities={"second_wind": 1}), monster())
+    cb.player_act(st, "p1", Action(kind="ability", ability="second_wind"), FixedRng(6), ABILITIES)
+    assert st.combatants["p1"].hp == 1 + 6 + 3
+
+
+def test_sacred_flame_uses_spell_bonus_and_reaches_back_row():
+    priest = player(row="back", attacks=[], spell_to_hit=4, abilities={"sacred_flame": None})
+    archer = monster(row="back", hp=100, max_hp=100, ac=14)
+    st = started(priest, monster("m2"), archer)
+    logs = cb.player_act(st, "p1", Action(kind="ability", ability="sacred_flame", target="m1"), FixedRng(10), ABILITIES)
+    hit = next(e for e in logs if e.key == "combat.hit")
+    assert hit.params["total"] == 14 and hit.params["target"] == "m1"
+    dmg = next(e for e in logs if e.key == "combat.damage" and e.params["target"] == "m1")
+    assert dmg.params["type"] == "radiant"
+    assert st.combatants["p1"].abilities["sacred_flame"] is None  # unlimited
+
+
+def test_turn_undead_only_hits_undead():
+    st = started(player(abilities={"turn_undead": 1}),
+                 monster("m1", hp=50, max_hp=50, creature_type="undead", weak_to=["radiant"]),
+                 monster("m2", hp=50, max_hp=50))
+    logs = cb.player_act(st, "p1", Action(kind="ability", ability="turn_undead"), FixedRng(3), ABILITIES)
+    assert st.combatants["m1"].hp == 50 - 12 and st.combatants["m2"].hp == 50
+    assert any(e.key == "combat.status" and e.params["status"] == "stunned" for e in logs)
+    st = started(player(abilities={"turn_undead": 1}), monster())
+    with pytest.raises(CombatError) as e:
+        cb.player_act(st, "p1", Action(kind="ability", ability="turn_undead"), FixedRng(3), ABILITIES)
+    assert e.value.key == "combat.err.no_type_targets"
+
+
+def test_bless_adds_to_attack_rolls_for_three_turns():
+    st = started(player(abilities={"bless": 1}), monster(hp=500, max_hp=500, ac=30))
+    cb.player_act(st, "p1", Action(kind="ability", ability="bless"), FixedRng(10), ABILITIES)
+    totals = []
+    for _ in range(4):
+        cb.player_act(st, "p1", Action(kind="end_turn"), FixedRng(10), ABILITIES) if st.current.action_used else None
+        logs = cb.player_act(st, "p1", Action(kind="attack", weapon="main", target="m1"), FixedRng(10), ABILITIES)
+        totals.append(next(e for e in logs if e.key == "combat.miss").params["total"])
+    assert totals == [17, 17, 17, 15]
+
+
+def test_divine_strike_once_per_turn():
+    st = started(player(bonus_damage="1d8", extra_attack=True), monster(hp=500, max_hp=500, ac=1))
+    logs = cb.player_act(st, "p1", Action(kind="attack", weapon="main", target="m1"), FixedRng(5), ABILITIES)
+    radiant = [e for e in logs if e.key == "combat.damage" and e.params["type"] == "radiant"]
+    assert len(radiant) == 1

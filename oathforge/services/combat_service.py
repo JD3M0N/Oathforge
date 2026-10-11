@@ -25,6 +25,7 @@ def monster_combatant(key: str, cid: str) -> Combatant:
     return Combatant(
         id=cid, side="enemy", ref=key, name=m.name.model_dump(), hp=m.hp, max_hp=m.hp, ac=m.ac, row=m.row,
         dex_mod=m.dex, passive_perception=10 + m.wis, immune=list(m.immune), cowardly=m.cowardly, xp=m.xp,
+        creature_type=m.type, resist=list(m.resist), weak_to=list(m.vulnerable), immune_damage=list(m.immune_damage),
         attacks=[
             AttackProfile(key=f"a{i}", name=a.name.model_dump(), to_hit=a.to_hit, damage=a.damage,
                           damage_type=a.damage_type, ranged=a.ranged,
@@ -172,6 +173,9 @@ def log_event(state: EncounterState, entry: LogEntry) -> Event:
         p["status"] = _both(f"status.{p['status']}")
     if "type" in p:
         p["type"] = _both(f"dmg.{p['type']}")
+    if entry.key == "combat.damage":  # logs saved before v0.2.0 have no effect
+        effect = p.pop("effect", "")
+        p["effect"] = _both(f"combat.effect.{effect}") if effect else ""
     if "row" in p:
         p["row"] = _both(f"row.{p['row']}")
     if "success" in p:

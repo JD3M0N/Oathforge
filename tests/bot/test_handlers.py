@@ -181,6 +181,33 @@ async def test_combat_through_buttons(llm):
     assert "Sunken Crypt" in p.last[0]
 
 
+async def test_priest_sacred_flame_burns_skeletons(llm):
+    p = Player(llm, tg_id=8, lang="en")
+    await create(p, cls="priest")
+    async with session_scope() as s:
+        char = await s.scalar(select(Character).with_for_update())
+        char.location, char.flags = "whispering_woods", {"crypt_unlocked": True}
+        char.hp = char.max_hp = 400
+    await p.press("scene|-|-")
+    await p.press(p.find("trv"))
+    await p.press(p.find("go", "crypt_entrance"))
+    assert p.find("cb", "abl:sacred_flame")
+
+    for _ in range(80):
+        async with session_scope() as s:
+            enc = await s.scalar(select(Encounter).order_by(Encounter.id.desc()))
+        if enc.status != "active":
+            break
+        if not any(parse(b)[1] == "abl:sacred_flame" for b in p.buttons()):
+            await p.press(p.find("cb", "end"))  # action spent, Healing Word keeps the turn open
+            continue
+        await p.press(p.find("cb", "abl:sacred_flame"))
+        if any(parse(b)[1].count(":") == 2 for b in p.buttons()):  # target menu shown
+            await p.press(next(b for b in p.buttons() if parse(b)[0] == "cb" and parse(b)[1].count(":") == 2))
+    assert enc.status == "victory"
+    assert any("weak to it" in t_ for t_, _ in p.chat.sent)
+
+
 async def test_free_text_combat_and_injection(llm):
     p = Player(llm, tg_id=9)
     await create(p, cls="rogue")

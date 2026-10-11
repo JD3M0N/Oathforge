@@ -188,6 +188,9 @@ async def build_combatant(session: AsyncSession, char: Character, cid: str = "p1
             if char.level >= lvl:
                 sneak = dice
     cls = c.classes[char.class_key]
+    m = mods(char)
+    casting_mod = m[cls.casting] if cls.casting else 0
+    bonus = next((p for p in passives if p.bonus_damage), None)
     return Combatant(
         id=cid, side="player", ref=str(char.id), name={"es": char.name, "en": char.name},
         hp=char.hp, max_hp=char.max_hp, ac=armor_class(char, gear),
@@ -198,6 +201,10 @@ async def build_combatant(session: AsyncSession, char: Character, cid: str = "p1
         sneak_dice=sneak, extra_attack=any(p.extra_attack for p in passives),
         halve_first_hit=any(p.halve_first_hit for p in passives),
         relentless="relentless" in lineage.traits,
+        crit_range=min([p.crit_range for p in passives if p.crit_range] or [20]),
+        casting_mod=casting_mod, spell_to_hit=casting_mod + proficiency_bonus(char.level),
+        bonus_damage=bonus.bonus_damage if bonus else None,
+        bonus_damage_type=(bonus.bonus_damage_type or "radiant") if bonus else "radiant",
     )
 
 

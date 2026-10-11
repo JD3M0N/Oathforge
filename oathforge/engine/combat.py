@@ -15,6 +15,7 @@ from oathforge.engine.dice import d20, roll
 
 NEGATIVE_STATUSES = {"bleeding", "burning", "poisoned", "frightened", "stunned", "vulnerable"}
 DOT = {"bleeding": "1d4", "burning": "1d6"}
+BLESS_BONUS = 2
 
 
 class CombatError(Exception):
@@ -51,6 +52,10 @@ class Combatant(BaseModel):
     attacks: list[AttackProfile] = []
     statuses: dict[str, int] = {}
     immune: list[str] = []
+    creature_type: str = "humanoid"
+    resist: list[str] = []  # damage types: half damage
+    weak_to: list[str] = []  # damage types: double damage
+    immune_damage: list[str] = []  # damage types: no damage
     # player-only
     level: int = 1
     skill_bonus: dict[str, int] = {}
@@ -59,6 +64,11 @@ class Combatant(BaseModel):
     extra_attack: bool = False
     halve_first_hit: bool = False
     relentless: bool = False
+    crit_range: int = 20
+    spell_to_hit: int = 0
+    casting_mod: int = 0
+    bonus_damage: str | None = None  # once per turn on a weapon hit (e.g. Divine Strike)
+    bonus_damage_type: str = "radiant"
     # monster-only
     cowardly: bool = False
     xp: int = 0
@@ -67,6 +77,7 @@ class Combatant(BaseModel):
     bonus_used: bool = False
     moved: bool = False
     sneak_used: bool = False
+    bonus_damage_used: bool = False
     dodge_used: bool = False
     defeated: bool = False
     fled: bool = False
@@ -164,6 +175,8 @@ def available_bonus_actions(state: EncounterState, c: Combatant, ability_defs: d
         a = ability_defs.get(key)
         if a and a.action == "bonus" and (uses is None or uses > 0):
             if a.kind == "heal" and c.hp >= c.max_hp:
+                continue
+            if a.kind == "surge" and not c.action_used:
                 continue
             out.append(key)
     return out
@@ -278,10 +291,42 @@ def _use_ability(state, actor, action, ability, rng) -> list[LogEntry]:
             state, actor, profile.key, action.target, rng,
             extra=(ability.extra_damage, ability.damage_type),
         )
+    elif ability.kind == "spell":
+        target = _resolve_target(state, actor, action.target, ranged=True)
+        profile = AttackProfile(key=action.ability, name=ability.name.model_dump(), to_hit=actor.spell_to_hit,
+                                damage=ability.damage or "1d4", damage_type=ability.damage_type or "radiant",
+                                ranged=True)
+        logs.append(LogEntry(key="combat.ability", params={"actor": actor.id, "ability": action.ability}))
+        logs += _attack(state, actor, target, profile, rng, None, weapon=False)
+    elif ability.kind == "turn":
+        targets = [e for e in state.enemies_of(actor) if e.creature_type == ability.targets_type]
+        if not targets:
+            raise CombatError("combat.err.no_type_targets")
+        logs.append(LogEntry(key="combat.turn", params={"actor": actor.id, "ability": action.ability}))
+        for t in targets:
+            if ability.damage:
+                logs += _apply_damage(state, t, roll(ability.damage, rng).total, ability.damage_type or "radiant")
+            if ability.status and t.active:
+                logs += _apply_status(t, ability.status, ability.status_turns)
+    elif ability.kind == "buff":
+        # +1: the turn it is cast ticks once, so the effect covers N later turns
+        actor.statuses[ability.status] = ability.status_turns + 1
+        logs.append(LogEntry(key="combat.buff", params={
+            "actor": actor.id, "ability": action.ability, "status": ability.status, "turns": ability.status_turns,
+        }))
+    elif ability.kind == "surge":
+        if not actor.action_used:
+            raise CombatError("combat.err.surge_unused")
+        actor.action_used = False
+        logs.append(LogEntry(key="combat.surge", params={"actor": actor.id, "ability": action.ability}))
     elif ability.kind == "heal":
         if actor.hp >= actor.max_hp:
             raise CombatError("combat.err.full_hp")
-        healed = _heal(actor, (ability.heal_per_level or 0) * actor.level)
+        amount = (ability.heal_per_level or 0) * actor.level
+        if ability.heal_dice:
+            amount += roll(ability.heal_dice, rng).total
+        amount += {"level": actor.level, "casting": actor.casting_mod}.get(ability.heal_add or "", 0)
+        healed = _heal(actor, amount)
         logs.append(LogEntry(key="combat.heal", params={"actor": actor.id, "ability": action.ability, "amount": healed}))
     elif ability.kind == "hide":
         dc = max((e.passive_perception for e in state.enemies_of(actor)), default=10)
@@ -351,7 +396,8 @@ def _resolve_target(state, actor, target_id, ranged) -> Combatant:
     return t
 
 
-def _attack(state, attacker, target, profile: AttackProfile, rng, extra) -> list[LogEntry]:
+def _attack(state, attacker, target, profile: AttackProfile, rng, extra, weapon: bool = True) -> list[LogEntry]:
+    """One attack roll. ``extra`` = (dice, damage type) added on a hit; ``weapon`` = False for spells."""
     adv = "hidden" in attacker.statuses or "stunned" in target.statuses
     dis = (
         "poisoned" in attacker.statuses
@@ -362,8 +408,8 @@ def _attack(state, attacker, target, profile: AttackProfile, rng, extra) -> list
     )
     attacker.statuses.pop("hidden", None)
     r = d20(rng, adv, dis)
-    total = r.kept + profile.to_hit
-    hit = not r.nat1 and (r.nat20 or total >= target.ac)
+    total = r.kept + profile.to_hit + (BLESS_BONUS if "blessed" in attacker.statuses else 0)
+    hit = not r.nat1 and (r.kept >= attacker.crit_range or total >= target.ac)
     params = {
         "actor": attacker.id, "target": target.id, "weapon": profile.name,
         "roll": r.kept, "total": total, "ac": target.ac, "adv": adv and not dis, "dis": dis and not adv,
@@ -371,10 +417,15 @@ def _attack(state, attacker, target, profile: AttackProfile, rng, extra) -> list
     if not hit:
         return [LogEntry(key="combat.miss", params=params)]
 
-    crit = r.nat20
+    crit = r.kept >= attacker.crit_range
     dmg = roll(profile.damage, rng, crit).total
+    # extra dice of another type are applied separately, so resistances apply per type
+    extras: list[tuple[int, str]] = []
     if extra and extra[0]:
-        dmg += roll(extra[0], rng, crit).total
+        extras.append((roll(extra[0], rng, crit).total, extra[1] or profile.damage_type))
+    if weapon and attacker.bonus_damage and not attacker.bonus_damage_used and not profile.ranged:
+        attacker.bonus_damage_used = True
+        extras.append((roll(attacker.bonus_damage, rng, crit).total, attacker.bonus_damage_type))
     sneak = 0
     if (
         attacker.sneak_dice and not attacker.sneak_used
@@ -387,6 +438,9 @@ def _attack(state, attacker, target, profile: AttackProfile, rng, extra) -> list
     params.update(crit=crit, sneak=sneak)
     logs = [LogEntry(key="combat.crit" if crit else "combat.hit", params=params)]
     logs += _apply_damage(state, target, dmg, profile.damage_type)
+    for amount, dtype in extras:
+        if target.active:
+            logs += _apply_damage(state, target, amount, dtype)
     ap = profile.applies
     if ap and target.active and rng.random() < ap.get("chance", 1.0):
         logs += _apply_status(target, ap["status"], ap["turns"])
@@ -394,13 +448,21 @@ def _attack(state, attacker, target, profile: AttackProfile, rng, extra) -> list
 
 
 def _apply_damage(state, target: Combatant, amount: int, damage_type: str) -> list[LogEntry]:
+    effect = ""
+    if damage_type in target.immune_damage:
+        amount, effect = 0, "immune"
+    elif damage_type in target.weak_to:
+        amount, effect = amount * 2, "weak"
+    elif damage_type in target.resist:
+        amount, effect = amount // 2, "resist"
     if "vulnerable" in target.statuses:
         amount = amount * 3 // 2
     if target.halve_first_hit and not target.dodge_used and amount > 1:
         amount //= 2
         target.dodge_used = True
     target.hp = max(0, target.hp - amount)
-    logs = [LogEntry(key="combat.damage", params={"target": target.id, "amount": amount, "type": damage_type})]
+    logs = [LogEntry(key="combat.damage", params={"target": target.id, "amount": amount, "type": damage_type,
+                                                  "effect": effect})]
     if target.hp == 0:
         if target.relentless:
             target.relentless = False
@@ -433,7 +495,7 @@ def _begin_turn(state: EncounterState, rng) -> list[LogEntry]:
     logs: list[LogEntry] = []
     while state.status == "active":
         c = state.current
-        c.action_used = c.bonus_used = c.moved = c.sneak_used = False
+        c.action_used = c.bonus_used = c.moved = c.sneak_used = c.bonus_damage_used = False
         c.statuses.pop("defending", None)
         if c.active:
             for status, expr in DOT.items():
@@ -497,7 +559,7 @@ def _run_enemies(state: EncounterState, rng) -> list[LogEntry]:
 
 def _enemy_turn(state: EncounterState, me: Combatant, rng) -> list[LogEntry]:
     foes = state.enemies_of(me)
-    if not foes:
+    if not foes or not me.attacks:
         return []
     allies = [a for a in state.side("enemy") if a.id != me.id]
     if me.cowardly and me.hp * 4 <= me.max_hp and allies:

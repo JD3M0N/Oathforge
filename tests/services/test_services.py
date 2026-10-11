@@ -46,6 +46,40 @@ async def test_create_character_sets_everything_up():
         assert char.resources == {"consecrated_strike": 2}
 
 
+async def test_create_warrior():
+    _, cid = await new_character(cls="warrior")
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        gear = await characters.equipped(s, char)
+        assert set(gear) == {"main_hand", "ranged", "body", "off_hand"}
+        assert characters.armor_class(char, gear) == 16 + 2 + 1  # chain mail, shield, Defense style
+        assert char.resources == {"second_wind": 1}
+        cb = await characters.build_combatant(s, char)
+        assert cb.row == "front" and cb.crit_range == 20
+        assert [(a.key, a.damage_type) for a in cb.attacks] == [("main", "bludgeoning"), ("ranged", "slashing")]
+        from oathforge.services.events import Outcome
+        characters.grant_xp(char, 2700, Outcome())
+        assert char.level == 4 and "action_surge" in char.resources
+        assert (await characters.build_combatant(s, char)).crit_range == 19
+
+
+async def test_create_priest():
+    _, cid = await new_character(cls="priest", bg="acolyte")
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        gear = await characters.equipped(s, char)
+        assert characters.armor_class(char, gear) == 14 + 1 + 2  # scale mail (dex +1), shield
+        assert char.resources == {"sacred_flame": None, "healing_word": 2}
+        cb = await characters.build_combatant(s, char)
+        assert cb.row == "back" and cb.casting_mod == 3 and cb.spell_to_hit == 3 + 2
+        assert cb.bonus_damage is None
+        from oathforge.services.events import Outcome
+        characters.grant_xp(char, 6500, Outcome())
+        assert {"turn_undead", "bless"} <= set(char.resources)
+        cb = await characters.build_combatant(s, char)
+        assert cb.bonus_damage == "1d8" and cb.bonus_damage_type == "radiant"
+
+
 async def test_user_language_normalized():
     async with session_scope() as s:
         u = await characters.get_or_create_user(s, 99, "en-GB")

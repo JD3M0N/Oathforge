@@ -262,7 +262,8 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
 
     if target_menu:
         kind, _, arg = target_menu.partition(":")
-        ranged = any(a.key == arg and a.ranged for a in me.attacks) or kind == "obj"
+        spell = kind == "abl" and arg in defs and defs[arg].kind == "spell"
+        ranged = any(a.key == arg and a.ranged for a in me.attacks) or kind == "obj" or spell
         for foe in valid_targets(state, me, ranged):
             rows.append([btn(f"🎯 {foe.name[lang]} ({foe.hp}/{foe.max_hp})", cb("cb", f"{target_menu}:{foe.id}", n))])
         rows.append([btn(t(lang, "btn.back"), cb("cbp"))])
@@ -276,7 +277,8 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
             a = defs.get(key)
             if a is None or a.action != "action" or (uses is not None and uses <= 0):
                 continue
-            buttons.append(btn(f"✨ {a.name.get(lang)} ({uses})", cb("cb", f"abl:{key}", n)))
+            label = f"✨ {a.name.get(lang)}" + (f" ({uses})" if uses is not None else "")
+            buttons.append(btn(label, cb("cb", f"abl:{key}", n)))
     for key in available_bonus_actions(state, me, defs):
         uses = me.abilities.get(key)
         label = f"⚡ {defs[key].name.get(lang)}" + (f" ({uses})" if uses is not None else "")
