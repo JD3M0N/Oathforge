@@ -228,7 +228,11 @@ combat:
   status: "{target} sufre {status} ({turns} turnos)."
   immune: "{target} es inmune a {status}."
   dot: "{target} sufre por {status}."
-  stunned: "{target} está aturdido y pierde su turno."
+  asleep: "{target} está dormido y pierde su turno."
+  wake: "{target} se despierta."
+  save: "{target} hace una salvación de {save}: {roll} → {total} contra CD {dc} {result}"
+  temp_hp: "{actor} tiene {amount} PV temporales."
+  absorbed: "Los PV temporales absorben {amount}."
   move: "{actor} se mueve a {row}."
   defend: "{actor} se pone en guardia."
   potion: "{actor} bebe una poción y recupera {amount} PV."
@@ -279,6 +283,10 @@ status:
   hidden: "oculto"
   defending: "en guardia"
   blessed: "bendición"
+  asleep: "sueño"
+  restrained: "enredado"
+  inspired: "inspiración"
+  wild_shape: "forma salvaje"
   icon:
     bleeding: "🩸"
     burning: "🔥"
@@ -289,6 +297,10 @@ status:
     hidden: "👤"
     defending: "🛡️"
     blessed: "🙏"
+    asleep: "💤"
+    restrained: "🌿"
+    inspired: "🎵"
+    wild_shape: "🐻"
 
 dmg:
   slashing: "cortante"
@@ -301,6 +313,8 @@ dmg:
   bleeding: "por sangrado"
   burning: "por fuego"
   fire: "de fuego"
+  force: "de fuerza"
+  psychic: "psíquico"
 
 err:
   generic: "Algo salió mal. Inténtalo de nuevo."

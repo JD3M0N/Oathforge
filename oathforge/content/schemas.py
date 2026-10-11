@@ -14,8 +14,11 @@ DC_TIERS = {"trivial": 5, "easy": 10, "medium": 13, "hard": 16, "very_hard": 19}
 STATUSES = (
     "bleeding", "burning", "poisoned", "frightened", "stunned",
     "vulnerable", "hidden", "defending", "blessed",
+    "asleep", "restrained", "inspired", "wild_shape",
 )
-DamageType = Literal["slashing", "piercing", "bludgeoning", "radiant", "necrotic", "cold", "fire", "poison"]
+DamageType = Literal[
+    "slashing", "piercing", "bludgeoning", "radiant", "necrotic", "cold", "fire", "poison", "force", "psychic",
+]
 CreatureType = Literal["humanoid", "beast", "undead"]
 
 Tier = Literal["trivial", "easy", "medium", "hard", "very_hard"]
@@ -67,8 +70,9 @@ class ClassAbility(Strict):
     level: int
     # strike: weapon attack + extra_damage · spell: ranged spell attack for `damage`
     # turn: `damage` + `status` to every enemy of `targets_type` · buff: `status` on self
+    # save: target (or the target's whole row) rolls a saving throw against `damage` / `status`
     # surge: bonus action that gives the action back · heal · hide · passive
-    kind: Literal["strike", "spell", "turn", "buff", "surge", "heal", "hide", "passive"]
+    kind: Literal["strike", "spell", "turn", "buff", "surge", "heal", "hide", "save", "passive"]
     action: Literal["action", "bonus", "none"] = "action"
     uses: int | None = None  # per rest; None = unlimited
     damage: str | None = None
@@ -77,10 +81,19 @@ class ClassAbility(Strict):
     heal_per_level: int | None = None
     heal_dice: str | None = None
     heal_add: Literal["level", "casting"] | None = None
-    status: Literal["blessed", "stunned", "frightened"] | None = None
+    status: Literal[
+        "blessed", "stunned", "frightened", "asleep", "restrained", "inspired", "wild_shape",
+    ] | None = None
     status_turns: int = 1
     targets_type: CreatureType | None = None
+    save: Literal["dex", "wis"] | None = None  # the target's saving throw (kind: save)
+    area: Literal["one", "row"] = "one"  # row: every enemy in the chosen target's row
+    half_on_save: bool = False
+    auto_hit: bool = False  # spell that never misses (Magic Missile)
+    temp_hp: str | None = None  # buff: temporary HP dice (+ heal_add)
     ac_bonus: int = 0
+    ac_bonus_unarmored: int = 0  # only without body armor (Mage Armor)
+    spell_damage_bonus: bool = False  # passive: add the casting modifier to spell damage
     immune: list[str] = []
     sneak_dice: dict[int, int] = {}  # level -> d6 count
     extra_attack: bool = False

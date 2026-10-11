@@ -38,6 +38,22 @@ handaxe:
   value: 5
   weapon: {damage: 1d6, damage_type: slashing, ranged: true}
 
+quarterstaff:
+  name: {es: Bastón, en: Quarterstaff}
+  description: {es: "Una vara de roble endurecida al fuego; apoyo de magos y druidas.", en: "A fire-hardened oak staff; a mainstay of mages and druids."}
+  type: weapon
+  slot: main_hand
+  value: 2
+  weapon: {damage: 1d6, damage_type: bludgeoning}
+
+rapier:
+  name: {es: Estoque, en: Rapier}
+  description: {es: "Hoja fina y rápida, más de duelista que de soldado.", en: "A thin and quick blade, more a duelist's than a soldier's."}
+  type: weapon
+  slot: main_hand
+  value: 25
+  weapon: {damage: 1d8, damage_type: piercing, finesse: true}
+
 shortbow:
   name: {es: Arco corto, en: Shortbow}
   description: {es: Un arco de tejo para atacar desde la distancia., en: A yew bow for striking from a distance.}

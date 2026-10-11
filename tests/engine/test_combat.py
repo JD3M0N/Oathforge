@@ -7,8 +7,7 @@ from oathforge.engine import combat as cb
 from oathforge.engine.combat import Action, AttackProfile, Combatant, CombatError, EncounterState
 
 _CLASSES = get_content().classes
-ABILITIES = (_CLASSES["paladin"].abilities | _CLASSES["rogue"].abilities
-             | _CLASSES["warrior"].abilities | _CLASSES["priest"].abilities)
+ABILITIES = {k: a for cls in _CLASSES.values() for k, a in cls.abilities.items()}
 SWORD = AttackProfile(key="main", name={"es": "Espada", "en": "Sword"}, to_hit=5, damage="1d8+3", damage_type="slashing")
 BOW = AttackProfile(key="ranged", name={"es": "Arco", "en": "Bow"}, to_hit=5, damage="1d6+3", damage_type="piercing", ranged=True)
 DAGGER = AttackProfile(key="main", name={"es": "Daga", "en": "Dagger"}, to_hit=5, damage="1d4+3", damage_type="piercing", finesse=True)
@@ -322,3 +321,81 @@ def test_divine_strike_once_per_turn():
     logs = cb.player_act(st, "p1", Action(kind="attack", weapon="main", target="m1"), FixedRng(5), ABILITIES)
     radiant = [e for e in logs if e.key == "combat.damage" and e.params["type"] == "radiant"]
     assert len(radiant) == 1
+
+
+# ---------------------------------------------------------------- v0.4.0: mage, druid, bard
+
+def test_save_fails_below_dc_and_succeeds_at_dc():
+    for value, slept in ((12, True), (13, False)):
+        st = started(player(spell_dc=13, abilities={"sleep": 2}), monster(hp=100, max_hp=100))
+        logs = cb.player_act(st, "p1", Action(kind="ability", ability="sleep", target="m1"), FixedRng(value), ABILITIES)
+        save = next(e for e in logs if e.key == "combat.save")
+        assert save.params["save"] == "wis" and save.params["dc"] == 13 and save.params["success"] is not slept
+        assert any(e.key == "combat.status" and e.params["status"] == "asleep" for e in logs) is slept
+
+
+def test_fireball_hits_the_targets_row_and_halves_on_save():
+    def cast(value):
+        st = started(player(spell_dc=13, abilities={"fireball": 1}),
+                     monster("m1", hp=50, max_hp=50), monster("m2", hp=50, max_hp=50),
+                     monster("m3", hp=50, max_hp=50, row="back"))
+        cb.player_act(st, "p1", Action(kind="ability", ability="fireball", target="m2"), FixedRng(value), ABILITIES)
+        return [st.combatants[m].hp for m in ("m1", "m2", "m3")]
+    assert cast(5) == [50 - 15, 50 - 15, 50]  # failed save: 3d6 = 15
+    assert cast(15) == [50 - 9, 50 - 9, 50]  # saved (15 + 1 >= 13): half of 18
+
+
+def test_sleep_skips_turns_and_damage_wakes():
+    st = started(player(spell_dc=13, abilities={"sleep": 2}), monster(hp=100, max_hp=100, ac=10))
+    logs = cb.player_act(st, "p1", Action(kind="ability", ability="sleep", target="m1"), FixedRng(1), ABILITIES)
+    assert any(e.key == "combat.asleep" for e in logs) and st.current.id == "p1"
+    logs = cb.player_act(st, "p1", Action(kind="attack", weapon="main", target="m1"), FixedRng(10), ABILITIES)
+    hit = next(e for e in logs if e.key == "combat.hit")
+    assert hit.params["adv"] and any(e.key == "combat.wake" for e in logs)
+    assert "asleep" not in st.combatants["m1"].statuses
+
+
+def test_restrained_gives_advantage_against_and_disadvantage_on_attacks():
+    st = started(player(), monster(hp=100, max_hp=100, ac=1, statuses={"restrained": 2}))
+    logs = cb.player_act(st, "p1", Action(kind="attack", weapon="main", target="m1"), FixedRng(10), ABILITIES)
+    assert next(e for e in logs if e.key == "combat.hit").params["adv"]
+    st = started(player(statuses={"restrained": 2}), monster(hp=100, max_hp=100, ac=1))
+    logs = cb.player_act(st, "p1", Action(kind="attack", weapon="main", target="m1"), FixedRng(10), ABILITIES)
+    assert next(e for e in logs if e.key == "combat.hit").params["dis"]
+
+
+def test_inspiration_adds_a_d6_once():
+    st = started(player(abilities={"bardic_inspiration": 2}), monster(hp=500, max_hp=500, ac=30))
+    cb.player_act(st, "p1", Action(kind="ability", ability="bardic_inspiration"), FixedRng(10), ABILITIES)
+    logs = cb.player_act(st, "p1", Action(kind="attack", weapon="main", target="m1"), FixedRng(10), ABILITIES)
+    assert next(e for e in logs if e.key == "combat.miss").params["total"] == 10 + 5 + 6
+    assert "inspired" not in st.combatants["p1"].statuses
+
+
+def test_wild_shape_temp_hp_absorbs_damage_first():
+    st = started(player(level=3, abilities={"wild_shape": 1}), monster())
+    cb.player_act(st, "p1", Action(kind="ability", ability="wild_shape"), FixedRng(4), ABILITIES)
+    p = st.combatants["p1"]
+    assert p.temp_hp == 8 + 3 and "wild_shape" in p.statuses
+    logs = cb._apply_damage(st, p, 14, "slashing")
+    assert p.temp_hp == 0 and p.hp == 20 - 3
+    assert any(e.key == "combat.absorbed" and e.params["amount"] == 11 for e in logs)
+
+
+def test_magic_missile_never_misses_and_spell_damage_bonus():
+    st = started(player(abilities={"magic_missile": 2}), monster(hp=100, max_hp=100, ac=99))
+    logs = cb.player_act(st, "p1", Action(kind="ability", ability="magic_missile", target="m1"), FixedRng(1), ABILITIES)
+    assert not any(e.key == "combat.miss" and e.params["actor"] == "p1" for e in logs)
+    assert st.combatants["m1"].hp == 100 - 6
+    st = started(player(spell_to_hit=5, spell_damage_bonus=3, abilities={"thorn_whip": None}),
+                 monster(hp=100, max_hp=100, ac=1))
+    cb.player_act(st, "p1", Action(kind="ability", ability="thorn_whip", target="m1"), FixedRng(2), ABILITIES)
+    assert st.combatants["m1"].hp == 100 - (2 + 3)
+
+
+def test_vicious_mockery_frightens_but_undead_are_immune():
+    st = started(player(spell_dc=13, abilities={"vicious_mockery": None}),
+                 monster(hp=100, max_hp=100, immune=["frightened"]))
+    logs = cb.player_act(st, "p1", Action(kind="ability", ability="vicious_mockery", target="m1"),
+                         FixedRng(2), ABILITIES)
+    assert st.combatants["m1"].hp == 100 - 2 and any(e.key == "combat.immune" for e in logs)

@@ -228,7 +228,11 @@ combat:
   status: "{target} suffers {status} ({turns} turns)."
   immune: "{target} is immune to {status}."
   dot: "{target} suffers from {status}."
-  stunned: "{target} is stunned and loses their turn."
+  asleep: "{target} is asleep and loses their turn."
+  wake: "{target} wakes up."
+  save: "{target} rolls a {save} save: {roll} → {total} vs DC {dc} {result}"
+  temp_hp: "{actor} has {amount} temporary HP."
+  absorbed: "Temporary HP absorb {amount}."
   move: "{actor} moves to the {row}."
   defend: "{actor} takes a defensive stance."
   potion: "{actor} drinks a potion and recovers {amount} HP."
@@ -279,6 +283,10 @@ status:
   hidden: "hidden"
   defending: "on guard"
   blessed: "blessing"
+  asleep: "sleep"
+  restrained: "entangled"
+  inspired: "inspiration"
+  wild_shape: "wild shape"
   icon:
     bleeding: "🩸"
     burning: "🔥"
@@ -289,6 +297,10 @@ status:
     hidden: "👤"
     defending: "🛡️"
     blessed: "🙏"
+    asleep: "💤"
+    restrained: "🌿"
+    inspired: "🎵"
+    wild_shape: "🐻"
 
 dmg:
   slashing: "slashing"
@@ -301,6 +313,8 @@ dmg:
   bleeding: "bleeding"
   burning: "fire"
   fire: "fire"
+  force: "force"
+  psychic: "psychic"
 
 err:
   generic: "Something went wrong. Please try again."

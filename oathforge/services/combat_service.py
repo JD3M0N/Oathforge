@@ -24,7 +24,7 @@ def monster_combatant(key: str, cid: str) -> Combatant:
     m = get_content().monsters[key]
     return Combatant(
         id=cid, side="enemy", ref=key, name=m.name.model_dump(), hp=m.hp, max_hp=m.hp, ac=m.ac, row=m.row,
-        dex_mod=m.dex, passive_perception=10 + m.wis, immune=list(m.immune), cowardly=m.cowardly, xp=m.xp,
+        dex_mod=m.dex, wis_mod=m.wis, passive_perception=10 + m.wis, immune=list(m.immune), cowardly=m.cowardly, xp=m.xp,
         creature_type=m.type, resist=list(m.resist), weak_to=list(m.vulnerable), immune_damage=list(m.immune_damage),
         attacks=[
             AttackProfile(key=f"a{i}", name=a.name.model_dump(), to_hit=a.to_hit, damage=a.damage,
@@ -167,6 +167,8 @@ def log_event(state: EncounterState, entry: LogEntry) -> Event:
     if "object" in p:
         obj = c.locations[state.location].scene_objects.get(p["object"]) if state.location in c.locations else None
         p["object"] = obj.name.model_dump() if obj else p["object"]
+    if "save" in p and p["save"] in c.abilities:
+        p["save"] = c.abilities[p["save"]].short.model_dump()
     if "skill" in p and p["skill"] in c.skills:
         p["skill"] = c.skills[p["skill"]].name.model_dump()
     if "status" in p:

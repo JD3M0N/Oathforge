@@ -4,11 +4,11 @@ RPG narrativo multijugador para Telegram, ambientado en **Aetherfall**. Un Dunge
 
 > Regla de oro: **la IA nunca decide resultados.** Convierte el texto libre en una intención estructurada; el motor la valida, tira los dados y guarda el resultado; después la IA narra *exactamente* lo que pasó.
 
-## Estado: v0.2.0, vertical slice en solitario (fases 1–2)
+## Estado: v0.4.0, vertical slice en solitario (fases 1–2)
 
-- Creación de personaje: 4 linajes, 4 trasfondos, 4 clases (Paladín, Pícaro, Guerrero, Sacerdote) con habilidades hasta nivel 5.
+- Creación de personaje: 4 linajes, 4 trasfondos, 7 clases (Paladín, Pícaro, Guerrero, Sacerdote, Mago, Druida, Bardo) con habilidades hasta nivel 5.
 - Crownreach (plaza, taberna La Corona Rota, mercado), el Camino del Viejo Rey, el Bosque de los Susurros y la Cripta Hundida (5 salas + jefe).
-- Combate por turnos: iniciativa, acción/acción adicional/movimiento, vanguardia/retaguardia, críticos, ataque furtivo, conjuros, estados alterados y objetos del escenario.
+- Combate por turnos: iniciativa, acción/acción adicional/movimiento, vanguardia/retaguardia, críticos, ataque furtivo, conjuros, tiradas de salvación, área por filas, PV temporales, estados alterados y objetos del escenario.
 - Tipos de daño y de criatura: resistencias, vulnerabilidades e inmunidades (los esqueletos temen el contundente y lo radiante).
 - Misión ramificada «El relicario sellado»: devolverlo al Pacto de Plata, venderlo al Sindicato Carmesí o abrirlo tú mismo.
 - NPC con memoria (Bram, Mira, Holt, Tessa), confianza, reputación con facciones, robos que se recuerdan, tiendas con precios según reputación.

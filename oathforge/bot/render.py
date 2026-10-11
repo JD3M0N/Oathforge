@@ -320,7 +320,8 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
             continue
         row = t(lang, f"row.{cb_.row}")
         st = " ".join(t(lang, f"status.icon.{s}") for s in cb_.statuses)
-        lines.append(f"{icon} <b>{escape(cb_.name[lang])}</b> {cb_.hp}/{cb_.max_hp} {hp_bar(cb_.hp, cb_.max_hp)} "
+        temp = f" (+{cb_.temp_hp})" if cb_.temp_hp else ""
+        lines.append(f"{icon} <b>{escape(cb_.name[lang])}</b> {cb_.hp}/{cb_.max_hp}{temp} {hp_bar(cb_.hp, cb_.max_hp)} "
                      f"· {row} {st}".rstrip())
     recent = state.log[-7:]
     if recent:
@@ -339,7 +340,7 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
 
     if target_menu:
         kind, _, arg = target_menu.partition(":")
-        spell = kind == "abl" and arg in defs and defs[arg].kind == "spell"
+        spell = kind == "abl" and arg in defs and defs[arg].kind in ("spell", "save")
         ranged = any(a.key == arg and a.ranged for a in me.attacks) or kind == "obj" or spell
         for foe in valid_targets(state, me, ranged):
             rows.append([btn(f"🎯 {foe.name[lang]} ({foe.hp}/{foe.max_hp})", cb("cb", f"{target_menu}:{foe.id}", n))])

@@ -203,3 +203,191 @@ priest:
     light: {es: Dominio de la Luz, en: Light Domain}
     war: {es: Dominio de la Guerra, en: War Domain}
     grave: {es: Dominio de la Tumba, en: Grave Domain}
+
+mage:
+  name: {es: Mago, en: Mage}
+  description:
+    es: Erudito de lo arcano; frágil de cerca, devastador a distancia con fuego y hechizos de control.
+    en: A scholar of the arcane; frail up close, devastating from afar with fire and control spells.
+  hit_die: 6
+  primary: int
+  casting: int
+  array: {int: 15, con: 14, dex: 13, wis: 12, cha: 10, str: 8}
+  skills: [arcana, history]
+  items: {quarterstaff: 1, dagger: 1, healing_potion: 1}
+  equip: [quarterstaff]
+  abilities:
+    fire_bolt:
+      name: {es: Rayo de Fuego, en: Fire Bolt}
+      description: {es: "Ataque de conjuro a distancia (INT): 1d10 de daño de fuego. Ilimitado.", en: "Ranged spell attack (INT): 1d10 fire damage. Unlimited."}
+      level: 1
+      kind: spell
+      damage: 1d10
+      damage_type: fire
+    mage_armor:
+      name: {es: Armadura de Mago, en: Mage Armor}
+      description: {es: "+3 a la CA si no llevas armadura.", en: "+3 AC while you wear no armor."}
+      level: 1
+      kind: passive
+      action: none
+      ac_bonus_unarmored: 3
+    sleep:
+      name: {es: Dormir, en: Sleep}
+      description: {es: "Un enemigo hace una salvación de SAB; si falla, se duerme 2 turnos (ventaja contra él; despierta al recibir daño).", en: "One enemy makes a WIS save; on a failure it falls asleep for 2 turns (advantage against it; it wakes when damaged)."}
+      level: 2
+      kind: save
+      uses: 2
+      save: wis
+      status: asleep
+      status_turns: 2
+    fireball:
+      name: {es: Bola de Fuego, en: Fireball}
+      description: {es: "Toda la fila del objetivo hace una salvación de DES: 3d6 de fuego, la mitad si la supera.", en: "The target's whole row makes a DEX save: 3d6 fire, half on a success."}
+      level: 3
+      kind: save
+      uses: 1
+      area: row
+      save: dex
+      damage: 3d6
+      damage_type: fire
+      half_on_save: true
+    magic_missile:
+      name: {es: Proyectil Mágico, en: Magic Missile}
+      description: {es: "Tres dardos que nunca fallan: 3d4+3 de daño de fuerza.", en: "Three darts that never miss: 3d4+3 force damage."}
+      level: 5
+      kind: spell
+      uses: 2
+      auto_hit: true
+      damage: 3d4+3
+      damage_type: force
+  specializations:
+    pyromancer: {es: Piromante, en: Pyromancer}
+    cryomancer: {es: Criomante, en: Cryomancer}
+    arcanist: {es: Arcanista, en: Arcanist}
+    chronomancer: {es: Cronomante, en: Chronomancer}
+
+druid:
+  name: {es: Druida, en: Druid}
+  description:
+    es: Guardián de lo salvaje; enreda a sus enemigos, cura con la savia del bosque y adopta forma de bestia.
+    en: Keeper of the wild; entangles foes, heals with the forest's sap and takes the shape of a beast.
+  hit_die: 8
+  primary: wis
+  casting: wis
+  array: {wis: 15, con: 14, dex: 13, int: 12, cha: 10, str: 8}
+  skills: [survival, medicine]
+  items: {quarterstaff: 1, leather_armor: 1, shield: 1, healing_potion: 1}
+  equip: [quarterstaff, leather_armor, shield]
+  abilities:
+    thorn_whip:
+      name: {es: Látigo de Espinas, en: Thorn Whip}
+      description: {es: "Ataque de conjuro a distancia (SAB): 1d6 de daño perforante. Ilimitado.", en: "Ranged spell attack (WIS): 1d6 piercing damage. Unlimited."}
+      level: 1
+      kind: spell
+      damage: 1d6
+      damage_type: piercing
+    cure_wounds:
+      name: {es: Curar Heridas, en: Cure Wounds}
+      description: {es: "Recuperas 1d8 + SAB PV.", en: "Recover 1d8 + WIS HP."}
+      level: 1
+      kind: heal
+      uses: 2
+      heal_dice: 1d8
+      heal_add: casting
+    entangle:
+      name: {es: Enredar, en: Entangle}
+      description: {es: "Toda la fila del objetivo hace una salvación de DES; quien falla queda enredado 2 turnos (ventaja contra él, desventaja en sus ataques).", en: "The target's whole row makes a DEX save; those who fail are entangled for 2 turns (advantage against them, disadvantage on their attacks)."}
+      level: 2
+      kind: save
+      uses: 1
+      area: row
+      save: dex
+      status: restrained
+      status_turns: 2
+    wild_shape:
+      name: {es: Forma Salvaje, en: Wild Shape}
+      description: {es: "Acción adicional: adoptas forma de oso y ganas 2d8 + tu nivel en PV temporales.", en: "Bonus action: you take the shape of a bear and gain 2d8 + your level in temporary HP."}
+      level: 3
+      kind: buff
+      action: bonus
+      uses: 1
+      temp_hp: 2d8
+      heal_add: level
+      status: wild_shape
+      status_turns: 3
+    elemental_fury:
+      name: {es: Furia Elemental, en: Elemental Fury}
+      description: {es: Sumas tu SAB al daño de tus conjuros., en: You add your WIS to the damage of your spells.}
+      level: 5
+      kind: passive
+      action: none
+      spell_damage_bonus: true
+  specializations:
+    shapeshifter: {es: Cambiaformas, en: Shapeshifter}
+    warden: {es: Guardián, en: Warden}
+    summoner: {es: Invocador, en: Summoner}
+    spores: {es: Esporas, en: Spores}
+
+bard:
+  name: {es: Bardo, en: Bard}
+  description:
+    es: Su voz es un arma; inspira, cura y desarma al enemigo con una burla o una melodía hipnótica.
+    en: Their voice is a weapon; they inspire, heal and undo foes with a jest or a hypnotic melody.
+  hit_die: 8
+  primary: cha
+  casting: cha
+  array: {cha: 15, dex: 14, con: 13, wis: 12, int: 10, str: 8}
+  skills: [persuasion, deception]
+  items: {rapier: 1, dagger: 1, leather_armor: 1, healing_potion: 1}
+  equip: [rapier, leather_armor]
+  abilities:
+    vicious_mockery:
+      name: {es: Burla Cruel, en: Vicious Mockery}
+      description: {es: "Un enemigo hace una salvación de SAB: si falla, 1d4 de daño psíquico y miedo 1 turno. Ilimitado.", en: "One enemy makes a WIS save: on a failure, 1d4 psychic damage and fear for 1 turn. Unlimited."}
+      level: 1
+      kind: save
+      save: wis
+      damage: 1d4
+      damage_type: psychic
+      status: frightened
+      status_turns: 1
+    bardic_inspiration:
+      name: {es: Inspiración Bárdica, en: Bardic Inspiration}
+      description: {es: "Acción adicional: tu próxima tirada de ataque suma 1d6.", en: "Bonus action: your next attack roll adds 1d6."}
+      level: 1
+      kind: buff
+      action: bonus
+      uses: 2
+      status: inspired
+      status_turns: 3
+    song_of_healing:
+      name: {es: Canción Sanadora, en: Song of Healing}
+      description: {es: "Acción adicional: recuperas 1d4 + CAR PV.", en: "Bonus action: recover 1d4 + CHA HP."}
+      level: 2
+      kind: heal
+      action: bonus
+      uses: 2
+      heal_dice: 1d4
+      heal_add: casting
+    hypnotic_pattern:
+      name: {es: Patrón Hipnótico, en: Hypnotic Pattern}
+      description: {es: "Toda la fila del objetivo hace una salvación de SAB; quien falla queda aturdido 1 turno.", en: "The target's whole row makes a WIS save; those who fail are stunned for 1 turn."}
+      level: 3
+      kind: save
+      uses: 1
+      area: row
+      save: wis
+      status: stunned
+      status_turns: 1
+    cutting_words:
+      name: {es: Palabras Cortantes, en: Cutting Words}
+      description: {es: El primer golpe que recibes cada ronda hace la mitad de daño., en: The first hit you take each round deals half damage.}
+      level: 5
+      kind: passive
+      action: none
+      halve_first_hit: true
+  specializations:
+    illusionist: {es: Ilusionista, en: Illusionist}
+    diplomat: {es: Diplomático, en: Diplomat}
+    war_chanter: {es: Cantor de Guerra, en: War Chanter}
+    trickster: {es: Embaucador, en: Trickster}

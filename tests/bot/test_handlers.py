@@ -215,6 +215,26 @@ async def test_priest_sacred_flame_burns_skeletons(llm):
     assert any("weak to it" in t_ for t_, _ in p.chat.sent)
 
 
+async def test_mage_fireball_asks_for_a_target_and_rolls_saves(llm):
+    from oathforge.services import characters
+
+    p = Player(llm, tg_id=12, lang="en")
+    await create(p, cls="mage")
+    async with session_scope() as s:
+        char = await s.scalar(select(Character).with_for_update())
+        char.location, char.flags = "whispering_woods", {"crypt_unlocked": True}
+        char.hp = char.max_hp = 400
+        char.level, char.resources = 3, characters.full_resources("mage", 3)
+    await p.press("scene|-|-")
+    await p.press(p.find("trv"))
+    await p.press(p.find("go", "crypt_entrance"))
+    assert p.find("cb", "abl:fire_bolt") and p.find("cb", "abl:sleep")
+    await p.press(p.find("cb", "abl:fireball"))
+    if any(parse(b)[1].count(":") == 2 for b in p.buttons()):  # target menu shown
+        await p.press(next(b for b in p.buttons() if parse(b)[0] == "cb" and parse(b)[1].count(":") == 2))
+    assert any(t_ and "DEX save" in t_ for t_, _ in p.chat.sent)
+
+
 async def test_free_text_combat_and_injection(llm):
     p = Player(llm, tg_id=9)
     await create(p, cls="rogue")

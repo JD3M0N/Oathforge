@@ -10,6 +10,11 @@ Cada clase vive en `content/classes.yaml`: dado de golpe, característica princi
 | Pícaro | Daño oportunista | d8 | DES | Retaguardia | Ataque Furtivo, Esconderse, Esquiva Asombrosa |
 | Guerrero (v0.2.0) | Combatiente puro | d10 | FUE | Vanguardia | Segundo Aliento, Estilo Defensa, Oleada de Acción, Crítico Mejorado, Ataque Extra |
 | Sacerdote (v0.2.0) | Sanador y azote de no-muertos | d8 | SAB | Retaguardia | Llama Sagrada, Palabra Sanadora, Expulsar No-muertos, Bendición, Golpe Divino |
+| Mago (v0.4.0) | Daño de área y control | d6 | INT | Retaguardia | Rayo de Fuego, Armadura de Mago, Dormir, Bola de Fuego, Proyectil Mágico |
+| Druida (v0.4.0) | Control, curación y forma de bestia | d8 | SAB | Retaguardia | Látigo de Espinas, Curar Heridas, Enredar, Forma Salvaje, Furia Elemental |
+| Bardo (v0.4.0) | Apoyo, burla e hipnosis | d8 | CAR | Retaguardia | Burla Cruel, Inspiración Bárdica, Canción Sanadora, Patrón Hipnótico, Palabras Cortantes |
+
+Desde v0.4.0 hay **tiradas de salvación**: la CD de conjuro es 8 + competencia + característica de la clase, y los monstruos salvan con DES o SAB (las únicas que tienen). Las habilidades `save` afectan a un objetivo o a toda su fila (`area: row`).
 
 Especializaciones previstas (nivel 5):
 
@@ -17,12 +22,15 @@ Especializaciones previstas (nivel 5):
 - Pícaro: Asesino, Espía, Duelista, Trampero.
 - Guerrero: Campeón, Maestro de Batalla, Guardián, Berserker.
 - Sacerdote: Vida, Luz, Guerra, Tumba.
+- Mago: Piromante, Criomante, Arcanista, Cronomante.
+- Druida: Cambiaformas, Guardián, Invocador, Esporas.
+- Bardo: Ilusionista, Diplomático, Cantor de Guerra, Embaucador.
 
 ## Ideas
 
-- **Mago**: conjuros por descanso, área (bola de fuego contra una fila), control (dormir, ralentizar). Necesita tiradas de salvación.
 - **Explorador**: enemigo predilecto por tipo de criatura (los monstruos ya tienen `type`), compañero animal, ventaja en el bosque.
-- **Bardo**: inspiración (ventaja a aliados); brilla en grupo y en diálogo con NPC.
+- **Bardo en grupo**: cuando llegue el combate en grupo, la Inspiración debería darse a un aliado; fuera de combate, ventaja en diálogo con NPC.
+- **Forma Salvaje** completa: hoy son PV temporales; podría cambiar los ataques por los de una bestia.
 - **Brujo**: pacto con una facción (Sindicato Carmesí), poderes que cambian con la reputación.
 - Especializaciones con una decisión real: cada una cambia una habilidad o añade un recurso, no solo números.
 - Multiclase: probablemente no; mejor especializaciones profundas.
@@ -38,11 +46,11 @@ El GDD imagina 12 clases con 4 especializaciones cada una. Es una **visión**, n
 | Guerrero | Berserker, Maestro de Armas, Centinela, Gladiador | Dominio marcial y control | ✅ |
 | Pícaro | Asesino, Espía, Duelista, Trampero | Precisión, información, movilidad | ✅ |
 | Clérigo | Oráculo, Sacerdote de Guerra, Sanador, Exorcista | Apoyo y símbolos sagrados | ✅ como **Sacerdote** |
-| Mago | Piromante, Criomante, Arcanista, Cronomante | Hechizos, área, preparación | idea |
+| Mago | Piromante, Criomante, Arcanista, Cronomante | Hechizos, área, preparación | ✅ |
 | Explorador | Cazador, Francotirador, Acechador, Trampero Salvaje | Rastreo, distancia, terreno | idea |
-| Bardo | Ilusionista, Diplomático, Cantor de Guerra, Embaucador | Inspiración, conversación, engaño | idea |
+| Bardo | Ilusionista, Diplomático, Cantor de Guerra, Embaucador | Inspiración, conversación, engaño | ✅ |
 | Brujo | Pactista Infernal, Nigromante, Hexblade, Vacío | Pactos, maldiciones, riesgo | idea |
-| Druida | Cambiaformas, Guardián, Invocador, Esporas | Naturaleza, formas, control | nueva |
+| Druida | Cambiaformas, Guardián, Invocador, Esporas | Naturaleza, formas, control | ✅ |
 | Monje | Puño de Hierro, Espiritual, Sombra, Elemental | Recursos internos y combos | nueva |
 | Hechicero | Sangre Dracónica, Magia Salvaje, Tormenta, Astral | Poder innato | nueva |
 | Artífice | Ingeniero, Alquimista, Forjador Rúnico, Autómata | Objetos y dispositivos; encaja con profesiones | nueva |
@@ -65,6 +73,6 @@ Concentración, furia, fe, maná, preparación o inspiración. **Como máximo do
 - ¿Nivel máximo 5 o ampliamos a 10 antes de añadir más clases?
 - ¿Los conjuros usan espacios (estilo D&D) o una barra de fe/maná más simple para Telegram?
 - ¿Cuántos botones caben en el panel de combate antes de que sea incómodo? (hoy ~8–10)
-- ¿Qué clase entra después: Mago (necesita salvaciones), Explorador (aprovecha los tipos de criatura) o Bardo (brilla en grupo)?
-- ¿Entran algún día Druida, Monje, Hechicero o Artífice, o nos quedamos en 8 clases?
+- ¿Qué clase entra después: Explorador (aprovecha los tipos de criatura) o Brujo (pactos con facciones)?
+- ¿Entran algún día Monje, Hechicero o Artífice, o nos quedamos en 9 clases?
 - ¿Cada especialización tiene un árbol de 3 talentos (como en el GDD) o un único cambio fuerte?

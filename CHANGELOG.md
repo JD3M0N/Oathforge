@@ -4,6 +4,22 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.4.0] - 2026-10-11
+
+### Añadido
+- **Mago** (d6, INT): Rayo de Fuego, Armadura de Mago (+3 CA sin armadura), Dormir, Bola de Fuego (toda una fila, mitad si salva), Proyectil Mágico (nunca falla).
+- **Druida** (d8, SAB): Látigo de Espinas, Curar Heridas, Enredar (toda una fila), Forma Salvaje (PV temporales), Furia Elemental (+SAB al daño de conjuros).
+- **Bardo** (d8, CAR): Burla Cruel, Inspiración Bárdica (+1d6 al próximo ataque), Canción Sanadora, Patrón Hipnótico (toda una fila), Palabras Cortantes.
+- **Tiradas de salvación** (DES y SAB) contra la CD de conjuro (8 + competencia + característica); habilidades `save` contra un objetivo o contra toda su fila.
+- Estados `asleep` (pierde el turno, despierta al recibir daño), `restrained` (ventaja contra él, desventaja en sus ataques), `inspired` y `wild_shape`.
+- **PV temporales**: absorben el daño primero y se ven en el panel de combate como `(+N)`.
+- Tipos de daño `force` (fuerza) y `psychic` (psíquico).
+- Objetos: bastón y estoque (tienda de Tessa).
+
+### Cambiado
+- Los monstruos usan su modificador de SAB para las salvaciones.
+- Las habilidades `save` piden objetivo a distancia como los conjuros.
+
 ## [0.3.0] - 2026-10-11
 
 ### Añadido

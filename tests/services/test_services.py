@@ -80,6 +80,41 @@ async def test_create_priest():
         assert cb.bonus_damage == "1d8" and cb.bonus_damage_type == "radiant"
 
 
+async def test_create_mage_druid_bard():
+    _, cid = await new_character(cls="mage")  # human: every ability +1
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        gear = await characters.equipped(s, char)
+        assert characters.armor_class(char, gear) == 10 + 2 + 3  # dex +2, Mage Armor
+        assert char.resources == {"fire_bolt": None}
+        cb = await characters.build_combatant(s, char)
+        assert cb.row == "back" and cb.spell_dc == 8 + 3 + 2 and cb.spell_damage_bonus == 0
+        await inventory.add_item(s, char, "chain_mail")
+        mail = next(i for i in await inventory.items_of(s, char) if i.item_key == "chain_mail")
+        await inventory.equip(s, char, mail.id)
+        gear = await characters.equipped(s, char)
+        assert characters.armor_class(char, gear) == 16  # chain mail: no dex, no Mage Armor
+
+    _, cid = await new_character(tg_id=2, cls="druid")
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        gear = await characters.equipped(s, char)
+        assert characters.armor_class(char, gear) == 11 + 2 + 2  # leather (dex +2), shield
+        assert char.resources == {"thorn_whip": None, "cure_wounds": 2}
+        from oathforge.services.events import Outcome
+        characters.grant_xp(char, 6500, Outcome())
+        assert {"entangle", "wild_shape"} <= set(char.resources)
+        cb = await characters.build_combatant(s, char)
+        assert cb.spell_damage_bonus == cb.casting_mod > 0
+
+    _, cid = await new_character(tg_id=3, cls="bard")
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        assert char.resources == {"vicious_mockery": None, "bardic_inspiration": 2}
+        cb = await characters.build_combatant(s, char)
+        assert cb.casting_mod == 3 and [a.finesse for a in cb.attacks] == [True]
+
+
 async def test_user_language_normalized():
     async with session_scope() as s:
         u = await characters.get_or_create_user(s, 99, "en-GB")

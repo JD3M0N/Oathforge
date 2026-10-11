@@ -13,9 +13,11 @@ from pydantic import BaseModel, Field
 from oathforge.engine.checks import check, dc_for
 from oathforge.engine.dice import d20, roll
 
-NEGATIVE_STATUSES = {"bleeding", "burning", "poisoned", "frightened", "stunned", "vulnerable"}
+NEGATIVE_STATUSES = {"bleeding", "burning", "poisoned", "frightened", "stunned", "vulnerable", "asleep", "restrained"}
 DOT = {"bleeding": "1d4", "burning": "1d6"}
 BLESS_BONUS = 2
+INSPIRATION_DIE = "1d6"
+SKIP_TURN = ("stunned", "asleep")
 
 
 class CombatError(Exception):
@@ -47,6 +49,7 @@ class Combatant(BaseModel):
     ac: int
     row: Literal["front", "back"] = "front"
     dex_mod: int = 0
+    wis_mod: int = 0  # saving throws
     passive_perception: int = 10
     initiative: int = 0
     attacks: list[AttackProfile] = []
@@ -67,6 +70,9 @@ class Combatant(BaseModel):
     crit_range: int = 20
     spell_to_hit: int = 0
     casting_mod: int = 0
+    spell_dc: int = 10
+    spell_damage_bonus: int = 0
+    temp_hp: int = 0
     bonus_damage: str | None = None  # once per turn on a weapon hit (e.g. Divine Strike)
     bonus_damage_type: str = "radiant"
     # monster-only
@@ -293,11 +299,28 @@ def _use_ability(state, actor, action, ability, rng) -> list[LogEntry]:
         )
     elif ability.kind == "spell":
         target = _resolve_target(state, actor, action.target, ranged=True)
-        profile = AttackProfile(key=action.ability, name=ability.name.model_dump(), to_hit=actor.spell_to_hit,
-                                damage=ability.damage or "1d4", damage_type=ability.damage_type or "radiant",
-                                ranged=True)
+        damage = _with_bonus(ability.damage or "1d4", actor.spell_damage_bonus)
+        dtype = ability.damage_type or "radiant"
         logs.append(LogEntry(key="combat.ability", params={"actor": actor.id, "ability": action.ability}))
-        logs += _attack(state, actor, target, profile, rng, None, weapon=False)
+        if ability.auto_hit:
+            logs += _apply_damage(state, target, roll(damage, rng).total, dtype)
+        else:
+            profile = AttackProfile(key=action.ability, name=ability.name.model_dump(), to_hit=actor.spell_to_hit,
+                                    damage=damage, damage_type=dtype, ranged=True)
+            logs += _attack(state, actor, target, profile, rng, None, weapon=False)
+    elif ability.kind == "save":
+        target = _resolve_target(state, actor, action.target, ranged=True)
+        targets = [target] if ability.area == "one" else [e for e in state.enemies_of(actor) if e.row == target.row]
+        logs.append(LogEntry(key="combat.ability", params={"actor": actor.id, "ability": action.ability}))
+        damage = _with_bonus(ability.damage, actor.spell_damage_bonus) if ability.damage else None
+        for t in targets:
+            saved, save_logs = _save(t, ability.save or "dex", actor.spell_dc, rng)
+            logs += save_logs
+            if damage and (not saved or ability.half_on_save):
+                amount = roll(damage, rng).total
+                logs += _apply_damage(state, t, amount // 2 if saved else amount, ability.damage_type or "force")
+            if ability.status and not saved and t.active:
+                logs += _apply_status(t, ability.status, ability.status_turns)
     elif ability.kind == "turn":
         targets = [e for e in state.enemies_of(actor) if e.creature_type == ability.targets_type]
         if not targets:
@@ -309,11 +332,16 @@ def _use_ability(state, actor, action, ability, rng) -> list[LogEntry]:
             if ability.status and t.active:
                 logs += _apply_status(t, ability.status, ability.status_turns)
     elif ability.kind == "buff":
-        # +1: the turn it is cast ticks once, so the effect covers N later turns
-        actor.statuses[ability.status] = ability.status_turns + 1
-        logs.append(LogEntry(key="combat.buff", params={
-            "actor": actor.id, "ability": action.ability, "status": ability.status, "turns": ability.status_turns,
-        }))
+        if ability.status:
+            # +1: the turn it is cast ticks once, so the effect covers N later turns
+            actor.statuses[ability.status] = ability.status_turns + 1
+            logs.append(LogEntry(key="combat.buff", params={
+                "actor": actor.id, "ability": action.ability, "status": ability.status, "turns": ability.status_turns,
+            }))
+        if ability.temp_hp:
+            amount = roll(ability.temp_hp, rng).total + _heal_add(actor, ability)
+            actor.temp_hp = max(actor.temp_hp, amount)
+            logs.append(LogEntry(key="combat.temp_hp", params={"actor": actor.id, "amount": actor.temp_hp}))
     elif ability.kind == "surge":
         if not actor.action_used:
             raise CombatError("combat.err.surge_unused")
@@ -325,7 +353,7 @@ def _use_ability(state, actor, action, ability, rng) -> list[LogEntry]:
         amount = (ability.heal_per_level or 0) * actor.level
         if ability.heal_dice:
             amount += roll(ability.heal_dice, rng).total
-        amount += {"level": actor.level, "casting": actor.casting_mod}.get(ability.heal_add or "", 0)
+        amount += _heal_add(actor, ability)
         healed = _heal(actor, amount)
         logs.append(LogEntry(key="combat.heal", params={"actor": actor.id, "ability": action.ability, "amount": healed}))
     elif ability.kind == "hide":
@@ -382,7 +410,26 @@ def _interact(state, actor, action, rng) -> list[LogEntry]:
     return logs
 
 
+def _heal_add(actor: Combatant, ability) -> int:
+    return {"level": actor.level, "casting": actor.casting_mod}.get(ability.heal_add or "", 0)
+
+
+def _with_bonus(dice: str, bonus: int) -> str:
+    return f"{dice}+{bonus}" if bonus > 0 else dice
+
+
 # ---------------------------------------------------------------- core resolution
+
+def _save(target: Combatant, ability: str, dc: int, rng) -> tuple[bool, list[LogEntry]]:
+    """Saving throw of ``target`` (dex or wis) against ``dc``. Returns (saved, logs)."""
+    mod = target.wis_mod if ability == "wis" else target.dex_mod
+    r = d20(rng)
+    total = r.kept + mod
+    saved = not r.nat1 and (r.kept == 20 or total >= dc)
+    return saved, [LogEntry(key="combat.save", params={
+        "target": target.id, "save": ability, "roll": r.kept, "total": total, "dc": dc, "success": saved,
+    })]
+
 
 def _resolve_target(state, actor, target_id, ranged) -> Combatant:
     targets = valid_targets(state, actor, ranged)
@@ -398,10 +445,11 @@ def _resolve_target(state, actor, target_id, ranged) -> Combatant:
 
 def _attack(state, attacker, target, profile: AttackProfile, rng, extra, weapon: bool = True) -> list[LogEntry]:
     """One attack roll. ``extra`` = (dice, damage type) added on a hit; ``weapon`` = False for spells."""
-    adv = "hidden" in attacker.statuses or "stunned" in target.statuses
+    adv = "hidden" in attacker.statuses or any(s in target.statuses for s in ("stunned", "asleep", "restrained"))
     dis = (
         "poisoned" in attacker.statuses
         or "frightened" in attacker.statuses
+        or "restrained" in attacker.statuses
         or "defending" in target.statuses
         or (profile.ranged and attacker.row == "front"
             and any(f.row == "front" for f in state.enemies_of(attacker)))
@@ -409,6 +457,8 @@ def _attack(state, attacker, target, profile: AttackProfile, rng, extra, weapon:
     attacker.statuses.pop("hidden", None)
     r = d20(rng, adv, dis)
     total = r.kept + profile.to_hit + (BLESS_BONUS if "blessed" in attacker.statuses else 0)
+    if attacker.statuses.pop("inspired", None):
+        total += roll(INSPIRATION_DIE, rng).total
     hit = not r.nat1 and (r.kept >= attacker.crit_range or total >= target.ac)
     params = {
         "actor": attacker.id, "target": target.id, "weapon": profile.name,
@@ -460,9 +510,15 @@ def _apply_damage(state, target: Combatant, amount: int, damage_type: str) -> li
     if target.halve_first_hit and not target.dodge_used and amount > 1:
         amount //= 2
         target.dodge_used = True
-    target.hp = max(0, target.hp - amount)
+    absorbed = min(target.temp_hp, amount)
+    target.temp_hp -= absorbed
+    target.hp = max(0, target.hp - (amount - absorbed))
     logs = [LogEntry(key="combat.damage", params={"target": target.id, "amount": amount, "type": damage_type,
                                                   "effect": effect})]
+    if absorbed:
+        logs.append(LogEntry(key="combat.absorbed", params={"target": target.id, "amount": absorbed}))
+    if amount > 0 and target.hp > 0 and target.statuses.pop("asleep", None):
+        logs.append(LogEntry(key="combat.wake", params={"target": target.id}))
     if target.hp == 0:
         if target.relentless:
             target.relentless = False
@@ -509,8 +565,9 @@ def _begin_turn(state: EncounterState, rng) -> list[LogEntry]:
         if not c.active:
             _advance(state)
             continue
-        if "stunned" in c.statuses:
-            logs.append(LogEntry(key="combat.stunned", params={"target": c.id}))
+        skip = next((s for s in SKIP_TURN if s in c.statuses), None)
+        if skip:
+            logs.append(LogEntry(key=f"combat.{skip}", params={"target": c.id}))
             _tick_statuses(c)
             _advance(state)
             continue

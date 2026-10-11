@@ -10,16 +10,18 @@ Versionado `0.x.y`: sube **y** (parche) en arreglos y cambios pequeños; sube **
 - **0.2.1**: documentos de referencia (GDD y guía audiovisual) en `planning/referencias/`; planning ampliado con ellos; `audiovisual.md` e `interfaz-telegram.md`.
 - **0.2.2**: hoja de héroe y límite de 150 llamadas de IA al día.
 - **0.3.0**: mundo en carpetas (continente → zona → lugar), catálogo de imágenes, caché de `file_id` y «Ver ciudad» en Crownreach.
+- **0.4.0**: Mago, Druida y Bardo; tiradas de salvación (DES/SAB), conjuros de área por fila, PV temporales.
 
 ## Próximo (candidatos)
 
 - **0.2.x**: balance con datos de `artifacts/battles/` y ajustes de los testers.
 - **0.3.x**: imagen por lugar («Ver lugar») y retratos de NPC sobre el catálogo de 0.3.0.
-- **0.4.0**: especializaciones a nivel 5 (los datos ya existen).
-- **0.5.0**: economía: profesiones/crafteo y sumideros de oro (ver `comercio.md`).
-- **0.6.0**: grupos cooperativos y combate en grupo (fase 3, ver `multijugador.md`).
-- **0.7.0** (propuesta): audio: música de la taberna y voces de NPC (ver `audiovisual.md`).
-- Más adelante: tiradas de salvación y conjuros con CD, IA enemiga con habilidades, simulador de batallas, mercado entre jugadores, PvP, Mini App, TTS.
+- **0.4.x**: balance de las 7 clases con datos de `artifacts/battles/`.
+- **0.5.0**: especializaciones a nivel 5 (los datos ya existen).
+- **0.6.0**: economía: profesiones/crafteo y sumideros de oro (ver `comercio.md`).
+- **0.7.0**: grupos cooperativos y combate en grupo (fase 3, ver `multijugador.md`).
+- **0.8.0** (propuesta): audio: música de la taberna y voces de NPC (ver `audiovisual.md`).
+- Más adelante: salvaciones de FUE/CON/INT/CAR para monstruos, IA enemiga con habilidades, simulador de batallas, mercado entre jugadores, PvP, Mini App, TTS.
 
 ## Visión a largo plazo (GDD)
 

@@ -146,7 +146,7 @@ def armor_class(char: Character, gear: dict[str, ItemInstance]) -> int:
         ac = 10 + dex
     if "off_hand" in gear:
         ac += c.items[gear["off_hand"].item_key].ac_bonus
-    ac += sum(p.ac_bonus for p in class_passives(char))
+    ac += sum(p.ac_bonus + (0 if body else p.ac_bonus_unarmored) for p in class_passives(char))
     return ac
 
 
@@ -203,6 +203,8 @@ async def build_combatant(session: AsyncSession, char: Character, cid: str = "p1
         relentless="relentless" in lineage.traits,
         crit_range=min([p.crit_range for p in passives if p.crit_range] or [20]),
         casting_mod=casting_mod, spell_to_hit=casting_mod + proficiency_bonus(char.level),
+        spell_dc=8 + casting_mod + proficiency_bonus(char.level),
+        spell_damage_bonus=casting_mod if any(p.spell_damage_bonus for p in passives) else 0,
         bonus_damage=bonus.bonus_damage if bonus else None,
         bonus_damage_type=(bonus.bonus_damage_type or "radiant") if bonus else "radiant",
     )
