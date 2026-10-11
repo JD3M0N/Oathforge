@@ -4,6 +4,15 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.4.2] - 2026-10-11
+
+### Añadido
+- **Cambios de estado en `artifacts/`**: cada cambio confirmado en la BD (PV, oro, XP, nivel, ubicación, flags, recursos, objetos, habilidades, misiones, relaciones y memorias de PNJ, reputación, rumores y acciones de botón del registro de auditoría) se guarda como diff en `events/` (`kind: state`) y como bloque «⚙️ estado» en la conversación del jugador, venga del camino que venga. Lo revertido no se registra.
+- `artifacts/logs/<día>.log`: avisos y errores de cualquier logger (reintentos y JSON inválido de Gemini, presupuesto de IA…), que antes solo salían por consola.
+- Evento `boot` al arrancar el bot con versión, commit, modelos y base de datos.
+- Las conversaciones registran también stickers, fotos, voz y demás mensajes que no son texto.
+- `scripts/reset_players.py`: borra todos los jugadores y sus datos para empezar una ronda de pruebas limpia (sin `--yes` solo muestra qué borraría); conserva `media_files`.
+
 ## [0.4.1] - 2026-10-11
 
 ### Añadido

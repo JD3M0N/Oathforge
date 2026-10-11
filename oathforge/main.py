@@ -37,6 +37,10 @@ async def record_update(update: object, context: ContextTypes.DEFAULT_TYPE) -> N
         recorder.incoming(user.id, user.full_name, update.message.text)
     elif update.callback_query and update.callback_query.data:
         recorder.incoming(user.id, user.full_name, update.callback_query.data, button=True)
+    elif update.message:  # sticker, photo, voice...: the bot ignores them, but the player tried
+        att = update.message.effective_attachment
+        kind = type(att[-1] if isinstance(att, (list, tuple)) and att else att).__name__ if att else "?"
+        recorder.incoming(user.id, user.full_name, f"[{kind}] {update.message.caption or ''}".strip())
 
 
 async def post_init(app: Application) -> None:
@@ -77,6 +81,7 @@ def main() -> None:
     logging.basicConfig(format="%(asctime)s %(levelname)s %(name)s: %(message)s", level=logging.INFO)
     logging.getLogger("httpx").setLevel(logging.WARNING)
     log.info("Oathforge v%s", __version__)
+    recorder.start(get_settings())
     build_app().run_polling(allowed_updates=Update.ALL_TYPES)
 
 

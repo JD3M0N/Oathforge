@@ -61,3 +61,43 @@ def test_disabled_or_broken_never_raises(root, monkeypatch):
     monkeypatch.setattr(get_settings(), "artifacts_enabled", False)
     recorder.outgoing(1, "hola")
     assert blocker.read_text() == "x"
+
+
+async def test_state_changes_are_recorded(root, database):
+    from oathforge.database.session import session_scope
+    from oathforge.services import audit, characters
+
+    recorder.start(get_settings())
+    async with session_scope() as s:
+        user = await characters.get_or_create_user(s, 77, "es")
+        char = await characters.create_character(s, user, "Edda", "human", "soldier", "paladin")
+        cid = char.id
+    async with session_scope() as s:
+        char = await characters.get_character(s, (await characters.get_or_create_user(s, 77, "es")).id)
+        char.gold -= 5
+        char.flags = {**char.flags, "met_tessa": True}
+        await audit.log(s, user_id=char.user_id, character_id=cid, verb="buy", payload={"item": "potion"})
+    with pytest.raises(RuntimeError):
+        async with session_scope() as s:
+            char = await characters.get_character(s, (await characters.get_or_create_user(s, 77, "es")).id)
+            char.gold = 999
+            raise RuntimeError("rolled back")
+
+    events = [json.loads(e) for f in (root / "events").glob("*.jsonl")
+              for e in f.read_text(encoding="utf-8").splitlines()]
+    state = [e for e in events if e["kind"] == "state" and e["character_id"] == cid]
+    assert any(e["op"] == "insert" and e["table"] == "characters" for e in state)
+    assert any(e["table"] == "item_instances" for e in state)
+    gold = [e for e in state if e["op"] == "update" and "gold" in e["diff"]]
+    assert [g["diff"]["gold"] for g in gold] == [[15, 10]]  # the rolled-back 999 never shows
+    assert any(e["kind"] == "boot" for e in events)
+    md = next((root / "conversations").glob("*/77.md")).read_text(encoding="utf-8")
+    assert "personaje creado: Edda" in md and "gold 15→10" in md and "+met_tessa" in md and '▶ buy {"item": "potion"}' in md
+
+
+def test_warnings_go_to_logs(root):
+    import logging
+
+    recorder.start(get_settings())
+    logging.getLogger("oathforge.ai.client").warning("gemini returned invalid JSON")
+    assert "invalid JSON" in next((root / "logs").glob("*.log")).read_text(encoding="utf-8")

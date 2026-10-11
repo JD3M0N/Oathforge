@@ -95,8 +95,10 @@ Las misiones son máquinas de estados: `stages`, `actions` (botones o acciones l
   - `conversations/<día>/<telegram_id>.md`: lo que escribe el jugador y lo que responde el bot.
   - `battles/<día>/<id>-<lugar>.md` y `.json`: combates turno a turno con tiradas y resultado.
   - `ai/<día>/…json`: cada llamada a Gemini con prompt, respuesta, modelo, tokens y latencia.
-  - `events/<día>.jsonl` (todo en crudo) y `errors/<día>.log`.
+  - `events/<día>.jsonl` (todo en crudo, incluidos los cambios de estado), `errors/<día>.log` y `logs/<día>.log` (avisos).
+  - Cada cambio de estado (PV, oro, objetos, misiones, memorias de PNJ, acciones de botón…) aparece también como «⚙️ estado» dentro de la conversación.
   - Se desactiva con `ARTIFACTS_ENABLED=false` en `.env`.
+- **Ronda de pruebas limpia:** para el bot y ejecuta `.venv\Scripts\python scripts\reset_players.py --yes` (sin `--yes` solo muestra qué borraría).
 
 ## Cómo colaborar
 
