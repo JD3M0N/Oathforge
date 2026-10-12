@@ -1,6 +1,7 @@
 """Persisted encounters on top of the pure combat engine."""
 
 import random
+from dataclasses import dataclass, field
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -69,6 +70,8 @@ async def start_encounter(
     char.state = "in_combat"
     bestiary.see(char, monster_keys)
 
+    session.add(CombatAction(encounter_id=enc.id, round=1, actor="start", action={},
+                             result=[entry.model_dump(mode="json") for entry in logs]))
     out = Outcome(encounter_id=enc.id)
     out.add("combat.start", enemies=_names_list([state.combatants[k] for k in state.combatants if k != "p1"]))
     out.events += [log_event(state, e) for e in logs]
@@ -123,6 +126,7 @@ async def _sync_and_maybe_finish(session, char, enc, state: EncounterState, rng,
     enc.status = state.status
     char.state = "idle"
     c = get_content()
+    first = len(out.events)
     if state.status == "victory":
         defeated = [cb for cb in state.combatants.values() if cb.side == "enemy" and cb.defeated]
         bestiary.kill(char, [cb.ref for cb in defeated])
@@ -144,6 +148,9 @@ async def _sync_and_maybe_finish(session, char, enc, state: EncounterState, rng,
         await characters.defeat_penalty(char, out)
     elif state.status == "fled":
         char.hp = max(1, char.hp)
+    # rewards and penalties, kept for the battle report
+    session.add(CombatAction(encounter_id=enc.id, round=state.round, actor="end", action={},
+                             result=[{"key": e.key, "params": e.params} for e in out.events[first:]]))
 
 
 # ---------------------------------------------------------------- rendering helpers
@@ -203,3 +210,76 @@ def log_event(state: EncounterState, entry: LogEntry) -> Event:
             for lang in ("es", "en")
         }
     return Event(entry.key, p)
+
+
+# ---------------------------------------------------------------- battle report
+
+@dataclass
+class BattleReport:
+    """A finished encounter replayed from its CombatAction rows: every round, totals and rewards."""
+    encounter_id: int
+    location: str
+    status: str
+    state: EncounterState
+    rounds: list[tuple[int, list[LogEntry]]]
+    rewards: list[Event]
+    stats: dict = field(default_factory=dict)
+
+
+async def battle_report(session: AsyncSession, char: Character, encounter_id: int | None = None) -> BattleReport | None:
+    """The given (or the latest) finished encounter of this character, or None."""
+    stmt = select(Encounter).where(Encounter.character_id == char.id, Encounter.status != "active")
+    if encounter_id is not None:
+        stmt = stmt.where(Encounter.id == encounter_id)
+    enc = await session.scalar(stmt.order_by(Encounter.id.desc()).limit(1))
+    if enc is None:
+        return None
+    rows = (await session.scalars(select(CombatAction).where(CombatAction.encounter_id == enc.id)
+                                  .order_by(CombatAction.id))).all()
+    entries: list[LogEntry] = []
+    rewards: list[Event] = []
+    for row in rows:
+        if row.actor == "end":
+            rewards += [Event(e["key"], e.get("params", {})) for e in row.result]
+        else:
+            entries += [LogEntry.model_validate(e) for e in row.result]
+    state = EncounterState.model_validate(enc.state)
+    rounds: list[tuple[int, list[LogEntry]]] = []
+    for e in entries:
+        if e.key == "combat.round":
+            rounds.append((e.params.get("round", len(rounds) + 1), []))
+        else:
+            if not rounds:  # encounters saved before v0.5.8 have no round markers
+                rounds.append((1, []))
+            rounds[-1][1].append(e)
+    rounds = [(n, es) for n, es in rounds if es]
+    return BattleReport(enc.id, enc.location, enc.status, state, rounds, rewards, battle_stats(state, entries))
+
+
+def battle_stats(state: EncounterState, entries: list[LogEntry]) -> dict:
+    """Totals seen from the player's side: damage, accuracy, crits, healing and who fell."""
+    stats = {"dealt": 0, "received": 0, "attacks": 0, "hits": 0, "crits": 0, "enemy_attacks": 0, "enemy_hits": 0,
+             "healed": 0, "defeated": {}}
+    for e in entries:
+        p = e.params
+        mine = p.get("actor") == "p1"
+        if e.key in ("combat.hit", "combat.crit", "combat.miss"):
+            hit = e.key != "combat.miss"
+            if mine:
+                stats["attacks"] += 1
+                stats["hits"] += hit
+                stats["crits"] += e.key == "combat.crit"
+            elif p.get("target") == "p1":
+                stats["enemy_attacks"] += 1
+                stats["enemy_hits"] += hit
+        elif e.key == "combat.damage":
+            target = state.combatants.get(p.get("target"))
+            if target is not None:
+                stats["received" if target.side == "player" else "dealt"] += p.get("amount", 0)
+        elif e.key in ("combat.heal", "combat.potion") and mine:
+            stats["healed"] += p.get("amount", 0)
+        elif e.key == "combat.defeated":
+            target = state.combatants.get(p.get("target"))
+            if target is not None and target.side == "enemy":
+                stats["defeated"][target.ref or target.id] = stats["defeated"].get(target.ref or target.id, 0) + 1
+    return stats

@@ -4,6 +4,18 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.5.9] - 2026-10-12
+
+### Añadido
+- **Informe de batalla**: botón «📜 Informe» en el panel al acabar un combate y comando `/report` (la última batalla terminada).
+  - Resumen: resultado y rondas; 🗡️ daño hecho, aciertos y 💥 críticos; 🩸 daño recibido y cuántas veces te acertaron; 💚 curación; 💀 enemigos derrotados; recompensas (XP, oro, botín, subidas de nivel) o la penalización por derrota.
+  - Una página por ronda con cada tirada, en el mismo formato que el panel. Botones ◀ ▶ y «Resumen» que editan el mismo mensaje.
+- `/report` en el menú de comandos de Telegram y en `/help`.
+
+### Cambiado
+- `combat_actions` guarda también la apertura del combate (`actor="start"`: iniciativa y turnos enemigos antes del primero del jugador) y el final (`actor="end"`: recompensas o penalización). Sin migración. Las batallas anteriores salen sin apertura ni recompensas.
+- Nuevo `combat_service.battle_report()` (solo lectura) con `battle_stats()`.
+
 ## [0.5.8] - 2026-10-12
 
 ### Cambiado

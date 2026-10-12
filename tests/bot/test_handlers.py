@@ -192,6 +192,15 @@ async def test_combat_through_buttons(llm):
     assert enc.status == "victory"
     assert (await char_row()).state == "idle"
     assert any("XP" in t_ for t_, _ in p.chat.sent[-3:])
+    # battle report: the button on the final panel, then the rounds, then /report
+    await p.press(p.find("rep"))
+    assert "Battle report" in p.last[0] and "Victory" in p.last[0]
+    await p.press(p.find("rep", f"{enc.id}:1"))
+    assert "Round 1" in p.last[0] and "Initiative" in p.last[0]
+    from oathforge.bot.handlers import commands
+    report = next(h for h in commands.handlers() if "report" in getattr(h, "commands", ()))
+    await report.callback(p.update(message="/report"), p.ctx)
+    assert "Battle report" in p.last[0]
     await p.press(p.find("scene"))
     assert "Sunken Crypt" in p.last[0]
 
@@ -395,14 +404,14 @@ async def test_stale_combat_button_never_acts_twice(llm):
     first = p.find("cb", "def")
     await p.press(first)
     async with session_scope() as s:
-        acted = await s.scalar(select(func.count()).select_from(CombatAction))
+        acted = await s.scalar(select(func.count()).select_from(CombatAction).where(CombatAction.actor == "p1"))
     assert acted == 1
     # the same old button with a fresh nonce (as if pressed twice from a stale panel) is ignored
     verb, arg, token = parse(first)
     version, turn, _ = token.split(".")
     await p.press(f"{verb}|{arg}|{version}.{turn}.zzzzzz")
     async with session_scope() as s:
-        assert await s.scalar(select(func.count()).select_from(CombatAction)) == 1
+        assert await s.scalar(select(func.count()).select_from(CombatAction).where(CombatAction.actor == "p1")) == 1
 
 
 async def test_journal_missions_and_bestiary_views(llm, monkeypatch):

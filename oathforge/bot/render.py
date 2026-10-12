@@ -660,6 +660,55 @@ def combat_blocks(state: EncounterState, entries: list, lang: str, with_end: boo
     return blocks
 
 
+REPORT_ICON = {"victory": "🏆", "defeat": "💀", "fled": "🏃"}
+
+
+def report_page(report: "combat_service.BattleReport | None", page: int, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+    """Battle report: page 0 is the summary, then one page per round."""
+    back = [btn(t(lang, "btn.continue"), cb("scene"))]
+    if report is None:
+        return t(lang, "report.none"), markup([back])
+    c = get_content()
+    pages = len(report.rounds)
+    page = max(0, min(page, pages))
+    place = c.locations[report.location].name.get(lang) if report.location in c.locations else report.location
+    lines = [t(lang, "report.title", place=escape(place))]
+    if page == 0:
+        s = report.stats
+        lines += [f"{REPORT_ICON.get(report.status, '⚔️')} <b>{t(lang, 'report.result.' + report.status)}</b> · "
+                  + t(lang, "report.rounds", n=report.state.round), RULE,
+                  t(lang, "report.dealt", dealt=s["dealt"], hits=s["hits"], attacks=s["attacks"], crits=s["crits"]),
+                  t(lang, "report.received", received=s["received"], hits=s["enemy_hits"], attacks=s["enemy_attacks"])]
+        if s["healed"]:
+            lines.append(t(lang, "report.healed", amount=s["healed"]))
+        if s["defeated"]:
+            names = ", ".join((c.monsters[k].name.get(lang) if k in c.monsters else k) + (f" ×{n}" if n > 1 else "")
+                              for k, n in s["defeated"].items())
+            lines.append(t(lang, "report.defeated", list=escape(names)))
+        shown = [ev for ev in report.rewards if ev.key not in ("progress.asi", "progress.specialization_soon")]
+        if shown:
+            lines += [RULE, *(f"• {escape(render_event(ev, lang))}" for ev in shown)]
+        if pages:
+            lines += ["", f"<i>{t(lang, 'report.hint')}</i>"]
+    else:
+        number, entries = report.rounds[page - 1]
+        lines += [f"<b>{t(lang, 'report.round', n=number, page=page, pages=pages)}</b>", RULE,
+                  *(line for block in combat_blocks(report.state, entries, lang) for line in block)]
+
+    def go(p: int) -> str:
+        return cb("rep", f"{report.encounter_id}:{p}")
+    nav = []
+    if page > 0:
+        nav.append(btn(t(lang, "btn.prev_round") if page > 1 else t(lang, "btn.summary"), go(page - 1)))
+    if page < pages:
+        nav.append(btn(t(lang, "btn.first_round") if page == 0 else t(lang, "btn.next_round"), go(page + 1)))
+    rows = [nav] if nav else []
+    if page > 1:
+        rows.append([btn(t(lang, "btn.summary"), go(0))])
+    rows.append(back)
+    return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
+
+
 def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str | None = None,
                  version: int | None = None) -> tuple[str, InlineKeyboardMarkup]:
     c = get_content()
@@ -686,7 +735,7 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
     rows: list = []
     if state.status != "active":
         lines += [RULE, f"<b>{t(lang, 'combat.end.' + state.status)}</b>"]
-        rows.append([btn(t(lang, "btn.continue"), cb("scene"))])
+        rows.append([btn(t(lang, "btn.report"), cb("rep")), btn(t(lang, "btn.continue"), cb("scene"))])
         return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
 
     me = state.combatants["p1"]

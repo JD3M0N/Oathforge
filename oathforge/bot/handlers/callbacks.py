@@ -22,7 +22,7 @@ log = logging.getLogger(__name__)
 
 # verbs that only show something (no nonce, no state change)
 VIEWS = {"scene", "trv", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jq", "jrb", "jb", "jrr",
-         "shopm", "shop", "sellm", "cbp", "lang", "city", "cls", "clsl"}
+         "shopm", "shop", "sellm", "cbp", "lang", "city", "cls", "clsl", "rep"}
 
 
 async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -102,6 +102,10 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             text, kb = await render.missions(session, char, lang)
         elif verb == "jq":
             text, kb = await render.mission(session, char, arg, lang)
+        elif verb == "rep":  # "<encounter_id>:<page>", or "-" for the latest battle
+            enc_id, _, page = arg.partition(":")
+            report = await combat_service.battle_report(session, char, int(enc_id) if enc_id.isdigit() else None)
+            text, kb = render.report_page(report, int(page) if page.isdigit() else 0, lang)
         elif verb == "jrb":
             text, kb = render.bestiary_list(char, lang)
         elif verb == "jb":

@@ -10,6 +10,7 @@ cmd:
   journal: "Adventure journal"
   quests: "Missions and progress"
   classes: "Classes and their abilities"
+  report: "Report of the last battle"
   roll: "Roll the die and manual rolls"
   language: "Change language"
   help: "How to play"
@@ -22,7 +23,7 @@ help:
     You can also <b>type whatever you want to do</b>: "I hide behind the bar and listen", "I try to lift the keeper's purse", "I push the cart onto the bandit".
     The Dungeon Master interprets your action, the engine rolls the dice, and you see what really happened.
 
-    Commands: /look /hero /sheet /inventory /journal /quests /classes /roll /language
+    Commands: /look /hero /sheet /inventory /journal /quests /classes /report /roll /language
   version: "<i>Oathforge v{version}</i>"
 
 lang:
@@ -70,6 +71,11 @@ create:
 
 btn:
   full_sheet: "📜 Full sheet"
+  report: "📜 Report"
+  summary: "📜 Summary"
+  first_round: "Round 1 ▶"
+  prev_round: "◀ Previous round"
+  next_round: "Next round ▶"
   classes: "📚 Classes"
   hero_summary: "🦸 Summary"
   travel: "🧭 Travel"
@@ -421,6 +427,21 @@ classes:
   abilities: "✨ Class abilities"
   level: "Lv {level}"
   specializations: "🌟 <b>Specializations (level 5)</b>"
+
+report:
+  title: "📜 <b>Battle report</b> · {place}"
+  none: "You haven't finished any battle yet."
+  result:
+    victory: "Victory"
+    defeat: "Defeat"
+    fled: "Escaped"
+  rounds: "{n} rounds"
+  dealt: "🗡️ Damage dealt: <b>{dealt}</b> · 🎯 Hits {hits}/{attacks} · 💥 Crits {crits}"
+  received: "🩸 Damage taken: <b>{received}</b> · They hit you {hits}/{attacks}"
+  healed: "💚 Healing: {amount} HP"
+  defeated: "💀 Defeated: {list}"
+  round: "Round {n} · page {page}/{pages}"
+  hint: "Step through the rounds with the buttons to see every roll."
 
 bestiary:
   title: "📖 <b>Bestiary</b> · {seen}/{total} creatures"

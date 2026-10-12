@@ -21,6 +21,7 @@ Versionado `0.x.y`: sube **y** (parche) en arreglos y cambios pequeños; sube **
 - **0.5.6**: la subida de nivel llega en un mensaje propio (PV antes → después, mejora de atributo, habilidades nuevas explicadas).
 - **0.5.7**: `/classes` y `/class_<clase>`: cada clase con sus habilidades por nivel explicadas.
 - **0.5.8**: panel de combate más legible (CA con 🛡️, críticos 💥, golpe y daño en un bloque, rondas).
+- **0.5.9**: informe de batalla (`/report` y botón al acabar): resumen y cada ronda tirada a tirada.
 
 ## Próximo (candidatos)
 
@@ -28,7 +29,6 @@ Versionado `0.x.y`: sube **y** (parche) en arreglos y cambios pequeños; sube **
 - **0.3.x**: imagen por lugar («Ver lugar») y retratos de NPC sobre el catálogo de 0.3.0.
 - **0.4.x**: balance de las 8 clases con datos de `artifacts/battles/`.
 - **0.5.x**: balance de la cadena de misiones y de la caza con datos de `artifacts/battles/` y del simulador (`artifacts/simulations/`): subir a Mago y Druida a nivel 1-2; más criaturas en el bestiario.
-- **0.5.9**: informe de batalla (`/report`).
 - **0.6.0**: especializaciones a nivel 5 (los datos ya existen; con la cadena de 0.5.0 se llega a nivel 5 enseguida) y **alquimia con un sistema de pociones nuevo** (hierbas del Bosque, recetas).
 - **0.7.0**: economía: herrería y más profesiones/crafteo, y sumideros de oro (ver `comercio.md`).
 - **0.8.0**: grupos cooperativos y combate en grupo (fase 3, ver `multijugador.md`).

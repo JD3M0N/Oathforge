@@ -17,8 +17,8 @@ from oathforge.i18n import t
 log = logging.getLogger("oathforge")
 
 # Telegram's "/" menu; each needs a cmd.<name> description in every locale.
-MENU_COMMANDS = ("start", "look", "hero", "sheet", "inventory", "journal", "quests", "classes", "roll",
-                 "language", "help")
+MENU_COMMANDS = ("start", "look", "hero", "sheet", "inventory", "journal", "quests", "classes", "report",
+                 "roll", "language", "help")
 
 
 async def on_error(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:

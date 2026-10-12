@@ -10,6 +10,7 @@ cmd:
   journal: "Diario de aventuras"
   quests: "Misiones y progreso"
   classes: "Clases y sus habilidades"
+  report: "Informe de la última batalla"
   roll: "Lanzar el dado y tiradas manuales"
   language: "Cambiar idioma"
   help: "Cómo jugar"
@@ -22,7 +23,7 @@ help:
     También puedes <b>escribir lo que quieras hacer</b>: «me escondo tras la barra y escucho», «intento robarle la bolsa al tabernero», «empujo el carro sobre el bandido».
     El Dungeon Master interpreta tu acción, el motor tira los dados y tú ves el resultado real.
 
-    Comandos: /look /hero /sheet /inventory /journal /quests /classes /roll /language
+    Comandos: /look /hero /sheet /inventory /journal /quests /classes /report /roll /language
   version: "<i>Oathforge v{version}</i>"
 
 lang:
@@ -70,6 +71,11 @@ create:
 
 btn:
   full_sheet: "📜 Ficha completa"
+  report: "📜 Informe"
+  summary: "📜 Resumen"
+  first_round: "Ronda 1 ▶"
+  prev_round: "◀ Ronda anterior"
+  next_round: "Ronda siguiente ▶"
   classes: "📚 Clases"
   hero_summary: "🦸 Resumen"
   travel: "🧭 Viajar"
@@ -421,6 +427,21 @@ classes:
   abilities: "✨ Habilidades de clase"
   level: "Nv {level}"
   specializations: "🌟 <b>Especializaciones (nivel 5)</b>"
+
+report:
+  title: "📜 <b>Informe de batalla</b> · {place}"
+  none: "Todavía no has terminado ninguna batalla."
+  result:
+    victory: "Victoria"
+    defeat: "Derrota"
+    fled: "Huida"
+  rounds: "{n} rondas"
+  dealt: "🗡️ Daño hecho: <b>{dealt}</b> · 🎯 Aciertos {hits}/{attacks} · 💥 Críticos {crits}"
+  received: "🩸 Daño recibido: <b>{received}</b> · Te acertaron {hits}/{attacks}"
+  healed: "💚 Curación: {amount} PV"
+  defeated: "💀 Derrotados: {list}"
+  round: "Ronda {n} · página {page}/{pages}"
+  hint: "Recorre las rondas con los botones para ver cada tirada."
 
 bestiary:
   title: "📖 <b>Bestiario</b> · {seen}/{total} criaturas"

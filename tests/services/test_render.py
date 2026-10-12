@@ -199,3 +199,46 @@ async def test_class_pages(lang):
         assert "✅" in page and "🔒" in page
         sheet, _ = await render.sheet(s, char, lang)
         assert "/class_paladin" in sheet
+
+
+@pytest.mark.parametrize("lang", ["es", "en"])
+async def test_battle_report(lang):
+    from oathforge.engine.combat import Action
+
+    async with session_scope() as s:
+        user = await characters.get_or_create_user(s, 9, lang)
+        char = await characters.create_character(s, user, "Edda", "dwarf", "acolyte", "paladin")
+        assert await combat_service.battle_report(s, char) is None
+        check(render.report_page(None, 0, lang))
+        char.location = "crypt_sanctum"
+        char.hp = char.max_hp = 300
+        enc, _ = await combat_service.start_encounter(s, char, ["crypt_skeleton", "crypt_skeleton"], random.Random(5))
+        rng = random.Random(6)
+        while enc.status == "active":
+            await combat_service.act(s, char, enc, Action(kind="attack", weapon="main"), rng)
+        await s.flush()
+        assert enc.status == "victory"
+        panel, kb = render.combat_panel(char, enc.state, lang)
+        assert "rep|-|-" in [b.callback_data for row in kb.inline_keyboard for b in row]
+
+        report = await combat_service.battle_report(s, char)
+        assert report.encounter_id == enc.id and report.status == "victory"
+        assert [n for n, _ in report.rounds] == list(range(1, len(report.rounds) + 1))
+        assert report.rounds[0][1][0].key == "combat.initiative"  # the opening logs are kept too
+        assert len(report.rounds) == report.state.round
+        everything = [e for _, es in report.rounds for e in es]
+        dealt = sum(e.params["amount"] for e in everything if e.key == "combat.damage" and e.params["target"] != "p1")
+        assert report.stats["dealt"] == dealt > 0
+        assert report.stats["defeated"] == {"crypt_skeleton": 2}
+        assert report.stats["hits"] <= report.stats["attacks"]
+        assert any(ev.key == "progress.xp" for ev in report.rewards)
+
+        summary, kb = render.report_page(report, 0, lang)
+        check((summary, kb))
+        assert "✨" in summary and "report." not in summary
+        for page in range(1, len(report.rounds) + 1):
+            text, kb = render.report_page(report, page, lang)
+            check((text, kb))
+            assert "combat." not in text
+        data = [b.callback_data for row in kb.inline_keyboard for b in row]
+        assert f"rep|{enc.id}:0|-" in data or len(report.rounds) == 1

@@ -1,4 +1,4 @@
-"""/hero /sheet /inventory /journal /quests /classes /class_<key> /roll /look /language /help."""
+"""/hero /sheet /inventory /journal /quests /classes /class_<key> /report /roll /look /language /help."""
 
 import re
 
@@ -13,6 +13,7 @@ from oathforge.bot.keyboards import btn, cb, markup
 from oathforge.content import get_content
 from oathforge.database.session import session_scope
 from oathforge.i18n import t
+from oathforge.services import combat_service
 
 
 def _view(builder):
@@ -56,6 +57,10 @@ async def classes(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await send(update, text, kb)
 
 
+async def _report(session, char, lang):
+    return render.report_page(await combat_service.battle_report(session, char), 0, lang)
+
+
 async def language(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     async with session_scope() as session:
         user, _ = await load(session, update)
@@ -81,6 +86,7 @@ def handlers() -> list[BaseHandler]:
         CommandHandler("quests", _view(render.missions)),
         CommandHandler("classes", classes),
         MessageHandler(filters.Regex(CLASS_LINK), classes),
+        CommandHandler("report", _view(_report)),
         CommandHandler("roll", callbacks.roll_command),
         CommandHandler("language", language),
         CommandHandler("help", help_cmd),
