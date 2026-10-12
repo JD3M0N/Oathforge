@@ -18,7 +18,6 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 
 ## ⚔️ Combate y balance · [combate.md](planning/combate.md)
 
-- [ ] 🔴 **Panel de combate más bonito y fácil de leer**: CA con escudo (🛡️) junto a cada combatiente, emoji de crítico (💥), golpe y daño en un solo bloque y separador por ronda.
 - [ ] 🔴 **Informe de batalla** (`/report` y botón al acabar): resumen (daño hecho y recibido, críticos, rondas, recompensas) y lo que pasó en cada ronda, para entender una victoria o una derrota.
 - [ ] 🟡 IA enemiga táctica (proteger al sanador, priorizar amenazas) y jefes por fases con aviso previo.
 - [ ] 🟢 Nuevos tipos de acción: defender a un aliado, negociar una tregua, rendirse.
@@ -102,3 +101,4 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] `oathforge tgtest`: probar el bot de punta a punta desde una cuenta de Telegram (v0.5.5).
 - [x] Subida de nivel en un mensaje propio: PV antes → después, mejora de atributo y cada habilidad nueva con su descripción (v0.5.6).
 - [x] Ver cada clase y sus habilidades: `/classes` y `/class_<clase>`, enlazado desde la subida de nivel y `/sheet` (v0.5.7).
+- [x] Panel de combate más bonito: 🛡️ CA de cada combatiente, 💥 críticos, golpe y daño en un bloque y separador por ronda (v0.5.8).

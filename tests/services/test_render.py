@@ -94,12 +94,37 @@ async def test_all_views_render(lang):
             if enc.status != "active":
                 break
             o = await combat_service.act(s, char, enc, Action(kind="attack", weapon="main"), rng)
-            check(render.outcome_text(o, lang))
+            text = render.outcome_text(o, lang)  # hit-by-hit logs live in the panel, rewards stay here
+            if text:
+                check(text)
+                assert "🗡️" not in text and "💨" not in text
+            check(render.combat_panel(char, enc.state, lang))
         check(render.combat_panel(char, enc.state, lang))
         assert enc.status == "victory"
         # the panel log must not leak raw i18n keys
         text, _ = render.combat_panel(char, enc.state, lang)
         assert "combat." not in text and "status." not in text and "dmg." not in text
+        assert "🛡️" in text  # AC next to each combatant
+        # a crit with its damage indented below it, a miss, and a new round as a separator
+        from oathforge.engine.combat import EncounterState, LogEntry
+        state = EncounterState.model_validate(enc.state)
+        entries = [LogEntry(key="combat.round", params={"round": 2}),
+                   LogEntry(key="combat.crit", params={"actor": "p1", "target": "m1", "weapon": {"es": "Espada", "en": "Sword"},
+                                                       "roll": 20, "total": 25, "ac": 13, "adv": False, "dis": False,
+                                                       "crit": True, "sneak": 0}),
+                   LogEntry(key="combat.damage", params={"target": "m1", "amount": 14, "type": "slashing",
+                                                         "effect": "", "hp": 0, "max_hp": 30}),
+                   LogEntry(key="combat.defeated", params={"target": "m1"}),
+                   LogEntry(key="combat.miss", params={"actor": "m2", "target": "p1", "weapon": {"es": "Garra", "en": "Claw"},
+                                                       "roll": 3, "total": 7, "ac": 18, "adv": False, "dis": False})]
+        blocks = render.combat_blocks(state, entries, lang)
+        assert len(blocks) == 3
+        assert blocks[0][0].startswith("<i>") and "2" in blocks[0][0]
+        crit = blocks[1]
+        assert crit[0].startswith("<b>💥") and "🎲 20 +5 = 25" in crit[0] and "🛡️ 13" in crit[0]
+        assert crit[1].startswith("   └ 🩸") and "❤️ 0/30" in crit[1] and crit[2].startswith("   └ 💀")
+        assert blocks[2][0].startswith("💨") and "❌" in blocks[2][0]
+        check("\n".join(line for b in blocks for line in b))
 
 
 @pytest.mark.parametrize("lang", ["es", "en"])

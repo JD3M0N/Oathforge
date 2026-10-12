@@ -180,6 +180,11 @@ def log_event(state: EncounterState, entry: LogEntry) -> Event:
     if entry.key == "combat.damage":  # logs saved before v0.2.0 have no effect
         effect = p.pop("effect", "")
         p["effect"] = _both(f"combat.effect.{effect}") if effect else ""
+        hp, max_hp = p.pop("hp", None), p.pop("max_hp", None)  # HP left, since v0.5.8
+        p["left"] = _both("combat.hp_left", hp=hp, max_hp=max_hp) if hp is not None else ""
+    if isinstance(p.get("roll"), int) and isinstance(p.get("total"), int):  # 🎲 14 +5 = 19
+        diff = p["total"] - p["roll"]
+        p["bonus"] = f" {diff:+d}" if diff else ""
     if "row" in p:
         p["row"] = _both(f"row.{p['row']}")
     if "success" in p:

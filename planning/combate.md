@@ -14,6 +14,7 @@ Motor puro en `oathforge/engine/combat.py`, persistido como JSON en `encounters.
 - Enemigos: atacan al jugador con menos PV con su primer ataque válido; los cobardes huyen con ¼ de PV.
 - **v0.5.0, cripta más fácil**: en la partida del 11/10 hubo 4 muertes en 4 combates en la sala de los juramentos (2 esqueletos contra nivel 1). Esqueleto: 11 PV, +3, 1d6+1. Guardián: 40 PV, +4, 1d8+2 y miedo al 25 %. Descanso gratis en el osario antes del santuario. Con la cadena de misiones se llega a la cripta a nivel 3–4.
 - **v0.5.0, botones a prueba de doble clic**: cada botón de combate lleva `<encounter.version>.<turn_index>.<nonce>`; si la versión o el turno ya no coinciden, se vuelve a pintar el panel sin actuar.
+- **v0.5.8, panel más legible**: cada combatiente muestra ❤️ PV, barra y 🛡️ CA. Cada acción es un bloque: la línea del ataque (🗡️ acierto, 💥 crítico en negrita, 💨 fallo, con «🎲 14 +5 = 19 vs 🛡️ 13») y, sangradas debajo, sus consecuencias (🩸 daño con los PV que le quedan al objetivo, 💀 cae, salvaciones, estados). Separador «── Ronda N ──»: el motor deja una entrada `combat.round` al empezar cada ronda. El daño guarda `hp` y `max_hp` del objetivo. Los golpes ya no se repiten en el mensaje de viñetas: solo salen en el panel.
 
 ## Ideas
 

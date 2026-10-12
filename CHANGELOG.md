@@ -4,6 +4,18 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.5.8] - 2026-10-12
+
+### Cambiado
+- **Panel de combate más bonito y fácil de leer**:
+  - Cada combatiente: ❤️ PV, barra de vida y 🛡️ CA.
+  - Cada acción es un bloque: la línea del ataque y, sangradas debajo (└), sus consecuencias: 🩸 daño con los PV que le quedan al objetivo, 💀 cae, salvaciones, estados.
+  - 🗡️ acierto, 💥 **crítico** en negrita (ahora también muestra la CA), 💨 fallo. La tirada se lee como «🎲 14 +5 = 19 vs 🛡️ 13 ✅».
+  - Separador «── Ronda N ──» entre rondas y líneas ━━━ entre combatientes, registro y botones. Se ven las 6 últimas acciones.
+  - Iconos en todas las líneas del registro: ⏱️ iniciativa, 💚 curación, 🧪 poción, 🌀 estado, 💤 dormido, 🏃 huir, 🥷 esconderse, 🪝 objeto del escenario…
+- Los golpes ya no se repiten en el mensaje de viñetas (al empezar un combate o con una acción escrita): solo salen en el panel, que llega justo después.
+- Motor: nueva entrada `combat.round` al empezar cada ronda (también la 1). El daño guarda `hp` y `max_hp` del objetivo.
+
 ## [0.5.7] - 2026-10-12
 
 ### Añadido

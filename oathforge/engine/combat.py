@@ -155,7 +155,8 @@ def start(state: EncounterState, rng: random.Random) -> list[LogEntry]:
         reverse=True,
     )
     state.turn_index = 0
-    logs = [LogEntry(key="combat.initiative", params={"order": list(state.order)})]
+    logs = [LogEntry(key="combat.round", params={"round": state.round}),
+            LogEntry(key="combat.initiative", params={"order": list(state.order)})]
     logs += _begin_turn(state, rng)
     logs += _run_enemies(state, rng)
     _append(state, logs)
@@ -522,7 +523,7 @@ def _apply_damage(state, target: Combatant, amount: int, damage_type: str) -> li
     target.temp_hp -= absorbed
     target.hp = max(0, target.hp - (amount - absorbed))
     logs = [LogEntry(key="combat.damage", params={"target": target.id, "amount": amount, "type": damage_type,
-                                                  "effect": effect})]
+                                                  "effect": effect, "hp": target.hp, "max_hp": target.max_hp})]
     if absorbed:
         logs.append(LogEntry(key="combat.absorbed", params={"target": target.id, "amount": absorbed}))
     if amount > 0 and target.hp > 0 and target.statuses.pop("asleep", None):
@@ -571,13 +572,13 @@ def _begin_turn(state: EncounterState, rng) -> list[LogEntry]:
             if state.status != "active":
                 break
         if not c.active:
-            _advance(state)
+            logs += _advance(state)
             continue
         skip = next((s for s in SKIP_TURN if s in c.statuses), None)
         if skip:
             logs.append(LogEntry(key=f"combat.{skip}", params={"target": c.id}))
             _tick_statuses(c)
-            _advance(state)
+            logs += _advance(state)
             continue
         break
     return logs
@@ -585,8 +586,8 @@ def _begin_turn(state: EncounterState, rng) -> list[LogEntry]:
 
 def _end_turn(state: EncounterState, rng) -> list[LogEntry]:
     _tick_statuses(state.current)
-    _advance(state)
-    return _begin_turn(state, rng)
+    logs = _advance(state)
+    return logs + _begin_turn(state, rng)
 
 
 def _tick_statuses(c: Combatant) -> None:
@@ -598,13 +599,16 @@ def _tick_statuses(c: Combatant) -> None:
             del c.statuses[status]
 
 
-def _advance(state: EncounterState) -> None:
+def _advance(state: EncounterState) -> list[LogEntry]:
+    """Next turn; a new round leaves a ``combat.round`` marker in the log (panel separator, battle report)."""
     state.turn_index += 1
-    if state.turn_index >= len(state.order):
-        state.turn_index = 0
-        state.round += 1
-        for c in state.combatants.values():
-            c.dodge_used = False
+    if state.turn_index < len(state.order):
+        return []
+    state.turn_index = 0
+    state.round += 1
+    for c in state.combatants.values():
+        c.dodge_used = False
+    return [LogEntry(key="combat.round", params={"round": state.round})]
 
 
 def _run_enemies(state: EncounterState, rng) -> list[LogEntry]:

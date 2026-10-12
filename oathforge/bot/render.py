@@ -31,12 +31,18 @@ ABILITY_ICON = {"strike": "⚔️", "spell": "🔮", "turn": "☀️", "buff": "
                 "hide": "🥷", "save": "🌀", "curse": "🕯️", "passive": "🌟"}
 
 
+def panel_only(key: str) -> bool:
+    """Blow-by-blow combat logs: the combat panel (sent right after) already shows them."""
+    return key.startswith("combat.") and key not in ("combat.start", "combat.defeat_penalty") \
+        and not key.startswith("combat.err.")
+
+
 def outcome_text(outcome: Outcome, lang: str, narration: str | None = None) -> str:
     parts: list[str] = []
     if narration:
         parts.append(f"<i>{escape(narration)}</i>")
     for ev in outcome.events:
-        if ev.key in LEVEL_KEYS:
+        if ev.key in LEVEL_KEYS or panel_only(ev.key):
             continue
         line = escape(render_event(ev, lang))
         parts.append(line if ev.key == "text" else f"• {line}")
@@ -632,11 +638,33 @@ def combat_token(version: int | None, turn_index: int) -> str:
     return f"{version or 0}.{turn_index}.{nonce()}"
 
 
+PANEL_BLOCKS = 6  # recent actions shown under the combatants
+# results that belong to the action above them (damage of a hit, saves of a spell...): drawn indented under it
+FOLLOW_UPS = {"combat.damage", "combat.absorbed", "combat.defeated", "combat.relentless", "combat.wake",
+              "combat.status", "combat.immune", "combat.save", "combat.temp_hp"}
+
+
+def combat_blocks(state: EncounterState, entries: list, lang: str, with_end: bool = True) -> list[list[str]]:
+    """Log entries as readable blocks: an action line with its results indented below, rounds as separators."""
+    blocks: list[list[str]] = []
+    for e in entries:
+        if not with_end and e.key.startswith("combat.end."):
+            continue
+        text = escape(render_event(combat_service.log_event(state, e), lang))
+        if e.key == "combat.round":
+            blocks.append([f"<i>{text}</i>"])
+        elif e.key in FOLLOW_UPS and blocks and not blocks[-1][0].startswith("<i>"):
+            blocks[-1].append(f"   └ {text}")
+        else:
+            blocks.append([f"<b>{text}</b>" if e.key == "combat.crit" else text])
+    return blocks
+
+
 def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str | None = None,
                  version: int | None = None) -> tuple[str, InlineKeyboardMarkup]:
     c = get_content()
     state = EncounterState.model_validate(enc_state)
-    lines = [t(lang, "combat.panel_title", round=state.round), ""]
+    lines = [t(lang, "combat.panel_title", round=state.round), RULE]
     for cid in state.order:
         cb_ = state.combatants[cid]
         icon = "🔵" if cb_.side == "player" else "🔴"
@@ -649,20 +677,20 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
         row = t(lang, f"row.{cb_.row}")
         st = " ".join(t(lang, f"status.icon.{s}") for s in cb_.statuses)
         temp = f" (+{cb_.temp_hp})" if cb_.temp_hp else ""
-        lines.append(f"{icon} <b>{escape(cb_.name[lang])}</b> {cb_.hp}/{cb_.max_hp}{temp} {hp_bar(cb_.hp, cb_.max_hp)} "
-                     f"· {row} {st}".rstrip())
-    recent = state.log[-7:]
-    if recent:
-        lines += ["", *(f"› {escape(render_event(combat_service.log_event(state, e), lang))}" for e in recent)]
+        lines.append(f"{icon} <b>{escape(cb_.name[lang])}</b> ❤️ {cb_.hp}/{cb_.max_hp}{temp} "
+                     f"{hp_bar(cb_.hp, cb_.max_hp)} 🛡️ {cb_.ac} · {row} {st}".rstrip())
+    blocks = combat_blocks(state, state.log, lang, with_end=False)[-PANEL_BLOCKS:]
+    if blocks:
+        lines += [RULE, *(line for block in blocks for line in block)]
 
     rows: list = []
     if state.status != "active":
-        lines += ["", f"<b>{t(lang, 'combat.end.' + state.status)}</b>"]
+        lines += [RULE, f"<b>{t(lang, 'combat.end.' + state.status)}</b>"]
         rows.append([btn(t(lang, "btn.continue"), cb("scene"))])
         return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
 
     me = state.combatants["p1"]
-    lines += ["", f"<b>{t(lang, 'combat.your_turn')}</b>"]
+    lines += [RULE, f"<b>{t(lang, 'combat.your_turn')}</b>"]
     n = combat_token(version, state.turn_index)
     defs = combat_service.ability_defs(char)
 
