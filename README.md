@@ -113,16 +113,17 @@ Cada versión se anuncia en los dos con el mismo formato (título `🛡 Oathforg
 
 ## Cómo colaborar
 
-Cada persona trabaja en su rama: `josue-development`, `rayko-development` o `edian-development`.
+Cada persona trabaja el código en su rama: `josue-development`, `rayko-development` o `edian-development`.
 
-- **TODO de testers:** edita tu `TODO-<nombre>.md` en tu rama y haz `git push`. Una GitHub Action copia ese archivo a `main` al momento.
+- **TODO de testers:** edita tu `TODO-<nombre>.md` directamente en `main` y haz `git push`. Es lo único que se empuja a `main` sin pull request.
 - **Código:** abre un pull request de tu rama a `main`. Necesita la aprobación de Josue.
 - **Mantente al día:** `git fetch` y `git merge origin/main` en tu rama antes de empezar.
 
 ```powershell
 git clone https://github.com/JD3M0N/Oathforge.git
 cd Oathforge
-git switch rayko-development   # o edian-development
+git switch main
+git pull
 # ...edita TODO-rayko.md...
 git commit -am "todo: bugs de la cripta"
 git push

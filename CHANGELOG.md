@@ -4,6 +4,15 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.5.10] - 2026-10-12
+
+### Cambiado
+- Los testers editan y empujan su `TODO-<nombre>.md` directamente en `main`: el ruleset de `main` deja pasar a quien tiene permiso de escritura. Antes lo hacían en su rama y una GitHub Action copiaba el archivo.
+- `README.md`, `CLAUDE.md` y `.github/CODEOWNERS` describen el flujo nuevo.
+
+### Eliminado
+- `.github/workflows/todo-sync.yml` y, con él, la necesidad de la deploy key `TODO_SYNC_KEY`.
+
 ## [0.5.9] - 2026-10-12
 
 ### Añadido

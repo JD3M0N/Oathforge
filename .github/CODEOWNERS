@@ -1,2 +1,3 @@
-# Every change to main needs Josue's approval (TODO files are synced by the todo-sync workflow).
+# Every change to main needs Josue's approval, except the testers' TODO-<name>.md:
+# the ruleset lets write collaborators push those straight to main.
 * @JD3M0N

@@ -13,9 +13,9 @@ Antes de editar nada, comprueba la rama (`git branch --show-current`) y el usuar
 | Edian | `edian-development` |
 
 - Si no estás en esa rama, cámbiate (`git switch <rama>`; si no existe, créala desde `origin/main`). Si hay cambios sin commitear, llévalos contigo.
-- Nunca hagas commit directamente en `main`. Solo se lleva trabajo a `main` cuando Josue lo pide.
+- Nunca hagas commit de código directamente en `main`. Solo se lleva trabajo a `main` cuando Josue lo pide.
 - Antes de empezar, trae lo nuevo: `git fetch` y `git merge origin/main`.
-- Los testers apuntan bugs e ideas en su `TODO-<nombre>.md`; al hacer push a su rama, una GitHub Action lo copia a `main`.
+- Los testers apuntan bugs e ideas en su `TODO-<nombre>.md` y lo editan y empujan **directamente en `main`**: el ruleset deja pasar a quien tiene permiso de escritura. Es la única excepción.
 
 ## Commits y PR
 
