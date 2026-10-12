@@ -9,6 +9,7 @@ cmd:
   inventory: "Inventory"
   journal: "Adventure journal"
   quests: "Missions and progress"
+  roll: "Roll the die and manual rolls"
   language: "Change language"
   help: "How to play"
 
@@ -20,7 +21,7 @@ help:
     You can also <b>type whatever you want to do</b>: "I hide behind the bar and listen", "I try to lift the keeper's purse", "I push the cart onto the bandit".
     The Dungeon Master interprets your action, the engine rolls the dice, and you see what really happened.
 
-    Commands: /look /hero /sheet /inventory /journal /quests /language
+    Commands: /look /hero /sheet /inventory /journal /quests /roll /language
   version: "<i>Oathforge v{version}</i>"
 
 lang:
@@ -78,6 +79,9 @@ btn:
   sheet: "🦸 Hero"
   journal: "📜 Journal"
   hunt: "🏹 Hunt"
+  roll: "🎲 Roll the die"
+  roll_on: "✅ Turn manual rolls on"
+  roll_off: "❌ Turn manual rolls off"
   hunt_night: "🦇 Hunt by night"
   missions: "📜 Missions"
   bestiary: "📖 Bestiary"
@@ -198,7 +202,7 @@ journal:
   no_rumors: "No rumors are going around yet."
 
 check:
-  result: "{skill}: {roll} → {total} vs DC {dc} {result}"
+  result: "🎲 {skill}: {roll} → {total} vs DC {dc} {result}"
 
 explore:
   arrived: "You reach {place} after {minutes} minutes on the road."
@@ -405,3 +409,14 @@ bestiary:
   immune_status: "🚫 Immune to: {list}"
   xp: "✨ {xp} XP"
   loot: "🎁 Loot: {list}"
+
+roll:
+  prompt: "🎲 This action needs a <b>{skill}</b> roll. Roll the die with /roll or the button."
+  settings: |-
+    🎲 <b>Manual rolls</b>: {state}
+
+    When on, a skill check (investigating, quest actions or written actions) waits for you to roll with /roll, and the animated die appears. The result always comes from the engine: d20 + your bonus against the DC.
+  "on": "on"
+  "off": "off"
+  changed: "🎲 Manual rolls {state}."
+  stale: "That roll makes no sense here anymore: you have moved."

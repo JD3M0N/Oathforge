@@ -4,6 +4,22 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.5.1] - 2026-10-11
+
+### Añadido
+- **`/roll` y tiradas manuales**, opcionales por jugador (`users.settings.manual_rolls`).
+  - Sin tirada pendiente, `/roll` las activa o desactiva.
+  - Con ellas activadas, la prueba de habilidad espera a que el jugador haga `/roll` o pulse «🎲 Tirar el dado». Afecta a investigar, a las acciones de misión con prueba y a las acciones escritas que piden tirada (prueba de habilidad, interacción con el entorno, inspeccionar o acción de misión).
+  - Al tirar, sale el dado animado de Telegram y después el resultado del motor: d20 + bonificador contra la CD. El dado de Telegram solo va de 1 a 6, así que es decorativo.
+  - El combate no espera a `/roll`.
+  - Si el jugador se ha movido antes de tirar, la tirada se anula.
+- **Retratos de hombre y de mujer** para las 8 clases: Bardo, Maga y Mago, Druida y Druidesa, Guerrera, Pícara, Sacerdotisa y Paladina. La barda aún no tiene retrato y usa el del bardo. Se quitó la franja inferior con texto falso de la IA.
+
+### Cambiado
+- Los retratos neutros de Paladín, Sacerdote, Pícaro y Guerrero eran de hombre: pasan a `portrait.male.jpg`.
+- Las pruebas de habilidad se muestran con 🎲 delante.
+- Las acciones escritas se separan en interpretar (`handle_free_text`) y resolver (`execute_free_text`), para poder resolverlas después de `/roll`.
+
 ## [0.5.0] - 2026-10-11
 
 ### Añadido

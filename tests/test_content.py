@@ -120,14 +120,12 @@ def test_class_portraits_and_unknown_class_folder(tmp_path):
     from oathforge.content.media import MediaCatalog
 
     c = load_content()
-    for cls in ("paladin", "warrior", "rogue", "priest"):
-        assert [a.key for a in c.media.class_images(cls)] == [f"classes/{cls}/images/portrait.jpg"]
-    assert c.media.class_images("mage") == []  # no portrait yet: the sheet goes without photo
-    portrait = "classes/warlock/images/portrait.{}.jpg"
-    for gender in ("male", "female"):
-        assert [a.key for a in c.media.class_images("warlock", gender)] == [portrait.format(gender)]
-    assert [a.key for a in c.media.class_images("warlock")] == [portrait.format("female")]  # no gender: first file
-    assert [a.key for a in c.media.class_images("paladin", "female")] == ["classes/paladin/images/portrait.jpg"]
+    portrait = "classes/{}/images/portrait.{}.jpg"
+    for cls in c.classes:  # every class has a man and a woman, except the bard (only the man so far)
+        for gender in ("male", "female"):
+            expected = "male" if cls == "bard" else gender
+            assert [a.key for a in c.media.class_images(cls, gender)] == [portrait.format(cls, expected)]
+    assert [a.key for a in c.media.class_images("warlock")] == [portrait.format("warlock", "female")]  # no gender: first
 
     shutil.copytree(CONTENT_DIR / "classes", tmp_path / "classes")
     (tmp_path / "classes/necromancer").mkdir()

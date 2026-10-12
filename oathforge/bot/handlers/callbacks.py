@@ -1,5 +1,6 @@
 """Single router for in-game buttons (everything except creation)."""
 
+import asyncio
 import logging
 
 from sqlalchemy.orm.exc import StaleDataError
@@ -8,12 +9,13 @@ from telegram.ext import CallbackQueryHandler, ContextTypes
 
 from oathforge.bot import render
 from oathforge.bot.handlers.common import current_view, edit_or_send, load, rate_ok, rng, send, send_photos
-from oathforge.bot.keyboards import parse
+from oathforge.bot.keyboards import btn, cb, markup, parse
 from oathforge.content import get_content
 from oathforge.database.session import session_scope
 from oathforge.engine.combat import Action, EncounterState, valid_targets
 from oathforge.i18n import t
-from oathforge.services import audit, combat_service, exploration, inventory, npcs, quests
+from oathforge.ai.intent_parser import Intent
+from oathforge.services import actions, audit, characters, combat_service, exploration, inventory, npcs, quests
 from oathforge.services.events import Outcome
 
 log = logging.getLogger(__name__)
@@ -35,6 +37,10 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
             await _view(update, context, verb, arg)
         elif verb == "cb":
             await _combat(update, context, arg, n)
+        elif verb == "roll":
+            await do_roll(update, context)
+        elif verb == "rollset":
+            await set_manual_rolls(update, context, arg == "on")
         else:
             await _act(update, context, verb, arg, n)
     except StaleDataError:
@@ -115,8 +121,16 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
     await edit_or_send(update, text, kb)
 
 
-async def _act(update: Update, context, verb: str, arg: str, n: str) -> None:
-    """State-changing, non-combat actions. One transaction, idempotent by nonce."""
+ROLL_VERBS = {"look", "qa"}  # button actions that can wait for a manual /roll
+DICE_SECONDS = 3.5  # Telegram's dice animation, before the engine's d20 appears
+
+
+async def _act(update: Update, context, verb: str, arg: str, n: str, rolled_at: str | None = None) -> None:
+    """State-changing, non-combat actions. One transaction, idempotent by nonce.
+
+    With manual rolls on, an action that needs a skill check is parked until the player sends /roll
+    (``rolled_at`` is then the location where it was asked, so a roll never lands somewhere else).
+    """
     r = rng()
     async with session_scope() as session:
         user, char = await load(session, update, lock=True)
@@ -124,14 +138,27 @@ async def _act(update: Update, context, verb: str, arg: str, n: str) -> None:
         if char is None:
             await send(update, t(lang, "start.need_character"))
             return
-        if n == "-" or await audit.claim(session, f"{user.telegram_id}:{n}", user_id=user.id,
-                                         character_id=char.id, verb=verb, payload={"arg": arg}) is None:
-            text, kb = await current_view(session, char, lang)
-            stale = True
-        else:
-            stale = False
-            out = await _dispatch(session, char, verb, arg, r, context)
-            text, kb = await _after(session, char, lang, verb, arg, context)
+        early = None  # (text, kb) answered without acting: a roll to make, or a roll that no longer fits
+        if rolled_at is not None and char.location != rolled_at:
+            early = (t(lang, "roll.stale"), None)
+        elif rolled_at is None and n != "-" and verb in ROLL_VERBS and actions.manual_rolls(user):
+            skill = await actions.button_roll(session, char, verb, arg)
+            if skill:
+                context.user_data["pending_roll"] = {"type": "button", "verb": verb, "arg": arg, "n": n,
+                                                     "location": char.location}
+                early = roll_prompt(skill, lang)
+        if early is None:
+            if n == "-" or await audit.claim(session, f"{user.telegram_id}:{n}", user_id=user.id,
+                                             character_id=char.id, verb=verb, payload={"arg": arg}) is None:
+                text, kb = await current_view(session, char, lang)
+                stale = True
+            else:
+                stale = False
+                out = await _dispatch(session, char, verb, arg, r, context)
+                text, kb = await _after(session, char, lang, verb, arg, context)
+    if early is not None:
+        await send(update, *early)
+        return
     if stale:
         await send(update, t(lang, "err.stale"))
         await send(update, text, kb)
@@ -191,6 +218,59 @@ async def _after(session, char, lang: str, verb: str, arg: str, context):
     if verb in ("eq", "use"):
         return await render.inventory_view(session, char, lang)
     return await render.scene(session, char, lang)
+
+
+# ---------------------------------------------------------------- manual rolls
+
+def roll_prompt(skill: str, lang: str):
+    name = get_content().skills[skill].name.get(lang)
+    return t(lang, "roll.prompt", skill=name), markup([[btn(t(lang, "btn.roll"), cb("roll"))]])
+
+
+async def do_roll(update: Update, context) -> None:
+    """/roll or the 🎲 button: animate Telegram's die, then resolve the parked action with the engine's d20."""
+    pending = context.user_data.pop("pending_roll", None)
+    if pending is None:
+        await roll_settings(update, context)
+        return
+    try:
+        await update.effective_chat.send_dice(emoji="🎲")
+        await asyncio.sleep(DICE_SECONDS)
+    except Exception:  # the animation is decoration; the roll is the engine's
+        log.warning("could not send the dice animation", exc_info=True)
+    if pending["type"] == "button":
+        await _act(update, context, pending["verb"], pending["arg"], pending["n"], rolled_at=pending["location"])
+        return
+    from oathforge.bot.handlers.text import show_free_text  # text imports this module
+
+    result = await actions.execute_free_text(context.bot_data["llm"], pending["user_id"], pending["text"],
+                                             Intent.model_validate(pending["intent"]), False, rng(),
+                                             location=pending["location"])
+    await show_free_text(update, context, result)
+
+
+async def roll_settings(update: Update, context) -> None:
+    async with session_scope() as session:
+        user, _ = await load(session, update)
+        lang = context.user_data["lang"] = user.language
+        on = actions.manual_rolls(user)
+    state = t(lang, "roll.on" if on else "roll.off")
+    kb = markup([[btn(t(lang, "btn.roll_off" if on else "btn.roll_on"), cb("rollset", "off" if on else "on"))]])
+    await send(update, t(lang, "roll.settings", state=state), kb)
+
+
+async def set_manual_rolls(update: Update, context, on: bool) -> None:
+    async with session_scope() as session:
+        user, _ = await load(session, update)
+        lang = context.user_data["lang"] = user.language
+        characters.set_setting(user, "manual_rolls", on)
+    if not on:
+        context.user_data.pop("pending_roll", None)
+    await edit_or_send(update, t(lang, "roll.changed", state=t(lang, "roll.on" if on else "roll.off")))
+
+
+async def roll_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await do_roll(update, context)
 
 
 # ---------------------------------------------------------------- combat

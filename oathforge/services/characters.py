@@ -35,6 +35,11 @@ async def get_character(session: AsyncSession, user_id: int, lock: bool = False)
     return await session.scalar(stmt)
 
 
+def set_setting(user: User, key: str, value) -> None:
+    """Per-player preferences (e.g. manual_rolls); a new dict so the JSON column notices the change."""
+    user.settings = {**(user.settings or {}), key: value}
+
+
 def valid_name(name: str) -> bool:
     name = name.strip()
     return 2 <= len(name) <= NAME_MAX and all(ch.isalpha() or ch in " '-" for ch in name)

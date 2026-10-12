@@ -30,6 +30,44 @@ class FreeTextResult:
     narration: str | None = None
     talk_to: str | None = None
     intent: Intent | None = None
+    roll_skill: str | None = None  # manual rolls: nothing resolved yet, the player must /roll first
+    location: str | None = None
+
+
+# ---------------------------------------------------------------- manual rolls (/roll)
+
+def manual_rolls(user: User) -> bool:
+    return bool((user.settings or {}).get("manual_rolls"))
+
+
+async def button_roll(session: AsyncSession, char: Character, verb: str, arg: str) -> str | None:
+    """Skill a button action will roll, if any: investigating with secrets left, quest actions with a check."""
+    c = get_content()
+    if char.state == "in_combat":
+        return None
+    if verb == "look":
+        loc = c.locations[char.location]
+        pending = [d for d in loc.discoveries.values()
+                   if not char.flags.get(d.sets_flag) and (not d.requires_flag or char.flags.get(d.requires_flag))]
+        return pending[0].skill if pending else None
+    if verb == "qa":
+        present = exploration.npcs_present(char.location)
+        action = next((a.action for a in await quests.available_actions(session, char, present) if a.ref == arg), None)
+        return action.check.skill if action is not None and action.check else None
+    return None
+
+
+async def intent_roll(session: AsyncSession, char: Character, intent: Intent, in_combat: bool) -> str | None:
+    """Skill a free-text action will roll outside combat, if any."""
+    if in_combat:
+        return None
+    if intent.type in ("skill_check", "environment_interaction"):
+        return intent.skill if intent.skill in get_content().skills else None
+    if intent.type == "inspect":
+        return await button_roll(session, char, "look", "")
+    if intent.type == "quest_action":
+        return await button_roll(session, char, "qa", intent.target or "")
+    return None
 
 
 async def _load(session: AsyncSession, user_id: int, lock: bool = False) -> tuple[User | None, Character | None]:
@@ -81,17 +119,32 @@ async def handle_free_text(llm: LLM, user_id: int, text: str, rng: random.Random
         if user_exhausted(*await usage_today(session, user_id)):
             return FreeTextResult(Outcome.refused("ai.budget_exhausted"))
         ctx = await build_context(session, char, lang)
+        manual = manual_rolls(user)
 
     intent = await intent_parser.parse(llm, ctx, text, user_id)
     if intent is None:
         return FreeTextResult(Outcome.refused("freetext.unavailable"))
     if intent.type == "talk":
         return FreeTextResult(talk_to=intent.target, intent=intent)
+    if manual:
+        async with session_scope() as session:
+            _, char = await _load(session, user_id)
+            skill = await intent_roll(session, char, intent, ctx.in_combat)
+            if skill:
+                return FreeTextResult(intent=intent, roll_skill=skill, location=char.location)
+    return await execute_free_text(llm, user_id, text, intent, ctx.in_combat, rng)
 
+
+async def execute_free_text(llm: LLM, user_id: int, text: str, intent: Intent, in_combat: bool,
+                            rng: random.Random, location: str | None = None) -> FreeTextResult:
+    """Resolve an interpreted action and narrate it (also after a deferred /roll)."""
     async with session_scope() as session:
         user, char = await _load(session, user_id, lock=True)
+        if char is None:
+            return FreeTextResult(Outcome.refused("start.need_character"))
+        lang = user.language
         enc = await combat_service.active_encounter(session, char, lock=True)
-        if (enc is not None) != ctx.in_combat:
+        if (enc is not None) != in_combat or (location is not None and char.location != location):
             return FreeTextResult(Outcome.refused("freetext.stale"), intent=intent)
         outcome = await resolve(session, char, enc, intent, rng)
         await audit.log(session, user_id=user_id, character_id=char.id, verb=f"free:{intent.type}",

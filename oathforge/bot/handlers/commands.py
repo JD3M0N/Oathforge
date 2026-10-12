@@ -1,10 +1,11 @@
-"""/hero /sheet /inventory /journal /quests /look /language /help."""
+"""/hero /sheet /inventory /journal /quests /roll /look /language /help."""
 
 from telegram import Update
 from telegram.ext import CommandHandler, ContextTypes
 
 from oathforge import __version__
 from oathforge.bot import render
+from oathforge.bot.handlers import callbacks
 from oathforge.bot.handlers.common import current_view, load, send, send_photos
 from oathforge.bot.keyboards import btn, cb, markup
 from oathforge.content import get_content
@@ -63,6 +64,7 @@ def handlers() -> list[CommandHandler]:
         CommandHandler("inventory", _view(render.inventory_view)),
         CommandHandler("journal", _view(render.journal)),
         CommandHandler("quests", _view(render.missions)),
+        CommandHandler("roll", callbacks.roll_command),
         CommandHandler("language", language),
         CommandHandler("help", help_cmd),
     ]

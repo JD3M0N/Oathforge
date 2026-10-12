@@ -48,6 +48,9 @@ class Chat:
     async def send_action(self, *_):
         pass
 
+    async def send_dice(self, emoji=None, **_):
+        self.dice = getattr(self, "dice", 0) + 1
+
 
 class Query:
     def __init__(self, data, chat):
@@ -331,7 +334,10 @@ async def test_hero_summary_and_full_sheet_with_portrait(llm):
     assert "Combate" in p.last[0]
 
 
-async def test_full_sheet_without_portrait_shows_spellcasting(llm):
+async def test_full_sheet_without_portrait_shows_spellcasting(llm, monkeypatch):
+    from oathforge.content.media import MediaCatalog
+
+    monkeypatch.setattr(MediaCatalog, "class_images", lambda self, cls, gender=None: [])  # a class with no art yet
     p = Player(llm, tg_id=13)
     await create(p, cls="mage")
     await p.press("sheet|-|-")
@@ -424,3 +430,45 @@ async def test_journal_missions_and_bestiary_views(llm, monkeypatch):
     assert "0/9" in p.last[0]
     await p.press("jrr|-|-")
     assert p.last[0]
+
+
+async def test_manual_rolls_wait_for_the_die(llm, monkeypatch):
+    monkeypatch.setattr(callbacks, "DICE_SECONDS", 0)
+    p = Player(llm, tg_id=63)
+    await create(p)
+    await p.press("roll|-|-")  # nothing pending: shows the on/off setting
+    assert "Tiradas manuales" in p.last[0]
+    await p.press(p.find("rollset", "on"))
+    assert "activadas" in p.last[0]
+
+    async with session_scope() as s:
+        char = await s.scalar(select(Character).with_for_update())
+        char.location = "whispering_woods"
+    await p.press("scene|-|-")
+    await p.press(p.find("look"))
+    assert "Lanza el dado" in p.last[0] and "pending_roll" in p.ctx.user_data
+    assert not any("contra CD" in t_ for t_, _ in p.chat.sent if t_)  # nothing rolled yet
+    await p.press(p.find("roll"))
+    assert getattr(p.chat, "dice", 0) == 1
+    assert any("🎲 Medicina" in t_ or "🎲 Percepción" in t_ for t_, _ in p.chat.sent[-3:] if t_)
+    assert "pending_roll" not in p.ctx.user_data
+
+    # written actions that need a check also wait
+    llm.json_queue.append({"type": "skill_check", "skill": "stealth", "tier": "easy"})
+    await p.say("me escondo entre los helechos")
+    assert "Sigilo" in p.last[0] and p.ctx.user_data["pending_roll"]["type"] == "text"
+    await creation_free_roll(p)
+    assert any("🎲 Sigilo" in t_ for t_, _ in p.chat.sent[-3:] if t_)
+
+    # off again: investigating resolves at once
+    await p.press("rollset|off|-")
+    await p.press("scene|-|-")
+    await p.press(p.find("look"))
+    assert "pending_roll" not in p.ctx.user_data
+
+
+async def creation_free_roll(p):
+    from oathforge.bot.handlers import commands
+
+    roll = next(h for h in commands.handlers() if "roll" in h.commands)
+    await roll.callback(p.update(message="/roll"), p.ctx)

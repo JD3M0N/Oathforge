@@ -7,6 +7,9 @@ Cómo se ve y se siente el juego dentro del chat. Fuente: [GDD](referencias/gdd-
 - Comandos: `/start` (crear personaje), `/look`, `/hero` (alias `/sheet`: hoja de héroe con barras de PV y XP, atributos, equipo, habilidades bloqueadas por nivel, reputación y uso diario de IA, v0.2.2), `/inventory`, `/journal`, `/language`, `/help` y `/cancel` (`oathforge/bot/handlers/commands.py`, `creation.py`).
 - Escenas con botones inline y texto libre que interpreta Gemini; el panel de combate es un mensaje con botones.
 - Solo chat privado.
+- **v0.5.0**: `/quests` (misiones y su avance) y diario con Misiones, Bestiario y Rumores.
+- **v0.5.1**: `/roll`. Sin tirada pendiente, activa o desactiva las tiradas manuales (`users.settings.manual_rolls`). Con ellas activadas, investigar, las acciones de misión con prueba y las acciones escritas que piden tirada esperan a que el jugador haga `/roll` (o pulse «🎲 Tirar el dado»). Entonces sale el dado animado de Telegram y, al pararse, el resultado del motor (d20 + bonificador contra la CD). El dado de Telegram solo va de 1 a 6, así que es decorativo: el resultado lo calcula siempre el motor. El combate no espera a `/roll`.
+- Canales de anuncios: https://t.me/OathForge (inglés) y https://t.me/OathForge_es (español).
 
 ## Ideas
 

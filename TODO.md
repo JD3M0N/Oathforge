@@ -35,8 +35,8 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 
 ## 🎨 Audiovisual · [audiovisual.md](planning/audiovisual.md)
 
-- [ ] 🟡 ◐ **Sistema de imágenes**: catálogo de activos + `file_id` de Telegram; una imagen por lugar y retratos de NPC. *Hecho en v0.3.0: carpetas del mundo, catálogo, caché de `file_id` y «Ver ciudad» en Crownreach; retratos de Paladín, Guerrero, Pícaro y Sacerdote en v0.4.1 y de Brujo y Bruja en v0.4.4. Faltan retratos de Mago, Druida y Bardo, las imágenes de cada lugar («Ver lugar») y los retratos de NPC.*
-- [ ] 🟡 ◐ **Retratos masculinos y femeninos** de cada clase, para que el jugador elija el suyo al crear el personaje. *Hecho (v0.4.4): elegir hombre o mujer al crear y retrato por sexo; el Brujo tiene los dos. Faltan las variantes del resto de clases.*
+- [ ] 🟡 ◐ **Sistema de imágenes**: catálogo de activos + `file_id` de Telegram; una imagen por lugar y retratos de NPC. *Hecho en v0.3.0: carpetas del mundo, catálogo, caché de `file_id` y «Ver ciudad» en Crownreach; retratos de clase en v0.4.1, v0.4.4 y v0.5.1 (todas las clases). Faltan las imágenes de cada lugar («Ver lugar») y los retratos de NPC.*
+- [ ] 🟢 ◐ **Retratos masculinos y femeninos** de cada clase. *Hecho (v0.5.1): hombre y mujer en las 8 clases; falta la barda (usa el retrato del bardo).*
 - [ ] 🟡 Ilustraciones del bestiario: una imagen por criatura en su ficha.
 - [ ] 🟡 **Canciones en las tabernas**: botón «Escuchar ambiente» con música en bucle (empezar por La Corona Rota).
 - [ ] 🟡 **Voces para personajes importantes** (Bram, Tessa, el Guardián de la Cripta) como notas de voz OGG/Opus.
@@ -48,11 +48,10 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 
 ## 📱 Telegram y multijugador · [interfaz-telegram.md](planning/interfaz-telegram.md) · [multijugador.md](planning/multijugador.md)
 
-- [ ] 🟡 **Publicar en los canales de Telegram** (ya creados): el bot publica solo el changelog de cada versión y el periódico *Herald of Aetherfall* con los rumores confirmados del mundo. Guardar los ids de los canales en `.env`.
+- [ ] 🟢 **Publicar en los canales de Telegram** ([inglés](https://t.me/OathForge), [español](https://t.me/OathForge_es)) desde el bot: el changelog de cada versión y el periódico *Herald of Aetherfall* con los rumores confirmados del mundo. Hoy los anuncios se publican a mano.
 - [ ] 🔴 Grupos de expedición y combate en grupo (0.8.0).
 - [ ] 🟡 ◐ Comandos nuevos: `/map`, `/quests`, `/rest`, `/party`. *Hecho: `/quests` (v0.5.0).*
 - [ ] 🟡 Mensaje de estado que se edita en lugar de mandar muchos mensajes.
-- [ ] 🟢 Opción on/off de `/roll`: cuando haya que hacer una tirada, el jugador la lanza con `/roll` y sale el dado animado 🎲 de Telegram.
 - [ ] 🟢 Duelos PvP con consentimiento y sin pérdidas.
 
 ## 🌍 Mundo, misiones y economía · [mundo-y-misiones.md](planning/mundo-y-misiones.md) · [comercio.md](planning/comercio.md)
@@ -94,3 +93,5 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] Emojis en la XP, el oro, las subidas de nivel y las habilidades nuevas (v0.5.0).
 - [x] Canales de Telegram creados (v0.5.0).
 - [x] Arreglados los `TimedOut` al subir retratos y los reintentos a Gemini con la cuota diaria agotada (v0.5.0).
+- [x] `/roll`: tiradas manuales opcionales con el dado animado de Telegram para las pruebas de habilidad (v0.5.1).
+- [x] Retratos de hombre y mujer para todas las clases, salvo la barda (v0.5.1).

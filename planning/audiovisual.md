@@ -9,6 +9,7 @@ Imágenes, música, voces, mapas y efectos. Fuente principal: [Guía de recursos
 - **v0.3.0**: el mundo vive en carpetas (`content/world/<continente>/<zona>/<lugar>/`) y cada carpeta puede tener `images/` y `audio/`. Catálogo por convención (`oathforge/content/media.py`), caché de `file_id` por bot en la tabla `media_files` y botón «🏙️ Ver ciudad» en la plaza de Crownreach con su panorámica.
 - **v0.4.1**: retratos de clase en `content/classes/<clase>/images/portrait.jpg` (768 × 1024) para Paladín, Guerrero, Pícaro y Sacerdote; `/sheet` y «📜 Ficha completa» los envían antes de la ficha completa. Faltan Mago, Druida y Bardo (su ficha va sin foto).
 - **v0.4.4**: el jugador elige hombre o mujer al crear el personaje; los retratos pueden ir por sexo (`portrait.male.jpg` / `portrait.female.jpg`) y `/sheet` envía el suyo, o el neutro `portrait.jpg`. El Brujo tiene los dos; el resto, uno neutro.
+- **v0.5.1**: retrato de hombre y de mujer para las 8 clases (`portrait.male.jpg` / `portrait.female.jpg`), salvo la barda, que de momento usa el del bardo. Los neutros antiguos eran de hombre y se renombraron.
 - Aún no hay imagen por lugar, retratos de NPC ni audio.
 - Todo texto visible existe en es/en; cualquier audio necesitará también su equivalente en texto.
 

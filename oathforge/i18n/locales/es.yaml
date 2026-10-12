@@ -9,6 +9,7 @@ cmd:
   inventory: "Inventario"
   journal: "Diario de aventuras"
   quests: "Misiones y progreso"
+  roll: "Lanzar el dado y tiradas manuales"
   language: "Cambiar idioma"
   help: "Cómo jugar"
 
@@ -20,7 +21,7 @@ help:
     También puedes <b>escribir lo que quieras hacer</b>: «me escondo tras la barra y escucho», «intento robarle la bolsa al tabernero», «empujo el carro sobre el bandido».
     El Dungeon Master interpreta tu acción, el motor tira los dados y tú ves el resultado real.
 
-    Comandos: /look /hero /sheet /inventory /journal /quests /language
+    Comandos: /look /hero /sheet /inventory /journal /quests /roll /language
   version: "<i>Oathforge v{version}</i>"
 
 lang:
@@ -78,6 +79,9 @@ btn:
   sheet: "🦸 Héroe"
   journal: "📜 Diario"
   hunt: "🏹 Cazar"
+  roll: "🎲 Tirar el dado"
+  roll_on: "✅ Activar tiradas manuales"
+  roll_off: "❌ Desactivar tiradas manuales"
   hunt_night: "🦇 Cazar de noche"
   missions: "📜 Misiones"
   bestiary: "📖 Bestiario"
@@ -198,7 +202,7 @@ journal:
   no_rumors: "Aún no corre ningún rumor."
 
 check:
-  result: "{skill}: {roll} → {total} contra CD {dc} {result}"
+  result: "🎲 {skill}: {roll} → {total} contra CD {dc} {result}"
 
 explore:
   arrived: "Llegas a {place} tras {minutes} minutos de camino."
@@ -405,3 +409,14 @@ bestiary:
   immune_status: "🚫 Inmune a: {list}"
   xp: "✨ {xp} XP"
   loot: "🎁 Botín: {list}"
+
+roll:
+  prompt: "🎲 Esta acción necesita una tirada de <b>{skill}</b>. Lanza el dado con /roll o con el botón."
+  settings: |-
+    🎲 <b>Tiradas manuales</b>: {state}
+
+    Activadas, cuando una prueba de habilidad (investigar, acciones de misión o acciones escritas) necesite tirada, la lanzas tú con /roll y sale el dado animado. El resultado lo calcula siempre el motor: d20 + tu bonificador contra la CD.
+  "on": "activadas"
+  "off": "desactivadas"
+  changed: "🎲 Tiradas manuales {state}."
+  stale: "Esa tirada ya no tiene sentido aquí: te has movido."
