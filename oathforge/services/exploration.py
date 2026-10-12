@@ -6,10 +6,10 @@ import time
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from oathforge.content import get_content
-from oathforge.content.schemas import Exit
+from oathforge.content.schemas import EncounterEntry, Exit, Location
 from oathforge.database.models import Character
 from oathforge.engine.checks import check, dc_for
-from oathforge.services import characters, combat_service, inventory
+from oathforge.services import characters, combat_service, inventory, quests
 from oathforge.services.events import Outcome
 
 GAME_DAY_SECONDS = 4 * 3600  # one in-game day every four real hours
@@ -36,6 +36,13 @@ def exits(char: Character) -> list[Exit]:
     return [e for e in loc.exits if not e.requires_flag or char.flags.get(e.requires_flag)]
 
 
+def encounter_table(loc: Location, now: float | None = None) -> list[EncounterEntry]:
+    """Night has its own creatures where the location defines them (bats instead of boars)."""
+    if loc.night_encounters and is_night(now):
+        return loc.night_encounters
+    return loc.encounters
+
+
 def pending_fixed_encounter(char: Character):
     for fe in get_content().locations[char.location].fixed_encounters:
         if char.flags.get(fe.flag):
@@ -58,17 +65,37 @@ async def travel(session: AsyncSession, char: Character, dest: str, rng: random.
     char.location = dest
     out = Outcome().add("explore.arrived", place=c.locations[dest].name.model_dump(), minutes=exit_.minutes)
 
+    out.extend(await quests.on_visit(session, char, dest, rng))
+
     fixed = pending_fixed_encounter(char)
     if fixed:
         _, enc_out = await combat_service.start_encounter(session, char, list(fixed.monsters), rng, fixed.flag)
         return out.extend(enc_out)
-    table = c.locations[dest].encounters
+    table = encounter_table(c.locations[dest])
     if exit_.danger and table and rng.random() < exit_.danger * ENCOUNTER_CHANCE_PER_DANGER:
         entry = rng.choices(table, weights=[e.weight for e in table])[0]
         out.add("explore.ambush")
         _, enc_out = await combat_service.start_encounter(session, char, list(entry.monsters), rng)
         out.extend(enc_out)
     return out
+
+
+async def hunt(session: AsyncSession, char: Character, rng: random.Random) -> Outcome:
+    """Look for prey on purpose: a fight from the location's day or night table."""
+    if char.state == "in_combat":
+        return Outcome.refused("explore.err.in_combat")
+    loc = get_content().locations[char.location]
+    if not loc.hunting:
+        return Outcome.refused("explore.err.no_hunting")
+    fixed = pending_fixed_encounter(char)
+    if fixed:
+        _, enc_out = await combat_service.start_encounter(session, char, list(fixed.monsters), rng, fixed.flag)
+        return Outcome().add("explore.hunt_boss").extend(enc_out)
+    table = encounter_table(loc)
+    entry = rng.choices(table, weights=[e.weight for e in table])[0]
+    out = Outcome().add("explore.hunt_night" if is_night() and loc.night_encounters else "explore.hunt_day")
+    _, enc_out = await combat_service.start_encounter(session, char, list(entry.monsters), rng)
+    return out.extend(enc_out)
 
 
 async def investigate(session: AsyncSession, char: Character, rng: random.Random) -> Outcome:
@@ -105,6 +132,7 @@ async def investigate(session: AsyncSession, char: Character, rng: random.Random
             out.add("explore.new_route")
     if not found:
         out.add("explore.found_nothing")
+    await quests.refresh(session, char, out)  # a discovery flag can open a mission (crypt_unlocked)
     return out
 
 

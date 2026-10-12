@@ -16,6 +16,7 @@ exits:
   - {to: broken_crown_tavern, minutes: 2}
   - {to: crownreach_market, minutes: 3}
   - {to: old_kings_road, minutes: 30, danger: 1}
+  - {to: tusk_meadow, minutes: 20}
 discoveries:
   chapel_inscription:
     skill: religion

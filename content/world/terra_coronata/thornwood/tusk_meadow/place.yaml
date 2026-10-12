@@ -1,0 +1,42 @@
+name: {es: Prado de los Colmillos, en: Tusk Meadow}
+kind: wild
+hunting: true  # botón «Cazar»: de día salen jabalíes y de noche murciélagos
+description:
+  es: >-
+    Campos de hierba alta al sur de Crownreach, removidos por los hocicos de los jabalíes. Entre las
+    rocas se abren grietas oscuras de las que nadie sale de día.
+  en: >-
+    Tall-grass fields south of Crownreach, churned up by boar snouts. Dark cracks open between the
+    rocks, and nothing comes out of them by day.
+night:
+  es: >-
+    La hierba susurra bajo la luna. De las grietas brota un aleteo constante: los murciélagos han
+    salido a cazar.
+  en: >-
+    The grass whispers under the moon. A constant fluttering pours out of the cracks: the bats are
+    out hunting.
+exits:
+  - {to: crownreach_plaza, minutes: 20}
+  - {to: old_kings_road, minutes: 30, danger: 1}
+encounters:
+  - {monsters: [boar], weight: 3}
+  - {monsters: [boar, boar], weight: 2}
+night_encounters:
+  - {monsters: [cave_bat], weight: 2}
+  - {monsters: [cave_bat, cave_bat], weight: 3}
+  - {monsters: [cave_bat, cave_bat, cave_bat], weight: 1}
+fixed_encounters:
+  - {monsters: [old_tusk], flag: cleared_old_tusk, if_flag: old_tusk_hunt}
+discoveries:
+  boar_wallow:
+    skill: survival
+    tier: easy
+    sets_flag: found_boar_wallow
+    gives: {healing_potion: 1}
+    text:
+      es: >-
+        Sigues un rastro de barro hasta un revolcadero. Junto a él, un cazador dejó olvidada su bolsa
+        con una poción dentro.
+      en: >-
+        You follow a mud trail to a wallow. Beside it, a hunter left a forgotten pouch with a potion
+        inside.

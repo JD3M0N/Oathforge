@@ -10,6 +10,7 @@ Puntos de partida para las ideas del juego. No es documentación del código (es
 | [comercio.md](comercio.md) | Tiendas, precios, economía y mercado entre jugadores |
 | [progresion.md](progresion.md) | Niveles, habilidades por uso, equipo |
 | [mundo-y-misiones.md](mundo-y-misiones.md) | Lugares, misiones, facciones, eventos del mundo |
+| [bestiario.md](bestiario.md) | Criaturas, fichas que se desbloquean y cómo ampliarlo |
 | [multijugador.md](multijugador.md) | Grupos, combate cooperativo, PvP |
 | [ia-y-narracion.md](ia-y-narracion.md) | Qué hace Gemini y qué nunca debe hacer |
 | [interfaz-telegram.md](interfaz-telegram.md) | Cómo se ve el juego en el chat: escenas, botones, comandos, sesiones |

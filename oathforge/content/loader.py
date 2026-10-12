@@ -184,7 +184,7 @@ def validate_references(c: Content) -> None:
             errors.append(f"location {key}: hub outside a city zone")
         for ex in loc.exits:
             need("location", ex.to, c.locations, f"location {key} exit")
-        for enc in [*loc.encounters, *loc.fixed_encounters]:
+        for enc in [*loc.encounters, *loc.night_encounters, *loc.fixed_encounters]:
             for m in enc.monsters:
                 need("monster", m, c.monsters, f"location {key} encounter")
         for okey, obj in loc.scene_objects.items():
@@ -226,6 +226,19 @@ def validate_references(c: Content) -> None:
             for s in trig.stages:
                 need("stage", s, quest.stages, where)
             effect_lists.append((where, trig.effects))
+        where = f"quest {key}"
+        need("npc", quest.giver, c.npcs, where)
+        need("quest", quest.after, c.quests, where)
+        for field in ("unlock_stage", "objective_stage", "complete_stage"):
+            need("stage", getattr(quest, field), quest.stages, f"{where} {field}")
+        if (quest.after or quest.unlock_flag) and quest.unlock_stage is None:
+            errors.append(f"{where}: locked missions need an unlock_stage")
+        if quest.objectives and (quest.objective_stage is None or quest.complete_stage is None):
+            errors.append(f"{where}: objectives need objective_stage and complete_stage")
+        pools = {"kill": ("monster", c.monsters), "talk": ("npc", c.npcs), "visit": ("location", c.locations)}
+        for obj in quest.objectives:
+            need(*pools[obj.kind][:1], obj.target, pools[obj.kind][1], f"{where} objective")
+        effect_lists.append((f"{where} rewards", quest.rewards))
         for where, effects in effect_lists:
             for eff in effects:
                 _validate_effect(c, eff, where, errors)

@@ -127,3 +127,17 @@ sealed_reliquary:
   type: quest
   value: 0
   sellable: false
+
+boar_tusk:
+  name: {es: Colmillo de jabalí, en: Boar tusk}
+  description: {es: Un colmillo curvo y afilado. Los artesanos del mercado lo compran., en: A sharp curved tusk. Market crafters buy them.}
+  type: tool
+  value: 8
+  stackable: true
+
+bat_wing:
+  name: {es: Ala de murciélago, en: Bat wing}
+  description: {es: Membrana correosa que usan los alquimistas., en: A leathery membrane alchemists use.}
+  type: tool
+  value: 4
+  stackable: true

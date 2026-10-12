@@ -79,3 +79,33 @@ async def test_fast_tier_retries_itself_once():
     llm, client = make_llm(api_error(503), "ok")
     assert await llm.text(tier="fast", system="s", prompt="p", user_id=None) == "ok"
     assert client.calls == [FAST, FAST]
+
+
+def quota_error(per_day: bool, delay: str) -> errors.APIError:
+    quota = "GenerateRequestsPerDayPerProjectPerModel-FreeTier" if per_day else "GenerateRequestsPerMinute"
+    return errors.APIError(429, {"error": {"code": 429, "message": "quota", "status": "RESOURCE_EXHAUSTED", "details": [
+        {"@type": "type.googleapis.com/google.rpc.QuotaFailure", "violations": [{"quotaId": quota}]},
+        {"@type": "type.googleapis.com/google.rpc.RetryInfo", "retryDelay": delay},
+    ]}})
+
+
+def test_cooldown_follows_google_retry_delay():
+    from oathforge.ai.client import MAX_COOLDOWN_SECONDS, cooldown_for
+
+    assert cooldown_for(quota_error(True, "79622s"), 120) == 79622
+    assert cooldown_for(quota_error(True, "999999s"), 120) == MAX_COOLDOWN_SECONDS
+    assert cooldown_for(quota_error(False, "30s"), 120) == 120
+    assert cooldown_for(quota_error(False, "300s"), 120) == 300
+    assert cooldown_for(api_error(503), 120) == 120
+    assert cooldown_for(TimeoutError(), 120) == 120
+
+
+async def test_daily_quota_skips_the_model_for_hours(monkeypatch):
+    import time as time_mod
+
+    llm, client = make_llm(quota_error(True, "80000s"), "first", "second")
+    await llm.text(tier="narrative", system="s", prompt="p", user_id=None)
+    now = time_mod.monotonic()
+    monkeypatch.setattr("oathforge.ai.client.time.monotonic", lambda: now + 3600)  # an hour later
+    assert await llm.text(tier="narrative", system="s", prompt="p", user_id=None) == "second"
+    assert client.calls == [NARRATIVE, FAST, FAST]

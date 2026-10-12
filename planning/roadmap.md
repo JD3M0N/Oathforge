@@ -12,16 +12,18 @@ Versionado `0.x.y`: sube **y** (parche) en arreglos y cambios pequeños; sube **
 - **0.3.0**: mundo en carpetas (continente → zona → lugar), catálogo de imágenes, caché de `file_id` y «Ver ciudad» en Crownreach.
 - **0.4.0**: Mago, Druida y Bardo; tiradas de salvación (DES/SAB), conjuros de área por fila, PV temporales.
 - **0.4.4**: Brujo (Maleficio y maldiciones sin salvación), elección de hombre o mujer con retrato por sexo y `/sheet` en el menú de comandos.
+- **0.5.0**: sistema de misiones (cadena de 6 hasta nivel 5, diario con avance), Prado de los Colmillos (caza de día y de noche), bestiario, compra de atributos por puntos, curva de XP más corta, cripta más fácil y botones de combate a prueba de doble clic.
 
 ## Próximo (candidatos)
 
 - **0.2.x**: balance con datos de `artifacts/battles/` y ajustes de los testers.
 - **0.3.x**: imagen por lugar («Ver lugar») y retratos de NPC sobre el catálogo de 0.3.0.
 - **0.4.x**: balance de las 8 clases con datos de `artifacts/battles/`.
-- **0.5.0**: especializaciones a nivel 5 (los datos ya existen).
-- **0.6.0**: economía: profesiones/crafteo y sumideros de oro (ver `comercio.md`).
-- **0.7.0**: grupos cooperativos y combate en grupo (fase 3, ver `multijugador.md`).
-- **0.8.0** (propuesta): audio: música de la taberna y voces de NPC (ver `audiovisual.md`).
+- **0.5.x**: balance de la cadena de misiones y de la caza con datos de `artifacts/battles/`; más criaturas en el bestiario.
+- **0.6.0**: especializaciones a nivel 5 (los datos ya existen; con la cadena de 0.5.0 se llega a nivel 5 enseguida).
+- **0.7.0**: economía: profesiones/crafteo y sumideros de oro (ver `comercio.md`).
+- **0.8.0**: grupos cooperativos y combate en grupo (fase 3, ver `multijugador.md`).
+- **0.9.0** (propuesta): audio: música de la taberna y voces de NPC (ver `audiovisual.md`).
 - Más adelante: salvaciones de FUE/CON/INT/CAR para monstruos, IA enemiga con habilidades, simulador de batallas, mercado entre jugadores, PvP, Mini App, TTS.
 
 ## Visión a largo plazo (GDD)
@@ -35,9 +37,9 @@ Secuencia recomendada (§20) y dónde estamos:
 1. Un buen turno y una buena escena: ✅ 0.1.0–0.2.0.
 2. Una misión que se puede resolver de dos formas: ✅ «El relicario sellado».
 3. Un NPC que recuerda: ✅ básico; falta la memoria en tres capas (`ia-y-narracion.md`).
-4. Una aventura compartida: 0.6.0.
+4. Una aventura compartida: 0.8.0.
 5. Un hecho que cambia la ciudad: `world_facts` y eventos encadenados (`mundo-y-misiones.md`).
-6. Economía y facciones que reaccionan: 0.5.0 y más facciones.
+6. Economía y facciones que reaccionan: 0.7.0 y más facciones.
 
 Fases del GDD (§17.2) frente a nuestras versiones:
 
@@ -46,8 +48,8 @@ Fases del GDD (§17.2) frente a nuestras versiones:
 | 0 · Diseño en papel | Contrato de acciones, ficha, situaciones de abuso | Hecho antes de 0.1.0 |
 | 1 · Vertical slice | `/start`, 3 nodos, NPC, tiradas, combate, inventario, PostgreSQL | 0.1.0 |
 | 2 · Narrador y misión | Texto libre con JSON validado, misión ramificada, memoria | 0.1.0 |
-| 3 · Multijugador | Grupos, turnos, intercambio, duelos | 0.6.0 |
-| 4 · Mundo pequeño vivo | 3 profesiones, 2 facciones, mercado, rumores, evento semanal, periódico, audio | 0.5.0 + 0.7.0 |
+| 3 · Multijugador | Grupos, turnos, intercambio, duelos | 0.8.0 |
+| 4 · Mundo pequeño vivo | 3 profesiones, 2 facciones, mercado, rumores, evento semanal, periódico, audio | 0.7.0 + 0.9.0 |
 | 5 · Expansión por métricas | Clases, especializaciones, regiones, gremios, Mini App | 0.4.0 y después |
 
 **Antes de invitar a amigos** (§17.6):

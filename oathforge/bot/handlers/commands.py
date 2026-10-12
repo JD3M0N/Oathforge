@@ -1,4 +1,4 @@
-"""/hero /sheet /inventory /journal /look /language /help."""
+"""/hero /sheet /inventory /journal /quests /look /language /help."""
 
 from telegram import Update
 from telegram.ext import CommandHandler, ContextTypes
@@ -62,6 +62,7 @@ def handlers() -> list[CommandHandler]:
         CommandHandler("sheet", sheet),
         CommandHandler("inventory", _view(render.inventory_view)),
         CommandHandler("journal", _view(render.journal)),
+        CommandHandler("quests", _view(render.missions)),
         CommandHandler("language", language),
         CommandHandler("help", help_cmd),
     ]

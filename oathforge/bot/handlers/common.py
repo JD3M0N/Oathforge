@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import random
 import time
 from contextlib import asynccontextmanager
@@ -6,7 +7,7 @@ from contextlib import asynccontextmanager
 from sqlalchemy.ext.asyncio import AsyncSession
 from telegram import Chat, InlineKeyboardMarkup, InputMediaPhoto, Message, Update
 from telegram.constants import ChatAction, ParseMode
-from telegram.error import BadRequest
+from telegram.error import BadRequest, NetworkError
 from telegram.ext import ContextTypes
 
 from oathforge import recorder
@@ -14,6 +15,8 @@ from oathforge.bot import render
 from oathforge.content.media import MediaAsset
 from oathforge.database.models import Character, User
 from oathforge.services import characters, combat_service, media
+
+log = logging.getLogger(__name__)
 
 MAX_CAPTION = 1024
 MAX_ALBUM = 10
@@ -68,7 +71,7 @@ async def current_view(session: AsyncSession, char: Character, lang: str) -> tup
     """The combat panel if fighting, otherwise the scene."""
     enc = await combat_service.active_encounter(session, char)
     if enc is not None:
-        return render.combat_panel(char, enc.state, lang)
+        return render.combat_panel(char, enc.state, lang, version=enc.version)
     return await render.scene(session, char, lang)
 
 
@@ -104,15 +107,21 @@ async def send_photos(session: AsyncSession, update: Update, context: ContextTyp
     assets = assets[:MAX_ALBUM]
     ids = [await media.get_file_id(session, bot_id, a) for a in assets]
     try:
-        sent = await _send_photos(chat, assets, ids, caption[:MAX_CAPTION])
-    except BadRequest:
-        if not any(ids):
+        try:
+            sent = await _send_photos(chat, assets, ids, caption[:MAX_CAPTION])
+        except BadRequest:
+            if not any(ids):
+                raise
+            for a, fid in zip(assets, ids):  # a cached file_id Telegram no longer accepts: upload again
+                if fid:
+                    await media.forget(session, bot_id, a)
+            ids = [None] * len(assets)
+            sent = await _send_photos(chat, assets, ids, caption[:MAX_CAPTION])
+    except NetworkError as e:  # TimedOut included: images are decoration, the text view still follows
+        if isinstance(e, BadRequest):
             raise
-        for a, fid in zip(assets, ids):  # a cached file_id Telegram no longer accepts: upload again
-            if fid:
-                await media.forget(session, bot_id, a)
-        ids = [None] * len(assets)
-        sent = await _send_photos(chat, assets, ids, caption[:MAX_CAPTION])
+        log.warning("could not send %s: %s", ", ".join(a.key for a in assets), e)
+        return
     for a, fid, msg in zip(assets, ids, sent):
         if fid is None and msg.photo:
             biggest = msg.photo[-1]

@@ -12,7 +12,7 @@ from oathforge.engine import combat as engine
 from oathforge.engine.combat import Action, AttackProfile, Combatant, CombatError, EncounterState, LogEntry
 from oathforge.engine.dice import roll
 from oathforge.i18n import t
-from oathforge.services import characters, inventory, quests
+from oathforge.services import bestiary, characters, inventory, quests
 from oathforge.services.events import Event, Outcome, render_event
 
 
@@ -67,6 +67,7 @@ async def start_encounter(
     await session.flush()
     session.add(EncounterParticipant(encounter_id=enc.id, character_id=char.id, combatant_id="p1"))
     char.state = "in_combat"
+    bestiary.see(char, monster_keys)
 
     out = Outcome(encounter_id=enc.id)
     out.add("combat.start", enemies=_names_list([state.combatants[k] for k in state.combatants if k != "p1"]))
@@ -124,6 +125,7 @@ async def _sync_and_maybe_finish(session, char, enc, state: EncounterState, rng,
     c = get_content()
     if state.status == "victory":
         defeated = [cb for cb in state.combatants.values() if cb.side == "enemy" and cb.defeated]
+        bestiary.kill(char, [cb.ref for cb in defeated])
         characters.grant_xp(char, sum(cb.xp for cb in defeated), out)
         gold = sum(roll(c.monsters[cb.ref].gold, rng).total for cb in defeated)
         if gold:

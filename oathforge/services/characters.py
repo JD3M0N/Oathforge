@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from oathforge.content import get_content
 from oathforge.content.schemas import ABILITIES
 from oathforge.database.models import Character, CharacterSkill, FactionReputation, ItemInstance, QuestProgress, User
-from oathforge.engine import progression
+from oathforge.engine import pointbuy, progression
 from oathforge.engine.checks import modifier, proficiency_bonus
 from oathforge.engine.combat import AttackProfile, Combatant
 from oathforge.i18n import normalize_lang
@@ -42,9 +42,10 @@ def valid_name(name: str) -> bool:
 
 # ---------------------------------------------------------------- creation
 
-def starting_scores(class_key: str, lineage_key: str) -> dict[str, int]:
+def starting_scores(class_key: str, lineage_key: str, base: dict[str, int] | None = None) -> dict[str, int]:
+    """Point-buy scores (or the class's recommended array) plus lineage bonuses."""
     c = get_content()
-    scores = dict(c.classes[class_key].array)
+    scores = dict(base) if base is not None and pointbuy.valid(base) else dict(c.classes[class_key].array)
     for ability, bonus in c.lineages[lineage_key].bonuses.items():
         scores[ability] = min(20, scores[ability] + bonus)
     return scores
@@ -52,11 +53,11 @@ def starting_scores(class_key: str, lineage_key: str) -> dict[str, int]:
 
 async def create_character(
     session: AsyncSession, user: User, name: str, lineage: str, background: str, class_key: str,
-    gender: str | None = None,
+    gender: str | None = None, scores: dict[str, int] | None = None,
 ) -> Character:
     c = get_content()
     cls, bg, lin = c.classes[class_key], c.backgrounds[background], c.lineages[lineage]
-    scores = starting_scores(class_key, lineage)
+    scores = starting_scores(class_key, lineage, scores)
     hp = progression.max_hp(cls.hit_die, modifier(scores["con"]), 1)
     char = Character(
         user_id=user.id, name=name.strip()[:NAME_MAX], lineage=lineage, background=background,

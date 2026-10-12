@@ -1,6 +1,6 @@
 """Character levels and use-based skill improvement."""
 
-XP_THRESHOLDS = (0, 300, 900, 2700, 6500)
+XP_THRESHOLDS = (0, 200, 500, 1000, 1800)  # compressed: the 6-quest chain reaches level 5
 MAX_LEVEL = len(XP_THRESHOLDS)
 SKILL_XP_PER_RANK = 100
 MAX_SKILL_RANK = 3

@@ -70,11 +70,11 @@ def test_check_success_uses_total_vs_dc():
 
 def test_levels_and_hp():
     assert progression.level_for_xp(0) == 1
-    assert progression.level_for_xp(299) == 1
-    assert progression.level_for_xp(300) == 2
-    assert progression.level_for_xp(99999) == 5
-    assert progression.xp_to_next(250) == 50
-    assert progression.xp_to_next(7000) is None
+    assert progression.level_for_xp(199) == 1
+    assert progression.level_for_xp(200) == 2
+    assert progression.level_for_xp(1800) == 5
+    assert progression.xp_to_next(150) == 50
+    assert progression.xp_to_next(1800) is None
     assert progression.max_hp(10, 2, 1) == 12
     assert progression.max_hp(10, 2, 3) == 12 + 2 * 8
 

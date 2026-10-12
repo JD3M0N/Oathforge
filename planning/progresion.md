@@ -2,7 +2,8 @@
 
 ## Estado actual
 
-- Niveles 1–5 por XP (`oathforge/engine/progression.py`: 0, 300, 900, 2700, 6500).
+- Niveles 1–5 por XP (`oathforge/engine/progression.py`: 0, 200, 500, 1000, 1800). **v0.5.0**: curva comprimida para que la cadena de 6 misiones lleve a nivel 5 en una tarde (la curva de D&D, 6.500 XP, pedía decenas de combates).
+- Atributos al crear (**v0.5.0**): compra por puntos de D&D (todo en 8, 27 puntos, 14→15 cuesta 2) con botón «Recomendado» que carga el array de la clase (15/14/13/12/10/8 cuesta justo 27) y una línea por atributo que explica para qué sirve (`content/abilities.yaml`, `effect`).
 - PV: dado de golpe completo a nivel 1; después, media + 1 + CON por nivel.
 - Mejora de característica a nivel 4 (+2 a la principal).
 - Habilidades de clase nuevas por nivel; los usos se recuperan al descansar.

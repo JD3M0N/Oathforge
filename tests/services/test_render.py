@@ -62,7 +62,21 @@ async def test_all_views_render(lang):
         check(await render.sheet(s, char, lang))
         check(await render.inventory_view(s, char, lang))
         check(await render.journal(s, char, lang))
+        check(await render.missions(s, char, lang))
+        for key in c.quests:
+            check(await render.mission(s, char, key, lang))
+        check(await render.rumors(s, lang))
+        check(render.bestiary_list(char, lang))
+        for kills in (0, 1, 3):  # every reveal level of every stat block
+            char.bestiary = {k: {"seen": 1, "killed": kills} for k in c.monsters}
+            check(render.bestiary_list(char, lang))
+            for key in c.monsters:
+                text, _ = render.bestiary_entry(char, key, lang)
+                check(text)
+                assert "bestiary." not in text and "creature." not in text and "dmg." not in text
 
+        prog = (await quests.progress(s, char, lock=True))["sealed_box"]
+        prog.stage, prog.state = "not_started", "available"
         char.location = "whispering_woods"
         out = await quests.perform(s, char, "sealed_box.approach_guard", [], random.Random(0))
         check(render.outcome_text(out, lang, narration="Llueve <fuerte> & frío"))

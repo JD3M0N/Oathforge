@@ -1,11 +1,197 @@
+# Misiones. Las que tienen `objectives` se completan solas al cumplirlos (muertes, charlas, lugares)
+# y dan `rewards`; la siguiente se desbloquea con `after` (misión completada) o `unlock_flag`.
+# El diario las ordena por `order`. La cadena 1-6 lleva a nivel 5.
+
+first_steps:
+  order: 1
+  giver: bram
+  name: {es: Bienvenido a Crownreach, en: Welcome to Crownreach}
+  summary:
+    es: Todo aventurero que llega a Crownreach acaba en La Corona Rota. Bram siempre sabe quién paga por un trabajo.
+    en: Every adventurer who reaches Crownreach ends up at the Broken Crown. Bram always knows who pays for a job.
+  hint:
+    es: Desde la plaza, viaja a la taberna La Corona Rota y habla con Bram.
+    en: From the plaza, travel to the Broken Crown tavern and talk to Bram.
+  start_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: talk, target: bram}
+  rewards:
+    - xp: 50
+    - gold: 10
+  stages:
+    active:
+      journal:
+        es: Habla con Bram, el tabernero de La Corona Rota.
+        en: Talk to Bram, keeper of the Broken Crown.
+    done:
+      state: completed
+      journal:
+        es: Bram te dio la bienvenida y unas monedas. Tiene trabajo para ti.
+        en: Bram welcomed you with a few coins. He has work for you.
+
+boar_hunt:
+  order: 2
+  giver: bram
+  after: first_steps
+  name: {es: Colmillos en el prado, en: Tusks in the Meadow}
+  summary:
+    es: Los jabalíes destrozan los campos al sur de la ciudad. Bram paga por cada bestia abatida... y por la carne.
+    en: Boars are wrecking the fields south of the city. Bram pays for every beast brought down... and for the meat.
+  hint:
+    es: El Prado de los Colmillos está a 20 minutos de la plaza. De día, pulsa «🏹 Cazar».
+    en: Tusk Meadow is 20 minutes from the plaza. By day, press "🏹 Hunt".
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: kill, target: boar, count: 3}
+  rewards:
+    - xp: 150
+    - gold: 20
+    - give_item: {healing_potion: 1}
+  stages:
+    locked:
+      state: locked
+      journal: {es: Bram tiene un encargo para ti., en: Bram has a job for you.}
+    active:
+      journal:
+        es: Caza jabalíes en el Prado de los Colmillos. Solo salen de día.
+        en: Hunt boars in Tusk Meadow. They only come out by day.
+    done:
+      state: completed
+      journal:
+        es: El prado vuelve a estar en calma, al menos de día. Bram te pagó con una sonrisa y una poción.
+        en: The meadow is calm again, by day at least. Bram paid you with a smile and a potion.
+
+night_wings:
+  order: 3
+  giver: bram
+  after: boar_hunt
+  name: {es: Alas al anochecer, en: Wings at Dusk}
+  summary:
+    es: Cuando cae el sol, una bandada de murciélagos sale de las grietas del prado y ataca al ganado.
+    en: When the sun sets, a swarm of bats pours out of the meadow's cracks and attacks the livestock.
+  hint:
+    es: Vuelve al Prado de los Colmillos de noche (de 20:00 a 06:00 del juego; la escena indica si es de día o de noche) y pulsa «🏹 Cazar».
+    en: Go back to Tusk Meadow at night (20:00 to 06:00 game time; the scene shows whether it is day or night) and press "🏹 Hunt".
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: kill, target: cave_bat, count: 4}
+  rewards:
+    - xp: 200
+    - gold: 20
+  stages:
+    locked:
+      state: locked
+      journal: {es: Algo acecha el prado cuando oscurece., en: Something stalks the meadow after dark.}
+    active:
+      journal:
+        es: Acaba con los murciélagos del prado. Solo salen de noche.
+        en: Deal with the meadow bats. They only come out at night.
+    done:
+      state: completed
+      journal:
+        es: Las noches del prado vuelven a ser tranquilas. En la taberna ya se habla de ti.
+        en: The meadow nights are quiet again. The tavern is already talking about you.
+
+crypt_bones:
+  order: 5
+  giver: holt
+  unlock_flag: crypt_unlocked
+  name: {es: Huesos inquietos, en: Restless Bones}
+  summary:
+    es: Los soldados de Ser Aldren siguen montando guardia en la Cripta Hundida. Hay que dejarlos descansar.
+    en: Ser Aldren's soldiers still stand guard in the Sunken Crypt. They must be laid to rest.
+  hint:
+    es: La entrada está en el Bosque de los Susurros. En el osario puedes descansar gratis antes del santuario.
+    en: The entrance is in the Whispering Woods. You can rest for free in the ossuary before the sanctum.
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: kill, target: crypt_skeleton, count: 3}
+  rewards:
+    - xp: 300
+    - give_item: {healing_potion: 2}
+  stages:
+    locked:
+      state: locked
+      journal: {es: Bajo el bosque hay una cripta sellada., en: A sealed crypt lies beneath the woods.}
+    active:
+      journal:
+        es: Destruye a los esqueletos de la Cripta Hundida.
+        en: Destroy the skeletons of the Sunken Crypt.
+    done:
+      state: completed
+      journal:
+        es: Los guardias de huesos han caído. Solo queda su señor, en el santuario.
+        en: The bone guards have fallen. Only their lord remains, in the sanctum.
+
+old_tusk:
+  order: 6
+  giver: bram
+  unlock_flag: old_tusk_hunt
+  name: {es: El Viejo Colmillo, en: Old Tusk}
+  summary:
+    es: Con la cripta en paz, Bram te cuenta la leyenda del jabalí que ningún cazador ha logrado abatir.
+    en: With the crypt at peace, Bram tells you the legend of the boar no hunter has ever brought down.
+  hint:
+    es: Ve al Prado de los Colmillos. El Viejo Colmillo te estará esperando.
+    en: Go to Tusk Meadow. Old Tusk will be waiting for you.
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: kill, target: old_tusk}
+  rewards:
+    - xp: 300
+    - gold: 80
+  stages:
+    locked:
+      state: locked
+      journal: {es: Una leyenda del prado espera a alguien digno., en: A meadow legend awaits someone worthy.}
+    active:
+      journal:
+        es: Abate al Viejo Colmillo en el Prado de los Colmillos.
+        en: Bring down Old Tusk in Tusk Meadow.
+      location_text:
+        tusk_meadow:
+          es: La tierra tiembla. Unas huellas enormes cruzan el prado, más profundas que las de cualquier jabalí.
+          en: The ground trembles. Huge tracks cross the meadow, deeper than any boar's.
+    done:
+      state: completed
+      journal:
+        es: El Viejo Colmillo ha caído. Su cabeza ya cuelga sobre la barra de La Corona Rota.
+        en: Old Tusk has fallen. Its head now hangs above the bar of the Broken Crown.
+
 sealed_box:
   name: {es: El relicario sellado, en: The Sealed Reliquary}
   summary:
     es: Un mensajero de la Guardia de Plata desapareció en el Bosque de los Susurros con una caja que muchos quieren.
     en: A Silver Guard courier vanished in the Whispering Woods carrying a box many people want.
-  start_stage: not_started
+  order: 4
+  giver: holt
+  after: night_wings
+  start_stage: locked
+  unlock_stage: not_started
+  hint:
+    es: Busca en el Bosque de los Susurros (por el Camino del Viejo Rey) y habla con el sargento Holt en la plaza.
+    en: Search the Whispering Woods (via the Old King's Road) and talk to Sergeant Holt in the plaza.
 
   stages:
+    locked:
+      state: locked
+      journal:
+        es: Bram dice que en el bosque pasan cosas raras. Primero, gánate la confianza de la ciudad.
+        en: Bram says strange things happen in the woods. First, earn the city's trust.
     not_started:
       state: available
       journal:
@@ -163,7 +349,8 @@ sealed_box:
         en: Ser Aldren lowers his sword. "An honest hand...", he whispers, and his armor collapses, empty.
       effects:
         - gold: 100
-        - xp: 200
+        - xp: 300
+        - set_flag: old_tusk_hunt
         - reputation: {silver_covenant: 20}
         - npc_memory: {npc: holt, importance: 5, text: "{name} laid the Crypt Warden to rest. A true friend of the Covenant."}
         - world_rumor: {es: "Dicen que {name} entró en la Cripta Hundida con la bendición del Pacto y dio descanso a Ser Aldren.", en: "They say {name} entered the Sunken Crypt with the Covenant's blessing and laid Ser Aldren to rest."}
@@ -176,18 +363,20 @@ sealed_box:
         en: The warden falls. Behind you, Mira's crew is already filling sacks.
       effects:
         - gold: 150
-        - xp: 200
+        - xp: 300
+        - set_flag: old_tusk_hunt
         - reputation: {crimson_syndicate: 10}
         - npc_memory: {npc: mira, importance: 4, text: "{name} cleared the crypt for us. Worth keeping close."}
         - world_rumor: {es: "Corre la voz de que {name} abrió la Cripta Hundida para el Sindicato Carmesí.", en: "Word is that {name} cracked the Sunken Crypt open for the Crimson Syndicate."}
     - event: defeat
       target: crypt_warden
-      stages: [not_started, has_box, opened_box]
+      stages: [locked, not_started, has_box, opened_box]
       to_stage: completed_alone
       text:
         es: El guardián se desploma. Nadie te vio bajar y nadie te verá salir con el tesoro.
         en: The warden crumbles. No one saw you go down and no one will see you leave with the treasure.
       effects:
         - gold: 80
-        - xp: 200
+        - xp: 300
+        - set_flag: old_tusk_hunt
         - world_rumor: {es: "Alguien vio a {name} salir del bosque cubierto de polvo de tumba. Nadie sabe qué encontró.", en: "Someone saw {name} leave the woods covered in grave dust. No one knows what they found."}

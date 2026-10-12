@@ -45,6 +45,7 @@ class Skill(Strict):
 class AbilityInfo(Strict):
     name: Text
     short: Text
+    effect: Text  # what it does in game, shown while assigning points at creation
 
 
 class Lineage(Strict):
@@ -188,6 +189,10 @@ class Monster(Strict):
     resist: list[DamageType] = []
     vulnerable: list[DamageType] = []
     immune_damage: list[DamageType] = []
+    # bestiary
+    lore: Text | None = None
+    habitat: Text | None = None
+    active: Literal["day", "night", "any"] = "any"
 
 
 class SceneEffect(Strict):
@@ -241,6 +246,8 @@ class Location(Strict):
     kind: Literal["city", "wild", "dungeon"]
     exits: list[Exit]
     encounters: list[EncounterEntry] = []
+    night_encounters: list[EncounterEntry] = []  # replaces `encounters` at night when not empty
+    hunting: bool = False  # shows "Hunt": start a fight from the encounter table on demand
     fixed_encounters: list[FixedEncounter] = []
     scene_objects: dict[str, SceneObject] = {}
     discoveries: dict[str, Discovery] = {}
@@ -326,8 +333,16 @@ class QuestTrigger(Strict):
 
 class QuestStage(Strict):
     journal: Text
-    state: Literal["available", "active", "completed", "failed"] = "active"
+    state: Literal["locked", "available", "active", "completed", "failed"] = "active"
     location_text: dict[str, Text] = {}
+
+
+class QuestObjective(Strict):
+    """Counted goal of a mission: kill `count` monsters, talk to an NPC, reach a place."""
+
+    kind: Literal["kill", "talk", "visit"]
+    target: str  # monster, npc or location key
+    count: int = 1
 
 
 class Quest(Strict):
@@ -335,5 +350,18 @@ class Quest(Strict):
     summary: Text
     start_stage: str
     stages: dict[str, QuestStage]
-    actions: dict[str, QuestAction]
+    actions: dict[str, QuestAction] = {}
     triggers: list[QuestTrigger] = []
+    # missions: the journal lists them by `order`; a locked mission opens at `unlock_stage`
+    # once the `after` mission is completed or the `unlock_flag` is set
+    order: int = 100
+    giver: str | None = None  # npc
+    hint: Text | None = None
+    after: str | None = None
+    unlock_flag: str | None = None
+    unlock_stage: str | None = None
+    # all objectives met on `objective_stage` -> rewards, then `complete_stage`
+    objectives: list[QuestObjective] = []
+    objective_stage: str | None = None
+    complete_stage: str | None = None
+    rewards: list[Effect] = []

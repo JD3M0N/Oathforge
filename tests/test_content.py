@@ -23,7 +23,7 @@ def test_content_loads_and_references_resolve():
     c = load_content()
     assert c.start_location in c.locations
     assert c.respawn_location in c.locations
-    assert len(c.classes) == 8 and len(c.monsters) == 6 and len(c.items) == 16 and len(c.npcs) == 4
+    assert len(c.classes) == 8 and len(c.monsters) == 9 and len(c.items) == 18 and len(c.npcs) == 4
 
 
 def test_every_text_has_both_languages():

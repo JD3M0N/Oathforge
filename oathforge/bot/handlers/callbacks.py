@@ -19,8 +19,8 @@ from oathforge.services.events import Outcome
 log = logging.getLogger(__name__)
 
 # verbs that only show something (no nonce, no state change)
-VIEWS = {"scene", "trv", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "shopm", "shop", "sellm", "cbp", "lang",
-         "city"}
+VIEWS = {"scene", "trv", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jq", "jrb", "jb", "jrr",
+         "shopm", "shop", "sellm", "cbp", "lang", "city"}
 
 
 async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -71,8 +71,10 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
                 text, kb = await render.sheet(session, char, lang)
                 await send(update, text, kb)
                 return
+        talked = None
         if verb == "talk" and not in_combat and arg in exploration.npcs_present(char.location):
             context.user_data["talk"] = arg
+            talked = await quests.on_talk(session, char, arg, rng())  # "talk to Bram" objectives
             text, kb = await render.conversation(session, char, arg, lang)
         elif verb == "trv" and not in_combat:
             text, kb = render.travel_menu(char, lang)
@@ -86,6 +88,16 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             text, kb = await render.sheet(session, char, lang)
         elif verb == "jr":
             text, kb = await render.journal(session, char, lang)
+        elif verb == "jrm":
+            text, kb = await render.missions(session, char, lang)
+        elif verb == "jq":
+            text, kb = await render.mission(session, char, arg, lang)
+        elif verb == "jrb":
+            text, kb = render.bestiary_list(char, lang)
+        elif verb == "jb":
+            text, kb = render.bestiary_entry(char, arg, lang)
+        elif verb == "jrr":
+            text, kb = await render.rumors(session, lang)
         elif verb == "shopm" and not in_combat:
             text, kb = render.shop_menu(char, lang)
         elif verb == "shop" and not in_combat and arg in exploration.npcs_present(char.location):
@@ -96,6 +108,10 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             if verb == "bye":
                 context.user_data.pop("talk", None)
             text, kb = await current_view(session, char, lang)
+    if verb == "talk" and talked is not None and talked.events:
+        await send(update, render.outcome_text(talked, lang))
+        await send(update, text, kb)
+        return
     await edit_or_send(update, text, kb)
 
 
@@ -134,6 +150,8 @@ async def _dispatch(session, char, verb: str, arg: str, r, context) -> Outcome:
         return await exploration.travel(session, char, arg, r)
     if verb == "look":
         return await exploration.investigate(session, char, r)
+    if verb == "hunt":
+        return await exploration.hunt(session, char, r)
     if verb == "rest":
         return await exploration.rest(session, char)
     if verb == "qa":
@@ -197,17 +215,23 @@ async def _combat(update: Update, context, arg: str, n: str) -> None:
         state = EncounterState.model_validate(enc.state)
         me = state.combatants["p1"]
 
+        # A button from an older panel (double click, another turn): show the current panel instead.
+        if not fresh_token(n, enc.version, state.turn_index):
+            text, kb = render.combat_panel(char, enc.state, lang, version=enc.version)
+            await edit_or_send(update, text, kb)
+            return
+
         # Ask for a target first when there is a real choice.
         if kind in NEEDS_TARGET and len(parts) == 2:
             need = _needs_target(state, me, kind, parts[1], combat_service.ability_defs(char))
             if need:
-                text, kb = render.combat_panel(char, enc.state, lang, target_menu=arg)
+                text, kb = render.combat_panel(char, enc.state, lang, target_menu=arg, version=enc.version)
                 await edit_or_send(update, text, kb)
                 return
 
         if await audit.claim(session, f"{user.telegram_id}:{n}", user_id=user.id, character_id=char.id,
                              verb="combat", payload={"arg": arg}) is None:
-            text, kb = render.combat_panel(char, enc.state, lang)
+            text, kb = render.combat_panel(char, enc.state, lang, version=enc.version)
             await edit_or_send(update, text, kb)
             return
 
@@ -225,8 +249,8 @@ async def _combat(update: Update, context, arg: str, n: str) -> None:
         if action is None:
             return
         out = await combat_service.act(session, char, enc, action(), r)
-        await session.flush()
-        text, kb = render.combat_panel(char, enc.state, lang)
+        await session.flush()  # bumps enc.version, so the new buttons carry it
+        text, kb = render.combat_panel(char, enc.state, lang, version=enc.version)
         finished = enc.status != "active"
         # rewards / quest updates appear after the panel; per-hit logs already live in the panel
         summary = Outcome(events=[e for e in out.events if not e.key.startswith("combat.")
@@ -238,6 +262,12 @@ async def _combat(update: Update, context, arg: str, n: str) -> None:
     await edit_or_send(update, text, kb)
     if finished and summary.events:
         await send(update, render.outcome_text(summary, lang))
+
+
+def fresh_token(token: str, version: int | None, turn_index: int) -> bool:
+    """Combat buttons carry "<version>.<turn_index>.<nonce>"; anything else is stale."""
+    parts = token.split(".")
+    return len(parts) == 3 and parts[0] == str(version or 0) and parts[1] == str(turn_index)
 
 
 def _needs_target(state, me, kind: str, key: str, defs) -> bool:

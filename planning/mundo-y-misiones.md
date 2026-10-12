@@ -2,10 +2,23 @@
 
 ## Estado actual
 
-- Aetherfall: Crownreach (plaza, taberna La Corona Rota, mercado), el Camino del Viejo Rey, el Bosque de los Susurros y la Cripta Hundida (5 salas + jefe).
+- Aetherfall: Crownreach (plaza, taberna La Corona Rota, mercado), el Camino del Viejo Rey, el Bosque de los Susurros, el Prado de los Colmillos y la Cripta Hundida (5 salas + jefe).
+- **Zona de caza** (v0.5.0): el Prado de los Colmillos, a 20 minutos de la plaza y sin peligro en el camino. Botón «🏹 Cazar»: de día salen jabalíes y de noche murciélagos (`night_encounters`). El Viejo Colmillo aparece cuando la misión 6 está activa.
 - Reloj día/noche; los NPC tienen horario.
 - Misiones como máquinas de estados en YAML (`content/quests.yaml`): etapas, acciones (botón o texto libre con tirada) y disparadores.
 - «El relicario sellado», con tres finales.
+- **Cadena de misiones** (v0.5.0), automática: al completar una se abre la siguiente (`after` o `unlock_flag`). Las misiones con `objectives` (matar N, hablar con, ir a) cuentan solas y dan `rewards`; el avance se guarda en `quest_progress.counters`. El diario muestra las misiones en curso con su avance y, en «Misiones», la ficha de cada una (quién la da, objetivos, pista y recompensa).
+
+  | # | Misión | Objetivo | XP |
+  |---|---|---|---|
+  | 1 | Bienvenido a Crownreach | Hablar con Bram | 50 |
+  | 2 | Colmillos en el prado | 3 jabalíes (de día) | 150 |
+  | 3 | Alas al anochecer | 4 murciélagos (de noche) | 200 |
+  | 4 | El relicario sellado | Tres caminos hasta el Guardián | 50 + 100 + 300 |
+  | 5 | Huesos inquietos | 3 esqueletos de la cripta | 300 |
+  | 6 | El Viejo Colmillo | El jabalí jefe | 300 |
+
+  Con la XP de los combates se llega a nivel 2 en la misión 2, a 3 en la 3, a 4 en la cripta y a 5 al vencer al Guardián.
 - Facciones con reputación: Pacto de Plata y Sindicato Carmesí.
 - Rumores: lo que hace un jugador se cuenta en las tabernas de los demás.
 

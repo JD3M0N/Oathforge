@@ -1,5 +1,6 @@
 name: {es: "Cripta Hundida: osario", en: "Sunken Crypt: ossuary"}
 kind: dungeon
+rest_cost: 0  # descanso gratis junto a la llama votiva antes del santuario
 description:
   es: Miles de cráneos ordenados con un cuidado inquietante cubren las paredes.
   en: Thousands of skulls, arranged with unsettling care, cover the walls.

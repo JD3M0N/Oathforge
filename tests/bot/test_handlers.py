@@ -104,7 +104,10 @@ async def create(p: Player, cls="paladin", gender="male"):
     assert await creation.got_gender(p.update(data=f"cc|gen:{gender}"), p.ctx) == creation.LINEAGE
     assert await creation.got_lineage(p.update(data="cc|lin:human"), p.ctx) == creation.BACKGROUND
     assert await creation.got_background(p.update(data="cc|bg:soldier"), p.ctx) == creation.CLASS
-    assert await creation.got_class(p.update(data=f"cc|cls:{cls}"), p.ctx) == creation.CONFIRM
+    assert await creation.got_class(p.update(data=f"cc|cls:{cls}"), p.ctx) == creation.ABILITIES
+    assert await creation.got_ability(p.update(data="cc|ab:ok"), p.ctx) == creation.ABILITIES  # 27 points left
+    assert await creation.got_ability(p.update(data="cc|ab:rec"), p.ctx) == creation.ABILITIES
+    assert await creation.got_ability(p.update(data="cc|ab:ok"), p.ctx) == creation.CONFIRM
     assert await creation.confirm(p.update(data="cc|ok"), p.ctx) == ConversationHandler.END
 
 
@@ -347,3 +350,77 @@ async def test_gender_picks_the_class_portrait_and_shows_on_the_sheet(llm):
     sent = get_content().media.class_images("warlock", "female")[0].path.read_bytes()
     assert p.chat.photos == [sent]  # only her portrait, not both
     assert "Mujer" in p.last[0]
+
+
+async def test_point_buy_creation_uses_the_chosen_scores(llm):
+    p = Player(llm, tg_id=60)
+    assert await creation.start(p.update(message="/start"), p.ctx) == creation.NAME
+    await creation.got_name(p.update(message="Mara"), p.ctx)
+    await creation.got_gender(p.update(data="cc|gen:female"), p.ctx)
+    await creation.got_lineage(p.update(data="cc|lin:human"), p.ctx)
+    await creation.got_background(p.update(data="cc|bg:soldier"), p.ctx)
+    assert await creation.got_class(p.update(data="cc|cls:warrior"), p.ctx) == creation.ABILITIES
+    assert "<b>27</b> de 27 puntos" in p.last[0] and "Vida a nivel 1" in p.last[0]
+    for ability, steps in (("con", 7), ("str", 7), ("dex", 6), ("wis", 1)):  # 9 + 9 + 7 + 1, then cha +1 = 27
+        for _ in range(steps):
+            await creation.got_ability(p.update(data=f"cc|ab:{ability}:+"), p.ctx)
+    await creation.got_ability(p.update(data="cc|ab:cha:+"), p.ctx)
+    await creation.got_ability(p.update(data="cc|ab:con:i"), p.ctx)  # info alert, nothing changes
+    assert await creation.got_ability(p.update(data="cc|ab:ok"), p.ctx) == creation.CONFIRM
+    assert await creation.confirm(p.update(data="cc|ok"), p.ctx) == ConversationHandler.END
+    char = await char_row()
+    assert char.abilities == {"str": 16, "dex": 15, "con": 16, "int": 9, "wis": 10, "cha": 10}
+    assert char.max_hp == 10 + 3
+
+
+async def test_stale_combat_button_never_acts_twice(llm):
+    from oathforge.database.models import CombatAction
+    from sqlalchemy import func
+
+    p = Player(llm, tg_id=61, lang="en")
+    await create(p, cls="warrior")
+    async with session_scope() as s:
+        char = await s.scalar(select(Character).with_for_update())
+        char.location = "tusk_meadow"
+        char.hp = char.max_hp = 400
+    await p.press("scene|-|-")
+    await p.press(p.find("hunt"))
+    assert "Combat" in p.last[0]
+    first = p.find("cb", "def")
+    await p.press(first)
+    async with session_scope() as s:
+        acted = await s.scalar(select(func.count()).select_from(CombatAction))
+    assert acted == 1
+    # the same old button with a fresh nonce (as if pressed twice from a stale panel) is ignored
+    verb, arg, token = parse(first)
+    version, turn, _ = token.split(".")
+    await p.press(f"{verb}|{arg}|{version}.{turn}.zzzzzz")
+    async with session_scope() as s:
+        assert await s.scalar(select(func.count()).select_from(CombatAction)) == 1
+
+
+async def test_journal_missions_and_bestiary_views(llm, monkeypatch):
+    monkeypatch.setattr(exploration, "npcs_present",
+                        lambda loc, now=None: {"broken_crown_tavern": ["bram"]}.get(loc, []))
+    p = Player(llm, tg_id=62)
+    await create(p)
+    await p.press("jr|-|-")
+    assert "Bienvenido a Crownreach" in p.last[0]
+    await p.press(p.find("jrm"))
+    await p.press(p.find("jq", "first_steps"))
+    assert "Bram" in p.last[0] and "50 XP" in p.last[0]
+    await p.press(p.find("jrm"))
+    await p.press(p.find("jq", "boar_hunt"))
+    assert "🔒" in p.last[0]
+    # talking to Bram completes the first mission and opens the boar hunt
+    async with session_scope() as s:
+        char = await s.scalar(select(Character).with_for_update())
+        char.location = "broken_crown_tavern"
+    await p.press("talk|bram|-")
+    assert any("Bienvenido a Crownreach" in t_ for t_, _ in p.chat.sent[-3:])
+    await p.press("jq|boar_hunt|-")
+    assert "Jabalí 0/3" in p.last[0]
+    await p.press("jrb|-|-")
+    assert "0/9" in p.last[0]
+    await p.press("jrr|-|-")
+    assert p.last[0]

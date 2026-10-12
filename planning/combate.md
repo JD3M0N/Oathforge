@@ -12,6 +12,8 @@ Motor puro en `oathforge/engine/combat.py`, persistido como JSON en `encounters.
 - Huir: Atletismo o Acrobacias contra 10 + 2 por enemigo.
 - **v0.2.0, tipos de daño y criaturas**: los monstruos tienen tipo (humanoide, bestia, no-muerto), resistencias (½ daño), vulnerabilidades (×2) e inmunidades. El panel avisa «¡débil!» o «resiste». Los esqueletos sufren el doble con contundente y radiante; el Guardián de la Cripta, con radiante, y resiste necrótico y frío. El daño extra de otro tipo (Golpe Consagrado, Golpe Divino) se aplica aparte para que cuente la debilidad.
 - Enemigos: atacan al jugador con menos PV con su primer ataque válido; los cobardes huyen con ¼ de PV.
+- **v0.5.0, cripta más fácil**: en la partida del 11/10 hubo 4 muertes en 4 combates en la sala de los juramentos (2 esqueletos contra nivel 1). Esqueleto: 11 PV, +3, 1d6+1. Guardián: 40 PV, +4, 1d8+2 y miedo al 25 %. Descanso gratis en el osario antes del santuario. Con la cadena de misiones se llega a la cripta a nivel 3–4.
+- **v0.5.0, botones a prueba de doble clic**: cada botón de combate lleva `<encounter.version>.<turn_index>.<nonce>`; si la versión o el turno ya no coinciden, se vuelve a pintar el panel sin actuar.
 
 ## Ideas
 

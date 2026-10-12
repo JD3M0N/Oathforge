@@ -17,7 +17,7 @@ from oathforge.i18n import t
 log = logging.getLogger("oathforge")
 
 # Telegram's "/" menu; each needs a cmd.<name> description in every locale.
-MENU_COMMANDS = ("start", "look", "hero", "sheet", "inventory", "journal", "language", "help")
+MENU_COMMANDS = ("start", "look", "hero", "sheet", "inventory", "journal", "quests", "language", "help")
 
 
 async def on_error(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -65,7 +65,9 @@ def build_app() -> Application:
         raise SystemExit("BOT_TOKEN is not set. Copy .env.example to .env and fill it in.")
     get_content()  # validate content before accepting players
 
+    # Uploading a portrait can take longer than python-telegram-bot's 5 s default.
     app = (Application.builder().token(settings.bot_token)
+           .connect_timeout(15).read_timeout(30).write_timeout(30).media_write_timeout(60)
            .post_init(post_init).post_shutdown(post_shutdown).build())
     app.bot_data["llm"] = build_llm(settings)
     app.add_handler(TypeHandler(Update, record_update), group=-1)

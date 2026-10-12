@@ -8,6 +8,7 @@ cmd:
   sheet: "Ficha completa con retrato"
   inventory: "Inventario"
   journal: "Diario de aventuras"
+  quests: "Misiones y progreso"
   language: "Cambiar idioma"
   help: "Cómo jugar"
 
@@ -19,7 +20,7 @@ help:
     También puedes <b>escribir lo que quieras hacer</b>: «me escondo tras la barra y escucho», «intento robarle la bolsa al tabernero», «empujo el carro sobre el bandido».
     El Dungeon Master interpreta tu acción, el motor tira los dados y tú ves el resultado real.
 
-    Comandos: /look /hero /sheet /inventory /journal /language
+    Comandos: /look /hero /sheet /inventory /journal /quests /language
   version: "<i>Oathforge v{version}</i>"
 
 lang:
@@ -47,6 +48,13 @@ create:
   ask_lineage: "<b>{name}</b>, ¿de qué linaje procedes?"
   ask_background: "¿Quién eras antes de convertirte en aventurero?"
   ask_class: "Elige tu clase:"
+  ask_abilities: |-
+    🎲 <b>Reparte tus atributos</b> · {cls}
+    Todos empiezan en 8. Te quedan <b>{left}</b> de {budget} puntos. Subir a 14 o a 15 cuesta 2 puntos. ★ = atributo principal de tu clase. Pulsa el nombre de un atributo para ver qué hace.
+  lineage_bonus: " · linaje {bonus}"
+  ability_hp: "❤️ Vida a nivel 1: <b>{hp}</b>"
+  points_left: "Aún te quedan {left} puntos por repartir."
+  cannot_change: "No puedes cambiar más ese atributo."
   summary: |-
     <b>{name}</b>
     {gender} · {lineage} · {background} · {cls}
@@ -69,6 +77,13 @@ btn:
   inventory: "🎒 Inventario"
   sheet: "🦸 Héroe"
   journal: "📜 Diario"
+  hunt: "🏹 Cazar"
+  hunt_night: "🦇 Cazar de noche"
+  missions: "📜 Misiones"
+  bestiary: "📖 Bestiario"
+  rumors: "🗣️ Rumores"
+  recommended: "⭐ Recomendado ({cls})"
+  reset_points: "🔄 Reiniciar"
   view_city: "🏙️ Ver ciudad"
   back: "⬅️ Volver"
   leave: "👋 Despedirse"
@@ -170,6 +185,17 @@ ai:
 journal:
   title: "📜 <b>Diario de aventuras</b>"
   rumors: "Rumores recientes"
+  current: "En curso"
+  no_current: "No tienes misiones en curso."
+  hint: "Toca «Misiones» para ver objetivos y recompensas, o «Bestiario» para las criaturas que conoces."
+  missions_title: "📜 <b>Misiones</b> · {done}/{total} completadas"
+  missions_hint: "Toca una misión para ver su avance."
+  locked_name: "Misión bloqueada"
+  unlocks_after: "Se desbloquea al completar «{quest}»."
+  giver: "Encargo de {npc}, {title}"
+  objectives: "Objetivos"
+  rewards: "Recompensa:"
+  no_rumors: "Aún no corre ningún rumor."
 
 check:
   result: "{skill}: {roll} → {total} contra CD {dc} {result}"
@@ -180,21 +206,31 @@ explore:
   nothing_more: "Ya no queda nada que descubrir aquí."
   found_nothing: "No encuentras nada fuera de lo común."
   new_route: "Has descubierto un nuevo camino."
+  hunt_day: "🏹 Rastreas el prado a plena luz y das con tu presa."
+  hunt_night: "🦇 Te adentras en la hierba oscura. Algo aletea sobre tu cabeza."
+  hunt_boss: "🐗 La tierra tiembla. Algo enorme se abre paso entre la hierba."
   rested: "Descansas toda la noche ({cost} de oro). Recuperas tus fuerzas: {hp} PV."
   err:
     in_combat: "¡Estás en pleno combate!"
     no_route: "No puedes ir allí desde aquí."
     no_rest: "Aquí no hay dónde descansar."
+    no_hunting: "Aquí no hay nada que cazar."
 
 quest:
   updated: "Diario actualizado: {quest}."
   completed: "Misión completada: {quest}."
   failed: "Misión fallida: {quest}."
+  new: "📜 Nueva misión: {quest}. Mírala en el diario."
+  progress: "{quest}: {target} {n}/{count}."
+  objective:
+    kill: "Derrota: {target}"
+    talk: "Habla con {target}"
+    visit: "Ve a {target}"
   err:
     unavailable: "Eso ya no es posible."
 
 loot:
-  gold: "+{gold} de oro."
+  gold: "🪙 +{gold} de oro."
   item: "Obtienes: {item} ×{qty}."
   lost_item: "Entregas: {item} ×{qty}."
   damage: "Sufres {amount} de daño (te quedan {hp} PV)."
@@ -203,9 +239,9 @@ rep:
   changed: "Reputación con {faction}: {delta} (ahora {value})."
 
 progress:
-  xp: "+{amount} XP."
-  level_up: "¡Subes a nivel {level}! PV máximos: {max_hp}."
-  new_ability: "Nueva habilidad: {ability}."
+  xp: "✨ +{amount} XP."
+  level_up: "🎉 ¡Subes a nivel {level}! PV máximos: {max_hp}."
+  new_ability: "🌟 Nueva habilidad: {ability}."
   asi: "Tu {ability} aumenta en 2."
   skill_rank: "Tu dominio de {skill} mejora (rango {rank})."
   specialization_soon: "Has alcanzado el nivel 5. Pronto podrás elegir una especialización."
@@ -341,3 +377,31 @@ err:
   rate: "Más despacio, aventurero."
   stale: "Ese menú ya no es válido. Aquí tienes el actual:"
   unknown: "No entiendo esa acción."
+
+creature:
+  beast: "Bestia"
+  undead: "No muerto"
+  humanoid: "Humanoide"
+
+bestiary:
+  title: "📖 <b>Bestiario</b> · {seen}/{total} criaturas"
+  hint: "Toca una criatura. Cuantas más derrotes, más sabrás de ella."
+  empty: "Aún no te has cruzado con ninguna criatura. Sal a cazar."
+  unknown: "No sabes nada de esa criatura."
+  active:
+    day: "sale de día"
+    night: "sale de noche"
+    any: "a cualquier hora"
+  habitat: "🗺️ Hábitat: {place}"
+  record: "👁️ Vista {seen} veces · ⚔️ derrotada {killed}"
+  stats: "Estadísticas"
+  hp_ac: "❤️ {hp} PV · 🛡️ CA {ac}"
+  locked_stats: "Derrota una para conocer sus estadísticas."
+  secrets: "Puntos débiles"
+  locked_secrets: "Derrota {n} para descubrir sus puntos débiles y su botín."
+  vulnerable: "💥 Vulnerable a: {list}"
+  resist: "🛡️ Resiste: {list}"
+  immune: "🚫 Inmune al daño: {list}"
+  immune_status: "🚫 Inmune a: {list}"
+  xp: "✨ {xp} XP"
+  loot: "🎁 Botín: {list}"

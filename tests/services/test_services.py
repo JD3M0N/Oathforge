@@ -5,8 +5,10 @@ import pytest
 from sqlalchemy import func, select
 
 from oathforge.database.models import ActionLog, Character, ItemInstance, NpcMemory, QuestProgress
+from oathforge.content import get_content
 from oathforge.database.session import session_scope
 from oathforge.engine.combat import Action
+from oathforge.services.events import Outcome
 from oathforge.services import (
     audit, characters, combat_service, exploration, inventory, npcs, quests,
 )
@@ -42,7 +44,8 @@ async def test_create_character_sets_everything_up():
         assert skills["athletics"].proficient and skills["intimidation"].proficient
         assert characters.skill_bonus(char, skills, "athletics") == 3 + 2
         prog = await quests.progress(s, char)
-        assert prog["sealed_box"].stage == "not_started"
+        assert prog["first_steps"].state == "active"
+        assert prog["sealed_box"].stage == "locked" and prog["boar_hunt"].state == "locked"
         assert char.resources == {"consecrated_strike": 2}
 
 
@@ -58,7 +61,7 @@ async def test_create_warrior():
         assert cb.row == "front" and cb.crit_range == 20
         assert [(a.key, a.damage_type) for a in cb.attacks] == [("main", "bludgeoning"), ("ranged", "slashing")]
         from oathforge.services.events import Outcome
-        characters.grant_xp(char, 2700, Outcome())
+        characters.grant_xp(char, 1000, Outcome())
         assert char.level == 4 and "action_surge" in char.resources
         assert (await characters.build_combatant(s, char)).crit_range == 19
 
@@ -74,7 +77,7 @@ async def test_create_priest():
         assert cb.row == "back" and cb.casting_mod == 3 and cb.spell_to_hit == 3 + 2
         assert cb.bonus_damage is None
         from oathforge.services.events import Outcome
-        characters.grant_xp(char, 6500, Outcome())
+        characters.grant_xp(char, 1800, Outcome())
         assert {"turn_undead", "bless"} <= set(char.resources)
         cb = await characters.build_combatant(s, char)
         assert cb.bonus_damage == "1d8" and cb.bonus_damage_type == "radiant"
@@ -102,7 +105,7 @@ async def test_create_mage_druid_bard():
         assert characters.armor_class(char, gear) == 11 + 2 + 2  # leather (dex +2), shield
         assert char.resources == {"thorn_whip": None, "cure_wounds": 2}
         from oathforge.services.events import Outcome
-        characters.grant_xp(char, 6500, Outcome())
+        characters.grant_xp(char, 1800, Outcome())
         assert {"entangle", "wild_shape"} <= set(char.resources)
         cb = await characters.build_combatant(s, char)
         assert cb.spell_damage_bonus == cb.casting_mod > 0
@@ -124,7 +127,7 @@ async def test_create_warlock():
         cb = await characters.build_combatant(s, char)
         assert cb.row == "back" and cb.casting_mod == 3 and cb.spell_dc == 8 + 3 + 2 and cb.spell_damage_bonus == 0
         from oathforge.services.events import Outcome
-        characters.grant_xp(char, 6500, Outcome())
+        characters.grant_xp(char, 1800, Outcome())
         assert {"shadow_armor", "void_whispers"} <= set(char.resources) and "agonizing_blast" not in char.resources
         cb = await characters.build_combatant(s, char)
         assert cb.spell_damage_bonus == cb.casting_mod > 0
@@ -348,7 +351,7 @@ async def test_level_up():
         char = await get_char(s, cid)
         from oathforge.services.events import Outcome
         out = Outcome()
-        characters.grant_xp(char, 900, out)
+        characters.grant_xp(char, 500, out)
         assert char.level == 3 and char.max_hp > 12
         assert "lay_on_hands" in char.resources
         assert any(e.key == "progress.level_up" for e in out.events)
@@ -356,11 +359,17 @@ async def test_level_up():
 
 # ---------------------------------------------------------------- quest
 
+async def unlock_sealed_box(s, char) -> None:
+    prog = (await quests.progress(s, char, lock=True))["sealed_box"]
+    prog.stage, prog.state = "not_started", "available"
+
+
 async def test_sealed_box_covenant_branch_to_completion():
     _, cid = await new_character()
     rng = random.Random(3)
     async with session_scope() as s:
         char = await get_char(s, cid)
+        await unlock_sealed_box(s, char)
         char.location = "whispering_woods"
         out = await quests.perform(s, char, "sealed_box.approach_guard", [], rng)
         assert out.ok and await inventory.count(s, char, "sealed_reliquary") == 1
@@ -387,7 +396,8 @@ async def test_quest_action_needs_npc_present_and_location():
         char = await get_char(s, cid)
         assert not (await quests.perform(s, char, "sealed_box.approach_guard", [], random.Random(0))).ok
         await inventory.add_item(s, char, "sealed_reliquary")
-        prog = await s.scalar(select(QuestProgress).where(QuestProgress.character_id == cid))
+        prog = await s.scalar(select(QuestProgress).where(QuestProgress.character_id == cid,
+                                                          QuestProgress.quest_key == "sealed_box"))
         prog.stage = "has_box"
         assert not (await quests.perform(s, char, "sealed_box.give_box_holt", [], random.Random(0))).ok
         assert (await quests.perform(s, char, "sealed_box.sell_box_mira", ["mira"], random.Random(0))).ok
@@ -448,3 +458,130 @@ async def test_media_file_id_cache_per_bot_and_checksum():
         await media.forget(s, 1, changed)
     async with session_scope() as s:
         assert await media.get_file_id(s, 1, changed) is None
+
+
+# ---------------------------------------------------------------- missions
+
+async def test_mission_chain_talk_then_hunt():
+    _, cid = await new_character()
+    rng = random.Random(1)
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        out = await quests.on_talk(s, char, "bram", rng)
+        prog = await quests.progress(s, char)
+        assert prog["first_steps"].state == "completed" and prog["boar_hunt"].state == "active"
+        assert char.xp == 50 and any(e.key == "quest.new" for e in out.events)
+        assert not (await quests.on_talk(s, char, "bram", rng)).events  # nothing left to count
+
+        for i in range(2):
+            out = await quests.on_defeat(s, char, "boar", rng)
+            assert any(e.key == "quest.progress" and e.params["n"] == i + 1 for e in out.events)
+        assert (await quests.progress(s, char))["boar_hunt"].counters == {"0": 2}
+        out = await quests.on_defeat(s, char, "boar", rng)
+        prog = await quests.progress(s, char)
+        assert prog["boar_hunt"].state == "completed" and prog["night_wings"].state == "active"
+        assert char.xp == 50 + 150 and char.level == 2
+        assert await inventory.count(s, char, "healing_potion") >= 1
+        assert prog["sealed_box"].state == "locked"
+
+
+async def test_mission_unlocks_by_flag_and_counts_only_when_active():
+    _, cid = await new_character()
+    rng = random.Random(1)
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        await quests.on_defeat(s, char, "crypt_skeleton", rng)  # crypt_bones still locked: no count
+        assert (await quests.progress(s, char))["crypt_bones"].counters == {}
+        char.flags = {**char.flags, "crypt_unlocked": True}
+        await quests.refresh(s, char, Outcome())
+        assert (await quests.progress(s, char))["crypt_bones"].state == "active"
+        for _ in range(3):
+            await quests.on_defeat(s, char, "crypt_skeleton", rng)
+        assert (await quests.progress(s, char))["crypt_bones"].state == "completed"
+
+
+async def test_whole_chain_reaches_level_five():
+    _, cid = await new_character()
+    rng = random.Random(5)
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        await quests.on_talk(s, char, "bram", rng)
+        for monster, n in (("boar", 3), ("cave_bat", 4)):
+            for _ in range(n):
+                characters.grant_xp(char, get_content().monsters[monster].xp, Outcome())
+                await quests.on_defeat(s, char, monster, rng)
+        prog = await quests.progress(s, char)
+        assert prog["sealed_box"].stage == "not_started" and char.level == 3
+        char.location = "whispering_woods"
+        await quests.perform(s, char, "sealed_box.approach_guard", [], rng)
+        char.location = "crownreach_plaza"
+        await quests.perform(s, char, "sealed_box.give_box_holt", ["holt"], rng)
+        assert (await quests.progress(s, char))["crypt_bones"].state == "active"
+        for monster, n in (("crypt_skeleton", 4), ("crypt_warden", 1)):
+            for _ in range(n):
+                characters.grant_xp(char, get_content().monsters[monster].xp, Outcome())
+                await quests.on_defeat(s, char, monster, rng)
+        prog = await quests.progress(s, char)
+        assert prog["sealed_box"].state == "completed" and prog["old_tusk"].state == "active"
+        assert char.level == 5
+
+
+async def test_ensure_progress_adds_missions_to_old_characters():
+    _, cid = await new_character()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        for p in (await quests.progress(s, char)).values():
+            if p.quest_key != "sealed_box":
+                await s.delete(p)
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        journal = await quests.journal(s, char)
+        assert [k for k, _, p in journal if p is None] == ["first_steps", "boar_hunt", "night_wings",
+                                                            "crypt_bones", "old_tusk"]
+        await quests.refresh(s, char, Outcome())
+        prog = await quests.progress(s, char)
+        assert set(prog) == set(get_content().quests) and prog["first_steps"].state == "active"
+
+
+# ---------------------------------------------------------------- hunting and bestiary
+
+@pytest.mark.parametrize("night,expected", [(False, {"boar"}), (True, {"cave_bat"})])
+async def test_hunt_uses_the_day_or_night_table(monkeypatch, night, expected):
+    monkeypatch.setattr(exploration, "is_night", lambda now=None: night)
+    _, cid = await new_character()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        char.location = "tusk_meadow"
+        out = await exploration.hunt(s, char, random.Random(0))
+        assert out.ok and char.state == "in_combat"
+        enc = await combat_service.active_encounter(s, char)
+        refs = {c["ref"] for c in enc.state["combatants"].values() if c["side"] == "enemy"}
+        assert refs == expected
+        assert set(char.bestiary) == expected
+
+
+async def test_hunt_only_where_there_is_prey_and_boss_first():
+    _, cid = await new_character()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        assert (await exploration.hunt(s, char, random.Random(0))).error == "explore.err.no_hunting"
+        char.location, char.flags = "tusk_meadow", {"old_tusk_hunt": True}
+        out = await exploration.hunt(s, char, random.Random(0))
+        assert out.events[0].key == "explore.hunt_boss"
+        enc = await combat_service.active_encounter(s, char)
+        assert enc.fixed_flag == "cleared_old_tusk"
+
+
+async def test_bestiary_records_seen_and_killed():
+    from oathforge.services import bestiary
+    _, cid = await new_character()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        char.hp = char.max_hp = 200
+        assert bestiary.tier(char.bestiary.get("grey_wolf")) == 0
+        await _fight(s, char, ["grey_wolf", "grey_wolf"])
+        assert char.bestiary["grey_wolf"] == {"seen": 1, "killed": 2}
+        assert bestiary.tier(char.bestiary["grey_wolf"]) == 2
+        await _fight(s, char, ["grey_wolf"], seed=1)
+        assert bestiary.tier(char.bestiary["grey_wolf"]) == 3
+        assert [k for k, _ in bestiary.known(char)] == ["grey_wolf"]

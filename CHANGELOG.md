@@ -4,6 +4,29 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.5.0] - 2026-10-11
+
+### Añadido
+- **Sistema de misiones**: cadena automática de 6 misiones que lleva a nivel 5 (Bienvenido a Crownreach, Colmillos en el prado, Alas al anochecer, El relicario sellado, Huesos inquietos y El Viejo Colmillo). Al completar una se abre la siguiente (`after` o `unlock_flag`). Los objetivos (matar N, hablar con, ir a) cuentan solos y dan su recompensa. El avance se guarda en `quest_progress.counters` (migración `0004`) y los personajes antiguos reciben las misiones nuevas sin perder su progreso.
+- **Diario renovado**: muestra las misiones en curso con su avance y tiene tres secciones. En «📜 Misiones» se toca cada misión para ver quién la da, el resumen, los objetivos (`2/3`), una pista de dónde ir y la recompensa. Las otras dos son «📖 Bestiario» y «🗣️ Rumores». Nuevo comando `/quests`.
+- **Prado de los Colmillos**, zona de caza a 20 minutos de la plaza y sin peligro en el camino. Con el botón «🏹 Cazar» salen **jabalíes de día** y **murciélagos de noche** (`night_encounters`, también en las emboscadas). El jefe **Viejo Colmillo** aparece con la misión 6. Botín vendible: colmillos de jabalí y alas de murciélago.
+- **Bestiario** (`characters.bestiary`): cuenta las criaturas vistas y derrotadas. Su ficha se desbloquea por partes: al verla, descripción, historia y hábitat; a la primera derrota, PV, CA y ataques; a la tercera, puntos débiles, XP y botín. Los monstruos tienen `lore`, `habitat` y `active` (día o noche).
+- **Compra de atributos por puntos** al crear el personaje: todos empiezan en 8 y hay 27 puntos (14→15 cuesta 2), con botones ➖/➕. «⭐ Recomendado» carga el array de la clase y «🔄 Reiniciar» vuelve a empezar. Cada atributo explica para qué sirve (`effect` en `content/abilities.yaml`) y se ve la vida resultante.
+- Emojis en XP (✨), oro (🪙), subidas de nivel (🎉) y habilidades nuevas (🌟).
+
+### Cambiado
+- **Curva de XP comprimida**: los niveles 2–5 piden 200 / 500 / 1.000 / 1.800 XP (antes 300 / 900 / 2.700 / 6.500).
+- **La Cripta Hundida es más fácil**:
+  - esqueleto: 11 PV, +3, 1d6+1;
+  - Guardián: 40 PV, +4, 1d8+2, miedo al 25 %;
+  - descanso gratis en el osario antes del santuario.
+- «El relicario sellado» empieza bloqueado hasta completar «Alas al anochecer». Sus finales dan 300 XP y abren la misión del Viejo Colmillo.
+- **Botones de combate a prueba de doble clic**: cada botón lleva `<encounter.version>.<turn_index>.<nonce>`. Un botón de un panel viejo o de otro turno ya no actúa: vuelve a pintar el panel.
+
+### Arreglado
+- `TimedOut` al subir retratos: el bot tiene ahora timeouts de 30 s, y 60 s para subir fotos. Si una imagen falla por red, se registra un aviso y se sigue con la vista sin mostrar el error genérico.
+- Reintentos inútiles a Gemini con la cuota diaria agotada: ante un 429 se respeta el `retryDelay` de Google (si la cuota es diaria, se salta ese modelo hasta que vuelva, como máximo 24 h). Se deja de llamar y de avisar cada 2 minutos.
+
 ## [0.4.4] - 2026-10-11
 
 ### Añadido

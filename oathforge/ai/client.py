@@ -8,6 +8,7 @@ deterministic templates.
 
 import asyncio
 import logging
+import re
 import time
 from datetime import date
 from typing import Literal, Protocol, TypeVar
@@ -95,6 +96,24 @@ class Budget:
 
 # HTTP codes worth another try (on this model later, or on the fallback now).
 TRANSIENT_CODES = {408, 429, 500, 502, 503, 504}
+MAX_COOLDOWN_SECONDS = 24 * 3600
+_RETRY_DELAY = re.compile(r"retryDelay['\"]?\s*[:=]\s*['\"]?(\d+(?:\.\d+)?)s")
+
+
+def cooldown_for(error: Exception, default: float) -> float:
+    """How long to skip a model after a transient error.
+
+    A 429 carries Google's own ``retryDelay``; when the daily quota is gone that is
+    hours, and retrying every couple of minutes only wastes a round-trip per call.
+    """
+    text = str(error)
+    m = _RETRY_DELAY.search(text)
+    if getattr(error, "code", None) != 429 or m is None:
+        return default
+    delay = float(m.group(1))
+    if "PerDay" in text:
+        return min(delay, MAX_COOLDOWN_SECONDS)
+    return min(max(default, delay), MAX_COOLDOWN_SECONDS)
 
 
 class GeminiLLM:
@@ -160,9 +179,13 @@ class GeminiLLM:
                     log.error("gemini call to %s rejected (%s), check the configuration: %s", model, code, e)
                     self._record(tier, model, purpose, system, prompt, None, error, None, started, user_id)
                     return None
-                self._cooldown_until[model] = time.monotonic() + self.s.ai_model_cooldown_seconds
-                log.warning("gemini call to %s failed (attempt %d): %s", model, attempt + 1,
-                            str(e) or type(e).__name__)
+                cooldown = cooldown_for(e, self.s.ai_model_cooldown_seconds)
+                self._cooldown_until[model] = time.monotonic() + cooldown
+                if cooldown > self.s.ai_model_cooldown_seconds:
+                    log.warning("gemini model %s out of quota, skipping it for %.0f min", model, cooldown / 60)
+                else:
+                    log.warning("gemini call to %s failed (attempt %d): %s", model, attempt + 1,
+                                str(e) or type(e).__name__)
                 continue
             usage = resp.usage_metadata
             await self.budget.record(

@@ -18,12 +18,13 @@ from oathforge.bot.handlers.common import current_view, edit_or_send, load, send
 from oathforge.bot.keyboards import btn, cb, markup
 from oathforge.content import get_content
 from oathforge.database.session import session_scope
+from oathforge.engine import pointbuy
 from oathforge.engine.checks import modifier
 from oathforge.engine.progression import max_hp
 from oathforge.i18n import t
 from oathforge.services import audit, characters
 
-NAME, GENDER, LINEAGE, BACKGROUND, CLASS, CONFIRM = range(6)
+NAME, GENDER, LINEAGE, BACKGROUND, CLASS, ABILITIES, CONFIRM = range(7)
 GENDERS = ("male", "female")
 
 
@@ -116,8 +117,80 @@ async def got_class(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     if key not in c.classes or not {"name", "gender", "lineage", "background"} <= set(new):
         return CLASS
     new["class"] = key
-    cls = c.classes[key]
-    scores = characters.starting_scores(key, new["lineage"])
+    new["scores"] = pointbuy.base()
+    text, kb = abilities_panel(new, lang)
+    await edit_or_send(update, text, kb)
+    return ABILITIES
+
+
+def abilities_panel(new: dict, lang: str):
+    """Point buy: every ability with lineage bonus, final modifier and what it is for."""
+    c = get_content()
+    cls = c.classes[new["class"]]
+    lin = c.lineages[new["lineage"]]
+    scores = new["scores"]
+    final = characters.starting_scores(new["class"], new["lineage"], scores)
+    lines = [t(lang, "create.ask_abilities", cls=cls.name.get(lang), left=pointbuy.left(scores),
+               budget=pointbuy.BUDGET), ""]
+    rows = []
+    for a, info in c.abilities.items():
+        bonus = lin.bonuses.get(a, 0)
+        extra = t(lang, "create.lineage_bonus", bonus=f"{bonus:+d}") if bonus else ""
+        star = " ★" if a == cls.primary else ""
+        lines.append(f"<b>{info.short.get(lang)} {final[a]}</b> ({modifier(final[a]):+d}){star}{extra}")
+        lines.append(f"<i>{escape(info.effect.get(lang))}</i>")
+        rows.append([btn("➖", cb("cc", f"ab:{a}:-")),
+                     btn(f"{info.short.get(lang)} {scores[a]}", cb("cc", f"ab:{a}:i")),
+                     btn("➕", cb("cc", f"ab:{a}:+"))])
+    hp = max_hp(cls.hit_die, modifier(final["con"]), 1)
+    lines += ["", t(lang, "create.ability_hp", hp=hp)]
+    rows.append([btn(t(lang, "btn.recommended", cls=cls.name.get(lang)), cb("cc", "ab:rec")),
+                 btn(t(lang, "btn.reset_points"), cb("cc", "ab:reset"))])
+    rows.append([btn(t(lang, "btn.continue"), cb("cc", "ab:ok"))])
+    return "\n".join(lines), markup(rows)
+
+
+async def got_ability(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    q = update.callback_query
+    lang = context.user_data.get("lang", "es")
+    c = get_content()
+    new = context.user_data.get("new", {})
+    if not {"name", "gender", "lineage", "background", "class", "scores"} <= set(new):
+        await q.answer()
+        return ABILITIES
+    parts = q.data.split("|")[1].split(":")[1:]
+    scores = new["scores"]
+    if parts[0] == "ok":
+        left = pointbuy.left(scores)
+        if left > 0:
+            await q.answer(t(lang, "create.points_left", left=left), show_alert=True)
+            return ABILITIES
+        await q.answer()
+        return await _summary(update, new, lang)
+    if parts[0] in pointbuy.ABILITIES and len(parts) == 2 and parts[1] == "i":
+        info = c.abilities[parts[0]]
+        await q.answer(f"{info.name.get(lang)}: {info.effect.get(lang)}"[:200], show_alert=True)
+        return ABILITIES
+    if parts[0] == "rec":
+        new["scores"] = dict(c.classes[new["class"]].array)
+    elif parts[0] == "reset":
+        new["scores"] = pointbuy.base()
+    elif parts[0] in pointbuy.ABILITIES and len(parts) == 2:
+        before = scores
+        new["scores"] = pointbuy.change(scores, parts[0], 1 if parts[1] == "+" else -1)
+        if new["scores"] == before:
+            await q.answer(t(lang, "create.cannot_change"), show_alert=False)
+            return ABILITIES
+    await q.answer()
+    text, kb = abilities_panel(new, lang)
+    await edit_or_send(update, text, kb)
+    return ABILITIES
+
+
+async def _summary(update: Update, new: dict, lang: str) -> int:
+    c = get_content()
+    cls = c.classes[new["class"]]
+    scores = characters.starting_scores(new["class"], new["lineage"], new["scores"])
     stats = " · ".join(f"{c.abilities[a].short.get(lang)} {scores[a]} ({modifier(scores[a]):+d})" for a in c.abilities)
     hp = max_hp(cls.hit_die, modifier(scores["con"]), 1)
     text = t(lang, "create.summary", name=escape(new["name"]), gender=t(lang, f"gender.{new['gender']}"),
@@ -138,14 +211,15 @@ async def confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         await edit_or_send(update, t(lang, "create.ask_name"))
         return NAME
     new = context.user_data.get("new", {})
-    if not {"name", "gender", "lineage", "background", "class"} <= set(new):
+    if not {"name", "gender", "lineage", "background", "class", "scores"} <= set(new):
         await edit_or_send(update, t(lang, "create.ask_name"))
         return NAME
     async with session_scope() as session:
         user, char = await load(session, update, lock=True)
         if char is None:
             char = await characters.create_character(session, user, new["name"], new["lineage"],
-                                                     new["background"], new["class"], new["gender"])
+                                                     new["background"], new["class"], new["gender"],
+                                                     scores=new.get("scores"))
             await audit.log(session, user_id=user.id, character_id=char.id, verb="create", payload=new)
         text, kb = await current_view(session, char, lang)
     context.user_data.pop("new", None)
@@ -172,6 +246,7 @@ def handler() -> ConversationHandler:
             LINEAGE: [CallbackQueryHandler(got_lineage, pattern=r"^cc\|lin:")],
             BACKGROUND: [CallbackQueryHandler(got_background, pattern=r"^cc\|bg:")],
             CLASS: [CallbackQueryHandler(got_class, pattern=r"^cc\|cls:")],
+            ABILITIES: [CallbackQueryHandler(got_ability, pattern=r"^cc\|ab:")],
             CONFIRM: [CallbackQueryHandler(confirm, pattern=r"^cc\|(ok|redo)")],
         },
         fallbacks=[CommandHandler("cancel", cancel), CommandHandler("start", start)],

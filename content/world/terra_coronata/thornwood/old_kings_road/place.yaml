@@ -10,6 +10,7 @@ description:
 exits:
   - {to: crownreach_plaza, minutes: 30, danger: 1}
   - {to: whispering_woods, minutes: 40, danger: 2}
+  - {to: tusk_meadow, minutes: 30, danger: 1}
 encounters:
   - {monsters: [bandit], weight: 3}
   - {monsters: [bandit, bandit], weight: 2}

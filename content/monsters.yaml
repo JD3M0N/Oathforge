@@ -11,6 +11,10 @@ bandit:
   loot:
     - {item: dagger, chance: 0.2}
   cowardly: true
+  habitat: {es: Camino del Viejo Rey, en: Old King's Road}
+  lore:
+    es: Desertores y campesinos arruinados que viven de asaltar caravanas. Huyen en cuanto el combate se tuerce.
+    en: Deserters and ruined farmers who live off raiding caravans. They run as soon as a fight turns against them.
 
 bandit_captain:
   name: {es: Capitán bandido, en: Bandit captain}
@@ -25,6 +29,10 @@ bandit_captain:
   gold: 4d10
   loot:
     - {item: healing_potion, chance: 0.5}
+  habitat: {es: Camino del Viejo Rey, en: Old King's Road}
+  lore:
+    es: Manda a los bandidos del camino. Sus golpes abren heridas que sangran durante varios turnos.
+    en: Leads the road bandits. Their cuts open wounds that keep bleeding for several turns.
 
 goblin_scout:
   name: {es: Goblin explorador, en: Goblin scout}
@@ -42,6 +50,10 @@ goblin_scout:
     - {item: shortbow, chance: 0.1}
     - {item: torch, chance: 0.4}
   cowardly: true
+  habitat: {es: Camino del Viejo Rey y Bosque de los Susurros, en: Old King's Road and Whispering Woods}
+  lore:
+    es: Dispara desde la retaguardia. Ataca primero a quien lo amenaza de cerca.
+    en: Shoots from the back row. Strike it first if you can reach it.
 
 grey_wolf:
   name: {es: Lobo gris, en: Grey wolf}
@@ -54,34 +66,42 @@ grey_wolf:
     - {name: {es: Mordisco, en: Bite}, to_hit: 4, damage: 2d4+2, damage_type: piercing, applies: {status: bleeding, turns: 2, chance: 0.25}}
   xp: 50
   type: beast
+  habitat: {es: Bosque de los Susurros, en: Whispering Woods}
+  lore:
+    es: Caza en manada. Su mordisco puede dejar al objetivo sangrando.
+    en: Hunts in packs. Its bite can leave its prey bleeding.
 
 crypt_skeleton:
   name: {es: Esqueleto de la cripta, en: Crypt skeleton}
   description: {es: Huesos unidos por una voluntad que no es la suya., en: Bones bound together by a will not their own.}
-  hp: 13
+  hp: 11
   ac: 13
   dex: 2
   attacks:
-    - {name: {es: Espada oxidada, en: Rusted sword}, to_hit: 4, damage: 1d6+2, damage_type: slashing}
+    - {name: {es: Espada oxidada, en: Rusted sword}, to_hit: 3, damage: 1d6+1, damage_type: slashing}
   xp: 50
   gold: 1d4
   immune: [poisoned, frightened, bleeding]
   type: undead
   vulnerable: [bludgeoning, radiant]
   immune_damage: [poison]
+  habitat: {es: Cripta Hundida, en: Sunken Crypt}
+  lore:
+    es: Soldados de Ser Aldren que siguen montando guardia. Las mazas y la luz sagrada los hacen pedazos.
+    en: Ser Aldren's soldiers, still standing guard. Maces and holy light shatter them.
 
 crypt_warden:
   name: {es: Guardián de la Cripta, en: Crypt Warden}
   description:
     es: Un caballero muerto hace siglos, aún fiel a un juramento que nadie recuerda.
     en: A knight dead for centuries, still loyal to an oath no one remembers.
-  hp: 45
+  hp: 40
   ac: 15
   dex: 0
   wis: 2
   attacks:
-    - {name: {es: Espadón espectral, en: Spectral greatsword}, to_hit: 5, damage: 1d10+2, damage_type: necrotic, applies: {status: frightened, turns: 1, chance: 0.35}}
-    - {name: {es: Lamento helado, en: Freezing wail}, to_hit: 5, damage: 2d4, damage_type: cold, ranged: true}
+    - {name: {es: Espadón espectral, en: Spectral greatsword}, to_hit: 4, damage: 1d8+2, damage_type: necrotic, applies: {status: frightened, turns: 1, chance: 0.25}}
+    - {name: {es: Lamento helado, en: Freezing wail}, to_hit: 4, damage: 2d4, damage_type: cold, ranged: true}
   xp: 700
   gold: 6d10
   loot:
@@ -91,3 +111,69 @@ crypt_warden:
   vulnerable: [radiant]
   resist: [necrotic, cold]
   immune_damage: [poison]
+  habitat: {es: "Cripta Hundida: santuario", en: "Sunken Crypt: sanctum"}
+  lore:
+    es: >-
+      Ser Aldren juró custodiar el relicario hasta que una mano honesta lo devolviera. Su espadón infunde
+      miedo; la luz sagrada le hace mucho daño.
+    en: >-
+      Ser Aldren swore to guard the reliquary until an honest hand returned it. His greatsword instills
+      fear; holy light hurts him badly.
+
+boar:
+  name: {es: Jabalí, en: Boar}
+  description: {es: Una bestia de cerdas negras y colmillos curvos que no retrocede., en: A black-bristled beast with curved tusks that never backs down.}
+  hp: 11
+  ac: 11
+  dex: 0
+  attacks:
+    - {name: {es: Colmillo, en: Tusk}, to_hit: 3, damage: 1d6+1, damage_type: slashing}
+  xp: 25
+  loot:
+    - {item: boar_tusk, chance: 0.6}
+  type: beast
+  active: day
+  habitat: {es: Prado de los Colmillos (de día), en: Tusk Meadow (by day)}
+  lore:
+    es: Hoza en los campos al sur de Crownreach y embiste a quien se acerque. Sus colmillos se venden bien en el mercado.
+    en: Roots through the fields south of Crownreach and charges anyone who comes close. Its tusks sell well at the market.
+
+cave_bat:
+  name: {es: Murciélago de cueva, en: Cave bat}
+  description: {es: Un murciélago del tamaño de un halcón que caza al anochecer., en: A hawk-sized bat that hunts at dusk.}
+  hp: 6
+  ac: 12
+  dex: 2
+  wis: 1
+  attacks:
+    - {name: {es: Mordisco, en: Bite}, to_hit: 4, damage: 1d4+1, damage_type: piercing}
+  xp: 15
+  loot:
+    - {item: bat_wing, chance: 0.5}
+  type: beast
+  active: night
+  habitat: {es: Prado de los Colmillos (de noche), en: Tusk Meadow (at night)}
+  lore:
+    es: Sale de las grietas del prado cuando cae el sol. Débil por separado, peligroso en bandada.
+    en: Pours out of the meadow's cracks when the sun sets. Weak alone, dangerous in a swarm.
+
+old_tusk:
+  name: {es: El Viejo Colmillo, en: Old Tusk}
+  description: {es: Un jabalí enorme cubierto de cicatrices y puntas de flecha rotas., en: A huge boar covered in scars and broken arrowheads.}
+  hp: 34
+  ac: 12
+  dex: 0
+  wis: 1
+  attacks:
+    - {name: {es: Embestida, en: Gore}, to_hit: 5, damage: 2d6+3, damage_type: slashing, applies: {status: bleeding, turns: 2, chance: 0.3}}
+  xp: 300
+  gold: 3d10
+  loot:
+    - {item: boar_tusk, chance: 1.0, qty: 3}
+  immune: [frightened]
+  type: beast
+  active: day
+  habitat: {es: Prado de los Colmillos, en: Tusk Meadow}
+  lore:
+    es: El patriarca de los jabalíes del prado. Los cazadores llevan veinte años intentando abatirlo.
+    en: The patriarch of the meadow boars. Hunters have been trying to bring it down for twenty years.

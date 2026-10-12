@@ -60,6 +60,7 @@ class Character(Base):
     flags: Mapped[dict] = mapped_column(Json, default=dict)
     resources: Mapped[dict] = mapped_column(Json, default=dict)  # ability uses left
     conditions: Mapped[dict] = mapped_column(Json, default=dict)  # e.g. {"injured": true}
+    bestiary: Mapped[dict] = mapped_column(Json, default=dict)  # monster -> {"seen": n, "killed": n}
     version: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
@@ -199,6 +200,7 @@ class QuestProgress(Base):
     quest_key: Mapped[str] = mapped_column(String(64))
     stage: Mapped[str] = mapped_column(String(64))
     state: Mapped[str] = mapped_column(String(16))
+    counters: Mapped[dict] = mapped_column(Json, default=dict)  # objective index -> progress
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
 
 

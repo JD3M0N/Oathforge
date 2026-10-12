@@ -1,4 +1,8 @@
-"""Data-driven quests: stages, player actions and triggers from quests.yaml."""
+"""Data-driven quests: stages, player actions and triggers from quests.yaml.
+
+Missions add counted objectives (kill / talk / visit) that complete them on their own, and a
+chain: a locked mission opens when the previous one is completed or a flag is set.
+"""
 
 import random
 from dataclasses import dataclass
@@ -7,7 +11,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from oathforge.content import get_content
-from oathforge.content.schemas import Quest, QuestAction
+from oathforge.content.schemas import Quest, QuestAction, QuestObjective
 from oathforge.database.models import Character, QuestProgress
 from oathforge.engine.checks import check, dc_for
 from oathforge.engine.dice import roll
@@ -31,6 +35,95 @@ async def progress(session: AsyncSession, char: Character, lock: bool = False) -
     if lock:
         stmt = stmt.with_for_update()
     return {p.quest_key: p for p in await session.scalars(stmt)}
+
+
+def ordered_quests() -> list[tuple[str, Quest]]:
+    return sorted(get_content().quests.items(), key=lambda kv: kv[1].order)
+
+
+async def ensure_progress(session: AsyncSession, char: Character) -> dict[str, QuestProgress]:
+    """Locked progress rows, creating the ones a character made before a quest existed."""
+    prog = await progress(session, char, lock=True)
+    for qkey, quest in get_content().quests.items():
+        if qkey not in prog:
+            row = QuestProgress(character_id=char.id, quest_key=qkey, stage=quest.start_stage,
+                                state=quest.stages[quest.start_stage].state, counters={})
+            session.add(row)
+            prog[qkey] = row
+    await session.flush()
+    return prog
+
+
+def _unlocked(quest: Quest, prog: dict[str, QuestProgress], char: Character) -> bool:
+    if quest.after is None and quest.unlock_flag is None:
+        return False
+    after_ok = quest.after is None or (quest.after in prog and prog[quest.after].state == "completed")
+    flag_ok = quest.unlock_flag is None or bool(char.flags.get(quest.unlock_flag))
+    return after_ok and flag_ok
+
+
+async def refresh(session: AsyncSession, char: Character, out: Outcome) -> None:
+    """Open every locked mission whose requirement is now met (chains can open several at once)."""
+    prog = await ensure_progress(session, char)
+    changed = True
+    while changed:
+        changed = False
+        for qkey, quest in ordered_quests():
+            p = prog[qkey]
+            if p.state == "locked" and quest.unlock_stage and _unlocked(quest, prog, char):
+                p.stage = quest.unlock_stage
+                p.state = quest.stages[quest.unlock_stage].state
+                out.add("quest.new", quest=quest.name.model_dump())
+                changed = True
+
+
+def objective_progress(quest: Quest, p: QuestProgress | None) -> list[tuple[QuestObjective, int]]:
+    counters = (p.counters if p is not None else None) or {}
+    done = p is not None and p.state == "completed"
+    return [(o, o.count if done else min(o.count, int(counters.get(str(i), 0))))
+            for i, o in enumerate(quest.objectives)]
+
+
+def objective_target(obj: QuestObjective) -> dict:
+    c = get_content()
+    pool = {"kill": c.monsters, "talk": c.npcs, "visit": c.locations}[obj.kind]
+    return pool[obj.target].name.model_dump()
+
+
+async def advance(session: AsyncSession, char: Character, kind: str, target: str, rng: random.Random) -> Outcome:
+    """Count a kill / talk / visit towards active missions; completing one gives its rewards."""
+    out = Outcome()
+    prog = await ensure_progress(session, char)
+    for qkey, quest in ordered_quests():
+        p = prog[qkey]
+        if p.state != "active" or p.stage != quest.objective_stage:
+            continue
+        counters = dict(p.counters or {})
+        hit = None
+        for i, obj in enumerate(quest.objectives):
+            if obj.kind == kind and obj.target == target and int(counters.get(str(i), 0)) < obj.count:
+                counters[str(i)] = int(counters.get(str(i), 0)) + 1
+                hit = (obj, counters[str(i)])
+        if hit is None:
+            continue
+        p.counters = counters
+        if all(int(counters.get(str(i), 0)) >= o.count for i, o in enumerate(quest.objectives)):
+            out.text(quest.stages[quest.complete_stage].journal)
+            await apply_effects(session, char, quest.rewards, out, rng)
+            _set_stage(quest, p, quest.complete_stage, out)
+        elif hit[0].count > 1:
+            out.add("quest.progress", quest=quest.name.model_dump(), target=objective_target(hit[0]),
+                    n=hit[1], count=hit[0].count)
+    await refresh(session, char, out)
+    return out
+
+
+async def on_talk(session: AsyncSession, char: Character, npc: str, rng: random.Random) -> Outcome:
+    return await advance(session, char, "talk", npc, rng)
+
+
+async def on_visit(session: AsyncSession, char: Character, location: str, rng: random.Random) -> Outcome:
+    return await advance(session, char, "visit", location, rng)
 
 
 async def available_actions(
@@ -86,23 +179,22 @@ async def perform(
             await apply_effects(session, char, action.check.failure_effects, out, rng)
     await apply_effects(session, char, action.effects, out, rng)
     _set_stage(quest, prog, action.to_stage, out)
+    await refresh(session, char, out)
     return out
 
 
 async def on_defeat(session: AsyncSession, char: Character, monster_key: str, rng: random.Random) -> Outcome:
     out = Outcome()
-    prog = await progress(session, char, lock=True)
+    prog = await ensure_progress(session, char)
     for qkey, quest in get_content().quests.items():
-        p = prog.get(qkey)
-        if p is None:
-            continue
+        p = prog[qkey]
         for trig in quest.triggers:
             if trig.event == "defeat" and trig.target == monster_key and p.stage in trig.stages:
                 out.text(trig.text)
                 await apply_effects(session, char, trig.effects, out, rng)
                 _set_stage(quest, p, trig.to_stage, out)
                 break
-    return out
+    return out.extend(await advance(session, char, "kill", monster_key, rng))
 
 
 def _set_stage(quest: Quest, p: QuestProgress, stage: str, out: Outcome) -> None:
@@ -149,10 +241,17 @@ async def apply_effects(session: AsyncSession, char: Character, effects: list[di
             await npcs.add_rumor(session, text, source=f"character:{char.id}", tags=[f"character:{char.id}"])
 
 
-async def journal(session: AsyncSession, char: Character) -> list[tuple[Quest, QuestProgress]]:
-    c = get_content()
+async def journal(session: AsyncSession, char: Character) -> list[tuple[str, Quest, QuestProgress | None]]:
+    """Every quest in mission order with its progress (None: the character predates the quest)."""
     prog = await progress(session, char)
-    return [(c.quests[k], p) for k, p in prog.items() if k in c.quests]
+    return [(k, q, prog.get(k)) for k, q in ordered_quests()]
+
+
+def stage_of(quest: Quest, p: QuestProgress | None) -> tuple[str, str]:
+    """(stage, state), falling back to the quest's start for rows not created yet."""
+    if p is None:
+        return quest.start_stage, quest.stages[quest.start_stage].state
+    return p.stage, p.state
 
 
 async def location_texts(session: AsyncSession, char: Character) -> list[dict]:
@@ -160,6 +259,8 @@ async def location_texts(session: AsyncSession, char: Character) -> list[dict]:
     c = get_content()
     out = []
     for k, p in (await progress(session, char)).items():
+        if k not in c.quests:
+            continue
         stage = c.quests[k].stages.get(p.stage)
         if stage and char.location in stage.location_text:
             out.append(stage.location_text[char.location].model_dump())
