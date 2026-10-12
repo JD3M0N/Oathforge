@@ -4,6 +4,19 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.5.6] - 2026-10-12
+
+### Cambiado
+- **La subida de nivel llega en un mensaje propio**, después del de XP, oro y botín, en lugar de mezclarse con ellos. Una tarjeta por nivel ganado:
+  - ❤️ PV máximos antes → después (+lo ganado).
+  - 💪 Mejora de atributo (nivel 4).
+  - Cada habilidad nueva con su icono, tipo (pasiva, acción, acción adicional y usos por descanso) y su descripción.
+  - Enlace `/class_<clase>` para ver la clase entera.
+- Los eventos `progress.level_up` y `progress.new_ability` llevan la clase, la clave de la habilidad y los PV máximos anteriores.
+- Nuevo helper `send_outcome` en los handlers: mensaje de viñetas y después las tarjetas de nivel. Lo usan las acciones con botón, hablar con NPC, el texto libre y el final del combate.
+- `TODO.md` ordenado: lo hecho pasa a «Hecho», las notas sueltas van a su sección, las pociones se dejan para la 0.6.0 con la alquimia y moverse por `/map` para más adelante.
+- Roadmap: la alquimia y las pociones pasan a la 0.6.0, junto a las especializaciones.
+
 ## [0.5.5] - 2026-10-12
 
 ### Añadido

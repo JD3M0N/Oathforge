@@ -18,15 +18,14 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 
 ## ⚔️ Combate y balance · [combate.md](planning/combate.md)
 
-- [x] 🔴 **Simulación de batallas** para probar el balance: `python -m oathforge.tools.simulate`, cientos de combates clase × enemigo, estadísticas en `artifacts/simulations/`. *Hecho en v0.5.4 (`oathforge simulate`).*
+- [ ] 🔴 **Panel de combate más bonito y fácil de leer**: CA con escudo (🛡️) junto a cada combatiente, emoji de crítico (💥), golpe y daño en un solo bloque y separador por ronda.
+- [ ] 🔴 **Informe de batalla** (`/report` y botón al acabar): resumen (daño hecho y recibido, críticos, rondas, recompensas) y lo que pasó en cada ronda, para entender una victoria o una derrota.
 - [ ] 🟡 IA enemiga táctica (proteger al sanador, priorizar amenazas) y jefes por fases con aviso previo.
-- [ ] 🟡 Resumen al final del combate (daño hecho y recibido, críticos, turnos, recompensas).
-- [x] 🟡 Probar que el d20 es justo: test estadístico de la distribución de las tiradas. *Hecho en v0.5.3 (`tests/engine/test_dice_fairness.py`).*
 - [ ] 🟢 Nuevos tipos de acción: defender a un aliado, negociar una tregua, rendirse.
-- [ ] 🟢 Repetición del combate (dados y acciones) para entender una derrota.
 
 ## 🧙 Clases y progresión · [clases.md](planning/clases.md) · [progresion.md](planning/progresion.md)
 
+- [ ] 🔴 **Ver cada clase y sus habilidades**: `/classes` y `/class_<clase>` (dado de golpe, atributo principal, habilidades por nivel con su descripción, especializaciones), enlazado desde la subida de nivel y la ficha.
 - [ ] 🔴 Elegir especialización a nivel 5. *La ficha completa ya muestra la especialización cuando exista; con la cadena de misiones de v0.5.0 se llega a nivel 5 enseguida.*
 - [ ] 🟡 ◐ **Sistema de descanso**: descanso corto en cualquier sitio (recuperar parte de la vida y algunos usos) y largo en posada. *Hecho: posada de La Corona Rota (5 oro) y descanso gratis en el osario de la cripta (v0.5.0).*
 - [ ] 🟡 Siguiente clase: Explorador (Mago, Druida y Bardo en v0.4.0; Brujo en v0.4.4).
@@ -51,6 +50,8 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🟢 **Publicar en los canales de Telegram** ([inglés](https://t.me/OathForge), [español](https://t.me/OathForge_es)) desde el bot: el changelog de cada versión y el periódico *Herald of Aetherfall* con los rumores confirmados del mundo. Hoy los anuncios se publican a mano.
 - [ ] 🔴 Grupos de expedición y combate en grupo (0.8.0).
 - [ ] 🟡 ◐ Comandos nuevos: `/map`, `/quests`, `/rest`, `/party`. *Hecho: `/quests` (v0.5.0).*
+- [ ] 🟡 Pruebas de habilidad más claras: hoy salen como «🎲 Survival: 2 → 3 vs DC 13 ❌».
+- [ ] 🟢 Moverse más cómodo con `/map`: por ejemplo, tras matar al jefe de la Cripta, salir y volver a la ciudad desde el mapa.
 - [ ] 🟡 Mensaje de estado que se edita en lugar de mandar muchos mensajes.
 - [ ] 🟢 Duelos PvP con consentimiento y sin pérdidas.
 
@@ -58,7 +59,8 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 
 - [ ] 🟡 ◐ **Bestiario**: ir añadiendo criaturas poco a poco (descripción, hábitat, de día o de noche, estadísticas y puntos débiles). *Hecho (v0.5.0): 9 criaturas y ficha que se desbloquea al verlas y derrotarlas.*
 - [ ] 🟡 Más misiones después del nivel 5 y misiones secundarias repetibles (encargos de caza diarios).
-- [ ] 🟡 Primera profesión (herrería con Tessa o alquimia con hierbas del Bosque) y recetas (0.7.0). *Los colmillos de jabalí y las alas de murciélago ya se venden y pueden servir de materiales.*
+- [ ] 🟡 **Alquimia y sistema de pociones nuevo (0.6.0)**: hierbas del Bosque, recetas y pociones mejores que la de curación actual.
+- [ ] 🟡 Herrería con Tessa y recetas (0.7.0). *Los colmillos de jabalí y las alas de murciélago ya se venden y pueden servir de materiales.*
 - [ ] 🟡 Sumideros de oro: reparaciones, tasas, viajes.
 - [ ] 🟡 `world_facts` y eventos encadenados (por ejemplo, la crisis del hierro).
 - [ ] 🟢 Rumores con veracidad (verdadero, falso, incompleto) que se puedan investigar.
@@ -95,11 +97,8 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] Arreglados los `TimedOut` al subir retratos y los reintentos a Gemini con la cuota diaria agotada (v0.5.0).
 - [x] `/roll`: tiradas manuales opcionales con el dado animado de Telegram para las pruebas de habilidad (v0.5.1).
 - [x] Retratos de hombre y mujer para todas las clases, salvo la barda (v0.5.1).
-
--mejorar el momento del lv up
--reporte de batalla
--mejorar sistema de combate
--mejorar : • 🎲 Survival: 2 → 3 vs DC 13 ❌
--actualizar sistema de pociones
--como veo las habilidades? • 🌟 New ability: Aura of Resolve.
--si mataste el boss que puedas salir de la cripta y q el mismo juego te deje ir de la cripta a la ciudad con /map
+- [x] Una tirada por habilidad y lugar al día: no se puede repetir hasta que salga (v0.5.2).
+- [x] Probar que el d20 es justo: test estadístico de la distribución de las tiradas (v0.5.3, `tests/engine/test_dice_fairness.py`).
+- [x] Simulación de batallas para el balance: `oathforge simulate`, estadísticas en `artifacts/simulations/` (v0.5.4).
+- [x] `oathforge tgtest`: probar el bot de punta a punta desde una cuenta de Telegram (v0.5.5).
+- [x] Subida de nivel en un mensaje propio: PV antes → después, mejora de atributo y cada habilidad nueva con su descripción (v0.5.6).

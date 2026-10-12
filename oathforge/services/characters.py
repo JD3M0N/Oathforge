@@ -256,9 +256,10 @@ def grant_xp(char: Character, amount: int, out: Outcome) -> None:
         for key, ability in cls.abilities.items():
             if ability.level == char.level:
                 resources[key] = ability.uses if ability.kind != "passive" else None
-                out.add("progress.new_ability", ability=ability.name.model_dump())
+                out.add("progress.new_ability", ability=ability.name.model_dump(), cls=char.class_key, ability_key=key)
         char.resources = {k: v for k, v in resources.items() if k in full_resources(char.class_key, char.level)}
-        out.add("progress.level_up", level=char.level, max_hp=char.max_hp)
+        out.add("progress.level_up", level=char.level, max_hp=char.max_hp, prev_max_hp=old_max,
+                cls=char.class_key)
         if char.level == 5:
             out.add("progress.specialization_soon")
 

@@ -7,7 +7,7 @@ from telegram.ext import ContextTypes, MessageHandler, filters
 
 from oathforge.bot import render
 from oathforge.bot.handlers import callbacks
-from oathforge.bot.handlers.common import current_view, keep_typing, load, rate_ok, rng, send
+from oathforge.bot.handlers.common import current_view, keep_typing, load, rate_ok, rng, send, send_outcome
 from oathforge.database.session import session_scope
 from oathforge.i18n import t
 from oathforge.services import actions
@@ -52,19 +52,23 @@ async def on_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         _, char = await load(session, update)
         if out.error:
             context.user_data.pop("talk", None)
-            await send(update, render.outcome_text(out, lang))
+            await send_outcome(update, out, lang)
             view, kb = await current_view(session, char, lang)
         else:
             view, kb = await render.conversation(session, char, npc, lang, line=line)
-            if out.events:
-                view += "\n\n" + render.outcome_text(out, lang)
+            events = render.outcome_text(out, lang)
+            if events:
+                view += "\n\n" + events
     await send(update, view, kb)
+    if not out.error:
+        for card in render.level_up_cards(out, lang):
+            await send(update, card)
 
 
 async def show_free_text(update: Update, context: ContextTypes.DEFAULT_TYPE, result: actions.FreeTextResult) -> None:
     lang = context.user_data.get("lang", "es")
     if result.outcome.events or result.narration:
-        await send(update, render.outcome_text(result.outcome, lang, result.narration))
+        await send_outcome(update, result.outcome, lang, result.narration)
     async with session_scope() as session:
         _, char = await load(session, update)
         view, kb = await current_view(session, char, lang)

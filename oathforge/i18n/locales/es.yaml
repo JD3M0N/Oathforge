@@ -251,6 +251,18 @@ progress:
   asi: "Tu {ability} aumenta en 2."
   skill_rank: "Tu dominio de {skill} mejora (rango {rank})."
   specialization_soon: "Has alcanzado el nivel 5. Pronto podrás elegir una especialización."
+  card_title: "🎉 <b>¡NIVEL {level}!</b>"
+  card_hp: "❤️ PV máximos: {prev} → <b>{max_hp}</b> (+{gain})"
+  card_new: "<b>Nueva habilidad</b>"
+  card_class: "📖 Tu clase: {cmd}"
+
+ability:
+  passive: "pasiva"
+  action:
+    action: "acción"
+    bonus: "acción adicional"
+  uses: "{n} usos por descanso"
+  unlimited: "sin límite"
 
 steal:
   success: "Le quitas {gold} de oro a {npc} sin que lo note."

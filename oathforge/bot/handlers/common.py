@@ -15,6 +15,7 @@ from oathforge.bot import render
 from oathforge.content.media import MediaAsset
 from oathforge.database.models import Character, User
 from oathforge.services import characters, combat_service, media
+from oathforge.services.events import Outcome
 
 log = logging.getLogger(__name__)
 
@@ -85,6 +86,15 @@ async def send(update: Update, text: str, kb: InlineKeyboardMarkup | None = None
     await update.effective_chat.send_message(text, parse_mode=ParseMode.HTML, reply_markup=kb,
                                              disable_web_page_preview=True)
     _record(update, text, kb, edited=False)
+
+
+async def send_outcome(update: Update, outcome: Outcome, lang: str, narration: str | None = None) -> None:
+    """Results as one bullet message, then each level gained as a card of its own."""
+    text = render.outcome_text(outcome, lang, narration)
+    if text:
+        await send(update, text)
+    for card in render.level_up_cards(outcome, lang):
+        await send(update, card)
 
 
 async def edit_or_send(update: Update, text: str, kb: InlineKeyboardMarkup | None = None) -> None:

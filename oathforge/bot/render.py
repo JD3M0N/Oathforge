@@ -25,14 +25,74 @@ def hp_bar(hp: int, max_hp: int, width: int = 8) -> str:
     return "▰" * filled + "▱" * (width - filled)
 
 
+RULE = "━━━━━━━━━━━━"
+# level-up events leave the bullet list and get a card of their own (level_up_cards)
+LEVEL_KEYS = {"progress.level_up", "progress.new_ability", "progress.asi", "progress.specialization_soon"}
+ABILITY_ICON = {"strike": "⚔️", "spell": "🔮", "turn": "☀️", "buff": "🎶", "surge": "💢", "heal": "💚",
+                "hide": "🥷", "save": "🌀", "curse": "🕯️", "passive": "🌟"}
+
+
 def outcome_text(outcome: Outcome, lang: str, narration: str | None = None) -> str:
     parts: list[str] = []
     if narration:
         parts.append(f"<i>{escape(narration)}</i>")
     for ev in outcome.events:
+        if ev.key in LEVEL_KEYS:
+            continue
         line = escape(render_event(ev, lang))
         parts.append(line if ev.key == "text" else f"• {line}")
     return "\n\n".join(p for p in parts if p)[:MAX_MESSAGE]
+
+
+def ability_tags(a, lang: str) -> str:
+    """'pasiva' or 'acción adicional · 2 usos/descanso'."""
+    if a.kind == "passive" or a.action == "none":
+        return t(lang, "ability.passive")
+    tags = [t(lang, f"ability.action.{a.action}")]
+    tags.append(t(lang, "ability.uses", n=a.uses) if a.uses else t(lang, "ability.unlimited"))
+    return " · ".join(tags)
+
+
+def ability_block(a, lang: str, prefix: str = "") -> list[str]:
+    """Name, tags and description of a class ability, as in the level-up card and /class_<key>."""
+    icon = ABILITY_ICON.get(a.kind, "✨")
+    return [f"{prefix}{icon} <b>{escape(a.name.get(lang))}</b> · {ability_tags(a, lang)}",
+            f"      <i>{escape(a.description.get(lang))}</i>"]
+
+
+def level_up_cards(outcome: Outcome, lang: str) -> list[str]:
+    """One message per level gained: HP before → after, attribute boost and each new ability explained."""
+    c = get_content()
+    cards: list[str] = []
+    pending: list = []
+    for ev in outcome.events:
+        if ev.key not in LEVEL_KEYS:
+            continue
+        if ev.key == "progress.specialization_soon" and cards:  # comes after its level_up
+            cards[-1] += "\n\n" + escape(render_event(ev, lang))
+            continue
+        pending.append(ev)
+        if ev.key != "progress.level_up":
+            continue
+        p = ev.params
+        lines = [t(lang, "progress.card_title", level=p["level"]), RULE,
+                 t(lang, "progress.card_hp", prev=p.get("prev_max_hp", p["max_hp"]), max_hp=p["max_hp"],
+                   gain=p["max_hp"] - p.get("prev_max_hp", p["max_hp"]))]
+        cls_key = p.get("cls")
+        for e in pending:
+            if e.key == "progress.asi":
+                lines.append("💪 " + escape(render_event(e, lang)))
+            elif e.key == "progress.new_ability":
+                a = c.classes[cls_key].abilities.get(e.params.get("ability_key")) if cls_key in c.classes else None
+                if a is None:
+                    lines.append(escape(render_event(e, lang)))
+                else:
+                    lines += ["", t(lang, "progress.card_new"), *ability_block(a, lang)]
+        if cls_key:
+            lines += ["", t(lang, "progress.card_class", cmd=f"/class_{cls_key}")]
+        cards.append("\n".join(lines)[:MAX_MESSAGE])
+        pending = []
+    return cards
 
 
 def status_line(char: Character, lang: str) -> str:

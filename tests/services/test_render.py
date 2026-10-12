@@ -121,3 +121,28 @@ async def test_hero_sheet_shows_gear_and_ai_budget(lang):
     assert Settings.model_fields["ai_user_daily_calls"].default == 150  # testing phase (0.2.x)
     assert get_content().items["longsword"].name.get(lang) in text
     assert "🔒" in text  # higher-level abilities appear locked
+
+
+@pytest.mark.parametrize("lang", ["es", "en"])
+async def test_level_up_cards_are_separate_messages(lang):
+    from oathforge.services.events import Outcome
+
+    async with session_scope() as s:
+        user = await characters.get_or_create_user(s, 7, lang)
+        char = await characters.create_character(s, user, "Edda", "dwarf", "acolyte", "paladin")
+        out = Outcome().add("loot.gold", gold=5)
+        start_hp = char.max_hp
+        characters.grant_xp(char, 1800, out)  # level 1 → 5 at once
+
+    bullets = render.outcome_text(out, lang)
+    assert "🪙" in bullets and "✨" in bullets  # gold and XP stay in the bullet message
+    assert "🎉" not in bullets and "🌟" not in bullets
+    cards = render.level_up_cards(out, lang)
+    assert len(cards) == 4  # one card per level gained
+    for card in cards:
+        check(card)
+        assert "/class_paladin" in card and "progress." not in card and "ability." not in card
+    aura = get_content().classes["paladin"].abilities["aura_of_resolve"]
+    assert aura.description.get(lang) in cards[1]  # level 3 explains the new ability
+    assert f"{start_hp} →" in cards[0]
+    assert "💪" in cards[2]  # level 4: attribute boost

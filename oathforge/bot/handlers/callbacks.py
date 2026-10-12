@@ -8,7 +8,7 @@ from telegram import Update
 from telegram.ext import CallbackQueryHandler, ContextTypes
 
 from oathforge.bot import render
-from oathforge.bot.handlers.common import current_view, edit_or_send, load, rate_ok, rng, send, send_photos
+from oathforge.bot.handlers.common import current_view, edit_or_send, load, rate_ok, rng, send, send_outcome, send_photos
 from oathforge.bot.keyboards import btn, cb, markup, parse
 from oathforge.content import get_content
 from oathforge.database.session import session_scope
@@ -115,7 +115,7 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
                 context.user_data.pop("talk", None)
             text, kb = await current_view(session, char, lang)
     if verb == "talk" and talked is not None and talked.events:
-        await send(update, render.outcome_text(talked, lang))
+        await send_outcome(update, talked, lang)
         await send(update, text, kb)
         return
     await edit_or_send(update, text, kb)
@@ -164,7 +164,7 @@ async def _act(update: Update, context, verb: str, arg: str, n: str, rolled_at: 
         await send(update, text, kb)
         return
     if out.events:
-        await send(update, render.outcome_text(out, lang))
+        await send_outcome(update, out, lang)
     await send(update, text, kb)
 
 
@@ -341,7 +341,7 @@ async def _combat(update: Update, context, arg: str, n: str) -> None:
         await send(update, "⚠️ " + t(lang, error))
     await edit_or_send(update, text, kb)
     if finished and summary.events:
-        await send(update, render.outcome_text(summary, lang))
+        await send_outcome(update, summary, lang)
 
 
 def fresh_token(token: str, version: int | None, turn_index: int) -> bool:
