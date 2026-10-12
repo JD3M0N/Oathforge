@@ -95,3 +95,11 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] Arreglados los `TimedOut` al subir retratos y los reintentos a Gemini con la cuota diaria agotada (v0.5.0).
 - [x] `/roll`: tiradas manuales opcionales con el dado animado de Telegram para las pruebas de habilidad (v0.5.1).
 - [x] Retratos de hombre y mujer para todas las clases, salvo la barda (v0.5.1).
+
+-mejorar el momento del lv up
+-reporte de batalla
+-mejorar sistema de combate
+-mejorar : • 🎲 Survival: 2 → 3 vs DC 13 ❌
+-actualizar sistema de pociones
+-como veo las habilidades? • 🌟 New ability: Aura of Resolve.
+-si mataste el boss que puedas salir de la cripta y q el mismo juego te deje ir de la cripta a la ciudad con /map
