@@ -101,6 +101,7 @@ Las misiones son máquinas de estados: `stages`, `actions` (botones o acciones l
   - Cada cambio de estado (PV, oro, objetos, misiones, memorias de PNJ, acciones de botón…) aparece también como «⚙️ estado» dentro de la conversación.
   - Se desactiva con `ARTIFACTS_ENABLED=false` en `.env`.
 - **Ronda de pruebas limpia:** para el bot y ejecuta `.venv\Scripts\oathforge reset-players --yes` (sin `--yes` solo muestra qué borraría).
+- **Probar desde Telegram:** `.venv\Scripts\oathforge tgtest send "/start"` y `tgtest press "Investigar"` juegan con el bot desde una cuenta de prueba (Telethon). Configuración y login en `oathforge/tools/tgtest.py`. En Git Bash, exporta `MSYS_NO_PATHCONV=1` para que `/start` no se convierta en una ruta.
 - **Balance:** `.venv\Scripts\oathforge simulate --level 1-5` lanza 200 combates por clase × enemigo × nivel (sin base de datos ni IA) y guarda la tabla en `artifacts/simulations/` (JSON y CSV). Opciones: `--classes`, `--monsters` (grupos con `+`, p. ej. `bandit+bandit`), `--n`, `--seed`, `--no-abilities`.
 
 ## Canales de Telegram

@@ -29,6 +29,11 @@ class Settings(BaseSettings):
     artifacts_enabled: bool = True
     artifacts_dir: Path = ROOT_DIR / "artifacts"
 
+    # oathforge tgtest: a real Telegram test account that plays the bot (https://my.telegram.org)
+    tg_test_api_id: int = 0
+    tg_test_api_hash: str = ""
+    tg_test_bot: str = ""  # the bot's @username
+
     default_language: str = "es"
     supported_languages: tuple[str, ...] = ("es", "en")
 

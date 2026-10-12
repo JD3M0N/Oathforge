@@ -4,6 +4,15 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.5.5] - 2026-10-12
+
+### Añadido
+- **`oathforge tgtest`**: una cuenta de Telegram de prueba juega con el bot de verdad (Telethon), para probar cambios de punta a punta.
+  - `login <teléfono>` y después `login <teléfono> <código>` (con `--password` si tiene verificación en dos pasos).
+  - `send "<texto>"` escribe al bot e imprime lo que responde, incluidos los mensajes editados, los botones y el dado. `press "<botón>"` pulsa un botón del último mensaje que lo tenga. `show -n N` muestra el historial.
+  - Configuración en `.env`: `TG_TEST_API_ID`, `TG_TEST_API_HASH` (de https://my.telegram.org) y `TG_TEST_BOT`. La sesión se guarda en `.telegram/`, que está en `.gitignore`.
+  - `telethon` pasa a las dependencias de desarrollo.
+
 ## [0.5.4] - 2026-10-12
 
 ### Añadido

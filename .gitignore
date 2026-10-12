@@ -7,3 +7,6 @@ __pycache__/
 
 # debug: conversations, battles, AI calls (oathforge/recorder.py)
 artifacts/
+
+# oathforge tgtest: login session of the Telegram test account
+.telegram/

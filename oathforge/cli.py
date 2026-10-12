@@ -8,6 +8,9 @@ COMMANDS = {
     "bot": ("", "arranca el bot de Telegram (Ctrl+C para pararlo)"),
     "reset-players": ("[--yes]", "borra todos los jugadores y sus datos para una ronda de pruebas limpia; "
                                  "sin --yes solo muestra qué borraría (para el bot antes)"),
+    "tgtest": ("login|send|press|show ...",
+               "juega con el bot desde una cuenta de Telegram de prueba (pruebas de punta a punta; "
+               "ver oathforge/tools/tgtest.py)"),
     "simulate": ("[--n 200] [--level 1-5] [--classes ...] [--monsters ...]",
                  "simula cientos de combates clase × enemigo para medir el balance; resultados en "
                  "artifacts/simulations/ (--help para todas las opciones)"),
@@ -63,6 +66,10 @@ def main(argv: list[str] | None = None) -> None:
         from oathforge.main import main as run_bot
 
         run_bot()
+    elif command == "tgtest":
+        from oathforge.tools.tgtest import main as tgtest
+
+        tgtest(args[1:])
     elif command == "simulate":
         from oathforge.tools.simulate import main as simulate
 

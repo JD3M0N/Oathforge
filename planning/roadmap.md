@@ -17,6 +17,7 @@ Versionado `0.x.y`: sube **y** (parche) en arreglos y cambios pequeños; sube **
 - **0.5.2**: una tirada por habilidad y lugar al día de juego (no se puede repetir hasta que salga).
 - **0.5.3**: test estadístico de que el d20 es justo.
 - **0.5.4**: simulador de batallas (`oathforge simulate`). Primera tirada (200 combates, enemigo único): a nivel 1 Paladín y Guerrero ganan ~73 % de media y Mago y Druida ~35 %; a nivel 5 todos superan el 90 %.
+- **0.5.5**: `oathforge tgtest`, pruebas de punta a punta desde una cuenta de Telegram de prueba.
 
 ## Próximo (candidatos)
 
