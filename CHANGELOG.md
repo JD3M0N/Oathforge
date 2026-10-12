@@ -4,6 +4,15 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.5.2] - 2026-10-12
+
+### Arreglado
+- **Ya no se puede repetir la misma tirada hasta que salga.** Una prueba de habilidad libre (escrita) se puede intentar una vez por habilidad y lugar al día de juego (4 h reales). Se desbloquea al día siguiente o al subir de nivel. Si se repite, sale «Ya intentaste {habilidad} aquí hoy».
+  - Investigar: cada secreto que se falla queda bloqueado hasta el día siguiente; si todos los pendientes están bloqueados, sale «Ya has registrado este lugar hoy».
+  - Con las tiradas manuales activadas, una tirada bloqueada no pide el dado.
+  - Prueba de habilidad e interacción con el entorno comparten bloqueo (misma habilidad, mismo lugar).
+  - Nueva columna `characters.checks_tried` (migración `0005`); guarda solo los intentos del día actual.
+
 ## [0.5.1] - 2026-10-11
 
 ### Añadido

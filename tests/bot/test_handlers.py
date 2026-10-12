@@ -460,6 +460,12 @@ async def test_manual_rolls_wait_for_the_die(llm, monkeypatch):
     await creation_free_roll(p)
     assert any("🎲 Sigilo" in t_ for t_, _ in p.chat.sent[-3:] if t_)
 
+    # the same check again today is refused without asking for the die
+    llm.json_queue.append({"type": "skill_check", "skill": "stealth", "tier": "easy"})
+    await p.say("me vuelvo a esconder")
+    assert "pending_roll" not in p.ctx.user_data
+    assert any("Ya intentaste Sigilo" in t_ for t_, _ in p.chat.sent[-3:] if t_)
+
     # off again: investigating resolves at once
     await p.press("rollset|off|-")
     await p.press("scene|-|-")

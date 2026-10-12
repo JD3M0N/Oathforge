@@ -8,6 +8,7 @@
 - Mejora de característica a nivel 4 (+2 a la principal).
 - Habilidades de clase nuevas por nivel; los usos se recuperan al descansar.
 - Las habilidades (skills) mejoran con el uso, con rendimientos decrecientes si repites lo mismo en 24 h (rango 0–3).
+- **v0.5.2**: una prueba de habilidad no se repite hasta que salga. Cada habilidad se puede intentar una vez por lugar y día de juego (4 h reales); cada secreto de Investigar, una vez al día. Se desbloquea al día siguiente o al subir de nivel (`characters.checks_tried`, `exploration.tried`).
 
 ## Ideas
 

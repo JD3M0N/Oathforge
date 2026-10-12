@@ -189,11 +189,53 @@ async def test_investigate_finds_discovery_once():
         char.location = "crypt_ossuary"
         gold0 = char.gold
         for seed in range(40):
+            char.checks_tried = {}  # a new day: failed secrets can be tried again
             await exploration.investigate(s, char, random.Random(seed))
         assert char.flags.get("found_ossuary_coins") and char.flags.get("warden_lore")
         assert char.gold == gold0 + 25
         out = await exploration.investigate(s, char, random.Random(0))
         assert out.events[0].key == "explore.nothing_more"
+
+
+class AlwaysOne(random.Random):
+    def randint(self, a, b):
+        return a
+
+
+async def test_failed_investigation_waits_for_tomorrow(monkeypatch):
+    _, cid = await new_character(cls="rogue", bg="scholar")
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        char.location = "crypt_ossuary"
+        out = await exploration.investigate(s, char, AlwaysOne())
+        assert out.events[-1].key == "explore.found_nothing"
+        assert (await exploration.investigate(s, char, random.Random(0))).events[0].key == "explore.already_tried"
+        tomorrow = exploration.time.time() + exploration.GAME_DAY_SECONDS
+        monkeypatch.setattr(exploration.time, "time", lambda: tomorrow)
+        assert (await exploration.investigate(s, char, AlwaysOne())).events[0].key == "check.result"
+
+
+async def test_free_check_once_per_skill_place_and_day(monkeypatch):
+    _, cid = await new_character()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        out, _ = await exploration.check_skill(s, char, "investigation", "medium", random.Random(0))
+        assert out.ok and out.events[0].key == "check.result"
+        out, ok = await exploration.check_skill(s, char, "investigation", "medium", random.Random(0))
+        assert not out.ok and out.error == "check.already_tried" and not ok
+        # another skill, or the same skill somewhere else, is a new attempt
+        assert (await exploration.check_skill(s, char, "perception", "medium", random.Random(0)))[0].ok
+        char.location = "broken_crown_tavern"
+        assert (await exploration.check_skill(s, char, "investigation", "medium", random.Random(0)))[0].ok
+        assert not (await exploration.check_skill(s, char, "investigation", "medium", random.Random(0)))[0].ok
+        # levelling up lets you try again
+        char.level += 1
+        assert (await exploration.check_skill(s, char, "investigation", "medium", random.Random(0)))[0].ok
+        # so does a new day, which also forgets older attempts
+        tomorrow = exploration.time.time() + exploration.GAME_DAY_SECONDS
+        monkeypatch.setattr(exploration.time, "time", lambda: tomorrow)
+        assert (await exploration.check_skill(s, char, "investigation", "medium", random.Random(0)))[0].ok
+        assert list(char.checks_tried) == ["free:investigation:broken_crown_tavern"]
 
 
 async def test_rest_costs_gold_and_restores():

@@ -21,6 +21,35 @@ def game_hour(now: float | None = None) -> int:
     return int((now % GAME_DAY_SECONDS) / GAME_DAY_SECONDS * 24)
 
 
+def game_day(now: float | None = None) -> int:
+    now = time.time() if now is None else now
+    return int(now // GAME_DAY_SECONDS)
+
+
+def tried(char: Character, key: str) -> bool:
+    """A check already attempted today at this level can't be retried until tomorrow or a level up."""
+    last = (char.checks_tried or {}).get(key)
+    return last is not None and last == [game_day(), char.level]
+
+
+def mark_tried(char: Character, key: str) -> None:
+    today = game_day()
+    kept = {k: v for k, v in (char.checks_tried or {}).items() if v[0] == today}
+    char.checks_tried = {**kept, key: [today, char.level]}
+
+
+def free_check_key(skill: str, location: str) -> str:
+    return f"free:{skill}:{location}"
+
+
+def open_discoveries(char: Character) -> dict:
+    """Secrets here not found yet and not already tried today."""
+    loc = get_content().locations[char.location]
+    return {k: d for k, d in loc.discoveries.items()
+            if not char.flags.get(d.sets_flag) and (not d.requires_flag or char.flags.get(d.requires_flag))
+            and not tried(char, f"discover:{k}")}
+
+
 def is_night(now: float | None = None) -> bool:
     h = game_hour(now)
     return h >= 20 or h < 6
@@ -99,7 +128,7 @@ async def hunt(session: AsyncSession, char: Character, rng: random.Random) -> Ou
 
 
 async def investigate(session: AsyncSession, char: Character, rng: random.Random) -> Outcome:
-    """Roll for every undiscovered secret here. Repeating is allowed; skill gains diminish."""
+    """Roll once for every undiscovered secret here; a failed secret can't be retried until tomorrow."""
     if char.state == "in_combat":
         return Outcome.refused("explore.err.in_combat")
     c = get_content()
@@ -109,11 +138,15 @@ async def investigate(session: AsyncSession, char: Character, rng: random.Random
     out = Outcome()
     if not pending:
         return out.add("explore.nothing_more")
+    pending = {k: d for k, d in pending.items() if not tried(char, f"discover:{k}")}
+    if not pending:
+        return out.add("explore.already_tried")
     skills = await characters.skills_of(session, char)
     found = False
     for key, disc in pending.items():
         dc = dc_for(disc.tier)
         res = check(rng, disc.skill, characters.skill_bonus(char, skills, disc.skill), dc)
+        mark_tried(char, f"discover:{key}")
         out.add("check.result", skill=c.skills[disc.skill].name.model_dump(), roll=res.kept, total=res.total,
                 dc=dc, result="✅" if res.success else "❌")
         if not res.success:
@@ -136,17 +169,21 @@ async def investigate(session: AsyncSession, char: Character, rng: random.Random
     return out
 
 
-async def check_skill(session: AsyncSession, char: Character, skill: str, tier: str, rng: random.Random,
-                      context: str) -> tuple[Outcome, bool]:
-    """A free-form skill check requested through the AI interpreter."""
+async def check_skill(session: AsyncSession, char: Character, skill: str, tier: str,
+                      rng: random.Random) -> tuple[Outcome, bool]:
+    """A free-form skill check requested through the AI interpreter; one attempt per skill and place a day."""
     c = get_content()
+    key = free_check_key(skill, char.location)
+    if tried(char, key):
+        return Outcome.refused("check.already_tried", skill=c.skills[skill].name.model_dump()), False
     skills = await characters.skills_of(session, char)
     dc = dc_for(tier)
     res = check(rng, skill, characters.skill_bonus(char, skills, skill), dc)
+    mark_tried(char, key)
     out = Outcome().add("check.result", skill=c.skills[skill].name.model_dump(), roll=res.kept, total=res.total,
                         dc=dc, result="✅" if res.success else "❌")
     if res.success:
-        await characters.practice(session, char, skill, tier, context, out)
+        await characters.practice(session, char, skill, tier, key, out)
     return out, res.success
 
 

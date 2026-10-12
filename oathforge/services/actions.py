@@ -46,9 +46,7 @@ async def button_roll(session: AsyncSession, char: Character, verb: str, arg: st
     if char.state == "in_combat":
         return None
     if verb == "look":
-        loc = c.locations[char.location]
-        pending = [d for d in loc.discoveries.values()
-                   if not char.flags.get(d.sets_flag) and (not d.requires_flag or char.flags.get(d.requires_flag))]
+        pending = list(exploration.open_discoveries(char).values())
         return pending[0].skill if pending else None
     if verb == "qa":
         present = exploration.npcs_present(char.location)
@@ -58,11 +56,13 @@ async def button_roll(session: AsyncSession, char: Character, verb: str, arg: st
 
 
 async def intent_roll(session: AsyncSession, char: Character, intent: Intent, in_combat: bool) -> str | None:
-    """Skill a free-text action will roll outside combat, if any."""
+    """Skill a free-text action will roll outside combat, if any (none when it was already tried today)."""
     if in_combat:
         return None
     if intent.type in ("skill_check", "environment_interaction"):
-        return intent.skill if intent.skill in get_content().skills else None
+        if intent.skill not in get_content().skills:
+            return None
+        return None if exploration.tried(char, exploration.free_check_key(intent.skill, char.location)) else intent.skill
     if intent.type == "inspect":
         return await button_roll(session, char, "look", "")
     if intent.type == "quest_action":
@@ -182,13 +182,8 @@ async def resolve(session: AsyncSession, char: Character, enc, intent: Intent, r
         return await exploration.travel(session, char, intent.target, rng)
     if kind == "use_item":
         return await inventory.use_item_outside_combat(session, char, intent.target, rng)
-    if kind == "skill_check":
-        out, _ = await exploration.check_skill(session, char, intent.skill, clamp_tier(intent.tier), rng,
-                                              f"free:{intent.skill}:{char.location}")
-        return out
-    if kind == "environment_interaction":
-        out, _ = await exploration.check_skill(session, char, intent.skill, clamp_tier(intent.tier), rng,
-                                              f"env:{char.location}")
+    if kind in ("skill_check", "environment_interaction"):
+        out, _ = await exploration.check_skill(session, char, intent.skill, clamp_tier(intent.tier), rng)
         return out
     if kind == "inspect":
         return await exploration.investigate(session, char, rng)

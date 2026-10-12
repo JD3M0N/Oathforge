@@ -61,6 +61,7 @@ class Character(Base):
     resources: Mapped[dict] = mapped_column(Json, default=dict)  # ability uses left
     conditions: Mapped[dict] = mapped_column(Json, default=dict)  # e.g. {"injured": true}
     bestiary: Mapped[dict] = mapped_column(Json, default=dict)  # monster -> {"seen": n, "killed": n}
+    checks_tried: Mapped[dict] = mapped_column(Json, default=dict)  # check key -> [game day, level] of last attempt
     version: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)

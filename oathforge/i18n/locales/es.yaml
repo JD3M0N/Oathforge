@@ -203,12 +203,14 @@ journal:
 
 check:
   result: "🎲 {skill}: {roll} → {total} contra CD {dc} {result}"
+  already_tried: "Ya intentaste {skill} aquí hoy. Tendrás que volver mañana o cuando hayas mejorado."
 
 explore:
   arrived: "Llegas a {place} tras {minutes} minutos de camino."
   ambush: "¡Emboscada!"
   nothing_more: "Ya no queda nada que descubrir aquí."
   found_nothing: "No encuentras nada fuera de lo común."
+  already_tried: "Ya has registrado este lugar hoy. Mañana, o cuando hayas mejorado, quizá veas algo nuevo."
   new_route: "Has descubierto un nuevo camino."
   hunt_day: "🏹 Rastreas el prado a plena luz y das con tu presa."
   hunt_night: "🦇 Te adentras en la hierba oscura. Algo aletea sobre tu cabeza."
