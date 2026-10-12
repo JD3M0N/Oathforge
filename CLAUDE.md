@@ -49,6 +49,7 @@ Antes de editar nada, comprueba la rama (`git branch --show-current`) y el usuar
 .venv\Scripts\oathforge bot            # arrancar el bot
 .venv\Scripts\oathforge reset-players   # borrar jugadores (--yes para confirmar)
 .venv\Scripts\alembic upgrade head      # migraciones
+.venv\Scripts\oathforge simulate --level 1-5   # simulador de combates para el balance
 ```
 
 `oathforge help` lista los comandos de consola (`oathforge/cli.py`); si añades uno, añádelo a `COMMANDS`.

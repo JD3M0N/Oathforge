@@ -21,7 +21,7 @@ Motor puro en `oathforge/engine/combat.py`, persistido como JSON en `encounters.
 - **IA enemiga**: elegir ataque según resistencias del jugador, habilidades propias (curarse, multiataque, pedir refuerzos), cambiar de fila, proteger al jefe.
 - **Jefes por fases**: el Guardián de la Cripta cambia de comportamiento a mitad de PV.
 - **Descubrir debilidades**: Religión/Arcanos para conocer tipo y resistencias antes de golpear.
-- **Simulador de batallas**: `python -m oathforge.tools.simulate` para lanzar cientos de combates clase × enemigo y guardar estadísticas en `artifacts/simulations/`.
+- **Simulador de batallas**: *hecho en v0.5.4* (`oathforge simulate`, ver README). Siguientes pasos: grupos de enemigos por defecto (los de cada zona), políticas alternativas (huir, pociones) y comparar dos versiones del contenido.
 - **Descanso corto** que recupere algunas habilidades (Segundo Aliento, Oleada de Acción).
 - **Temporizador de turno** (JobQueue) cuando haya grupos.
 - Salvaciones contra muerte en vez de derrota inmediata.

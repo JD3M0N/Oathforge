@@ -18,7 +18,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 
 ## ⚔️ Combate y balance · [combate.md](planning/combate.md)
 
-- [ ] 🔴 **Simulación de batallas** para probar el balance: `python -m oathforge.tools.simulate`, cientos de combates clase × enemigo, estadísticas en `artifacts/simulations/`.
+- [x] 🔴 **Simulación de batallas** para probar el balance: `python -m oathforge.tools.simulate`, cientos de combates clase × enemigo, estadísticas en `artifacts/simulations/`. *Hecho en v0.5.4 (`oathforge simulate`).*
 - [ ] 🟡 IA enemiga táctica (proteger al sanador, priorizar amenazas) y jefes por fases con aviso previo.
 - [ ] 🟡 Resumen al final del combate (daño hecho y recibido, críticos, turnos, recompensas).
 - [x] 🟡 Probar que el d20 es justo: test estadístico de la distribución de las tiradas. *Hecho en v0.5.3 (`tests/engine/test_dice_fairness.py`).*

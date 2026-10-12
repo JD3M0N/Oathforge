@@ -16,18 +16,19 @@ Versionado `0.x.y`: sube **y** (parche) en arreglos y cambios pequeños; sube **
 - **0.5.1**: `/roll` (tiradas manuales con el dado animado de Telegram) y retratos de hombre y mujer para todas las clases.
 - **0.5.2**: una tirada por habilidad y lugar al día de juego (no se puede repetir hasta que salga).
 - **0.5.3**: test estadístico de que el d20 es justo.
+- **0.5.4**: simulador de batallas (`oathforge simulate`). Primera tirada (200 combates, enemigo único): a nivel 1 Paladín y Guerrero ganan ~73 % de media y Mago y Druida ~35 %; a nivel 5 todos superan el 90 %.
 
 ## Próximo (candidatos)
 
 - **0.2.x**: balance con datos de `artifacts/battles/` y ajustes de los testers.
 - **0.3.x**: imagen por lugar («Ver lugar») y retratos de NPC sobre el catálogo de 0.3.0.
 - **0.4.x**: balance de las 8 clases con datos de `artifacts/battles/`.
-- **0.5.x**: balance de la cadena de misiones y de la caza con datos de `artifacts/battles/`; más criaturas en el bestiario.
+- **0.5.x**: balance de la cadena de misiones y de la caza con datos de `artifacts/battles/` y del simulador (`artifacts/simulations/`): subir a Mago y Druida a nivel 1-2; más criaturas en el bestiario.
 - **0.6.0**: especializaciones a nivel 5 (los datos ya existen; con la cadena de 0.5.0 se llega a nivel 5 enseguida).
 - **0.7.0**: economía: profesiones/crafteo y sumideros de oro (ver `comercio.md`).
 - **0.8.0**: grupos cooperativos y combate en grupo (fase 3, ver `multijugador.md`).
 - **0.9.0** (propuesta): audio: música de la taberna y voces de NPC (ver `audiovisual.md`).
-- Más adelante: salvaciones de FUE/CON/INT/CAR para monstruos, IA enemiga con habilidades, simulador de batallas, mercado entre jugadores, PvP, Mini App, TTS.
+- Más adelante: salvaciones de FUE/CON/INT/CAR para monstruos, IA enemiga con habilidades, mercado entre jugadores, PvP, Mini App, TTS.
 
 ## Visión a largo plazo (GDD)
 

@@ -4,6 +4,18 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.5.4] - 2026-10-12
+
+### Añadido
+- **Simulador de batallas** (`python -m oathforge.tools.simulate` u `oathforge simulate`): cientos de combates clase × enemigo × nivel con el motor real, sin base de datos ni IA.
+  - El héroe se construye como al crearlo (array de la clase, linaje, trasfondo y equipo inicial) y al subir de nivel (PV, usos, +2 al atributo principal a nivel 4).
+  - Política fija del jugador: cura con la acción adicional por debajo del 50 % de vida; usa bendiciones, maldiciones y ocultarse; gasta primero las habilidades con usos limitados; una habilidad ilimitada solo si pega al menos como el arma; Oleada de Acción si la tiene. `--no-abilities` ataca solo con armas.
+  - Métricas por fila: % de victorias, rondas, % de vida restante, daño por ronda, vida perdida por ronda y % de combates que llegan al tope de 50 rondas.
+  - Opciones: `--n`, `--level 1-5`, `--classes`, `--monsters` (grupos con `+`), `--lineage`, `--background`, `--seed`. Es reproducible (`Random(seed + i)`) y guarda JSON y CSV en `artifacts/simulations/`.
+
+### Cambiado
+- `characters.combatant_from(char, gear, skills)`: la parte pura de `build_combatant`, que la usa el simulador.
+
 ## [0.5.3] - 2026-10-12
 
 ### Añadido

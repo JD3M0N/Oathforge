@@ -196,9 +196,13 @@ def attack_profiles(char: Character, gear: dict[str, ItemInstance]) -> list[Atta
 
 
 async def build_combatant(session: AsyncSession, char: Character, cid: str = "p1") -> Combatant:
+    return combatant_from(char, await equipped(session, char), await skills_of(session, char), cid)
+
+
+def combatant_from(char: Character, gear: dict[str, ItemInstance], skills: dict[str, CharacterSkill],
+                   cid: str = "p1") -> Combatant:
+    """The player's combat stats from already loaded gear and skills (no database; also used by the simulator)."""
     c = get_content()
-    gear = await equipped(session, char)
-    skills = await skills_of(session, char)
     passives = class_passives(char)
     lineage = c.lineages[char.lineage]
     sneak = 0

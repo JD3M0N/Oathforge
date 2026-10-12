@@ -8,6 +8,9 @@ COMMANDS = {
     "bot": ("", "arranca el bot de Telegram (Ctrl+C para pararlo)"),
     "reset-players": ("[--yes]", "borra todos los jugadores y sus datos para una ronda de pruebas limpia; "
                                  "sin --yes solo muestra qué borraría (para el bot antes)"),
+    "simulate": ("[--n 200] [--level 1-5] [--classes ...] [--monsters ...]",
+                 "simula cientos de combates clase × enemigo para medir el balance; resultados en "
+                 "artifacts/simulations/ (--help para todas las opciones)"),
 }
 
 
@@ -60,6 +63,10 @@ def main(argv: list[str] | None = None) -> None:
         from oathforge.main import main as run_bot
 
         run_bot()
+    elif command == "simulate":
+        from oathforge.tools.simulate import main as simulate
+
+        simulate(args[1:])
     elif command == "reset-players":
         asyncio.run(reset_players("--yes" in args[1:]))
     else:
