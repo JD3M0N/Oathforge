@@ -4,6 +4,11 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.5.11] - 2026-10-12
+
+### Cambiado
+- `README.md` ya no lleva número de versión (estaba congelado en v0.5.1): describe solo la idea del proyecto y remite a `CHANGELOG.md` para los cambios.
+
 ## [0.5.10] - 2026-10-12
 
 ### Cambiado

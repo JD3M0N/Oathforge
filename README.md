@@ -4,7 +4,9 @@ RPG narrativo multijugador para Telegram, ambientado en **Aetherfall**. Un Dunge
 
 > Regla de oro: **la IA nunca decide resultados.** Convierte el texto libre en una intención estructurada; el motor la valida, tira los dados y guarda el resultado; después la IA narra *exactamente* lo que pasó.
 
-## Estado: v0.5.1, vertical slice en solitario (fases 1–2)
+## Estado: vertical slice en solitario (fases 1–2)
+
+Qué cambió en cada versión está en [CHANGELOG.md](CHANGELOG.md); aquí solo la idea del proyecto.
 
 - Creación de personaje: hombre o mujer, 4 linajes, 4 trasfondos, 8 clases (Paladín, Pícaro, Guerrero, Sacerdote, Mago, Druida, Bardo, Brujo) con habilidades hasta nivel 5, atributos por compra de puntos (27, como en D&D) y retrato por clase y sexo.
 - Crownreach (plaza, taberna La Corona Rota, mercado), el Camino del Viejo Rey, el Bosque de los Susurros, el Prado de los Colmillos (caza: jabalíes de día, murciélagos de noche) y la Cripta Hundida (5 salas + jefe).
