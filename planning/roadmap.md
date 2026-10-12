@@ -15,6 +15,7 @@ Versionado `0.x.y`: sube **y** (parche) en arreglos y cambios pequeños; sube **
 - **0.5.0**: sistema de misiones (cadena de 6 hasta nivel 5, diario con avance), Prado de los Colmillos (caza de día y de noche), bestiario, compra de atributos por puntos, curva de XP más corta, cripta más fácil y botones de combate a prueba de doble clic.
 - **0.5.1**: `/roll` (tiradas manuales con el dado animado de Telegram) y retratos de hombre y mujer para todas las clases.
 - **0.5.2**: una tirada por habilidad y lugar al día de juego (no se puede repetir hasta que salga).
+- **0.5.3**: test estadístico de que el d20 es justo.
 
 ## Próximo (candidatos)
 

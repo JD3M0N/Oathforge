@@ -4,6 +4,11 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.5.3] - 2026-10-12
+
+### Añadido
+- **Test estadístico de los dados** (`tests/engine/test_dice_fairness.py`): chi-cuadrado sobre 200 000 tiradas del d20 (uniforme), de la ventaja y la desventaja (máximo y mínimo de dos d20), de 1d6 y de 2d6; frecuencia de 20 y 1 naturales (≈ 5 %) y medias (10,5 / 13,825 / 7,175). Usa semillas fijas, así que no falla por azar, y una prueba con el RNG real del bot.
+
 ## [0.5.2] - 2026-10-12
 
 ### Arreglado
