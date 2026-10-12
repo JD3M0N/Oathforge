@@ -146,3 +146,31 @@ async def test_level_up_cards_are_separate_messages(lang):
     assert aura.description.get(lang) in cards[1]  # level 3 explains the new ability
     assert f"{start_hp} →" in cards[0]
     assert "💪" in cards[2]  # level 4: attribute boost
+
+
+@pytest.mark.parametrize("lang", ["es", "en"])
+async def test_class_pages(lang):
+    from oathforge.bot.handlers.commands import CLASS_LINK
+
+    c = get_content()
+    text, kb = render.classes_list(lang)
+    check((text, kb))
+    for key, cl in c.classes.items():
+        assert f"/class_{key}" in text
+        page, page_kb = render.class_page(key, lang)
+        check((page, page_kb))
+        assert "classes." not in page and "ability." not in page and "🔒" not in page
+        for a in cl.abilities.values():
+            assert a.description.get(lang) in page.replace("&#x27;", "'")
+        assert CLASS_LINK.match(f"/class_{key}").group(1) == key
+        assert CLASS_LINK.match(f"/class_{key}@OathForgeBot").group(1) == key
+    unknown, _ = render.class_page("nope", lang)
+    assert "/class_paladin" in unknown
+
+    async with session_scope() as s:
+        user = await characters.get_or_create_user(s, 8, lang)
+        char = await characters.create_character(s, user, "Edda", "dwarf", "acolyte", "paladin")
+        page, _ = render.class_page("paladin", lang, char)  # own class: unlocked ✅, the rest 🔒
+        assert "✅" in page and "🔒" in page
+        sheet, _ = await render.sheet(s, char, lang)
+        assert "/class_paladin" in sheet

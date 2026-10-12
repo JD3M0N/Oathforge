@@ -1,7 +1,9 @@
-"""/hero /sheet /inventory /journal /quests /roll /look /language /help."""
+"""/hero /sheet /inventory /journal /quests /classes /class_<key> /roll /look /language /help."""
+
+import re
 
 from telegram import Update
-from telegram.ext import CommandHandler, ContextTypes
+from telegram.ext import BaseHandler, CommandHandler, ContextTypes, MessageHandler, filters
 
 from oathforge import __version__
 from oathforge.bot import render
@@ -41,6 +43,19 @@ async def sheet(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await send(update, text, kb)
 
 
+CLASS_LINK = re.compile(r"^/class_([a-z_]+?)(?:@\w+)?$")
+
+
+async def classes(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/classes lists every class; /class_<key> (tappable from the level-up card and the sheet) opens one."""
+    async with session_scope() as session:
+        user, char = await load(session, update)
+        lang = context.user_data["lang"] = user.language
+    m = CLASS_LINK.match((update.message.text or "").strip()) if update.message else None
+    text, kb = render.class_page(m.group(1), lang, char) if m else render.classes_list(lang)
+    await send(update, text, kb)
+
+
 async def language(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     async with session_scope() as session:
         user, _ = await load(session, update)
@@ -56,7 +71,7 @@ async def help_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await send(update, f'{t(lang, "help.text")}\n\n{t(lang, "help.version", version=__version__)}')
 
 
-def handlers() -> list[CommandHandler]:
+def handlers() -> list[BaseHandler]:
     return [
         CommandHandler("look", _view(current_view)),
         CommandHandler("hero", _view(render.hero)),
@@ -64,6 +79,8 @@ def handlers() -> list[CommandHandler]:
         CommandHandler("inventory", _view(render.inventory_view)),
         CommandHandler("journal", _view(render.journal)),
         CommandHandler("quests", _view(render.missions)),
+        CommandHandler("classes", classes),
+        MessageHandler(filters.Regex(CLASS_LINK), classes),
         CommandHandler("roll", callbacks.roll_command),
         CommandHandler("language", language),
         CommandHandler("help", help_cmd),

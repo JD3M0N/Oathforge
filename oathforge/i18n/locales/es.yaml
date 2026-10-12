@@ -9,6 +9,7 @@ cmd:
   inventory: "Inventario"
   journal: "Diario de aventuras"
   quests: "Misiones y progreso"
+  classes: "Clases y sus habilidades"
   roll: "Lanzar el dado y tiradas manuales"
   language: "Cambiar idioma"
   help: "Cómo jugar"
@@ -21,7 +22,7 @@ help:
     También puedes <b>escribir lo que quieras hacer</b>: «me escondo tras la barra y escucho», «intento robarle la bolsa al tabernero», «empujo el carro sobre el bandido».
     El Dungeon Master interpreta tu acción, el motor tira los dados y tú ves el resultado real.
 
-    Comandos: /look /hero /sheet /inventory /journal /quests /roll /language
+    Comandos: /look /hero /sheet /inventory /journal /quests /classes /roll /language
   version: "<i>Oathforge v{version}</i>"
 
 lang:
@@ -69,6 +70,7 @@ create:
 
 btn:
   full_sheet: "📜 Ficha completa"
+  classes: "📚 Clases"
   hero_summary: "🦸 Resumen"
   travel: "🧭 Viajar"
   investigate: "🔎 Investigar"
@@ -154,6 +156,7 @@ inv:
 sheet:
   specialization: "🎖️ {name}"
   hit_die: "🎲 Dado de golpe d{die}"
+  class_link: "📖 Tu clase: {cmd}"
   combat: "⚔️ Combate"
   attack: "{name}: {to_hit} al impacto · {damage} {type}"
   spellcasting: "Conjuros ({ability}): {to_hit} al impacto · CD {dc}"
@@ -251,16 +254,19 @@ progress:
   asi: "Tu {ability} aumenta en 2."
   skill_rank: "Tu dominio de {skill} mejora (rango {rank})."
   specialization_soon: "Has alcanzado el nivel 5. Pronto podrás elegir una especialización."
-  card_title: "🎉 <b>¡NIVEL {level}!</b>"
-  card_hp: "❤️ PV máximos: {prev} → <b>{max_hp}</b> (+{gain})"
-  card_new: "<b>Nueva habilidad</b>"
-  card_class: "📖 Tu clase: {cmd}"
+
+level_card:
+  title: "🎉 <b>¡NIVEL {level}!</b>"
+  hp: "❤️ PV máximos: {prev} → <b>{max_hp}</b> (+{gain})"
+  new: "<b>Nueva habilidad</b>"
+  class: "📖 Tu clase: {cmd}"
 
 ability:
   passive: "pasiva"
   action:
     action: "acción"
     bonus: "acción adicional"
+  uses_one: "1 uso por descanso"
   uses: "{n} usos por descanso"
   unlimited: "sin límite"
 
@@ -400,6 +406,19 @@ creature:
   beast: "Bestia"
   undead: "No muerto"
   humanoid: "Humanoide"
+
+classes:
+  title: "📚 <b>Clases de Oathforge</b>"
+  hint: "Toca una clase o su comando para ver sus habilidades."
+  unknown: "Esa clase no existe."
+  hit_die: "🎲 Dado de golpe: <b>d{die}</b>"
+  primary: "💪 Atributo principal: <b>{ability}</b>"
+  casting: "🔮 Magia con: <b>{ability}</b>"
+  skills: "🎓 Competencias: {list}"
+  items: "🎒 Equipo inicial: {list}"
+  abilities: "✨ Habilidades de clase"
+  level: "Nv {level}"
+  specializations: "🌟 <b>Especializaciones (nivel 5)</b>"
 
 bestiary:
   title: "📖 <b>Bestiario</b> · {seen}/{total} criaturas"

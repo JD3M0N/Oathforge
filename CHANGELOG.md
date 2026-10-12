@@ -4,6 +4,20 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.5.7] - 2026-10-12
+
+### Añadido
+- **`/classes` y `/class_<clase>`** (por ejemplo `/class_paladin`) para ver cada clase:
+  - Dado de golpe, atributo principal, atributo de magia, competencias y equipo inicial.
+  - Habilidades por nivel con icono, tipo (pasiva, acción, acción adicional), usos por descanso y descripción.
+  - Especializaciones de nivel 5.
+  - Con tu propia clase, ✅ en lo desbloqueado y 🔒 en lo que falta, y botón a la ficha completa.
+- Los `/class_<clase>` que salen en un mensaje se pueden tocar. Los enlazan la tarjeta de subida de nivel y `/sheet`. La lista tiene un botón por clase y funciona sin personaje.
+- `/classes` en el menú de comandos de Telegram y en `/help`.
+
+### Cambiado
+- Los textos de la tarjeta de nivel pasan a su propio bloque `level_card.*` (son plantillas de vista con HTML, no eventos).
+
 ## [0.5.6] - 2026-10-12
 
 ### Cambiado

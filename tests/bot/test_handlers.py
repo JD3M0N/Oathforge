@@ -476,5 +476,21 @@ async def test_manual_rolls_wait_for_the_die(llm, monkeypatch):
 async def creation_free_roll(p):
     from oathforge.bot.handlers import commands
 
-    roll = next(h for h in commands.handlers() if "roll" in h.commands)
+    roll = next(h for h in commands.handlers() if "roll" in getattr(h, "commands", ()))
     await roll.callback(p.update(message="/roll"), p.ctx)
+
+
+async def test_class_pages_from_commands_and_buttons(llm):
+    from oathforge.bot.handlers import commands
+
+    p = Player(llm, tg_id=63)
+    await commands.classes(p.update(message="/classes"), p.ctx)  # no character yet: still works
+    assert "/class_paladin" in p.last[0]
+    await p.press(p.find("cls", "mage"))
+    assert "Bola de Fuego" in p.last[0] or "Fireball" in p.last[0]
+    await create(p)
+    await commands.classes(p.update(message="/class_paladin"), p.ctx)
+    assert "Aura de Resolución" in p.last[0] and "✅" in p.last[0] and "🔒" in p.last[0]
+    assert p.find("sheet") and p.find("clsl")
+    await p.press(p.find("clsl"))
+    assert "/class_warlock" in p.last[0]

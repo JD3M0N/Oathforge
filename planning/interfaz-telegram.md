@@ -9,6 +9,8 @@ Cómo se ve y se siente el juego dentro del chat. Fuente: [GDD](referencias/gdd-
 - Solo chat privado.
 - **v0.5.0**: `/quests` (misiones y su avance) y diario con Misiones, Bestiario y Rumores.
 - **v0.5.1**: `/roll`. Sin tirada pendiente, activa o desactiva las tiradas manuales (`users.settings.manual_rolls`). Con ellas activadas, investigar, las acciones de misión con prueba y las acciones escritas que piden tirada esperan a que el jugador haga `/roll` (o pulse «🎲 Tirar el dado»). Entonces sale el dado animado de Telegram y, al pararse, el resultado del motor (d20 + bonificador contra la CD). El dado de Telegram solo va de 1 a 6, así que es decorativo: el resultado lo calcula siempre el motor. El combate no espera a `/roll`.
+- **v0.5.6**: la subida de nivel llega en un mensaje propio (tarjeta por nivel con PV, atributo y habilidades nuevas explicadas), separada del mensaje de XP y botín.
+- **v0.5.7**: `/classes` (lista de clases) y `/class_<clase>` (por ejemplo `/class_paladin`): dado de golpe, atributo principal, magia, competencias, equipo inicial, habilidades por nivel con tipo, usos y descripción, y especializaciones. Los `/class_<clase>` que salen dentro de un mensaje se pueden tocar; los enlazan la tarjeta de nivel y `/sheet`. Con tu propia clase, ✅ en lo desbloqueado y 🔒 en lo que falta. Funciona sin personaje.
 - Canales de anuncios: https://t.me/OathForge (inglés) y https://t.me/OathForge_es (español).
 
 ## Ideas
@@ -18,7 +20,7 @@ Cómo se ve y se siente el juego dentro del chat. Fuente: [GDD](referencias/gdd-
 - **Escena compacta**: lugar, hora y clima, descripción, actores visibles, sucesos importantes y opciones, todo en un mensaje.
 - **Interfaz progresiva**: al principio pocas opciones claras; aparecen más botones cuando el personaje desbloquea sistemas.
 - **Un mensaje de estado que se edita** (turno, PV, decisiones) en lugar de diez mensajes por acción; los mensajes nuevos, solo para cambios narrativos.
-- Comandos que faltan: `/map`, `/quests`, `/party`, `/rest`.
+- Comandos que faltan: `/map`, `/party`, `/rest`.
 
 ### Acción rápida y acción libre (GDD §2.3)
 
