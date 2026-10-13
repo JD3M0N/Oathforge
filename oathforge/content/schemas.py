@@ -23,15 +23,26 @@ CreatureType = Literal["humanoid", "beast", "undead"]
 
 Tier = Literal["trivial", "easy", "medium", "hard", "very_hard"]
 
-# how a field activity ended; content/chronicles.yaml has generic texts for each one
+# how a field activity ended; content/fallbacks/chronicles.yaml has generic texts for each one
 CHRONICLE_OUTCOMES = (
     "gather", "stay_ok", "stay_won", "stay_fled", "stay_lost",
     "track_tracks", "track_won", "track_fled", "track_lost",
 )
 CHRONICLE_PLACEHOLDERS = {"name", "place", "loot", "monster"}
 
+# content/fallbacks/<category>.yaml: what each text may use, and the keys that must exist
+FALLBACK_PLACEHOLDERS = {
+    "chronicles": CHRONICLE_PLACEHOLDERS,
+    "dialogue": {"npc", "name"},
+    "narration": {"name", "place"},
+    "freetext": {"name"},
+}
+FALLBACK_KEYS = {"dialogue": ("default",), "narration": ("default",), "freetext": ("unavailable",)}
+
 # crafting stations a location can have (Location.stations); each profession works at one
-Station = Literal["anvil", "alchemy_table", "carpenter_bench", "tannery", "jeweler_bench", "hearth"]
+Station = Literal[
+    "anvil", "alchemy_table", "carpenter_bench", "tannery", "jeweler_bench", "hearth", "scribe_desk", "workbench",
+]
 Row = Literal["front", "back"]
 
 
@@ -167,6 +178,33 @@ class ShortRest(Strict):
 ItemEffect = Annotated[Union[RestoreHp, RestoreSpellCharge, ShortRest], Field(discriminator="type")]
 
 
+class ItemCombat(Strict):
+    """What a consumable does when used in combat (scrolls, bombs). Any class can use it.
+
+    Same shapes as a class ability, with fixed numbers instead of the user's spellcasting:
+    spell: ranged attack at ``attack_bonus`` · save: the target (or its row) saves against ``save_dc``
+    heal: ``heal_dice`` HP · buff: ``temp_hp`` · escape: leave the fight, no roll.
+    """
+
+    kind: Literal["spell", "save", "heal", "buff", "escape"]
+    damage: str | None = None
+    damage_type: DamageType | None = None
+    attack_bonus: int = 5
+    save: Literal["dex", "wis"] | None = None
+    save_dc: int = 13
+    area: Literal["one", "row"] = "one"
+    half_on_save: bool = False
+    auto_hit: bool = False
+    status: Literal["stunned", "frightened", "asleep", "restrained", "burning", "blessed"] | None = None
+    status_turns: int = 1
+    heal_dice: str | None = None
+    temp_hp: str | None = None
+    # unused by items, read by the engine's shared ability code
+    heal_per_level: int | None = None
+    heal_add: None = None
+    targets_type: None = None
+
+
 class Item(Strict):
     name: Text
     description: Text
@@ -181,6 +219,7 @@ class Item(Strict):
     ac_bonus: int = 0
     heal: str | None = None  # also usable in combat (the potion button); outside combat it is a restore_hp effect
     effects: list[ItemEffect] = []  # what "Use" does outside combat
+    combat: ItemCombat | None = None  # usable from the combat panel's "Items"
     sellable: bool = True
 
 
@@ -299,6 +338,11 @@ class Gathering(Strict):
     stay_ambush: float = Field(0.0, ge=0, le=1)  # the ambushers come from the place's encounter table
 
 
+class Healer(Strict):
+    cost: int
+    heal: str  # dice
+
+
 class Location(Strict):
     name: Text
     description: Text
@@ -314,7 +358,8 @@ class Location(Strict):
     fixed_encounters: list[FixedEncounter] = []
     scene_objects: dict[str, SceneObject] = {}
     discoveries: dict[str, Discovery] = {}
-    rest_cost: int | None = None
+    rest_cost: int | None = None  # long rest (8 game hours) at an inn
+    healer: Healer | None = None  # "Cure wounds" for a few coins (the chapel)
     respawn: bool = False
     hub: bool = False  # the zone's overview point (city plaza): shows "View city" when the zone has images
     # filled by the loader from the folder: world/<continent>/<zone>/<location>/place.yaml
@@ -323,12 +368,17 @@ class Location(Strict):
 
 
 class Profession(Strict):
-    """A crafting profession; a character keeps two active (see planning/profesiones.md)."""
+    """A crafting profession; a character keeps two active (see planning/profesiones.md).
+
+    A hobby (cooking) takes no slot: everyone can practise it and level it if they want.
+    """
 
     name: Text
     description: Text
     icon: str
     station: Station
+    hobby: bool = False
+    guide: Text | None = None  # how to play it, for /prof_<key>
 
 
 class Recipe(Strict):

@@ -12,6 +12,7 @@ Cómo se ve y se siente el juego dentro del chat. Fuente: [GDD](referencias/gdd-
 - **v0.5.6**: la subida de nivel llega en un mensaje propio (tarjeta por nivel con PV, atributo y habilidades nuevas explicadas), separada del mensaje de XP y botín.
 - **v0.5.7**: `/classes` (lista de clases) y `/class_<clase>` (por ejemplo `/class_paladin`): dado de golpe, atributo principal, magia, competencias, equipo inicial, habilidades por nivel con tipo, usos y descripción, y especializaciones. Los `/class_<clase>` que salen dentro de un mensaje se pueden tocar; los enlazan la tarjeta de nivel y `/sheet`. Con tu propia clase, ✅ en lo desbloqueado y 🔒 en lo que falta. Funciona sin personaje.
 - **v0.5.9**: `/report` y botón «📜 Informe» en el panel final: informe de la última batalla, con resumen y una página por ronda (botones ◀ ▶ que editan el mismo mensaje).
+- **v0.7.0**: `/settings` (⚙️ Ajustes) reúne idioma y tiradas manuales; `/roll` sale del menú. Las tiradas manuales están desactivadas por defecto y, al activarlas, un aviso explica que el dado de Telegram es un d6 decorativo y que la tirada real es el d20 del motor. La tirada pendiente se lanza con el botón «🎲 Tirar el dado». `/prof_<oficio>` abre la guía de cada oficio y afición.
 - Canales de anuncios: https://t.me/OathForge (inglés) y https://t.me/OathForge_es (español).
 
 ## Ideas

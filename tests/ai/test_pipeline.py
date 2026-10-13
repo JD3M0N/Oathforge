@@ -53,13 +53,13 @@ async def test_valid_move_is_resolved_by_engine(llm):
     llm.json_queue.append({"type": "move", "target": "crownreach_plaza"})
     res = await actions.handle_free_text(llm, uid, "salgo a la plaza", random.Random(0))
     assert res.outcome.ok and (await load_char(cid)).location == "crownreach_plaza"
-    assert res.narration is None  # narrator returned nothing: the mechanical lines still show
+    assert res.narration  # narrator returned nothing: a generic travel line, and the mechanical lines still show
 
 
 async def test_ai_unavailable_falls_back(llm):
     uid, _ = await setup_char()
     res = await actions.handle_free_text(llm, uid, "busco pistas", random.Random(0))
-    assert not res.outcome.ok and res.outcome.error == "freetext.unavailable"
+    assert res.outcome.ok and not res.outcome.events and res.narration.startswith("🎲")
 
 
 async def test_skill_check_tier_is_clamped(llm):

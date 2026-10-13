@@ -1,6 +1,7 @@
-"""Crafting professions: two active of six, learned and swapped at the guild (Craftsmen's Row).
+"""Crafting professions: two active, learned and swapped at the guild (Craftsmen's Row).
 
 Swapping keeps the XP of the profession you drop, so trying another one never wastes progress.
+Hobbies (cooking) take no slot: everyone can practise them.
 """
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -15,8 +16,23 @@ SLOTS = 2
 SWAP_COST = 25  # gold, to replace an active profession
 
 
+def is_hobby(key: str) -> bool:
+    prof = get_content().professions.get(key)
+    return prof is not None and prof.hobby
+
+
 def active(char: Character) -> list[str]:
-    return list((char.professions or {}).get("active", []))
+    """The professions in the two slots (a hobby learned before v0.7.0 no longer takes one)."""
+    return [k for k in (char.professions or {}).get("active", []) if not is_hobby(k)]
+
+
+def hobbies() -> list[str]:
+    return [k for k, p in get_content().professions.items() if p.hobby]
+
+
+def usable(char: Character) -> list[str]:
+    """Professions you can craft with: your active ones plus every hobby."""
+    return active(char) + hobbies()
 
 
 def xp(char: Character, key: str) -> int:
@@ -40,6 +56,8 @@ async def learn(session: AsyncSession, char: Character, key: str, replace: str |
         return Outcome.refused("prof.err.not_guild")
     if key not in c.professions:
         return Outcome.refused("prof.err.unknown")
+    if c.professions[key].hobby:
+        return Outcome.refused("prof.err.hobby", prof=c.professions[key].name.model_dump())
     current = active(char)
     if key in current:
         return Outcome.refused("prof.err.already", prof=c.professions[key].name.model_dump())

@@ -1,4 +1,5 @@
-"""/hero /sheet /inventory /journal /quests /classes /class_<key> /report /professions /roll /look /language /help."""
+"""/hero /sheet /inventory /journal /quests /classes /class_<key> /report /professions /prof_<key> /settings /look
+/language /help."""
 
 import re
 
@@ -7,7 +8,6 @@ from telegram.ext import BaseHandler, CommandHandler, ContextTypes, MessageHandl
 
 from oathforge import __version__
 from oathforge.bot import render
-from oathforge.bot.handlers import callbacks
 from oathforge.bot.handlers.common import current_view, load, send, send_photos
 from oathforge.bot.keyboards import btn, cb, markup
 from oathforge.content import get_content
@@ -57,12 +57,34 @@ async def classes(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await send(update, text, kb)
 
 
+PROF_LINK = re.compile(r"^/prof_([a-z_]+?)(?:@\w+)?$")
+
+
+async def profession_guide(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/prof_<key>: the mini guide of a profession or hobby (tappable from /professions)."""
+    async with session_scope() as session:
+        user, char = await load(session, update)
+        lang = context.user_data["lang"] = user.language
+        m = PROF_LINK.match((update.message.text or "").strip()) if update.message else None
+        text, kb = render.profession_page(m.group(1) if m else "", lang, char)
+    await send(update, text, kb)
+
+
 async def _report(session, char, lang):
     return render.report_page(await combat_service.battle_report(session, char), 0, lang)
 
 
 async def _professions(session, char, lang):
     return render.professions_view(char, lang)
+
+
+async def settings(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/settings: language and manual rolls."""
+    async with session_scope() as session:
+        user, _ = await load(session, update)
+        lang = context.user_data["lang"] = user.language
+        text, kb = render.settings_view(user, lang)
+    await send(update, text, kb)
 
 
 async def language(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -92,7 +114,8 @@ def handlers() -> list[BaseHandler]:
         MessageHandler(filters.Regex(CLASS_LINK), classes),
         CommandHandler("report", _view(_report)),
         CommandHandler("professions", _view(_professions)),
-        CommandHandler("roll", callbacks.roll_command),
+        MessageHandler(filters.Regex(PROF_LINK), profession_guide),
+        CommandHandler("settings", settings),
         CommandHandler("language", language),
         CommandHandler("help", help_cmd),
     ]

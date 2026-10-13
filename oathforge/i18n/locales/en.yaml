@@ -12,7 +12,7 @@ cmd:
   classes: "Classes and their abilities"
   report: "Report of the last battle"
   professions: "Professions and masteries"
-  roll: "Roll the die and manual rolls"
+  settings: "Settings: language and manual rolls"
   language: "Change language"
   help: "How to play"
 
@@ -24,8 +24,18 @@ help:
     You can also <b>type whatever you want to do</b>: "I hide behind the bar and listen", "I try to lift the keeper's purse", "I push the cart onto the bandit".
     The Dungeon Master interprets your action, the engine rolls the dice, and you see what really happened.
 
-    Commands: /look /hero /sheet /inventory /journal /quests /classes /report /professions /roll /language
+    Commands: /look /hero /sheet /inventory /journal /quests /classes /report /professions /settings
   version: "<i>Oathforge v{version}</i>"
+
+settings:
+  text: |-
+    ⚙️ <b>Settings</b>
+
+    🌐 Language: {language}
+    🎲 Manual rolls: {rolls}
+
+    <i>With manual rolls, when a skill check needs a roll (investigating, quest actions or written actions) you are asked to press "🎲 Roll the die". The animation is decoration: the result always comes from the engine.</i>
+  language_name: "English"
 
 lang:
   choose: "Choose your language:"
@@ -84,6 +94,8 @@ btn:
   talk: "💬 Talk"
   shop: "🛒 Trade"
   rest: "🛏️ Long rest ({cost} 🪙)"
+  heal: "🙏 Cure wounds ({cost} 🪙)"
+  wake: "☀️ Get up"
   inventory: "🎒 Inventory"
   sheet: "🦸 Hero"
   journal: "📜 Journal"
@@ -104,8 +116,8 @@ btn:
   professions: "🛠️ Professions"
   craft: "🔨 Craft"
   learn: "📘 Learn {prof}"
-  swap_for: "🔁 Swap for {prof}"
-  replace: "Drop {prof} ({cost} 🪙)"
+  swap_for: "🔁 Swap for {prof} ({cost} 🪙)"
+  replace: "Drop {prof}"
   make: "🔨 {item}"
   missions: "📜 Missions"
   bestiary: "📖 Bestiary"
@@ -124,6 +136,7 @@ btn:
   continue: "▶️ Continue"
   defend: "🛡️ Defend"
   potion: "🧪 Potion"
+  items: "🎒 Items"
   move_back: "↩️ To the back"
   move_front: "↪️ To the front"
   flee: "🏃 Flee"
@@ -142,7 +155,6 @@ travel:
 talk:
   title: "💬 Who do you want to talk to?"
   hint: "Type what you say to {npc}."
-  fallback: "{npc} looks at you for a moment, thoughtful, and says nothing."
   trust_up: "{npc} trusts you more ({trust})."
   trust_down: "{npc} trusts you less ({trust})."
   err:
@@ -160,6 +172,24 @@ shop:
     no_gold: "You don't have enough gold (you need {price})."
     no_buy: "This merchant doesn't buy anything."
     cant_sell: "You can't sell that (is it equipped?)."
+  group:
+    weapons: "⚔️ Weapons"
+    armor: "🛡️ Armour and shields"
+    consumables: "🧪 Consumables"
+    tools: "🧰 Tools"
+    other: "📦 Other"
+  stat:
+    ranged: "ranged"
+    finesse: "finesse"
+    ac: "AC {ac}"
+    ac_dex: "AC {ac} + DEX"
+    ac_dex_cap: "AC {ac} + DEX (max {cap})"
+    ac_bonus: "+{bonus} AC"
+    heal: "❤️ {dice} HP"
+    restore_hp: "❤️ heals HP"
+    restore_spell_charge: "🔮 +1 spell use"
+    short_rest: "💤 short rest"
+    combat: "⚔️ for use in combat"
 
 inv:
   title: "🎒 <b>Inventory</b> · 🪙 {gold}"
@@ -194,7 +224,7 @@ sheet:
   origins: "🧬 Origins"
   identity: "{cls} · level {level}"
   hp: "❤️ HP {hp}/{max_hp}  {bar}"
-  xp: "✨ XP {xp}/{next}  {bar}"
+  xp: "✨ XP {cur}/{need} to level {level} ({xp} total)  {bar}"
   xp_max: "✨ XP {xp} · max level"
   vitals: "🛡️ AC {ac} · 🎯 Proficiency +{pb} · 🪙 {gold}"
   injured: "🩹 Injured (rest at an inn)"
@@ -215,6 +245,7 @@ sheet:
     honored: "honored"
   ai_usage: "🤖 Dungeon Master today: {calls}/{limit} · {left} left  {bar}"
   masteries: "Field masteries"
+  hobbies: "Hobbies (optional)"
   chronicles: "📜 Chronicles today: {used}/{limit} · {left} left  {bar}"
   professions: "🛠️ Professions {used}/{slots}: {list}"
   no_professions: "none (learn them at Craftsmen’s Row)"
@@ -251,11 +282,15 @@ explore:
   hunt_day: "🏹 You track the meadow in broad daylight and find your prey."
   hunt_night: "🦇 You wade into the dark grass. Something flutters above your head."
   hunt_boss: "🐗 The ground trembles. Something huge pushes through the grass."
-  rested: "You rest through the night ({cost} gold). You recover your strength: {hp} HP."
+  rested: "☀️ You get up rested after eight hours of sleep. You recover all your strength: {hp} HP and every use."
+  healed: "🙏 Sister Ysolde murmurs a prayer and bandages you ({cost} gold): you recover {amount} HP ({hp}/{max_hp})."
+  healed_injured: "Grave wounds don't close with bandages: for that you need a long rest."
   err:
     in_combat: "You are in the middle of a fight!"
     no_route: "You can't go there from here."
     no_rest: "There is nowhere to rest here."
+    no_healer: "There is no one here to cure wounds."
+    injured_cap: "Bandages can't do more for your grave wounds. You need a long rest."
     no_hunting: "There is nothing to hunt here."
 
 quest:
@@ -311,7 +346,6 @@ steal:
     nothing: "There is nothing to steal there."
 
 freetext:
-  unavailable: "The Dungeon Master can't interpret free actions right now. Use the buttons."
   stale: "The situation changed while you were thinking. Try again."
   not_here: "That isn't here."
   no_effect: "Nothing changes in the world."
@@ -349,6 +383,9 @@ combat:
   move: "👣 {actor} moves to the {row}."
   defend: "🛡️ {actor} takes a defensive stance."
   potion: "🧪 {actor} drinks a potion and recovers {amount} HP."
+  item: "🎒 {actor} uses {item}."
+  escaped: "💨 {actor} vanishes into the smoke."
+  items_title: "🎒 <b>Which item do you use?</b>"
   ability: "✨ {actor} uses {ability}."
   heal: "💚 {actor} uses {ability} and recovers {amount} HP."
   turn: "☀️ {actor} uses {ability}: holy light sears the undead."
@@ -381,6 +418,7 @@ combat:
     bad_target: "You can't reach that target."
     no_type_targets: "There are no enemies it would affect."
     surge_unused: "Use your action first."
+    no_item: "You have none of that item left."
 
 row:
   front: "front"
@@ -494,11 +532,9 @@ bestiary:
   loot: "🎁 Loot: {list}"
 
 roll:
-  prompt: "🎲 This action needs a <b>{skill}</b> roll. Roll the die with /roll or the button."
-  settings: |-
-    🎲 <b>Manual rolls</b>: {state}
-
-    When on, a skill check (investigating, quest actions or written actions) waits for you to roll with /roll, and the animated die appears. The result always comes from the engine: d20 + your bonus against the DC.
+  prompt: "🎲 This action needs a <b>{skill}</b> roll. Roll the die with the button."
+  warning: |-
+    ⚠️ <b>Manual rolls on.</b> Telegram's animated die is only decoration: it is a d6 and its number is <b>not</b> your roll. The engine rolls a d20 (plus your bonus against the DC) and the real result appears below the die.
   "on": "on"
   "off": "off"
   changed: "🎲 Manual rolls {state}."
@@ -509,6 +545,7 @@ activity:
     gather: "⏳ You get to work: {skill} at {place}. In {minutes} minutes you can collect what you got."
     stay: "🏕️ You start a long {skill} expedition at {place} ({minutes} min). You'll bring back much more, but there may be an ambush at the end."
     track: "🐾 You crouch and start looking for tracks at {place} ({minutes} min)."
+    rest: "🛏️ You pay {cost} gold and lie down at {place}. Eight hours of sleep: you wake up in {minutes} min."
   done:
     gather: "✅ You finish your work at {place}."
     stay: "✅ Your expedition at {place} ends without trouble."
@@ -516,6 +553,7 @@ activity:
     gather: "{skill} at {place}"
     stay: "{skill} expedition at {place}"
     track: "Tracking at {place}"
+    rest: "Sleeping at {place}"
   cancelled: "You abandon the task. You take nothing with you."
   bonus: "🍀 Your mastery gives you something extra: {loot}."
   stay_ambush: "⚠️ As you load up your haul ({loot}), something comes out of the shadows... Victory: you keep it all. Flee: half. Defeat: you lose it."
@@ -532,7 +570,10 @@ activity:
   ready: "✅ Done! Press “Collect”."
   stay_warning: "⚠️ There may be an ambush at the end. Victory: everything; flee: half; defeat: nothing."
   busy_hint: "You can't travel or start anything else until you collect or abandon this task."
+  busy_hint_rest: "While you sleep you can't travel or do anything else. If you get up early, you recover nothing and the gold is not refunded."
+  ready_rest: "☀️ You have slept your eight hours. Press “Get up”."
   ready_ping: "⏰ Your task at {place} is done. Press “Collect”."
+  ready_ping_rest: "☀️ You have slept eight hours at {place}. Press “Get up” to recover your strength."
   options: "🧰 <b>Fieldwork</b>: {list}"
   err:
     busy: "You have a task under way. Collect it or abandon it first."
@@ -561,6 +602,14 @@ chronicle:
 prof:
   title: "🛠️ <b>Professions</b> · {used}/{slots}"
   masteries: "<b>Field masteries</b> (free for everyone)"
+  hobbies: "<b>Hobbies</b> (optional, no slot)"
+  hobby_tag: "hobby, no slot"
+  guides: "📖 Guides: {list}"
+  station: "🔨 Worked at: {station} · {place}"
+  your_rank: "Your level: {stars} · {progress}"
+  recipes: "Recipes"
+  rank_n: "Rank {rank}"
+  swap_confirm: "🔁 Drop <b>{old}</b> to learn <b>{prof}</b>?\n\nIt costs {cost} gold (you have {gold}). What you knew of {old} is kept: if you come back to it, you pick up where you left off."
   none: "<i>You have no profession yet. Learn up to {slots} at Craftsmen’s Row, next to the market.</i>"
   guild_hint: "<i>Learning is free while you have free slots; swapping a profession costs {cost} gold and you keep what you learned.</i>"
   go_guild: "<i>Professions are learned and swapped at Craftsmen’s Row, next to the market.</i>"
@@ -576,10 +625,11 @@ prof:
     unknown: "That profession does not exist."
     already: "You already practise {prof}."
     slots_full: "You already have {slots} professions. Choose one to drop."
+    hobby: "{prof} is a hobby: no need to learn it, you can already practise it."
 
 craft:
   title: "🔨 <b>Craft</b> · {place}"
-  none: "<i>There is no station for your professions here. Smithing, alchemy, carpentry, leatherworking and jewelcrafting: Craftsmen’s Row. Cooking: the hearth at The Broken Crown.</i>"
+  none: "<i>There is no station for your professions or hobbies here. Where to work each one:</i>"
   recipe: "{mark} <b>{item}</b> ×{qty} · {prof} {rank}"
   locked: "(rank {rank})"
   made: "🔨 You craft: {item} ×{qty}."
@@ -597,3 +647,5 @@ station:
   tannery: "tannery"
   jeweler_bench: "jeweler’s bench"
   hearth: "hearth"
+  scribe_desk: "scribe's desk"
+  workbench: "artificer's bench"

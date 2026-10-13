@@ -13,19 +13,8 @@ night:
   es: Las farolas tiemblan bajo la llovizna. Solo la capilla y la taberna mantienen la luz encendida.
   en: Streetlamps flicker in the drizzle. Only the chapel and the tavern keep their lights on.
 exits:
+  - {to: crownreach_chapel, minutes: 2}
   - {to: broken_crown_tavern, minutes: 2}
   - {to: crownreach_market, minutes: 3}
   - {to: old_kings_road, minutes: 30, danger: 1}
   - {to: tusk_meadow, minutes: 20}
-discoveries:
-  chapel_inscription:
-    skill: religion
-    tier: easy
-    sets_flag: lore_chapel_oath
-    text:
-      es: >-
-        Bajo el altar lees una inscripción: «El guardián no dormirá mientras el sello siga roto».
-        Alguien ha pasado los dedos por esas letras hace poco.
-      en: >-
-        Beneath the altar you read an inscription: "The warden shall not sleep while the seal is broken."
-        Someone ran their fingers over those letters recently.

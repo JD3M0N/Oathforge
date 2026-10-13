@@ -9,8 +9,9 @@ El bucle que buscamos: **ir a una zona → elegir actividad → esperar o arries
 ### Tres capas de progresión
 
 - **Nivel del personaje**: combate, atributos y habilidades de clase. No cambia.
-- **Maestrías de campo** (v0.6.0): minería, tala, herboristería, desuello, pesca y rastreo. Libres para todos, sin plazas, rango 0–5. No son habilidades d20: «Supervivencia» sigue existiendo para las tiradas.
-- **Oficios** (v0.6.1): herrería, alquimia, carpintería, peletería, cocina y joyería; **dos activos** a la vez.
+- **Maestrías de campo** (v0.6.0): minería, tala, herboristería, desuello y rastreo. Libres para todos, sin plazas, rango 0–5. No son habilidades d20: «Supervivencia» sigue existiendo para las tiradas.
+- **Oficios** (v0.6.1, v0.7.0): herrería, alquimia, carpintería, peletería, joyería, escribanía y artificiería; **dos activos** a la vez.
+- **Aficiones** (v0.7.0): cocina y pesca. Opcionales y sin plaza: cualquiera las practica y las sube si quiere. Por dentro, la pesca sigue siendo una maestría (`gathering.HOBBIES`) y la cocina un oficio con `hobby: true`; solo cambia cómo se muestran y que no ocupan plaza.
 
 ### Actividades de campo (v0.6.0)
 
@@ -30,9 +31,11 @@ El bucle que buscamos: **ir a una zona → elegir actividad → esperar o arries
 
 ### Oficios y recetas (v0.6.1)
 
-- **Dos oficios activos** de seis. Se aprenden en el **Barrio de Oficios** (junto al mercado): gratis mientras haya plaza libre; cambiar uno cuesta **25 de oro** y su XP no se pierde.
+- **Dos oficios activos** de siete (las aficiones no cuentan). Se aprenden en el **Barrio de Oficios** (junto al mercado): gratis mientras haya plaza libre; cambiar uno cuesta **25 de oro** y su XP no se pierde.
 - Rango de oficio 0–5 con la misma curva que las maestrías. Una receta 2 o más rangos por debajo del tuyo da la mitad de XP.
-- **Estaciones**: yunque, mesa alquímica, banco de carpintero, curtiembre y banco de joyero en el Barrio de Oficios; el fogón de cocina en La Corona Rota.
+- **Estaciones**: yunque, mesa alquímica, banco de carpintero, curtiembre, banco de joyero, mesa de escriba y banco de artificiero en el Barrio de Oficios; el fogón de cocina en La Corona Rota.
+- **Guía** de cada oficio y afición en `/prof_<clave>` (campo `guide` de `content/professions.yaml`): qué hace, dónde, de qué maestrías salen los materiales y las recetas por rango.
+- Cambiar de oficio pide confirmación y el botón muestra el precio.
 - **Fabricar** es inmediato y atómico: se comprueba todo y después se gastan los ingredientes, o no se gasta nada. Los objetos no apilables guardan quién los fabricó (`crafted_by`).
 - `/professions` muestra oficios y maestrías; en el Barrio de Oficios, los botones para aprender o cambiar. «🔨 Fabricar» lista las recetas de tus oficios en esa estación, con lo que tienes y lo que falta.
 
@@ -42,10 +45,26 @@ El bucle que buscamos: **ir a una zona → elegir actividad → esperar o arries
 | ⚗️ Alquimia | Poción de curación (2 raíz de sangre + 1 frasco de agua) | Poción de maná, rango 1 (2 hoja de luna + 1 frasco); tónico del reposo, rango 3 (2 musgo + 1 hoja + 1 frasco) |
 | 🪚 Carpintería | 2 tablones (3 troncos de roble) | Bastón de roble (2 tablones + 1 fibra) |
 | 🧵 Peletería | Cuero curtido (2 cuero de jabalí o 1 piel de lobo) | Cuero reforzado, CA 12 (3 cuero curtido + 1 lingote) |
-| 🍲 Cocina | Estofado del cazador, 1d6+2 PV (2 carne + 1 raíz) | 2 raciones del pescador, 2d4+1 PV (2 peces + 1 raíz) |
 | 💍 Joyería | Anillo de cobre (2 cobre + 1 carbón) | Anillo con gema, rango 2 (anillo + gema en bruto) |
+| 📜 Escribanía | 2 tintas (raíz + carbón), 2 pergaminos (cuero de jabalí), pergamino de dardo de fuego (tinta + pergamino) | Curar heridas y Égida, rango 1 (+ raíz / + hoja de luna); Sueño, rango 2 (2 tintas + pergamino + hoja de luna) |
+| 💣 Artificiería | 2 pólvoras (2 carbón + mena de hierro), 2 mechas (2 fibras), bomba de humo (pólvora + mecha + fibra) | Bomba de fuego, rango 1 (2 pólvoras + mecha); bomba cegadora, rango 2 (pólvora + mecha + cobre) |
+| 🍲 Cocina (afición) | Estofado del cazador, 1d6+2 PV (2 carne + 1 raíz) | 2 raciones del pescador, 2d4+1 PV (2 peces + 1 raíz) |
 
 Las armas fabricadas no son más fuertes que las de tienda (la espada de hierro pega como la espada larga y se vende mejor); el cuero reforzado da +1 CA sobre el cuero normal. Los ingredientes cruzan oficios: la espada necesita un tablón de carpintería y el cuero reforzado, un lingote de herrería.
+
+### Pergaminos y bombas (v0.7.0)
+
+Los objetos con `combat` (un `ItemCombat`: `spell`, `save`, `heal`, `buff` o `escape`) se usan desde «🎒 Objetos» en el panel de combate, o escribiendo la acción. Usan la misma resolución que los conjuros de clase (`engine/combat._cast`) con números fijos (ataque +5, CD 13), así que cualquier clase los lanza igual. El motor los resuelve primero y después se gasta uno del inventario, en la misma transacción. El combatiente lleva sus consumibles (`Combatant.consumables`) para pintar solo los botones que tienen sentido (la poción, si quedan).
+
+| Objeto | Efecto |
+|---|---|
+| Pergamino de dardo de fuego | Ataque +5, 2d6 de fuego |
+| Pergamino de curar heridas | 2d8+2 PV |
+| Pergamino de égida | 2d6+3 PV temporales |
+| Pergamino de sueño | Salvación de SAB CD 13 o duerme 2 turnos |
+| Bomba de humo | Sales del combate sin tirada |
+| Bomba de fuego | Toda la fila: salvación de DES CD 13, 2d6 de fuego (mitad si salva) y ardiendo 2 turnos |
+| Bomba cegadora | Salvación de DES CD 13 o aturdido 1 turno |
 
 ### Pociones con efectos tipados (v0.6.2)
 
@@ -75,7 +94,7 @@ Las herramientas las vende Tessa. Sin la herramienta no se puede trabajar ese re
 
 - Al terminar una actividad (al recoger, o al acabar el combate de una emboscada o de un rastreo) llega una **crónica**: un párrafo personal con el nombre, la clase y el linaje del héroe, el lugar y lo que pasó.
 - La escribe **Gemini 3.1 Flash-Lite** (`GEMINI_MODEL_CHRONICLE`), con un presupuesto propio de **15 al día por jugador** (`AI_USER_DAILY_CHRONICLES`). También cuenta para las 150 llamadas diarias.
-- Cuando se agota (o la IA falla), sale un texto genérico de `content/chronicles.yaml`: 3 variantes por desenlace, en los dos idiomas, elegidas por la semilla de la actividad.
+- Cuando se agota (o la IA falla), sale un texto genérico de `content/fallbacks/chronicles.yaml`: 3 variantes por desenlace, en los dos idiomas, elegidas por la semilla de la actividad.
 - La crónica se guarda con la actividad: pulsar otra vez no gasta presupuesto. El motor ya ha pagado antes de que la IA escriba nada: la crónica **no decide** botín ni resultados.
 - `/sheet` muestra «📜 Crónicas de hoy: 3/15».
 

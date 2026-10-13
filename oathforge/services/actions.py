@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from oathforge import recorder
-from oathforge.ai import intent_parser, narrator, npc_dialogue
+from oathforge.ai import fallbacks, intent_parser, narrator, npc_dialogue
 from oathforge.ai.client import LLM, usage_today, user_exhausted
 from oathforge.ai.intent_parser import ActionContext, Intent
 from oathforge.content import get_content
@@ -19,8 +19,7 @@ from oathforge.database.models import Character, User
 from oathforge.database.session import session_scope
 from oathforge.engine.checks import clamp_tier
 from oathforge.engine.combat import Action, EncounterState
-from oathforge.i18n import t
-from oathforge.services import audit, characters, combat_service, exploration, inventory, npcs, quests
+from oathforge.services import activities, audit, characters, combat_service, exploration, inventory, npcs, quests
 from oathforge.services.events import Outcome, facts
 
 
@@ -120,10 +119,11 @@ async def handle_free_text(llm: LLM, user_id: int, text: str, rng: random.Random
             return FreeTextResult(Outcome.refused("ai.budget_exhausted"))
         ctx = await build_context(session, char, lang)
         manual = manual_rolls(user)
+        name = char.name
 
     intent = await intent_parser.parse(llm, ctx, text, user_id)
-    if intent is None:
-        return FreeTextResult(Outcome.refused("freetext.unavailable"))
+    if intent is None:  # Gemini down: say so at once, in a generic voice
+        return FreeTextResult(Outcome(), fallbacks.pick("freetext", "unavailable", lang, name=name))
     if intent.type == "talk":
         return FreeTextResult(talk_to=intent.target, intent=intent)
     if manual:
@@ -151,14 +151,38 @@ async def execute_free_text(llm: LLM, user_id: int, text: str, intent: Intent, i
                         payload={"text": text[:600], "intent": intent.model_dump()},
                         result={"ok": outcome.ok, "events": [e.key for e in outcome.events]})
         scene = get_content().locations[char.location].name.en
+        place = get_content().locations[char.location].name.get(lang)
         who = describe_character(char)
-        char_id = char.id
+        char_id, name = char.id, char.name
 
     narration = await narrator.narrate(llm, lang=lang, scene=scene, character=who, player_text=text,
                                        facts=facts(outcome), user_id=user_id)
+    if narration is None and outcome.ok and outcome.events:
+        narration = fallbacks.pick("narration", narration_key(intent, outcome, in_combat), lang,
+                                   name=name, place=place)
     recorder.action(user_id=user_id, character_id=char_id, text=text, intent=intent.model_dump(),
                     ok=outcome.ok, events=[e.key for e in outcome.events], narration=narration)
     return FreeTextResult(outcome, narration, intent=intent)
+
+
+def narration_key(intent: Intent, outcome: Outcome, in_combat: bool) -> str:
+    """Which generic narration fits (content/fallbacks/narration.yaml)."""
+    if in_combat:
+        return "combat"
+    if intent.type in ("move", "steal", "rest"):
+        return {"move": "travel"}.get(intent.type, intent.type)
+    results = [e.params.get("result") for e in outcome.events if e.key == "check.result"]
+    if results:
+        return "success" if results[-1] == "✅" else "failure"
+    return "default"
+
+
+def _combat_item_action(intent: Intent) -> Action:
+    """"I throw the fire bomb": a scroll or bomb when the target is one, else a healing potion."""
+    item = get_content().items.get(intent.target or "")
+    if item is not None and item.combat is not None:
+        return Action(kind="item", ability=intent.target)
+    return Action(kind="heal_item")
 
 
 async def resolve(session: AsyncSession, char: Character, enc, intent: Intent, rng: random.Random) -> Outcome:
@@ -168,7 +192,7 @@ async def resolve(session: AsyncSession, char: Character, enc, intent: Intent, r
         action = {
             "attack": lambda: Action(kind="attack", weapon=intent.weapon, target=intent.target),
             "ability": lambda: Action(kind="ability", ability=intent.ability, target=intent.target),
-            "use_item": lambda: Action(kind="heal_item"),
+            "use_item": lambda: _combat_item_action(intent),
             "defend": lambda: Action(kind="defend"),
             "flee": lambda: Action(kind="flee"),
             "environment_interaction": lambda: Action(kind="interact", object=intent.target),
@@ -192,7 +216,7 @@ async def resolve(session: AsyncSession, char: Character, enc, intent: Intent, r
             return Outcome.refused("freetext.not_here")
         return await npcs.steal(session, char, intent.target, rng)
     if kind == "rest":
-        return await exploration.rest(session, char)
+        return await activities.start(session, char, "rest", "rest")
     if kind == "quest_action":
         return await quests.perform(session, char, intent.target, present, rng)
     if kind == "ooc_question":
@@ -212,8 +236,10 @@ async def talk(llm: LLM, user_id: int, npc_key: str, text: str) -> tuple[str, Ou
         lang = user.language
         if npc is None or npc_key not in exploration.npcs_present(char.location):
             return "", Outcome.refused("talk.err.not_here")
+        name = char.name
         if user_exhausted(*await usage_today(session, user_id)):
-            return t(lang, "talk.fallback", npc=npc.name.get(lang)), Outcome().add("ai.budget_exhausted")
+            return (fallbacks.pick("dialogue", npc_key, lang, npc=npc.name.get(lang), name=name),
+                    Outcome().add("ai.budget_exhausted"))
         rel = await npcs.relationship(session, npc_key, char)
         trust = rel.trust
         memories = [m.text for m in await npcs.recall(session, npc_key, char)]
@@ -227,8 +253,8 @@ async def talk(llm: LLM, user_id: int, npc_key: str, text: str) -> tuple[str, Ou
         user_id=user_id,
     )
     out = Outcome()
-    if reply is None:
-        return t(lang, "talk.fallback", npc=npc.name.get(lang)), out
+    if reply is None:  # Gemini down: a generic line in the NPC's voice
+        return fallbacks.pick("dialogue", npc_key, lang, npc=npc.name.get(lang), name=name), out
 
     async with session_scope() as session:
         _, char = await _load(session, user_id, lock=True)

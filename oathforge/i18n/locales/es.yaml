@@ -12,7 +12,7 @@ cmd:
   classes: "Clases y sus habilidades"
   report: "Informe de la última batalla"
   professions: "Oficios y maestrías"
-  roll: "Lanzar el dado y tiradas manuales"
+  settings: "Ajustes: idioma y tiradas manuales"
   language: "Cambiar idioma"
   help: "Cómo jugar"
 
@@ -24,8 +24,18 @@ help:
     También puedes <b>escribir lo que quieras hacer</b>: «me escondo tras la barra y escucho», «intento robarle la bolsa al tabernero», «empujo el carro sobre el bandido».
     El Dungeon Master interpreta tu acción, el motor tira los dados y tú ves el resultado real.
 
-    Comandos: /look /hero /sheet /inventory /journal /quests /classes /report /professions /roll /language
+    Comandos: /look /hero /sheet /inventory /journal /quests /classes /report /professions /settings
   version: "<i>Oathforge v{version}</i>"
+
+settings:
+  text: |-
+    ⚙️ <b>Ajustes</b>
+
+    🌐 Idioma: {language}
+    🎲 Tiradas manuales: {rolls}
+
+    <i>Con las tiradas manuales, cuando una prueba de habilidad necesite tirada (investigar, acciones de misión o acciones escritas) te pedimos que pulses «🎲 Tirar el dado». La animación es decorativa: el resultado lo calcula siempre el motor.</i>
+  language_name: "Español"
 
 lang:
   choose: "Elige tu idioma:"
@@ -84,6 +94,8 @@ btn:
   talk: "💬 Hablar"
   shop: "🛒 Comerciar"
   rest: "🛏️ Descanso largo ({cost} 🪙)"
+  heal: "🙏 Curar heridas ({cost} 🪙)"
+  wake: "☀️ Levantarse"
   inventory: "🎒 Inventario"
   sheet: "🦸 Héroe"
   journal: "📜 Diario"
@@ -104,8 +116,8 @@ btn:
   professions: "🛠️ Oficios"
   craft: "🔨 Fabricar"
   learn: "📘 Aprender {prof}"
-  swap_for: "🔁 Cambiar por {prof}"
-  replace: "Dejar {prof} ({cost} 🪙)"
+  swap_for: "🔁 Cambiar por {prof} ({cost} 🪙)"
+  replace: "Dejar {prof}"
   make: "🔨 {item}"
   missions: "📜 Misiones"
   bestiary: "📖 Bestiario"
@@ -124,6 +136,7 @@ btn:
   continue: "▶️ Continuar"
   defend: "🛡️ Defender"
   potion: "🧪 Poción"
+  items: "🎒 Objetos"
   move_back: "↩️ A retaguardia"
   move_front: "↪️ A vanguardia"
   flee: "🏃 Huir"
@@ -142,7 +155,6 @@ travel:
 talk:
   title: "💬 ¿Con quién quieres hablar?"
   hint: "Escribe lo que le dices a {npc}."
-  fallback: "{npc} te mira un momento, pensativo, y no responde."
   trust_up: "{npc} confía más en ti ({trust})."
   trust_down: "{npc} confía menos en ti ({trust})."
   err:
@@ -160,6 +172,24 @@ shop:
     no_gold: "No tienes suficiente oro (necesitas {price})."
     no_buy: "Este comerciante no compra nada."
     cant_sell: "No puedes vender eso (¿está equipado?)."
+  group:
+    weapons: "⚔️ Armas"
+    armor: "🛡️ Armaduras y escudos"
+    consumables: "🧪 Consumibles"
+    tools: "🧰 Herramientas"
+    other: "📦 Otros"
+  stat:
+    ranged: "a distancia"
+    finesse: "sutil"
+    ac: "CA {ac}"
+    ac_dex: "CA {ac} + DES"
+    ac_dex_cap: "CA {ac} + DES (máx. {cap})"
+    ac_bonus: "+{bonus} CA"
+    heal: "❤️ {dice} PV"
+    restore_hp: "❤️ cura PV"
+    restore_spell_charge: "🔮 +1 uso de conjuro"
+    short_rest: "💤 descanso corto"
+    combat: "⚔️ para usar en combate"
 
 inv:
   title: "🎒 <b>Inventario</b> · 🪙 {gold}"
@@ -194,7 +224,7 @@ sheet:
   origins: "🧬 Orígenes"
   identity: "{cls} · nivel {level}"
   hp: "❤️ PV {hp}/{max_hp}  {bar}"
-  xp: "✨ XP {xp}/{next}  {bar}"
+  xp: "✨ XP {cur}/{need} hacia el nivel {level} ({xp} en total)  {bar}"
   xp_max: "✨ XP {xp} · nivel máximo"
   vitals: "🛡️ CA {ac} · 🎯 Competencia +{pb} · 🪙 {gold}"
   injured: "🩹 Herido (descansa en una posada)"
@@ -215,6 +245,7 @@ sheet:
     honored: "venerado"
   ai_usage: "🤖 Dungeon Master hoy: {calls}/{limit} · quedan {left}  {bar}"
   masteries: "Maestrías de campo"
+  hobbies: "Aficiones (opcionales)"
   chronicles: "📜 Crónicas de hoy: {used}/{limit} · quedan {left}  {bar}"
   professions: "🛠️ Oficios {used}/{slots}: {list}"
   no_professions: "ninguno (apréndelos en el Barrio de Oficios)"
@@ -251,11 +282,15 @@ explore:
   hunt_day: "🏹 Rastreas el prado a plena luz y das con tu presa."
   hunt_night: "🦇 Te adentras en la hierba oscura. Algo aletea sobre tu cabeza."
   hunt_boss: "🐗 La tierra tiembla. Algo enorme se abre paso entre la hierba."
-  rested: "Descansas toda la noche ({cost} de oro). Recuperas tus fuerzas: {hp} PV."
+  rested: "☀️ Te levantas descansado tras ocho horas de sueño. Recuperas todas tus fuerzas: {hp} PV y todos tus usos."
+  healed: "🙏 La hermana Ysolde murmura una plegaria y te venda ({cost} de oro): recuperas {amount} PV ({hp}/{max_hp})."
+  healed_injured: "Las heridas graves no se cierran con vendas: para eso necesitas un descanso largo."
   err:
     in_combat: "¡Estás en pleno combate!"
     no_route: "No puedes ir allí desde aquí."
     no_rest: "Aquí no hay dónde descansar."
+    no_healer: "Aquí no hay quien cure heridas."
+    injured_cap: "Tus heridas graves no se curan más con vendas. Necesitas un descanso largo."
     no_hunting: "Aquí no hay nada que cazar."
 
 quest:
@@ -311,7 +346,6 @@ steal:
     nothing: "No hay nada que robar ahí."
 
 freetext:
-  unavailable: "El Dungeon Master no puede interpretar acciones libres ahora mismo. Usa los botones."
   stale: "La situación cambió mientras pensabas. Inténtalo de nuevo."
   not_here: "Eso no está aquí."
   no_effect: "Nada cambia en el mundo."
@@ -349,6 +383,9 @@ combat:
   move: "👣 {actor} se mueve a {row}."
   defend: "🛡️ {actor} se pone en guardia."
   potion: "🧪 {actor} bebe una poción y recupera {amount} PV."
+  item: "🎒 {actor} usa {item}."
+  escaped: "💨 {actor} desaparece entre el humo."
+  items_title: "🎒 <b>¿Qué objeto usas?</b>"
   ability: "✨ {actor} usa {ability}."
   heal: "💚 {actor} usa {ability} y recupera {amount} PV."
   turn: "☀️ {actor} usa {ability}: la luz sagrada abrasa a los no-muertos."
@@ -381,6 +418,7 @@ combat:
     bad_target: "No puedes alcanzar a ese objetivo."
     no_type_targets: "No hay enemigos a los que afecte."
     surge_unused: "Primero usa tu acción."
+    no_item: "No te queda ese objeto."
 
 row:
   front: "vanguardia"
@@ -494,11 +532,9 @@ bestiary:
   loot: "🎁 Botín: {list}"
 
 roll:
-  prompt: "🎲 Esta acción necesita una tirada de <b>{skill}</b>. Lanza el dado con /roll o con el botón."
-  settings: |-
-    🎲 <b>Tiradas manuales</b>: {state}
-
-    Activadas, cuando una prueba de habilidad (investigar, acciones de misión o acciones escritas) necesite tirada, la lanzas tú con /roll y sale el dado animado. El resultado lo calcula siempre el motor: d20 + tu bonificador contra la CD.
+  prompt: "🎲 Esta acción necesita una tirada de <b>{skill}</b>. Lanza el dado con el botón."
+  warning: |-
+    ⚠️ <b>Tiradas manuales activadas.</b> El dado animado de Telegram es solo decoración: es un d6 y su número <b>no</b> es tu tirada. El motor tira un d20 (más tu bonificador contra la CD) y el resultado real sale debajo del dado.
   "on": "activadas"
   "off": "desactivadas"
   changed: "🎲 Tiradas manuales {state}."
@@ -509,6 +545,7 @@ activity:
     gather: "⏳ Te pones a trabajar: {skill} en {place}. En {minutes} minutos podrás recoger lo obtenido."
     stay: "🏕️ Empiezas una expedición larga de {skill} en {place} ({minutes} min). Traerás mucho más, pero al final puede haber emboscada."
     track: "🐾 Te agachas y empiezas a buscar rastros en {place} ({minutes} min)."
+    rest: "🛏️ Pagas {cost} de oro y te acuestas en {place}. Ocho horas de sueño: despiertas en {minutes} min."
   done:
     gather: "✅ Terminas tu trabajo en {place}."
     stay: "✅ Tu expedición en {place} termina sin incidentes."
@@ -516,6 +553,7 @@ activity:
     gather: "{skill} en {place}"
     stay: "Expedición de {skill} en {place}"
     track: "Rastreo en {place}"
+    rest: "Durmiendo en {place}"
   cancelled: "Abandonas la tarea. No te llevas nada."
   bonus: "🍀 Tu maestría te da algo extra: {loot}."
   stay_ambush: "⚠️ Cuando cargas lo obtenido ({loot}), algo sale de las sombras... Victoria: te lo llevas todo. Huida: la mitad. Derrota: lo pierdes."
@@ -532,7 +570,10 @@ activity:
   ready: "✅ ¡Listo! Pulsa «Recoger»."
   stay_warning: "⚠️ Al terminar puede haber emboscada. Victoria: todo; huida: la mitad; derrota: nada."
   busy_hint: "No puedes viajar ni empezar otra cosa hasta recoger o abandonar esta tarea."
+  busy_hint_rest: "Mientras duermes no puedes viajar ni hacer otra cosa. Si te levantas antes, no recuperas nada y el oro no se devuelve."
+  ready_rest: "☀️ Has dormido tus ocho horas. Pulsa «Levantarse»."
   ready_ping: "⏰ Tu tarea en {place} ha terminado. Pulsa «Recoger»."
+  ready_ping_rest: "☀️ Has dormido ocho horas en {place}. Pulsa «Levantarse» para recuperar tus fuerzas."
   options: "🧰 <b>Trabajo de campo</b>: {list}"
   err:
     busy: "Tienes una tarea en marcha. Recógela o abandónala primero."
@@ -561,6 +602,14 @@ chronicle:
 prof:
   title: "🛠️ <b>Oficios</b> · {used}/{slots}"
   masteries: "<b>Maestrías de campo</b> (libres para todos)"
+  hobbies: "<b>Aficiones</b> (opcionales, sin plaza)"
+  hobby_tag: "afición, sin plaza"
+  guides: "📖 Guías: {list}"
+  station: "🔨 Se trabaja en: {station} · {place}"
+  your_rank: "Tu nivel: {stars} · {progress}"
+  recipes: "Recetas"
+  rank_n: "Rango {rank}"
+  swap_confirm: "🔁 ¿Dejas <b>{old}</b> para aprender <b>{prof}</b>?\n\nCuesta {cost} de oro (tienes {gold}). Lo que sabías de {old} no se pierde: si vuelves a él, sigues donde lo dejaste."
   none: "<i>Aún no tienes oficio. Aprende hasta {slots} en el Barrio de Oficios, junto al mercado.</i>"
   guild_hint: "<i>Aprender es gratis mientras tengas plazas libres; cambiar un oficio cuesta {cost} de oro y no pierdes lo aprendido.</i>"
   go_guild: "<i>Los oficios se aprenden y cambian en el Barrio de Oficios, junto al mercado.</i>"
@@ -576,10 +625,11 @@ prof:
     unknown: "Ese oficio no existe."
     already: "Ya practicas {prof}."
     slots_full: "Ya tienes {slots} oficios. Elige cuál dejar."
+    hobby: "{prof} es una afición: no hace falta aprenderla, ya puedes practicarla."
 
 craft:
   title: "🔨 <b>Fabricar</b> · {place}"
-  none: "<i>Aquí no hay estación para tus oficios. Herrería, alquimia, carpintería, peletería y joyería: Barrio de Oficios. Cocina: fogón de La Corona Rota.</i>"
+  none: "<i>Aquí no hay estación para tus oficios ni aficiones. Dónde trabajar cada uno:</i>"
   recipe: "{mark} <b>{item}</b> ×{qty} · {prof} {rank}"
   locked: "(rango {rank})"
   made: "🔨 Fabricas: {item} ×{qty}."
@@ -597,3 +647,5 @@ station:
   tannery: "curtiembre"
   jeweler_bench: "banco de joyero"
   hearth: "fogón"
+  scribe_desk: "mesa de escriba"
+  workbench: "banco de artificiero"

@@ -7,7 +7,7 @@ from sqlalchemy import func, select
 from oathforge.database.models import ActionLog, Character, ItemInstance, NpcMemory, QuestProgress
 from oathforge.content import get_content
 from oathforge.database.session import session_scope
-from oathforge.engine.combat import Action
+from oathforge.engine.combat import Action, EncounterState
 from oathforge.services.events import Outcome
 from oathforge.services import (
     audit, characters, combat_service, exploration, inventory, npcs, quests,
@@ -238,15 +238,50 @@ async def test_free_check_once_per_skill_place_and_day(monkeypatch):
         assert list(char.checks_tried) == ["free:investigation:broken_crown_tavern"]
 
 
-async def test_rest_costs_gold_and_restores():
+async def test_long_rest_is_80_minutes_asleep_then_restores():
+    from oathforge.services import activities
+
     _, cid = await new_character()
     async with session_scope() as s:
         char = await get_char(s, cid)
         char.location, char.hp, char.resources = "broken_crown_tavern", 1, {"consecrated_strike": 0}
         char.conditions = {"injured": True}
-        out = await exploration.rest(s, char)
-        assert out.ok and char.hp == char.max_hp and char.gold == 10
+        out = await activities.start(s, char, "rest", "rest", now=1000)
+        assert out.ok and char.gold == 10 and char.state == "busy" and char.hp == 1  # paid, asleep, not healed yet
+        assert (await exploration.travel(s, char, "crownreach_plaza", random.Random(0))).error == "activity.err.busy"
+        assert (await activities.claim(s, char, now=1000 + 79 * 60)).error == "activity.err.not_ready"
+        out = await activities.claim(s, char, now=1000 + 80 * 60)
+        assert out.ok and char.state == "idle" and char.hp == char.max_hp
         assert char.resources["consecrated_strike"] == 2 and "injured" not in char.conditions
+
+
+async def test_abandoned_rest_heals_nothing_and_keeps_the_gold():
+    from oathforge.services import activities
+
+    _, cid = await new_character()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        char.location, char.hp = "broken_crown_tavern", 1
+        await activities.start(s, char, "rest", "rest", now=1000)
+        assert (await activities.cancel(s, char, now=1060)).ok
+        assert char.hp == 1 and char.gold == 10 and char.state == "idle"
+
+
+async def test_chapel_cures_wounds_for_a_few_coins():
+    _, cid = await new_character()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        char.location = "crownreach_chapel"
+        assert (await exploration.cure_wounds(s, char, random.Random(0))).error == "inv.err.full_hp"  # free when healthy
+        char.hp = 1
+        out = await exploration.cure_wounds(s, char, random.Random(0))
+        assert out.ok and char.gold == 15 - 3 and 1 + 5 <= char.hp <= 1 + 12
+        char.hp, char.conditions = 1, {"injured": True}
+        await exploration.cure_wounds(s, char, random.Random(0))
+        assert char.hp <= char.max_hp // 2  # grave wounds still need a long rest
+        assert (await exploration.cure_wounds(s, char, random.Random(0))).error == "explore.err.injured_cap"
+        char.location = "crownreach_plaza"
+        assert (await exploration.cure_wounds(s, char, random.Random(0))).error == "explore.err.no_healer"
 
 
 def test_day_night_clock():
@@ -627,3 +662,17 @@ async def test_bestiary_records_seen_and_killed():
         await _fight(s, char, ["grey_wolf"], seed=1)
         assert bestiary.tier(char.bestiary["grey_wolf"]) == 3
         assert [k for k, _ in bestiary.known(char)] == ["grey_wolf"]
+
+
+def test_anything_worth_a_coin_sells_for_at_least_one():
+    assert inventory.sell_price("torch", 0) == 1
+    assert inventory.sell_price("longsword", 0) == 8
+
+
+async def test_two_enemies_of_the_same_kind_get_letters():
+    _, cid = await new_character()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        enc, _ = await combat_service.start_encounter(s, char, ["boar", "boar", "cave_bat"], random.Random(0))
+        names = {c.name["es"] for k, c in EncounterState.model_validate(enc.state).combatants.items() if k != "p1"}
+        assert names == {"Jabalí A", "Jabalí B", "Murciélago de cueva"}

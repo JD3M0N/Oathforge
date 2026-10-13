@@ -1,5 +1,5 @@
 """Timed field activities: Gather (5 min, safe), Stay (15 min, more loot, may end in an ambush)
-and Track (5 min, then a fight with the prey).
+and Track (5 min, then a fight with the prey). A long rest at an inn is one too (80 min asleep).
 
     start  -> the character is busy until ``ends_at`` (unix seconds stored in the database)
     claim  -> the result is rolled once from the activity's seed, stored and paid
@@ -24,7 +24,7 @@ from oathforge.i18n import t
 from oathforge.services import characters, combat_service, exploration, inventory
 from oathforge.services.events import Outcome
 
-KINDS = ("gather", "stay", "track")
+KINDS = ("gather", "stay", "track", "rest")
 OPEN = ("running", "awaiting_combat")
 SKINNING_KNIFE = "skinning_knife"
 
@@ -69,7 +69,13 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str,
         return refusal
     c = get_content()
     loc = c.locations[char.location]
-    if kind == "track":
+    if kind == "rest":
+        if loc.rest_cost is None:
+            return Outcome.refused("explore.err.no_rest")
+        if char.gold < loc.rest_cost:
+            return Outcome.refused("shop.err.no_gold", price=loc.rest_cost)
+        skill = "rest"
+    elif kind == "track":
         if not loc.hunting:
             return Outcome.refused("activity.err.unavailable")
         skill = "tracking"
@@ -88,6 +94,10 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str,
     session.add(act)
     await session.flush()
     char.state = "busy"
+    if kind == "rest":  # paid on lying down; abandoning gives nothing back
+        char.gold -= loc.rest_cost
+        return Outcome().add("activity.started.rest", place=loc.name.model_dump(), cost=loc.rest_cost,
+                             minutes=seconds // 60)
     return Outcome().add(f"activity.started.{kind}", skill=characters.mastery_name(skill),
                          place=loc.name.model_dump(), minutes=seconds // 60)
 
@@ -128,6 +138,9 @@ async def claim(session: AsyncSession, char: Character, now: float | None = None
     rng = random.Random(act.seed)
     loc = c.locations[act.location]
     char.state = "idle"
+    if act.kind == "rest":
+        _finish(act, "rest", {}, 0, now)
+        return exploration.wake_rested(char)
     if act.kind == "track":
         return await _claim_track(session, char, act, loc, rng, now)
 
@@ -242,5 +255,5 @@ def remaining_minutes(act: WorldActivity, now: float | None = None) -> int:
 def describe(act: WorldActivity, lang: str) -> str:
     """'Minería en Mina del Paso Viejo' for panels."""
     c = get_content()
-    return t(lang, f"activity.kind.{act.kind}", skill=characters.mastery_name(act.skill)[lang],
-             place=c.locations[act.location].name.get(lang))
+    skill = "" if act.kind == "rest" else characters.mastery_name(act.skill)[lang]
+    return t(lang, f"activity.kind.{act.kind}", skill=skill, place=c.locations[act.location].name.get(lang))

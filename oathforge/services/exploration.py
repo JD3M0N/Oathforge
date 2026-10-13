@@ -9,6 +9,7 @@ from oathforge.content import get_content
 from oathforge.content.schemas import EncounterEntry, Exit, Location
 from oathforge.database.models import Character
 from oathforge.engine.checks import check, dc_for
+from oathforge.engine.dice import roll
 from oathforge.services import characters, combat_service, inventory, quests
 from oathforge.services.events import Outcome
 
@@ -189,16 +190,31 @@ async def check_skill(session: AsyncSession, char: Character, skill: str, tier: 
     return out, res.success
 
 
-async def rest(session: AsyncSession, char: Character) -> Outcome:
-    loc = get_content().locations[char.location]
-    if loc.rest_cost is None:
-        return Outcome.refused("explore.err.no_rest")
-    if refusal := characters.ensure_free(char):
-        return refusal
-    if char.gold < loc.rest_cost:
-        return Outcome.refused("shop.err.no_gold", price=loc.rest_cost)
-    char.gold -= loc.rest_cost
+def wake_rested(char: Character) -> Outcome:
+    """The end of a long rest (activities.claim): full HP and uses, and grave wounds healed."""
     char.hp = char.max_hp
     char.resources = characters.full_resources(char.class_key, char.level)
     char.conditions = {k: v for k, v in char.conditions.items() if k != "injured"}
-    return Outcome().add("explore.rested", cost=loc.rest_cost, hp=char.hp)
+    return Outcome().add("explore.rested", hp=char.hp)
+
+
+async def cure_wounds(session: AsyncSession, char: Character, rng: random.Random) -> Outcome:
+    """The chapel's healer: a few coins for a quick heal. Grave wounds still need a long rest."""
+    loc = get_content().locations[char.location]
+    if loc.healer is None:
+        return Outcome.refused("explore.err.no_healer")
+    if refusal := characters.ensure_free(char):
+        return refusal
+    cap = inventory.hp_cap(char)
+    if char.hp >= cap:
+        return Outcome.refused("explore.err.injured_cap" if cap < char.max_hp else "inv.err.full_hp")
+    if char.gold < loc.healer.cost:
+        return Outcome.refused("shop.err.no_gold", price=loc.healer.cost)
+    char.gold -= loc.healer.cost
+    before = char.hp
+    char.hp = min(cap, char.hp + roll(loc.healer.heal, rng).total)
+    out = Outcome().add("explore.healed", cost=loc.healer.cost, amount=char.hp - before, hp=char.hp,
+                        max_hp=char.max_hp)
+    if cap < char.max_hp:
+        out.add("explore.healed_injured")
+    return out

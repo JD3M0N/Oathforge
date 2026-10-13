@@ -37,7 +37,7 @@ async def on_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             result = await actions.handle_free_text(llm, user_id, text, rng())
         if result.talk_to:
             npc = context.user_data["talk"] = result.talk_to
-        elif result.roll_skill:  # manual rolls: park the action until /roll
+        elif result.roll_skill:  # manual rolls: park the action until the 🎲 button
             context.user_data["pending_roll"] = {"type": "text", "text": text, "user_id": user_id,
                                                  "intent": result.intent.model_dump(), "location": result.location}
             await send(update, *callbacks.roll_prompt(result.roll_skill, lang))

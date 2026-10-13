@@ -1,0 +1,54 @@
+# Réplicas de respaldo de los NPC: se usan cuando Gemini no responde o se acabó el presupuesto de IA.
+# Una lista por NPC (su clave en npcs.yaml) y «default» para el resto. Se elige una al azar.
+# Sin adjetivos con género sobre quien habla: valen para cualquier NPC.
+# Marcadores: {npc} el nombre del NPC · {name} el héroe.
+
+default:
+  - es: "{npc} te escucha con atención, pero solo responde con un gesto vago. Hoy no saca nada más."
+    en: "{npc} listens closely, but answers only with a vague gesture. Nothing more today."
+  - es: "«Ahora no, {name}. Vuelve más tarde», dice {npc}, con la cabeza en otra parte."
+    en: "\"Not now, {name}. Come back later,\" says {npc}, mind elsewhere."
+  - es: "{npc} se encoge de hombros. «No sabría qué decirte.»"
+    en: "{npc} shrugs. \"I wouldn't know what to tell you.\""
+  - es: "{npc} te mira un momento en silencio y vuelve a lo suyo."
+    en: "{npc} looks at you for a moment in silence and goes back to work."
+
+bram:
+  - es: "«¿Otra ronda? Para charlas largas, vuelve cuando la taberna esté más tranquila», dice Bram mientras seca una jarra."
+    en: "\"Another round? For long talks, come back when the tavern is quieter,\" Bram says, drying a tankard."
+  - es: "Bram se inclina sobre la barra. «Aquí se oye de todo, {name}, pero hoy los rumores andan escasos.»"
+    en: "Bram leans over the bar. \"You hear everything in here, {name}, but rumours are thin today.\""
+  - es: "«Si buscas trabajo, mira el diario: yo ya te he dicho lo que sé», gruñe Bram con una sonrisa."
+    en: "\"If you're after work, check your journal: I've told you what I know,\" Bram grunts with a grin."
+
+mira:
+  - es: "Mira gira la moneda entre los dedos. «La información cuesta. Y hoy no vendo.»"
+    en: "Mira turns a coin between her fingers. \"Information costs. And today I'm not selling.\""
+  - es: "«¿Por qué quieres saberlo?», pregunta Mira, y no añade nada más."
+    en: "\"Why do you want to know?\" Mira asks, and adds nothing more."
+  - es: "Mira se ajusta la capucha y mira hacia la puerta. «Ahora no es buen momento.»"
+    en: "Mira adjusts her hood and glances at the door. \"Now isn't a good time.\""
+
+holt:
+  - es: "«Circule, ciudadano. La Guardia de Plata tiene trabajo», dice el sargento Holt sin apartar la vista de la plaza."
+    en: "\"Move along, citizen. The Silver Guard has work to do,\" Sergeant Holt says without taking his eyes off the plaza."
+  - es: "Holt se cruza de brazos. «Si tienes algo útil que contar, cuéntalo. Si no, no me hagas perder el tiempo.»"
+    en: "Holt folds his arms. \"If you've got something useful to report, report it. If not, don't waste my time.\""
+  - es: "«Las órdenes son las órdenes», responde Holt, seco."
+    en: "\"Orders are orders,\" Holt replies flatly."
+
+tessa:
+  - es: "Tessa no levanta la vista del yunque. «Si quieres acero, mira lo que tengo. Si quieres charla, ve a la taberna.»"
+    en: "Tessa doesn't look up from the anvil. \"If you want steel, see what I've got. If you want chatter, go to the tavern.\""
+  - es: "«Un buen filo vale más que mil palabras», dice Tessa, y vuelve a martillear."
+    en: "\"A good edge is worth more than a thousand words,\" Tessa says, and goes back to hammering."
+  - es: "Tessa se seca el sudor de la frente. «Luego, {name}. Ahora el metal está caliente.»"
+    en: "Tessa wipes the sweat from her brow. \"Later, {name}. The metal's hot right now.\""
+
+ysolde:
+  - es: "La hermana Ysolde junta las manos. «Que la luz te guarde, {name}. Si estás herido, puedo ayudarte.»"
+    en: "Sister Ysolde folds her hands. \"May the light keep you, {name}. If you're hurt, I can help.\""
+  - es: "«Aquí todos son bienvenidos, sobre todo los que vuelven a rastras», dice Ysolde con una sonrisa cansada."
+    en: "\"Everyone is welcome here, especially those who come back crawling,\" Ysolde says with a tired smile."
+  - es: "Ysolde enciende una vela más en el altar y no responde enseguida. «Reza conmigo un momento, si quieres.»"
+    en: "Ysolde lights one more candle on the altar and doesn't answer at once. \"Pray with me a moment, if you like.\""

@@ -131,9 +131,11 @@ async def _ready_ping(context: ContextTypes.DEFAULT_TYPE) -> None:
         if act is None or act.ends_at > time.time():  # collected, abandoned, or a newer activity
             return
         place = get_content().locations[act.location].name.get(lang)
-    kb = markup([[btn(t(lang, "btn.claim"), cb("actc", "-", nonce()))]])
+        rest = act.kind == "rest"
+    kb = markup([[btn(t(lang, "btn.wake" if rest else "btn.claim"), cb("actc", "-", nonce()))]])
     try:
-        await context.bot.send_message(job.chat_id, t(lang, "activity.ready_ping", place=escape(place)),
+        await context.bot.send_message(job.chat_id, t(lang, "activity.ready_ping_rest" if rest else "activity.ready_ping",
+                                                      place=escape(place)),
                                        parse_mode=ParseMode.HTML, reply_markup=kb)
     except Exception:  # a heads-up only
         log.warning("could not send the activity ping", exc_info=True)

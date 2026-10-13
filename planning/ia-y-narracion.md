@@ -2,12 +2,14 @@
 
 ## Estado actual
 
-- Gemini (`google-genai`): modelo rápido para interpretar intenciones y modelo narrativo para narrar. Si el narrativo falla, se usa el rápido con un enfriamiento.
+- Gemini (`google-genai`): un nivel rápido para interpretar intenciones, uno narrativo para narrar y otro para las crónicas. **Desde v0.7.0 los tres usan Gemini 3.1 Flash-Lite** (`GEMINI_MODEL_*` en `.env`).
+- **Respaldo cuando Gemini cae** (v0.7.0): un modelo nunca se reintenta a sí mismo; tras un fallo (503, cuota, timeout) queda en pausa 2 min (o lo que diga el `retryDelay` de Google) y mientras tanto se va directo al texto genérico. Timeout de 10 s (8 s en crónicas). Si el narrativo es distinto del rápido, se prueba el rápido una vez.
+- **Textos genéricos** en `content/fallbacks/`, uno por tipo: `chronicles.yaml` (crónicas por desenlace), `dialogue.yaml` (réplicas por NPC, sin género), `narration.yaml` (ambiente por tipo de desenlace), `freetext.yaml` (aviso de que el DM no responde). Se validan al arrancar (marcadores permitidos, claves obligatorias, NPC que existen) y se eligen con `ai/fallbacks.pick`. Para ampliarlos basta con añadir líneas al YAML.
 - **Regla de oro: la IA nunca decide resultados.** Interpreta → el motor valida y tira → la IA narra los hechos.
 - El texto del jugador va delimitado como datos; los ids se validan contra el contexto; las dificultades están acotadas.
 - Presupuesto diario por usuario y global. En la fase de testeo (0.2.x), **150 llamadas al día por jugador** (`AI_USER_DAILY_CALLS`). Si se agota, se avisa al jugador y se juega con botones y plantillas; la hoja de héroe (`/hero`) muestra las llamadas usadas y las que quedan (v0.2.2).
 - NPC con persona, objetivos, secretos y memoria.
-- **Crónicas de expedición** (v0.6.0): tercer modelo, `GEMINI_MODEL_CHRONICLE` (Gemini 3.1 Flash-Lite), que escribe la historia de cada actividad de campo a partir del resultado ya guardado. Presupuesto propio de **15 al día por jugador** (`AI_USER_DAILY_CHRONICLES`); después, textos genéricos de `content/chronicles.yaml`. No cae al modelo rápido: si falla, texto genérico sin gastar presupuesto. Ver `profesiones.md`.
+- **Crónicas de expedición** (v0.6.0): tercer modelo, `GEMINI_MODEL_CHRONICLE` (Gemini 3.1 Flash-Lite), que escribe la historia de cada actividad de campo a partir del resultado ya guardado. Presupuesto propio de **15 al día por jugador** (`AI_USER_DAILY_CHRONICLES`); después, textos genéricos de `content/fallbacks/chronicles.yaml`. No cae al modelo rápido: si falla, texto genérico sin gastar presupuesto. Ver `profesiones.md`.
 - v0.1.1: cada llamada se guarda en `artifacts/ai/` (prompt, respuesta, modelo, tokens, latencia).
 
 ## Ideas

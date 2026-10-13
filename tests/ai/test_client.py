@@ -75,10 +75,21 @@ async def test_invalid_request_is_not_retried():
     assert client.calls == [FAST]
 
 
-async def test_fast_tier_retries_itself_once():
+async def test_a_model_never_retries_itself():
     llm, client = make_llm(api_error(503), "ok")
-    assert await llm.text(tier="fast", system="s", prompt="p", user_id=None) == "ok"
-    assert client.calls == [FAST, FAST]
+    assert await llm.text(tier="fast", system="s", prompt="p", user_id=None) is None
+    assert client.calls == [FAST]
+
+
+async def test_one_model_for_everything_goes_generic_while_it_cools_down():
+    client = ScriptedClient(TimeoutError(), "never used")
+    llm = GeminiLLM(Settings(gemini_model_fast=FAST, gemini_model_narrative=FAST, gemini_model_chronicle=FAST),
+                    client=client)
+    llm.budget = OpenBudget()
+    assert await llm.text(tier="narrative", system="s", prompt="p", user_id=None) is None
+    for tier in ("fast", "narrative", "chronicle"):  # no call, no wait: the caller uses its generic text
+        assert await llm.text(tier=tier, system="s", prompt="p", user_id=None) is None
+    assert client.calls == [FAST]
 
 
 def quota_error(per_day: bool, delay: str) -> errors.APIError:

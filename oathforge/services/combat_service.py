@@ -36,6 +36,19 @@ def monster_combatant(key: str, cid: str) -> Combatant:
     )
 
 
+def _letter_duplicates(foes: list[Combatant]) -> None:
+    """Two boars become "Boar A" and "Boar B", so targets and logs can tell them apart."""
+    seen: dict[str, int] = {}
+    for f in foes:
+        seen[f.ref] = seen.get(f.ref, 0) + 1
+    letters: dict[str, int] = {}
+    for f in foes:
+        if seen[f.ref] > 1:
+            n = letters.get(f.ref, 0)
+            letters[f.ref] = n + 1
+            f.name = {lang: f"{name} {chr(ord('A') + n)}" for lang, name in f.name.items()}
+
+
 async def active_encounter(session: AsyncSession, char: Character, lock: bool = False) -> Encounter | None:
     stmt = (select(Encounter)
             .where(Encounter.character_id == char.id, Encounter.status == "active")
@@ -52,9 +65,11 @@ async def start_encounter(
     c = get_content()
     loc = c.locations[char.location]
     player = await characters.build_combatant(session, char)
+    player.consumables = await inventory.combat_items(session, char)
     state = EncounterState(location=char.location, combatants={"p1": player})
     for i, key in enumerate(monster_keys, start=1):
         state.combatants[f"m{i}"] = monster_combatant(key, f"m{i}")
+    _letter_duplicates([state.combatants[f"m{i}"] for i in range(1, len(monster_keys) + 1)])
     for okey, obj in loc.scene_objects.items():
         state.scene_objects[okey] = engine.SceneObjectState(
             key=okey, skill=obj.skill, tier=obj.tier, damage=obj.effect.damage,
@@ -91,10 +106,19 @@ async def act(
         if amount is None:
             return Outcome.refused("inv.err.no_potion")
         action = action.model_copy(update={"heal_amount": amount})
+    defs = ability_defs(char)
+    if action.kind == "item":  # a scroll or a bomb: the engine resolves it, then one leaves the inventory
+        item = get_content().items.get(action.ability or "")
+        if item is None or item.combat is None:
+            return Outcome.refused("combat.err.no_item")
+        defs[f"item:{action.ability}"] = item.combat
+        action = action.model_copy(update={"item_name": item.name.model_dump()})
     try:
-        logs = engine.player_act(state, "p1", action, rng, ability_defs(char))
+        logs = engine.player_act(state, "p1", action, rng, defs)
     except CombatError as e:
         return Outcome.refused(e.key)
+    if action.kind == "item" and not await inventory.remove_item(session, char, action.ability, 1):
+        raise RuntimeError(f"combat item {action.ability} vanished")  # rolls the transaction back
     session.add(CombatAction(encounter_id=enc.id, round=state.round, actor="p1",
                              action=action.model_dump(mode="json"),
                              result=[entry.model_dump(mode="json") for entry in logs]))
@@ -175,6 +199,8 @@ def log_event(state: EncounterState, entry: LogEntry) -> Event:
     for k in ("actor", "target"):
         if k in p and p[k] in state.combatants:
             p[k] = state.combatants[p[k]].name
+    if "item" in p and p["item"] in c.items:
+        p["item"] = c.items[p["item"]].name.model_dump()
     if "ability" in p:
         ability = next((cls.abilities[p["ability"]] for cls in c.classes.values() if p["ability"] in cls.abilities), None)
         p["ability"] = ability.name.model_dump() if ability else p["ability"]

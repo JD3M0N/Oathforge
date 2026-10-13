@@ -1,0 +1,50 @@
+# Narración de respaldo de las acciones escritas: una frase de ambiente cuando Gemini no responde.
+# El resultado real (tiradas, oro, daño) sale siempre debajo; esto solo pone el tono.
+# Claves: el tipo de desenlace (actions.narration_key). Se elige una al azar.
+# Marcadores: {name} el héroe · {place} el lugar.
+
+default:
+  - es: "{name} actúa sin dudar. El mundo responde a su manera."
+    en: "{name} acts without hesitation. The world answers in its own way."
+  - es: "Por un instante, todo en {place} parece contener el aliento."
+    en: "For a moment, everything at {place} seems to hold its breath."
+
+success:
+  - es: "{name} lo hace con la soltura de quien lo ha practicado mil veces."
+    en: "{name} does it with the ease of someone who has practised it a thousand times."
+  - es: "Sale bien. {name} se permite media sonrisa."
+    en: "It works. {name} allows a half smile."
+  - es: "Con calma y buen pulso, {name} consigue lo que buscaba."
+    en: "With calm and a steady hand, {name} gets what they were after."
+
+failure:
+  - es: "No sale como {name} esperaba. Otra vez será."
+    en: "It doesn't go the way {name} hoped. Another time."
+  - es: "{name} lo intenta, pero algo se tuerce en el último momento."
+    en: "{name} tries, but something goes wrong at the last moment."
+  - es: "Un mal paso, un descuido: {place} no se lo pone fácil a {name}."
+    en: "A misstep, a lapse: {place} doesn't make it easy for {name}."
+
+travel:
+  - es: "{name} se echa el camino a la espalda y no mira atrás."
+    en: "{name} shoulders the road and doesn't look back."
+  - es: "Paso a paso, {name} deja atrás el sitio de antes."
+    en: "Step by step, {name} leaves the old place behind."
+
+combat:
+  - es: "Acero, gritos y polvo. {name} no cede terreno."
+    en: "Steel, shouts and dust. {name} gives no ground."
+  - es: "{name} aprieta los dientes y se lanza a por ello."
+    en: "{name} grits their teeth and goes for it."
+  - es: "El combate no espera: {name} actúa antes de pensarlo dos veces."
+    en: "The fight doesn't wait: {name} acts before thinking twice."
+
+steal:
+  - es: "Dedos rápidos, mirada distraída: {name} prueba suerte."
+    en: "Quick fingers, a distracted look: {name} tries their luck."
+  - es: "{name} espera el momento justo y alarga la mano."
+    en: "{name} waits for the right moment and reaches out."
+
+rest:
+  - es: "{name} se deja caer y cierra los ojos. Por fin, un respiro."
+    en: "{name} sinks down and closes their eyes. At last, a breather."

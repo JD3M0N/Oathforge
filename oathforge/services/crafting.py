@@ -16,10 +16,10 @@ LOW_RANK_GAP = 2  # a recipe this many ranks below yours gives half XP
 
 
 def recipes_here(char: Character) -> dict[str, Recipe]:
-    """Recipes of your active professions whose station is where you stand."""
+    """Recipes of your active professions and hobbies whose station is where you stand."""
     c = get_content()
     stations = set(c.locations[char.location].stations)
-    mine = professions.active(char)
+    mine = professions.usable(char)
     return {k: r for k, r in c.recipes.items()
             if r.profession in mine and c.professions[r.profession].station in stations}
 
@@ -42,7 +42,7 @@ async def craft(session: AsyncSession, char: Character, recipe_key: str) -> Outc
     if recipe is None:
         return Outcome.refused("craft.err.unknown")
     prof = c.professions[recipe.profession]
-    if recipe.profession not in professions.active(char):
+    if recipe.profession not in professions.usable(char):
         return Outcome.refused("craft.err.not_your_profession", prof=prof.name.model_dump())
     if prof.station not in c.locations[char.location].stations:
         return Outcome.refused("craft.err.no_station", station={lang: t(lang, f"station.{prof.station}")

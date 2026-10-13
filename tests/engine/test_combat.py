@@ -427,3 +427,41 @@ def test_hex_respects_immunity():
     st = started(player(abilities={"hex": 2}), monster(hp=100, max_hp=100, immune=["hexed"]))
     logs = cb.player_act(st, "p1", Action(kind="ability", ability="hex", target="m1"), FixedRng(1), ABILITIES)
     assert any(e.key == "combat.immune" for e in logs) and "hexed" not in st.combatants["m1"].statuses
+
+
+ITEMS = {f"item:{k}": i.combat for k, i in get_content().items.items() if i.combat is not None}
+NAMES = {k: i.name.model_dump() for k, i in get_content().items.items()}
+
+
+def use(st, key, target=None, rng=None):
+    action = Action(kind="item", ability=key, target=target, item_name=NAMES[key])
+    return cb.player_act(st, "p1", action, rng or random.Random(1), {**ABILITIES, **ITEMS})
+
+
+def test_combat_items_are_spent_once_and_need_stock():
+    st = encounter(player(consumables={"scroll_firebolt": 1}), monster(hp=50, max_hp=50))
+    use(st, "scroll_firebolt")
+    assert st.combatants["p1"].consumables["scroll_firebolt"] == 0
+    st.combatants["p1"].action_used = False
+    with pytest.raises(CombatError):
+        use(st, "scroll_firebolt")
+
+
+def test_smoke_bomb_escapes_without_a_roll():
+    st = encounter(player(consumables={"smoke_bomb": 1}), monster(), monster("m2"))
+    logs = use(st, "smoke_bomb")
+    assert st.status == "fled" and any(e.key == "combat.escaped" for e in logs)
+
+
+def test_fire_bomb_burns_the_row_on_a_failed_save():
+    st = encounter(player(consumables={"fire_bomb": 1}), monster(hp=99, max_hp=99, dex_mod=-10),
+                   monster("m2", hp=99, max_hp=99, dex_mod=-10))
+    use(st, "fire_bomb", target="m1")
+    for m in ("m1", "m2"):
+        assert st.combatants[m].hp < 99
+
+
+def test_cure_scroll_heals_any_class():
+    st = encounter(player(hp=5, consumables={"scroll_cure": 1}), monster())
+    use(st, "scroll_cure")
+    assert st.combatants["p1"].hp > 5 or st.status != "active"

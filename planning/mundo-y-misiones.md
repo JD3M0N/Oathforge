@@ -4,7 +4,9 @@
 
 - Aetherfall: Crownreach (plaza, taberna La Corona Rota, mercado), el Camino del Viejo Rey, el Bosque de los Susurros, el Prado de los Colmillos y la Cripta Hundida (5 salas + jefe).
 - **Zona de caza** (v0.5.0): el Prado de los Colmillos, a 20 minutos de la plaza y sin peligro en el camino. Botón «🏹 Cazar»: de día salen jabalíes y de noche murciélagos (`night_encounters`). El Viejo Colmillo aparece cuando la misión 6 está activa.
-- Reloj día/noche; los NPC tienen horario.
+- **Capilla del Alba** (v0.7.0), a 2 min de la plaza: la hermana Ysolde cura heridas por 3 de oro (1d8+4 PV, sin pasar del techo de «herido»). La inscripción del altar se mudó aquí desde la plaza.
+- **Descanso largo** (v0.7.0): en la posada, 5 de oro y 8 horas de juego (80 min reales) acostado, como una actividad (`kind: rest`): ocupado, aviso al despertar y «Levantarse» para recuperar PV, usos y «herido». Levantarse antes no cura ni devuelve el oro.
+- Reloj día/noche (un día de juego = 4 horas reales); los NPC tienen horario.
 - Misiones como máquinas de estados en YAML (`content/quests.yaml`): etapas, acciones (botón o texto libre con tirada) y disparadores.
 - «El relicario sellado», con tres finales.
 - **Cadena de misiones** (v0.5.0), automática: al completar una se abre la siguiente (`after` o `unlock_flag`). Las misiones con `objectives` (matar N, hablar con, ir a) cuentan solas y dan `rewards`; el avance se guarda en `quest_progress.counters`. El diario muestra las misiones en curso con su avance y, en «Misiones», la ficha de cada una (quién la da, objetivos, pista y recompensa).

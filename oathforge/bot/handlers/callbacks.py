@@ -27,7 +27,7 @@ log = logging.getLogger(__name__)
 
 # verbs that only show something (no nonce, no state change)
 VIEWS = {"scene", "trv", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jq", "jrb", "jb", "jrr",
-         "shopm", "shop", "sellm", "cbp", "lang", "city", "cls", "clsl", "rep", "prof", "profsw", "crf"}
+         "shopm", "shop", "sellm", "cbp", "lang", "city", "cls", "clsl", "rep", "prof", "profsw", "profcf", "pg", "crf"}
 
 
 async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -46,6 +46,8 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
             await do_roll(update, context)
         elif verb == "rollset":
             await set_manual_rolls(update, context, arg == "on")
+        elif verb in ("set", "setl"):
+            await settings(update, context, arg if verb == "setl" else None)
         else:
             await _act(update, context, verb, arg, n)
     except StaleDataError:
@@ -115,6 +117,10 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             text, kb = render.professions_view(char, lang)
         elif verb == "profsw" and not in_combat:
             text, kb = render.swap_menu(char, arg, lang)
+        elif verb == "profcf" and not in_combat:
+            text, kb = render.swap_confirm(char, arg, lang)
+        elif verb == "pg":
+            text, kb = render.profession_page(arg, lang, char)
         elif verb == "crf" and not in_combat:
             text, kb = await render.craft_menu(session, char, lang)
         elif verb == "jrb":
@@ -140,14 +146,14 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
     await edit_or_send(update, text, kb)
 
 
-ROLL_VERBS = {"look", "qa"}  # button actions that can wait for a manual /roll
+ROLL_VERBS = {"look", "qa"}  # button actions that can wait for the manual 🎲 button
 DICE_SECONDS = 3.5  # Telegram's dice animation, before the engine's d20 appears
 
 
 async def _act(update: Update, context, verb: str, arg: str, n: str, rolled_at: str | None = None) -> None:
     """State-changing, non-combat actions. One transaction, idempotent by nonce.
 
-    With manual rolls on, an action that needs a skill check is parked until the player sends /roll
+    With manual rolls on, an action that needs a skill check is parked until the player presses 🎲
     (``rolled_at`` is then the location where it was asked, so a roll never lands somewhere else).
     """
     r = rng()
@@ -187,8 +193,9 @@ async def _act(update: Update, context, verb: str, arg: str, n: str, rolled_at: 
         await send_outcome(update, out, lang)
     if out.activity_id:  # a field activity just finished: its chronicle, after the facts
         await send_chronicle(update, context, out.activity_id, lang)
-    if verb == "act" and out.ok:
-        schedule_ready_ping(update, context, char_id, gathering.SECONDS[arg.partition(":")[0]])
+    if verb in ("act", "rest") and out.ok:
+        kind = "rest" if verb == "rest" else arg.partition(":")[0]
+        schedule_ready_ping(update, context, char_id, gathering.SECONDS[kind])
     await send(update, text, kb)
 
 
@@ -203,8 +210,10 @@ async def _dispatch(session, char, verb: str, arg: str, r, context) -> Outcome:
         return await exploration.investigate(session, char, r)
     if verb == "hunt":
         return await exploration.hunt(session, char, r)
-    if verb == "rest":
-        return await exploration.rest(session, char)
+    if verb == "rest":  # a long rest: 80 minutes asleep at the inn
+        return await activities.start(session, char, "rest", "rest")
+    if verb == "heal":
+        return await exploration.cure_wounds(session, char, r)
     if verb == "act":  # "<gather|stay|track>:<mastery>"
         kind, _, skill = arg.partition(":")
         return await activities.start(session, char, kind, skill)
@@ -268,10 +277,11 @@ def roll_prompt(skill: str, lang: str):
 
 
 async def do_roll(update: Update, context) -> None:
-    """/roll or the 🎲 button: animate Telegram's die, then resolve the parked action with the engine's d20."""
+    """The 🎲 button: animate Telegram's die (decoration only), then resolve the parked action with the
+    engine's d20."""
     pending = context.user_data.pop("pending_roll", None)
     if pending is None:
-        await roll_settings(update, context)
+        await settings(update, context)
         return
     try:
         await update.effective_chat.send_dice(emoji="🎲")
@@ -289,33 +299,33 @@ async def do_roll(update: Update, context) -> None:
     await show_free_text(update, context, result)
 
 
-async def roll_settings(update: Update, context) -> None:
+async def settings(update: Update, context, new_lang: str | None = None) -> None:
+    """⚙️ Settings: language and manual rolls (also /settings)."""
     async with session_scope() as session:
         user, _ = await load(session, update)
+        if new_lang in ("es", "en"):
+            user.language = new_lang
         lang = context.user_data["lang"] = user.language
-        on = actions.manual_rolls(user)
-    state = t(lang, "roll.on" if on else "roll.off")
-    kb = markup([[btn(t(lang, "btn.roll_off" if on else "btn.roll_on"), cb("rollset", "off" if on else "on"))]])
-    await send(update, t(lang, "roll.settings", state=state), kb)
+        text, kb = render.settings_view(user, lang)
+    await edit_or_send(update, text, kb)
 
 
 async def set_manual_rolls(update: Update, context, on: bool) -> None:
+    """Off by default. Turning them on warns that Telegram's die is only decoration."""
     async with session_scope() as session:
         user, _ = await load(session, update)
         lang = context.user_data["lang"] = user.language
         characters.set_setting(user, "manual_rolls", on)
+        text, kb = render.settings_view(user, lang)
     if not on:
         context.user_data.pop("pending_roll", None)
-    await edit_or_send(update, t(lang, "roll.changed", state=t(lang, "roll.on" if on else "roll.off")))
-
-
-async def roll_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await do_roll(update, context)
+    head = t(lang, "roll.warning") if on else t(lang, "roll.changed", state=t(lang, "roll.off"))
+    await edit_or_send(update, f"{head}\n\n{text}", kb)
 
 
 # ---------------------------------------------------------------- combat
 
-NEEDS_TARGET = {"atk", "abl", "obj"}
+NEEDS_TARGET = {"atk", "abl", "obj", "itm"}
 
 
 async def _combat(update: Update, context, arg: str, n: str) -> None:
@@ -341,6 +351,11 @@ async def _combat(update: Update, context, arg: str, n: str) -> None:
             await edit_or_send(update, text, kb)
             return
 
+        if kind == "itms":  # the list of scrolls and bombs
+            text, kb = render.combat_panel(char, enc.state, lang, target_menu="items", version=enc.version)
+            await edit_or_send(update, text, kb)
+            return
+
         # Ask for a target first when there is a real choice.
         if kind in NEEDS_TARGET and len(parts) == 2:
             need = _needs_target(state, me, kind, parts[1], combat_service.ability_defs(char))
@@ -360,6 +375,7 @@ async def _combat(update: Update, context, arg: str, n: str) -> None:
             "atk": lambda: Action(kind="attack", weapon=parts[1], target=target),
             "abl": lambda: Action(kind="ability", ability=parts[1], target=target),
             "obj": lambda: Action(kind="interact", object=parts[1], target=target),
+            "itm": lambda: Action(kind="item", ability=parts[1], target=target),
             "def": lambda: Action(kind="defend"),
             "pot": lambda: Action(kind="heal_item"),
             "mov": lambda: Action(kind="move"),
@@ -404,6 +420,10 @@ def _needs_target(state, me, kind: str, key: str, defs) -> bool:
     if kind == "obj":
         obj = state.scene_objects.get(key)
         return obj is not None and obj.targets == "one" and len(state.enemies_of(me)) > 1
+    if kind == "itm":
+        item = get_content().items.get(key)
+        return (item is not None and item.combat is not None and item.combat.kind in ("spell", "save")
+                and len(state.enemies_of(me)) > 1)
     return False
 
 

@@ -2,7 +2,7 @@
 
 The engine's result is final and already paid; the chronicle only tells it. The chronicle model
 (Gemini 3.1 Flash-Lite) writes up to ``AI_USER_DAILY_CHRONICLES`` a day per player; after that, or
-when the AI fails, a generic text from content/chronicles.yaml is used instead. Each activity gets
+when the AI fails, a generic text from content/fallbacks/chronicles.yaml is used instead. Each activity gets
 one chronicle, stored with it, so pressing a button again never spends the budget twice.
 """
 
@@ -13,7 +13,7 @@ from datetime import time as dtime
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from oathforge.ai import chronicler
+from oathforge.ai import chronicler, fallbacks
 from oathforge.ai.client import LLM
 from oathforge.config import get_settings
 from oathforge.content import get_content
@@ -34,11 +34,6 @@ OUTCOME_FACTS = {
     "track_fled": "The hero tracked the prey down but had to flee from it.",
     "track_lost": "The hero tracked the prey down and was defeated by it.",
 }
-
-
-class _Keep(dict):
-    def __missing__(self, key):
-        return "{" + key + "}"
 
 
 @dataclass
@@ -76,8 +71,8 @@ def _values(act: WorldActivity, char: Character, lang: str) -> dict:
 
 def generic(act: WorldActivity, char: Character, lang: str) -> str:
     """A hand-written text for this outcome, picked by the activity's seed."""
-    texts = get_content().chronicles[(act.result or {}).get("outcome", "gather")]
-    return texts[act.seed % len(texts)].get(lang).format_map(_Keep(_values(act, char, lang)))
+    return fallbacks.pick("chronicles", (act.result or {}).get("outcome", "gather"), lang, seed=act.seed,
+                          **_values(act, char, lang))
 
 
 def _facts(act: WorldActivity, char: Character) -> list[str]:

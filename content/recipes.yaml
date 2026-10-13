@@ -91,3 +91,74 @@ gem_ring:
   ingredients: {copper_ring: 1, rough_gem: 1}
   outputs: {gem_ring: 1}
   xp: 30
+
+ink:
+  profession: scribing
+  ingredients: {bloodroot: 1, coal: 1}
+  outputs: {ink: 2}
+  xp: 6
+
+parchment:
+  profession: scribing
+  ingredients: {boar_hide: 1}
+  outputs: {parchment: 2}
+  xp: 6
+
+scroll_firebolt:
+  profession: scribing
+  ingredients: {ink: 1, parchment: 1}
+  outputs: {scroll_firebolt: 1}
+  xp: 12
+
+scroll_cure:
+  profession: scribing
+  min_rank: 1
+  ingredients: {ink: 1, parchment: 1, bloodroot: 1}
+  outputs: {scroll_cure: 1}
+  xp: 18
+
+scroll_aegis:
+  profession: scribing
+  min_rank: 1
+  ingredients: {ink: 1, parchment: 1, moonleaf: 1}
+  outputs: {scroll_aegis: 1}
+  xp: 18
+
+scroll_sleep:
+  profession: scribing
+  min_rank: 2
+  ingredients: {ink: 2, parchment: 1, moonleaf: 1}
+  outputs: {scroll_sleep: 1}
+  xp: 30
+
+black_powder:
+  profession: artificing
+  ingredients: {coal: 2, iron_ore: 1}
+  outputs: {black_powder: 2}
+  xp: 6
+
+fuse:
+  profession: artificing
+  ingredients: {plant_fiber: 2}
+  outputs: {fuse: 2}
+  xp: 4
+
+smoke_bomb:
+  profession: artificing
+  ingredients: {black_powder: 1, fuse: 1, plant_fiber: 1}
+  outputs: {smoke_bomb: 1}
+  xp: 10
+
+fire_bomb:
+  profession: artificing
+  min_rank: 1
+  ingredients: {black_powder: 2, fuse: 1}
+  outputs: {fire_bomb: 1}
+  xp: 18
+
+flash_bomb:
+  profession: artificing
+  min_rank: 2
+  ingredients: {black_powder: 1, fuse: 1, copper_ore: 1}
+  outputs: {flash_bomb: 1}
+  xp: 30

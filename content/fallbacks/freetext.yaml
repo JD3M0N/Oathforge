@@ -1,0 +1,10 @@
+# Avisos cuando el Dungeon Master (Gemini) no puede interpretar una acción escrita.
+# Se elige uno al azar. Marcadores: {name} el héroe.
+
+unavailable:
+  - es: "🎲 El Dungeon Master se ha quedado sin voz un momento. Usa los botones mientras se recupera."
+    en: "🎲 The Dungeon Master has lost their voice for a moment. Use the buttons while they recover."
+  - es: "🎲 El Dungeon Master está consultando sus notas y no te ha oído. Sigue con los botones; las acciones escritas vuelven enseguida."
+    en: "🎲 The Dungeon Master is checking their notes and didn't hear you. Carry on with the buttons; written actions will be back soon."
+  - es: "🎲 Hay demasiado ruido en la mesa: el Dungeon Master no entiende tu acción ahora mismo. Los botones funcionan igual."
+    en: "🎲 It's too noisy at the table: the Dungeon Master can't follow your action right now. The buttons work as usual."

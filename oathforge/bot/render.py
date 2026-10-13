@@ -16,7 +16,7 @@ from oathforge.engine.combat import EncounterState, available_bonus_actions, val
 from oathforge.engine.progression import MAX_LEVEL, XP_THRESHOLDS, skill_rank
 from oathforge.i18n import t
 from oathforge.services import (
-    activities, bestiary, characters, chronicles, combat_service, crafting, exploration, inventory, npcs, professions,
+    actions, activities, bestiary, characters, chronicles, combat_service, crafting, exploration, inventory, npcs, professions,
     quests,
 )
 from oathforge.services.events import Outcome, render_event
@@ -150,6 +150,8 @@ async def scene(session: AsyncSession, char: Character, lang: str) -> tuple[str,
         buttons.append(btn(t(lang, "btn.professions"), cb("prof")))
     if loc.rest_cost is not None:
         buttons.append(btn(t(lang, "btn.rest", cost=loc.rest_cost), cb("rest", "-", n)))
+    if loc.healer is not None:
+        buttons.append(btn(t(lang, "btn.heal", cost=loc.healer.cost), cb("heal", "-", n)))
     if loc.hub and c.media.zone_images(loc.zone, night):
         buttons.append(btn(t(lang, "btn.view_city"), cb("city")))
     rows = grid(buttons)
@@ -161,6 +163,7 @@ async def scene(session: AsyncSession, char: Character, lang: str) -> tuple[str,
     return "\n".join(lines), markup(rows)
 
 
+SKINNING_TOOL = activities.SKINNING_KNIFE
 MASTERY_ICON = {"mining": "⛏️", "woodcutting": "🪓", "herbalism": "🌿", "skinning": "🔪", "fishing": "🎣",
                 "tracking": "🐾"}
 
@@ -172,22 +175,38 @@ def activity_panel(char: Character, act, lines: list[str], n: str, lang: str) ->
                          t(lang, "activity.ready") if left == 0 else t(lang, "activity.left", minutes=left)]
     if act.kind == "stay":
         lines.append(t(lang, "activity.stay_warning"))
-    lines += ["", f"<i>{t(lang, 'activity.busy_hint')}</i>"]
-    first = [btn(t(lang, "btn.claim"), cb("actc", "-", n))] if left == 0 else [btn(t(lang, "btn.refresh"), cb("scene"))]
+    rest = act.kind == "rest"
+    if rest and left == 0:
+        lines[-1] = t(lang, "activity.ready_rest")
+    lines += ["", f"<i>{t(lang, 'activity.busy_hint_rest' if rest else 'activity.busy_hint')}</i>"]
+    claim = t(lang, "btn.wake" if rest else "btn.claim")
+    first = [btn(claim, cb("actc", "-", n))] if left == 0 else [btn(t(lang, "btn.refresh"), cb("scene"))]
     rows = [first + [btn(t(lang, "btn.abandon"), cb("actx", "-", n))],
             [btn(t(lang, "btn.inventory"), cb("inv")), btn(t(lang, "btn.sheet"), cb("hero")),
              btn(t(lang, "btn.journal"), cb("jr"))]]
     return "\n".join(lines), markup(rows)
 
 
-def mastery_lines(char: Character, lang: str) -> list[str]:
+FIELD_MASTERIES = tuple(m for m in gathering.MASTERIES if m not in gathering.HOBBIES)
+
+
+def mastery_lines(char: Character, lang: str, skills: tuple[str, ...] = FIELD_MASTERIES) -> list[str]:
     """⛏️ Minería ★★ · 260/500 XP"""
     out = []
-    for skill in gathering.MASTERIES:
+    for skill in skills:
         xp = characters.mastery_xp(char, skill)
         out.append(f"{MASTERY_ICON[skill]} {escape(t(lang, f'mastery.name.{skill}'))} "
                    f"{_stars(gathering.rank_for(xp))} · {_progress(xp)}")
     return out
+
+
+def hobby_lines(char: Character, lang: str) -> list[str]:
+    """Cooking and fishing: optional, no slot."""
+    c = get_content()
+    lines = [t(lang, "prof.line", icon=c.professions[k].icon, name=escape(c.professions[k].name.get(lang)),
+               stars=_stars(professions.rank(char, k)), progress=_progress(professions.xp(char, k)))
+             + f" · /prof_{k}" for k in professions.hobbies()]
+    return lines + mastery_lines(char, lang, gathering.HOBBIES)
 
 
 def _stars(rank: int) -> str:
@@ -203,13 +222,13 @@ def professions_line(char: Character, lang: str) -> str:
     """🛠️ Oficios 1/2: Alquimia ★☆☆☆☆"""
     c = get_content()
     mine = professions.active(char)
-    names = ", ".join(f"{c.professions[k].icon} {c.professions[k].name.get(lang)} {professions.rank(char, k)}"
+    names = ", ".join(f"{c.professions[k].icon} {c.professions[k].name.get(lang)} {_stars(professions.rank(char, k))}"
                       for k in mine) or t(lang, "sheet.no_professions")
     return t(lang, "sheet.professions", used=len(mine), slots=professions.SLOTS, list=escape(names))
 
 
 def professions_view(char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
-    """/professions: your two professions, the others you know, and the six field masteries.
+    """/professions: your two professions, the others you know, the hobbies and the field masteries.
     At the guild, buttons to learn or swap."""
     c = get_content()
     mine = professions.active(char)
@@ -218,19 +237,25 @@ def professions_view(char: Character, lang: str) -> tuple[str, InlineKeyboardMar
         lines.append(t(lang, "prof.none", slots=professions.SLOTS))
     for key, prof in c.professions.items():
         xp = professions.xp(char, key)
-        if key in mine or xp:
+        if not prof.hobby and (key in mine or xp):
             lines.append(t(lang, "prof.line", icon=prof.icon, name=escape(prof.name.get(lang)),
                            stars=_stars(professions.rank(char, key)), progress=_progress(xp))
-                         + ("" if key in mine else " " + t(lang, "prof.inactive")))
+                         + ("" if key in mine else " " + t(lang, "prof.inactive")) + f" · /prof_{key}")
+    others = [f"{p.icon} /prof_{k}" for k, p in c.professions.items()
+              if not p.hobby and k not in mine and not professions.xp(char, k)]
+    if others:
+        lines += ["", t(lang, "prof.guides", list=" · ".join(others))]
+    lines += ["", t(lang, "prof.hobbies"), *hobby_lines(char, lang)]
     lines += ["", t(lang, "prof.masteries"), *mastery_lines(char, lang), ""]
     rows = []
     if c.locations[char.location].guild:
         lines.append(t(lang, "prof.guild_hint", cost=professions.SWAP_COST))
         n = nonce()
         full = len(mine) >= professions.SLOTS
-        learnable = [btn(t(lang, "btn.swap_for" if full else "btn.learn", prof=f"{p.icon} {p.name.get(lang)}"),
+        learnable = [btn(t(lang, "btn.swap_for" if full else "btn.learn", prof=f"{p.icon} {p.name.get(lang)}",
+                           cost=professions.SWAP_COST),
                          cb("profsw", k) if full else cb("plearn", k, n))
-                     for k, p in c.professions.items() if k not in mine]
+                     for k, p in c.professions.items() if k not in mine and not p.hobby]
         rows += grid(learnable)
     else:
         lines.append(t(lang, "prof.go_guild"))
@@ -239,15 +264,60 @@ def professions_view(char: Character, lang: str) -> tuple[str, InlineKeyboardMar
 
 
 def swap_menu(char: Character, key: str, lang: str) -> tuple[str, InlineKeyboardMarkup]:
-    """Which active profession to drop for ``key``."""
+    """Which active profession to drop for ``key``; the next step asks to confirm."""
     c = get_content()
     if key not in c.professions:
         return professions_view(char, lang)
-    n = nonce()
-    rows = [[btn(t(lang, "btn.replace", prof=c.professions[old].name.get(lang), cost=professions.SWAP_COST),
-                 cb("plearn", f"{key}:{old}", n))] for old in professions.active(char)]
+    rows = [[btn(t(lang, "btn.replace", prof=c.professions[old].name.get(lang)), cb("profcf", f"{key}:{old}"))]
+            for old in professions.active(char)]
     rows.append([btn(t(lang, "btn.back"), cb("prof"))])
     return t(lang, "prof.swap_title", prof=escape(c.professions[key].name.get(lang)), cost=professions.SWAP_COST), markup(rows)
+
+
+def swap_confirm(char: Character, arg: str, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+    """Drop one profession for another: the cost and a Confirm button."""
+    c = get_content()
+    key, _, old = arg.partition(":")
+    if key not in c.professions or old not in professions.active(char):
+        return professions_view(char, lang)
+    text = t(lang, "prof.swap_confirm", old=escape(c.professions[old].name.get(lang)),
+             prof=escape(c.professions[key].name.get(lang)), cost=professions.SWAP_COST, gold=char.gold)
+    rows = [[btn(t(lang, "btn.confirm"), cb("plearn", arg, nonce())), btn(t(lang, "btn.back"), cb("profsw", key))]]
+    return text, markup(rows)
+
+
+def _station_place(station: str, lang: str) -> str:
+    c = get_content()
+    places = [loc.name.get(lang) for loc in c.locations.values() if station in loc.stations]
+    return t(lang, "prof.station", station=t(lang, f"station.{station}"), place=escape(", ".join(places)))
+
+
+def profession_page(key: str, lang: str, char: Character | None = None) -> tuple[str, InlineKeyboardMarkup | None]:
+    """/prof_<key>: a profession or hobby at a glance, like /class_<key>: what it does, where, from what,
+    and every recipe by rank (yours marked when the player has a character)."""
+    c = get_content()
+    prof = c.professions.get(key)
+    if prof is None:
+        return professions_view(char, lang) if char else (t(lang, "prof.err.unknown"), None)
+    lines = [f"{prof.icon} <b>{escape(prof.name.get(lang))}</b>"
+             + (f" · {t(lang, 'prof.hobby_tag')}" if prof.hobby else ""),
+             f"<i>{escape(prof.description.get(lang))}</i>", RULE]
+    if prof.guide:
+        lines += [escape(prof.guide.get(lang)), ""]
+    lines.append(_station_place(prof.station, lang))
+    if char is not None and (prof.hobby or key in professions.active(char) or professions.xp(char, key)):
+        lines.append(t(lang, "prof.your_rank", stars=_stars(professions.rank(char, key)),
+                       progress=_progress(professions.xp(char, key))))
+    lines += [RULE, f"<b>{t(lang, 'prof.recipes')}</b>"]
+    recipes = sorted((r for r in c.recipes.values() if r.profession == key), key=lambda r: r.min_rank)
+    for r in recipes:
+        mark = ("✅ " if professions.rank(char, key) >= r.min_rank else "🔒 ") if char is not None else ""
+        outs = ", ".join(f"{c.items[i].name.get(lang)} ×{q}" for i, q in r.outputs.items())
+        ins = " + ".join(f"{q} {c.items[i].name.get(lang)}" for i, q in r.ingredients.items())
+        lines.append(f"{mark}<b>{t(lang, 'prof.rank_n', rank=r.min_rank)}</b> · {escape(outs)}")
+        lines.append(f"      ← {escape(ins)}")
+    rows = [[btn(t(lang, "btn.professions"), cb("prof"))]] if char is not None else []
+    return "\n".join(lines)[:MAX_MESSAGE], (markup(rows) if rows else None)
 
 
 async def craft_menu(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
@@ -259,6 +329,9 @@ async def craft_menu(session: AsyncSession, char: Character, lang: str) -> tuple
     ready = []
     if not recipes:
         lines.append(t(lang, "craft.none"))
+        for k in professions.usable(char):
+            prof = c.professions[k]
+            lines.append(f"{prof.icon} {escape(prof.name.get(lang))}: {_station_place(prof.station, lang)}")
     for key, r in recipes.items():
         prof = c.professions[r.profession]
         locked = professions.rank(char, r.profession) < r.min_rank
@@ -278,6 +351,16 @@ async def craft_menu(session: AsyncSession, char: Character, lang: str) -> tuple
     rows = grid(ready)
     rows.append([btn(t(lang, "btn.professions"), cb("prof")), btn(t(lang, "btn.back"), cb("scene"))])
     return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
+
+
+def settings_view(user, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+    """⚙️ Settings: language and manual rolls (off by default; the die is decoration)."""
+    on = actions.manual_rolls(user)
+    text = t(lang, "settings.text", language=t(lang, "settings.language_name"),
+             rolls=t(lang, "roll.on" if on else "roll.off"))
+    rows = [[btn("🇪🇸 Español", cb("setl", "es")), btn("🇬🇧 English", cb("setl", "en"))],
+            [btn(t(lang, "btn.roll_off" if on else "btn.roll_on"), cb("rollset", "off" if on else "on"))]]
+    return text, markup(rows)
 
 
 def zone_caption(zone_key: str, lang: str) -> str:
@@ -340,13 +423,63 @@ async def shop(session: AsyncSession, char: Character, npc_key: str, lang: str) 
     n = nonce()
     lines = [t(lang, "shop.title", npc=escape(npc.name.get(lang)), gold=char.gold)]
     rows = []
+    groups: dict[str, list[str]] = {}
     for key in npc.shop.items:
+        item = c.items[key]
         price = inventory.buy_price(key, rep)
-        rows.append([btn(f"{c.items[key].name.get(lang)} · {price} 🪙", cb("buy", f"{npc_key}:{key}", n))])
+        stats = item_stats(key, lang)
+        groups.setdefault(_shop_group(item), []).append(
+            f"• <b>{escape(item.name.get(lang))}</b>{' · ' + escape(stats) if stats else ''} · {price} 🪙")
+        rows.append([btn(f"{item.name.get(lang)} · {price} 🪙", cb("buy", f"{npc_key}:{key}", n))])
+    for group in SHOP_GROUPS:
+        if groups.get(group):
+            lines += ["", f"<b>{t(lang, f'shop.group.{group}')}</b>", *groups[group]]
     if npc.shop.buys:
         rows.append([btn(t(lang, "btn.sell"), cb("sellm", npc_key))])
     rows.append([btn(t(lang, "btn.back"), cb("scene"))])
     return "\n".join(lines), markup(rows)
+
+
+SHOP_GROUPS = ("weapons", "armor", "consumables", "tools", "other")
+
+
+def _shop_group(item) -> str:
+    if item.type == "weapon":
+        return "weapons"
+    if item.type in ("armor", "shield"):
+        return "armor"
+    return {"consumable": "consumables", "tool": "tools"}.get(item.type, "other")
+
+
+def item_stats(key: str, lang: str) -> str:
+    """What an item does, in a few words: "1d8 cortante", "CA 11 + DES", "2d4+2 PV", "⛏️ Minería"."""
+    c = get_content()
+    item = c.items[key]
+    if item.weapon:
+        w = item.weapon
+        tags = [t(lang, "shop.stat.ranged")] if w.ranged else [t(lang, "shop.stat.finesse")] if w.finesse else []
+        return " · ".join([f"{w.damage} {t(lang, f'dmg.{w.damage_type}')}", *tags])
+    if item.base_ac is not None:
+        if item.dex_cap == 0:
+            return t(lang, "shop.stat.ac", ac=item.base_ac)
+        if item.dex_cap is not None and item.dex_cap < 5:
+            return t(lang, "shop.stat.ac_dex_cap", ac=item.base_ac, cap=item.dex_cap)
+        return t(lang, "shop.stat.ac_dex", ac=item.base_ac)
+    if item.ac_bonus:
+        return t(lang, "shop.stat.ac_bonus", bonus=item.ac_bonus)
+    if item.heal:
+        return t(lang, "shop.stat.heal", dice=item.heal)
+    for effect in item.effects:
+        return t(lang, f"shop.stat.{effect.type}")
+    if item.combat is not None:
+        return t(lang, "shop.stat.combat")
+    for loc in c.locations.values():
+        for g in loc.gathering:
+            if g.tool == key:
+                return f"{MASTERY_ICON[g.skill]} {t(lang, f'mastery.name.{g.skill}')}"
+    if key == SKINNING_TOOL:
+        return f"{MASTERY_ICON['skinning']} {t(lang, 'mastery.name.skinning')}"
+    return ""
 
 
 async def sell_menu(session: AsyncSession, char: Character, npc_key: str, lang: str) -> tuple[str, InlineKeyboardMarkup]:
@@ -405,7 +538,8 @@ def _sheet_top(c, cls, char: Character, gear: dict, lang: str) -> list[str]:
     ]
     if char.level < MAX_LEVEL:
         lo, hi = XP_THRESHOLDS[char.level - 1], XP_THRESHOLDS[char.level]
-        lines.append(t(lang, "sheet.xp", xp=char.xp, next=hi, bar=hp_bar(char.xp - lo, hi - lo)))
+        lines.append(t(lang, "sheet.xp", cur=char.xp - lo, need=hi - lo, level=char.level + 1, xp=char.xp,
+                       bar=hp_bar(char.xp - lo, hi - lo)))
     else:
         lines.append(t(lang, "sheet.xp_max", xp=char.xp))
     lines.append(t(lang, "sheet.vitals", ac=characters.armor_class(char, gear), pb=proficiency_bonus(char.level),
@@ -522,7 +656,8 @@ async def sheet(session: AsyncSession, char: Character, lang: str) -> tuple[str,
               f"📖 <i>{escape(c.backgrounds[char.background].description.get(lang))}</i>"]
 
     # professions and gathering masteries
-    lines += ["", professions_line(char, lang), "", f"<b>{t(lang, 'sheet.masteries')}</b>", *mastery_lines(char, lang)]
+    lines += ["", professions_line(char, lang), "", f"<b>{t(lang, 'sheet.hobbies')}</b>", *hobby_lines(char, lang),
+              "", f"<b>{t(lang, 'sheet.masteries')}</b>", *mastery_lines(char, lang)]
 
     # today's AI budget and expedition chronicles
     limit = get_settings().ai_user_daily_calls
@@ -883,10 +1018,19 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
     n = combat_token(version, state.turn_index)
     defs = combat_service.ability_defs(char)
 
+    if target_menu == "items":  # the scrolls and bombs you carry
+        lines[-1] = t(lang, "combat.items_title")
+        for key, qty in me.consumables.items():
+            item = c.items.get(key)
+            if qty > 0 and item is not None and item.combat is not None:
+                rows.append([btn(f"{item.name.get(lang)} ×{qty}", cb("cb", f"itm:{key}", n))])
+        rows.append([btn(t(lang, "btn.back"), cb("cbp"))])
+        return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
+
     if target_menu:
         kind, _, arg = target_menu.partition(":")
         spell = kind == "abl" and arg in defs and defs[arg].kind in ("spell", "save", "curse")
-        ranged = any(a.key == arg and a.ranged for a in me.attacks) or kind == "obj" or spell
+        ranged = any(a.key == arg and a.ranged for a in me.attacks) or kind in ("obj", "itm") or spell
         for foe in valid_targets(state, me, ranged):
             rows.append([btn(f"🎯 {foe.name[lang]} ({foe.hp}/{foe.max_hp})", cb("cb", f"{target_menu}:{foe.id}", n))])
         rows.append([btn(t(lang, "btn.back"), cb("cbp"))])
@@ -908,7 +1052,11 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
         buttons.append(btn(label, cb("cb", f"abl:{key}", n)))
     if not me.action_used:
         buttons.append(btn(t(lang, "btn.defend"), cb("cb", "def", n)))
-        buttons.append(btn(t(lang, "btn.potion"), cb("cb", "pot", n)))
+        if me.consumables.get("healing_potion", 0) > 0:
+            buttons.append(btn(t(lang, "btn.potion"), cb("cb", "pot", n)))
+        if any(q > 0 and c.items.get(k) is not None and c.items[k].combat is not None
+               for k, q in me.consumables.items()):
+            buttons.append(btn(t(lang, "btn.items"), cb("cb", "itms", n)))
         for okey in state.scene_objects:
             obj = c.locations[state.location].scene_objects.get(okey)
             if obj:

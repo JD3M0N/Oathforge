@@ -142,9 +142,12 @@ async def test_full_flow(llm, monkeypatch):
     assert (await char_row()).location == "broken_crown_tavern"
     assert any("ya no es válido" in t_ for t_, _ in p.chat.sent[-3:])
 
-    # investigate (idempotent per nonce) and rest
+    # investigate (idempotent per nonce); a long rest leaves you asleep, getting up early gives nothing
     await p.press(p.find("look"))
     await p.press(p.find("rest"))
+    assert (await char_row()).state == "busy" and "80 min" in p.last[0]
+    await p.press(p.find("actx"))
+    assert (await char_row()).state == "idle"
 
     # talk to Bram: no AI configured in the fake -> fallback line, still a valid view
     await p.press("talkm|-|-")
@@ -445,10 +448,10 @@ async def test_manual_rolls_wait_for_the_die(llm, monkeypatch):
     monkeypatch.setattr(callbacks, "DICE_SECONDS", 0)
     p = Player(llm, tg_id=63)
     await create(p)
-    await p.press("roll|-|-")  # nothing pending: shows the on/off setting
-    assert "Tiradas manuales" in p.last[0]
+    await p.press("roll|-|-")  # nothing pending: shows the settings
+    assert "Tiradas manuales: desactivadas" in p.last[0]  # off by default
     await p.press(p.find("rollset", "on"))
-    assert "activadas" in p.last[0]
+    assert "activadas" in p.last[0] and "decoración" in p.last[0]  # warned: the die is decoration
 
     async with session_scope() as s:
         char = await s.scalar(select(Character).with_for_update())
@@ -485,8 +488,8 @@ async def test_manual_rolls_wait_for_the_die(llm, monkeypatch):
 async def creation_free_roll(p):
     from oathforge.bot.handlers import commands
 
-    roll = next(h for h in commands.handlers() if "roll" in getattr(h, "commands", ()))
-    await roll.callback(p.update(message="/roll"), p.ctx)
+    assert not any("roll" in getattr(h, "commands", ()) for h in commands.handlers())  # no /roll command
+    await p.press(p.find("roll"))
 
 
 async def test_class_pages_from_commands_and_buttons(llm):
@@ -554,3 +557,16 @@ async def test_learn_a_profession_and_craft(llm):
     await p.press(p.find("craft", "healing_potion"))
     assert "Poción de curación" in p.chat.sent[-2][0]
     assert "❌" in p.last[0]  # no more bloodroot
+
+
+async def test_settings_command_changes_language_and_rolls(llm):
+    from oathforge.bot.handlers import commands
+
+    p = Player(llm, tg_id=64)
+    await create(p)
+    await commands.settings(p.update(message="/settings"), p.ctx)
+    assert "Ajustes" in p.last[0] and "desactivadas" in p.last[0]
+    await p.press(p.find("setl", "en"))
+    assert "Settings" in p.last[0] and p.ctx.user_data["lang"] == "en"
+    await p.press(p.find("rollset", "on"))
+    assert "decoration" in p.last[0]

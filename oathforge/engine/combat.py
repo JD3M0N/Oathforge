@@ -76,6 +76,7 @@ class Combatant(BaseModel):
     temp_hp: int = 0
     bonus_damage: str | None = None  # once per turn on a weapon hit (e.g. Divine Strike)
     bonus_damage_type: str = "radiant"
+    consumables: dict[str, int] = {}  # combat items carried (potions, scrolls, bombs): key -> count
     # monster-only
     cowardly: bool = False
     xp: int = 0
@@ -131,12 +132,13 @@ class EncounterState(BaseModel):
 
 
 class Action(BaseModel):
-    kind: Literal["attack", "ability", "defend", "move", "flee", "interact", "heal_item", "end_turn"]
+    kind: Literal["attack", "ability", "defend", "move", "flee", "interact", "heal_item", "item", "end_turn"]
     weapon: str | None = None
-    ability: str | None = None
+    ability: str | None = None  # kind "item": the item key; its ItemCombat comes in ability_defs["item:<key>"]
     target: str | None = None
     object: str | None = None
     heal_amount: int | None = None  # resolved by the inventory service
+    item_name: dict[str, str] = {}  # kind "item": shown as the "weapon" of a scroll's attack
 
 
 # ---------------------------------------------------------------- setup
@@ -240,7 +242,10 @@ def player_act(
         logs.append(LogEntry(key="combat.defend", params={"actor": actor.id}))
     elif kind == "heal_item":
         healed = _heal(actor, action.heal_amount or 0)
+        _spend(actor, "healing_potion")
         logs.append(LogEntry(key="combat.potion", params={"actor": actor.id, "amount": healed}))
+    elif kind == "item":
+        logs += _use_item(state, actor, action, ability_defs.get(f"item:{action.ability}"), rng)
     elif kind == "flee":
         logs += _flee(state, actor, rng)
     elif kind == "interact":
@@ -299,30 +304,10 @@ def _use_ability(state, actor, action, ability, rng) -> list[LogEntry]:
             state, actor, profile.key, action.target, rng,
             extra=(ability.extra_damage, ability.damage_type),
         )
-    elif ability.kind == "spell":
-        target = _resolve_target(state, actor, action.target, ranged=True)
-        damage = _with_bonus(ability.damage or "1d4", actor.spell_damage_bonus)
-        dtype = ability.damage_type or "radiant"
+    elif ability.kind in ("spell", "save"):
         logs.append(LogEntry(key="combat.ability", params={"actor": actor.id, "ability": action.ability}))
-        if ability.auto_hit:
-            logs += _apply_damage(state, target, roll(damage, rng).total, dtype)
-        else:
-            profile = AttackProfile(key=action.ability, name=ability.name.model_dump(), to_hit=actor.spell_to_hit,
-                                    damage=damage, damage_type=dtype, ranged=True)
-            logs += _attack(state, actor, target, profile, rng, None, weapon=False)
-    elif ability.kind == "save":
-        target = _resolve_target(state, actor, action.target, ranged=True)
-        targets = [target] if ability.area == "one" else [e for e in state.enemies_of(actor) if e.row == target.row]
-        logs.append(LogEntry(key="combat.ability", params={"actor": actor.id, "ability": action.ability}))
-        damage = _with_bonus(ability.damage, actor.spell_damage_bonus) if ability.damage else None
-        for t in targets:
-            saved, save_logs = _save(t, ability.save or "dex", actor.spell_dc, rng)
-            logs += save_logs
-            if damage and (not saved or ability.half_on_save):
-                amount = roll(damage, rng).total
-                logs += _apply_damage(state, t, amount // 2 if saved else amount, ability.damage_type or "force")
-            if ability.status and not saved and t.active:
-                logs += _apply_status(t, ability.status, ability.status_turns)
+        logs += _cast(state, actor, ability, action.ability, action.target, rng,
+                      to_hit=actor.spell_to_hit, dc=actor.spell_dc, dmg_bonus=actor.spell_damage_bonus)
     elif ability.kind == "curse":
         target = _resolve_target(state, actor, action.target, ranged=True)
         logs.append(LogEntry(key="combat.ability", params={"actor": actor.id, "ability": action.ability}))
@@ -339,16 +324,7 @@ def _use_ability(state, actor, action, ability, rng) -> list[LogEntry]:
             if ability.status and t.active:
                 logs += _apply_status(t, ability.status, ability.status_turns)
     elif ability.kind == "buff":
-        if ability.status:
-            # +1: the turn it is cast ticks once, so the effect covers N later turns
-            actor.statuses[ability.status] = ability.status_turns + 1
-            logs.append(LogEntry(key="combat.buff", params={
-                "actor": actor.id, "ability": action.ability, "status": ability.status, "turns": ability.status_turns,
-            }))
-        if ability.temp_hp:
-            amount = roll(ability.temp_hp, rng).total + _heal_add(actor, ability)
-            actor.temp_hp = max(actor.temp_hp, amount)
-            logs.append(LogEntry(key="combat.temp_hp", params={"actor": actor.id, "amount": actor.temp_hp}))
+        logs += _cast(state, actor, ability, action.ability, None, rng, 0, 0, 0)
     elif ability.kind == "surge":
         if not actor.action_used:
             raise CombatError("combat.err.surge_unused")
@@ -357,12 +333,7 @@ def _use_ability(state, actor, action, ability, rng) -> list[LogEntry]:
     elif ability.kind == "heal":
         if actor.hp >= actor.max_hp:
             raise CombatError("combat.err.full_hp")
-        amount = (ability.heal_per_level or 0) * actor.level
-        if ability.heal_dice:
-            amount += roll(ability.heal_dice, rng).total
-        amount += _heal_add(actor, ability)
-        healed = _heal(actor, amount)
-        logs.append(LogEntry(key="combat.heal", params={"actor": actor.id, "ability": action.ability, "amount": healed}))
+        logs += _cast(state, actor, ability, action.ability, None, rng, 0, 0, 0)
     elif ability.kind == "hide":
         dc = max((e.passive_perception for e in state.enemies_of(actor)), default=10)
         res = check(rng, "stealth", actor.skill_bonus.get("stealth", 0), dc)
@@ -375,6 +346,75 @@ def _use_ability(state, actor, action, ability, rng) -> list[LogEntry]:
         raise CombatError("combat.err.passive")
     if uses is not None:
         actor.abilities[action.ability] = uses - 1
+    return logs
+
+
+def _spend(actor: Combatant, item: str) -> None:
+    if actor.consumables.get(item, 0) > 0:
+        actor.consumables[item] -= 1
+
+
+def _use_item(state, actor, action, item, rng) -> list[LogEntry]:
+    """A scroll or a bomb: the same shapes as a spell, with the item's own numbers."""
+    if item is None or actor.consumables.get(action.ability or "", 0) <= 0:
+        raise CombatError("combat.err.no_item")
+    if item.kind == "heal" and actor.hp >= actor.max_hp:
+        raise CombatError("combat.err.full_hp")
+    logs = [LogEntry(key="combat.item", params={"actor": actor.id, "item": action.ability})]
+    if item.kind == "escape":
+        actor.fled = True
+        logs.append(LogEntry(key="combat.escaped", params={"actor": actor.id}))
+    else:
+        logs += _cast(state, actor, item, action.ability, action.target, rng,
+                      to_hit=item.attack_bonus, dc=item.save_dc, dmg_bonus=0, name=action.item_name)
+    _spend(actor, action.ability)
+    return logs
+
+
+def _cast(state, actor, ability, key, target_id, rng, to_hit: int, dc: int, dmg_bonus: int,
+          name: dict | None = None) -> list[LogEntry]:
+    """Resolve a spell, save, heal or buff; class abilities and combat items share it."""
+    logs: list[LogEntry] = []
+    if ability.kind == "spell":
+        target = _resolve_target(state, actor, target_id, ranged=True)
+        damage = _with_bonus(ability.damage or "1d4", dmg_bonus)
+        dtype = ability.damage_type or "radiant"
+        if ability.auto_hit:
+            logs += _apply_damage(state, target, roll(damage, rng).total, dtype)
+        else:
+            profile = AttackProfile(key=key, name=name if name is not None else ability.name.model_dump(),
+                                    to_hit=to_hit, damage=damage, damage_type=dtype, ranged=True)
+            logs += _attack(state, actor, target, profile, rng, None, weapon=False)
+    elif ability.kind == "save":
+        target = _resolve_target(state, actor, target_id, ranged=True)
+        targets = [target] if ability.area == "one" else [e for e in state.enemies_of(actor) if e.row == target.row]
+        damage = _with_bonus(ability.damage, dmg_bonus) if ability.damage else None
+        for t in targets:
+            saved, save_logs = _save(t, ability.save or "dex", dc, rng)
+            logs += save_logs
+            if damage and (not saved or ability.half_on_save):
+                amount = roll(damage, rng).total
+                logs += _apply_damage(state, t, amount // 2 if saved else amount, ability.damage_type or "force")
+            if ability.status and not saved and t.active:
+                logs += _apply_status(t, ability.status, ability.status_turns)
+    elif ability.kind == "buff":
+        if ability.status:
+            # +1: the turn it is cast ticks once, so the effect covers N later turns
+            actor.statuses[ability.status] = ability.status_turns + 1
+            logs.append(LogEntry(key="combat.buff", params={
+                "actor": actor.id, "ability": key, "status": ability.status, "turns": ability.status_turns,
+            }))
+        if ability.temp_hp:
+            amount = roll(ability.temp_hp, rng).total + _heal_add(actor, ability)
+            actor.temp_hp = max(actor.temp_hp, amount)
+            logs.append(LogEntry(key="combat.temp_hp", params={"actor": actor.id, "amount": actor.temp_hp}))
+    elif ability.kind == "heal":
+        amount = (ability.heal_per_level or 0) * actor.level
+        if ability.heal_dice:
+            amount += roll(ability.heal_dice, rng).total
+        amount += _heal_add(actor, ability)
+        healed = _heal(actor, amount)
+        logs.append(LogEntry(key="combat.heal", params={"actor": actor.id, "ability": key, "amount": healed}))
     return logs
 
 

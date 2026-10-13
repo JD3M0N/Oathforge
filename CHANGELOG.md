@@ -4,6 +4,43 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.0] - 2026-10-13
+
+### Añadido
+- **Aficiones**: Cocina y Pesca dejan de ser oficio y maestría y pasan a ser aficiones opcionales, sin plaza. Cualquiera cocina en el fogón de La Corona Rota. Quien tenía Cocina como oficio recupera la plaza y conserva la XP.
+- **📜 Escribanía** (mesa de escriba, Barrio de Oficios):
+  - Materiales: tinta (raíz de sangre + carbón) y pergamino (cuero de jabalí).
+  - Pergaminos de un solo uso que cualquier clase lee en combate: Dardo de fuego (rango 0, ataque +5, 2d6 de fuego), Curar heridas (rango 1, 2d8+2 PV), Égida (rango 1, 2d6+3 PV temporales) y Sueño (rango 2, salvación de SAB CD 13).
+- **💣 Artificiería** (banco de artificiero, Barrio de Oficios):
+  - Materiales: pólvora (carbón + mena de hierro) y mecha (fibra vegetal).
+  - Bombas: de humo (rango 0, huyes sin tirada), de fuego (rango 1, toda una fila, salvación de DES, 2d6 de fuego y ardiendo) y cegadora (rango 2, aturdido 1 turno).
+- **«🎒 Objetos» en el panel de combate** para usar pergaminos y bombas. También funciona con una acción escrita («le lanzo la bomba de fuego»).
+- **Guía de cada oficio y afición**: `/prof_<oficio>`, como `/class_<clase>`. Cuenta qué hace, dónde se trabaja, de qué maestrías salen los materiales y las recetas por rango (✅/🔒 según el tuyo). Enlazada desde `/professions`.
+- **Capilla del Alba** (a 2 min de la plaza) con la **hermana Ysolde**: «🙏 Curar heridas» por 3 de oro (1d8+4 PV). Respeta el techo de «herido» y no cobra si estás sano. La inscripción del altar está ahora en la capilla.
+- **⚙️ `/settings`**: idioma y tiradas manuales en un solo sitio.
+- **Textos genéricos de respaldo** en `content/fallbacks/` para cuando Gemini no responde:
+  - `chronicles.yaml`: las crónicas, igual que antes.
+  - `dialogue.yaml`: réplicas por NPC, sin adjetivos con género.
+  - `narration.yaml`: una frase de ambiente por tipo de desenlace.
+  - `freetext.yaml`: avisos de «el DM no te oye, usa los botones».
+  - Se validan al arrancar y se eligen con `ai/fallbacks.pick`.
+
+### Cambiado
+- **Descanso largo**: ahora son 8 horas de juego (80 min reales) acostado en la posada. Pagas al acostarte y quedas ocupado. Un aviso «☀️» te despierta y «Levantarse» recupera PV, usos y «herido». Si te levantas antes, no recuperas nada.
+- **Gemini 3.1 Flash-Lite para todo** (interpretar, narrar, NPC y crónicas).
+- **Respaldo rápido cuando Gemini cae**: un modelo nunca se reintenta a sí mismo y queda en pausa 2 min tras un fallo. El timeout baja a 10 s (8 s en crónicas). Con la API caída, la primera acción tarda como mucho 10 s y las siguientes responden al momento con el texto genérico (antes, unos 45 s cada una).
+- **Tiradas manuales**: desactivadas por defecto. Al activarlas se avisa de que el dado animado de Telegram es solo decoración (un d6) y que la tirada real es el d20 del motor. `/roll` sale del menú de comandos: la tirada se lanza con el botón «🎲 Tirar el dado» cuando se pide.
+- **Barra de XP**: muestra el avance del nivel, «XP 14/300 hacia el nivel 3 (214 en total)», y barra y números cuentan lo mismo.
+- **Enemigos repetidos** llevan letra: «Jabalí A», «Jabalí B».
+- El botón «🧪 Poción» solo sale en combate si llevas pociones.
+- **Cambiar de oficio**: el botón dice el precio («Cambiar por Alquimia (25 🪙)») y, tras elegir cuál dejas, se pide confirmación.
+- «🔨 Fabricar» sin recetas aquí dice dónde está la estación de cada uno de tus oficios y aficiones.
+- **Tienda**: la lista va agrupada (armas, armaduras, consumibles, herramientas) con lo que hace cada objeto (daño, CA, curación, maestría).
+- Todo lo que vale al menos 1 de oro se vende por al menos 1 (la antorcha ya no se vende por 0).
+
+### Arreglado
+- El texto de reserva de los NPC decía «pensativo» también de Tessa o Mira.
+
 ## [0.6.2] - 2026-10-13
 
 ### Añadido

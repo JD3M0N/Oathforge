@@ -383,3 +383,89 @@ gem_ring:
   type: trinket
   value: 110
   stackable: true
+
+# ---------------------------------------------------------------- scribing and artificing (v0.7.0)
+
+ink:
+  name: {es: Tinta, en: Ink}
+  description: {es: "Raíz de sangre machacada con hollín. Escribe rojo oscuro y no se borra.", en: "Bloodroot crushed with soot. It writes dark red and never fades."}
+  type: material
+  value: 4
+  stackable: true
+
+parchment:
+  name: {es: Pergamino, en: Parchment}
+  description: {es: "Piel de jabalí raspada y estirada hasta quedar fina como una hoja.", en: "Boar hide scraped and stretched until it is thin as a leaf."}
+  type: material
+  value: 5
+  stackable: true
+
+black_powder:
+  name: {es: Pólvora, en: Black powder}
+  description: {es: "Polvo gris que huele a azufre. Mejor lejos del fuego.", en: "Grey dust that smells of sulphur. Best kept far from fire."}
+  type: material
+  value: 5
+  stackable: true
+
+fuse:
+  name: {es: Mecha, en: Fuse}
+  description: {es: "Fibra trenzada y encerada que arde despacio.", en: "Braided, waxed fibre that burns slowly."}
+  type: material
+  value: 1
+  stackable: true
+
+scroll_firebolt:
+  name: {es: Pergamino de dardo de fuego, en: Scroll of fire bolt}
+  description: {es: "Al leerlo en combate, lanza un dardo de fuego: ataque +5, 2d6 de fuego.", en: "Read in combat, it hurls a fire bolt: +5 to hit, 2d6 fire."}
+  type: consumable
+  value: 14
+  stackable: true
+  combat: {kind: spell, damage: 2d6, damage_type: fire, attack_bonus: 5}
+
+scroll_cure:
+  name: {es: Pergamino de curar heridas, en: Scroll of cure wounds}
+  description: {es: "Al leerlo en combate, recuperas 2d8+2 PV.", en: "Read in combat, you recover 2d8+2 HP."}
+  type: consumable
+  value: 22
+  stackable: true
+  combat: {kind: heal, heal_dice: 2d8+2}
+
+scroll_aegis:
+  name: {es: Pergamino de égida, en: Scroll of aegis}
+  description: {es: "Al leerlo en combate, una luz te envuelve: 2d6+3 PV temporales.", en: "Read in combat, a light wraps around you: 2d6+3 temporary HP."}
+  type: consumable
+  value: 20
+  stackable: true
+  combat: {kind: buff, temp_hp: 2d6+3}
+
+scroll_sleep:
+  name: {es: Pergamino de sueño, en: Scroll of sleep}
+  description: {es: "Al leerlo en combate, un enemigo hace una salvación de SAB (CD 13); si falla, duerme 2 turnos.", en: "Read in combat, one enemy makes a WIS save (DC 13); on a failure it sleeps for 2 turns."}
+  type: consumable
+  value: 30
+  stackable: true
+  combat: {kind: save, save: wis, save_dc: 13, status: asleep, status_turns: 2}
+
+smoke_bomb:
+  name: {es: Bomba de humo, en: Smoke bomb}
+  description: {es: "Una nube gris y espesa: sales del combate sin tirada.", en: "A thick grey cloud: you leave the fight without a roll."}
+  type: consumable
+  value: 12
+  stackable: true
+  combat: {kind: escape}
+
+fire_bomb:
+  name: {es: Bomba de fuego, en: Fire bomb}
+  description: {es: "Toda la fila del objetivo hace una salvación de DES (CD 13): 2d6 de fuego (la mitad si la supera) y quien falla, arde.", en: "The target's whole row makes a DEX save (DC 13): 2d6 fire (half on a success), and whoever fails burns."}
+  type: consumable
+  value: 18
+  stackable: true
+  combat: {kind: save, save: dex, save_dc: 13, area: row, damage: 2d6, damage_type: fire, half_on_save: true, status: burning, status_turns: 2}
+
+flash_bomb:
+  name: {es: Bomba cegadora, en: Flash bomb}
+  description: {es: "Un fogonazo blanco: un enemigo hace una salvación de DES (CD 13); si falla, queda aturdido 1 turno.", en: "A white flash: one enemy makes a DEX save (DC 13); on a failure it is stunned for 1 turn."}
+  type: consumable
+  value: 20
+  stackable: true
+  combat: {kind: save, save: dex, save_dc: 13, status: stunned, status_turns: 1}

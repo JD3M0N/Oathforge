@@ -74,3 +74,21 @@ tessa:
   shop:
     items: [longsword, warhammer, mace, handaxe, dagger, rapier, quarterstaff, shortbow, chain_mail, scale_mail, leather_armor, shield, healing_potion, torch, rope, pickaxe, woodaxe, sickle, skinning_knife, fishing_rod]
     buys: true
+
+ysolde:
+  name: {es: Hermana Ysolde, en: Sister Ysolde}
+  title: {es: sanadora de la Capilla del Alba, en: healer of the Chapel of the Dawn}
+  faction: silver_covenant
+  schedule: {day: crownreach_chapel, night: crownreach_chapel}
+  greeting:
+    es: "«Que la luz te guarde. Si vienes herido, siéntate: por unas monedas para la capilla, te curo esas heridas.»"
+    en: "\"May the light keep you. If you're hurt, sit down: for a few coins for the chapel, I'll mend those wounds.\""
+  persona: >-
+    Sister Ysolde is a calm, tired priestess in her fifties who has bandaged half the adventurers of Crownreach.
+    Gentle but no fool; scolds the reckless, never refuses the dying. Speaks softly, with dry humour.
+  goals: Keep the chapel's doors open day and night and the city's healers fed.
+  secrets: She read the warden's inscription long before anyone else and fears what the crypt holds.
+  knowledge: >-
+    Many who went into the Sunken Crypt came back cursed or not at all. The Silver Guard pays her for every
+    soldier she saves. The inscription under the altar speaks of a warden who will not sleep.
+  passive_perception: 14

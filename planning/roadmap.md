@@ -25,6 +25,7 @@ Versionado `0.x.y`: sube **y** (parche) en arreglos y cambios pequeños; sube **
 - **0.6.0**: actividades de campo con espera real (trabajar 5 min, expedición larga 15 min con emboscada, rastrear 5 min), 6 maestrías 0–5, mina, arboleda, claro y ribera, herramientas y materiales, desuello, y crónicas de expedición con Gemini 3.1 Flash-Lite (15 al día) y textos genéricos (ver `profesiones.md`).
 - **0.6.1**: oficios (2 activos de 6) en el Barrio de Oficios, estaciones, 12 recetas, fabricación atómica y `/professions`.
 - **0.6.2**: efectos tipados en los consumibles: poción de maná (+1 uso de conjuro) y tónico del reposo (descanso corto con enfriamiento).
+- **0.7.0**: aficiones (cocina y pesca, sin plaza), Escribanía y Artificiería con pergaminos y bombas para el combate, guía `/prof_<oficio>`, Capilla del Alba («Curar heridas»), descanso largo de 8 h de juego, `/settings` con el aviso del dado decorativo, textos genéricos de respaldo en `content/fallbacks/` y Gemini 3.1 Flash-Lite para todo.
 
 ## Próximo (candidatos)
 
@@ -33,7 +34,7 @@ Versionado `0.x.y`: sube **y** (parche) en arreglos y cambios pequeños; sube **
 - **0.4.x**: balance de las 8 clases con datos de `artifacts/battles/`.
 - **0.5.x**: balance de la cadena de misiones y de la caza con datos de `artifacts/battles/` y del simulador (`artifacts/simulations/`): subir a Mago y Druida a nivel 1-2; más criaturas en el bestiario.
 - **0.6.x**: especializaciones a nivel 5 (los datos ya existen; con la cadena de 0.5.0 se llega a nivel 5 enseguida).
-- **0.7.0**: economía: encargos, sumideros de oro y balance de oficios con datos de la beta (ver `comercio.md`).
+- **0.7.x**: economía: encargos, sumideros de oro y balance de oficios con datos de la beta (ver `comercio.md`).
 - **0.8.0**: grupos cooperativos y combate en grupo (fase 3, ver `multijugador.md`).
 - **0.9.0** (propuesta): audio: música de la taberna y voces de NPC (ver `audiovisual.md`).
 - Más adelante: salvaciones de FUE/CON/INT/CAR para monstruos, IA enemiga con habilidades, mercado entre jugadores, PvP, Mini App, TTS.
@@ -51,7 +52,7 @@ Secuencia recomendada (§20) y dónde estamos:
 3. Un NPC que recuerda: ✅ básico; falta la memoria en tres capas (`ia-y-narracion.md`).
 4. Una aventura compartida: 0.8.0.
 5. Un hecho que cambia la ciudad: `world_facts` y eventos encadenados (`mundo-y-misiones.md`).
-6. Economía y facciones que reaccionan: 0.7.0 y más facciones.
+6. Economía y facciones que reaccionan: 0.7.x y más facciones.
 
 Fases del GDD (§17.2) frente a nuestras versiones:
 
@@ -61,7 +62,7 @@ Fases del GDD (§17.2) frente a nuestras versiones:
 | 1 · Vertical slice | `/start`, 3 nodos, NPC, tiradas, combate, inventario, PostgreSQL | 0.1.0 |
 | 2 · Narrador y misión | Texto libre con JSON validado, misión ramificada, memoria | 0.1.0 |
 | 3 · Multijugador | Grupos, turnos, intercambio, duelos | 0.8.0 |
-| 4 · Mundo pequeño vivo | 3 profesiones, 2 facciones, mercado, rumores, evento semanal, periódico, audio | 0.7.0 + 0.9.0 |
+| 4 · Mundo pequeño vivo | 3 profesiones, 2 facciones, mercado, rumores, evento semanal, periódico, audio | 0.7.x + 0.9.0 |
 | 5 · Expansión por métricas | Clases, especializaciones, regiones, gremios, Mini App | 0.4.0 y después |
 
 **Antes de invitar a amigos** (§17.6):

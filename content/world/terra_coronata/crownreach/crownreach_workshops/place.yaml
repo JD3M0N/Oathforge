@@ -1,7 +1,7 @@
 name: {es: Barrio de Oficios, en: Craftsmen's Row}
 kind: city
 guild: true  # aquí se aprenden y cambian los oficios
-stations: [anvil, alchemy_table, carpenter_bench, tannery, jeweler_bench]
+stations: [anvil, alchemy_table, carpenter_bench, tannery, jeweler_bench, scribe_desk, workbench]
 description:
   es: >-
     Una calle estrecha detrás del mercado donde nunca se apaga el ruido: el yunque de los herreros, el burbujeo

@@ -1,5 +1,7 @@
 # Oficios: cada personaje tiene dos activos (se aprenden y cambian en el Barrio de Oficios).
+# Una afición (hobby: true) no ocupa plaza: cualquiera la practica y la sube si quiere.
 # Cada uno trabaja en una estación (Location.stations). Diseño en planning/profesiones.md.
+# guide: la mini guía de /prof_<clave>.
 
 blacksmithing:
   name: {es: Herrería, en: Blacksmithing}
@@ -8,6 +10,13 @@ blacksmithing:
   description:
     es: Funde mena en lingotes y forja armas en el yunque. Necesita hierro y carbón de la mina.
     en: Smelts ore into ingots and forges weapons at the anvil. Needs iron and coal from the mine.
+  guide:
+    es: >-
+      Mina hierro y carbón en la Mina del Paso Viejo (⛏️ Minería), funde lingotes en el yunque y, a rango 1,
+      forja espadas con un tablón de carpintería. Los lingotes también los piden la peletería y la artificiería.
+    en: >-
+      Mine iron and coal at Ironvein Mine (⛏️ Mining), smelt ingots at the anvil and, at rank 1, forge swords
+      with a carpentry plank. Leatherworking and artificing need ingots too.
 
 alchemy:
   name: {es: Alquimia, en: Alchemy}
@@ -16,6 +25,13 @@ alchemy:
   description:
     es: Destila hierbas en pociones. La raíz de sangre del bosque es su base.
     en: Distils herbs into potions. Bloodroot from the woods is its base.
+  guide:
+    es: >-
+      Recoge raíz de sangre, hoja de luna y musgo del reposo (🌿 Herboristería) y compra frascos de agua a Mira.
+      Pociones de curación desde el principio, de maná a rango 1 y el tónico del reposo a rango 3.
+    en: >-
+      Gather bloodroot, moonleaf and restmoss (🌿 Herbalism) and buy water flasks from Mira. Healing potions
+      from the start, mana potions at rank 1 and the rest draught at rank 3.
 
 carpentry:
   name: {es: Carpintería, en: Carpentry}
@@ -24,6 +40,13 @@ carpentry:
   description:
     es: Convierte troncos en tablones, bastones y piezas para otros oficios.
     en: Turns logs into planks, staves and parts for other crafts.
+  guide:
+    es: >-
+      Tala robles en la Arboleda Antigua (🪓 Tala) y sácales tablones; a rango 1, bastones para magos. Los tablones
+      los necesita la herrería para sus espadas.
+    en: >-
+      Fell oaks at the Elderwood Grove (🪓 Woodcutting) and saw them into planks; at rank 1, staves for mages.
+      Blacksmiths need planks for their swords.
 
 leatherworking:
   name: {es: Peletería, en: Leatherworking}
@@ -32,14 +55,13 @@ leatherworking:
   description:
     es: Curte pieles y cose armaduras ligeras. Vive de lo que traen los cazadores.
     en: Tans hides and stitches light armour. Lives on what hunters bring back.
-
-cooking:
-  name: {es: Cocina, en: Cooking}
-  icon: "🍲"
-  station: hearth
-  description:
-    es: Guisos y raciones que reponen fuerzas fuera del combate. El fogón está en La Corona Rota.
-    en: Stews and rations that restore strength outside combat. The hearth is at The Broken Crown.
+  guide:
+    es: >-
+      Caza jabalíes y lobos con un cuchillo de desollar (🔪 Desuello) y curte sus pieles. A rango 1, el cuero
+      reforzado da 1 punto más de CA que el de la tienda.
+    en: >-
+      Hunt boars and wolves with a skinning knife (🔪 Skinning) and tan their hides. At rank 1, reinforced
+      leather gives 1 more AC than the shop's.
 
 jewelcrafting:
   name: {es: Joyería, en: Jewelcrafting}
@@ -48,3 +70,59 @@ jewelcrafting:
   description:
     es: Anillos de cobre y engastes de gemas que valen mucho en el mercado.
     en: Copper rings and gem settings that fetch a good price at the market.
+  guide:
+    es: >-
+      Necesitas Minería de rango 1 para el cobre y de rango 3 para las gemas. Los anillos se venden bien: es el
+      oficio para hacer oro.
+    en: >-
+      You need Mining rank 1 for copper and rank 3 for gems. Rings sell well: it is the profession for making gold.
+
+scribing:
+  name: {es: Escribanía, en: Scribing}
+  icon: "📜"
+  station: scribe_desk
+  description:
+    es: Tinta de hierbas y pergamino de piel para escribir pergaminos de un solo uso que cualquiera puede leer en combate.
+    en: Herb ink and hide parchment to write single-use scrolls anyone can read in combat.
+  guide:
+    es: >-
+      La tinta sale de raíz de sangre y carbón (🌿 Herboristería, ⛏️ Minería) y el pergamino, de cuero de jabalí
+      (🔪 Desuello). Con los dos escribes pergaminos: Dardo de fuego desde el principio, Curar heridas y Égida a
+      rango 1, Sueño a rango 2. En combate, «🎒 Objetos» los lanza aunque tu clase no sepa magia.
+    en: >-
+      Ink comes from bloodroot and coal (🌿 Herbalism, ⛏️ Mining) and parchment from boar hide (🔪 Skinning). With
+      both you write scrolls: Fire Bolt from the start, Cure Wounds and Aegis at rank 1, Sleep at rank 2. In combat,
+      "🎒 Items" casts them even if your class knows no magic.
+
+artificing:
+  name: {es: Artificiería, en: Artificing}
+  icon: "💣"
+  station: workbench
+  description:
+    es: Pólvora de carbón y hierro, mechas de fibra y bombas para lanzar en combate.
+    en: Powder from coal and iron, fibre fuses and bombs to throw in combat.
+  guide:
+    es: >-
+      La pólvora sale de carbón y mena de hierro (⛏️ Minería) y la mecha, de fibra vegetal (🌿 Herboristería,
+      🪓 Tala). Bomba de humo desde el principio (huyes sin tirada), bomba de fuego a rango 1 (quema una fila
+      entera) y bomba cegadora a rango 2 (aturde). En combate, desde «🎒 Objetos».
+    en: >-
+      Powder comes from coal and iron ore (⛏️ Mining) and fuses from plant fibre (🌿 Herbalism, 🪓 Woodcutting).
+      Smoke bomb from the start (escape without a roll), fire bomb at rank 1 (burns a whole row) and flash bomb at
+      rank 2 (stuns). In combat, from "🎒 Items".
+
+cooking:
+  name: {es: Cocina, en: Cooking}
+  icon: "🍲"
+  station: hearth
+  hobby: true
+  description:
+    es: Afición libre. Guisos y raciones que reponen fuerzas fuera del combate. El fogón está en La Corona Rota.
+    en: A free hobby. Stews and rations that restore strength outside combat. The hearth is at The Broken Crown.
+  guide:
+    es: >-
+      No ocupa plaza de oficio: cualquiera puede cocinar. Carne de caza (🔪 Desuello) o peces de la ribera
+      (🎣 Pesca) con raíz de sangre, en el fogón de La Corona Rota.
+    en: >-
+      It takes no profession slot: anyone can cook. Game meat (🔪 Skinning) or river fish (🎣 Fishing) with
+      bloodroot, at the hearth of The Broken Crown.

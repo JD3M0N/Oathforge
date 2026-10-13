@@ -12,7 +12,8 @@ from oathforge.content.media import MediaCatalog, scan_images
 from oathforge.content.schemas import (
     ABILITIES,
     CHRONICLE_OUTCOMES,
-    CHRONICLE_PLACEHOLDERS,
+    FALLBACK_KEYS,
+    FALLBACK_PLACEHOLDERS,
     AbilityInfo,
     Background,
     Continent,
@@ -56,9 +57,16 @@ class Content:
     media: MediaCatalog
     start_location: str
     respawn_location: str
-    chronicles: dict[str, list[Text]] = field(default_factory=dict)
+    chronicles: dict[str, list[Text]] = field(default_factory=dict)  # = fallbacks["chronicles"]
+    # generic texts when Gemini is down or out of budget: content/fallbacks/<category>.yaml -> key -> texts
+    fallbacks: dict[str, dict[str, list[Text]]] = field(default_factory=dict)
     professions: dict[str, Profession] = field(default_factory=dict)
     recipes: dict[str, Recipe] = field(default_factory=dict)  # outcome -> generic texts when the AI chronicler is not used
+
+
+def _read_fallbacks(directory: Path) -> dict[str, dict[str, list[Text]]]:
+    return {path.stem: {k: [Text.model_validate(v) for v in vs] for k, vs in _read_file(path).items()}
+            for path in sorted((directory / "fallbacks").glob("*.yaml"))}
 
 
 def _read(directory: Path, name: str) -> dict:
@@ -133,6 +141,7 @@ def load_content(directory: Path = CONTENT_DIR) -> Content:
     respawn = [k for k, loc in locations.items() if loc.respawn]
     classes = _parse(GameClass, _read(directory, "classes"))
     scan_class_media(directory, classes, world.media)
+    fallbacks = _read_fallbacks(directory)
     content = Content(
         abilities=_parse(AbilityInfo, rules["abilities"]),
         skills=_parse(Skill, rules["skills"]),
@@ -150,7 +159,8 @@ def load_content(directory: Path = CONTENT_DIR) -> Content:
         media=world.media,
         start_location=world.start,
         respawn_location=respawn[0] if respawn else world.start,
-        chronicles={k: [Text.model_validate(v) for v in vs] for k, vs in _read(directory, "chronicles").items()},
+        chronicles=fallbacks["chronicles"],
+        fallbacks=fallbacks,
         professions=_parse(Profession, _read(directory, "professions")),
         recipes=_parse(Recipe, _read(directory, "recipes")),
     )
@@ -230,15 +240,27 @@ def validate_references(c: Content) -> None:
         errors.append("professions: no guild location to learn them")
     for outcome in CHRONICLE_OUTCOMES:
         if not c.chronicles.get(outcome):
-            errors.append(f"chronicles.yaml: no texts for '{outcome}'")
-    for outcome, texts in c.chronicles.items():
+            errors.append(f"fallbacks/chronicles.yaml: no texts for '{outcome}'")
+    for outcome in c.chronicles:
         if outcome not in CHRONICLE_OUTCOMES:
-            errors.append(f"chronicles.yaml: unknown outcome '{outcome}'")
-        for text in texts:
-            for lang in ("es", "en"):
-                used = set(re.findall(r"\{(\w+)\}", getattr(text, lang)))
-                if used - CHRONICLE_PLACEHOLDERS:
-                    errors.append(f"chronicles.yaml {outcome}: unknown placeholders {sorted(used - CHRONICLE_PLACEHOLDERS)}")
+            errors.append(f"fallbacks/chronicles.yaml: unknown outcome '{outcome}'")
+    for category, keys in FALLBACK_KEYS.items():
+        for key in keys:
+            if not c.fallbacks.get(category, {}).get(key):
+                errors.append(f"fallbacks/{category}.yaml: no texts for '{key}'")
+    for category, by_key in c.fallbacks.items():
+        allowed = FALLBACK_PLACEHOLDERS.get(category)
+        if allowed is None:
+            errors.append(f"fallbacks/{category}.yaml: unknown category")
+            continue
+        for key, texts in by_key.items():
+            if category == "dialogue" and key != "default":
+                need("npc", key, c.npcs, "fallbacks/dialogue.yaml")
+            for text in texts:
+                for lang in ("es", "en"):
+                    used = set(re.findall(r"\{(\w+)\}", getattr(text, lang)))
+                    if used - allowed:
+                        errors.append(f"fallbacks/{category}.yaml {key}: unknown placeholders {sorted(used - allowed)}")
     for zkey, zone in c.zones.items():
         if c.media.zones.get(zkey) and not any(loc.hub for loc in c.locations.values() if loc.zone == zkey):
             errors.append(f"zone {zkey}: has images but no hub location to show them from")

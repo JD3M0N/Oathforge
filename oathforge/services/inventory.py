@@ -101,6 +101,17 @@ async def equip(session: AsyncSession, char: Character, instance_id: int) -> Out
     return Outcome().add("inv.equipped", item=item.name.model_dump())
 
 
+async def combat_items(session: AsyncSession, char: Character) -> dict[str, int]:
+    """What the combat panel can use: healing potions, scrolls and bombs carried."""
+    c = get_content()
+    out: dict[str, int] = {}
+    for inst in await items_of(session, char):
+        item = c.items.get(inst.item_key)
+        if item is not None and (inst.item_key == "healing_potion" or item.combat is not None):
+            out[inst.item_key] = out.get(inst.item_key, 0) + inst.qty
+    return out
+
+
 async def consume_healing(session: AsyncSession, char: Character, key: str, rng: random.Random) -> int | None:
     """Spend one consumable and return the rolled healing, or None if unavailable."""
     item = get_content().items.get(key)
@@ -198,8 +209,9 @@ def buy_price(item_key: str, reputation: int) -> int:
 
 
 def sell_price(item_key: str, reputation: int) -> int:
+    """Half the value (up to 25% better with reputation); anything worth a coin sells for at least one."""
     base = get_content().items[item_key].value
-    return max(0, round(base * 0.5 * (1 + reputation / 400)))
+    return max(1 if base >= 1 else 0, round(base * 0.5 * (1 + reputation / 400)))
 
 
 async def buy(session: AsyncSession, char: Character, npc_key: str, item_key: str, reputation: int) -> Outcome:

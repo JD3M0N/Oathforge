@@ -1,4 +1,4 @@
-"""Professions (two slots, swapping keeps XP) and atomic crafting."""
+"""Professions (two slots, swapping keeps XP), hobbies (no slot) and atomic crafting."""
 
 import pytest
 from sqlalchemy import select
@@ -31,10 +31,10 @@ async def test_two_slots_and_swapping_keeps_xp():
         assert (await professions.learn(s, char, "alchemy")).ok
         assert (await professions.learn(s, char, "alchemy")).error == "prof.err.already"
         assert (await professions.learn(s, char, "blacksmithing")).ok
-        assert (await professions.learn(s, char, "cooking")).error == "prof.err.slots_full"
+        assert (await professions.learn(s, char, "scribing")).error == "prof.err.slots_full"
         professions.grant_xp(char, "alchemy", 90, Outcome())
-        out = await professions.learn(s, char, "cooking", replace="alchemy")
-        assert out.ok and professions.active(char) == ["cooking", "blacksmithing"]
+        out = await professions.learn(s, char, "scribing", replace="alchemy")
+        assert out.ok and professions.active(char) == ["scribing", "blacksmithing"]
         assert char.gold == 100 - professions.SWAP_COST
         assert professions.xp(char, "alchemy") == 90 and professions.rank(char, "alchemy") == 1  # not forgotten
 
@@ -68,7 +68,6 @@ async def test_station_rank_and_crafted_by():
     cid = await new_character()
     async with session_scope() as s:
         char = await get_char(s, cid)
-        await professions.learn(s, char, "cooking")
         await inventory.add_item(s, char, "raw_meat", 2)
         await inventory.add_item(s, char, "bloodroot", 1)
         assert (await crafting.craft(s, char, "hunter_stew")).error == "craft.err.no_station"  # the hearth is at the tavern
@@ -98,3 +97,33 @@ async def test_low_rank_recipes_give_half_xp():
         await crafting.craft(s, char, "oak_plank")
         assert professions.xp(char, "carpentry") == 240 + 8 // 2
         assert await inventory.count(s, char, "oak_plank") == 2
+
+
+async def test_cooking_is_a_hobby_without_a_slot():
+    cid = await new_character()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        assert (await professions.learn(s, char, "cooking")).error == "prof.err.hobby"
+        char.professions = {"active": ["cooking", "alchemy"], "xp": {"cooking": 30}}  # learned before v0.7.0
+        assert professions.active(char) == ["alchemy"]  # the slot is free again
+        assert "cooking" in professions.usable(char) and professions.xp(char, "cooking") == 30
+        assert (await professions.learn(s, char, "artificing")).ok
+        assert professions.active(char) == ["alchemy", "artificing"]
+
+
+async def test_scribing_and_artificing_recipes():
+    cid = await new_character()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        await professions.learn(s, char, "scribing")
+        await professions.learn(s, char, "artificing")
+        await inventory.add_item(s, char, "bloodroot", 1)
+        await inventory.add_item(s, char, "coal", 3)
+        await inventory.add_item(s, char, "boar_hide", 1)
+        await inventory.add_item(s, char, "iron_ore", 1)
+        await inventory.add_item(s, char, "plant_fiber", 3)
+        for recipe in ("ink", "parchment", "scroll_firebolt", "black_powder", "fuse", "smoke_bomb"):
+            assert (await crafting.craft(s, char, recipe)).ok, recipe
+        assert await inventory.count(s, char, "scroll_firebolt") == 1
+        assert await inventory.count(s, char, "smoke_bomb") == 1
+        assert (await crafting.craft(s, char, "fire_bomb")).error == "craft.err.rank"

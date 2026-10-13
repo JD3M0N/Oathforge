@@ -1,0 +1,27 @@
+name: {es: Capilla del Alba, en: Chapel of the Dawn}
+kind: city
+healer: {cost: 3, heal: 1d8+4}  # «Curar heridas»: unas monedas y la hermana Ysolde te cierra las heridas
+description:
+  es: >-
+    Una capilla de piedra blanca al norte de la plaza, con olor a cera y a hierbas. Junto al altar, la hermana
+    Ysolde venda a los aventureros que vuelven del camino; un cuenco de cobre recoge el donativo.
+  en: >-
+    A white stone chapel north of the plaza, smelling of wax and herbs. By the altar, Sister Ysolde bandages the
+    adventurers who come back from the road; a copper bowl collects the offering.
+night:
+  es: Las velas no se apagan nunca. En los bancos duermen dos heridos y Ysolde vela junto a ellos.
+  en: The candles never go out. Two wounded sleep on the pews while Ysolde keeps watch beside them.
+exits:
+  - {to: crownreach_plaza, minutes: 2}
+discoveries:
+  chapel_inscription:
+    skill: religion
+    tier: easy
+    sets_flag: lore_chapel_oath
+    text:
+      es: >-
+        Bajo el altar lees una inscripción: «El guardián no dormirá mientras el sello siga roto».
+        Alguien ha pasado los dedos por esas letras hace poco.
+      en: >-
+        Beneath the altar you read an inscription: "The warden shall not sleep while the seal is broken."
+        Someone ran their fingers over those letters recently.

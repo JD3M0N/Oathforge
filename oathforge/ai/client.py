@@ -132,20 +132,17 @@ class GeminiLLM:
             tier, self.s.gemini_model_narrative)
 
     def _candidates(self, tier: Tier) -> list[str]:
-        """Models to try in order. Narrative falls back to the fast model; fast retries itself once.
+        """Models to try in order: the tier's model, then (narrative only) the fast one if it is different.
 
-        A model that recently failed with an overload/quota error is skipped while
-        another one is available, so players don't wait for a timeout on every call.
-        Chronicles never fall back: a generic text is better than spending the fast model's quota.
+        A model that recently failed (overload, quota, timeout) is skipped while it cools down, and a
+        model never retries itself: when Gemini is down the player gets the generic text at once
+        instead of waiting for another timeout.
         """
-        primary = self._model(tier)
-        if tier == "chronicle":
-            return [] if self._cooldown_until.get(primary, 0) > time.monotonic() else [primary]
-        fallback = self.s.gemini_model_fast if tier == "narrative" else primary
         now = time.monotonic()
-        if primary != fallback and self._cooldown_until.get(primary, 0) > now:
-            return [fallback]
-        return [primary, fallback]
+        models = [self._model(tier)]
+        if tier == "narrative" and self.s.gemini_model_fast not in models:
+            models.append(self.s.gemini_model_fast)
+        return [m for m in models if self._cooldown_until.get(m, 0) <= now]
 
     def _config(self, tier: Tier, system: str, schema):
         from google.genai import types
@@ -167,14 +164,13 @@ class GeminiLLM:
         started = time.monotonic()
         error = None
         models = self._candidates(tier)
+        timeout = self.s.ai_chronicle_timeout_seconds if tier == "chronicle" else self.s.ai_timeout_seconds
         for attempt, model in enumerate(models):
-            if attempt and model == models[attempt - 1]:
-                await asyncio.sleep(0.5)
             config = self._config(tier if model == self._model(tier) else "fast", system, schema)
             try:
                 resp = await asyncio.wait_for(
                     self.client.aio.models.generate_content(model=model, contents=prompt, config=config),
-                    timeout=self.s.ai_timeout_seconds,
+                    timeout=timeout,
                 )
             except Exception as e:  # network, quota, timeout: degrade gracefully
                 error = f"{model}: {str(e) or type(e).__name__}"

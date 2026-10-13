@@ -8,13 +8,15 @@ import random
 from dataclasses import dataclass, field
 
 MASTERIES = ("mining", "woodcutting", "herbalism", "skinning", "fishing", "tracking")
+HOBBIES = ("fishing",)  # masteries shown as an optional hobby (with cooking), not as a field mastery
 RANK_XP = (0, 80, 240, 500, 900, 1500)  # accumulated XP for ranks 0..5
 MAX_RANK = len(RANK_XP) - 1
 
 GATHER_SECONDS = 5 * 60
 STAY_SECONDS = 15 * 60
 TRACK_SECONDS = 5 * 60
-SECONDS = {"gather": GATHER_SECONDS, "stay": STAY_SECONDS, "track": TRACK_SECONDS}
+REST_SECONDS = 80 * 60  # a long rest: 8 game hours (a game day lasts 4 real hours)
+SECONDS = {"gather": GATHER_SECONDS, "stay": STAY_SECONDS, "track": TRACK_SECONDS, "rest": REST_SECONDS}
 
 GATHER_UNITS = (2, 3)
 STAY_UNITS = (8, 10)
