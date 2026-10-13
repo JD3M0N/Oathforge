@@ -11,6 +11,7 @@ cmd:
   quests: "Missions and progress"
   classes: "Classes and their abilities"
   report: "Report of the last battle"
+  professions: "Professions and masteries"
   roll: "Roll the die and manual rolls"
   language: "Change language"
   help: "How to play"
@@ -23,7 +24,7 @@ help:
     You can also <b>type whatever you want to do</b>: "I hide behind the bar and listen", "I try to lift the keeper's purse", "I push the cart onto the bandit".
     The Dungeon Master interprets your action, the engine rolls the dice, and you see what really happened.
 
-    Commands: /look /hero /sheet /inventory /journal /quests /classes /report /roll /language
+    Commands: /look /hero /sheet /inventory /journal /quests /classes /report /professions /roll /language
   version: "<i>Oathforge v{version}</i>"
 
 lang:
@@ -100,6 +101,12 @@ btn:
   claim: "🎁 Collect"
   refresh: "🔄 Refresh"
   abandon: "✖️ Abandon"
+  professions: "🛠️ Professions"
+  craft: "🔨 Craft"
+  learn: "📘 Learn {prof}"
+  swap_for: "🔁 Swap for {prof}"
+  replace: "Drop {prof} ({cost} 🪙)"
+  make: "🔨 {item}"
   missions: "📜 Missions"
   bestiary: "📖 Bestiary"
   rumors: "🗣️ Rumors"
@@ -202,6 +209,8 @@ sheet:
   ai_usage: "🤖 Dungeon Master today: {calls}/{limit} · {left} left  {bar}"
   masteries: "Field masteries"
   chronicles: "📜 Chronicles today: {used}/{limit} · {left} left  {bar}"
+  professions: "🛠️ Professions {used}/{slots}: {list}"
+  no_professions: "none (learn them at Craftsmen’s Row)"
 
 ai:
   budget_exhausted: "🤖 The Dungeon Master is spent for today. Keep playing with the buttons; it recovers at midnight."
@@ -541,3 +550,43 @@ chronicle:
   footer_ai: "📜 Chronicle {used}/{limit} today"
   footer_rest: "📜 The chronicler has written all {limit} chronicles for today; come back tomorrow."
   footer_generic: "📜 From the guild archives"
+
+prof:
+  title: "🛠️ <b>Professions</b> · {used}/{slots}"
+  masteries: "<b>Field masteries</b> (free for everyone)"
+  none: "<i>You have no profession yet. Learn up to {slots} at Craftsmen’s Row, next to the market.</i>"
+  guild_hint: "<i>Learning is free while you have free slots; swapping a profession costs {cost} gold and you keep what you learned.</i>"
+  go_guild: "<i>Professions are learned and swapped at Craftsmen’s Row, next to the market.</i>"
+  line: "{icon} <b>{name}</b> {stars} · {progress}"
+  inactive: "<i>(not practised)</i>"
+  swap_title: "🔁 Which profession do you drop to learn <b>{prof}</b>? It costs {cost} gold and you keep its experience."
+  learned: "📘 You learn {prof} ({used}/{slots} professions)."
+  swapped: "🔁 You drop {old} and learn {prof} ({cost} gold). What you knew of {old} is not forgotten."
+  xp: "📈 +{amount} {prof} XP."
+  rank: "⭐ {prof} rises to rank {rank}!"
+  err:
+    not_guild: "Professions are learned at Craftsmen’s Row."
+    unknown: "That profession does not exist."
+    already: "You already practise {prof}."
+    slots_full: "You already have {slots} professions. Choose one to drop."
+
+craft:
+  title: "🔨 <b>Craft</b> · {place}"
+  none: "<i>There is no station for your professions here. Smithing, alchemy, carpentry, leatherworking and jewelcrafting: Craftsmen’s Row. Cooking: the hearth at The Broken Crown.</i>"
+  recipe: "{mark} <b>{item}</b> ×{qty} · {prof} {rank}"
+  locked: "(rank {rank})"
+  made: "🔨 You craft: {item} ×{qty}."
+  err:
+    unknown: "That recipe does not exist."
+    not_your_profession: "You do not practise {prof}."
+    no_station: "There is no {station} here."
+    rank: "You need {prof} at rank {rank}."
+    missing: "You are missing: {items}."
+
+station:
+  anvil: "anvil"
+  alchemy_table: "alchemy table"
+  carpenter_bench: "carpenter’s bench"
+  tannery: "tannery"
+  jeweler_bench: "jeweler’s bench"
+  hearth: "hearth"

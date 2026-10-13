@@ -531,3 +531,26 @@ async def test_mining_buttons_collect_and_chronicle(llm):
     assert any("Mena de hierro" in t_ or "Carbón" in t_ for t_ in texts)
     assert any("Crónica" in t_ and "Aldric arranca" in t_ and "1/15" in t_ for t_ in texts)
     assert "Viajar" in str(p.last[1].inline_keyboard)  # back to the normal scene
+
+
+async def test_learn_a_profession_and_craft(llm):
+    from oathforge.services import inventory
+
+    p = Player(llm, tg_id=64)
+    await create(p)
+    async with session_scope() as s:
+        char = await s.scalar(select(Character).with_for_update())
+        char.location = "crownreach_workshops"
+        await inventory.add_item(s, char, "bloodroot", 2)
+        await inventory.add_item(s, char, "water_flask", 1)
+    await p.press("scene|-|-")
+    await p.press(p.find("prof"))
+    assert "0/2" in p.last[0]
+    await p.press(p.find("plearn", "alchemy"))
+    assert "Alquimia" in p.chat.sent[-2][0] and "1/2" in p.last[0]
+    await p.press("scene|-|-")
+    await p.press(p.find("crf"))
+    assert "✅" in p.last[0]
+    await p.press(p.find("craft", "healing_potion"))
+    assert "Poción de curación" in p.chat.sent[-2][0]
+    assert "❌" in p.last[0]  # no more bloodroot

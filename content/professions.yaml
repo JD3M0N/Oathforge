@@ -1,0 +1,50 @@
+# Oficios: cada personaje tiene dos activos (se aprenden y cambian en el Barrio de Oficios).
+# Cada uno trabaja en una estación (Location.stations). Diseño en planning/profesiones.md.
+
+blacksmithing:
+  name: {es: Herrería, en: Blacksmithing}
+  icon: "⚒️"
+  station: anvil
+  description:
+    es: Funde mena en lingotes y forja armas en el yunque. Necesita hierro y carbón de la mina.
+    en: Smelts ore into ingots and forges weapons at the anvil. Needs iron and coal from the mine.
+
+alchemy:
+  name: {es: Alquimia, en: Alchemy}
+  icon: "⚗️"
+  station: alchemy_table
+  description:
+    es: Destila hierbas en pociones. La raíz de sangre del bosque es su base.
+    en: Distils herbs into potions. Bloodroot from the woods is its base.
+
+carpentry:
+  name: {es: Carpintería, en: Carpentry}
+  icon: "🪚"
+  station: carpenter_bench
+  description:
+    es: Convierte troncos en tablones, bastones y piezas para otros oficios.
+    en: Turns logs into planks, staves and parts for other crafts.
+
+leatherworking:
+  name: {es: Peletería, en: Leatherworking}
+  icon: "🧵"
+  station: tannery
+  description:
+    es: Curte pieles y cose armaduras ligeras. Vive de lo que traen los cazadores.
+    en: Tans hides and stitches light armour. Lives on what hunters bring back.
+
+cooking:
+  name: {es: Cocina, en: Cooking}
+  icon: "🍲"
+  station: hearth
+  description:
+    es: Guisos y raciones que reponen fuerzas fuera del combate. El fogón está en La Corona Rota.
+    en: Stews and rations that restore strength outside combat. The hearth is at The Broken Crown.
+
+jewelcrafting:
+  name: {es: Joyería, en: Jewelcrafting}
+  icon: "💍"
+  station: jeweler_bench
+  description:
+    es: Anillos de cobre y engastes de gemas que valen mucho en el mercado.
+    en: Copper rings and gem settings that fetch a good price at the market.

@@ -16,7 +16,8 @@ from oathforge.engine.combat import EncounterState, available_bonus_actions, val
 from oathforge.engine.progression import MAX_LEVEL, XP_THRESHOLDS, skill_rank
 from oathforge.i18n import t
 from oathforge.services import (
-    activities, bestiary, characters, chronicles, combat_service, exploration, inventory, npcs, quests,
+    activities, bestiary, characters, chronicles, combat_service, crafting, exploration, inventory, npcs, professions,
+    quests,
 )
 from oathforge.services.events import Outcome, render_event
 
@@ -143,6 +144,10 @@ async def scene(session: AsyncSession, char: Character, lang: str) -> tuple[str,
     for kind, skill in activities.options(char):
         label = {"gather": f"btn.gather_{skill}", "stay": "btn.stay", "track": "btn.track"}[kind]
         buttons.append(btn(t(lang, label, minutes=gathering.SECONDS[kind] // 60), cb("act", f"{kind}:{skill}", n)))
+    if loc.stations:
+        buttons.append(btn(t(lang, "btn.craft"), cb("crf")))
+    if loc.guild:
+        buttons.append(btn(t(lang, "btn.professions"), cb("prof")))
     if loc.rest_cost is not None:
         buttons.append(btn(t(lang, "btn.rest", cost=loc.rest_cost), cb("rest", "-", n)))
     if loc.hub and c.media.zone_images(loc.zone, night):
@@ -180,11 +185,99 @@ def mastery_lines(char: Character, lang: str) -> list[str]:
     out = []
     for skill in gathering.MASTERIES:
         xp = characters.mastery_xp(char, skill)
-        rank, nxt = gathering.rank_for(xp), gathering.next_threshold(xp)
-        progress = f"{xp}/{nxt} XP" if nxt else f"{xp} XP"
-        stars = "★" * rank + "☆" * (gathering.MAX_RANK - rank)
-        out.append(f"{MASTERY_ICON[skill]} {escape(t(lang, f'mastery.name.{skill}'))} {stars} · {progress}")
+        out.append(f"{MASTERY_ICON[skill]} {escape(t(lang, f'mastery.name.{skill}'))} "
+                   f"{_stars(gathering.rank_for(xp))} · {_progress(xp)}")
     return out
+
+
+def _stars(rank: int) -> str:
+    return "★" * rank + "☆" * (gathering.MAX_RANK - rank)
+
+
+def _progress(xp: int) -> str:
+    nxt = gathering.next_threshold(xp)
+    return f"{xp}/{nxt} XP" if nxt else f"{xp} XP"
+
+
+def professions_line(char: Character, lang: str) -> str:
+    """🛠️ Oficios 1/2: Alquimia ★☆☆☆☆"""
+    c = get_content()
+    mine = professions.active(char)
+    names = ", ".join(f"{c.professions[k].icon} {c.professions[k].name.get(lang)} {professions.rank(char, k)}"
+                      for k in mine) or t(lang, "sheet.no_professions")
+    return t(lang, "sheet.professions", used=len(mine), slots=professions.SLOTS, list=escape(names))
+
+
+def professions_view(char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+    """/professions: your two professions, the others you know, and the six field masteries.
+    At the guild, buttons to learn or swap."""
+    c = get_content()
+    mine = professions.active(char)
+    lines = [t(lang, "prof.title", used=len(mine), slots=professions.SLOTS), ""]
+    if not mine:
+        lines.append(t(lang, "prof.none", slots=professions.SLOTS))
+    for key, prof in c.professions.items():
+        xp = professions.xp(char, key)
+        if key in mine or xp:
+            lines.append(t(lang, "prof.line", icon=prof.icon, name=escape(prof.name.get(lang)),
+                           stars=_stars(professions.rank(char, key)), progress=_progress(xp))
+                         + ("" if key in mine else " " + t(lang, "prof.inactive")))
+    lines += ["", t(lang, "prof.masteries"), *mastery_lines(char, lang), ""]
+    rows = []
+    if c.locations[char.location].guild:
+        lines.append(t(lang, "prof.guild_hint", cost=professions.SWAP_COST))
+        n = nonce()
+        full = len(mine) >= professions.SLOTS
+        learnable = [btn(t(lang, "btn.swap_for" if full else "btn.learn", prof=f"{p.icon} {p.name.get(lang)}"),
+                         cb("profsw", k) if full else cb("plearn", k, n))
+                     for k, p in c.professions.items() if k not in mine]
+        rows += grid(learnable)
+    else:
+        lines.append(t(lang, "prof.go_guild"))
+    rows.append([btn(t(lang, "btn.back"), cb("scene"))])
+    return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
+
+
+def swap_menu(char: Character, key: str, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+    """Which active profession to drop for ``key``."""
+    c = get_content()
+    if key not in c.professions:
+        return professions_view(char, lang)
+    n = nonce()
+    rows = [[btn(t(lang, "btn.replace", prof=c.professions[old].name.get(lang), cost=professions.SWAP_COST),
+                 cb("plearn", f"{key}:{old}", n))] for old in professions.active(char)]
+    rows.append([btn(t(lang, "btn.back"), cb("prof"))])
+    return t(lang, "prof.swap_title", prof=escape(c.professions[key].name.get(lang)), cost=professions.SWAP_COST), markup(rows)
+
+
+async def craft_menu(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+    """Recipes of your professions at this station: what you have, what is missing, and a button when ready."""
+    c = get_content()
+    lines = [t(lang, "craft.title", place=escape(c.locations[char.location].name.get(lang))), ""]
+    recipes = crafting.recipes_here(char)
+    n = nonce()
+    ready = []
+    if not recipes:
+        lines.append(t(lang, "craft.none"))
+    for key, r in recipes.items():
+        prof = c.professions[r.profession]
+        locked = professions.rank(char, r.profession) < r.min_rank
+        lacking = await crafting.missing(session, char, r)
+        mark = "🔒" if locked else "❌" if lacking else "✅"
+        out_key, qty = next(iter(r.outputs.items()))
+        rank = t(lang, "craft.locked", rank=r.min_rank) if locked else ""
+        lines.append(t(lang, "craft.recipe", mark=mark, item=escape(c.items[out_key].name.get(lang)), qty=qty,
+                       prof=prof.icon, rank=rank).rstrip())
+        parts = []
+        for item, need in r.ingredients.items():
+            have = need - lacking.get(item, 0)
+            parts.append(f"{have}/{need} {escape(c.items[item].name.get(lang))}")
+        lines.append("      " + " + ".join(parts))
+        if not locked and not lacking:
+            ready.append(btn(t(lang, "btn.make", item=c.items[out_key].name.get(lang)), cb("craft", key, n)))
+    rows = grid(ready)
+    rows.append([btn(t(lang, "btn.professions"), cb("prof")), btn(t(lang, "btn.back"), cb("scene"))])
+    return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
 
 
 def zone_caption(zone_key: str, lang: str) -> str:
@@ -428,8 +521,8 @@ async def sheet(session: AsyncSession, char: Character, lang: str) -> tuple[str,
               f"🧬 <i>{escape(c.lineages[char.lineage].trait_text.get(lang))}</i>",
               f"📖 <i>{escape(c.backgrounds[char.background].description.get(lang))}</i>"]
 
-    # gathering masteries
-    lines += ["", f"<b>{t(lang, 'sheet.masteries')}</b>", *mastery_lines(char, lang)]
+    # professions and gathering masteries
+    lines += ["", professions_line(char, lang), "", f"<b>{t(lang, 'sheet.masteries')}</b>", *mastery_lines(char, lang)]
 
     # today's AI budget and expedition chronicles
     limit = get_settings().ai_user_daily_calls

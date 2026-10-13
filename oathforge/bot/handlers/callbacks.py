@@ -19,7 +19,7 @@ from oathforge.engine.combat import Action, EncounterState, valid_targets
 from oathforge.i18n import t
 from oathforge.ai.intent_parser import Intent
 from oathforge.services import (
-    actions, activities, audit, characters, combat_service, exploration, inventory, npcs, quests,
+    actions, activities, audit, characters, combat_service, crafting, exploration, inventory, npcs, professions, quests,
 )
 from oathforge.services.events import Outcome
 
@@ -27,7 +27,7 @@ log = logging.getLogger(__name__)
 
 # verbs that only show something (no nonce, no state change)
 VIEWS = {"scene", "trv", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jq", "jrb", "jb", "jrr",
-         "shopm", "shop", "sellm", "cbp", "lang", "city", "cls", "clsl", "rep"}
+         "shopm", "shop", "sellm", "cbp", "lang", "city", "cls", "clsl", "rep", "prof", "profsw", "crf"}
 
 
 async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -111,6 +111,12 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             enc_id, _, page = arg.partition(":")
             report = await combat_service.battle_report(session, char, int(enc_id) if enc_id.isdigit() else None)
             text, kb = render.report_page(report, int(page) if page.isdigit() else 0, lang)
+        elif verb == "prof":
+            text, kb = render.professions_view(char, lang)
+        elif verb == "profsw" and not in_combat:
+            text, kb = render.swap_menu(char, arg, lang)
+        elif verb == "crf" and not in_combat:
+            text, kb = await render.craft_menu(session, char, lang)
         elif verb == "jrb":
             text, kb = render.bestiary_list(char, lang)
         elif verb == "jb":
@@ -206,6 +212,11 @@ async def _dispatch(session, char, verb: str, arg: str, r, context) -> Outcome:
         return await activities.claim(session, char)
     if verb == "actx":
         return await activities.cancel(session, char)
+    if verb == "plearn":  # "<profession>" or "<profession>:<the one it replaces>"
+        key, _, old = arg.partition(":")
+        return await professions.learn(session, char, key, old or None)
+    if verb == "craft":
+        return await crafting.craft(session, char, arg)
     if verb == "qa":
         return await quests.perform(session, char, arg, present, r)
     if verb == "eq":
@@ -242,6 +253,10 @@ async def _after(session, char, lang: str, verb: str, arg: str, context):
         return await render.sell_menu(session, char, npc_key, lang)
     if verb in ("eq", "use"):
         return await render.inventory_view(session, char, lang)
+    if verb == "plearn":
+        return render.professions_view(char, lang)
+    if verb == "craft":
+        return await render.craft_menu(session, char, lang)
     return await render.scene(session, char, lang)
 
 

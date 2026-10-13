@@ -1,0 +1,21 @@
+name: {es: Barrio de Oficios, en: Craftsmen's Row}
+kind: city
+guild: true  # aquí se aprenden y cambian los oficios
+stations: [anvil, alchemy_table, carpenter_bench, tannery, jeweler_bench]
+description:
+  es: >-
+    Una calle estrecha detrás del mercado donde nunca se apaga el ruido: el yunque de los herreros, el burbujeo
+    de los alambiques, el serrucho de los carpinteros. En la puerta del gremio, una pizarra anuncia que se
+    admiten aprendices.
+  en: >-
+    A narrow street behind the market where the noise never stops: the smiths' anvils, the bubbling stills,
+    the carpenters' saws. On the guild door, a slate announces that apprentices are welcome.
+night:
+  es: >-
+    Las fraguas se enfrían y solo un alquimista trasnochador mantiene la luz encendida. Los bancos de trabajo
+    siguen abiertos a quien quiera usarlos.
+  en: >-
+    The forges cool and only a night-owl alchemist keeps a light on. The workbenches stay open to anyone who
+    wants them.
+exits:
+  - {to: crownreach_market, minutes: 2}

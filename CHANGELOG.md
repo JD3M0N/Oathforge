@@ -4,6 +4,23 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.6.1] - 2026-10-13
+
+### Añadido
+- **Oficios**: herrería, alquimia, carpintería, peletería, cocina y joyería. Cada personaje tiene **dos activos**.
+  - Se aprenden en el nuevo **Barrio de Oficios** (junto al mercado), gratis mientras haya plaza libre. Cambiar uno cuesta 25 de oro y su experiencia no se pierde.
+  - Rango 0–5 con la misma curva que las maestrías; una receta 2 rangos por debajo del tuyo da la mitad de XP.
+- **Estaciones**: yunque, mesa alquímica, banco de carpintero, curtiembre y banco de joyero en el Barrio de Oficios; fogón de cocina en La Corona Rota.
+- **12 recetas**: lingote y espada de hierro, poción de curación, tablones y bastón de roble, cuero curtido (de jabalí o de lobo) y cuero reforzado (CA 12), estofado del cazador y ración del pescador (curan fuera de combate), anillo de cobre y anillo con gema.
+- **«🔨 Fabricar»** en los lugares con estación: las recetas de tus oficios con lo que tienes y lo que falta, y un botón por cada una que puedes hacer. Fabricar comprueba todo antes de gastar: o se gastan todos los ingredientes o ninguno. Lo fabricado guarda quién lo hizo.
+- **`/professions`** (también en el menú de comandos): tus oficios y las seis maestrías con rango y XP; en el Barrio de Oficios, botones para aprender o cambiar.
+- Mira vende frascos de agua para la alquimia.
+- `/sheet` muestra «🛠️ Oficios 1/2».
+
+### Cambiado
+- `inventory.add_item` acepta `crafted_by`.
+- `content/professions.yaml` y `content/recipes.yaml`, validados al arrancar; `Location.stations` y `Location.guild`.
+
 ## [0.6.0] - 2026-10-13
 
 ### Añadido

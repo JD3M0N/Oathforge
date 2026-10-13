@@ -23,7 +23,9 @@ from oathforge.content.schemas import (
     Location,
     Monster,
     Npc,
+    Profession,
     Quest,
+    Recipe,
     Skill,
     Text,
     Zone,
@@ -54,7 +56,9 @@ class Content:
     media: MediaCatalog
     start_location: str
     respawn_location: str
-    chronicles: dict[str, list[Text]] = field(default_factory=dict)  # outcome -> generic texts when the AI chronicler is not used
+    chronicles: dict[str, list[Text]] = field(default_factory=dict)
+    professions: dict[str, Profession] = field(default_factory=dict)
+    recipes: dict[str, Recipe] = field(default_factory=dict)  # outcome -> generic texts when the AI chronicler is not used
 
 
 def _read(directory: Path, name: str) -> dict:
@@ -147,6 +151,8 @@ def load_content(directory: Path = CONTENT_DIR) -> Content:
         start_location=world.start,
         respawn_location=respawn[0] if respawn else world.start,
         chronicles={k: [Text.model_validate(v) for v in vs] for k, vs in _read(directory, "chronicles").items()},
+        professions=_parse(Profession, _read(directory, "professions")),
+        recipes=_parse(Recipe, _read(directory, "recipes")),
     )
     validate_references(content)
     return content
@@ -210,6 +216,18 @@ def validate_references(c: Content) -> None:
             need("skill", disc.skill, c.skills, f"location {key} discovery {dkey}")
             for i in disc.gives:
                 need("item", i, c.items, f"location {key} discovery {dkey}")
+    for key, recipe in c.recipes.items():
+        need("profession", recipe.profession, c.professions, f"recipe {key}")
+        for i in [*recipe.ingredients, *recipe.outputs]:
+            need("item", i, c.items, f"recipe {key}")
+        if not recipe.ingredients or not recipe.outputs:
+            errors.append(f"recipe {key}: needs ingredients and outputs")
+    stations = {s for loc in c.locations.values() for s in loc.stations}
+    for key, prof in c.professions.items():
+        if prof.station not in stations:
+            errors.append(f"profession {key}: no location has a '{prof.station}'")
+    if c.professions and not any(loc.guild for loc in c.locations.values()):
+        errors.append("professions: no guild location to learn them")
     for outcome in CHRONICLE_OUTCOMES:
         if not c.chronicles.get(outcome):
             errors.append(f"chronicles.yaml: no texts for '{outcome}'")

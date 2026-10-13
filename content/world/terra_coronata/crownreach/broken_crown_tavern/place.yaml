@@ -1,6 +1,7 @@
 name: {es: Taberna La Corona Rota, en: The Broken Crown Tavern}
 kind: city
 rest_cost: 5
+stations: [hearth]  # cocina
 description:
   es: >-
     El olor a madera quemada y carne asada llena el salón. Dos mercenarios discuten junto a la

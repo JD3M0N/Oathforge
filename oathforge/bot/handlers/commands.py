@@ -1,4 +1,4 @@
-"""/hero /sheet /inventory /journal /quests /classes /class_<key> /report /roll /look /language /help."""
+"""/hero /sheet /inventory /journal /quests /classes /class_<key> /report /professions /roll /look /language /help."""
 
 import re
 
@@ -61,6 +61,10 @@ async def _report(session, char, lang):
     return render.report_page(await combat_service.battle_report(session, char), 0, lang)
 
 
+async def _professions(session, char, lang):
+    return render.professions_view(char, lang)
+
+
 async def language(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     async with session_scope() as session:
         user, _ = await load(session, update)
@@ -87,6 +91,7 @@ def handlers() -> list[BaseHandler]:
         CommandHandler("classes", classes),
         MessageHandler(filters.Regex(CLASS_LINK), classes),
         CommandHandler("report", _view(_report)),
+        CommandHandler("professions", _view(_professions)),
         CommandHandler("roll", callbacks.roll_command),
         CommandHandler("language", language),
         CommandHandler("help", help_cmd),

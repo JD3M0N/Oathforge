@@ -29,6 +29,9 @@ CHRONICLE_OUTCOMES = (
     "track_tracks", "track_won", "track_fled", "track_lost",
 )
 CHRONICLE_PLACEHOLDERS = {"name", "place", "loot", "monster"}
+
+# crafting stations a location can have (Location.stations); each profession works at one
+Station = Literal["anvil", "alchemy_table", "carpenter_bench", "tannery", "jeweler_bench", "hearth"]
 Row = Literal["front", "back"]
 
 
@@ -281,6 +284,8 @@ class Location(Strict):
     night_encounters: list[EncounterEntry] = []  # replaces `encounters` at night when not empty
     hunting: bool = False  # shows "Hunt" (a fight now) and "Track" (5 min, tracking XP and trophies)
     gathering: list[Gathering] = []
+    stations: list[Station] = []  # crafting stations here: "Craft" in the scene
+    guild: bool = False  # professions are learned and swapped here
     fixed_encounters: list[FixedEncounter] = []
     scene_objects: dict[str, SceneObject] = {}
     discoveries: dict[str, Discovery] = {}
@@ -290,6 +295,23 @@ class Location(Strict):
     # filled by the loader from the folder: world/<continent>/<zone>/<location>/place.yaml
     zone: str = ""
     continent: str = ""
+
+
+class Profession(Strict):
+    """A crafting profession; a character keeps two active (see planning/profesiones.md)."""
+
+    name: Text
+    description: Text
+    icon: str
+    station: Station
+
+
+class Recipe(Strict):
+    profession: str
+    min_rank: int = Field(0, ge=0, le=5)
+    ingredients: dict[str, int]
+    outputs: dict[str, int]
+    xp: int
 
 
 class Zone(Strict):

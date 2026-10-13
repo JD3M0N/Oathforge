@@ -31,7 +31,8 @@ async def count(session: AsyncSession, char: Character, key: str) -> int:
     return sum(i.qty for i in await items_of(session, char) if i.item_key == key)
 
 
-async def add_item(session: AsyncSession, char: Character, key: str, qty: int = 1) -> None:
+async def add_item(session: AsyncSession, char: Character, key: str, qty: int = 1,
+                   crafted_by: int | None = None) -> None:
     item = get_content().items[key]
     if item.stackable:
         stmt = (select(ItemInstance)
@@ -44,7 +45,8 @@ async def add_item(session: AsyncSession, char: Character, key: str, qty: int = 
         session.add(ItemInstance(owner_character_id=char.id, item_key=key, qty=qty, history=[]))
     else:
         for _ in range(qty):
-            session.add(ItemInstance(owner_character_id=char.id, item_key=key, qty=1, history=[]))
+            session.add(ItemInstance(owner_character_id=char.id, item_key=key, qty=1, crafted_by=crafted_by,
+                                     history=[]))
     await session.flush()
 
 

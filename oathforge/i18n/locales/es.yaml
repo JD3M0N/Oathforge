@@ -11,6 +11,7 @@ cmd:
   quests: "Misiones y progreso"
   classes: "Clases y sus habilidades"
   report: "Informe de la última batalla"
+  professions: "Oficios y maestrías"
   roll: "Lanzar el dado y tiradas manuales"
   language: "Cambiar idioma"
   help: "Cómo jugar"
@@ -23,7 +24,7 @@ help:
     También puedes <b>escribir lo que quieras hacer</b>: «me escondo tras la barra y escucho», «intento robarle la bolsa al tabernero», «empujo el carro sobre el bandido».
     El Dungeon Master interpreta tu acción, el motor tira los dados y tú ves el resultado real.
 
-    Comandos: /look /hero /sheet /inventory /journal /quests /classes /report /roll /language
+    Comandos: /look /hero /sheet /inventory /journal /quests /classes /report /professions /roll /language
   version: "<i>Oathforge v{version}</i>"
 
 lang:
@@ -100,6 +101,12 @@ btn:
   claim: "🎁 Recoger"
   refresh: "🔄 Actualizar"
   abandon: "✖️ Abandonar"
+  professions: "🛠️ Oficios"
+  craft: "🔨 Fabricar"
+  learn: "📘 Aprender {prof}"
+  swap_for: "🔁 Cambiar por {prof}"
+  replace: "Dejar {prof} ({cost} 🪙)"
+  make: "🔨 {item}"
   missions: "📜 Misiones"
   bestiary: "📖 Bestiario"
   rumors: "🗣️ Rumores"
@@ -202,6 +209,8 @@ sheet:
   ai_usage: "🤖 Dungeon Master hoy: {calls}/{limit} · quedan {left}  {bar}"
   masteries: "Maestrías de campo"
   chronicles: "📜 Crónicas de hoy: {used}/{limit} · quedan {left}  {bar}"
+  professions: "🛠️ Oficios {used}/{slots}: {list}"
+  no_professions: "ninguno (apréndelos en el Barrio de Oficios)"
 
 ai:
   budget_exhausted: "🤖 El Dungeon Master ha agotado sus fuerzas por hoy. Sigue jugando con los botones; se recupera a medianoche."
@@ -541,3 +550,43 @@ chronicle:
   footer_ai: "📜 Crónica {used}/{limit} de hoy"
   footer_rest: "📜 El cronista ya escribió sus {limit} crónicas de hoy; vuelve mañana."
   footer_generic: "📜 De los archivos del gremio"
+
+prof:
+  title: "🛠️ <b>Oficios</b> · {used}/{slots}"
+  masteries: "<b>Maestrías de campo</b> (libres para todos)"
+  none: "<i>Aún no tienes oficio. Aprende hasta {slots} en el Barrio de Oficios, junto al mercado.</i>"
+  guild_hint: "<i>Aprender es gratis mientras tengas plazas libres; cambiar un oficio cuesta {cost} de oro y no pierdes lo aprendido.</i>"
+  go_guild: "<i>Los oficios se aprenden y cambian en el Barrio de Oficios, junto al mercado.</i>"
+  line: "{icon} <b>{name}</b> {stars} · {progress}"
+  inactive: "<i>(sin practicar)</i>"
+  swap_title: "🔁 ¿Qué oficio dejas para aprender <b>{prof}</b>? Cuesta {cost} de oro y no pierdes su experiencia."
+  learned: "📘 Aprendes {prof} ({used}/{slots} oficios)."
+  swapped: "🔁 Dejas {old} y aprendes {prof} ({cost} de oro). Lo que sabías de {old} no se olvida."
+  xp: "📈 +{amount} XP de {prof}."
+  rank: "⭐ ¡{prof} sube a rango {rank}!"
+  err:
+    not_guild: "Los oficios se aprenden en el Barrio de Oficios."
+    unknown: "Ese oficio no existe."
+    already: "Ya practicas {prof}."
+    slots_full: "Ya tienes {slots} oficios. Elige cuál dejar."
+
+craft:
+  title: "🔨 <b>Fabricar</b> · {place}"
+  none: "<i>Aquí no hay estación para tus oficios. Herrería, alquimia, carpintería, peletería y joyería: Barrio de Oficios. Cocina: fogón de La Corona Rota.</i>"
+  recipe: "{mark} <b>{item}</b> ×{qty} · {prof} {rank}"
+  locked: "(rango {rank})"
+  made: "🔨 Fabricas: {item} ×{qty}."
+  err:
+    unknown: "Esa receta no existe."
+    not_your_profession: "No practicas {prof}."
+    no_station: "Aquí no hay {station}."
+    rank: "Necesitas {prof} de rango {rank}."
+    missing: "Te falta: {items}."
+
+station:
+  anvil: "yunque"
+  alchemy_table: "mesa alquímica"
+  carpenter_bench: "banco de carpintero"
+  tannery: "curtiembre"
+  jeweler_bench: "banco de joyero"
+  hearth: "fogón"

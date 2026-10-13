@@ -8,3 +8,4 @@ night:
   en: The stalls are shut. Only rats and the odd discreet buyer walk the aisles.
 exits:
   - {to: crownreach_plaza, minutes: 3}
+  - {to: crownreach_workshops, minutes: 2}

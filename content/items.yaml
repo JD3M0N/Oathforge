@@ -280,3 +280,88 @@ silverscale_trout:
   type: material
   value: 20
   stackable: true
+
+water_flask:
+  name: {es: Frasco de agua, en: Water flask}
+  description: {es: "Un frasco de vidrio con agua limpia de pozo, listo para la alquimia.", en: "A glass flask of clean well water, ready for alchemy."}
+  type: material
+  value: 2
+  stackable: true
+
+# ---------------------------------------------------------------- crafted goods (v0.6.1)
+
+iron_ingot:
+  name: {es: Lingote de hierro, en: Iron ingot}
+  description: {es: "Hierro fundido y limpio, listo para el yunque.", en: "Clean smelted iron, ready for the anvil."}
+  type: material
+  value: 18
+  stackable: true
+
+oak_plank:
+  name: {es: Tablón de roble, en: Oak plank}
+  description: {es: "Madera cepillada y recta para empuñaduras y mangos.", en: "Planed straight wood for grips and hafts."}
+  type: material
+  value: 5
+  stackable: true
+
+treated_leather:
+  name: {es: Cuero curtido, en: Treated leather}
+  description: {es: "Cuero flexible y resistente, listo para coser.", en: "Supple, tough leather, ready to stitch."}
+  type: material
+  value: 15
+  stackable: true
+
+iron_sword:
+  name: {es: Espada de hierro, en: Iron sword}
+  description: {es: "Una espada recta forjada a mano. Igual de letal que una espada larga, y se vende mejor.", en: "A hand-forged straight sword. As deadly as a longsword, and it sells better."}
+  type: weapon
+  slot: main_hand
+  value: 40
+  weapon: {damage: 1d8, damage_type: slashing}
+
+oak_staff:
+  name: {es: Bastón de roble, en: Oak staff}
+  description: {es: "Un bastón tallado y equilibrado; los magos lo prefieren al del mercado.", en: "A carved, balanced staff; mages prefer it to the market ones."}
+  type: weapon
+  slot: main_hand
+  value: 20
+  weapon: {damage: 1d6, damage_type: bludgeoning}
+
+reinforced_leather:
+  name: {es: Cuero reforzado, en: Reinforced leather}
+  description: {es: "Cuero curtido con remaches de hierro. Protege más que el cuero simple sin estorbar.", en: "Treated leather with iron rivets. Better protection than plain leather without the bulk."}
+  type: armor
+  slot: body
+  value: 60
+  base_ac: 12
+  dex_cap: 5
+
+hunter_stew:
+  name: {es: Estofado del cazador, en: Hunter's stew}
+  description: {es: "Carne guisada con raíz de sangre. Recupera 1d6+2 PV fuera de combate.", en: "Meat stewed with bloodroot. Restores 1d6+2 HP outside combat."}
+  type: consumable
+  value: 12
+  stackable: true
+  heal: 1d6+2
+
+fisher_ration:
+  name: {es: Ración del pescador, en: Fisher's ration}
+  description: {es: "Pescado ahumado envuelto en hojas. Recupera 2d4+1 PV fuera de combate.", en: "Smoked fish wrapped in leaves. Restores 2d4+1 HP outside combat."}
+  type: consumable
+  value: 10
+  stackable: true
+  heal: 2d4+1
+
+copper_ring:
+  name: {es: Anillo de cobre, en: Copper ring}
+  description: {es: "Un anillo sencillo y bien pulido. Los mercaderes lo compran.", en: "A simple, well-polished ring. Merchants buy them."}
+  type: trinket
+  value: 24
+  stackable: true
+
+gem_ring:
+  name: {es: Anillo con gema, en: Gem ring}
+  description: {es: "Cobre trabajado con una gema tallada. Una pequeña fortuna en el mercado.", en: "Worked copper set with a cut gem. A small fortune at the market."}
+  type: trinket
+  value: 110
+  stackable: true

@@ -28,6 +28,25 @@ El bucle que buscamos: **ir a una zona → elegir actividad → esperar o arries
 - **Desuello automático** tras cualquier victoria contra bestias con `harvest` (jabalí, lobo, Viejo Colmillo), si llevas cuchillo de desollar. Da XP de desuello.
 - Rango de maestría: XP acumulada 0 / 80 / 240 / 500 / 900 / 1500. Cada rango suma un 4 % de probabilidad de unidad extra (tope del 20 %, que no da XP) y abre recursos con `min_rank` (cobre a rango 1, gemas a rango 3...).
 
+### Oficios y recetas (v0.6.1)
+
+- **Dos oficios activos** de seis. Se aprenden en el **Barrio de Oficios** (junto al mercado): gratis mientras haya plaza libre; cambiar uno cuesta **25 de oro** y su XP no se pierde.
+- Rango de oficio 0–5 con la misma curva que las maestrías. Una receta 2 o más rangos por debajo del tuyo da la mitad de XP.
+- **Estaciones**: yunque, mesa alquímica, banco de carpintero, curtiembre y banco de joyero en el Barrio de Oficios; el fogón de cocina en La Corona Rota.
+- **Fabricar** es inmediato y atómico: se comprueba todo y después se gastan los ingredientes, o no se gasta nada. Los objetos no apilables guardan quién los fabricó (`crafted_by`).
+- `/professions` muestra oficios y maestrías; en el Barrio de Oficios, los botones para aprender o cambiar. «🔨 Fabricar» lista las recetas de tus oficios en esa estación, con lo que tienes y lo que falta.
+
+| Oficio | Rango 0 | Rango 1+ |
+|---|---|---|
+| ⚒️ Herrería | Lingote de hierro (3 mena + 1 carbón) | Espada de hierro (2 lingotes + 1 tablón) |
+| ⚗️ Alquimia | Poción de curación (2 raíz de sangre + 1 frasco de agua) | — |
+| 🪚 Carpintería | 2 tablones (3 troncos de roble) | Bastón de roble (2 tablones + 1 fibra) |
+| 🧵 Peletería | Cuero curtido (2 cuero de jabalí o 1 piel de lobo) | Cuero reforzado, CA 12 (3 cuero curtido + 1 lingote) |
+| 🍲 Cocina | Estofado del cazador, 1d6+2 PV (2 carne + 1 raíz) | 2 raciones del pescador, 2d4+1 PV (2 peces + 1 raíz) |
+| 💍 Joyería | Anillo de cobre (2 cobre + 1 carbón) | Anillo con gema, rango 2 (anillo + gema en bruto) |
+
+Las armas fabricadas no son más fuertes que las de tienda (la espada de hierro pega como la espada larga y se vende mejor); el cuero reforzado da +1 CA sobre el cuero normal. Los ingredientes cruzan oficios: la espada necesita un tablón de carpintería y el cuero reforzado, un lingote de herrería.
+
 ### Lugares nuevos (v0.6.0)
 
 | Lugar | Desde | Maestría | Emboscada | Caza |
@@ -50,7 +69,6 @@ Las herramientas las vende Tessa. Sin la herramienta no se puede trabajar ese re
 
 ## Ideas (siguientes pasos)
 
-- **v0.6.1, oficios**: dos plazas, cambio en el Barrio de Oficios por 25 de oro sin perder XP, unas 12 recetas, estaciones (yunque, mesa alquímica, banco de carpintero, curtiembre, banco de joyero, fogón de la taberna).
 - **v0.6.2, pociones con efectos tipados**: vida (como ahora), maná (+1 uso de un conjuro gastado) y reposo breve (20 % de PV y +1 uso, enfriamiento de 4 h).
 - Afinidades a rango 3 (Prospector / Excavador...), durabilidad de herramientas, vetas finitas con regeneración, encargos de NPC, mercado entre jugadores y un tercer oficio como recompensa. **Ninguna antes de tener datos de la beta.**
 - Antifarmeo más fino: menos XP en nodos de nivel bajo a partir de rango 3 y por repetir el mismo contexto.

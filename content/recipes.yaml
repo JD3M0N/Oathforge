@@ -1,0 +1,79 @@
+# Recetas: oficio, rango mínimo del oficio, ingredientes → productos y XP de oficio.
+# Se fabrican en la estación del oficio (content/professions.yaml). Fabricar es inmediato.
+
+iron_ingot:
+  profession: blacksmithing
+  ingredients: {iron_ore: 3, coal: 1}
+  outputs: {iron_ingot: 1}
+  xp: 10
+
+iron_sword:
+  profession: blacksmithing
+  min_rank: 1
+  ingredients: {iron_ingot: 2, oak_plank: 1}
+  outputs: {iron_sword: 1}
+  xp: 25
+
+healing_potion:
+  profession: alchemy
+  ingredients: {bloodroot: 2, water_flask: 1}
+  outputs: {healing_potion: 1}
+  xp: 12
+
+oak_plank:
+  profession: carpentry
+  ingredients: {oak_log: 3}
+  outputs: {oak_plank: 2}
+  xp: 8
+
+oak_staff:
+  profession: carpentry
+  min_rank: 1
+  ingredients: {oak_plank: 2, plant_fiber: 1}
+  outputs: {oak_staff: 1}
+  xp: 20
+
+treated_leather:
+  profession: leatherworking
+  ingredients: {boar_hide: 2}
+  outputs: {treated_leather: 1}
+  xp: 10
+
+wolf_leather:
+  profession: leatherworking
+  ingredients: {wolf_pelt: 1}
+  outputs: {treated_leather: 1}
+  xp: 10
+
+reinforced_leather:
+  profession: leatherworking
+  min_rank: 1
+  ingredients: {treated_leather: 3, iron_ingot: 1}
+  outputs: {reinforced_leather: 1}
+  xp: 30
+
+hunter_stew:
+  profession: cooking
+  ingredients: {raw_meat: 2, bloodroot: 1}
+  outputs: {hunter_stew: 1}
+  xp: 8
+
+fisher_ration:
+  profession: cooking
+  min_rank: 1
+  ingredients: {river_fish: 2, bloodroot: 1}
+  outputs: {fisher_ration: 2}
+  xp: 12
+
+copper_ring:
+  profession: jewelcrafting
+  ingredients: {copper_ore: 2, coal: 1}
+  outputs: {copper_ring: 1}
+  xp: 10
+
+gem_ring:
+  profession: jewelcrafting
+  min_rank: 2
+  ingredients: {copper_ring: 1, rough_gem: 1}
+  outputs: {gem_ring: 1}
+  xp: 30

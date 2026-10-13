@@ -13,7 +13,7 @@
 
 - **Stock que se repone** con el reloj del mundo; precios que suben si todos compran lo mismo.
 - **Mercado entre jugadores**: tablón de ofertas en Crownreach con comisión (sumidero de oro) y entrega asíncrona.
-- **Profesiones**: diseño en [`profesiones.md`](profesiones.md). v0.6.0 trae la recolección (maestrías y materiales); los oficios y las recetas llegan en v0.6.1.
+- **Profesiones**: diseño en [`profesiones.md`](profesiones.md). v0.6.0 trae la recolección (maestrías y materiales); v0.6.1, los oficios y las recetas.
 - **Sumideros de oro**: reparaciones, alojamiento, sobornos, cuotas de gremio, mejoras de casa.
 - **Mercado negro** del Sindicato: objetos robados, mejores precios con reputación criminal y riesgo de que la Guardia te pille.
 - **Regateo**: una prueba de Persuasión o Engaño por visita.

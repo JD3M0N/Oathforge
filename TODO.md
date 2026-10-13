@@ -57,7 +57,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 
 - [ ] 🟡 ◐ **Bestiario**: ir añadiendo criaturas poco a poco (descripción, hábitat, de día o de noche, estadísticas y puntos débiles). *Hecho (v0.5.0): 9 criaturas y ficha que se desbloquea al verlas y derrotarlas.*
 - [ ] 🟡 Más misiones después del nivel 5 y misiones secundarias repetibles (encargos de caza diarios).
-- [ ] 🔴 ◐ **Profesiones y recolección** · [profesiones.md](planning/profesiones.md). *Hecho (v0.6.0): actividades de campo, 6 maestrías, mina, arboleda, claro y ribera, desuello y crónicas. Falta: oficios con 2 plazas y recetas (0.6.1) y pociones de maná y reposo breve (0.6.2).*
+- [ ] 🔴 ◐ **Profesiones y recolección** · [profesiones.md](planning/profesiones.md). *Hecho (v0.6.0): actividades de campo, 6 maestrías, mina, arboleda, claro y ribera, desuello y crónicas. Hecho (v0.6.1): 6 oficios con 2 plazas, Barrio de Oficios, 12 recetas y `/professions`. Falta: pociones de maná y reposo breve (0.6.2).*
 - [ ] 🟢 Afinidades de maestría a rango 3, durabilidad de herramientas y vetas que se agotan (después de la beta).
 - [ ] 🟡 Sumideros de oro: reparaciones, tasas, viajes.
 - [ ] 🟡 `world_facts` y eventos encadenados (por ejemplo, la crisis del hierro).
@@ -108,3 +108,4 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 
 -para las misiones si da 503 se manda un texto generico rapido y ya
 -organizar los textos genericos para ampliarlos luego
+- [x] **Oficios**: 2 activos de 6, Barrio de Oficios con estaciones, 12 recetas, fabricación atómica y `/professions` (v0.6.1).
