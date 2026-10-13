@@ -553,7 +553,7 @@ async def inventory_view(session: AsyncSession, char: Character, lang: str) -> t
         if item.slot:
             label = t(lang, "btn.unequip" if inst.equipped_slot else "btn.equip", item=item.name.get(lang))
             rows.append([btn(label, cb("eq", str(inst.id), n))])
-        elif item.heal:
+        elif inventory.effects_of(item):
             rows.append([btn(t(lang, "btn.use", item=item.name.get(lang)), cb("use", inst.item_key, n))])
     rows.append([btn(t(lang, "btn.back"), cb("scene"))])
     return "\n".join(lines)[:MAX_MESSAGE], markup(rows)

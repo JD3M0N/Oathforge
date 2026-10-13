@@ -25,7 +25,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 ## 🧙 Clases y progresión · [clases.md](planning/clases.md) · [progresion.md](planning/progresion.md)
 
 - [ ] 🔴 Elegir especialización a nivel 5. *La ficha completa ya muestra la especialización cuando exista; con la cadena de misiones de v0.5.0 se llega a nivel 5 enseguida.*
-- [ ] 🟡 ◐ **Sistema de descanso**: descanso corto en cualquier sitio (recuperar parte de la vida y algunos usos) y largo en posada. *Hecho: posada de La Corona Rota (5 oro) y descanso gratis en el osario de la cripta (v0.5.0).*
+- [ ] 🟡 ◐ **Sistema de descanso**: descanso corto en cualquier sitio (recuperar parte de la vida y algunos usos) y largo en posada. *Hecho: posada de La Corona Rota (5 oro), descanso gratis en el osario de la cripta (v0.5.0) y descanso corto embotellado, el tónico del reposo (v0.6.2). Falta: un descanso corto sin poción.*
 - [ ] 🟡 Siguiente clase: Explorador (Mago, Druida y Bardo en v0.4.0; Brujo en v0.4.4).
 - [ ] 🟢 Juramentos con consecuencias, títulos y cicatrices en la ficha.
 - [ ] 🟢 Ranuras de equipo y objetos con procedencia (quién los fabricó o encontró).
@@ -57,7 +57,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 
 - [ ] 🟡 ◐ **Bestiario**: ir añadiendo criaturas poco a poco (descripción, hábitat, de día o de noche, estadísticas y puntos débiles). *Hecho (v0.5.0): 9 criaturas y ficha que se desbloquea al verlas y derrotarlas.*
 - [ ] 🟡 Más misiones después del nivel 5 y misiones secundarias repetibles (encargos de caza diarios).
-- [ ] 🔴 ◐ **Profesiones y recolección** · [profesiones.md](planning/profesiones.md). *Hecho (v0.6.0): actividades de campo, 6 maestrías, mina, arboleda, claro y ribera, desuello y crónicas. Hecho (v0.6.1): 6 oficios con 2 plazas, Barrio de Oficios, 12 recetas y `/professions`. Falta: pociones de maná y reposo breve (0.6.2).*
+- [ ] 🔴 ◐ **Profesiones y recolección** · [profesiones.md](planning/profesiones.md). *Hecho (v0.6.0): actividades de campo, 6 maestrías, mina, arboleda, claro y ribera, desuello y crónicas. Hecho (v0.6.1): 6 oficios con 2 plazas, Barrio de Oficios, 12 recetas y `/professions`. Hecho (v0.6.2): poción de maná y tónico del reposo. Falta: probar el balance con la beta.*
 - [ ] 🟢 Afinidades de maestría a rango 3, durabilidad de herramientas y vetas que se agotan (después de la beta).
 - [ ] 🟡 Sumideros de oro: reparaciones, tasas, viajes.
 - [ ] 🟡 `world_facts` y eventos encadenados (por ejemplo, la crisis del hierro).
@@ -109,3 +109,4 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 -para las misiones si da 503 se manda un texto generico rapido y ya
 -organizar los textos genericos para ampliarlos luego
 - [x] **Oficios**: 2 activos de 6, Barrio de Oficios con estaciones, 12 recetas, fabricación atómica y `/professions` (v0.6.1).
+- [x] **Pociones nuevas**: poción de maná (+1 uso de conjuro) y tónico del reposo (descanso corto, enfriamiento de 4 h), con efectos tipados (v0.6.2).

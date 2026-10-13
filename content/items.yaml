@@ -352,6 +352,24 @@ fisher_ration:
   stackable: true
   heal: 2d4+1
 
+mana_potion:
+  name: {es: Poción de maná, en: Mana potion}
+  description: {es: "Un líquido azul que brilla como la hoja de luna. Devuelve un uso de un conjuro gastado (solo clases que lanzan conjuros, fuera de combate).", en: "A blue liquid that glows like moonleaf. Gives back one use of a spent spell (spellcasting classes only, outside combat)."}
+  type: consumable
+  value: 60
+  stackable: true
+  effects:
+    - {type: restore_spell_charge, amount: 1}
+
+rest_draught:
+  name: {es: Tónico del reposo, en: Resting draught}
+  description: {es: "Huele a musgo tibio. Un descanso corto en un trago: recupera el 20 % de tus PV y un uso de una habilidad gastada. Una vez cada 4 horas; no cura heridas graves.", en: "It smells of warm moss. A short rest in one sip: restores 20% of your HP and one use of a spent ability. Once every 4 hours; it does not heal grave wounds."}
+  type: consumable
+  value: 80
+  stackable: true
+  effects:
+    - {type: short_rest, hp_percent: 0.20, charges: 1, cooldown_seconds: 14400}
+
 copper_ring:
   name: {es: Anillo de cobre, en: Copper ring}
   description: {es: "Un anillo sencillo y bien pulido. Los mercaderes lo compran.", en: "A simple, well-polished ring. Merchants buy them."}

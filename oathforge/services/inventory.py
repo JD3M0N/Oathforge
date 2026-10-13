@@ -4,12 +4,15 @@ Rows are locked with SELECT ... FOR UPDATE so two concurrent actions cannot
 spend the same potion or the same coin.
 """
 
+import math
 import random
+import time
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from oathforge.content import get_content
+from oathforge.content.schemas import RestoreHp, RestoreSpellCharge
 from oathforge.database.models import Character, ItemInstance
 from oathforge.engine.dice import roll
 from oathforge.services.events import Outcome
@@ -108,19 +111,82 @@ async def consume_healing(session: AsyncSession, char: Character, key: str, rng:
     return roll(item.heal, rng).total
 
 
-async def use_item_outside_combat(session: AsyncSession, char: Character, key: str, rng: random.Random) -> Outcome:
+def effects_of(item) -> list:
+    """What "Use" does outside combat; a plain ``heal`` counts as a restore_hp effect."""
+    if item.heal and not any(isinstance(e, RestoreHp) for e in item.effects):
+        return [RestoreHp(type="restore_hp", dice=item.heal), *item.effects]
+    return list(item.effects)
+
+
+def spent_abilities(char: Character, spells_only: bool) -> list[tuple[str, int]]:
+    """(ability, uses missing) for limited abilities below their maximum, most spent first.
+    Spells are the limited abilities of a class that casts (priest, mage, druid, bard, warlock)."""
+    cls = get_content().classes[char.class_key]
+    if spells_only and not cls.casting:
+        return []
+    out = []
+    for key, a in cls.abilities.items():
+        left = char.resources.get(key)
+        if a.uses and a.level <= char.level and a.kind != "passive" and left is not None and left < a.uses:
+            out.append((key, a.uses - left))
+    return sorted(out, key=lambda kv: -kv[1])
+
+
+def _restore_use(char: Character, key: str, amount: int, out: Outcome) -> None:
+    a = get_content().classes[char.class_key].abilities[key]
+    char.resources = {**char.resources, key: min(a.uses, char.resources[key] + amount)}
+    out.add("inv.use_restored", ability=a.name.model_dump(), uses=char.resources[key], max=a.uses)
+
+
+def _refusal(char: Character, effect, now: float) -> str | None:
+    """Why this effect would do nothing now (then the item is not spent), or None."""
+    if isinstance(effect, RestoreHp):
+        return "inv.err.full_hp" if char.hp >= hp_cap(char) else None
+    if isinstance(effect, RestoreSpellCharge):
+        return "inv.err.no_spent_spell" if not spent_abilities(char, spells_only=True) else None
+    if (char.cooldowns or {}).get("short_rest", 0) > now:
+        return "inv.err.cooldown"
+    if char.hp >= hp_cap(char) and not spent_abilities(char, spells_only=False):
+        return "inv.err.no_need"
+    return None
+
+
+async def use_item_outside_combat(session: AsyncSession, char: Character, key: str, rng: random.Random,
+                                  now: float | None = None) -> Outcome:
     item = get_content().items.get(key)
-    if item is None or item.heal is None:
+    effects = effects_of(item) if item else []
+    if not effects:
         return Outcome.refused("inv.err.not_usable")
-    if char.hp >= hp_cap(char):
-        return Outcome.refused("inv.err.full_hp")
-    amount = await consume_healing(session, char, key, rng)
-    if amount is None:
+    now = time.time() if now is None else now
+    useful = [e for e in effects if _refusal(char, e, now) is None]
+    if not useful:
+        reason = _refusal(char, effects[0], now)
+        if reason == "inv.err.cooldown":
+            ready = (char.cooldowns or {}).get("short_rest", now)
+            return Outcome.refused(reason, minutes=math.ceil((ready - now) / 60))
+        return Outcome.refused(reason)
+    if not await remove_item(session, char, key, 1):
         return Outcome.refused("inv.err.not_found")
-    before = char.hp
-    char.hp = min(hp_cap(char), char.hp + amount)
-    return Outcome().add("inv.healed", item=item.name.model_dump(), amount=char.hp - before, hp=char.hp,
-                         max_hp=char.max_hp)
+    out = Outcome()
+    name = item.name.model_dump()
+    for effect in useful:
+        before = char.hp
+        if isinstance(effect, RestoreHp):
+            char.hp = min(hp_cap(char), char.hp + roll(effect.dice, rng).total)
+            out.add("inv.healed", item=name, amount=char.hp - before, hp=char.hp, max_hp=char.max_hp)
+        elif isinstance(effect, RestoreSpellCharge):
+            out.add("inv.used", item=name)
+            _restore_use(char, spent_abilities(char, spells_only=True)[0][0], effect.amount, out)
+        else:  # short rest: part of the HP, a use back, then the cooldown; never lifts "injured"
+            out.add("inv.short_rest", item=name)
+            char.hp = min(hp_cap(char), char.hp + max(1, round(char.max_hp * effect.hp_percent)))
+            if char.hp > before:
+                out.add("inv.healed_hp", amount=char.hp - before, hp=char.hp, max_hp=char.max_hp)
+            spent = spent_abilities(char, spells_only=False)
+            if spent:
+                _restore_use(char, spent[0][0], effect.charges, out)
+            char.cooldowns = {**(char.cooldowns or {}), "short_rest": now + effect.cooldown_seconds}
+    return out
 
 
 # ---------------------------------------------------------------- shops

@@ -24,6 +24,7 @@ Versionado `0.x.y`: sube **y** (parche) en arreglos y cambios pequeños; sube **
 - **0.5.9**: informe de batalla (`/report` y botón al acabar): resumen y cada ronda tirada a tirada.
 - **0.6.0**: actividades de campo con espera real (trabajar 5 min, expedición larga 15 min con emboscada, rastrear 5 min), 6 maestrías 0–5, mina, arboleda, claro y ribera, herramientas y materiales, desuello, y crónicas de expedición con Gemini 3.1 Flash-Lite (15 al día) y textos genéricos (ver `profesiones.md`).
 - **0.6.1**: oficios (2 activos de 6) en el Barrio de Oficios, estaciones, 12 recetas, fabricación atómica y `/professions`.
+- **0.6.2**: efectos tipados en los consumibles: poción de maná (+1 uso de conjuro) y tónico del reposo (descanso corto con enfriamiento).
 
 ## Próximo (candidatos)
 
@@ -31,7 +32,6 @@ Versionado `0.x.y`: sube **y** (parche) en arreglos y cambios pequeños; sube **
 - **0.3.x**: imagen por lugar («Ver lugar») y retratos de NPC sobre el catálogo de 0.3.0.
 - **0.4.x**: balance de las 8 clases con datos de `artifacts/battles/`.
 - **0.5.x**: balance de la cadena de misiones y de la caza con datos de `artifacts/battles/` y del simulador (`artifacts/simulations/`): subir a Mago y Druida a nivel 1-2; más criaturas en el bestiario.
-- **0.6.2**: pociones con efectos tipados: maná (+1 uso de conjuro) y reposo breve.
 - **0.6.x**: especializaciones a nivel 5 (los datos ya existen; con la cadena de 0.5.0 se llega a nivel 5 enseguida).
 - **0.7.0**: economía: encargos, sumideros de oro y balance de oficios con datos de la beta (ver `comercio.md`).
 - **0.8.0**: grupos cooperativos y combate en grupo (fase 3, ver `multijugador.md`).

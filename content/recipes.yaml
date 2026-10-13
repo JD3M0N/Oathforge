@@ -20,6 +20,20 @@ healing_potion:
   outputs: {healing_potion: 1}
   xp: 12
 
+mana_potion:
+  profession: alchemy
+  min_rank: 1
+  ingredients: {moonleaf: 2, water_flask: 1}
+  outputs: {mana_potion: 1}
+  xp: 18
+
+rest_draught:
+  profession: alchemy
+  min_rank: 3
+  ingredients: {restmoss: 2, moonleaf: 1, water_flask: 1}
+  outputs: {rest_draught: 1}
+  xp: 35
+
 oak_plank:
   profession: carpentry
   ingredients: {oak_log: 3}

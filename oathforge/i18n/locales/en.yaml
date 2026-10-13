@@ -83,7 +83,7 @@ btn:
   investigate: "🔎 Investigate"
   talk: "💬 Talk"
   shop: "🛒 Trade"
-  rest: "🛏️ Rest ({cost} 🪙)"
+  rest: "🛏️ Long rest ({cost} 🪙)"
   inventory: "🎒 Inventory"
   sheet: "🦸 Hero"
   journal: "📜 Journal"
@@ -166,6 +166,10 @@ inv:
   equipped: "You equip: {item}."
   unequipped: "You unequip: {item}."
   healed: "You use {item} and recover {amount} HP ({hp}/{max_hp})."
+  used: "You use {item}."
+  use_restored: "✨ {ability} regains a use ({uses}/{max})."
+  short_rest: "🌿 You use {item}: a short breather."
+  healed_hp: "💚 You recover {amount} HP ({hp}/{max_hp})."
   err:
     not_found: "You don't have that item."
     not_equippable: "That item can't be equipped."
@@ -174,6 +178,9 @@ inv:
     in_combat: "You can't change gear in the middle of a fight."
     in_combat_use: "In combat, use the potion button on the panel."
     no_potion: "You have no potions left."
+    no_spent_spell: "You have no spent spell to restore. The potion is not used up."
+    cooldown: "You can’t take another resting draught yet: {minutes} min left."
+    no_need: "You are rested: the draught would do nothing. It is not used up."
 
 sheet:
   specialization: "🎖️ {name}"

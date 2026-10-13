@@ -35,7 +35,7 @@ mira:
     The reliquary is the key to the Sunken Crypt. Sergeant Holt is honest but rigid. Bram owes the Syndicate.
   passive_perception: 15
   shop:
-    items: [dagger, rope, healing_potion, water_flask]
+    items: [dagger, rope, healing_potion, mana_potion, water_flask]
     buys: true
 
 holt:

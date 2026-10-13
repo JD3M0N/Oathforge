@@ -5,7 +5,7 @@ fields (NPC persona, secrets) are plain English strings because only the LLM
 reads them.
 """
 
-from typing import Literal
+from typing import Annotated, Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -143,6 +143,30 @@ class WeaponStats(Strict):
     ranged: bool = False
 
 
+class RestoreHp(Strict):
+    type: Literal["restore_hp"]
+    dice: str
+
+
+class RestoreSpellCharge(Strict):
+    """+uses of a spent spell (only classes that cast spells)."""
+
+    type: Literal["restore_spell_charge"]
+    amount: int = 1
+
+
+class ShortRest(Strict):
+    """A short rest in a bottle: part of the HP (never past the injury cap) and a use of a spent ability."""
+
+    type: Literal["short_rest"]
+    hp_percent: float = 0.20
+    charges: int = 1
+    cooldown_seconds: int = 4 * 3600
+
+
+ItemEffect = Annotated[Union[RestoreHp, RestoreSpellCharge, ShortRest], Field(discriminator="type")]
+
+
 class Item(Strict):
     name: Text
     description: Text
@@ -155,7 +179,8 @@ class Item(Strict):
     base_ac: int | None = None
     dex_cap: int | None = None
     ac_bonus: int = 0
-    heal: str | None = None
+    heal: str | None = None  # also usable in combat (the potion button); outside combat it is a restore_hp effect
+    effects: list[ItemEffect] = []  # what "Use" does outside combat
     sellable: bool = True
 
 

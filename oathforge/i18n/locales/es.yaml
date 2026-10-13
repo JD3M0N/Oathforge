@@ -83,7 +83,7 @@ btn:
   investigate: "🔎 Investigar"
   talk: "💬 Hablar"
   shop: "🛒 Comerciar"
-  rest: "🛏️ Descansar ({cost} 🪙)"
+  rest: "🛏️ Descanso largo ({cost} 🪙)"
   inventory: "🎒 Inventario"
   sheet: "🦸 Héroe"
   journal: "📜 Diario"
@@ -166,6 +166,10 @@ inv:
   equipped: "Te equipas: {item}."
   unequipped: "Te quitas: {item}."
   healed: "Usas {item} y recuperas {amount} PV ({hp}/{max_hp})."
+  used: "Usas {item}."
+  use_restored: "✨ {ability} recupera un uso ({uses}/{max})."
+  short_rest: "🌿 Usas {item}: un breve respiro."
+  healed_hp: "💚 Recuperas {amount} PV ({hp}/{max_hp})."
   err:
     not_found: "No tienes ese objeto."
     not_equippable: "Ese objeto no se puede equipar."
@@ -174,6 +178,9 @@ inv:
     in_combat: "No puedes cambiar de equipo en pleno combate."
     in_combat_use: "En combate, usa el botón de poción del panel."
     no_potion: "No te quedan pociones."
+    no_spent_spell: "No tienes ningún conjuro gastado que recuperar. La poción no se gasta."
+    cooldown: "Aún no puedes tomar otro tónico del reposo: faltan {minutes} min."
+    no_need: "Estás descansado: el tónico no haría nada. No se gasta."
 
 sheet:
   specialization: "🎖️ {name}"

@@ -39,13 +39,25 @@ El bucle que buscamos: **ir a una zona → elegir actividad → esperar o arries
 | Oficio | Rango 0 | Rango 1+ |
 |---|---|---|
 | ⚒️ Herrería | Lingote de hierro (3 mena + 1 carbón) | Espada de hierro (2 lingotes + 1 tablón) |
-| ⚗️ Alquimia | Poción de curación (2 raíz de sangre + 1 frasco de agua) | — |
+| ⚗️ Alquimia | Poción de curación (2 raíz de sangre + 1 frasco de agua) | Poción de maná, rango 1 (2 hoja de luna + 1 frasco); tónico del reposo, rango 3 (2 musgo + 1 hoja + 1 frasco) |
 | 🪚 Carpintería | 2 tablones (3 troncos de roble) | Bastón de roble (2 tablones + 1 fibra) |
 | 🧵 Peletería | Cuero curtido (2 cuero de jabalí o 1 piel de lobo) | Cuero reforzado, CA 12 (3 cuero curtido + 1 lingote) |
 | 🍲 Cocina | Estofado del cazador, 1d6+2 PV (2 carne + 1 raíz) | 2 raciones del pescador, 2d4+1 PV (2 peces + 1 raíz) |
 | 💍 Joyería | Anillo de cobre (2 cobre + 1 carbón) | Anillo con gema, rango 2 (anillo + gema en bruto) |
 
 Las armas fabricadas no son más fuertes que las de tienda (la espada de hierro pega como la espada larga y se vende mejor); el cuero reforzado da +1 CA sobre el cuero normal. Los ingredientes cruzan oficios: la espada necesita un tablón de carpintería y el cuero reforzado, un lingote de herrería.
+
+### Pociones con efectos tipados (v0.6.2)
+
+Los objetos tienen `effects` (`restore_hp`, `restore_spell_charge`, `short_rest`), validados con Pydantic y aplicados en `services/inventory.py`. El campo antiguo `heal` sigue valiendo (es la poción del panel de combate) y fuera del combate cuenta como `restore_hp`.
+
+| Consumible | Efecto | Protección |
+|---|---|---|
+| Poción de curación | 2d4+2 PV | Respeta el techo de herido (50 % de los PV) |
+| Poción de maná (alquimia 1, o Mira) | +1 uso del conjuro más gastado | Solo clases que lanzan conjuros; sin conjuro gastado no se gasta |
+| Tónico del reposo (alquimia 3) | 20 % de los PV y +1 uso de cualquier habilidad gastada | Enfriamiento de 4 h; no quita «herido»; si no hace falta, no se gasta |
+
+Oathforge no tiene puntos de maná: los conjuros gastan usos (`Character.resources`). Una reserva de maná de verdad exigiría rediseñar el coste de los conjuros; queda como idea. La posada pasa a llamarse «Descanso largo».
 
 ### Lugares nuevos (v0.6.0)
 
@@ -69,7 +81,6 @@ Las herramientas las vende Tessa. Sin la herramienta no se puede trabajar ese re
 
 ## Ideas (siguientes pasos)
 
-- **v0.6.2, pociones con efectos tipados**: vida (como ahora), maná (+1 uso de un conjuro gastado) y reposo breve (20 % de PV y +1 uso, enfriamiento de 4 h).
 - Afinidades a rango 3 (Prospector / Excavador...), durabilidad de herramientas, vetas finitas con regeneración, encargos de NPC, mercado entre jugadores y un tercer oficio como recompensa. **Ninguna antes de tener datos de la beta.**
 - Antifarmeo más fino: menos XP en nodos de nivel bajo a partir de rango 3 y por repetir el mismo contexto.
 - Clima y fauna que cambian qué sale (peces de noche, alfas raros).

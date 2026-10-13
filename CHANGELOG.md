@@ -4,6 +4,17 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.6.2] - 2026-10-13
+
+### Añadido
+- **Poción de maná** (alquimia rango 1: 2 hojas de luna + 1 frasco de agua; también la vende Mira): devuelve un uso del conjuro más gastado. Solo para clases que lanzan conjuros (sacerdote, mago, druida, bardo, brujo). Sin conjuro gastado no se gasta.
+- **Tónico del reposo** (alquimia rango 3: 2 musgos del reposo + 1 hoja de luna + 1 frasco): un descanso corto embotellado. Recupera el 20 % de los PV y un uso de una habilidad gastada; enfriamiento de 4 horas. No quita «herido» ni supera su techo, y si no hace falta no se gasta.
+- Efectos tipados en los objetos (`effects`: `restore_hp`, `restore_spell_charge`, `short_rest`), validados al arrancar. El antiguo `heal` sigue funcionando (fuera de combate cuenta como `restore_hp`).
+
+### Cambiado
+- El botón de la posada se llama «Descanso largo».
+- Cualquier consumible con efectos tiene botón «Usar» en el inventario.
+
 ## [0.6.1] - 2026-10-13
 
 ### Añadido
