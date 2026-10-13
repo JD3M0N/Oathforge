@@ -72,5 +72,5 @@ tessa:
     Iron prices are rising because the northern roads are dangerous. The Silver Guard buys her armor.
   passive_perception: 11
   shop:
-    items: [longsword, warhammer, mace, handaxe, dagger, rapier, quarterstaff, shortbow, chain_mail, scale_mail, leather_armor, shield, healing_potion, torch, rope]
+    items: [longsword, warhammer, mace, handaxe, dagger, rapier, quarterstaff, shortbow, chain_mail, scale_mail, leather_armor, shield, healing_potion, torch, rope, pickaxe, woodaxe, sickle, skinning_knife, fishing_rod]
     buys: true

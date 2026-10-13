@@ -85,8 +85,8 @@ def pending_fixed_encounter(char: Character):
 
 
 async def travel(session: AsyncSession, char: Character, dest: str, rng: random.Random) -> Outcome:
-    if char.state == "in_combat":
-        return Outcome.refused("explore.err.in_combat")
+    if refusal := characters.ensure_free(char):
+        return refusal
     exit_ = next((e for e in exits(char) if e.to == dest), None)
     if exit_ is None:
         return Outcome.refused("explore.err.no_route")
@@ -111,8 +111,8 @@ async def travel(session: AsyncSession, char: Character, dest: str, rng: random.
 
 async def hunt(session: AsyncSession, char: Character, rng: random.Random) -> Outcome:
     """Look for prey on purpose: a fight from the location's day or night table."""
-    if char.state == "in_combat":
-        return Outcome.refused("explore.err.in_combat")
+    if refusal := characters.ensure_free(char):
+        return refusal
     loc = get_content().locations[char.location]
     if not loc.hunting:
         return Outcome.refused("explore.err.no_hunting")
@@ -129,8 +129,8 @@ async def hunt(session: AsyncSession, char: Character, rng: random.Random) -> Ou
 
 async def investigate(session: AsyncSession, char: Character, rng: random.Random) -> Outcome:
     """Roll once for every undiscovered secret here; a failed secret can't be retried until tomorrow."""
-    if char.state == "in_combat":
-        return Outcome.refused("explore.err.in_combat")
+    if refusal := characters.ensure_free(char):
+        return refusal
     c = get_content()
     loc = c.locations[char.location]
     pending = {k: d for k, d in loc.discoveries.items()
@@ -172,6 +172,8 @@ async def investigate(session: AsyncSession, char: Character, rng: random.Random
 async def check_skill(session: AsyncSession, char: Character, skill: str, tier: str,
                       rng: random.Random) -> tuple[Outcome, bool]:
     """A free-form skill check requested through the AI interpreter; one attempt per skill and place a day."""
+    if refusal := characters.ensure_free(char):
+        return refusal, False
     c = get_content()
     key = free_check_key(skill, char.location)
     if tried(char, key):
@@ -191,8 +193,8 @@ async def rest(session: AsyncSession, char: Character) -> Outcome:
     loc = get_content().locations[char.location]
     if loc.rest_cost is None:
         return Outcome.refused("explore.err.no_rest")
-    if char.state == "in_combat":
-        return Outcome.refused("explore.err.in_combat")
+    if refusal := characters.ensure_free(char):
+        return refusal
     if char.gold < loc.rest_cost:
         return Outcome.refused("shop.err.no_gold", price=loc.rest_cost)
     char.gold -= loc.rest_cost

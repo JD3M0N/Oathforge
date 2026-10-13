@@ -9,10 +9,19 @@ description:
 exits:
   - {to: old_kings_road, minutes: 40, danger: 2}
   - {to: crypt_entrance, minutes: 20, requires_flag: crypt_unlocked}
+  - {to: elderwood_grove, minutes: 20, danger: 1}
+  - {to: redroot_clearing, minutes: 15, danger: 1}
 encounters:
   - {monsters: [grey_wolf], weight: 3}
   - {monsters: [grey_wolf, grey_wolf], weight: 2}
   - {monsters: [goblin_scout, bandit], weight: 1}
+gathering:
+  - skill: herbalism
+    tool: sickle
+    stay_ambush: 0.15
+    resources:
+      - {item: bloodroot, weight: 40}
+      - {item: plant_fiber, weight: 40}
 scene_objects:
   hornet_nest:
     name: {es: Avispero, en: Hornet nest}

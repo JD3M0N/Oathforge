@@ -11,6 +11,8 @@ exits:
   - {to: crownreach_plaza, minutes: 30, danger: 1}
   - {to: whispering_woods, minutes: 40, danger: 2}
   - {to: tusk_meadow, minutes: 30, danger: 1}
+  - {to: ironvein_mine, minutes: 25, danger: 1}
+  - {to: silverbrook_bank, minutes: 20}
 encounters:
   - {monsters: [bandit], weight: 3}
   - {monsters: [bandit, bandit], weight: 2}

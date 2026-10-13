@@ -22,6 +22,13 @@ DamageType = Literal[
 CreatureType = Literal["humanoid", "beast", "undead"]
 
 Tier = Literal["trivial", "easy", "medium", "hard", "very_hard"]
+
+# how a field activity ended; content/chronicles.yaml has generic texts for each one
+CHRONICLE_OUTCOMES = (
+    "gather", "stay_ok", "stay_won", "stay_fled", "stay_lost",
+    "track_tracks", "track_won", "track_fled", "track_lost",
+)
+CHRONICLE_PLACEHOLDERS = {"name", "place", "loot", "monster"}
 Row = Literal["front", "back"]
 
 
@@ -136,7 +143,8 @@ class WeaponStats(Strict):
 class Item(Strict):
     name: Text
     description: Text
-    type: Literal["weapon", "armor", "shield", "consumable", "tool", "quest"]
+    # material: gathered or crafted ingredient · trinket: only worth selling (for now)
+    type: Literal["weapon", "armor", "shield", "consumable", "tool", "quest", "material", "trinket"]
     slot: Literal["main_hand", "ranged", "off_hand", "body"] | None = None
     value: int = 0
     stackable: bool = False
@@ -171,6 +179,14 @@ class LootEntry(Strict):
     qty: int = 1
 
 
+class HarvestEntry(Strict):
+    """What skinning a defeated beast can give (needs a skinning knife)."""
+
+    item: str
+    chance: float
+    qty: int = 1
+
+
 class Monster(Strict):
     name: Text
     description: Text
@@ -183,6 +199,7 @@ class Monster(Strict):
     xp: int
     gold: str = "0"
     loot: list[LootEntry] = []
+    harvest: list[HarvestEntry] = []
     cowardly: bool = False
     immune: list[str] = []  # statuses
     type: CreatureType = "humanoid"
@@ -239,6 +256,21 @@ class Discovery(Strict):
     requires_flag: str | None = None
 
 
+class GatherResource(Strict):
+    item: str
+    weight: int = 1
+    min_rank: int = Field(0, ge=0, le=5)  # mastery rank needed to find it
+
+
+class Gathering(Strict):
+    """A field activity here: "Gather" (5 min, safe) and "Stay" (15 min, more loot, may end in an ambush)."""
+
+    skill: Literal["mining", "woodcutting", "herbalism", "fishing"]
+    tool: str | None = None  # item needed in the inventory
+    resources: list[GatherResource]
+    stay_ambush: float = Field(0.0, ge=0, le=1)  # the ambushers come from the place's encounter table
+
+
 class Location(Strict):
     name: Text
     description: Text
@@ -247,7 +279,8 @@ class Location(Strict):
     exits: list[Exit]
     encounters: list[EncounterEntry] = []
     night_encounters: list[EncounterEntry] = []  # replaces `encounters` at night when not empty
-    hunting: bool = False  # shows "Hunt": start a fight from the encounter table on demand
+    hunting: bool = False  # shows "Hunt" (a fight now) and "Track" (5 min, tracking XP and trophies)
+    gathering: list[Gathering] = []
     fixed_encounters: list[FixedEncounter] = []
     scene_objects: dict[str, SceneObject] = {}
     discoveries: dict[str, Discovery] = {}

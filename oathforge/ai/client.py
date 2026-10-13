@@ -23,7 +23,7 @@ from oathforge.database.session import session_scope
 
 log = logging.getLogger(__name__)
 
-Tier = Literal["fast", "narrative"]
+Tier = Literal["fast", "narrative", "chronicle"]
 M = TypeVar("M", bound=BaseModel)
 
 
@@ -128,15 +128,19 @@ class GeminiLLM:
         self._cooldown_until: dict[str, float] = {}
 
     def _model(self, tier: Tier) -> str:
-        return self.s.gemini_model_fast if tier == "fast" else self.s.gemini_model_narrative
+        return {"fast": self.s.gemini_model_fast, "chronicle": self.s.gemini_model_chronicle}.get(
+            tier, self.s.gemini_model_narrative)
 
     def _candidates(self, tier: Tier) -> list[str]:
         """Models to try in order. Narrative falls back to the fast model; fast retries itself once.
 
         A model that recently failed with an overload/quota error is skipped while
         another one is available, so players don't wait for a timeout on every call.
+        Chronicles never fall back: a generic text is better than spending the fast model's quota.
         """
         primary = self._model(tier)
+        if tier == "chronicle":
+            return [] if self._cooldown_until.get(primary, 0) > time.monotonic() else [primary]
         fallback = self.s.gemini_model_fast if tier == "narrative" else primary
         now = time.monotonic()
         if primary != fallback and self._cooldown_until.get(primary, 0) > now:

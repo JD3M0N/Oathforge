@@ -65,8 +65,11 @@ grey_wolf:
   attacks:
     - {name: {es: Mordisco, en: Bite}, to_hit: 4, damage: 2d4+2, damage_type: piercing, applies: {status: bleeding, turns: 2, chance: 0.25}}
   xp: 50
+  harvest:
+    - {item: wolf_pelt, chance: 0.7}
+    - {item: raw_meat, chance: 0.5}
   type: beast
-  habitat: {es: Bosque de los Susurros, en: Whispering Woods}
+  habitat: {es: Bosque de los Susurros y Arboleda Antigua, en: Whispering Woods and Elderwood Grove}
   lore:
     es: Caza en manada. Su mordisco puede dejar al objetivo sangrando.
     en: Hunts in packs. Its bite can leave its prey bleeding.
@@ -131,6 +134,9 @@ boar:
   xp: 25
   loot:
     - {item: boar_tusk, chance: 0.6}
+  harvest:
+    - {item: boar_hide, chance: 0.7}
+    - {item: raw_meat, chance: 0.8, qty: 2}
   type: beast
   active: day
   habitat: {es: Prado de los Colmillos (de día), en: Tusk Meadow (by day)}
@@ -170,6 +176,9 @@ old_tusk:
   gold: 3d10
   loot:
     - {item: boar_tusk, chance: 1.0, qty: 3}
+  harvest:
+    - {item: boar_hide, chance: 1.0, qty: 2}
+    - {item: raw_meat, chance: 1.0, qty: 4}
   immune: [frightened]
   type: beast
   active: day
@@ -177,3 +186,20 @@ old_tusk:
   lore:
     es: El patriarca de los jabalíes del prado. Los cazadores llevan veinte años intentando abatirlo.
     en: The patriarch of the meadow boars. Hunters have been trying to bring it down for twenty years.
+
+giant_rat:
+  name: {es: Rata gigante, en: Giant rat}
+  description: {es: "Una rata del tamaño de un perro, con los ojos rojos y el pelo apelmazado de hollín.", en: A dog-sized rat with red eyes and soot-matted fur.}
+  hp: 7
+  ac: 11
+  dex: 1
+  attacks:
+    - {name: {es: Mordisco, en: Bite}, to_hit: 3, damage: 1d4+1, damage_type: piercing, applies: {status: poisoned, turns: 2, chance: 0.15}}
+  xp: 15
+  loot:
+    - {item: coal, chance: 0.3}
+  type: beast
+  habitat: {es: Mina del Paso Viejo, en: Old Pass Mine}
+  lore:
+    es: Anida en las galerías abandonadas y roe todo lo que los mineros dejan atrás. Su mordisco puede infectarse.
+    en: Nests in abandoned tunnels and gnaws whatever the miners leave behind. Its bite can fester.

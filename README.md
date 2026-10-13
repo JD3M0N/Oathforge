@@ -9,7 +9,8 @@ RPG narrativo multijugador para Telegram, ambientado en **Aetherfall**. Un Dunge
 Qué cambió en cada versión está en [CHANGELOG.md](CHANGELOG.md); aquí solo la idea del proyecto.
 
 - Creación de personaje: hombre o mujer, 4 linajes, 4 trasfondos, 8 clases (Paladín, Pícaro, Guerrero, Sacerdote, Mago, Druida, Bardo, Brujo) con habilidades hasta nivel 5, atributos por compra de puntos (27, como en D&D) y retrato por clase y sexo.
-- Crownreach (plaza, taberna La Corona Rota, mercado), el Camino del Viejo Rey, el Bosque de los Susurros, el Prado de los Colmillos (caza: jabalíes de día, murciélagos de noche) y la Cripta Hundida (5 salas + jefe).
+- Crownreach (plaza, taberna La Corona Rota, mercado), el Camino del Viejo Rey, el Bosque de los Susurros, el Prado de los Colmillos (caza: jabalíes de día, murciélagos de noche), la Mina del Paso Viejo, la Arboleda Antigua, el Claro de la Raíz Roja, la Ribera de Silverbrook y la Cripta Hundida (5 salas + jefe).
+- Actividades de campo con espera real: minar, talar, recolectar hierbas y pescar (5 min), expediciones largas con emboscada (15 min) y rastreo de presas, con 6 maestrías que suben de rango. Cada expedición termina con una crónica personal escrita por la IA (con un presupuesto diario y textos genéricos cuando se agota).
 - Cadena de 6 misiones hasta nivel 5, con su avance en el diario (`/journal`, `/quests`), y bestiario que se completa al ver y derrotar criaturas.
 - Tiradas manuales opcionales (`/roll`): la prueba de habilidad espera a que el jugador lance el dado animado; el resultado lo calcula el motor.
 - Combate por turnos: iniciativa, acción/acción adicional/movimiento, vanguardia/retaguardia, críticos, ataque furtivo, conjuros, tiradas de salvación, área por filas, PV temporales, estados alterados y objetos del escenario.

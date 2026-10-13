@@ -15,6 +15,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🟡 Memoria de NPC en tres capas: episódica, relacional y semántica.
 - [ ] 🟡 Cuota de Gemini: el plan gratuito del modelo narrativo da 20 llamadas al día y se agotó en la primera partida larga. Valorar el plan de pago o usar el modelo rápido como narrador por defecto. *Desde v0.5.0 el bot respeta el `retryDelay` de Google y deja de reintentar hasta que vuelve la cuota.*
 - [ ] 🟢 Resumen del diario («resume mis últimas aventuras») generado solo desde eventos.
+- [ ] 🟡 Ajustar el presupuesto de crónicas (hoy 15 al día por jugador, `AI_USER_DAILY_CHRONICLES`) con el coste real de Gemini 3.1 Flash-Lite en `artifacts/ai/`.
 
 ## ⚔️ Combate y balance · [combate.md](planning/combate.md)
 
@@ -56,8 +57,8 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 
 - [ ] 🟡 ◐ **Bestiario**: ir añadiendo criaturas poco a poco (descripción, hábitat, de día o de noche, estadísticas y puntos débiles). *Hecho (v0.5.0): 9 criaturas y ficha que se desbloquea al verlas y derrotarlas.*
 - [ ] 🟡 Más misiones después del nivel 5 y misiones secundarias repetibles (encargos de caza diarios).
-- [ ] 🟡 **Alquimia y sistema de pociones nuevo (0.6.0)**: hierbas del Bosque, recetas y pociones mejores que la de curación actual.
-- [ ] 🟡 Herrería con Tessa y recetas (0.7.0). *Los colmillos de jabalí y las alas de murciélago ya se venden y pueden servir de materiales.*
+- [ ] 🔴 ◐ **Profesiones y recolección** · [profesiones.md](planning/profesiones.md). *Hecho (v0.6.0): actividades de campo, 6 maestrías, mina, arboleda, claro y ribera, desuello y crónicas. Falta: oficios con 2 plazas y recetas (0.6.1) y pociones de maná y reposo breve (0.6.2).*
+- [ ] 🟢 Afinidades de maestría a rango 3, durabilidad de herramientas y vetas que se agotan (después de la beta).
 - [ ] 🟡 Sumideros de oro: reparaciones, tasas, viajes.
 - [ ] 🟡 `world_facts` y eventos encadenados (por ejemplo, la crisis del hierro).
 - [ ] 🟢 Rumores con veracidad (verdadero, falso, incompleto) que se puedan investigar.
@@ -102,3 +103,8 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] Ver cada clase y sus habilidades: `/classes` y `/class_<clase>`, enlazado desde la subida de nivel y `/sheet` (v0.5.7).
 - [x] Panel de combate más bonito: 🛡️ CA de cada combatiente, 💥 críticos, golpe y daño en un bloque y separador por ronda (v0.5.8).
 - [x] Informe de batalla: botón «📜 Informe» al acabar y `/report`, con resumen (daño, aciertos, críticos, recompensas) y cada ronda tirada a tirada (v0.5.9).
+- [x] **Actividades de campo** (minar, talar, hierbas, pescar; expedición larga con emboscada; rastrear), 6 maestrías, desuello y **presupuesto de misiones**: crónica personal con Gemini 3.1 Flash-Lite, 15 al día por jugador, y textos genéricos cuando se acaba (v0.6.0).
+
+
+-para las misiones si da 503 se manda un texto generico rapido y ya
+-organizar los textos genericos para ampliarlos luego

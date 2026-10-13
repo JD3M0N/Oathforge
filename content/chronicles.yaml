@@ -1,0 +1,184 @@
+# Crónicas genéricas de las expediciones: se usan cuando el cronista de IA ya escribió las del día
+# (AI_USER_DAILY_CHRONICLES) o no responde. Se elige una por actividad, siempre la misma.
+# Marcadores: {name} el héroe · {place} el lugar · {loot} lo obtenido · {monster} la criatura.
+
+gather:
+  - es: >-
+      {name} trabajó sin prisa en {place}, con el ritmo paciente de quien sabe que la tierra no regala nada.
+      Cuando el sol se movió un palmo, la bolsa ya pesaba: {loot}. Un buen rato de oficio, sin sobresaltos.
+    en: >-
+      {name} worked unhurried at {place}, with the patient rhythm of someone who knows the land gives nothing
+      away. By the time the sun had moved a hand's width, the pack was heavy: {loot}. A good stretch of honest
+      work, without a single scare.
+  - es: >-
+      Hubo un momento de silencio total en {place}, roto solo por el golpe de la herramienta y la respiración de
+      {name}. Luego, el premio: {loot}. Nada épico, pero cada pieza cuenta cuando se vuelve a la ciudad.
+    en: >-
+      There was a moment of perfect silence at {place}, broken only by the strike of the tool and {name}'s
+      breathing. Then the reward: {loot}. Nothing epic, but every piece counts once you're back in the city.
+  - es: >-
+      {name} encontró su sitio en {place}, se arremangó y dejó que las manos hicieran lo que saben hacer. Al
+      terminar, con la espalda dolorida y la mirada satisfecha, contó lo conseguido: {loot}.
+    en: >-
+      {name} found a spot at {place}, rolled up their sleeves and let their hands do what they know. When it was
+      done, back aching and eyes content, they counted the haul: {loot}.
+
+stay_ok:
+  - es: >-
+      La jornada en {place} fue larga. {name} se adentró donde pocos se molestan en llegar, trabajó hasta que la
+      luz cambió de color y volvió con la carga a cuestas como una mula: {loot}. Nadie interrumpió el trabajo; hoy el mundo fue generoso.
+    en: >-
+      The day at {place} was a long one. {name} went where few bother to go, worked until the light changed
+      colour and came back loaded like a mule: {loot}. No one interfered; today the world was generous.
+  - es: >-
+      Hubo ruidos, sombras y más de una falsa alarma en {place}, pero {name} no se movió de su faena. Cuando por
+      fin cargó el botín al hombro, el esfuerzo había merecido la pena: {loot}.
+    en: >-
+      There were noises, shadows and more than one false alarm at {place}, but {name} stayed at the task. When
+      the load was finally on their shoulder, the effort had been worth it: {loot}.
+  - es: >-
+      {name} montó un pequeño campamento en {place} y se dedicó a ello con la constancia de un veterano. Al
+      volver, la mochila crujía por las costuras: {loot}. Las tabernas de Crownreach oirán hablar de este viaje.
+    en: >-
+      {name} set up a small camp at {place} and worked with a veteran's steadiness. On the way back the pack was
+      straining at the seams: {loot}. The taverns of Crownreach will hear about this trip.
+
+stay_won:
+  - es: >-
+      Justo cuando {name} recogía en {place}, {monster} salió de las sombras atraído por el ruido. Fue un combate
+      sucio y breve, pero {name} quedó en pie y con toda la carga intacta: {loot}.
+    en: >-
+      Just as {name} was packing up at {place}, {monster} burst from the shadows, drawn by the noise. It was a
+      short, dirty fight, but {name} was left standing with the whole load intact: {loot}.
+  - es: >-
+      {place} no quería dejar marchar su tesoro. {monster} lo intentó y fracasó. {name} se limpió la sangre,
+      ajustó las correas de la bolsa y emprendió el regreso con todo: {loot}.
+    en: >-
+      {place} didn't want to let the treasure go. {monster} tried and failed. {name} wiped off the blood,
+      tightened the pack straps and set off for home with everything: {loot}.
+  - es: >-
+      La emboscada llegó en el peor momento, con las manos ocupadas y la carga a los pies. Aun así, {name} se
+      rehízo y despachó a {monster}. Nada se perdió: {loot}.
+    en: >-
+      The ambush came at the worst moment, hands full and the load at their feet. Even so, {name} recovered and
+      dealt with {monster}. Nothing was lost: {loot}.
+
+stay_fled:
+  - es: >-
+      {monster} cayó sobre {name} al final de la jornada en {place}. No era momento de heroísmos: {name} agarró lo
+      que pudo y corrió. Salvó la mitad de la carga, {loot}, y la piel entera, que no es poco.
+    en: >-
+      {monster} fell on {name} at the end of the day at {place}. It was no time for heroics: {name} grabbed what
+      they could and ran. Half the load was saved, {loot}, and their hide with it, which is no small thing.
+  - es: >-
+      Hay retiradas que son victorias. {name} dejó atrás parte del botín para que {monster} se entretuviera y
+      escapó de {place} con lo justo: {loot}. Mañana habrá otra oportunidad.
+    en: >-
+      Some retreats are victories. {name} left part of the haul behind to keep {monster} busy and escaped {place}
+      with just enough: {loot}. Tomorrow there will be another chance.
+  - es: >-
+      La huida desde {place} fue a trompicones, con {monster} pisándole los talones. Cuando por fin se detuvo,
+      {name} revisó la bolsa: medio cargamento, {loot}. Mejor que nada.
+    en: >-
+      The flight from {place} was a stumbling one, with {monster} on their heels. When at last they stopped,
+      {name} checked the pack: half a load, {loot}. Better than nothing.
+
+stay_lost:
+  - es: >-
+      La larga jornada de {name} en {place} terminó mal: {monster} fue más fuerte. La carga quedó esparcida por el
+      suelo y {name} despertó lejos de allí, con las manos vacías y una lección aprendida.
+    en: >-
+      {name}'s long day at {place} ended badly: {monster} was stronger. The load lay scattered on the ground and
+      {name} woke far from there, empty-handed and a lesson wiser.
+  - es: >-
+      Todo el trabajo en {place} se perdió en un instante cuando {monster} se interpuso. {name} cayó, pero no
+      para siempre. Las heridas cerrarán; la herramienta sigue en su sitio.
+    en: >-
+      All the work at {place} was lost in an instant when {monster} stepped in. {name} fell, but not forever. The
+      wounds will close; the tool is still where it belongs.
+  - es: >-
+      Hay días en que el mundo no perdona. En {place}, {monster} se llevó la victoria y el fruto de horas de
+      esfuerzo. {name} volverá con más experiencia y mejor preparación.
+    en: >-
+      Some days the world does not forgive. At {place}, {monster} took the victory and the fruit of hours of
+      work. {name} will be back, wiser and better prepared.
+
+track_tracks:
+  - es: >-
+      {name} siguió huellas, ramas rotas y excrementos por todo {place}. El rastro era viejo y la presa ya se había
+      ido. Ni un combate, pero cada pista enseña algo a quien sabe leerla.
+    en: >-
+      {name} followed prints, broken branches and droppings all across {place}. The trail was old and the prey
+      long gone. Not a fight to be had, but every sign teaches something to those who can read it.
+  - es: >-
+      Durante un buen rato, {name} se agachó, olfateó el viento y escuchó en {place}. Algo había pasado por allí,
+      pero no hoy. La paciencia del cazador también se entrena.
+    en: >-
+      For a long while {name} crouched, sniffed the wind and listened at {place}. Something had passed through,
+      but not today. A hunter's patience needs training too.
+  - es: >-
+      El rastro se perdió en un arroyo de {place}. {name} lo buscó en ambas orillas sin suerte, y volvió con las
+      botas mojadas y el ojo un poco más afinado.
+    en: >-
+      The trail vanished in a stream at {place}. {name} searched both banks without luck and came back with wet
+      boots and a slightly sharper eye.
+
+track_won:
+  - es: >-
+      {name} leyó cada huella de {place} hasta dar con {monster}. La presa no tuvo escapatoria: un acecho paciente,
+      un golpe certero y una caza digna de contarse.
+    en: >-
+      {name} read every print at {place} until finding {monster}. The prey had no way out: a patient stalk, a sure
+      strike and a hunt worth telling.
+  - es: >-
+      El viento cambió y {name} lo aprovechó. Cuando {monster} se dio cuenta, ya era tarde. En {place} quedó
+      escrito quién era el cazador y quién la presa.
+    en: >-
+      The wind shifted and {name} used it. By the time {monster} noticed, it was too late. At {place} it was made
+      clear who was the hunter and who the prey.
+  - es: >-
+      Siguiendo un rastro de sangre y pelo por {place}, {name} acorraló a {monster} y le plantó cara. La pelea fue
+      dura, pero {name} volvió con trofeos y con historia.
+    en: >-
+      Following a trail of blood and fur through {place}, {name} cornered {monster} and stood their ground. The
+      fight was hard, but the hunter came back with trophies and a story.
+
+track_fled:
+  - es: >-
+      {name} encontró a {monster} en {place}, y {monster} también dio con {name}. A veces la mejor caza es la que acaba
+      con todos vivos: {name} se retiró a tiempo.
+    en: >-
+      {name} found {monster} at {place}, and {monster} found them back. Sometimes the best hunt is the one that
+      ends with everyone alive: {name} withdrew in time.
+  - es: >-
+      El rastro llevó a {name} directo hasta {monster}, más grande y más fiero de lo esperado. {name} optó por
+      retirarse de {place}; la presa seguirá ahí otro día.
+    en: >-
+      The trail led {name} straight to {monster}, bigger and fiercer than expected. {name} chose to fall back from
+      {place}; the prey will still be there another day.
+  - es: >-
+      Tras horas de rastreo en {place}, el encuentro con {monster} duró apenas unos instantes. {name} midió sus
+      fuerzas y eligió vivir para cazar mañana.
+    en: >-
+      After hours of tracking at {place}, the clash with {monster} lasted mere moments. {name} weighed their
+      strength and chose to live to hunt tomorrow.
+
+track_lost:
+  - es: >-
+      La presa resultó ser el cazador. En {place}, {monster} sorprendió a {name} y acabó con su resistencia. Una
+      derrota amarga, pero el rastro sigue allí, esperando.
+    en: >-
+      The prey turned out to be the hunter. At {place}, {monster} surprised {name} and left them beaten. A bitter
+      defeat, but the trail is still there, waiting.
+  - es: >-
+      {name} siguió a {monster} demasiado lejos por {place}. Cuando quiso darse cuenta, ya no había vuelta atrás.
+      Hoy ganó la bestia.
+    en: >-
+      {name} followed {monster} too deep into {place}. By the time they noticed, there was no turning back. Today
+      the beast won.
+  - es: >-
+      En {place}, {monster} defendió su territorio con uñas y dientes, y {name} cayó. Las cicatrices de hoy serán
+      la experiencia de mañana.
+    en: >-
+      At {place}, {monster} defended its ground tooth and claw, and {name} fell. Today's scars will be tomorrow's
+      experience.

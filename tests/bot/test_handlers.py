@@ -436,7 +436,7 @@ async def test_journal_missions_and_bestiary_views(llm, monkeypatch):
     await p.press("jq|boar_hunt|-")
     assert "Jabalí 0/3" in p.last[0]
     await p.press("jrb|-|-")
-    assert "0/9" in p.last[0]
+    assert "0/10" in p.last[0]
     await p.press("jrr|-|-")
     assert p.last[0]
 
@@ -503,3 +503,31 @@ async def test_class_pages_from_commands_and_buttons(llm):
     assert p.find("sheet") and p.find("clsl")
     await p.press(p.find("clsl"))
     assert "/class_warlock" in p.last[0]
+
+
+async def test_mining_buttons_collect_and_chronicle(llm):
+    from oathforge.database.models import WorldActivity
+    from oathforge.services import inventory
+
+    p = Player(llm, tg_id=63)
+    await create(p)
+    async with session_scope() as s:
+        char = await s.scalar(select(Character).with_for_update())
+        char.location = "ironvein_mine"
+        await inventory.add_item(s, char, "pickaxe")
+    await p.press("scene|-|-")
+    await p.press(p.find("act", "gather:mining"))
+    assert "Minería" in p.chat.sent[-2][0]  # started
+    assert "Termina en 5 min" in p.last[0] and "actx" in str(p.buttons())
+    await p.press("trv|-|-")  # an old travel button: the travel menu is not offered while busy
+    assert "Termina en" in p.last[0]
+    async with session_scope() as s:
+        act = await s.scalar(select(WorldActivity).with_for_update())
+        act.ends_at -= 600  # five minutes later
+    await p.press("scene|-|-")
+    llm.text_queue.append("Aldric arranca la mena de la roca con paciencia.")
+    await p.press(p.find("actc"))
+    texts = [t_ for t_, _ in p.chat.sent[-3:]]
+    assert any("Mena de hierro" in t_ or "Carbón" in t_ for t_ in texts)
+    assert any("Crónica" in t_ and "Aldric arranca" in t_ and "1/15" in t_ for t_ in texts)
+    assert "Viajar" in str(p.last[1].inline_keyboard)  # back to the normal scene

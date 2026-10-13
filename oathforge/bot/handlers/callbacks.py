@@ -8,14 +8,19 @@ from telegram import Update
 from telegram.ext import CallbackQueryHandler, ContextTypes
 
 from oathforge.bot import render
-from oathforge.bot.handlers.common import current_view, edit_or_send, load, rate_ok, rng, send, send_outcome, send_photos
+from oathforge.bot.handlers.common import (
+    current_view, edit_or_send, load, rate_ok, rng, schedule_ready_ping, send, send_chronicle, send_outcome, send_photos,
+)
 from oathforge.bot.keyboards import btn, cb, markup, parse
 from oathforge.content import get_content
 from oathforge.database.session import session_scope
+from oathforge.engine import gathering
 from oathforge.engine.combat import Action, EncounterState, valid_targets
 from oathforge.i18n import t
 from oathforge.ai.intent_parser import Intent
-from oathforge.services import actions, audit, characters, combat_service, exploration, inventory, npcs, quests
+from oathforge.services import (
+    actions, activities, audit, characters, combat_service, exploration, inventory, npcs, quests,
+)
 from oathforge.services.events import Outcome
 
 log = logging.getLogger(__name__)
@@ -65,7 +70,7 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
         if char is None:
             await edit_or_send(update, t(lang, "start.need_character"))
             return
-        in_combat = char.state == "in_combat"
+        in_combat = char.state != "idle"  # fighting or busy with a field activity: no menus to leave
         loc = get_content().locations[char.location]
         if verb == "city" and not in_combat and loc.hub:
             images = get_content().media.zone_images(loc.zone, exploration.is_night())
@@ -162,6 +167,7 @@ async def _act(update: Update, context, verb: str, arg: str, n: str, rolled_at: 
                 stale = True
             else:
                 stale = False
+                char_id = char.id
                 out = await _dispatch(session, char, verb, arg, r, context)
                 text, kb = await _after(session, char, lang, verb, arg, context)
     if early is not None:
@@ -173,6 +179,10 @@ async def _act(update: Update, context, verb: str, arg: str, n: str, rolled_at: 
         return
     if out.events:
         await send_outcome(update, out, lang)
+    if out.activity_id:  # a field activity just finished: its chronicle, after the facts
+        await send_chronicle(update, context, out.activity_id, lang)
+    if verb == "act" and out.ok:
+        schedule_ready_ping(update, context, char_id, gathering.SECONDS[arg.partition(":")[0]])
     await send(update, text, kb)
 
 
@@ -189,6 +199,13 @@ async def _dispatch(session, char, verb: str, arg: str, r, context) -> Outcome:
         return await exploration.hunt(session, char, r)
     if verb == "rest":
         return await exploration.rest(session, char)
+    if verb == "act":  # "<gather|stay|track>:<mastery>"
+        kind, _, skill = arg.partition(":")
+        return await activities.start(session, char, kind, skill)
+    if verb == "actc":
+        return await activities.claim(session, char)
+    if verb == "actx":
+        return await activities.cancel(session, char)
     if verb == "qa":
         return await quests.perform(session, char, arg, present, r)
     if verb == "eq":
@@ -350,6 +367,8 @@ async def _combat(update: Update, context, arg: str, n: str) -> None:
     await edit_or_send(update, text, kb)
     if finished and summary.events:
         await send_outcome(update, summary, lang)
+    if finished and out.activity_id:  # an ambushed stay or a tracked prey: the expedition's chronicle
+        await send_chronicle(update, context, out.activity_id, lang)
 
 
 def fresh_token(token: str, version: int | None, turn_index: int) -> bool:

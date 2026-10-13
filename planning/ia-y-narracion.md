@@ -7,6 +7,7 @@
 - El texto del jugador va delimitado como datos; los ids se validan contra el contexto; las dificultades están acotadas.
 - Presupuesto diario por usuario y global. En la fase de testeo (0.2.x), **150 llamadas al día por jugador** (`AI_USER_DAILY_CALLS`). Si se agota, se avisa al jugador y se juega con botones y plantillas; la hoja de héroe (`/hero`) muestra las llamadas usadas y las que quedan (v0.2.2).
 - NPC con persona, objetivos, secretos y memoria.
+- **Crónicas de expedición** (v0.6.0): tercer modelo, `GEMINI_MODEL_CHRONICLE` (Gemini 3.1 Flash-Lite), que escribe la historia de cada actividad de campo a partir del resultado ya guardado. Presupuesto propio de **15 al día por jugador** (`AI_USER_DAILY_CHRONICLES`); después, textos genéricos de `content/chronicles.yaml`. No cae al modelo rápido: si falla, texto genérico sin gastar presupuesto. Ver `profesiones.md`.
 - v0.1.1: cada llamada se guarda en `artifacts/ai/` (prompt, respuesta, modelo, tokens, latencia).
 
 ## Ideas

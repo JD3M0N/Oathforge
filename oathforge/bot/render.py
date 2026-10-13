@@ -11,10 +11,13 @@ from oathforge.config import get_settings
 from oathforge.content import get_content
 from oathforge.database.models import Character
 from oathforge.engine.checks import modifier, proficiency_bonus
+from oathforge.engine import gathering
 from oathforge.engine.combat import EncounterState, available_bonus_actions, valid_targets
 from oathforge.engine.progression import MAX_LEVEL, XP_THRESHOLDS, skill_rank
 from oathforge.i18n import t
-from oathforge.services import bestiary, characters, combat_service, exploration, inventory, npcs, quests
+from oathforge.services import (
+    activities, bestiary, characters, chronicles, combat_service, exploration, inventory, npcs, quests,
+)
 from oathforge.services.events import Outcome, render_event
 
 MAX_MESSAGE = 4000
@@ -126,6 +129,9 @@ async def scene(session: AsyncSession, char: Character, lang: str) -> tuple[str,
     lines += ["", f"<i>{t(lang, 'scene.hint')}</i>"]
 
     n = nonce()
+    act = await activities.open_activity(session, char)
+    if act is not None and act.status == "running":
+        return activity_panel(char, act, lines, n, lang)
     buttons = [btn(t(lang, "btn.travel"), cb("trv")), btn(t(lang, "btn.investigate"), cb("look", "-", n))]
     if present:
         buttons.append(btn(t(lang, "btn.talk"), cb("talkm")))
@@ -134,6 +140,9 @@ async def scene(session: AsyncSession, char: Character, lang: str) -> tuple[str,
     if loc.hunting:
         buttons.append(btn(t(lang, "btn.hunt_night" if night and loc.night_encounters else "btn.hunt"),
                            cb("hunt", "-", n)))
+    for kind, skill in activities.options(char):
+        label = {"gather": f"btn.gather_{skill}", "stay": "btn.stay", "track": "btn.track"}[kind]
+        buttons.append(btn(t(lang, label, minutes=gathering.SECONDS[kind] // 60), cb("act", f"{kind}:{skill}", n)))
     if loc.rest_cost is not None:
         buttons.append(btn(t(lang, "btn.rest", cost=loc.rest_cost), cb("rest", "-", n)))
     if loc.hub and c.media.zone_images(loc.zone, night):
@@ -145,6 +154,37 @@ async def scene(session: AsyncSession, char: Character, lang: str) -> tuple[str,
     rows.append([btn(t(lang, "btn.inventory"), cb("inv")), btn(t(lang, "btn.sheet"), cb("hero")),
                  btn(t(lang, "btn.journal"), cb("jr"))])
     return "\n".join(lines), markup(rows)
+
+
+MASTERY_ICON = {"mining": "⛏️", "woodcutting": "🪓", "herbalism": "🌿", "skinning": "🔪", "fishing": "🎣",
+                "tracking": "🐾"}
+
+
+def activity_panel(char: Character, act, lines: list[str], n: str, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+    """The scene while a field activity runs: what, how long is left, Collect / Refresh / Abandon."""
+    left = activities.remaining_minutes(act)
+    lines = lines[:2] + ["", t(lang, "activity.panel_title", what=escape(activities.describe(act, lang))),
+                         t(lang, "activity.ready") if left == 0 else t(lang, "activity.left", minutes=left)]
+    if act.kind == "stay":
+        lines.append(t(lang, "activity.stay_warning"))
+    lines += ["", f"<i>{t(lang, 'activity.busy_hint')}</i>"]
+    first = [btn(t(lang, "btn.claim"), cb("actc", "-", n))] if left == 0 else [btn(t(lang, "btn.refresh"), cb("scene"))]
+    rows = [first + [btn(t(lang, "btn.abandon"), cb("actx", "-", n))],
+            [btn(t(lang, "btn.inventory"), cb("inv")), btn(t(lang, "btn.sheet"), cb("hero")),
+             btn(t(lang, "btn.journal"), cb("jr"))]]
+    return "\n".join(lines), markup(rows)
+
+
+def mastery_lines(char: Character, lang: str) -> list[str]:
+    """⛏️ Minería ★★ · 260/500 XP"""
+    out = []
+    for skill in gathering.MASTERIES:
+        xp = characters.mastery_xp(char, skill)
+        rank, nxt = gathering.rank_for(xp), gathering.next_threshold(xp)
+        progress = f"{xp}/{nxt} XP" if nxt else f"{xp} XP"
+        stars = "★" * rank + "☆" * (gathering.MAX_RANK - rank)
+        out.append(f"{MASTERY_ICON[skill]} {escape(t(lang, f'mastery.name.{skill}'))} {stars} · {progress}")
+    return out
 
 
 def zone_caption(zone_key: str, lang: str) -> str:
@@ -388,11 +428,18 @@ async def sheet(session: AsyncSession, char: Character, lang: str) -> tuple[str,
               f"🧬 <i>{escape(c.lineages[char.lineage].trait_text.get(lang))}</i>",
               f"📖 <i>{escape(c.backgrounds[char.background].description.get(lang))}</i>"]
 
-    # today's AI budget
+    # gathering masteries
+    lines += ["", f"<b>{t(lang, 'sheet.masteries')}</b>", *mastery_lines(char, lang)]
+
+    # today's AI budget and expedition chronicles
     limit = get_settings().ai_user_daily_calls
     calls, _ = await usage_today(session, char.user_id)
     left = max(0, limit - calls)
     lines += [RULE, t(lang, "sheet.ai_usage", calls=calls, limit=limit, left=left, bar=hp_bar(left, limit))]
+    climit = get_settings().ai_user_daily_chronicles
+    cused = await chronicles.chronicles_today(session, char.id)
+    cleft = max(0, climit - cused)
+    lines.append(t(lang, "sheet.chronicles", used=cused, limit=climit, left=cleft, bar=hp_bar(cleft, climit)))
 
     kb = markup([[btn(t(lang, "btn.hero_summary"), cb("hero"))],
                  [btn(t(lang, "btn.inventory"), cb("inv")), btn(t(lang, "btn.journal"), cb("jr"))],

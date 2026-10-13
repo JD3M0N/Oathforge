@@ -1,6 +1,7 @@
 """Loads and cross-validates the YAML content. Fails fast at startup."""
 
-from dataclasses import dataclass
+import re
+from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
 
@@ -10,6 +11,8 @@ from oathforge.config import CONTENT_DIR
 from oathforge.content.media import MediaCatalog, scan_images
 from oathforge.content.schemas import (
     ABILITIES,
+    CHRONICLE_OUTCOMES,
+    CHRONICLE_PLACEHOLDERS,
     AbilityInfo,
     Background,
     Continent,
@@ -22,8 +25,10 @@ from oathforge.content.schemas import (
     Npc,
     Quest,
     Skill,
+    Text,
     Zone,
 )
+from oathforge.engine.gathering import MASTERIES
 
 EFFECT_KINDS = {
     "give_item", "take_item", "gold", "reputation", "set_flag", "xp",
@@ -49,6 +54,7 @@ class Content:
     media: MediaCatalog
     start_location: str
     respawn_location: str
+    chronicles: dict[str, list[Text]] = field(default_factory=dict)  # outcome -> generic texts when the AI chronicler is not used
 
 
 def _read(directory: Path, name: str) -> dict:
@@ -139,7 +145,8 @@ def load_content(directory: Path = CONTENT_DIR) -> Content:
         zones=world.zones,
         media=world.media,
         start_location=world.start,
-        respawn_location=respawn[0] if respawn else world["start"],
+        respawn_location=respawn[0] if respawn else world.start,
+        chronicles={k: [Text.model_validate(v) for v in vs] for k, vs in _read(directory, "chronicles").items()},
     )
     validate_references(content)
     return content
@@ -177,7 +184,7 @@ def validate_references(c: Content) -> None:
         if item.type in ("weapon", "armor", "shield") and item.slot is None:
             errors.append(f"item {key}: equippable without slot")
     for key, mon in c.monsters.items():
-        for loot in mon.loot:
+        for loot in [*mon.loot, *mon.harvest]:
             need("item", loot.item, c.items, f"monster {key}")
     for key, loc in c.locations.items():
         if loc.hub and c.zones[loc.zone].kind != "city":
@@ -189,10 +196,31 @@ def validate_references(c: Content) -> None:
                 need("monster", m, c.monsters, f"location {key} encounter")
         for okey, obj in loc.scene_objects.items():
             need("skill", obj.skill, c.skills, f"location {key} object {okey}")
+        for g in loc.gathering:
+            need("item", g.tool, c.items, f"location {key} gathering {g.skill}")
+            for r in g.resources:
+                need("item", r.item, c.items, f"location {key} gathering {g.skill}")
+            if g.skill not in MASTERIES:
+                errors.append(f"location {key}: unknown mastery '{g.skill}'")
+            if not any(r.min_rank == 0 for r in g.resources):
+                errors.append(f"location {key} gathering {g.skill}: nothing to find at rank 0")
+            if g.stay_ambush and not (loc.encounters or loc.night_encounters):
+                errors.append(f"location {key} gathering {g.skill}: stay_ambush without an encounter table")
         for dkey, disc in loc.discoveries.items():
             need("skill", disc.skill, c.skills, f"location {key} discovery {dkey}")
             for i in disc.gives:
                 need("item", i, c.items, f"location {key} discovery {dkey}")
+    for outcome in CHRONICLE_OUTCOMES:
+        if not c.chronicles.get(outcome):
+            errors.append(f"chronicles.yaml: no texts for '{outcome}'")
+    for outcome, texts in c.chronicles.items():
+        if outcome not in CHRONICLE_OUTCOMES:
+            errors.append(f"chronicles.yaml: unknown outcome '{outcome}'")
+        for text in texts:
+            for lang in ("es", "en"):
+                used = set(re.findall(r"\{(\w+)\}", getattr(text, lang)))
+                if used - CHRONICLE_PLACEHOLDERS:
+                    errors.append(f"chronicles.yaml {outcome}: unknown placeholders {sorted(used - CHRONICLE_PLACEHOLDERS)}")
     for zkey, zone in c.zones.items():
         if c.media.zones.get(zkey) and not any(loc.hub for loc in c.locations.values() if loc.zone == zkey):
             errors.append(f"zone {zkey}: has images but no hub location to show them from")

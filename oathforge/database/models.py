@@ -6,11 +6,14 @@ from sqlalchemy import (
     Boolean,
     Date,
     DateTime,
+    Float,
     ForeignKey,
+    Index,
     Integer,
     String,
     Text,
     UniqueConstraint,
+    text,
 )
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -56,12 +59,15 @@ class Character(Base):
     max_hp: Mapped[int] = mapped_column(Integer)
     gold: Mapped[int] = mapped_column(Integer, default=0)
     location: Mapped[str] = mapped_column(String(64))
-    state: Mapped[str] = mapped_column(String(16), default="idle")  # idle | in_combat
+    state: Mapped[str] = mapped_column(String(16), default="idle")  # idle | in_combat | busy (field activity)
     flags: Mapped[dict] = mapped_column(Json, default=dict)
     resources: Mapped[dict] = mapped_column(Json, default=dict)  # ability uses left
     conditions: Mapped[dict] = mapped_column(Json, default=dict)  # e.g. {"injured": true}
     bestiary: Mapped[dict] = mapped_column(Json, default=dict)  # monster -> {"seen": n, "killed": n}
     checks_tried: Mapped[dict] = mapped_column(Json, default=dict)  # check key -> [game day, level] of last attempt
+    masteries: Mapped[dict] = mapped_column(Json, default=dict)  # gathering mastery -> xp
+    professions: Mapped[dict] = mapped_column(Json, default=dict)  # {"active": [..], "xp": {profession: xp}}
+    cooldowns: Mapped[dict] = mapped_column(Json, default=dict)  # key -> unix time when it is ready again
     version: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
@@ -144,6 +150,38 @@ class EncounterParticipant(Base):
     encounter_id: Mapped[int] = mapped_column(ForeignKey("encounters.id", ondelete="CASCADE"))
     character_id: Mapped[int] = mapped_column(ForeignKey("characters.id", ondelete="CASCADE"))
     combatant_id: Mapped[str] = mapped_column(String(8))
+
+
+OPEN_ACTIVITY = "status IN ('running', 'awaiting_combat')"
+
+
+class WorldActivity(Base):
+    """A timed field activity (gather 5 min, stay 15 min, track 5 min).
+
+    The timer lives here (unix seconds), never in memory, so a restart loses nothing; the result
+    is rolled once at claim time and stored, so pressing "Claim" twice never pays twice.
+    """
+
+    __tablename__ = "world_activities"
+    __table_args__ = (
+        Index("uq_open_activity_per_character", "character_id", unique=True,
+              postgresql_where=text(OPEN_ACTIVITY), sqlite_where=text(OPEN_ACTIVITY)),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    character_id: Mapped[int] = mapped_column(ForeignKey("characters.id", ondelete="CASCADE"), index=True)
+    location: Mapped[str] = mapped_column(String(64))
+    kind: Mapped[str] = mapped_column(String(16))  # gather | stay | track
+    skill: Mapped[str] = mapped_column(String(32))  # mastery that grows
+    started_at: Mapped[float] = mapped_column(Float)
+    ends_at: Mapped[float] = mapped_column(Float)
+    status: Mapped[str] = mapped_column(String(16), default="running")  # running | awaiting_combat | done | cancelled
+    seed: Mapped[int] = mapped_column(BigInteger)
+    result: Mapped[dict] = mapped_column(Json, default=dict)  # outcome, items given or pending, xp, monsters
+    encounter_id: Mapped[int | None] = mapped_column(ForeignKey("encounters.id", ondelete="SET NULL"), nullable=True)
+    chronicle: Mapped[str | None] = mapped_column(Text, nullable=True)
+    chronicle_ai: Mapped[bool] = mapped_column(Boolean, default=False)  # counts against the daily chronicle budget
+    resolved_at: Mapped[float | None] = mapped_column(Float, nullable=True, index=True)
 
 
 class CombatAction(Base):

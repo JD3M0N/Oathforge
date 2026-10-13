@@ -1,0 +1,29 @@
+name: {es: Claro de la Raíz Roja, en: Redroot Clearing}
+kind: wild
+description:
+  es: >-
+    Un claro húmedo donde la tierra es casi roja. Crecen raíces de sangre por todas partes y, a la sombra de
+    las rocas, hojas plateadas que nadie ha plantado.
+  en: >-
+    A damp clearing where the soil is almost red. Bloodroot grows everywhere and, in the shade of the rocks,
+    silver leaves that nobody planted.
+night:
+  es: >-
+    Las hojas de luna brillan débilmente sobre la hierba. Es la mejor hora para recogerlas, y la peor para
+    estar solo.
+  en: >-
+    The moonleaves glow faintly over the grass. It's the best time to pick them, and the worst to be alone.
+exits:
+  - {to: whispering_woods, minutes: 15, danger: 1}
+encounters:
+  - {monsters: [boar], weight: 2}
+  - {monsters: [grey_wolf], weight: 1}
+gathering:
+  - skill: herbalism
+    tool: sickle
+    stay_ambush: 0.20
+    resources:
+      - {item: bloodroot, weight: 50}
+      - {item: plant_fiber, weight: 25}
+      - {item: moonleaf, weight: 20, min_rank: 1}
+      - {item: restmoss, weight: 8, min_rank: 3}

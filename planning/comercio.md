@@ -5,6 +5,7 @@
 - Tiendas en NPC (`content/npcs.yaml`, campo `shop`).
 - Compra: valor base ±25 % según la reputación con la facción del NPC (-100..100). Venta: 50 % del valor, ajustado igual (`oathforge/services/inventory.py`).
 - Stock con bloqueo de fila: dos jugadores no pueden comprar a la vez la última poción.
+- Materiales de recolección (v0.6.0): mena, madera, hierbas, pieles, pescado. Se venden en cualquier tienda que compre; Tessa vende las herramientas (pico, hacha, hoz, cuchillo, caña).
 - Entradas de oro: trasfondo inicial, botín, misiones, robos. Salidas: tiendas, descansar en la taberna y el 10 % que se pierde al ser derrotado.
 - El relicario de la misión se puede vender al Sindicato Carmesí (decisión con consecuencias de reputación).
 
@@ -12,7 +13,7 @@
 
 - **Stock que se repone** con el reloj del mundo; precios que suben si todos compran lo mismo.
 - **Mercado entre jugadores**: tablón de ofertas en Crownreach con comisión (sumidero de oro) y entrega asíncrona.
-- **Profesiones**: herrería (armas +1), alquimia (pociones con hierbas del bosque), que suben por uso como las habilidades.
+- **Profesiones**: diseño en [`profesiones.md`](profesiones.md). v0.6.0 trae la recolección (maestrías y materiales); los oficios y las recetas llegan en v0.6.1.
 - **Sumideros de oro**: reparaciones, alojamiento, sobornos, cuotas de gremio, mejoras de casa.
 - **Mercado negro** del Sindicato: objetos robados, mejores precios con reputación criminal y riesgo de que la Guardia te pille.
 - **Regateo**: una prueba de Persuasión o Engaño por visita.
@@ -58,5 +59,5 @@ Cada región produce y consume cosas distintas (Crownreach necesita hierro de la
 - ¿Moneda única (oro) o oro/plata/cobre? Hoy: oro.
 - ¿Cómo evitamos que el oro sobre a nivel 5? Medir en `artifacts/events/` cuánto acumula un jugador por hora.
 - ¿El comercio entre jugadores exige estar en el mismo lugar?
-- ¿Cuántas profesiones a la vez puede tener un personaje? ¿Cuánto tarda fabricar?
-- ¿La primera profesión es herrería (Tessa ya existe) o alquimia (hierbas del Bosque)?
+- ~~¿Cuántas profesiones a la vez?~~ Dos oficios activos de seis; la recolección es libre (ver `profesiones.md`).
+- ~~¿Cuánto tarda fabricar?~~ Las recetas básicas son inmediatas; recolectar sí lleva 5 o 15 minutos reales.

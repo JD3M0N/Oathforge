@@ -155,6 +155,8 @@ async def available_actions(
 async def perform(
     session: AsyncSession, char: Character, ref: str, present_npcs: list[str], rng: random.Random
 ) -> Outcome:
+    if refusal := characters.ensure_free(char):
+        return refusal
     qkey, _, akey = ref.partition(".")
     avail = {a.ref: a for a in await available_actions(session, char, present_npcs)}
     if ref not in avail:

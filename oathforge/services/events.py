@@ -23,6 +23,7 @@ class Outcome:
     ok: bool = True
     encounter_id: int | None = None
     error: str | None = None  # i18n key when the action was refused
+    activity_id: int | None = None  # a field activity that just finished (its chronicle follows)
 
     def add(self, key: str, **params) -> "Outcome":
         self.events.append(Event(key, params))
@@ -38,6 +39,8 @@ class Outcome:
         self.events += other.events
         if other.encounter_id:
             self.encounter_id = other.encounter_id
+        if other.activity_id:
+            self.activity_id = other.activity_id
         return self
 
     @classmethod

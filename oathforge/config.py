@@ -18,9 +18,11 @@ class Settings(BaseSettings):
     gemini_model_fast: str = "gemini-flash-lite-latest"
     gemini_model_narrative: str = "gemini-flash-latest"
     gemini_thinking_level: str = "low"  # narrative tier only; "" leaves the model default
+    gemini_model_chronicle: str = "gemini-3.1-flash-lite"  # expedition chronicles (gather, stay, track)
 
     ai_user_daily_calls: int = 150  # testing phase (0.2.x)
     ai_user_daily_tokens: int = 200_000
+    ai_user_daily_chronicles: int = 15  # AI-written expedition chronicles per player and day; then generic texts
     ai_global_daily_calls: int = 5_000
     ai_timeout_seconds: float = 20.0
     ai_model_cooldown_seconds: float = 120.0

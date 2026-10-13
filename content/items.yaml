@@ -141,3 +141,142 @@ bat_wing:
   type: tool
   value: 4
   stackable: true
+
+# ---------------------------------------------------------------- gathering tools (Tessa sells them)
+
+pickaxe:
+  name: {es: Pico de minero, en: Miner's pickaxe}
+  description: {es: "Hierro templado y mango de fresno. Sin él no se arranca mena de la roca.", en: "Tempered iron on an ash handle. You can't pry ore from rock without one."}
+  type: tool
+  value: 15
+
+woodaxe:
+  name: {es: Hacha de leñador, en: Woodcutter's axe}
+  description: {es: "Hoja ancha y pesada, hecha para troncos y no para cráneos.", en: "A broad heavy blade made for logs, not skulls."}
+  type: tool
+  value: 15
+
+sickle:
+  name: {es: Hoz de herborista, en: Herbalist's sickle}
+  description: {es: "Una hoja curva y pequeña para cortar raíces sin dañarlas.", en: "A small curved blade for cutting roots without bruising them."}
+  type: tool
+  value: 10
+
+skinning_knife:
+  name: {es: Cuchillo de desollar, en: Skinning knife}
+  description: {es: "Hoja corta y fina. Con él aprovechas la piel y la carne de las bestias que abates.", en: "A short thin blade. With it you take the hide and meat of the beasts you bring down."}
+  type: tool
+  value: 8
+
+fishing_rod:
+  name: {es: Caña de pescar, en: Fishing rod}
+  description: {es: "Caña de sauce, sedal de crin y un anzuelo de hueso.", en: "A willow rod, horsehair line and a bone hook."}
+  type: tool
+  value: 10
+
+# ---------------------------------------------------------------- materials
+
+iron_ore:
+  name: {es: Mena de hierro, en: Iron ore}
+  description: {es: "Roca rojiza con vetas de hierro. La base de toda herrería.", en: "Reddish rock veined with iron. The base of all smithing."}
+  type: material
+  value: 4
+  stackable: true
+
+coal:
+  name: {es: Carbón, en: Coal}
+  description: {es: "Negro y ligero; arde caliente en la fragua.", en: "Black and light; it burns hot in the forge."}
+  type: material
+  value: 3
+  stackable: true
+
+copper_ore:
+  name: {es: Mena de cobre, en: Copper ore}
+  description: {es: "Piedra verdosa que los joyeros funden para anillos y hebillas.", en: "Greenish stone jewelers smelt for rings and buckles."}
+  type: material
+  value: 6
+  stackable: true
+
+rough_gem:
+  name: {es: Gema en bruto, en: Rough gem}
+  description: {es: "Un cristal turbio que, tallado, vale una pequeña fortuna.", en: "A cloudy crystal that, once cut, is worth a small fortune."}
+  type: material
+  value: 25
+  stackable: true
+
+oak_log:
+  name: {es: Tronco de roble, en: Oak log}
+  description: {es: "Madera dura y recta de los robles de Thornwood.", en: "Hard straight wood from the Thornwood oaks."}
+  type: material
+  value: 3
+  stackable: true
+
+ash_log:
+  name: {es: Tronco de fresno, en: Ash log}
+  description: {es: "Madera flexible y noble, buscada por los arqueros.", en: "Supple fine wood, prized by bowyers."}
+  type: material
+  value: 7
+  stackable: true
+
+plant_fiber:
+  name: {es: Fibra vegetal, en: Plant fiber}
+  description: {es: "Tallos secos y trenzables para cuerdas y ataduras.", en: "Dry stalks that braid into cords and bindings."}
+  type: material
+  value: 1
+  stackable: true
+
+bloodroot:
+  name: {es: Raíz de sangre, en: Bloodroot}
+  description: {es: "Una raíz roja que, machacada, cierra heridas. La base de las pociones de curación.", en: "A red root that closes wounds when crushed. The base of healing potions."}
+  type: material
+  value: 4
+  stackable: true
+
+moonleaf:
+  name: {es: Hoja de luna, en: Moonleaf}
+  description: {es: "Hojas plateadas que brillan débilmente de noche. Los magos pagan bien por ellas.", en: "Silver leaves that glow faintly at night. Mages pay well for them."}
+  type: material
+  value: 7
+  stackable: true
+
+restmoss:
+  name: {es: Musgo del reposo, en: Restmoss}
+  description: {es: "Un musgo raro y tibio. Dicen que su olor devuelve las fuerzas.", en: "A rare, warm moss. They say its scent brings strength back."}
+  type: material
+  value: 10
+  stackable: true
+
+wolf_pelt:
+  name: {es: Piel de lobo, en: Wolf pelt}
+  description: {es: "Pelaje gris y espeso. Los curtidores la convierten en cuero.", en: "Thick grey fur. Tanners turn it into leather."}
+  type: material
+  value: 10
+  stackable: true
+
+boar_hide:
+  name: {es: Cuero de jabalí, en: Boar hide}
+  description: {es: "Piel dura y de cerdas ásperas.", en: "Tough hide with coarse bristles."}
+  type: material
+  value: 7
+  stackable: true
+
+raw_meat:
+  name: {es: Carne cruda, en: Raw meat}
+  description: {es: "Carne fresca de caza. Hay que cocinarla pronto.", en: "Fresh game meat. Best cooked soon."}
+  type: material
+  value: 2
+  stackable: true
+
+river_fish:
+  name: {es: Pez de río, en: River fish}
+  description: {es: "Un pez plateado de las aguas frías de Silverbrook.", en: "A silvery fish from the cold waters of Silverbrook."}
+  type: material
+  value: 3
+  stackable: true
+
+silverscale_trout:
+  name: {es: Trucha de escamas de plata, en: Silverscale trout}
+  description: {es: "Una trucha enorme y esquiva. Los cocineros de la ciudad se la disputan.", en: "A huge, elusive trout. The city's cooks fight over it."}
+  type: material
+  value: 20
+  stackable: true

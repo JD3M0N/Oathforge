@@ -91,6 +91,15 @@ btn:
   roll_on: "✅ Turn manual rolls on"
   roll_off: "❌ Turn manual rolls off"
   hunt_night: "🦇 Hunt by night"
+  gather_mining: "⛏️ Mine · {minutes} min"
+  gather_woodcutting: "🪓 Chop wood · {minutes} min"
+  gather_herbalism: "🌿 Gather herbs · {minutes} min"
+  gather_fishing: "🎣 Fish · {minutes} min"
+  stay: "🏕️ Long expedition · {minutes} min"
+  track: "🐾 Track · {minutes} min"
+  claim: "🎁 Collect"
+  refresh: "🔄 Refresh"
+  abandon: "✖️ Abandon"
   missions: "📜 Missions"
   bestiary: "📖 Bestiary"
   rumors: "🗣️ Rumors"
@@ -191,6 +200,8 @@ sheet:
     friendly: "friendly"
     honored: "honored"
   ai_usage: "🤖 Dungeon Master today: {calls}/{limit} · {left} left  {bar}"
+  masteries: "Field masteries"
+  chronicles: "📜 Chronicles today: {used}/{limit} · {left} left  {bar}"
 
 ai:
   budget_exhausted: "🤖 The Dungeon Master is spent for today. Keep playing with the buttons; it recovers at midnight."
@@ -476,3 +487,57 @@ roll:
   "off": "off"
   changed: "🎲 Manual rolls {state}."
   stale: "That roll makes no sense here anymore: you have moved."
+
+activity:
+  started:
+    gather: "⏳ You get to work: {skill} at {place}. In {minutes} minutes you can collect what you got."
+    stay: "🏕️ You start a long {skill} expedition at {place} ({minutes} min). You'll bring back much more, but there may be an ambush at the end."
+    track: "🐾 You crouch and start looking for tracks at {place} ({minutes} min)."
+  done:
+    gather: "✅ You finish your work at {place}."
+    stay: "✅ Your expedition at {place} ends without trouble."
+  kind:
+    gather: "{skill} at {place}"
+    stay: "{skill} expedition at {place}"
+    track: "Tracking at {place}"
+  cancelled: "You abandon the task. You take nothing with you."
+  bonus: "🍀 Your mastery gives you something extra: {loot}."
+  stay_ambush: "⚠️ As you load up your haul ({loot}), something comes out of the shadows... Victory: you keep it all. Flee: half. Defeat: you lose it."
+  stay_saved: "📦 You keep the whole expedition load."
+  stay_half: "📦 Half of the load is lost as you flee."
+  stay_lost: "📦 The expedition load is lost ({loot})."
+  track_found: "🐾 The trail leads you to your prey: {monster}."
+  track_tracks: "🐾 You only find old tracks. The prey is gone."
+  skinned: "🔪 You skin your kills: {loot}."
+  trophies: "🏆 Tracking trophies: {loot}."
+  no_knife: "🔪 Without a skinning knife you can't take the hide or meat (Tessa sells one at the market)."
+  panel_title: "⏳ <b>{what}</b>"
+  left: "Ends in {minutes} min."
+  ready: "✅ Done! Press “Collect”."
+  stay_warning: "⚠️ There may be an ambush at the end. Victory: everything; flee: half; defeat: nothing."
+  busy_hint: "You can't travel or start anything else until you collect or abandon this task."
+  ready_ping: "⏰ Your task at {place} is done. Press “Collect”."
+  options: "🧰 <b>Fieldwork</b>: {list}"
+  err:
+    busy: "You have a task under way. Collect it or abandon it first."
+    unavailable: "You can't do that here."
+    no_tool: "You need: {tool}. Tessa sells tools at the Crownreach market."
+    none: "You have no task under way."
+    not_ready: "Not finished yet: {minutes} min left."
+
+mastery:
+  name:
+    mining: "Mining"
+    woodcutting: "Woodcutting"
+    herbalism: "Herbalism"
+    skinning: "Skinning"
+    fishing: "Fishing"
+    tracking: "Tracking"
+  xp: "📈 +{amount} {skill} XP."
+  rank: "⭐ {skill} rises to rank {rank}!"
+
+chronicle:
+  title: "📜 <b>Expedition chronicle</b>"
+  footer_ai: "📜 Chronicle {used}/{limit} today"
+  footer_rest: "📜 The chronicler has written all {limit} chronicles for today; come back tomorrow."
+  footer_generic: "📜 From the guild archives"

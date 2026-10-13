@@ -4,6 +4,34 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.6.0] - 2026-10-13
+
+### Añadido
+- **Actividades de campo con espera real** (diseño en `planning/profesiones.md`):
+  - ⛏️ **Trabajar 5 min** (minar, talar, recolectar hierbas, pescar): 2–3 materiales y 10 XP de maestría, sin riesgo.
+  - 🏕️ **Expedición larga 15 min**: 8–10 materiales y 25–30 XP, pero al recoger puede haber emboscada (0–25 % según el lugar). Victoria: te lo llevas todo; huida: la mitad; derrota: nada.
+  - 🐾 **Rastrear 5 min** donde hay caza: 75 % encuentras presa (combate normal, +18 XP de rastreo y trofeos) y 25 % solo rastros (+10 XP). Si hay un jefe de misión pendiente, el rastreo lo encuentra. «Cazar» sigue siendo inmediato.
+  - Mientras dura, el personaje está ocupado: no puede viajar, cazar, investigar, descansar ni hacer acciones de misión. La escena muestra el tiempo que falta y los botones «Recoger», «Actualizar» y «Abandonar». Un aviso ⏰ llega cuando termina.
+  - El temporizador vive en la base de datos: un reinicio del bot no pierde nada. El resultado se tira una vez, con la semilla de la actividad, y se paga una sola vez.
+- **6 maestrías de campo** (minería, tala, herboristería, desuello, pesca, rastreo), rango 0–5 con XP acumulada 0/80/240/500/900/1500. Cada rango da un 4 % de unidad extra (tope del 20 %, sin XP) y abre recursos mejores (cobre a rango 1, gemas y musgo del reposo a rango 3). Salen en `/sheet`.
+- **Desuello automático** al vencer a jabalíes, lobos y al Viejo Colmillo si llevas cuchillo de desollar: cuero, pieles y carne, y XP de desuello.
+- **Lugares nuevos**: Mina del Paso Viejo y Ribera de Silverbrook (desde el Camino del Viejo Rey), Arboleda Antigua y Claro de la Raíz Roja (desde el Bosque de los Susurros). El Bosque de los Susurros también tiene hierbas.
+- **Rata gigante** en el bestiario (Mina del Paso Viejo).
+- 14 materiales (mena de hierro y cobre, carbón, gema en bruto, roble, fresno, fibra, raíz de sangre, hoja de luna, musgo del reposo, piel de lobo, cuero de jabalí, carne, pescado y trucha de escamas de plata) y 5 herramientas que vende Tessa (pico, hacha, hoz, cuchillo de desollar, caña).
+- **Crónicas de expedición** (el «presupuesto de misiones»): al terminar cada actividad llega una crónica personal con el nombre, la clase y el linaje del héroe y lo que pasó.
+  - La escribe **Gemini 3.1 Flash-Lite** (`GEMINI_MODEL_CHRONICLE`), con un presupuesto de **15 al día por jugador** (`AI_USER_DAILY_CHRONICLES`). También cuenta para el límite diario de IA.
+  - Después, o si la IA falla, sale un texto genérico de `content/chronicles.yaml` (3 por desenlace, en español e inglés). La crónica se guarda con la actividad y nunca decide el botín.
+  - `/sheet` muestra «📜 Crónicas de hoy: X/15».
+- `planning/profesiones.md`: decisiones de profesiones y recolección, y lo que queda para 0.6.1 (oficios y recetas) y 0.6.2 (pociones de maná y reposo).
+
+### Cambiado
+- Nuevo estado `busy` del personaje; `characters.ensure_free` sustituye a las comprobaciones de «en combate» en viajar, cazar, investigar, descansar, pruebas de habilidad y acciones de misión.
+- El cliente de Gemini tiene un tercer tier, `chronicle`, que no cae al modelo rápido.
+- Migración `0006`: tabla `world_activities` (una actividad abierta por personaje, con índice único parcial) y columnas `masteries`, `professions` y `cooldowns` en `characters`.
+
+### Arreglado
+- `load_content` usaba `world["start"]` en vez de `world.start` cuando ningún lugar tenía `respawn`.
+
 ## [0.5.11] - 2026-10-12
 
 ### Cambiado

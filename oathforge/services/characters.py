@@ -8,10 +8,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from oathforge.content import get_content
 from oathforge.content.schemas import ABILITIES
 from oathforge.database.models import Character, CharacterSkill, FactionReputation, ItemInstance, QuestProgress, User
-from oathforge.engine import pointbuy, progression
+from oathforge.engine import gathering, pointbuy, progression
 from oathforge.engine.checks import modifier, proficiency_bonus
 from oathforge.engine.combat import AttackProfile, Combatant
-from oathforge.i18n import normalize_lang
+from oathforge.i18n import normalize_lang, t
 from oathforge.services.events import Outcome
 
 NAME_MAX = 24
@@ -33,6 +33,15 @@ async def get_character(session: AsyncSession, user_id: int, lock: bool = False)
     if lock:
         stmt = stmt.with_for_update()
     return await session.scalar(stmt)
+
+
+def ensure_free(char: Character) -> Outcome | None:
+    """A refusal while fighting or busy with a field activity (mining, a long stay, tracking); None if free."""
+    if char.state == "in_combat":
+        return Outcome.refused("explore.err.in_combat")
+    if char.state == "busy":
+        return Outcome.refused("activity.err.busy")
+    return None
 
 
 def set_setting(user: User, key: str, value) -> None:
@@ -262,6 +271,26 @@ def grant_xp(char: Character, amount: int, out: Outcome) -> None:
                 cls=char.class_key)
         if char.level == 5:
             out.add("progress.specialization_soon")
+
+
+def mastery_name(skill: str) -> dict:
+    return {lang: t(lang, f"mastery.name.{skill}") for lang in ("es", "en")}
+
+
+def mastery_xp(char: Character, skill: str) -> int:
+    return int((char.masteries or {}).get(skill, 0))
+
+
+def grant_mastery(char: Character, skill: str, amount: int, out: Outcome) -> None:
+    """Gathering masteries (mining, tracking...) grow 0-5 with use, apart from d20 skills."""
+    if amount <= 0:
+        return
+    before = mastery_xp(char, skill)
+    char.masteries = {**(char.masteries or {}), skill: before + amount}
+    out.add("mastery.xp", skill=mastery_name(skill), amount=amount)
+    rank = gathering.rank_for(before + amount)
+    if rank > gathering.rank_for(before):
+        out.add("mastery.rank", skill=mastery_name(skill), rank=rank)
 
 
 async def practice(session: AsyncSession, char: Character, skill: str, tier: str, context: str, out: Outcome) -> None:

@@ -1,0 +1,29 @@
+name: {es: Arboleda Antigua, en: Elderwood Grove}
+kind: wild
+hunting: true  # lobos y jabalíes rondan los claros de tala
+description:
+  es: >-
+    Robles tan anchos que tres hombres no los abrazan. Entre ellos crecen fresnos jóvenes y rectos, y el
+    suelo está cubierto de astillas de leñadores que no volvieron a por sus hachas.
+  en: >-
+    Oaks so wide three men couldn't ring them with their arms. Young straight ashes grow between them, and
+    the ground is littered with chips from woodcutters who never came back for their axes.
+night:
+  es: >-
+    Los troncos crujen en la oscuridad. A lo lejos, un aullido; luego otro, más cerca.
+  en: >-
+    The trunks creak in the dark. Far off, a howl; then another, closer.
+exits:
+  - {to: whispering_woods, minutes: 20, danger: 1}
+encounters:
+  - {monsters: [grey_wolf], weight: 3}
+  - {monsters: [boar], weight: 2}
+  - {monsters: [grey_wolf, grey_wolf], weight: 1}
+gathering:
+  - skill: woodcutting
+    tool: woodaxe
+    stay_ambush: 0.20
+    resources:
+      - {item: oak_log, weight: 70}
+      - {item: plant_fiber, weight: 20}
+      - {item: ash_log, weight: 15, min_rank: 2}

@@ -1,9 +1,11 @@
 import asyncio
 import logging
+from html import escape
 import random
 import time
 from contextlib import asynccontextmanager
 
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from telegram import Chat, InlineKeyboardMarkup, InputMediaPhoto, Message, Update
 from telegram.constants import ChatAction, ParseMode
@@ -14,7 +16,12 @@ from oathforge import recorder
 from oathforge.bot import render
 from oathforge.content.media import MediaAsset
 from oathforge.database.models import Character, User
-from oathforge.services import characters, combat_service, media
+from oathforge.bot.keyboards import btn, cb, markup, nonce
+from oathforge.content import get_content
+from oathforge.database.models import WorldActivity
+from oathforge.database.session import session_scope
+from oathforge.i18n import t
+from oathforge.services import characters, chronicles, combat_service, media
 from oathforge.services.events import Outcome
 
 log = logging.getLogger(__name__)
@@ -95,6 +102,41 @@ async def send_outcome(update: Update, outcome: Outcome, lang: str, narration: s
         await send(update, text)
     for card in render.level_up_cards(outcome, lang):
         await send(update, card)
+
+
+async def send_chronicle(update: Update, context: ContextTypes.DEFAULT_TYPE, activity_id: int, lang: str) -> None:
+    """The expedition's chronicle (AI while the daily budget lasts, then a generic one), after the facts."""
+    async with keep_typing(update.effective_chat):
+        ch = await chronicles.tell(context.bot_data["llm"], activity_id, lang)
+    if ch is not None:
+        await send(update, f"{t(lang, 'chronicle.title')}\n\n<i>{escape(ch.text)}</i>\n\n{chronicles.footer(ch, lang)}")
+
+
+def schedule_ready_ping(update: Update, context: ContextTypes.DEFAULT_TYPE, char_id: int, seconds: int) -> None:
+    """A heads-up when the activity just started is done. Best effort: the timer itself lives in the
+    database, so a restart only loses this message, never the activity."""
+    jobs = getattr(context, "job_queue", None)
+    if jobs is None or update.effective_chat is None:
+        return
+    jobs.run_once(_ready_ping, when=seconds + 1, chat_id=update.effective_chat.id,
+                  data={"char_id": char_id, "lang": context.user_data.get("lang", "es")})
+
+
+async def _ready_ping(context: ContextTypes.DEFAULT_TYPE) -> None:
+    job = context.job
+    char_id, lang = job.data["char_id"], job.data["lang"]
+    async with session_scope() as session:
+        act = await session.scalar(select(WorldActivity).where(WorldActivity.character_id == char_id,
+                                                               WorldActivity.status == "running"))
+        if act is None or act.ends_at > time.time():  # collected, abandoned, or a newer activity
+            return
+        place = get_content().locations[act.location].name.get(lang)
+    kb = markup([[btn(t(lang, "btn.claim"), cb("actc", "-", nonce()))]])
+    try:
+        await context.bot.send_message(job.chat_id, t(lang, "activity.ready_ping", place=escape(place)),
+                                       parse_mode=ParseMode.HTML, reply_markup=kb)
+    except Exception:  # a heads-up only
+        log.warning("could not send the activity ping", exc_info=True)
 
 
 async def edit_or_send(update: Update, text: str, kb: InlineKeyboardMarkup | None = None) -> None:

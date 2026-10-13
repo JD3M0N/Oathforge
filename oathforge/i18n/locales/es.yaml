@@ -91,6 +91,15 @@ btn:
   roll_on: "✅ Activar tiradas manuales"
   roll_off: "❌ Desactivar tiradas manuales"
   hunt_night: "🦇 Cazar de noche"
+  gather_mining: "⛏️ Minar · {minutes} min"
+  gather_woodcutting: "🪓 Talar · {minutes} min"
+  gather_herbalism: "🌿 Recolectar hierbas · {minutes} min"
+  gather_fishing: "🎣 Pescar · {minutes} min"
+  stay: "🏕️ Expedición larga · {minutes} min"
+  track: "🐾 Rastrear · {minutes} min"
+  claim: "🎁 Recoger"
+  refresh: "🔄 Actualizar"
+  abandon: "✖️ Abandonar"
   missions: "📜 Misiones"
   bestiary: "📖 Bestiario"
   rumors: "🗣️ Rumores"
@@ -191,6 +200,8 @@ sheet:
     friendly: "amistoso"
     honored: "venerado"
   ai_usage: "🤖 Dungeon Master hoy: {calls}/{limit} · quedan {left}  {bar}"
+  masteries: "Maestrías de campo"
+  chronicles: "📜 Crónicas de hoy: {used}/{limit} · quedan {left}  {bar}"
 
 ai:
   budget_exhausted: "🤖 El Dungeon Master ha agotado sus fuerzas por hoy. Sigue jugando con los botones; se recupera a medianoche."
@@ -476,3 +487,57 @@ roll:
   "off": "desactivadas"
   changed: "🎲 Tiradas manuales {state}."
   stale: "Esa tirada ya no tiene sentido aquí: te has movido."
+
+activity:
+  started:
+    gather: "⏳ Te pones a trabajar: {skill} en {place}. En {minutes} minutos podrás recoger lo obtenido."
+    stay: "🏕️ Empiezas una expedición larga de {skill} en {place} ({minutes} min). Traerás mucho más, pero al final puede haber emboscada."
+    track: "🐾 Te agachas y empiezas a buscar rastros en {place} ({minutes} min)."
+  done:
+    gather: "✅ Terminas tu trabajo en {place}."
+    stay: "✅ Tu expedición en {place} termina sin incidentes."
+  kind:
+    gather: "{skill} en {place}"
+    stay: "Expedición de {skill} en {place}"
+    track: "Rastreo en {place}"
+  cancelled: "Abandonas la tarea. No te llevas nada."
+  bonus: "🍀 Tu maestría te da algo extra: {loot}."
+  stay_ambush: "⚠️ Cuando cargas lo obtenido ({loot}), algo sale de las sombras... Victoria: te lo llevas todo. Huida: la mitad. Derrota: lo pierdes."
+  stay_saved: "📦 Conservas toda la carga de la expedición."
+  stay_half: "📦 En la huida se pierde la mitad de la carga."
+  stay_lost: "📦 La carga de la expedición se pierde ({loot})."
+  track_found: "🐾 El rastro te lleva hasta tu presa: {monster}."
+  track_tracks: "🐾 Solo encuentras rastros viejos. La presa ya no está aquí."
+  skinned: "🔪 Desuellas las piezas: {loot}."
+  trophies: "🏆 Trofeos del rastreo: {loot}."
+  no_knife: "🔪 Sin cuchillo de desollar no aprovechas la piel ni la carne (Tessa vende uno en el mercado)."
+  panel_title: "⏳ <b>{what}</b>"
+  left: "Termina en {minutes} min."
+  ready: "✅ ¡Listo! Pulsa «Recoger»."
+  stay_warning: "⚠️ Al terminar puede haber emboscada. Victoria: todo; huida: la mitad; derrota: nada."
+  busy_hint: "No puedes viajar ni empezar otra cosa hasta recoger o abandonar esta tarea."
+  ready_ping: "⏰ Tu tarea en {place} ha terminado. Pulsa «Recoger»."
+  options: "🧰 <b>Trabajo de campo</b>: {list}"
+  err:
+    busy: "Tienes una tarea en marcha. Recógela o abandónala primero."
+    unavailable: "Aquí no se puede hacer eso."
+    no_tool: "Necesitas: {tool}. Tessa vende herramientas en el mercado de Crownreach."
+    none: "No tienes ninguna tarea en marcha."
+    not_ready: "Aún no ha terminado: faltan {minutes} min."
+
+mastery:
+  name:
+    mining: "Minería"
+    woodcutting: "Tala"
+    herbalism: "Herboristería"
+    skinning: "Desuello"
+    fishing: "Pesca"
+    tracking: "Rastreo"
+  xp: "📈 +{amount} XP de {skill}."
+  rank: "⭐ ¡{skill} sube a rango {rank}!"
+
+chronicle:
+  title: "📜 <b>Crónica de la expedición</b>"
+  footer_ai: "📜 Crónica {used}/{limit} de hoy"
+  footer_rest: "📜 El cronista ya escribió sus {limit} crónicas de hoy; vuelve mañana."
+  footer_generic: "📜 De los archivos del gremio"

@@ -117,6 +117,7 @@ def _record(enc: Encounter, char: Character, state: EncounterState, action: Acti
 
 
 async def _sync_and_maybe_finish(session, char, enc, state: EncounterState, rng, out: Outcome) -> None:
+    from oathforge.services import activities  # activities starts encounters too
     p = state.combatants["p1"]
     char.hp = p.hp
     char.resources = {k: v for k, v in p.abilities.items()}
@@ -140,6 +141,7 @@ async def _sync_and_maybe_finish(session, char, enc, state: EncounterState, rng,
                 if rng.random() < loot.chance:
                     await inventory.add_item(session, char, loot.item, loot.qty)
                     out.add("loot.item", item=c.items[loot.item].name.model_dump(), qty=loot.qty)
+        await activities.skin(session, char, [cb.ref for cb in defeated], rng, out)
         if enc.fixed_flag:
             char.flags = {**char.flags, enc.fixed_flag: True}
         for cb in defeated:
@@ -148,6 +150,9 @@ async def _sync_and_maybe_finish(session, char, enc, state: EncounterState, rng,
         await characters.defeat_penalty(char, out)
     elif state.status == "fled":
         char.hp = max(1, char.hp)
+    # an ambushed stay or a tracked prey: pay what was pending (or not)
+    defeated_refs = [cb.ref for cb in state.combatants.values() if cb.side == "enemy" and cb.defeated]
+    await activities.on_encounter_end(session, char, state.status, defeated_refs, rng, out)
     # rewards and penalties, kept for the battle report
     session.add(CombatAction(encounter_id=enc.id, round=state.round, actor="end", action={},
                              result=[{"key": e.key, "params": e.params} for e in out.events[first:]]))

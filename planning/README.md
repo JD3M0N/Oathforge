@@ -8,6 +8,7 @@ Puntos de partida para las ideas del juego. No es documentación del código (es
 | [clases.md](clases.md) | Clases, habilidades, especializaciones y clases futuras |
 | [combate.md](combate.md) | Sistema de batalla: qué hay y hacia dónde va |
 | [comercio.md](comercio.md) | Tiendas, precios, economía y mercado entre jugadores |
+| [profesiones.md](profesiones.md) | Maestrías de campo, actividades con espera, oficios, recetas y crónicas de expedición |
 | [progresion.md](progresion.md) | Niveles, habilidades por uso, equipo |
 | [mundo-y-misiones.md](mundo-y-misiones.md) | Lugares, misiones, facciones, eventos del mundo |
 | [bestiario.md](bestiario.md) | Criaturas, fichas que se desbloquean y cómo ampliarlo |

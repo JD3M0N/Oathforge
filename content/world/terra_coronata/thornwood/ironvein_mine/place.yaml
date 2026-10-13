@@ -1,0 +1,25 @@
+name: {es: Mina del Paso Viejo, en: Old Pass Mine}
+kind: wild
+hunting: true  # ratas gigantes y murciélagos en las galerías
+description:
+  es: >-
+    Una boca de piedra al pie de la colina, apuntalada con vigas ennegrecidas. Las vetas de hierro asoman
+    rojizas entre la roca y, más adentro, algo brilla cuando le da la luz de la antorcha.
+  en: >-
+    A stone mouth at the foot of the hill, shored up with blackened beams. Iron veins show reddish in the
+    rock and, deeper in, something glints when the torchlight touches it.
+exits:
+  - {to: old_kings_road, minutes: 25, danger: 1}
+encounters:
+  - {monsters: [giant_rat], weight: 3}
+  - {monsters: [giant_rat, giant_rat], weight: 2}
+  - {monsters: [cave_bat, cave_bat], weight: 1}
+gathering:
+  - skill: mining
+    tool: pickaxe
+    stay_ambush: 0.25
+    resources:
+      - {item: iron_ore, weight: 60}
+      - {item: coal, weight: 30}
+      - {item: copper_ore, weight: 15, min_rank: 1}
+      - {item: rough_gem, weight: 4, min_rank: 3}

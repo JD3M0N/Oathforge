@@ -1,0 +1,17 @@
+name: {es: Ribera de Silverbrook, en: Silverbrook Bank}
+kind: wild
+description:
+  es: >-
+    Un arroyo ancho y frío que baja de las colinas entre piedras pulidas. Un viejo muelle de madera aguanta
+    todavía, y desde él se ven los peces plateados remontar la corriente.
+  en: >-
+    A wide, cold stream running down from the hills between polished stones. An old wooden jetty still holds,
+    and from it you can see the silver fish swimming upstream.
+exits:
+  - {to: old_kings_road, minutes: 20}
+gathering:
+  - skill: fishing
+    tool: fishing_rod
+    resources:
+      - {item: river_fish, weight: 80}
+      - {item: silverscale_trout, weight: 8, min_rank: 3}
