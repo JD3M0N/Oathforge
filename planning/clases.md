@@ -80,3 +80,9 @@ Concentración, furia, fe, maná, preparación o inspiración. **Como máximo do
 - ¿El Explorador es la siguiente clase (aprovecha los tipos de criatura)?
 - ¿Entran algún día Monje, Hechicero o Artífice, o nos quedamos en 9 clases?
 - ¿Cada especialización tiene un árbol de 3 talentos (como en el GDD) o un único cambio fuerte?
+
+## Páginas de habilidad (v0.7.11)
+
+- Cada habilidad de `content/classes.yaml` tiene su página `/skill_<clave>`. «⚙️ Cómo funciona» se genera a partir de sus campos (`render.ability_mechanics`), así que nunca se desajusta del motor.
+- `details: {es, en}` es opcional: una explicación más larga y con sabor. De momento solo la tienen las habilidades del Paladín; el resto usa la descripción corta. Conviene escribirla para cada habilidad nueva.
+- `extra_attack` existe en Paladín y Guerrero: la página lista las dos clases con su nivel.

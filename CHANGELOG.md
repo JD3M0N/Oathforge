@@ -4,6 +4,21 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.11] - 2026-10-14
+
+### Añadido
+- `/skill_<clave>`, por ejemplo `/skill_lay_on_hands`: la página de una habilidad de clase. Muestra:
+  - la clase y el nivel;
+  - el tipo de acción y los usos;
+  - una explicación más larga;
+  - «⚙️ Cómo funciona», generado con los mismos datos que usa el motor (daño, salvación, área, curación, estados, CA, crítico…).
+
+  Funciona sin personaje y, con tu propia clase, marca si ya la tienes (✅) o en qué nivel llega (🔒).
+- Campo opcional `details: {es, en}` en las habilidades de `content/classes.yaml`. Las del Paladín ya lo tienen.
+
+### Cambiado
+- `/class_<clase>`, la tarjeta de subida de nivel y `/sheet` enlazan cada habilidad con su `/skill_<clave>`.
+
 ## [0.7.10] - 2026-10-14
 
 ### Añadido

@@ -63,11 +63,82 @@ def ability_tags(a, lang: str) -> str:
     return " · ".join(tags)
 
 
-def ability_block(a, lang: str, prefix: str = "") -> list[str]:
+def ability_block(a, lang: str, prefix: str = "", key: str | None = None) -> list[str]:
     """Name, tags and description of a class ability, as in the level-up card and /class_<key>."""
     icon = ABILITY_ICON.get(a.kind, "✨")
+    link = f" · /skill_{key}" if key else ""
     return [f"{prefix}{icon} <b>{escape(a.name.get(lang))}</b> · {ability_tags(a, lang)}",
-            f"      <i>{escape(a.description.get(lang))}</i>"]
+            f"      <i>{escape(a.description.get(lang))}</i>{link}"]
+
+
+def ability_mechanics(a, lang: str) -> list[str]:
+    """What the engine does with an ability, read from its data (classes.yaml)."""
+    c = get_content()
+    out = [t(lang, f"skill.kind.{a.kind}")]
+    dmg = lambda typ: t(lang, "dmg." + typ) if typ else ""  # noqa: E731
+    if a.damage:
+        out.append(t(lang, "skill.damage", dice=a.damage, type=dmg(a.damage_type)))
+    if a.extra_damage:
+        out.append(t(lang, "skill.extra_damage", dice=a.extra_damage, type=dmg(a.damage_type)))
+    if a.auto_hit:
+        out.append(t(lang, "skill.auto_hit"))
+    if a.save:
+        out.append(t(lang, "skill.save", ability=c.abilities[a.save].short.get(lang)))
+        if a.half_on_save:
+            out.append(t(lang, "skill.half_on_save"))
+    if a.area == "row":
+        out.append(t(lang, "skill.row"))
+    if a.targets_type:
+        out.append(t(lang, "skill.targets", type=t(lang, "creature." + a.targets_type)))
+    if a.heal_per_level:
+        out.append(t(lang, "skill.heal_per_level", n=a.heal_per_level))
+    if a.heal_dice:
+        out.append(t(lang, "skill.heal_dice", dice=a.heal_dice) + (t(lang, f"skill.plus_{a.heal_add}") if a.heal_add else ""))
+    if a.temp_hp:
+        out.append(t(lang, "skill.temp_hp", dice=a.temp_hp) + (t(lang, f"skill.plus_{a.heal_add}") if a.heal_add else ""))
+    if a.status:
+        out.append(t(lang, "skill.status", status=t(lang, "status." + a.status), turns=a.status_turns))
+    if a.ac_bonus:
+        out.append(t(lang, "skill.ac", n=a.ac_bonus))
+    if a.ac_bonus_unarmored:
+        out.append(t(lang, "skill.ac_unarmored", n=a.ac_bonus_unarmored))
+    if a.immune:
+        out.append(t(lang, "skill.immune", list=", ".join(t(lang, "status." + s) for s in a.immune)))
+    if a.spell_damage_bonus:
+        out.append(t(lang, "skill.spell_damage_bonus"))
+    if a.sneak_dice:
+        out.append(t(lang, "skill.sneak", list=" · ".join(
+            t(lang, "skill.sneak_level", n=n, level=lvl) for lvl, n in sorted(a.sneak_dice.items()))))
+    if a.extra_attack:
+        out.append(t(lang, "skill.extra_attack"))
+    if a.halve_first_hit:
+        out.append(t(lang, "skill.halve_first_hit"))
+    if a.crit_range:
+        out.append(t(lang, "skill.crit_range", n=a.crit_range))
+    if a.bonus_damage:
+        out.append(t(lang, "skill.bonus_damage", dice=a.bonus_damage, type=dmg(a.bonus_damage_type)))
+    return [escape(line) for line in out]
+
+
+def skill_page(key: str, lang: str, char: Character | None = None) -> tuple[str, InlineKeyboardMarkup]:
+    """/skill_<key>: a class ability in depth (what the engine does with it). Extra Attack is in two classes."""
+    c = get_content()
+    owners = [(ck, cl) for ck, cl in c.classes.items() if key in cl.abilities]
+    if not owners:
+        text, kb = classes_list(lang)
+        return t(lang, "skill.unknown") + "\n\n" + text, kb
+    a = owners[0][1].abilities[key]
+    lines = [f"{ABILITY_ICON.get(a.kind, '✨')} <b>{escape(a.name.get(lang))}</b>",
+             " · ".join(f"{CLASS_ICONS.get(ck, '•')} {escape(cl.name.get(lang))} "
+                        f"({t(lang, 'classes.level', level=cl.abilities[key].level)})" for ck, cl in owners),
+             ability_tags(a, lang), RULE,
+             f"<i>{escape((a.details or a.description).get(lang))}</i>", "",
+             f"<b>{t(lang, 'skill.mechanics')}</b>", *(f"• {line}" for line in ability_mechanics(a, lang))]
+    if char is not None and char.class_key in dict(owners):
+        level = dict(owners)[char.class_key].abilities[key].level
+        lines += ["", t(lang, "skill.yours" if level <= char.level else "skill.locked", level=level)]
+    rows = [[btn(f"{CLASS_ICONS.get(ck, '•')} {cl.name.get(lang)}", cb("cls", ck)) for ck, cl in owners]]
+    return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
 
 
 def level_up_cards(outcome: Outcome, lang: str) -> list[str]:
@@ -97,7 +168,7 @@ def level_up_cards(outcome: Outcome, lang: str) -> list[str]:
                 if a is None:
                     lines.append(escape(render_event(e, lang)))
                 else:
-                    lines += ["", t(lang, "level_card.new"), *ability_block(a, lang)]
+                    lines += ["", t(lang, "level_card.new"), *ability_block(a, lang, key=e.params.get("ability_key"))]
         if cls_key:
             lines += ["", t(lang, "level_card.class", cmd=f"/class_{cls_key}")]
         cards.append("\n".join(lines)[:MAX_MESSAGE])
@@ -701,7 +772,8 @@ async def sheet(session: AsyncSession, char: Character, lang: str) -> tuple[str,
     lines += ["", f"<b>{t(lang, 'sheet.abilities')}</b>"]
     for key, a in cls.abilities.items():
         if a.level <= char.level:
-            lines.append(f"✨ <b>{escape(a.name.get(lang))}</b>{_uses(char, key, a)}: {escape(a.description.get(lang))}")
+            lines.append(f"✨ <b>{escape(a.name.get(lang))}</b>{_uses(char, key, a)}: {escape(a.description.get(lang))}"
+                         f" /skill_{key}")
         else:
             lines.append(f"🔒 <i>{t(lang, 'sheet.locked', level=a.level, name=escape(a.name.get(lang)))}</i>")
 
@@ -948,9 +1020,9 @@ def class_page(key: str, lang: str, char: Character | None = None) -> tuple[str,
     lines.append(t(lang, "classes.items", list=escape(gear)))
 
     lines += [RULE, f"<b>{t(lang, 'classes.abilities')}</b>"]
-    for a in sorted(cl.abilities.values(), key=lambda a: a.level):
+    for akey, a in sorted(cl.abilities.items(), key=lambda kv: kv[1].level):
         mark = ("✅ " if a.level <= char.level else "🔒 ") if mine else ""
-        lines += ["", *ability_block(a, lang, prefix=f"{mark}<b>{t(lang, 'classes.level', level=a.level)}</b> · ")]
+        lines += ["", *ability_block(a, lang, prefix=f"{mark}<b>{t(lang, 'classes.level', level=a.level)}</b> · ", key=akey)]
     if cl.specializations:
         lines += [RULE, t(lang, "classes.specializations"),
                   " · ".join(escape(sp.get(lang)) for sp in cl.specializations.values())]

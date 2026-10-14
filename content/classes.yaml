@@ -18,6 +18,9 @@ paladin:
       uses: 2
       extra_damage: 1d8
       damage_type: radiant
+      details:
+        es: Invocas tu juramento al golpear y el arma arde con luz sagrada. Es tu ataque normal con el arma, pero si acierta suma 1d8 de daño radiante, que hace el doble a los no muertos que temen la luz. Guárdalo para el enemigo que importa.
+        en: You call on your oath as you strike and the weapon burns with holy light. It is your normal weapon attack, but on a hit it adds 1d8 radiant damage, which hits twice as hard on undead that fear the light. Save it for the enemy that matters.
     lay_on_hands:
       name: {es: Imposición de Manos, en: Lay on Hands}
       description: {es: "Acción adicional: recuperas 5 PV por nivel.", en: "Bonus action: recover 5 HP per level."}
@@ -26,6 +29,9 @@ paladin:
       action: bonus
       uses: 1
       heal_per_level: 5
+      details:
+        es: Posas las manos sobre tus heridas y el juramento las cierra. Como es una acción adicional, puedes curarte y atacar en el mismo turno. A nivel 2 recuperas 10 PV; a nivel 5, 25. Se recarga con un descanso.
+        en: You lay your hands on your wounds and your oath closes them. As a bonus action, you can heal and attack in the same turn. At level 2 you recover 10 HP; at level 5, 25. It recharges with a rest.
     aura_of_resolve:
       name: {es: Aura de Resolución, en: Aura of Resolve}
       description: {es: "+1 a la CA e inmunidad al miedo.", en: "+1 AC and immunity to fear."}
@@ -34,6 +40,9 @@ paladin:
       action: none
       ac_bonus: 1
       immune: [frightened]
+      details:
+        es: Tu fe es una muralla. Siempre activa, sin gastar acciones, te da +1 a la CA y hace que el miedo no te afecte, ni el de los gritos de un espectro ni el de un conjuro.
+        en: Your faith is a wall. Always on, with no action needed, it gives you +1 AC and makes you immune to fear, whether from a spectre's wail or a spell.
     extra_attack:
       name: {es: Ataque Extra, en: Extra Attack}
       description: {es: Atacas dos veces con tu acción de ataque., en: You attack twice with your attack action.}

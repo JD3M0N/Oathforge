@@ -637,6 +637,25 @@ async def test_class_pages_from_commands_and_buttons(llm):
     assert "/class_warlock" in p.last[0]
 
 
+async def test_skill_pages(llm):
+    from oathforge.bot.handlers import commands
+
+    p = Player(llm, tg_id=67)
+    await commands.skill(p.update(message="/skill_fireball"), p.ctx)  # no character yet: still works
+    assert "Bola de Fuego" in p.last[0] and "Salvación de DES" in p.last[0] and "Mitad" in p.last[0]
+    await commands.skill(p.update(message="/skill_extra_attack"), p.ctx)  # in two classes
+    assert "Paladín" in p.last[0] and "Guerrero" in p.last[0]
+    await commands.skill(p.update(message="/skill_nope"), p.ctx)
+    assert "no existe" in p.last[0]
+    await create(p)  # a level 1 paladin
+    await commands.skill(p.update(message="/skill_lay_on_hands"), p.ctx)
+    assert "juramento las cierra" in p.last[0] and "5 PV por nivel" in p.last[0] and "🔒" in p.last[0]
+    await commands.classes(p.update(message="/class_paladin"), p.ctx)
+    assert "/skill_lay_on_hands" in p.last[0]
+    await commands.sheet(p.update(message="/sheet"), p.ctx)
+    assert "/skill_consecrated_strike" in p.last[0]
+
+
 async def test_mining_buttons_collect_and_chronicle(llm):
     from oathforge.database.models import WorldActivity
     from oathforge.services import inventory

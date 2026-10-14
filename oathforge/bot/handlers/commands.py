@@ -81,6 +81,18 @@ async def backgrounds(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     await send(update, render.backgrounds_list(lang))
 
 
+SKILL_LINK = re.compile(r"^/skill_([a-z_]+?)(?:@\w+)?$")
+
+
+async def skill(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/skill_<key>: a class ability in depth (tappable from /class_<key>, the level-up card and /sheet)."""
+    async with session_scope() as session:
+        user, char = await load(session, update)
+        lang = context.user_data["lang"] = user.language
+    m = SKILL_LINK.match((update.message.text or "").strip()) if update.message else None
+    await send(update, *render.skill_page(m.group(1) if m else "", lang, char))
+
+
 PROF_LINK = re.compile(r"^/prof_([a-z_]+?)(?:@\w+)?$")
 
 
@@ -147,6 +159,7 @@ def handlers() -> list[BaseHandler]:
         CommandHandler("background", backgrounds),
         CommandHandler("classes", classes),
         MessageHandler(filters.Regex(CLASS_LINK), classes),
+        MessageHandler(filters.Regex(SKILL_LINK), skill),
         CommandHandler("report", _view(_report)),
         CommandHandler("professions", _view(_professions)),
         MessageHandler(filters.Regex(PROF_LINK), profession_guide),

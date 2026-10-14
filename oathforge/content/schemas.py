@@ -104,6 +104,7 @@ class Background(Strict):
 class ClassAbility(Strict):
     name: Text
     description: Text
+    details: Text | None = None  # longer explanation for /skill_<key>
     level: int
     # strike: weapon attack + extra_damage · spell: ranged spell attack for `damage`
     # turn: `damage` + `status` to every enemy of `targets_type` · buff: `status` on self

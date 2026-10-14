@@ -29,7 +29,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 
 - [ ] 🔴 Elegir especialización a nivel 5. *La ficha completa ya muestra la especialización cuando exista; con la cadena de misiones de v0.5.0 se llega a nivel 5 enseguida.*
 - [ ] 🔴 **Tutorial guiado hasta nivel 3**: al llegar a la plaza, «habla con la sargenta»; ella encarga las primeras misiones para explorar el mundo y enseña de forma divertida cada actividad (recolectar, fabricar, cazar, desollar, minar, viajar, descansar). Sustituye a las misiones 1–3 y desbloquea el resto de la cadena.
-- [ ] 🟡 Página de cada habilidad de clase, `/skill_<clave>` (por ejemplo «Imposición de manos»), con más detalle, y enlazada desde `/class_<clase>`, la subida de nivel y `/sheet`.
+- [ ] 🟢 Escribir el texto largo (`details`) de las habilidades de cada clase para `/skill_<clave>` (hoy solo el Paladín).
 - [ ] 🟡 ◐ **Sistema de descanso**: descanso corto en cualquier sitio (recuperar parte de la vida y algunos usos) y largo en posada. *Hecho: descanso gratis en el osario de la cripta (v0.5.0), el tónico del reposo (v0.6.2), descanso largo de 8 h de juego en la posada y «Curar heridas» en la capilla (v0.7.0). Falta: un descanso corto sin poción; decidir si el osario también debe tardar 8 h.*
 - [ ] 🟡 Siguiente clase: Explorador (Mago, Druida y Bardo en v0.4.0; Brujo en v0.4.4).
 - [ ] 🟢 Juramentos con consecuencias, títulos y cicatrices en la ficha.
@@ -124,3 +124,4 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] `/lineage` (o `/race`) y `/background` para consultar las opciones a mitad de la creación, y 12 trasfondos: los 4 básicos como botón y «📜 Más trasfondos…» para el resto (v0.7.8).
 - [x] **Trasfondo propio**: nombre e historia escritos por el jugador, revisados por Gemini (sin insultos, contenido inapropiado ni trampas) y 2 habilidades a elegir (v0.7.9).
 - [x] **`/rulebook`** en el menú y en la bienvenida: tiradas, atributos, CA, PV y dado de golpe, combate, descanso, linajes, trasfondos, clases, oficios y viajes (v0.7.10).
+- [x] Página de cada habilidad de clase, `/skill_<clave>`, con su explicación y «⚙️ Cómo funciona» sacado de los datos del motor, y enlazada desde `/class_<clase>`, la subida de nivel y `/sheet` (v0.7.11).
