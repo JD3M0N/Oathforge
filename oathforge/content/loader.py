@@ -330,7 +330,9 @@ def validate_references(c: Content) -> None:
             errors.append(f"{where}: locked missions need an unlock_stage")
         if quest.objectives and (quest.objective_stage is None or quest.complete_stage is None):
             errors.append(f"{where}: objectives need objective_stage and complete_stage")
-        pools = {"kill": ("monster", c.monsters), "talk": ("npc", c.npcs), "visit": ("location", c.locations)}
+        items, places = ("item", c.items), ("location", {**c.locations, "any": None})
+        pools = {"kill": ("monster", c.monsters), "talk": ("npc", c.npcs), "visit": ("location", c.locations),
+                 "gather": items, "skin": items, "craft": items, "rest": places, "heal": places}
         for obj in quest.objectives:
             need(*pools[obj.kind][:1], obj.target, pools[obj.kind][1], f"{where} objective")
         effect_lists.append((f"{where} rewards", quest.rewards))

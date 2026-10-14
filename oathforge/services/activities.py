@@ -21,7 +21,7 @@ from oathforge.content.schemas import Gathering, Location
 from oathforge.database.models import Character, WorldActivity
 from oathforge.engine import gathering
 from oathforge.i18n import t
-from oathforge.services import characters, combat_service, exploration, inventory
+from oathforge.services import characters, combat_service, exploration, inventory, quests
 from oathforge.services.events import Outcome
 
 KINDS = ("gather", "stay", "track", "rest")
@@ -119,11 +119,14 @@ def _finish(act: WorldActivity, outcome: str, items: dict[str, int], xp: int, no
     act.result = {**(act.result or {}), "outcome": outcome, "items": items, "xp": xp, **extra}
 
 
-async def _give(session: AsyncSession, char: Character, items: dict[str, int], out: Outcome) -> None:
+async def _give(session: AsyncSession, char: Character, items: dict[str, int], out: Outcome,
+                rng: random.Random) -> None:
+    """Gathered items: into the bag, and towards "gather" objectives."""
     c = get_content()
     for key, qty in items.items():
         await inventory.add_item(session, char, key, qty)
         out.add("loot.item", item=c.items[key].name.model_dump(), qty=qty)
+    out.extend(await quests.on_items(session, char, "gather", items, rng))
 
 
 async def claim(session: AsyncSession, char: Character, now: float | None = None) -> Outcome:
@@ -140,7 +143,7 @@ async def claim(session: AsyncSession, char: Character, now: float | None = None
     char.state = "idle"
     if act.kind == "rest":
         _finish(act, "rest", {}, 0, now)
-        return exploration.wake_rested(char)
+        return exploration.wake_rested(char).extend(await quests.advance(session, char, "rest", act.location, rng))
     if act.kind == "track":
         return await _claim_track(session, char, act, loc, rng, now)
 
@@ -159,7 +162,7 @@ async def claim(session: AsyncSession, char: Character, now: float | None = None
         return out.extend(enc_out)
 
     out = Outcome(activity_id=act.id).add(f"activity.done.{act.kind}", place=loc.name.model_dump())
-    await _give(session, char, items, out)
+    await _give(session, char, items, out, rng)
     if roll.bonus:
         out.add("activity.bonus", loot=loot_text(roll.bonus))
     characters.grant_mastery(char, act.skill, roll.xp, out)
@@ -205,6 +208,7 @@ async def skin(session: AsyncSession, char: Character, monster_keys: list[str], 
         out.add("activity.trophies" if trophy else "activity.skinned", loot=loot_text(got))
         for key, qty in got.items():
             await inventory.add_item(session, char, key, qty)
+        out.extend(await quests.on_items(session, char, "skin", got, rng))
     if not trophy:
         characters.grant_mastery(char, "skinning", gathering.SKIN_XP * len(beasts), out)
     return got
@@ -233,7 +237,7 @@ async def on_encounter_end(session: AsyncSession, char: Character, status: str, 
             out.add("activity.stay_half")
         else:
             out.add("activity.stay_lost", loot=loot_text(pending))
-        await _give(session, char, given, out)
+        await _give(session, char, given, out, rng)
         if xp:
             characters.grant_mastery(char, act.skill, xp, out)
         outcome = {"victory": "stay_won", "fled": "stay_fled"}.get(status, "stay_lost")

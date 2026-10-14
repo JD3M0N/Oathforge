@@ -24,6 +24,8 @@
 - Facciones con reputación: Pacto de Plata y Sindicato Carmesí.
 - Rumores: lo que hace un jugador se cuenta en las tabernas de los demás.
 
+- **Objetivos de misión (v0.7.12)**: además de `kill`, `talk` y `visit`, existen `gather`, `skin` y `craft` (el objetivo es un objeto y cuenta la cantidad conseguida recogiendo, desollando o fabricando), `rest` (un descanso largo que termina en ese lugar) y `heal` (la curandera de ese lugar). `rest` y `heal` aceptan `target: any`. Son la base del tutorial.
+
 ## Ideas
 
 - Eventos mundiales encadenados (asedio de bandidos a Crownreach si nadie limpia el camino).

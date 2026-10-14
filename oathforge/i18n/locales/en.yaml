@@ -365,6 +365,11 @@ quest:
     kill: "Defeat: {target}"
     talk: "Talk to {target}"
     visit: "Go to {target}"
+    gather: "Gather: {target}"
+    skin: "Get by skinning: {target}"
+    craft: "Craft: {target}"
+    rest: "Rest at {target}"
+    heal: "Get healed at {target}"
   err:
     unavailable: "That is no longer possible."
 

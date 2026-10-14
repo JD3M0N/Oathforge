@@ -216,4 +216,4 @@ async def cure_wounds(session: AsyncSession, char: Character, rng: random.Random
                         max_hp=char.max_hp)
     if cap < char.max_hp:
         out.add("explore.healed_injured")
-    return out
+    return out.extend(await quests.advance(session, char, "heal", char.location, rng))

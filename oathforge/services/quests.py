@@ -1,6 +1,7 @@
 """Data-driven quests: stages, player actions and triggers from quests.yaml.
 
-Missions add counted objectives (kill / talk / visit) that complete them on their own, and a
+Missions add counted objectives (kill / talk / visit / gather / skin / craft / rest / heal) that complete them
+on their own, and a
 chain: a locked mission opens when the previous one is completed or a flag is set.
 """
 
@@ -84,14 +85,26 @@ def objective_progress(quest: Quest, p: QuestProgress | None) -> list[tuple[Ques
             for i, o in enumerate(quest.objectives)]
 
 
+ANYWHERE = {"es": "cualquier sitio", "en": "anywhere"}
+
+
 def objective_target(obj: QuestObjective) -> dict:
     c = get_content()
-    pool = {"kill": c.monsters, "talk": c.npcs, "visit": c.locations}[obj.kind]
+    if obj.target == "any":
+        return dict(ANYWHERE)
+    pool = {"kill": c.monsters, "talk": c.npcs, "visit": c.locations, "gather": c.items, "skin": c.items,
+            "craft": c.items, "rest": c.locations, "heal": c.locations}[obj.kind]
     return pool[obj.target].name.model_dump()
 
 
-async def advance(session: AsyncSession, char: Character, kind: str, target: str, rng: random.Random) -> Outcome:
-    """Count a kill / talk / visit towards active missions; completing one gives its rewards."""
+def _matches(obj: QuestObjective, kind: str, target: str) -> bool:
+    return obj.kind == kind and (obj.target == target or (obj.target == "any" and kind in ("rest", "heal")))
+
+
+async def advance(session: AsyncSession, char: Character, kind: str, target: str, rng: random.Random,
+                  amount: int = 1) -> Outcome:
+    """Count a kill / talk / visit (or `amount` items gathered, skinned or crafted, a rest, a heal) towards
+    active missions; completing one gives its rewards."""
     out = Outcome()
     prog = await ensure_progress(session, char)
     for qkey, quest in ordered_quests():
@@ -101,8 +114,8 @@ async def advance(session: AsyncSession, char: Character, kind: str, target: str
         counters = dict(p.counters or {})
         hit = None
         for i, obj in enumerate(quest.objectives):
-            if obj.kind == kind and obj.target == target and int(counters.get(str(i), 0)) < obj.count:
-                counters[str(i)] = int(counters.get(str(i), 0)) + 1
+            if _matches(obj, kind, target) and int(counters.get(str(i), 0)) < obj.count:
+                counters[str(i)] = min(obj.count, int(counters.get(str(i), 0)) + amount)
                 hit = (obj, counters[str(i)])
         if hit is None:
             continue
@@ -124,6 +137,16 @@ async def on_talk(session: AsyncSession, char: Character, npc: str, rng: random.
 
 async def on_visit(session: AsyncSession, char: Character, location: str, rng: random.Random) -> Outcome:
     return await advance(session, char, "visit", location, rng)
+
+
+async def on_items(session: AsyncSession, char: Character, kind: str, items: dict[str, int],
+                   rng: random.Random) -> Outcome:
+    """Items gathered, skinned or crafted (kind) count towards objectives, by quantity."""
+    out = Outcome()
+    for key, qty in items.items():
+        if qty > 0:
+            out.extend(await advance(session, char, kind, key, rng, amount=qty))
+    return out
 
 
 async def available_actions(

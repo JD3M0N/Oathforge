@@ -365,6 +365,11 @@ quest:
     kill: "Derrota: {target}"
     talk: "Habla con {target}"
     visit: "Ve a {target}"
+    gather: "Recoge: {target}"
+    skin: "Consigue desollando: {target}"
+    craft: "Fabrica: {target}"
+    rest: "Descansa en {target}"
+    heal: "Cúrate en {target}"
   err:
     unavailable: "Eso ya no es posible."
 

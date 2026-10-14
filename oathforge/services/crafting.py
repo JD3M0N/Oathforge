@@ -3,13 +3,15 @@
 The request only carries a recipe id; ingredients, outputs and XP always come from content/recipes.yaml.
 """
 
+import random
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from oathforge.content import get_content
 from oathforge.content.schemas import Recipe
 from oathforge.database.models import Character
 from oathforge.i18n import t
-from oathforge.services import characters, inventory, professions
+from oathforge.services import characters, inventory, professions, quests
 from oathforge.services.events import Outcome
 
 LOW_RANK_GAP = 2  # a recipe this many ranks below yours gives half XP
@@ -34,7 +36,7 @@ async def missing(session: AsyncSession, char: Character, recipe: Recipe) -> dic
     return out
 
 
-async def craft(session: AsyncSession, char: Character, recipe_key: str) -> Outcome:
+async def craft(session: AsyncSession, char: Character, recipe_key: str, rng: random.Random | None = None) -> Outcome:
     if refusal := characters.ensure_free(char):
         return refusal
     c = get_content()
@@ -62,6 +64,7 @@ async def craft(session: AsyncSession, char: Character, recipe_key: str) -> Outc
         out.add("craft.made", item=c.items[item].name.model_dump(), qty=qty)
     xp = recipe.xp // 2 if rank - recipe.min_rank >= LOW_RANK_GAP else recipe.xp
     professions.grant_xp(char, recipe.profession, xp, out)
+    out.extend(await quests.on_items(session, char, "craft", recipe.outputs, rng or random.Random()))
     return out
 
 

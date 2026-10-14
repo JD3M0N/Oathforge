@@ -4,6 +4,17 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.12] - 2026-10-14
+
+### Añadido
+- Objetivos de misión nuevos:
+  - `gather`, `skin` y `craft`: un objeto, y cuenta la cantidad conseguida al recoger (también lo que se salva de una emboscada), al desollar (también los trofeos de un rastreo) o al fabricar;
+  - `rest`: un descanso largo que termina en ese lugar;
+  - `heal`: curarse con la curandera de ese lugar.
+
+  `rest` y `heal` aceptan `target: any`. El diario los muestra como «Recoge», «Consigue desollando», «Fabrica», «Descansa en» y «Cúrate en». Son la base del tutorial de la próxima versión.
+- La validación del contenido comprueba que el objetivo de cada misión existe.
+
 ## [0.7.11] - 2026-10-14
 
 ### Añadido

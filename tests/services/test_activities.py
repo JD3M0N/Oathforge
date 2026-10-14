@@ -318,3 +318,79 @@ async def test_saved_fallback_survives_catalog_change_without_repaying(llm, monk
         after = (char.gold, char.xp, char.hp,
                  sorted((item.item_key, item.qty) for item in await inventory.items_of(session, char)))
         assert before == after
+
+
+# ---------------------------------------------------------------- mission objectives for every activity
+
+@pytest.fixture
+def errands(monkeypatch):
+    """A mission that asks for one of each new objective kind (the tutorial is built from them)."""
+    from oathforge.content import get_content
+    from oathforge.content.schemas import Quest
+
+    quest = Quest.model_validate({
+        "order": 99, "giver": "bram", "name": {"es": "Recados", "en": "Errands"},
+        "summary": {"es": "-", "en": "-"}, "start_stage": "active", "objective_stage": "active",
+        "complete_stage": "done", "rewards": [{"xp": 10}],
+        "objectives": [{"kind": "gather", "target": "iron_ore", "count": 50},
+                       {"kind": "skin", "target": "boar_hide", "count": 50},
+                       {"kind": "craft", "target": "healing_potion"},
+                       {"kind": "heal", "target": "any"},
+                       {"kind": "rest", "target": "broken_crown_tavern"}],
+        "stages": {"active": {"journal": {"es": "-", "en": "-"}},
+                   "done": {"state": "completed", "journal": {"es": "Hecho.", "en": "Done."}}},
+    })
+    monkeypatch.setitem(get_content().quests, "errands", quest)
+    return quest
+
+
+async def test_every_activity_counts_towards_missions(errands):
+    from oathforge.services import crafting, professions, quests
+
+    cid = await new_character(tools=("pickaxe", "skinning_knife"))
+    now = time.time()
+    rng = random.Random(3)
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        assert (await activities.start(s, char, "gather", "mining", now)).ok
+        await activities.claim(s, char, now + LATER)
+        ore = await inventory.count(s, char, "iron_ore")
+        await activities.skin(s, char, ["boar", "boar", "boar"], rng, Outcome())
+        hides = await inventory.count(s, char, "boar_hide")
+        counters = (await quests.progress(s, char))["errands"].counters
+        assert int(counters.get("0", 0)) == ore and int(counters.get("1", 0)) == hides and ore + hides > 0
+
+        char.location, char.gold = "crownreach_workshops", 50
+        await professions.learn(s, char, "alchemy")
+        await inventory.add_item(s, char, "bloodroot", 2)
+        await inventory.add_item(s, char, "water_flask", 1)
+        assert (await crafting.craft(s, char, "healing_potion", rng)).ok
+        char.location, char.hp = "crownreach_chapel", 1
+        assert (await exploration.cure_wounds(s, char, rng)).ok
+        counters = (await quests.progress(s, char))["errands"].counters
+        assert counters["2"] == 1 and counters["3"] == 1
+
+        char.location = "broken_crown_tavern"
+        assert (await activities.start(s, char, "rest", "rest", now)).ok
+        out = await activities.claim(s, char, now + 2 * 3600)
+        prog = (await quests.progress(s, char))["errands"]
+        assert prog.counters["4"] == 1 and prog.state == "active"  # the 50 ore and hides are still missing
+        assert any(e.key == "explore.rested" for e in out.events)
+
+
+async def test_completing_item_objectives_caps_the_count(errands):
+    from oathforge.services import quests
+
+    cid = await new_character()
+    rng = random.Random(1)
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        await quests.on_items(s, char, "gather", {"iron_ore": 70, "coal": 3}, rng)
+        await quests.on_items(s, char, "skin", {"boar_hide": 50}, rng)
+        await quests.on_items(s, char, "craft", {"healing_potion": 2}, rng)
+        await quests.advance(s, char, "heal", "crownreach_chapel", rng)
+        xp = char.xp
+        out = await quests.advance(s, char, "rest", "broken_crown_tavern", rng)
+        prog = (await quests.progress(s, char))["errands"]
+        assert prog.state == "completed" and prog.counters["0"] == 50 and prog.counters["2"] == 1
+        assert char.xp == xp + 10 and any(e.key == "text" for e in out.events)

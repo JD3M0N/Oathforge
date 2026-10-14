@@ -235,7 +235,7 @@ async def _dispatch(session, char, verb: str, arg: str, r, context) -> Outcome:
         key, _, old = arg.partition(":")
         return await professions.learn(session, char, key, old or None)
     if verb == "craft":
-        return await crafting.craft(session, char, arg)
+        return await crafting.craft(session, char, arg, r)
     if verb == "qa":
         return await quests.perform(session, char, arg, present, r)
     if verb == "eq":
