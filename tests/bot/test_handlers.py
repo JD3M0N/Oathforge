@@ -430,6 +430,28 @@ async def test_lineage_and_background_help_during_creation(llm):
     assert char.background == "sailor" and char.gold == 10
 
 
+async def test_rulebook_from_the_welcome_and_the_menu(llm):
+    from oathforge.bot.handlers import commands
+    from oathforge.main import MENU_COMMANDS
+
+    assert "rulebook" in MENU_COMMANDS
+    p = Player(llm, tg_id=66)
+    await creation.start(p.update(message="/start"), p.ctx)
+    welcome = p.chat.sent[-2]
+    assert "/rulebook" in welcome[0] and welcome[1].inline_keyboard[0][0].callback_data.startswith("rb|")
+    await p.press(p.chat.sent[-2][1].inline_keyboard[0][0].callback_data)  # no character yet: still works
+    assert "Reglamento" in p.last[0]
+    await p.press(p.find("rb", "armor"))
+    assert "CA" in p.last[0] and "10 + DES" in p.last[0]
+    await p.press(p.find("rb", "health"))  # ▶ goes to the next section
+    assert "dado de golpe" in p.last[0]
+    await p.press(p.find("rb", "index"))
+    await p.press(p.find("rb", "abilities"))
+    assert "🫀" in p.last[0] and "Constitución" in p.last[0]
+    await commands.rulebook(p.update(message="/rulebook"), p.ctx)
+    assert "Reglamento" in p.last[0] and p.find("rb", "travel")
+
+
 async def test_custom_background_is_reviewed_and_picks_two_skills(llm):
     from oathforge.bot.handlers import commands
 

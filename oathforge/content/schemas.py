@@ -398,6 +398,13 @@ class Profession(Strict):
     guide: Text | None = None  # how to play it, for /prof_<key>
 
 
+class RuleSection(Strict):
+    """A page of /rulebook (content/rulebook.yaml)."""
+    icon: str
+    title: Text
+    body: Text  # plain text: it is escaped; /commands in it stay tappable
+
+
 class Recipe(Strict):
     profession: str
     min_rank: int = Field(0, ge=0, le=5)

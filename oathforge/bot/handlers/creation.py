@@ -42,7 +42,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         return ConversationHandler.END
     context.user_data["lang"] = lang
     context.user_data["new"] = {}
-    await send(update, t(lang, "create.welcome"))
+    await send(update, t(lang, "create.welcome"), markup([[btn(t(lang, "btn.rulebook"), cb("rb", "index"))]]))
     await send(update, t(lang, "create.ask_name"))
     return NAME
 

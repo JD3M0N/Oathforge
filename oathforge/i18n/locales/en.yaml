@@ -15,6 +15,7 @@ cmd:
   classes: "Classes and their abilities"
   report: "Report of the last battle"
   professions: "Professions and masteries"
+  rulebook: "Rulebook: how the game works"
   settings: "Settings: language and manual rolls"
   language: "Change language"
   help: "How to play"
@@ -56,6 +57,8 @@ create:
     ⚔️ <b>Welcome to Aetherfall.</b>
 
     A world that existed before you and will go on after you leave. Taverns remember, factions scheme, and your deeds leave marks.
+
+    📖 New to the game? The /rulebook explains rolls, AC, hit points, classes and everything you can do.
   ask_name: "What is your character's name? (2–24 letters)"
   bad_name: "That name won't do. Use 2 to 24 letters, spaces, apostrophes or hyphens."
   ask_gender: "<b>{name}</b>, is your character a man or a woman? It sets their portrait and how the world speaks to them."
@@ -106,6 +109,7 @@ create:
   custom_skills_full: "You already have {n}: tap one to drop it."
 
 btn:
+  rulebook: "📖 Rulebook"
   full_sheet: "📜 Full sheet"
   report: "📜 Report"
   summary: "📜 Summary"
@@ -537,6 +541,11 @@ creature:
   beast: "Beast"
   undead: "Undead"
   humanoid: "Humanoid"
+
+rulebook:
+  title: "📖 <b>Rulebook of Aetherfall</b>"
+  intro: "What you need to play, one section at a time. Tap one to open it."
+  index: "📖 Index"
 
 lineages:
   title: "🧬 <b>Lineages of Aetherfall</b>"

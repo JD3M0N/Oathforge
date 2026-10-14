@@ -27,6 +27,7 @@ from oathforge.content.schemas import (
     Profession,
     Quest,
     Recipe,
+    RuleSection,
     Skill,
     Text,
     Zone,
@@ -61,7 +62,8 @@ class Content:
     # generic texts when Gemini is down or out of budget: content/fallbacks/<category>.yaml -> key -> texts
     fallbacks: dict[str, dict[str, list[Text]]] = field(default_factory=dict)
     professions: dict[str, Profession] = field(default_factory=dict)
-    recipes: dict[str, Recipe] = field(default_factory=dict)  # outcome -> generic texts when the AI chronicler is not used
+    recipes: dict[str, Recipe] = field(default_factory=dict)
+    rulebook: dict[str, RuleSection] = field(default_factory=dict)  # /rulebook pages, in order  # outcome -> generic texts when the AI chronicler is not used
 
 
 def _read_fallbacks(directory: Path) -> dict[str, dict[str, list[Text]]]:
@@ -166,6 +168,7 @@ def load_content(directory: Path = CONTENT_DIR) -> Content:
         fallbacks=fallbacks,
         professions=_parse(Profession, _read(directory, "professions")),
         recipes=_parse(Recipe, _read(directory, "recipes")),
+        rulebook=_parse(RuleSection, _read(directory, "rulebook")),
     )
     validate_references(content)
     return content

@@ -1,0 +1,153 @@
+# /rulebook: one page per section, in this order. Plain text (it is escaped); /commands stay tappable.
+# A new section is just a new entry here.
+
+dice:
+  icon: "🎲"
+  title: {es: Tiradas y dificultad, en: Rolls and difficulty}
+  body:
+    es: |-
+      Casi todo se decide con un d20, un dado de 20 caras: d20 + tu bonificador contra una dificultad (CD). Si igualas o superas la CD, lo consigues.
+      • CD 5 trivial · 10 fácil · 13 normal · 16 difícil · 19 muy difícil.
+      • Tu bonificador = el modificador del atributo + tu competencia si dominas esa habilidad (+2 a nivel 1, +3 a nivel 5).
+      • Con ventaja tiras dos d20 y te quedas el mayor; con desventaja, el menor.
+      • Un 20 natural en un ataque es un crítico (dobla los dados de daño); un 1 natural siempre falla.
+      Cada prueba de habilidad se intenta una vez al día en cada lugar. Las tiradas las hace siempre el motor del juego, nunca la IA.
+    en: |-
+      Almost everything is decided with a d20, a twenty-sided die: d20 + your bonus against a difficulty class (DC). Meet or beat the DC and you succeed.
+      • DC 5 trivial · 10 easy · 13 normal · 16 hard · 19 very hard.
+      • Your bonus = the ability modifier + your proficiency if you are trained in that skill (+2 at level 1, +3 at level 5).
+      • With advantage you roll two d20 and keep the higher; with disadvantage, the lower.
+      • A natural 20 on an attack is a critical hit (damage dice doubled); a natural 1 always misses.
+      Each skill check can be tried once a day in each place. Rolls are always made by the game engine, never by the AI.
+
+abilities:
+  icon: "⚖️"
+  title: {es: Atributos y modificadores, en: Abilities and modifiers}
+  body:
+    es: |-
+      Seis atributos describen a tu héroe. Cada uno da un modificador: (atributo − 10) ÷ 2, redondeando hacia abajo. 10 da +0, 14 da +2, 16 da +3, 8 da −1.
+      Se reparten al crear el personaje con 27 puntos (como en D&D) más el bonificador de tu linaje. A nivel 4, tu atributo principal sube +2.
+    en: |-
+      Six abilities describe your hero. Each gives a modifier: (score − 10) ÷ 2, rounded down. 10 gives +0, 14 gives +2, 16 gives +3, 8 gives −1.
+      You assign them at creation with 27 points (as in D&D) plus your lineage bonus. At level 4 your primary ability rises by +2.
+
+armor:
+  icon: "🛡️"
+  title: {es: Clase de armadura (CA), en: Armor class (AC)}
+  body:
+    es: |-
+      La CA mide lo difícil que es acertarte. Un ataque acierta si d20 + bonificador de ataque iguala o supera tu CA.
+      • Sin armadura: 10 + DES. Con armadura: su valor + DES, con un tope según la armadura (las pesadas no suman DES).
+      • Un escudo suma +2, y algunas habilidades de clase también suben la CA.
+      En el combate verás la 🛡️ CA de cada combatiente; la tuya está en /hero.
+    en: |-
+      AC measures how hard you are to hit. An attack hits if d20 + attack bonus meets or beats your AC.
+      • No armor: 10 + DEX. With armor: its value + DEX, capped by the armor (heavy armor adds no DEX).
+      • A shield adds +2, and some class abilities raise AC too.
+      In combat you see each fighter's 🛡️ AC; yours is in /hero.
+
+health:
+  icon: "❤️"
+  title: {es: Puntos de vida y dado de golpe, en: Hit points and hit die}
+  body:
+    es: |-
+      Los puntos de vida (PV) son el aguante de tu héroe. A 0 PV caes derrotado: despiertas en un lugar seguro con la mitad de la vida, herido (hasta un descanso largo) y con un 10 % menos de oro.
+      El dado de golpe depende de la clase (d6 para el Mago, d10 para el Paladín…). A nivel 1 tienes el máximo del dado + tu modificador de CON; cada nivel suma la mitad del dado + 1 + CON.
+      Por eso la Constitución importa a todas las clases.
+    en: |-
+      Hit points (HP) are your hero's staying power. At 0 HP you are defeated: you wake up somewhere safe at half HP, injured (until a long rest) and with 10% less gold.
+      The hit die depends on the class (d6 for the Mage, d10 for the Paladin…). At level 1 you get the die's maximum + your CON modifier; each level adds half the die + 1 + CON.
+      That is why Constitution matters to every class.
+
+combat:
+  icon: "⚔️"
+  title: {es: Combate, en: Combat}
+  body:
+    es: |-
+      El combate es por turnos, en el orden de la iniciativa (d20 + DES). En tu turno tienes una acción (atacar, una habilidad de clase, usar un objeto) y a veces una acción adicional.
+      • Las habilidades tienen usos por descanso; los ves en los botones.
+      • «🎒 Objetos»: pociones, pergaminos y bombas.
+      • Huir es una prueba de Atletismo o Acrobacias contra CD 10 + 2 por enemigo; si falla, pierdes el turno.
+      Al acabar, «📜 Informe» (o /report) cuenta la batalla tirada a tirada.
+    en: |-
+      Combat is turn-based, in initiative order (d20 + DEX). On your turn you get one action (attack, a class ability, use an item) and sometimes a bonus action.
+      • Abilities have uses per rest; the buttons show them.
+      • "🎒 Items": potions, scrolls and bombs.
+      • Fleeing is an Athletics or Acrobatics check against DC 10 + 2 per enemy; if it fails, you lose the turn.
+      Afterwards, "📜 Report" (or /report) tells the battle roll by roll.
+
+rest:
+  icon: "🛌"
+  title: {es: Descanso y curación, en: Rest and healing}
+  body:
+    es: |-
+      • Descanso largo en la posada de La Corona Rota: 5 de oro y 8 horas de juego (80 minutos reales). Recuperas toda la vida y los usos de tus habilidades, y se curan las heridas graves.
+      • «Curar heridas» en la Capilla del Alba: 3 de oro, al momento.
+      • Las pociones de curación y el tónico del reposo ayudan fuera de la ciudad.
+      En el juego también pasan el día y la noche: algunas criaturas solo salen de noche.
+    en: |-
+      • Long rest at the Broken Crown inn: 5 gold and 8 game hours (80 real minutes). You recover all your HP and ability uses, and grave wounds heal.
+      • "Heal wounds" at the Chapel of Dawn: 3 gold, right away.
+      • Healing potions and the rest draught help outside the city.
+      The game also has day and night: some creatures only come out at night.
+
+lineages:
+  icon: "🧬"
+  title: {es: Linajes, en: Lineages}
+  body:
+    es: |-
+      Tu linaje (humano, elfo, enano, orco) suma puntos a tus atributos y te da un rasgo propio, como los sentidos agudos del elfo o la resistencia implacable del orco.
+      Todos los linajes con sus bonificadores: /lineage
+    en: |-
+      Your lineage (human, elf, dwarf, orc) adds points to your abilities and gives you a trait of its own, like the elf's keen senses or the orc's relentless endurance.
+      Every lineage with its bonuses: /lineage
+
+backgrounds:
+  icon: "📜"
+  title: {es: Trasfondos, en: Backgrounds}
+  body:
+    es: |-
+      Tu trasfondo es quién eras antes de la aventura: te da 2 habilidades dominadas, oro inicial y algo de equipo. También puedes escribir el tuyo propio al crear el personaje.
+      Todos los trasfondos: /background
+    en: |-
+      Your background is who you were before adventuring: it gives you 2 trained skills, starting gold and some gear. You can also write your own when creating your character.
+      Every background: /background
+
+classes:
+  icon: "📚"
+  title: {es: Clases, en: Classes}
+  body:
+    es: |-
+      La clase decide cómo luchas: tu dado de golpe, tu atributo principal, tus habilidades por nivel y, a nivel 5, una especialización.
+      Guerrero y Paladín aguantan en primera línea, el Pícaro golpea desde las sombras, Mago, Brujo y Druida lanzan conjuros, Sacerdote y Bardo cuidan del grupo.
+      Todas las clases y sus habilidades: /classes
+    en: |-
+      Your class decides how you fight: your hit die, your primary ability, your abilities by level and, at level 5, a specialization.
+      Warrior and Paladin hold the front line, the Rogue strikes from the shadows, Mage, Warlock and Druid cast spells, Priest and Bard look after the party.
+      Every class and its abilities: /classes
+
+professions:
+  icon: "⛏️"
+  title: {es: Recolección y oficios, en: Gathering and crafts}
+  body:
+    es: |-
+      Fuera de la ciudad puedes minar, talar, recoger hierbas, pescar y rastrear presas. Son actividades con tiempo: vuelves con materiales y una crónica de lo que pasó, y a veces con una emboscada.
+      Con los materiales fabricas en el Barrio de Oficios: armas, pociones, pergaminos o bombas. Tienes 2 oficios activos; Cocina y Pesca son aficiones sin plaza.
+      Tus oficios y maestrías: /professions
+    en: |-
+      Outside the city you can mine, chop wood, gather herbs, fish and track prey. They take time: you come back with materials and a chronicle of what happened, and sometimes with an ambush.
+      With the materials you craft in the Crafts Quarter: weapons, potions, scrolls or bombs. You have 2 active professions; Cooking and Fishing are hobbies that take no slot.
+      Your professions and masteries: /professions
+
+travel:
+  icon: "🧭"
+  title: {es: Viajar y explorar, en: Travel and explore}
+  body:
+    es: |-
+      En la ciudad vas directo a cualquier lugar. Para salir, pasa por la plaza. Fuera se avanza tramo a tramo, y cada camino con ⚠️ puede traer una emboscada.
+      El mapa enseña dónde estás, a dónde puedes ir, cuánto tardas y qué se puede hacer en cada lugar: /map
+      Los botones cubren lo habitual, pero también puedes escribir lo que quieras hacer («me escondo tras la barra y escucho»): la IA lo interpreta y el motor decide qué pasa.
+    en: |-
+      In the city you go straight anywhere. To leave it, go through the plaza. Outside you move leg by leg, and every road with ⚠️ may bring an ambush.
+      The map shows where you are, where you can go, how long it takes and what you can do in each place: /map
+      Buttons cover the usual, but you can also type whatever you want to do ("I hide behind the bar and listen"): the AI interprets it and the engine decides what happens.

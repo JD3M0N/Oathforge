@@ -27,7 +27,7 @@ log = logging.getLogger(__name__)
 
 # verbs that only show something (no nonce, no state change)
 VIEWS = {"scene", "trv", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jq", "jrb", "jb", "jbi", "jrr",
-         "shopm", "shop", "sellm", "cbp", "lang", "city", "cls", "clsl", "rep", "prof", "profsw", "profcf", "pg", "crf"}
+         "shopm", "shop", "sellm", "cbp", "lang", "city", "cls", "clsl", "rep", "prof", "profsw", "profcf", "pg", "crf", "rb"}
 
 
 async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -65,6 +65,9 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             if char is None:
                 await edit_or_send(update, t(lang, "lang.changed"))
                 return
+        if verb == "rb":  # the rulebook too (it is offered in the very first message)
+            await edit_or_send(update, *render.rulebook(lang, arg))
+            return
         if verb in ("cls", "clsl"):  # class pages work without a character too
             text, kb = render.class_page(arg, lang, char) if verb == "cls" else render.classes_list(lang)
             await edit_or_send(update, text, kb)

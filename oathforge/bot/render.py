@@ -845,6 +845,29 @@ def _rewards_line(effects: list[dict], lang: str) -> str:
     return " · ".join(escape(p) for p in parts)
 
 
+# ---------------------------------------------------------------- rulebook
+
+def rulebook(lang: str, key: str | None = None) -> tuple[str, InlineKeyboardMarkup]:
+    """/rulebook: an index of sections as buttons; each section a page with ◀ ▶ (edits the same message)."""
+    c = get_content()
+    keys = list(c.rulebook)
+    if key not in c.rulebook:
+        lines = [t(lang, "rulebook.title"), RULE, t(lang, "rulebook.intro"), ""]
+        lines += [f"{sec.icon} {escape(sec.title.get(lang))}" for sec in c.rulebook.values()]
+        buttons = [btn(f"{sec.icon} {sec.title.get(lang)}", cb("rb", k)) for k, sec in c.rulebook.items()]
+        return "\n".join(lines)[:MAX_MESSAGE], markup(grid(buttons))
+    sec = c.rulebook[key]
+    lines = [f"{sec.icon} <b>{escape(sec.title.get(lang))}</b>", RULE, escape(sec.body.get(lang))]
+    if key == "abilities":  # the six abilities and what each is for, straight from abilities.yaml
+        lines.append("")
+        lines += [f"{a.icon} <b>{escape(a.name.get(lang))}</b>: {escape(a.effect.get(lang))}" for a in c.abilities.values()]
+    i = keys.index(key)
+    nav = [btn(f"◀ {c.rulebook[keys[i - 1]].icon}", cb("rb", keys[i - 1])) if i > 0 else None,
+           btn(t(lang, "rulebook.index"), cb("rb", "index")),
+           btn(f"{c.rulebook[keys[i + 1]].icon} ▶", cb("rb", keys[i + 1])) if i + 1 < len(keys) else None]
+    return "\n".join(lines)[:MAX_MESSAGE], markup([[b for b in nav if b]])
+
+
 # ---------------------------------------------------------------- lineages and backgrounds
 
 def lineages_list(lang: str) -> str:

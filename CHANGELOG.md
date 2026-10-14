@@ -4,6 +4,26 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.10] - 2026-10-14
+
+### Añadido
+- `/rulebook` (alias `/rules`) en el menú de Telegram. Es un reglamento con un índice de botones y una página por sección, con ◀ ▶ para pasar de una a otra:
+  - tiradas y dificultad;
+  - atributos y modificadores, con la lista de los seis;
+  - CA;
+  - puntos de vida y dado de golpe;
+  - combate;
+  - descanso y curación;
+  - linajes, trasfondos y clases;
+  - recolección y oficios;
+  - viajar.
+
+  Funciona sin personaje.
+- Los textos del reglamento están en `content/rulebook.yaml` (es/en). Añadir una sección nueva solo pide añadir una entrada.
+
+### Cambiado
+- La bienvenida de `/start` invita a leer el `/rulebook` y trae el botón «📖 Reglamento».
+
 ## [0.7.9] - 2026-10-14
 
 ### Añadido
