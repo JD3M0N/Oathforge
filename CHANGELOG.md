@@ -4,6 +4,11 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.4] - 2026-10-14
+
+### Cambiado
+- Prompts de Leonardo AI anotados en su `.prompt.md`: las 10 criaturas del bestiario, la barda, los retratos de Guerrero, Pícaro, Sacerdote y Paladín (el mismo prompt para hombre y mujer) y la panorámica de Crownreach. Faltan Mago, Druida, Brujo y el bardo.
+
 ## [0.7.3] - 2026-10-14
 
 ### Añadido
