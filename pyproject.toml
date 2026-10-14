@@ -16,6 +16,7 @@ dependencies = [
 
 [project.scripts]
 oathforge = "oathforge.cli:main"
+oath = "oathforge.cli:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "pytest-asyncio>=0.23", "aiosqlite>=0.20", "pillow>=10", "telethon>=1.36"]

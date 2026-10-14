@@ -46,11 +46,12 @@ Antes de editar nada, comprueba la rama (`git branch --show-current`) y el usuar
 
 ```powershell
 .venv\Scripts\python -m pytest          # tests (Postgres si TEST_DATABASE_URL conecta; si no, SQLite)
-.venv\Scripts\oathforge bot            # arrancar el bot
-.venv\Scripts\oathforge reset-players   # borrar jugadores (--yes para confirmar)
+.venv\Scripts\oath bot                 # arrancar el bot
+.venv\Scripts\oath reset-players       # borrar todos los jugadores (--yes para confirmar)
+.venv\Scripts\oath delete-player Aldric # borrar un jugador por nombre o id de Telegram (--yes para confirmar)
 .venv\Scripts\alembic upgrade head      # migraciones
-.venv\Scripts\oathforge simulate --level 1-5   # simulador de combates para el balance
-.venv\Scripts\oathforge tgtest send "/start"   # jugar con el bot desde la cuenta de prueba (también press, show)
+.venv\Scripts\oath simulate --level 1-5   # simulador de combates para el balance
+.venv\Scripts\oath tgtest send "/start"   # jugar con el bot desde la cuenta de prueba (también press, show)
 ```
 
-`oathforge help` lista los comandos de consola (`oathforge/cli.py`); si añades uno, añádelo a `COMMANDS`.
+`oath help` lista los comandos de consola (`oathforge/cli.py`; `oathforge` es el nombre largo); si añades uno, añádelo a su grupo en `COMMANDS`.

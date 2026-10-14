@@ -4,6 +4,16 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.5] - 2026-10-14
+
+### Añadido
+- Comando corto `oath` (mismo que `oathforge`, que sigue funcionando). Tras actualizar, `.venv\Scripts\pip install -e .` lo instala.
+- `oath delete-player [id|nombre] [--yes]`: borra un solo jugador y todo lo suyo (personaje, objetos, combates, memorias de NPC, misiones…). Sin argumentos lista los jugadores; sin `--yes` solo muestra qué borraría. Los objetos que fabricó y tienen otros se quedan (sin autor) y el registro de acciones se conserva anónimo. Lógica en `oathforge/services/admin.py`.
+
+### Cambiado
+- `oath help` más limpio: comandos agrupados (Bot, Jugadores, Pruebas, Ayuda), con `oath` delante, descripciones de una línea alineadas y una nota sobre `--yes`.
+- Mensajes de `reset-players` en español.
+
 ## [0.7.4] - 2026-10-14
 
 ### Cambiado

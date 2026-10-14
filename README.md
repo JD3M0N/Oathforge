@@ -41,9 +41,9 @@ Qué cambió en cada versión está en [CHANGELOG.md](CHANGELOG.md); aquí solo 
    ```
 5. **Jugar**
    ```powershell
-   .venv\Scripts\oathforge bot
+   .venv\Scripts\oath bot
    ```
-   Abre tu bot en Telegram y escribe `/start`. `.venv\Scripts\oathforge help` lista todos los comandos de consola (con el venv activado basta `oathforge help`).
+   Abre tu bot en Telegram y escribe `/start`. `.venv\Scripts\oath help` lista todos los comandos de consola (con el venv activado basta `oath help`; `oathforge` es el nombre largo).
 
 ## Tests
 
@@ -103,9 +103,9 @@ Las misiones son máquinas de estados: `stages`, `actions` (botones o acciones l
   - `events/<día>.jsonl` (todo en crudo, incluidos los cambios de estado), `errors/<día>.log` y `logs/<día>.log` (avisos).
   - Cada cambio de estado (PV, oro, objetos, misiones, memorias de PNJ, acciones de botón…) aparece también como «⚙️ estado» dentro de la conversación.
   - Se desactiva con `ARTIFACTS_ENABLED=false` en `.env`.
-- **Ronda de pruebas limpia:** para el bot y ejecuta `.venv\Scripts\oathforge reset-players --yes` (sin `--yes` solo muestra qué borraría).
-- **Probar desde Telegram:** `.venv\Scripts\oathforge tgtest send "/start"` y `tgtest press "Investigar"` juegan con el bot desde una cuenta de prueba (Telethon). Configuración y login en `oathforge/tools/tgtest.py`. En Git Bash, exporta `MSYS_NO_PATHCONV=1` para que `/start` no se convierta en una ruta.
-- **Balance:** `.venv\Scripts\oathforge simulate --level 1-5` lanza 200 combates por clase × enemigo × nivel (sin base de datos ni IA) y guarda la tabla en `artifacts/simulations/` (JSON y CSV). Opciones: `--classes`, `--monsters` (grupos con `+`, p. ej. `bandit+bandit`), `--n`, `--seed`, `--no-abilities`.
+- **Ronda de pruebas limpia:** para el bot y ejecuta `.venv\Scripts\oath reset-players --yes` (sin `--yes` solo muestra qué borraría). Para borrar a un solo jugador, `oath delete-player <nombre|id> --yes`; sin argumentos lista los jugadores.
+- **Probar desde Telegram:** `.venv\Scripts\oath tgtest send "/start"` y `tgtest press "Investigar"` juegan con el bot desde una cuenta de prueba (Telethon). Configuración y login en `oathforge/tools/tgtest.py`. En Git Bash, exporta `MSYS_NO_PATHCONV=1` para que `/start` no se convierta en una ruta.
+- **Balance:** `.venv\Scripts\oath simulate --level 1-5` lanza 200 combates por clase × enemigo × nivel (sin base de datos ni IA) y guarda la tabla en `artifacts/simulations/` (JSON y CSV). Opciones: `--classes`, `--monsters` (grupos con `+`, p. ej. `bandit+bandit`), `--n`, `--seed`, `--no-abilities`.
 
 ## Canales de Telegram
 
