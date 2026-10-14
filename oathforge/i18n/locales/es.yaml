@@ -121,6 +121,7 @@ btn:
   make: "🔨 {item}"
   missions: "📜 Misiones"
   bestiary: "📖 Bestiario"
+  creature_art: "🖼️ Ver ilustración"
   rumors: "🗣️ Rumores"
   recommended: "⭐ Recomendado ({cls})"
   reset_points: "🔄 Reiniciar"

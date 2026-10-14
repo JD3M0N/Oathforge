@@ -118,16 +118,17 @@ def load_world(directory: Path) -> World:
     return World(meta["start"], continents, zones, locations, media)
 
 
-def scan_class_media(directory: Path, classes: dict, media: MediaCatalog) -> None:
-    """Class portraits live in content/classes/<class>/images/; a folder must name a real class."""
-    root = directory / "classes"
+def scan_keyed_media(directory: Path, kind: str, keys: dict, into: dict) -> None:
+    """Class portraits (content/classes/<class>/images/) and bestiary art (content/monsters/<monster>/images/);
+    a folder must name a real class or monster."""
+    root = directory / kind
     if not root.is_dir():
         return
-    unknown = [d.name for d in sorted(root.iterdir()) if d.is_dir() and d.name not in classes]
+    unknown = [d.name for d in sorted(root.iterdir()) if d.is_dir() and d.name not in keys]
     if unknown:
-        raise ValueError(f"content/classes: folders for unknown classes {unknown}")
-    for key in classes:
-        media.classes[key] = scan_images(root / key, directory)
+        raise ValueError(f"content/{kind}: folders for unknown keys {unknown}")
+    for key in keys:
+        into[key] = scan_images(root / key, directory)
 
 
 def _parse(model, raw: dict) -> dict:
@@ -140,7 +141,9 @@ def load_content(directory: Path = CONTENT_DIR) -> Content:
     locations = world.locations
     respawn = [k for k, loc in locations.items() if loc.respawn]
     classes = _parse(GameClass, _read(directory, "classes"))
-    scan_class_media(directory, classes, world.media)
+    scan_keyed_media(directory, "classes", classes, world.media.classes)
+    monsters = _parse(Monster, _read(directory, "monsters"))
+    scan_keyed_media(directory, "monsters", monsters, world.media.monsters)
     fallbacks = _read_fallbacks(directory)
     content = Content(
         abilities=_parse(AbilityInfo, rules["abilities"]),
@@ -149,7 +152,7 @@ def load_content(directory: Path = CONTENT_DIR) -> Content:
         backgrounds=_parse(Background, _read(directory, "backgrounds")),
         classes=classes,
         items=_parse(Item, _read(directory, "items")),
-        monsters=_parse(Monster, _read(directory, "monsters")),
+        monsters=monsters,
         locations=locations,
         npcs=_parse(Npc, _read(directory, "npcs")),
         factions=_parse(Faction, _read(directory, "factions")),

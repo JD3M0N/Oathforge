@@ -10,6 +10,7 @@ Imágenes, música, voces, mapas y efectos. Fuente principal: [Guía de recursos
 - **v0.4.1**: retratos de clase en `content/classes/<clase>/images/portrait.jpg` (768 × 1024) para Paladín, Guerrero, Pícaro y Sacerdote; `/sheet` y «📜 Ficha completa» los envían antes de la ficha completa. Faltan Mago, Druida y Bardo (su ficha va sin foto).
 - **v0.4.4**: el jugador elige hombre o mujer al crear el personaje; los retratos pueden ir por sexo (`portrait.male.jpg` / `portrait.female.jpg`) y `/sheet` envía el suyo, o el neutro `portrait.jpg`. El Brujo tiene los dos; el resto, uno neutro.
 - **v0.5.1**: retrato de hombre y de mujer para las 8 clases (`portrait.male.jpg` / `portrait.female.jpg`), salvo la barda, que de momento usa el del bardo. Los neutros antiguos eran de hombre y se renombraron.
+- **v0.7.3**: retrato de la barda; ilustración de las 10 criaturas del bestiario en `content/monsters/<criatura>/images/portrait.jpg`, con «🖼️ Ver ilustración» en su ficha. Cada imagen tiene al lado `<nombre>.prompt.md` con el prompt con el que se generó (Leonardo AI), pendiente de rellenar.
 - Aún no hay imagen por lugar, retratos de NPC ni audio.
 - Todo texto visible existe en es/en; cualquier audio necesitará también su equivalente en texto.
 
@@ -33,6 +34,8 @@ content/world/
         images/cover.jpg          # (futuro) «Ver lugar»
 content/classes/<clase>/images/portrait.jpg  # retrato de clase en /sheet (+ media.yaml)
 content/classes/<clase>/images/portrait.male.jpg / portrait.female.jpg  # variante por sexo (opcional)
+content/monsters/<criatura>/images/portrait.jpg  # ilustración del bestiario (+ media.yaml)
+<carpeta>/images/<nombre>.prompt.md   # junto a cada imagen: prompt, modelo y ajustes con que se generó
 content/npcs/<npc>/portrait.jpg   # (futuro) retratos
 ```
 
@@ -147,7 +150,7 @@ Presupuesto de espacio orientativo: unos 63 MB para 12 pistas, 30 voces, 50 imá
 
 ### Licencias (Guía §11)
 
-- Para cada activo guardar: autor/proveedor, URL, fecha, licencia, atribución, prompt y modelo, hash y estado de aprobación.
+- Para cada activo guardar: autor/proveedor, URL, fecha, licencia, atribución, prompt y modelo, hash y estado de aprobación. Créditos y licencia en `media.yaml`; prompt y modelo en `<nombre>.prompt.md` junto a la imagen.
 - **No usar en una versión monetizada:** Suno, AIVA y ElevenLabs Free, Inkarnate Hobby, Dungeon Scrawl Free, pesos de MusicGen.
 - Ojo: enviar un MP3 por un bot es distribuir el archivo; comprobar que la licencia lo permite, no solo «usar en un vídeo».
 - Game-icons (CC BY) necesita una página de créditos (`/credits`).

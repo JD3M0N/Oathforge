@@ -1,10 +1,12 @@
 """Read-only catalog of images found next to the world content.
 
-Convention, no manifest needed: every node folder (continent, zone, location) and every
-``content/classes/<class>/`` folder (class portraits) may have an
+Convention, no manifest needed: every node folder (continent, zone, location), every
+``content/classes/<class>/`` folder (class portraits) and every ``content/monsters/<monster>/``
+folder (bestiary illustrations) may have an
 ``images/`` folder; files are sorted by name and a ``.night`` suffix (``panorama.night.jpg``)
 marks the night variant and ``.male`` / ``.female`` (``portrait.female.jpg``) a class
-portrait for that gender. Optional ``images/media.yaml`` holds credits and license per file.
+portrait for that gender. Optional ``images/media.yaml`` holds credits and license per file,
+and ``<name>.prompt.md`` next to each image the prompt it was generated with.
 Telegram ``file_id``s are cached in the database by ``oathforge.services.media``.
 """
 
@@ -36,6 +38,7 @@ class MediaCatalog:
     locations: dict[str, tuple[MediaAsset, ...]] = field(default_factory=dict)
     continents: dict[str, tuple[MediaAsset, ...]] = field(default_factory=dict)
     classes: dict[str, tuple[MediaAsset, ...]] = field(default_factory=dict)  # content/classes/<class>/images
+    monsters: dict[str, tuple[MediaAsset, ...]] = field(default_factory=dict)  # content/monsters/<monster>/images
 
     def zone_images(self, zone: str, night: bool = False) -> list[MediaAsset]:
         return _pick(self.zones.get(zone, ()), night)
@@ -51,6 +54,9 @@ class MediaCatalog:
             if match:
                 return match[:1]
         return []
+
+    def monster_images(self, monster: str) -> list[MediaAsset]:
+        return list(self.monsters.get(monster, ()))[:1]
 
 
 def _pick(assets: tuple[MediaAsset, ...], night: bool) -> list[MediaAsset]:
@@ -69,6 +75,8 @@ def scan_images(folder: Path, root: Path) -> tuple[MediaAsset, ...]:
     for p in files:
         if p.name not in known:
             log.warning("media without credits in %s: %s", credits, p.name)
+        if not p.with_name(p.stem + ".prompt.md").is_file():
+            log.warning("media without prompt file: %s", p)
     return tuple(
         MediaAsset(
             key=p.relative_to(root).as_posix(),

@@ -4,6 +4,17 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.3] - 2026-10-14
+
+### Añadido
+- Ilustraciones del bestiario: una por criatura (10) en `content/monsters/<criatura>/images/portrait.jpg`, con el botón «🖼️ Ver ilustración» en su ficha una vez vista.
+- Retrato de la barda (`content/classes/bard/images/portrait.female.jpg`).
+- Junto a cada imagen de `content/`, un `<nombre>.prompt.md` para guardar el prompt con el que se generó (de momento pendiente de rellenar); el catálogo avisa si falta.
+- `tools/prepare_image.py --trim-bottom N` quita la firma o el texto falso que pinta el generador.
+
+### Arreglado
+- Cada criatura tiene su propio icono en el bestiario (campo `icon` en `content/monsters.yaml`): el murciélago ya no sale con 🐗.
+
 ## [0.7.2] - 2026-10-14
 
 ### Cambiado

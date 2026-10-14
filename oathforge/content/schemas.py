@@ -284,6 +284,7 @@ class Monster(Strict):
     vulnerable: list[DamageType] = []
     immune_damage: list[DamageType] = []
     # bestiary
+    icon: str | None = None  # its own emoji; None: the one for its type
     lore: Text | None = None
     habitat: Text | None = None
     active: Literal["day", "night", "any"] = "any"

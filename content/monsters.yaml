@@ -1,5 +1,6 @@
 bandit:
   name: {es: Bandido, en: Bandit}
+  icon: 🗡️
   description: {es: Un desertor con una espada mellada y pocas ganas de morir., en: A deserter with a notched sword and little wish to die.}
   hp: 11
   ac: 12
@@ -18,6 +19,7 @@ bandit:
 
 bandit_captain:
   name: {es: Capitán bandido, en: Bandit captain}
+  icon: 🎖️
   description: {es: Lleva las cicatrices de cien emboscadas y las botas de un noble., en: Wears the scars of a hundred ambushes and a nobleman's boots.}
   hp: 32
   ac: 14
@@ -36,6 +38,7 @@ bandit_captain:
 
 goblin_scout:
   name: {es: Goblin explorador, en: Goblin scout}
+  icon: 👺
   description: {es: "Pequeño, rápido y armado con un arco que robó a alguien más grande.", en: "Small, quick and armed with a bow it stole from someone bigger."}
   hp: 9
   ac: 13
@@ -57,6 +60,7 @@ goblin_scout:
 
 grey_wolf:
   name: {es: Lobo gris, en: Grey wolf}
+  icon: 🐺
   description: {es: "Hambriento y nunca solo por mucho tiempo.", en: "Hungry, and never alone for long."}
   hp: 13
   ac: 13
@@ -76,6 +80,7 @@ grey_wolf:
 
 crypt_skeleton:
   name: {es: Esqueleto de la cripta, en: Crypt skeleton}
+  icon: 💀
   description: {es: Huesos unidos por una voluntad que no es la suya., en: Bones bound together by a will not their own.}
   hp: 11
   ac: 13
@@ -95,6 +100,7 @@ crypt_skeleton:
 
 crypt_warden:
   name: {es: Guardián de la Cripta, en: Crypt Warden}
+  icon: 👻
   description:
     es: Un caballero muerto hace siglos, aún fiel a un juramento que nadie recuerda.
     en: A knight dead for centuries, still loyal to an oath no one remembers.
@@ -125,6 +131,7 @@ crypt_warden:
 
 boar:
   name: {es: Jabalí, en: Boar}
+  icon: 🐗
   description: {es: Una bestia de cerdas negras y colmillos curvos que no retrocede., en: A black-bristled beast with curved tusks that never backs down.}
   hp: 11
   ac: 11
@@ -146,6 +153,7 @@ boar:
 
 cave_bat:
   name: {es: Murciélago de cueva, en: Cave bat}
+  icon: 🦇
   description: {es: Un murciélago del tamaño de un halcón que caza al anochecer., en: A hawk-sized bat that hunts at dusk.}
   hp: 6
   ac: 12
@@ -165,6 +173,7 @@ cave_bat:
 
 old_tusk:
   name: {es: El Viejo Colmillo, en: Old Tusk}
+  icon: 🦣
   description: {es: Un jabalí enorme cubierto de cicatrices y puntas de flecha rotas., en: A huge boar covered in scars and broken arrowheads.}
   hp: 34
   ac: 12
@@ -189,6 +198,7 @@ old_tusk:
 
 giant_rat:
   name: {es: Rata gigante, en: Giant rat}
+  icon: 🐀
   description: {es: "Una rata del tamaño de un perro, con los ojos rojos y el pelo apelmazado de hollín.", en: A dog-sized rat with red eyes and soot-matted fur.}
   hp: 7
   ac: 11

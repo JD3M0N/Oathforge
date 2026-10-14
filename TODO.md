@@ -36,8 +36,6 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 ## 🎨 Audiovisual · [audiovisual.md](planning/audiovisual.md)
 
 - [ ] 🟡 ◐ **Sistema de imágenes**: catálogo de activos + `file_id` de Telegram; una imagen por lugar y retratos de NPC. *Hecho en v0.3.0: carpetas del mundo, catálogo, caché de `file_id` y «Ver ciudad» en Crownreach; retratos de clase en v0.4.1, v0.4.4 y v0.5.1 (todas las clases). Faltan las imágenes de cada lugar («Ver lugar») y los retratos de NPC.*
-- [ ] 🟢 ◐ **Retratos masculinos y femeninos** de cada clase. *Hecho (v0.5.1): hombre y mujer en las 8 clases; falta la barda (usa el retrato del bardo).*
-- [ ] 🟡 Ilustraciones del bestiario: una imagen por criatura en su ficha.
 - [ ] 🟡 **Canciones en las tabernas**: botón «Escuchar ambiente» con música en bucle (empezar por La Corona Rota).
 - [ ] 🟡 **Voces para personajes importantes** (Bram, Tessa, el Guardián de la Cripta) como notas de voz OGG/Opus.
 - [ ] 🟢 **Stickers por personaje**: pack con los retratos y expresiones de los NPC.
@@ -62,7 +60,6 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 ## 🌍 Mundo, misiones y economía · [mundo-y-misiones.md](planning/mundo-y-misiones.md) · [comercio.md](planning/comercio.md)
 
 - [ ] 🟡 ◐ **Bestiario**: ir añadiendo criaturas poco a poco (descripción, hábitat, de día o de noche, estadísticas y puntos débiles). *Hecho (v0.5.0): 9 criaturas y ficha que se desbloquea al verlas y derrotarlas.*
-- [ ] 🟢 Un icono por criatura en el bestiario: hoy va por tipo y el murciélago sale con 🐗.
 - [ ] 🟢 Bram habla de «problemas al norte» en su saludo, pero la misión que da es la del prado (al sur): ajustar el saludo a la misión activa.
 - [ ] 🟢 «Algo brilla» al fondo de la mina: hoy es solo ambiente; convertirlo en un descubrimiento con recompensa.
 - [ ] 🟡 Más misiones después del nivel 5 y misiones secundarias repetibles (encargos de caza diarios).
@@ -120,3 +117,4 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] **Dado decorativo**: tiradas manuales desactivadas por defecto, aviso al activarlas y `/settings` en lugar de `/roll` (v0.7.0).
 - [x] **Capilla del Alba** con «Curar heridas» por 3 de oro y **descanso largo** de 8 h de juego (80 min) acostado en la posada (v0.7.0).
 - [x] Arreglos de la partida de prueba del 13-10: barra de XP del nivel, «Jabalí A/B», 🧪 solo con pociones, tienda con estadísticas, la antorcha se vende por 1, «pensativo» en NPC femeninas (v0.7.0).
+- [x] Ilustraciones e icono propio para cada criatura del bestiario, retrato de la barda y archivo de prompt junto a cada imagen (v0.7.3).

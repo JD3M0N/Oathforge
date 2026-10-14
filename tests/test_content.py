@@ -1,5 +1,7 @@
 import re
 
+import yaml
+
 from oathforge.content import load_content
 from oathforge.content.schemas import Text
 from oathforge.i18n import translator
@@ -116,18 +118,46 @@ def test_class_portraits_and_unknown_class_folder(tmp_path):
     import pytest
 
     from oathforge.config import CONTENT_DIR
-    from oathforge.content.loader import scan_class_media
+    from oathforge.content.loader import scan_keyed_media
     from oathforge.content.media import MediaCatalog
 
     c = load_content()
     portrait = "classes/{}/images/portrait.{}.jpg"
-    for cls in c.classes:  # every class has a man and a woman, except the bard (only the man so far)
+    for cls in c.classes:  # every class has a man and a woman
         for gender in ("male", "female"):
-            expected = "male" if cls == "bard" else gender
-            assert [a.key for a in c.media.class_images(cls, gender)] == [portrait.format(cls, expected)]
+            assert [a.key for a in c.media.class_images(cls, gender)] == [portrait.format(cls, gender)]
     assert [a.key for a in c.media.class_images("warlock")] == [portrait.format("warlock", "female")]  # no gender: first
 
     shutil.copytree(CONTENT_DIR / "classes", tmp_path / "classes")
     (tmp_path / "classes/necromancer").mkdir()
     with pytest.raises(ValueError, match="necromancer"):
-        scan_class_media(tmp_path, c.classes, MediaCatalog())
+        scan_keyed_media(tmp_path, "classes", c.classes, MediaCatalog().classes)
+
+
+def test_monster_art_icons_and_prompt_files(tmp_path):
+    import shutil
+
+    import pytest
+
+    from oathforge.config import CONTENT_DIR
+    from oathforge.content.loader import scan_keyed_media
+    from oathforge.content.media import IMAGE_SUFFIXES, MediaCatalog
+
+    c = load_content()
+    for key, m in c.monsters.items():  # every creature: its own icon and its illustration
+        assert [a.key for a in c.media.monster_images(key)] == [f"monsters/{key}/images/portrait.jpg"]
+        assert m.icon
+    icons = [m.icon for m in c.monsters.values()]
+    assert len(set(icons)) == len(icons)
+    assert c.media.monster_images("dragon") == []
+
+    for img in CONTENT_DIR.rglob("images/*"):  # credits and the prompt it was made with, next to every image
+        if img.suffix.lower() in IMAGE_SUFFIXES:
+            credits = yaml.safe_load((img.parent / "media.yaml").read_text(encoding="utf-8"))
+            assert img.name in credits, img
+            assert img.with_name(img.stem + ".prompt.md").is_file(), img
+
+    shutil.copytree(CONTENT_DIR / "monsters", tmp_path / "monsters")
+    (tmp_path / "monsters/dragon").mkdir()
+    with pytest.raises(ValueError, match="dragon"):
+        scan_keyed_media(tmp_path, "monsters", c.monsters, MediaCatalog().monsters)

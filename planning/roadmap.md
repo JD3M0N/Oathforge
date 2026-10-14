@@ -27,6 +27,7 @@ Versionado `0.x.y`: sube **y** (parche) en arreglos y cambios pequeños; sube **
 - **0.6.2**: efectos tipados en los consumibles: poción de maná (+1 uso de conjuro) y tónico del reposo (descanso corto con enfriamiento).
 - **0.7.0**: aficiones (cocina y pesca, sin plaza), Escribanía y Artificiería con pergaminos y bombas para el combate, guía `/prof_<oficio>`, Capilla del Alba («Curar heridas»), descanso largo de 8 h de juego, `/settings` con el aviso del dado decorativo, textos genéricos de respaldo en `content/fallbacks/` y Gemini 3.1 Flash-Lite para todo.
 - **0.7.1**: 612 textos de respaldo (12+ por caso, crónicas por oficio, narración por desenlace), aviso único que distingue presupuesto agotado de IA no disponible, y validación del catálogo al arrancar.
+- **0.7.3**: ilustración e icono propio para cada criatura del bestiario, retrato de la barda y un archivo de prompt junto a cada imagen.
 
 ## Próximo (candidatos)
 

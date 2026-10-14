@@ -19,14 +19,14 @@ from oathforge.engine.combat import Action, EncounterState, valid_targets
 from oathforge.i18n import t
 from oathforge.ai.intent_parser import Intent
 from oathforge.services import (
-    actions, activities, audit, characters, combat_service, crafting, exploration, inventory, npcs, professions, quests,
+    actions, activities, audit, bestiary, characters, combat_service, crafting, exploration, inventory, npcs, professions, quests,
 )
 from oathforge.services.events import Outcome
 
 log = logging.getLogger(__name__)
 
 # verbs that only show something (no nonce, no state change)
-VIEWS = {"scene", "trv", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jq", "jrb", "jb", "jrr",
+VIEWS = {"scene", "trv", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jq", "jrb", "jb", "jbi", "jrr",
          "shopm", "shop", "sellm", "cbp", "lang", "city", "cls", "clsl", "rep", "prof", "profsw", "profcf", "pg", "crf"}
 
 
@@ -88,6 +88,13 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
                 text, kb = await render.sheet(session, char, lang)
                 await send(update, text, kb)
                 return
+        if verb == "jbi":
+            images = get_content().media.monster_images(arg)
+            if images and bestiary.tier((char.bestiary or {}).get(arg)):  # only creatures it has seen
+                await send_photos(session, update, context, images, render.creature_caption(arg, lang))
+            text, kb = render.bestiary_entry(char, arg, lang)
+            await send(update, text, kb)  # the entry again, so its buttons stay below the photo
+            return
         talked = None
         if verb == "talk" and not in_combat and arg in exploration.npcs_present(char.location):
             context.user_data["talk"] = arg

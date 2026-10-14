@@ -838,7 +838,11 @@ def class_page(key: str, lang: str, char: Character | None = None) -> tuple[str,
 
 # ---------------------------------------------------------------- bestiary
 
-CREATURE_ICONS = {"beast": "🐗", "undead": "💀", "humanoid": "🗡️"}
+CREATURE_ICONS = {"beast": "🐾", "undead": "💀", "humanoid": "🗡️"}  # for creatures without an icon of their own
+
+
+def creature_icon(m) -> str:
+    return m.icon or CREATURE_ICONS.get(m.type, "•")
 
 
 def bestiary_list(char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
@@ -848,7 +852,7 @@ def bestiary_list(char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup
     rows = []
     for key, entry in known:
         m = c.monsters[key]
-        rows.append([btn(f"{CREATURE_ICONS.get(m.type, '•')} {m.name.get(lang)} · ⚔️ {entry.get('killed', 0)}",
+        rows.append([btn(f"{creature_icon(m)} {m.name.get(lang)} · ⚔️ {entry.get('killed', 0)}",
                          cb("jb", key))])
     lines.append(f"<i>{t(lang, 'bestiary.hint' if known else 'bestiary.empty')}</i>")
     rows.append([btn(t(lang, "btn.back"), cb("jr"))])
@@ -864,7 +868,7 @@ def bestiary_entry(char: Character, key: str, lang: str) -> tuple[str, InlineKey
     if key not in c.monsters or level == 0:
         return t(lang, "bestiary.unknown"), back
     m = c.monsters[key]
-    lines = [f"{CREATURE_ICONS.get(m.type, '•')} <b>{escape(m.name.get(lang))}</b>",
+    lines = [f"{creature_icon(m)} <b>{escape(m.name.get(lang))}</b>",
              f"<i>{t(lang, 'creature.' + m.type)} · {t(lang, 'bestiary.active.' + m.active)}</i>",
              RULE, escape(m.description.get(lang))]
     if m.lore:
@@ -896,7 +900,14 @@ def bestiary_entry(char: Character, key: str, lang: str) -> tuple[str, InlineKey
             lines.append(t(lang, "bestiary.loot", list=escape(", ".join(loot))))
     elif level == 2:
         lines += ["", f"🔒 <i>{t(lang, 'bestiary.locked_secrets', n=bestiary.KILLS_FOR_SECRETS)}</i>"]
+    if c.media.monster_images(key):
+        back = markup([[btn(t(lang, "btn.creature_art"), cb("jbi", key)), btn(t(lang, "btn.back"), cb("jrb"))]])
     return "\n".join(lines)[:MAX_MESSAGE], back
+
+
+def creature_caption(key: str, lang: str) -> str:
+    m = get_content().monsters[key]
+    return f"{creature_icon(m)} <b>{escape(m.name.get(lang))}</b>"
 
 
 async def rumors(session: AsyncSession, lang: str) -> tuple[str, InlineKeyboardMarkup]:

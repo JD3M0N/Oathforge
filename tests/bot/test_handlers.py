@@ -444,6 +444,25 @@ async def test_journal_missions_and_bestiary_views(llm, monkeypatch):
     assert p.last[0]
 
 
+async def test_bestiary_icon_per_creature_and_illustration(llm):
+    p = Player(llm, tg_id=64)
+    await create(p)
+    await p.press("jbi|cave_bat|-")  # never seen: no photo, just "unknown"
+    assert not p.chat.photos and [parse(d)[0] for d in p.buttons()] == ["jrb"]
+    async with session_scope() as s:
+        char = await s.scalar(select(Character).with_for_update())
+        char.bestiary = {"cave_bat": {"seen": 1, "killed": 0}, "boar": {"seen": 2, "killed": 1}}
+    await p.press("jrb|-|-")
+    names = [b.text for row in p.last[1].inline_keyboard for b in row]
+    assert any(n.startswith("🦇 Murciélago") for n in names) and any(n.startswith("🐗 Jabalí") for n in names)
+    await p.press(p.find("jb", "cave_bat"))
+    assert p.last[0].startswith("🦇")
+    await p.press(p.find("jbi", "cave_bat"))
+    assert isinstance(p.chat.photos[-1], bytes)
+    assert "Murciélago" in p.chat.sent[-2][0]  # caption, then the entry again below it
+    assert p.last[0].startswith("🦇") and "jbi" in [parse(d)[0] for d in p.buttons()]
+
+
 async def test_manual_rolls_wait_for_the_die(llm, monkeypatch):
     monkeypatch.setattr(callbacks, "DICE_SECONDS", 0)
     p = Player(llm, tg_id=63)
