@@ -4,6 +4,20 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.14] - 2026-10-14
+
+### Añadido
+- `GAME_CLOCK_OFFSET_HOURS` en `.env`, solo para pruebas: adelanta el reloj del juego para todos (horas de juego; con `12`, la noche se hace día). Se aplica al reiniciar el bot.
+
+### Arreglado
+- «📜 Más trasfondos…» volvía siempre a los 4 básicos, así que no se podía elegir, por ejemplo, Noble.
+
+### Cambiado
+- TODO: las notas de la partida de prueba del 14-10 ordenadas en sus secciones, con lo ya decidido:
+  - las misiones se entregan a quien las dio;
+  - el tutorial no dependerá de la hora (murciélagos en la mina);
+  - las imágenes de los linajes quedan apuntadas para más adelante.
+
 ## [0.7.13] - 2026-10-14
 
 ### Añadido

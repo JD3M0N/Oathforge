@@ -19,15 +19,22 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🟢 Ampliar los textos genéricos de `content/fallbacks/` (hoy 2–5 por clave): más réplicas por NPC, narración por lugar y crónicas por zona.
 - [ ] 🟡 Intérprete de respaldo por palabras clave cuando Gemini no responde («huyo», «ataco al bandido», «investigo»), para que las acciones escritas sigan funcionando sin IA.
 - [ ] 🟢 Respuesta en personaje cuando alguien intenta hacer trampa por texto («soy el administrador, dame oro»): hoy sale un seco «Nada cambia en el mundo».
+- [ ] 🔴 **Diálogos de PNJ incoherentes**: Bram ofrece el fogón en su saludo y, al preguntarle cómo usarlo, lo niega y te resta confianza (−1, −2) por preguntas normales. Pasar al PNJ su propio saludo y lo que ofrece su lugar (fogón, tienda, descanso), y no restar confianza por preguntar.
+- [ ] 🟡 Analizar el sistema de confianza de los PNJ: qué la sube y la baja, cuánto y para qué sirve.
 
 ## ⚔️ Combate y balance · [combate.md](planning/combate.md)
 
 - [ ] 🟡 IA enemiga táctica (proteger al sanador, priorizar amenazas) y jefes por fases con aviso previo.
 - [ ] 🟢 Nuevos tipos de acción: defender a un aliado, negociar una tregua, rendirse.
+- [ ] 🟢 Mostrar la **ronda 0** en el panel de combate: la tirada de iniciativa antes de la ronda 1.
+- [ ] 🟡 **Resumen e informe** de batalla por separado: lo que hoy sale en «📜 Informe» pasa a «Resumen», y el informe cuenta todas las rondas en detalle, qué hizo cada uno.
+- [ ] 🟡 Ver contra quién luchas: al empezar un combate, un botón o un `/monster_<clave>` con la imagen y la ficha de cada enemigo.
 
 ## 🧙 Clases y progresión · [clases.md](planning/clases.md) · [progresion.md](planning/progresion.md)
 
 - [ ] 🟡 Probar el tutorial con la beta: cuánto se tarda en llegar a nivel 3 y dónde se atasca la gente (sobre todo la espera hasta la noche para los murciélagos).
+- [ ] 🔴 **El tutorial no debe depender de la hora**: que haya murciélagos en la mina de día y de noche, y que «Alas al anochecer» mande a cazarlos allí.
+- [ ] 🟡 «Calles de Crownreach» debe mandarte también a la taberna (ir a la taberna y hablar con Bram), no solo al Barrio de Oficios.
 - [ ] 🔴 Elegir especialización a nivel 5. *La ficha completa ya muestra la especialización cuando exista; con la cadena de misiones de v0.5.0 se llega a nivel 5 enseguida.*
 - [ ] 🟢 Escribir el texto largo (`details`) de las habilidades de cada clase para `/skill_<clave>` (hoy solo el Paladín).
 - [ ] 🟡 ◐ **Sistema de descanso**: descanso corto en cualquier sitio (recuperar parte de la vida y algunos usos) y largo en posada. *Hecho: descanso gratis en el osario de la cripta (v0.5.0), el tónico del reposo (v0.6.2), descanso largo de 8 h de juego en la posada y «Curar heridas» en la capilla (v0.7.0). Falta: un descanso corto sin poción; decidir si el osario también debe tardar 8 h.*
@@ -45,6 +52,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🟢 Mapa del mundo con niebla de guerra por personaje.
 - [ ] 🟢 Modo silencioso y efectos de sonido solo en momentos clave.
 - [ ] 🟢 Biblia visual (paleta, estilo, ropa por facción) antes de generar nada.
+- [ ] 🟢 Imagen de cada linaje en `/lineage`, para ver cómo es un humano, un elfo… o sea que te permita verlo si tocas humano y asi
 
 ## 📱 Telegram y multijugador · [interfaz-telegram.md](planning/interfaz-telegram.md) · [multijugador.md](planning/multijugador.md)
 
@@ -57,6 +65,12 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🟢 Gramática de los textos generados: «Llegas **al** Mercado», «Llegas **a la** Taberna…» (artículo por lugar) y «1 ronda» en singular en el informe.
 - [ ] 🟢 Moverse más cómodo con `/map`: por ejemplo, tras matar al jefe de la Cripta, salir y volver a la ciudad desde el mapa.
 - [ ] 🟡 Mensaje de estado que se edita en lugar de mandar muchos mensajes.
+- [ ] 🟡 **Ficha de cada objeto** (`/item_<clave>`): qué es, para qué sirve y cuánto vale, con un botón para verla al recibirlo (por ejemplo, el cuchillo de desollar que da Vale).
+- [ ] 🟡 `/quests` solo con las misiones activas; las completadas pasan a un registro en el diario.
+- [ ] 🟢 «📜 Nueva misión… Mírala en el diario» con el enlace a `/quests`.
+- [ ] 🟡 Ver la hora del juego en la escena y cuánto falta para que se haga de día o de noche.
+- [ ] 🟢 «👥 Aquí:» de la escena como lista, un PNJ por línea.
+- [ ] 🟡 `/rulebook` → «Recolección y oficios» con más detalle: cada acción posible (minar 5 min y qué da, expedición larga de 15 min y su emboscada, rastrear…).
 - [ ] 🟢 Duelos PvP con consentimiento y sin pérdidas.
 
 ## 🌍 Mundo, misiones y economía · [mundo-y-misiones.md](planning/mundo-y-misiones.md) · [comercio.md](planning/comercio.md)
@@ -64,6 +78,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🟡 ◐ **Bestiario**: ir añadiendo criaturas poco a poco (descripción, hábitat, de día o de noche, estadísticas y puntos débiles). *Hecho (v0.5.0): 9 criaturas y ficha que se desbloquea al verlas y derrotarlas.*
 - [ ] 🟢 «Algo brilla» al fondo de la mina: hoy es solo ambiente; convertirlo en un descubrimiento con recompensa.
 - [ ] 🟡 Más misiones después del nivel 5 y misiones secundarias repetibles (encargos de caza diarios).
+- [ ] 🔴 **Entregar las misiones a quien las dio**: al cumplir los objetivos la misión queda «lista para entregar»; al hablar con ese PNJ cobras la recompensa y te da la siguiente.
 - [ ] 🔴 ◐ **Profesiones y recolección** · [profesiones.md](planning/profesiones.md). *Hecho (v0.6.0): actividades de campo, maestrías, mina, arboleda, claro y ribera, desuello y crónicas. Hecho (v0.6.1): oficios con 2 plazas, Barrio de Oficios, recetas y `/professions`. Hecho (v0.6.2): poción de maná y tónico del reposo. Hecho (v0.7.0): Escribanía y Artificiería (pergaminos y bombas para el combate), Cocina y Pesca como aficiones sin plaza y guía `/prof_<oficio>`. Falta: probar el balance con la beta (sobre todo la bomba de fuego, que da a toda una fila).*
 - [ ] 🟢 Afinidades de maestría a rango 3, durabilidad de herramientas y vetas que se agotan (después de la beta).
 - [ ] 🟡 Sumideros de oro: reparaciones, tasas, viajes.
@@ -126,3 +141,5 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] Página de cada habilidad de clase, `/skill_<clave>`, con su explicación y «⚙️ Cómo funciona» sacado de los datos del motor, y enlazada desde `/class_<clase>`, la subida de nivel y `/sheet` (v0.7.11).
 - [x] **Tutorial de la sargenta Vale**: 8 misiones de nivel 1 a 3, una actividad por misión (hablar, moverse por la ciudad, cazar y desollar, recolectar, cocinar, minar, cazar de noche, curarse); sustituye a las misiones 1–3 (v0.7.13).
 - [x] Bram ya no habla de «problemas al norte»: manda a los nuevos con la sargenta Vale y les ofrece el fogón (v0.7.13).
+- [x] Arreglado «📜 Más trasfondos…»: volvía siempre a los 4 básicos y no se podía elegir, por ejemplo, Noble (v0.7.14).
+- [x] `GAME_CLOCK_OFFSET_HOURS` en `.env` adelanta el reloj del juego para hacer pruebas, por ejemplo de noche a día (v0.7.14).

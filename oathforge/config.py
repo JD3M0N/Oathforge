@@ -29,6 +29,9 @@ class Settings(BaseSettings):
     ai_chronicle_timeout_seconds: float = 8.0
     ai_model_cooldown_seconds: float = 120.0
 
+    # testing only: moves the game clock forward for everyone (e.g. 12 turns night into day). 1 game hour = 10 min.
+    game_clock_offset_hours: float = 0.0
+
     # debug artifacts (conversations, battles, AI calls); git-ignored, see oathforge/recorder.py
     artifacts_enabled: bool = True
     artifacts_dir: Path = ROOT_DIR / "artifacts"

@@ -114,7 +114,8 @@ async def more_backgrounds(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     q = update.callback_query
     await q.answer()
     lang = context.user_data.get("lang", "es")
-    await edit_or_send(update, *background_step(lang, everything=q.data.endswith(":all")))
+    everything = q.data.split("|")[1] == "bgl:all"  # "cc|bgl:all|-"
+    await edit_or_send(update, *background_step(lang, everything=everything))
     return BACKGROUND
 
 

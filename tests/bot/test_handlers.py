@@ -415,7 +415,7 @@ async def test_lineage_and_background_help_during_creation(llm):
     assert "Sentidos agudos" in p.last[0] and "🏹 DES +2" in p.last[0]
     assert await creation.got_lineage(p.update(data="cc|lin:elf"), p.ctx) == creation.BACKGROUND
     assert "cc|bg:soldier|-" in p.buttons() and "cc|bg:sailor|-" not in p.buttons()  # only the basic ones
-    assert await creation.more_backgrounds(p.update(data="cc|bgl:all"), p.ctx) == creation.BACKGROUND
+    assert await creation.more_backgrounds(p.update(data="cc|bgl:all|-"), p.ctx) == creation.BACKGROUND  # as sent
     assert "cc|bg:sailor|-" in p.buttons() and len([b for b in p.buttons() if b.startswith("cc|bg:")]) >= 10
     await commands.backgrounds(p.update(message="/background"), p.ctx)
     assert "Marinero" in p.last[0] and "💰" in p.last[0]

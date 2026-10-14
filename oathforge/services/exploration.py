@@ -5,6 +5,7 @@ import time
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from oathforge.config import get_settings
 from oathforge.content import get_content
 from oathforge.content.schemas import EncounterEntry, Exit, Location
 from oathforge.database.models import Character
@@ -17,14 +18,18 @@ GAME_DAY_SECONDS = 4 * 3600  # one in-game day every four real hours
 ENCOUNTER_CHANCE_PER_DANGER = 0.15
 
 
-def game_hour(now: float | None = None) -> int:
+def game_time(now: float | None = None) -> float:
+    """Real time as the game clock reads it: GAME_CLOCK_OFFSET_HOURS (testing) moves it forward."""
     now = time.time() if now is None else now
-    return int((now % GAME_DAY_SECONDS) / GAME_DAY_SECONDS * 24)
+    return now + get_settings().game_clock_offset_hours * GAME_DAY_SECONDS / 24
+
+
+def game_hour(now: float | None = None) -> int:
+    return int((game_time(now) % GAME_DAY_SECONDS) / GAME_DAY_SECONDS * 24)
 
 
 def game_day(now: float | None = None) -> int:
-    now = time.time() if now is None else now
-    return int(now // GAME_DAY_SECONDS)
+    return int(game_time(now) // GAME_DAY_SECONDS)
 
 
 def tried(char: Character, key: str) -> bool:
