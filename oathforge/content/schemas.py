@@ -507,6 +507,8 @@ class Quest(Strict):
     name: Text
     summary: Text
     start_stage: str
+    # a character who completed any of these (old, removed) quests gets this one completed, without rewards
+    legacy_done: list[str] = []
     stages: dict[str, QuestStage]
     actions: dict[str, QuestAction] = {}
     triggers: list[QuestTrigger] = []

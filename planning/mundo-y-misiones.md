@@ -11,16 +11,28 @@
 - «El relicario sellado», con tres finales.
 - **Cadena de misiones** (v0.5.0), automática: al completar una se abre la siguiente (`after` o `unlock_flag`). Las misiones con `objectives` (matar N, hablar con, ir a) cuentan solas y dan `rewards`; el avance se guarda en `quest_progress.counters`. El diario muestra las misiones en curso con su avance y, en «Misiones», la ficha de cada una (quién la da, objetivos, pista y recompensa).
 
+  **Tutorial de la sargenta Vale** (v0.7.13, misiones 1–8). Sustituye a las antiguas «Bienvenido a Crownreach», «Colmillos en el prado» y «Alas al anochecer». Vale está en la plaza día y noche; el primer mensaje de la plaza invita a hablar con ella. Cada misión enseña una cosa y su recompensa es la herramienta de la siguiente:
+
+  | # | Misión | Objetivo | Enseña | XP | Recompensa |
+  |---|---|---|---|---|---|
+  | 1 | Alistamiento | Hablar con Vale | hablar con PNJ | 25 | cuchillo de desollar |
+  | 2 | Calles de Crownreach | Ir al Barrio de Oficios + hablar con Bram | `/map`, moverse por la ciudad | 25 | 5 de oro |
+  | 3 | Colmillos en el prado | 2 jabalíes + 1 cuero desollado | caza, combate, desuello | 100 | hoz |
+  | 4 | Raíz de sangre | Recoger 3 raíces de sangre | salir de la ciudad, recolección, emboscadas | 50 | 5 de oro |
+  | 5 | Guiso del cazador | Fabricar un estofado del cazador | aficiones, fogón, fabricar | 50 | pico |
+  | 6 | Hierro para la Guardia | Sacar 3 menas de hierro | minería, expedición larga | 60 | 10 de oro |
+  | 7 | Alas al anochecer | 3 murciélagos (de noche) | día y noche | 75 | — |
+  | 8 | Heridas de guerra | Hablar con Ysolde + volver con Vale | curación y descanso | 40 | poción de curación |
+
+  Total: 425 de misión + unos 95 de combates ≈ 520 → nivel 3. Quien ya había completado «Alas al anochecer» tiene el tutorial hecho (`legacy_done`, sin recompensa).
+
   | # | Misión | Objetivo | XP |
   |---|---|---|---|
-  | 1 | Bienvenido a Crownreach | Hablar con Bram | 50 |
-  | 2 | Colmillos en el prado | 3 jabalíes (de día) | 150 |
-  | 3 | Alas al anochecer | 4 murciélagos (de noche) | 200 |
-  | 4 | El relicario sellado | Tres caminos hasta el Guardián | 50 + 100 + 300 |
-  | 5 | Huesos inquietos | 3 esqueletos de la cripta | 300 |
-  | 6 | El Viejo Colmillo | El jabalí jefe | 300 |
+  | 9 | El relicario sellado | Tres caminos hasta el Guardián | 50 + 100 + 300 |
+  | 10 | Huesos inquietos | 3 esqueletos de la cripta | 300 |
+  | 11 | El Viejo Colmillo | El jabalí jefe | 300 |
 
-  Con la XP de los combates se llega a nivel 2 en la misión 2, a 3 en la 3, a 4 en la cripta y a 5 al vencer al Guardián.
+  Con la XP de los combates se llega a nivel 2 en la misión 3, a 3 al acabar el tutorial, a 4 en la cripta y a 5 al vencer al Guardián.
 - Facciones con reputación: Pacto de Plata y Sindicato Carmesí.
 - Rumores: lo que hace un jugador se cuenta en las tabernas de los demás.
 

@@ -43,12 +43,17 @@ def ordered_quests() -> list[tuple[str, Quest]]:
 
 
 async def ensure_progress(session: AsyncSession, char: Character) -> dict[str, QuestProgress]:
-    """Locked progress rows, creating the ones a character made before a quest existed."""
+    """Locked progress rows, creating the ones a character made before a quest existed.
+
+    A new quest that replaces old ones (`legacy_done`) starts completed for whoever finished them, so a
+    veteran does not redo the tutorial. Rows of removed quests stay in the table and are ignored."""
     prog = await progress(session, char, lock=True)
     for qkey, quest in get_content().quests.items():
         if qkey not in prog:
-            row = QuestProgress(character_id=char.id, quest_key=qkey, stage=quest.start_stage,
-                                state=quest.stages[quest.start_stage].state, counters={})
+            veteran = any(old in prog and prog[old].state == "completed" for old in quest.legacy_done)
+            stage = quest.complete_stage if veteran and quest.complete_stage else quest.start_stage
+            row = QuestProgress(character_id=char.id, quest_key=qkey, stage=stage,
+                                state=quest.stages[stage].state, counters={})
             session.add(row)
             prog[qkey] = row
     await session.flush()

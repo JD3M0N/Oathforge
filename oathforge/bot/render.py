@@ -677,10 +677,13 @@ def _sheet_top(c, cls, char: Character, gear: dict, lang: str) -> list[str]:
     return lines
 
 
-def attribute(key: str, score: int, lang: str) -> str:
-    """'💪 STR 16 (+3)': the same look at creation, in /hero and in /sheet."""
+def attribute(key: str, score: int, lang: str, aligned: bool = False) -> str:
+    """'💪 STR 16 (+3)': the same look at creation, in /hero and in /sheet (aligned: for a monospace block)."""
     info = get_content().abilities[key]
-    return f"{info.icon} {info.short.get(lang):<3} {score:>2} ({modifier(score):+d})".lstrip()
+    short = info.short.get(lang)
+    if aligned:
+        return f"{info.icon} {short:<3} {score:>2} ({modifier(score):+d})".lstrip()
+    return f"{info.icon} {short} {score} ({modifier(score):+d})".lstrip()
 
 
 def _sheet_attributes(c, cls, char: Character, lang: str) -> list[str]:
@@ -688,7 +691,7 @@ def _sheet_attributes(c, cls, char: Character, lang: str) -> list[str]:
     cells = []
     for a in c.abilities:
         star = "★" if a == cls.primary else " "
-        cells.append(attribute(a, char.abilities[a], lang) + star)
+        cells.append(attribute(a, char.abilities[a], lang, aligned=True) + star)
     pairs = ["  ".join(cells[i:i + 2]) for i in range(0, len(cells), 2)]
     return ["", f"<b>{t(lang, 'sheet.attributes')}</b>", "<code>" + escape("\n".join(pairs)) + "</code>"]
 

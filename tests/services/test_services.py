@@ -44,8 +44,8 @@ async def test_create_character_sets_everything_up():
         assert skills["athletics"].proficient and skills["intimidation"].proficient
         assert characters.skill_bonus(char, skills, "athletics") == 3 + 2
         prog = await quests.progress(s, char)
-        assert prog["first_steps"].state == "active"
-        assert prog["sealed_box"].stage == "locked" and prog["boar_hunt"].state == "locked"
+        assert prog["tut_muster"].state == "active"
+        assert prog["sealed_box"].stage == "locked" and prog["tut_town"].state == "locked"
         assert char.resources == {"consecrated_strike": 2}
 
 
@@ -544,21 +544,28 @@ async def test_mission_chain_talk_then_hunt():
     rng = random.Random(1)
     async with session_scope() as s:
         char = await get_char(s, cid)
-        out = await quests.on_talk(s, char, "bram", rng)
+        out = await quests.on_talk(s, char, "vale", rng)
         prog = await quests.progress(s, char)
-        assert prog["first_steps"].state == "completed" and prog["boar_hunt"].state == "active"
-        assert char.xp == 50 and any(e.key == "quest.new" for e in out.events)
-        assert not (await quests.on_talk(s, char, "bram", rng)).events  # nothing left to count
+        assert prog["tut_muster"].state == "completed" and prog["tut_town"].state == "active"
+        assert char.xp == 25 and any(e.key == "quest.new" for e in out.events)
+        assert await inventory.count(s, char, "skinning_knife") == 1
+        assert not (await quests.on_talk(s, char, "vale", rng)).events  # nothing left to count
 
-        for i in range(2):
-            out = await quests.on_defeat(s, char, "boar", rng)
-            assert any(e.key == "quest.progress" and e.params["n"] == i + 1 for e in out.events)
-        assert (await quests.progress(s, char))["boar_hunt"].counters == {"0": 2}
-        out = await quests.on_defeat(s, char, "boar", rng)
+        await quests.on_talk(s, char, "bram", rng)
+        assert (await quests.progress(s, char))["tut_town"].state == "active"  # still has to see the workshops
+        await quests.on_visit(s, char, "crownreach_workshops", rng)
         prog = await quests.progress(s, char)
-        assert prog["boar_hunt"].state == "completed" and prog["night_wings"].state == "active"
-        assert char.xp == 50 + 150 and char.level == 2
-        assert await inventory.count(s, char, "healing_potion") >= 1
+        assert prog["tut_town"].state == "completed" and prog["tut_boars"].state == "active"
+
+        out = await quests.on_defeat(s, char, "boar", rng)
+        assert any(e.key == "quest.progress" and e.params["n"] == 1 for e in out.events)
+        await quests.on_defeat(s, char, "boar", rng)
+        assert (await quests.progress(s, char))["tut_boars"].state == "active"  # the hide is missing
+        await quests.on_items(s, char, "skin", {"boar_hide": 1, "raw_meat": 2}, rng)
+        prog = await quests.progress(s, char)
+        assert prog["tut_boars"].state == "completed" and prog["tut_herbs"].state == "active"
+        assert char.xp == 25 + 25 + 100 and char.level == 1  # boar XP comes from the fight, not from here
+        assert await inventory.count(s, char, "sickle") == 1
         assert prog["sealed_box"].state == "locked"
 
 
@@ -580,15 +587,34 @@ async def test_mission_unlocks_by_flag_and_counts_only_when_active():
 async def test_whole_chain_reaches_level_five():
     _, cid = await new_character()
     rng = random.Random(5)
+
+    def fight(char, monster):
+        characters.grant_xp(char, get_content().monsters[monster].xp, Outcome())
+        return quests.on_defeat(s, char, monster, rng)
+
     async with session_scope() as s:
         char = await get_char(s, cid)
+        # the tutorial: one activity per mission, from level 1 to 3
+        await quests.on_talk(s, char, "vale", rng)
         await quests.on_talk(s, char, "bram", rng)
-        for monster, n in (("boar", 3), ("cave_bat", 4)):
-            for _ in range(n):
-                characters.grant_xp(char, get_content().monsters[monster].xp, Outcome())
-                await quests.on_defeat(s, char, monster, rng)
+        await quests.on_visit(s, char, "crownreach_workshops", rng)
+        for _ in range(2):
+            await fight(char, "boar")
+        await quests.on_items(s, char, "skin", {"boar_hide": 1}, rng)
+        assert char.level == 2
+        await quests.on_items(s, char, "gather", {"bloodroot": 3}, rng)
+        await quests.on_items(s, char, "craft", {"hunter_stew": 1}, rng)
+        assert await inventory.count(s, char, "pickaxe") == 1
+        await quests.on_items(s, char, "gather", {"iron_ore": 2, "coal": 1}, rng)
+        await quests.on_items(s, char, "gather", {"iron_ore": 1}, rng)
+        for _ in range(3):
+            await fight(char, "cave_bat")
+        await quests.on_talk(s, char, "ysolde", rng)
+        await quests.on_talk(s, char, "vale", rng)
         prog = await quests.progress(s, char)
+        assert all(prog[k].state == "completed" for k in get_content().quests if k.startswith("tut_"))
         assert prog["sealed_box"].stage == "not_started" and char.level == 3
+        # Holt's reliquary and the crypt
         char.location = "whispering_woods"
         await quests.perform(s, char, "sealed_box.approach_guard", [], rng)
         char.location = "crownreach_plaza"
@@ -596,8 +622,7 @@ async def test_whole_chain_reaches_level_five():
         assert (await quests.progress(s, char))["crypt_bones"].state == "active"
         for monster, n in (("crypt_skeleton", 4), ("crypt_warden", 1)):
             for _ in range(n):
-                characters.grant_xp(char, get_content().monsters[monster].xp, Outcome())
-                await quests.on_defeat(s, char, monster, rng)
+                await fight(char, monster)
         prog = await quests.progress(s, char)
         assert prog["sealed_box"].state == "completed" and prog["old_tusk"].state == "active"
         assert char.level == 5
@@ -613,11 +638,32 @@ async def test_ensure_progress_adds_missions_to_old_characters():
     async with session_scope() as s:
         char = await get_char(s, cid)
         journal = await quests.journal(s, char)
-        assert [k for k, _, p in journal if p is None] == ["first_steps", "boar_hunt", "night_wings",
-                                                            "crypt_bones", "old_tusk"]
+        assert [k for k, _, p in journal if p is None] == [
+            k for k, _ in quests.ordered_quests() if k != "sealed_box"]
         await quests.refresh(s, char, Outcome())
         prog = await quests.progress(s, char)
-        assert set(prog) == set(get_content().quests) and prog["first_steps"].state == "active"
+        assert set(prog) == set(get_content().quests) and prog["tut_muster"].state == "active"
+
+
+async def test_veterans_of_the_old_chain_skip_the_tutorial():
+    """A character who finished the old first missions (night_wings) gets the tutorial already done."""
+    from oathforge.database.models import QuestProgress
+
+    _, cid = await new_character()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        for p in (await quests.progress(s, char)).values():
+            if p.quest_key.startswith("tut_"):
+                await s.delete(p)
+        s.add(QuestProgress(character_id=cid, quest_key="night_wings", stage="done", state="completed", counters={}))
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        xp = char.xp
+        await quests.refresh(s, char, Outcome())
+        prog = await quests.progress(s, char)
+        assert all(prog[k].state == "completed" for k in prog if k.startswith("tut_"))
+        assert prog["sealed_box"].stage == "not_started" and char.xp == xp  # unlocked, and no rewards paid
+        assert await quests.location_texts(s, char) is not None  # the old row is ignored, not an error
 
 
 # ---------------------------------------------------------------- hunting and bestiary

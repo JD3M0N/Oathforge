@@ -1,107 +1,315 @@
-# Misiones. Las que tienen `objectives` se completan solas al cumplirlos (muertes, charlas, lugares)
-# y dan `rewards`; la siguiente se desbloquea con `after` (misión completada) o `unlock_flag`.
-# El diario las ordena por `order`. La cadena 1-6 lleva a nivel 5.
+# Misiones. Las que tienen `objectives` se completan solas al cumplirlos (muertes, charlas, lugares, objetos
+# recogidos, desollados o fabricados, descansos, curaciones) y dan `rewards`; la siguiente se desbloquea con
+# `after` (misión completada) o `unlock_flag`. El diario las ordena por `order`.
+# 1-8: el tutorial de la sargenta Vale (de nivel 1 a 3, una actividad por misión); 9-11 llevan a nivel 5.
+# `legacy_done`: quien completó alguna de esas misiones antiguas empieza con esta completada (sin recompensa).
 
-first_steps:
+tut_muster:
   order: 1
-  giver: bram
-  name: {es: Bienvenido a Crownreach, en: Welcome to Crownreach}
+  giver: vale
+  legacy_done: [night_wings]
+  name: {es: Alistamiento, en: Mustering In}
   summary:
-    es: Todo aventurero que llega a Crownreach acaba en La Corona Rota. Bram siempre sabe quién paga por un trabajo.
-    en: Every adventurer who reaches Crownreach ends up at the Broken Crown. Bram always knows who pays for a job.
+    es: La sargenta Vale recibe a los recién llegados en la plaza. Dice que la ciudad necesita manos… y que las tuyas parecen servir.
+    en: Sergeant Vale greets newcomers in the plaza. She says the city needs hands… and yours look useful.
   hint:
-    es: Desde la plaza, viaja a la taberna La Corona Rota y habla con Bram.
-    en: From the plaza, travel to the Broken Crown tavern and talk to Bram.
+    es: Estás en la plaza. Pulsa «💬 Hablar» y elige a la sargenta Vale.
+    en: You are in the plaza. Press "💬 Talk" and pick Sergeant Vale.
   start_stage: active
   objective_stage: active
   complete_stage: done
   objectives:
-    - {kind: talk, target: bram}
+    - {kind: talk, target: vale}
   rewards:
-    - xp: 50
-    - gold: 10
+    - xp: 25
+    - give_item: {skinning_knife: 1}
   stages:
     active:
       journal:
-        es: Habla con Bram, el tabernero de La Corona Rota.
-        en: Talk to Bram, keeper of the Broken Crown.
+        es: Preséntate a la sargenta Vale en la plaza de Crownreach.
+        en: Report to Sergeant Vale in Crownreach Plaza.
+      location_text:
+        crownreach_plaza:
+          es: "Una sargenta de la Guardia de Plata, con la voz de quien ha gritado a mil reclutas, llama a los recién llegados: «¡Eh, cara nueva! Ven aquí». 🗨️ Habla con ella para empezar."
+          en: "A Silver Guard sergeant, with the voice of someone who has shouted at a thousand recruits, calls to the newcomers: \"Hey, new face! Over here.\" 🗨️ Talk to her to begin."
     done:
       state: completed
       journal:
-        es: Bram te dio la bienvenida y unas monedas. Tiene trabajo para ti.
-        en: Bram welcomed you with a few coins. He has work for you.
+        es: Vale te apuntó en su lista y te dio un cuchillo de desollar. «Primero, conoce la ciudad».
+        en: Vale put you on her list and handed you a skinning knife. "First, learn the city."
 
-boar_hunt:
+tut_town:
   order: 2
-  giver: bram
-  after: first_steps
-  name: {es: Colmillos en el prado, en: Tusks in the Meadow}
+  giver: vale
+  after: tut_muster
+  legacy_done: [night_wings]
+  name: {es: Calles de Crownreach, en: Streets of Crownreach}
   summary:
-    es: Los jabalíes destrozan los campos al sur de la ciudad. Bram paga por cada bestia abatida... y por la carne.
-    en: Boars are wrecking the fields south of the city. Bram pays for every beast brought down... and for the meat.
+    es: «Un recluta que se pierde en su propia ciudad no me sirve», dice Vale. Quiere que conozcas la taberna y el Barrio de Oficios.
+    en: "\"A recruit who gets lost in their own city is no use to me,\" says Vale. She wants you to know the tavern and Craftsmen's Row."
   hint:
-    es: El Prado de los Colmillos está a 20 minutos de la plaza. De día, pulsa «🏹 Cazar».
-    en: Tusk Meadow is 20 minutes from the plaza. By day, press "🏹 Hunt".
+    es: Abre /map (o «🧭 Viajar»). En la ciudad vas directo a cualquier lugar. Ve al Barrio de Oficios y habla con Bram en la taberna.
+    en: Open /map (or "🧭 Travel"). In the city you go straight anywhere. Visit Craftsmen's Row and talk to Bram at the tavern.
   start_stage: locked
   unlock_stage: active
   objective_stage: active
   complete_stage: done
   objectives:
-    - {kind: kill, target: boar, count: 3}
+    - {kind: visit, target: crownreach_workshops}
+    - {kind: talk, target: bram}
   rewards:
-    - xp: 150
-    - gold: 20
-    - give_item: {healing_potion: 1}
+    - xp: 25
+    - gold: 5
   stages:
     locked:
       state: locked
-      journal: {es: Bram tiene un encargo para ti., en: Bram has a job for you.}
+      journal: {es: La sargenta Vale tiene algo que enseñarte., en: Sergeant Vale has something to show you.}
     active:
       journal:
-        es: Caza jabalíes en el Prado de los Colmillos. Solo salen de día.
-        en: Hunt boars in Tusk Meadow. They only come out by day.
+        es: Visita el Barrio de Oficios (talleres y gremio) y habla con Bram, el tabernero.
+        en: Visit Craftsmen's Row (workshops and guild) and talk to Bram, the tavern keeper.
+      location_text:
+        crownreach_workshops:
+          es: Yunques, alambiques y tinteros. Aquí se aprende un oficio y se fabrica con lo que traes de fuera (🛠️ Oficios).
+          en: Anvils, stills and inkwells. Here you learn a trade and craft with what you bring back from outside (🛠️ Professions).
     done:
       state: completed
       journal:
-        es: El prado vuelve a estar en calma, al menos de día. Bram te pagó con una sonrisa y una poción.
-        en: The meadow is calm again, by day at least. Bram paid you with a smile and a potion.
+        es: Ya sabes moverte por Crownreach. Bram te invitó a una cerveza «para la próxima».
+        en: You know your way around Crownreach now. Bram offered you a beer "for next time".
 
-night_wings:
+tut_boars:
   order: 3
-  giver: bram
-  after: boar_hunt
+  giver: vale
+  after: tut_town
+  legacy_done: [night_wings]
+  name: {es: Colmillos en el prado, en: Tusks in the Meadow}
+  summary:
+    es: Los jabalíes destrozan los campos al sur de la ciudad. Vale quiere ver cómo peleas… y cómo aprovechas lo que cazas.
+    en: Boars are wrecking the fields south of the city. Vale wants to see how you fight… and how you use what you hunt.
+  hint:
+    es: El Prado de los Colmillos sale directo de la plaza (20 min, sin peligro). De día, pulsa «🏹 Cazar». Con el cuchillo, al ganar desuellas solo.
+    en: Tusk Meadow leaves straight from the plaza (20 min, safe). By day, press "🏹 Hunt". With the knife, you skin the beasts when you win.
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: kill, target: boar, count: 2}
+    - {kind: skin, target: boar_hide}
+  rewards:
+    - xp: 100
+    - give_item: {sickle: 1}
+  stages:
+    locked:
+      state: locked
+      journal: {es: Algo hoza en los campos del sur., en: Something is rooting in the southern fields.}
+    active:
+      journal:
+        es: Caza dos jabalíes en el Prado de los Colmillos (solo de día) y consigue una piel desollando.
+        en: Hunt two boars in Tusk Meadow (by day only) and get a hide by skinning.
+      location_text:
+        tusk_meadow:
+          es: "La hierba está removida a hozadas. Un recluta de la Guardia te grita desde la valla: «¡Cuidado con los colmillos, que no perdonan!»."
+          en: The grass is torn up by snouts. A Guard recruit shouts from the fence, "Mind the tusks, they don't forgive!"
+    done:
+      state: completed
+      journal:
+        es: El prado respira. Vale asintió al ver la piel («no está mal») y te dio una hoz.
+        en: The meadow breathes again. Vale nodded at the hide ("not bad") and gave you a sickle.
+
+tut_herbs:
+  order: 4
+  giver: vale
+  after: tut_boars
+  legacy_done: [night_wings]
+  name: {es: Raíz de sangre, en: Bloodroot}
+  summary:
+    es: La capilla se queda sin raíz de sangre y la Guardia sin pociones. Vale te manda al bosque con la hoz.
+    en: The chapel is running out of bloodroot and the Guard out of potions. Vale sends you to the woods with the sickle.
+  hint:
+    es: Sal por la plaza al Camino del Viejo Rey y sigue hasta el Bosque de los Susurros (o el Claro de la Raíz Roja). Pulsa «🌿 Recolectar hierbas» y pulsa «🎁 Recoger» cuando acabe. Los caminos con ⚠️ pueden traer emboscadas.
+    en: Leave through the plaza to the Old King's Road and on to the Whispering Woods (or Redroot Clearing). Press "🌿 Gather herbs" and "🎁 Collect" when it's done. Roads marked ⚠️ may bring ambushes.
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: gather, target: bloodroot, count: 3}
+  rewards:
+    - xp: 50
+    - gold: 5
+  stages:
+    locked:
+      state: locked
+      journal: {es: A la capilla le falta algo., en: The chapel is short of something.}
+    active:
+      journal:
+        es: Recoge 3 raíces de sangre en el Bosque de los Susurros o el Claro de la Raíz Roja.
+        en: Gather 3 bloodroot in the Whispering Woods or Redroot Clearing.
+      location_text:
+        whispering_woods:
+          es: Entre los helechos asoman tallos rojizos. Raíz de sangre, como dijo Vale.
+          en: Reddish stalks peek out between the ferns. Bloodroot, just as Vale said.
+        redroot_clearing:
+          es: El claro entero huele a raíz de sangre. Aquí no te costará llenar el morral.
+          en: The whole clearing smells of bloodroot. Filling your pack won't be hard here.
+    done:
+      state: completed
+      journal:
+        es: "Volviste con raíz de sangre y sin un rasguño (o con pocos). Guarda alguna: te hará falta para cocinar."
+        en: "You came back with bloodroot and few scratches. Keep some: you'll need it for cooking."
+
+tut_stew:
+  order: 5
+  giver: vale
+  after: tut_herbs
+  legacy_done: [night_wings]
+  name: {es: Guiso del cazador, en: Hunter's Stew}
+  summary:
+    es: «Un soldado con hambre es un soldado muerto». Vale quiere que aprendas a cocinar lo que cazas.
+    en: "\"A hungry soldier is a dead soldier.\" Vale wants you to learn to cook what you hunt."
+  hint:
+    es: "En la taberna La Corona Rota está el fogón. Abre «🛠️ Oficios» y fabrica un estofado del cazador (2 de carne cruda + 1 raíz de sangre). La Cocina es una afición: no ocupa plaza de oficio."
+    en: "The hearth is at The Broken Crown Tavern. Open \"🛠️ Professions\" and craft a Hunter's stew (2 raw meat + 1 bloodroot). Cooking is a hobby: it takes no profession slot."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: craft, target: hunter_stew}
+  rewards:
+    - xp: 50
+    - give_item: {pickaxe: 1}
+  stages:
+    locked:
+      state: locked
+      journal: {es: Se acerca la hora de comer., en: Mealtime is coming.}
+    active:
+      journal:
+        es: Cocina un estofado del cazador en el fogón de La Corona Rota.
+        en: Cook a Hunter's stew at the hearth of The Broken Crown.
+      location_text:
+        broken_crown_tavern:
+          es: "El fogón crepita al fondo. Bram te señala la olla con el trapo: «Es toda tuya, mientras no la quemes»."
+          en: The hearth crackles at the back. Bram points his rag at the pot, "All yours, as long as you don't burn it."
+    done:
+      state: completed
+      journal:
+        es: El guiso olía tan bien que medio salón te pidió la receta. Vale te dio un pico y otro encargo.
+        en: The stew smelled so good half the room asked for the recipe. Vale gave you a pickaxe and another job.
+
+tut_mine:
+  order: 6
+  giver: vale
+  after: tut_stew
+  legacy_done: [night_wings]
+  name: {es: Hierro para la Guardia, en: Iron for the Guard}
+  summary:
+    es: Los caminos del norte están cortados y la herrera Tessa no tiene hierro. Vale te manda a la mina con el pico.
+    en: The northern roads are cut off and Tessa the smith has no iron. Vale sends you to the mine with the pickaxe.
+  hint:
+    es: Por el Camino del Viejo Rey llegas a la Mina del Paso Viejo. Pulsa «⛏️ Minar»; con la «🏕️ Expedición larga» sacas más, pero puede haber emboscada.
+    en: The Old King's Road takes you to the Old Pass Mine. Press "⛏️ Mine"; a "🏕️ Long expedition" yields more, but you may be ambushed.
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: gather, target: iron_ore, count: 3}
+  rewards:
+    - xp: 60
+    - gold: 10
+  stages:
+    locked:
+      state: locked
+      journal: {es: La herrería de Tessa está demasiado tranquila., en: Tessa's forge is too quiet.}
+    active:
+      journal:
+        es: Saca 3 menas de hierro en la Mina del Paso Viejo.
+        en: Dig out 3 iron ore at the Old Pass Mine.
+      location_text:
+        ironvein_mine:
+          es: Las vetas de hierro brillan a la luz de la antorcha. Al fondo, algo chilla y se aleja aleteando.
+          en: The iron veins gleam in the torchlight. Deep inside, something squeaks and flutters away.
+    done:
+      state: completed
+      journal:
+        es: Tessa besó la mena (literalmente) y Vale te pagó. Ahora toca algo más oscuro.
+        en: Tessa kissed the ore (literally) and Vale paid you. Now for something darker.
+
+tut_bats:
+  order: 7
+  giver: vale
+  after: tut_mine
+  legacy_done: [night_wings]
   name: {es: Alas al anochecer, en: Wings at Dusk}
   summary:
     es: Cuando cae el sol, una bandada de murciélagos sale de las grietas del prado y ataca al ganado.
     en: When the sun sets, a swarm of bats pours out of the meadow's cracks and attacks the livestock.
   hint:
-    es: Vuelve al Prado de los Colmillos de noche (de 20:00 a 06:00 del juego; la escena indica si es de día o de noche) y pulsa «🏹 Cazar».
-    en: Go back to Tusk Meadow at night (20:00 to 06:00 game time; the scene shows whether it is day or night) and press "🏹 Hunt".
+    es: Vuelve al Prado de los Colmillos de noche (de 20:00 a 06:00 del juego; la escena indica si es de día o de noche) y pulsa «🏹 Cazar». Mientras esperas, puedes recolectar o descansar.
+    en: Go back to Tusk Meadow at night (20:00 to 06:00 game time; the scene shows whether it is day or night) and press "🏹 Hunt". While you wait, you can gather or rest.
   start_stage: locked
   unlock_stage: active
   objective_stage: active
   complete_stage: done
   objectives:
-    - {kind: kill, target: cave_bat, count: 4}
+    - {kind: kill, target: cave_bat, count: 3}
   rewards:
-    - xp: 200
-    - gold: 20
+    - xp: 75
   stages:
     locked:
       state: locked
       journal: {es: Algo acecha el prado cuando oscurece., en: Something stalks the meadow after dark.}
     active:
       journal:
-        es: Acaba con los murciélagos del prado. Solo salen de noche.
-        en: Deal with the meadow bats. They only come out at night.
+        es: Acaba con tres murciélagos del prado. Solo salen de noche.
+        en: Kill three of the meadow bats. They only come out at night.
     done:
       state: completed
       journal:
         es: Las noches del prado vuelven a ser tranquilas. En la taberna ya se habla de ti.
         en: The meadow nights are quiet again. The tavern is already talking about you.
 
+tut_chapel:
+  order: 8
+  giver: vale
+  after: tut_bats
+  legacy_done: [night_wings]
+  name: {es: Heridas de guerra, en: Battle Scars}
+  summary:
+    es: «Nadie vuelve entero de ahí fuera», dice Vale. Antes de darte por listo, quiere que conozcas a la hermana Ysolde.
+    en: "\"Nobody comes back whole from out there,\" says Vale. Before she calls you ready, she wants you to meet Sister Ysolde."
+  hint:
+    es: Ve a la Capilla del Alba y habla con la hermana Ysolde («🙏 Curar heridas» por unas monedas). Para todo lo demás, descanso largo en la posada. Después, vuelve con Vale.
+    en: Go to the Chapel of the Dawn and talk to Sister Ysolde ("🙏 Heal wounds" for a few coins). For everything else, a long rest at the inn. Then report back to Vale.
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: talk, target: ysolde}
+    - {kind: talk, target: vale}
+  rewards:
+    - xp: 40
+    - give_item: {healing_potion: 1}
+  stages:
+    locked:
+      state: locked
+      journal: {es: Falta una última lección., en: One last lesson remains.}
+    active:
+      journal:
+        es: Habla con la hermana Ysolde en la Capilla del Alba y vuelve a informar a Vale.
+        en: Talk to Sister Ysolde at the Chapel of the Dawn and report back to Vale.
+    done:
+      state: completed
+      journal:
+        es: «Ya no eres un recluta», dijo Vale. «Dicen que el sargento Holt busca a alguien de confianza. Ve a verle».
+        en: "\"You're no recruit any more,\" Vale said. \"Word is Sergeant Holt is looking for someone he can trust. Go see him.\""
+
 crypt_bones:
-  order: 5
+  order: 10
   giver: holt
   unlock_flag: crypt_unlocked
   name: {es: Huesos inquietos, en: Restless Bones}
@@ -135,7 +343,7 @@ crypt_bones:
         en: The bone guards have fallen. Only their lord remains, in the sanctum.
 
 old_tusk:
-  order: 6
+  order: 11
   giver: bram
   unlock_flag: old_tusk_hunt
   name: {es: El Viejo Colmillo, en: Old Tusk}
@@ -177,9 +385,9 @@ sealed_box:
   summary:
     es: Un mensajero de la Guardia de Plata desapareció en el Bosque de los Susurros con una caja que muchos quieren.
     en: A Silver Guard courier vanished in the Whispering Woods carrying a box many people want.
-  order: 4
+  order: 9
   giver: holt
-  after: night_wings
+  after: tut_chapel
   start_stage: locked
   unlock_stage: not_started
   hint:
@@ -190,8 +398,8 @@ sealed_box:
     locked:
       state: locked
       journal:
-        es: Bram dice que en el bosque pasan cosas raras. Primero, gánate la confianza de la ciudad.
-        en: Bram says strange things happen in the woods. First, earn the city's trust.
+        es: Dicen que en el bosque pasan cosas raras. Primero, termina la instrucción de la sargenta Vale.
+        en: Word is strange things happen in the woods. First, finish Sergeant Vale's training.
     not_started:
       state: available
       journal:

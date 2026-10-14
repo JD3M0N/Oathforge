@@ -4,6 +4,28 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.13] - 2026-10-14
+
+### Añadido
+- **Tutorial de la sargenta Vale**: 8 misiones de nivel 1 a 3. La sargenta Vale, nueva PNJ, espera en la plaza día y noche, y la plaza invita a hablar con ella nada más crear el personaje. Cada misión enseña una cosa y su recompensa es la herramienta de la siguiente:
+  1. hablar con un PNJ;
+  2. moverse por la ciudad con `/map`;
+  3. cazar jabalíes y desollar;
+  4. salir de la ciudad y recolectar raíz de sangre;
+  5. cocinar un estofado en el fogón de la taberna;
+  6. minar hierro;
+  7. cazar murciélagos de noche;
+  8. curarse con la hermana Ysolde y volver con Vale.
+
+  Son unos 520 XP con los combates. Al acabarlo se abre «El relicario sellado».
+- 12 réplicas de respaldo para Vale cuando la IA no responde.
+- Campo `legacy_done` en las misiones: quien ya completó las misiones antiguas (hasta «Alas al anochecer») tiene el tutorial hecho, sin cobrar sus recompensas otra vez.
+
+### Cambiado
+- El tutorial sustituye a «Bienvenido a Crownreach», «Colmillos en el prado» y «Alas al anochecer». El relicario, la cripta y el Viejo Colmillo pasan a ser las misiones 9–11.
+- Bram ya no habla de «problemas al norte»: manda a los nuevos con la sargenta Vale y les ofrece el fogón.
+- Los atributos solo se alinean en el bloque monoespaciado de `/hero` y `/sheet`. En la creación salen sin espacios de más.
+
 ## [0.7.12] - 2026-10-14
 
 ### Añadido

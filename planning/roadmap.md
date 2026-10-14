@@ -29,6 +29,10 @@ Versionado `0.x.y`: sube **y** (parche) en arreglos y cambios pequeños; sube **
 - **0.7.1**: 612 textos de respaldo (12+ por caso, crónicas por oficio, narración por desenlace), aviso único que distingue presupuesto agotado de IA no disponible, y validación del catálogo al arrancar.
 - **0.7.3**: ilustración e icono propio para cada criatura del bestiario, retrato de la barda y un archivo de prompt junto a cada imagen.
 - **0.7.6**: `/map` sobre el grafo del mundo: rutas más cortas dentro de la ciudad, salida desde la plaza, tramo a tramo fuera, minutos y yardas y actividades de cada lugar.
+- **0.7.7–0.7.13**: incorporación de jugadores nuevos.
+  - **Creación de personaje**: emojis en la creación y los atributos, `/lineage` y `/background`, 12 trasfondos y trasfondo propio revisado por la IA.
+  - **Ayuda**: `/rulebook` y páginas `/skill_<clave>`.
+  - **Misiones**: objetivos nuevos (recoger, desollar, fabricar, descansar, curarse) y el tutorial de la sargenta Vale hasta nivel 3.
 
 ## Próximo (candidatos)
 
@@ -37,7 +41,9 @@ Versionado `0.x.y`: sube **y** (parche) en arreglos y cambios pequeños; sube **
 - **0.4.x**: balance de las 8 clases con datos de `artifacts/battles/`.
 - **0.5.x**: balance de la cadena de misiones y de la caza con datos de `artifacts/battles/` y del simulador (`artifacts/simulations/`): subir a Mago y Druida a nivel 1-2; más criaturas en el bestiario.
 - **0.6.x**: especializaciones a nivel 5 (los datos ya existen; con la cadena de 0.5.0 se llega a nivel 5 enseguida).
-- **0.7.x**: economía: encargos, sumideros de oro y balance de oficios con datos de la beta (ver `comercio.md`).
+- **0.7.x**:
+  - balance del tutorial con datos de la beta (cuánto tarda, dónde se atasca la gente);
+  - economía: encargos, sumideros de oro y balance de oficios (ver `comercio.md`).
 - **0.8.0**: grupos cooperativos y combate en grupo (fase 3, ver `multijugador.md`).
 - **0.9.0** (propuesta): audio: música de la taberna y voces de NPC (ver `audiovisual.md`).
 - Más adelante: salvaciones de FUE/CON/INT/CAR para monstruos, IA enemiga con habilidades, mercado entre jugadores, PvP, Mini App, TTS.

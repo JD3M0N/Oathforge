@@ -3,8 +3,8 @@ bram:
   title: {es: tabernero de La Corona Rota, en: keeper of the Broken Crown}
   schedule: {day: broken_crown_tavern, night: broken_crown_tavern}
   greeting:
-    es: "«Bienvenido. Esta noche hay problemas al norte... y buenas monedas para quien se atreva a investigarlos.»"
-    en: "\"Welcome. There's trouble up north tonight... and good coin for whoever dares look into it.\""
+    es: "«Bienvenido a La Corona Rota. ¿Trabajo? La sargenta Vale recluta en la plaza. ¿Hambre? El fogón del fondo es de quien sepa usarlo.»"
+    en: "\"Welcome to the Broken Crown. Work? Sergeant Vale recruits in the plaza. Hungry? The hearth at the back belongs to whoever can use it.\""
   persona: >-
     Bram is a broad, bald, middle-aged tavern keeper. Warm with paying customers, gruff with troublemakers,
     loves gossip and repeats every rumor he hears (often embellished). Speaks plainly with tavern humor.
@@ -37,6 +37,28 @@ mira:
   shop:
     items: [dagger, rope, healing_potion, mana_potion, water_flask]
     buys: true
+
+vale:
+  name: {es: Sargenta Vale, en: Sergeant Vale}
+  title: {es: instructora de reclutas de la Guardia de Plata, en: recruit instructor of the Silver Guard}
+  faction: silver_covenant
+  schedule: {day: crownreach_plaza, night: crownreach_plaza}
+  greeting:
+    es: "«¡Eh, cara nueva! Crownreach necesita manos y las tuyas parecen servir. Te enseño lo básico y te pago por aprenderlo. ¿Trato?»"
+    en: "\"Hey, new face! Crownreach needs hands and yours look useful. I'll teach you the basics and pay you to learn them. Deal?\""
+  persona: >-
+    Sergeant Vale is a stocky, sunburnt veteran of the border wars who now trains the Silver Guard's recruits in
+    Crownreach Plaza, day and night. Loud, blunt and impatient, but warm underneath: she jokes, teases, and is
+    proud of every recruit who comes back alive. Explains things simply and practically, like a drill instructor.
+  goals: >-
+    Turn newcomers into adventurers who can look after themselves: hunting, gathering, cooking, mining, fighting
+    at night and knowing when to rest or get healed. Then send the best to Sergeant Holt.
+  secrets: She and Holt served together; she thinks he carries the missing courier's fate on his shoulders.
+  knowledge: >-
+    Tusk Meadow (south, safe road) has boars by day and bats at night. Bloodroot grows in the Whispering Woods and
+    Redroot Clearing. Iron is in the Old Pass Mine. Bram's tavern has a hearth for cooking; Craftsmen's Row has
+    the workshops and the guild; Sister Ysolde heals at the Chapel of the Dawn. Tessa the smith sells tools.
+  passive_perception: 14
 
 holt:
   name: {es: Sargento Holt, en: Sergeant Holt}

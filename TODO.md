@@ -27,8 +27,8 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 
 ## 🧙 Clases y progresión · [clases.md](planning/clases.md) · [progresion.md](planning/progresion.md)
 
+- [ ] 🟡 Probar el tutorial con la beta: cuánto se tarda en llegar a nivel 3 y dónde se atasca la gente (sobre todo la espera hasta la noche para los murciélagos).
 - [ ] 🔴 Elegir especialización a nivel 5. *La ficha completa ya muestra la especialización cuando exista; con la cadena de misiones de v0.5.0 se llega a nivel 5 enseguida.*
-- [ ] 🔴 **Tutorial guiado hasta nivel 3**: al llegar a la plaza, «habla con la sargenta»; ella encarga las primeras misiones para explorar el mundo y enseña de forma divertida cada actividad (recolectar, fabricar, cazar, desollar, minar, viajar, descansar). Sustituye a las misiones 1–3 y desbloquea el resto de la cadena.
 - [ ] 🟢 Escribir el texto largo (`details`) de las habilidades de cada clase para `/skill_<clave>` (hoy solo el Paladín).
 - [ ] 🟡 ◐ **Sistema de descanso**: descanso corto en cualquier sitio (recuperar parte de la vida y algunos usos) y largo en posada. *Hecho: descanso gratis en el osario de la cripta (v0.5.0), el tónico del reposo (v0.6.2), descanso largo de 8 h de juego en la posada y «Curar heridas» en la capilla (v0.7.0). Falta: un descanso corto sin poción; decidir si el osario también debe tardar 8 h.*
 - [ ] 🟡 Siguiente clase: Explorador (Mago, Druida y Bardo en v0.4.0; Brujo en v0.4.4).
@@ -62,7 +62,6 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 ## 🌍 Mundo, misiones y economía · [mundo-y-misiones.md](planning/mundo-y-misiones.md) · [comercio.md](planning/comercio.md)
 
 - [ ] 🟡 ◐ **Bestiario**: ir añadiendo criaturas poco a poco (descripción, hábitat, de día o de noche, estadísticas y puntos débiles). *Hecho (v0.5.0): 9 criaturas y ficha que se desbloquea al verlas y derrotarlas.*
-- [ ] 🟢 Bram habla de «problemas al norte» en su saludo, pero la misión que da es la del prado (al sur): ajustar el saludo a la misión activa.
 - [ ] 🟢 «Algo brilla» al fondo de la mina: hoy es solo ambiente; convertirlo en un descubrimiento con recompensa.
 - [ ] 🟡 Más misiones después del nivel 5 y misiones secundarias repetibles (encargos de caza diarios).
 - [ ] 🔴 ◐ **Profesiones y recolección** · [profesiones.md](planning/profesiones.md). *Hecho (v0.6.0): actividades de campo, maestrías, mina, arboleda, claro y ribera, desuello y crónicas. Hecho (v0.6.1): oficios con 2 plazas, Barrio de Oficios, recetas y `/professions`. Hecho (v0.6.2): poción de maná y tónico del reposo. Hecho (v0.7.0): Escribanía y Artificiería (pergaminos y bombas para el combate), Cocina y Pesca como aficiones sin plaza y guía `/prof_<oficio>`. Falta: probar el balance con la beta (sobre todo la bomba de fuego, que da a toda una fila).*
@@ -125,3 +124,5 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] **Trasfondo propio**: nombre e historia escritos por el jugador, revisados por Gemini (sin insultos, contenido inapropiado ni trampas) y 2 habilidades a elegir (v0.7.9).
 - [x] **`/rulebook`** en el menú y en la bienvenida: tiradas, atributos, CA, PV y dado de golpe, combate, descanso, linajes, trasfondos, clases, oficios y viajes (v0.7.10).
 - [x] Página de cada habilidad de clase, `/skill_<clave>`, con su explicación y «⚙️ Cómo funciona» sacado de los datos del motor, y enlazada desde `/class_<clase>`, la subida de nivel y `/sheet` (v0.7.11).
+- [x] **Tutorial de la sargenta Vale**: 8 misiones de nivel 1 a 3, una actividad por misión (hablar, moverse por la ciudad, cazar y desollar, recolectar, cocinar, minar, cazar de noche, curarse); sustituye a las misiones 1–3 (v0.7.13).
+- [x] Bram ya no habla de «problemas al norte»: manda a los nuevos con la sargenta Vale y les ofrece el fogón (v0.7.13).

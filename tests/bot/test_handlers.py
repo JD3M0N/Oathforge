@@ -529,25 +529,23 @@ async def test_stale_combat_button_never_acts_twice(llm):
 
 async def test_journal_missions_and_bestiary_views(llm, monkeypatch):
     monkeypatch.setattr(exploration, "npcs_present",
-                        lambda loc, now=None: {"broken_crown_tavern": ["bram"]}.get(loc, []))
+                        lambda loc, now=None: {"crownreach_plaza": ["vale"]}.get(loc, []))
     p = Player(llm, tg_id=62)
     await create(p)
+    assert any("Habla con ella para empezar" in t_ for t_, _ in p.chat.sent[-2:])  # the plaza calls you over
     await p.press("jr|-|-")
-    assert "Bienvenido a Crownreach" in p.last[0]
+    assert "Alistamiento" in p.last[0]
     await p.press(p.find("jrm"))
-    await p.press(p.find("jq", "first_steps"))
-    assert "Bram" in p.last[0] and "50 XP" in p.last[0]
+    await p.press(p.find("jq", "tut_muster"))
+    assert "Vale" in p.last[0] and "25 XP" in p.last[0]
     await p.press(p.find("jrm"))
-    await p.press(p.find("jq", "boar_hunt"))
+    await p.press(p.find("jq", "tut_town"))
     assert "🔒" in p.last[0]
-    # talking to Bram completes the first mission and opens the boar hunt
-    async with session_scope() as s:
-        char = await s.scalar(select(Character).with_for_update())
-        char.location = "broken_crown_tavern"
-    await p.press("talk|bram|-")
-    assert any("Bienvenido a Crownreach" in t_ for t_, _ in p.chat.sent[-3:])
-    await p.press("jq|boar_hunt|-")
-    assert "Jabalí 0/3" in p.last[0]
+    # talking to the sergeant completes the first mission and opens the next
+    await p.press("talk|vale|-")
+    assert any("Alistamiento" in t_ for t_, _ in p.chat.sent[-3:])
+    await p.press("jq|tut_town|-")
+    assert "Barrio de Oficios" in p.last[0] and "Bram" in p.last[0]
     await p.press("jrb|-|-")
     assert "0/10" in p.last[0]
     await p.press("jrr|-|-")
