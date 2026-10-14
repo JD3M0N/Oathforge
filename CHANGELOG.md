@@ -4,6 +4,16 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.7] - 2026-10-14
+
+### Añadido
+- Cada atributo tiene su emoji (💪 FUE, 🏹 DES, 🫀 CON, 🧠 INT, 🦉 SAB, 🎭 CAR; campo `icon` en `content/abilities.yaml`), y lo mismo cada linaje y trasfondo.
+
+### Cambiado
+- Creación de personaje con emojis: linajes y trasfondos con su icono, «⚔️ Elige tu clase (ℹ️ /classes)» con el icono y el dado de golpe de cada clase, y una confirmación con 🦸, ❤️ y los atributos en dos filas.
+- Los atributos se pintan igual en la compra por puntos, la confirmación, `/hero` y `/sheet` (`render.attribute`).
+- TODO: las ideas nuevas (tutorial de la sargenta, `/lineage`, `/background`, trasfondo propio, `/rulebook` y `/skill_<clave>`) ordenadas en sus secciones.
+
 ## [0.7.6] - 2026-10-14
 
 ### Añadido

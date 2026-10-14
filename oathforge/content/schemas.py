@@ -77,10 +77,12 @@ class AbilityInfo(Strict):
     name: Text
     short: Text
     effect: Text  # what it does in game, shown while assigning points at creation
+    icon: str = ""
 
 
 class Lineage(Strict):
     name: Text
+    icon: str = ""
     description: Text
     bonuses: dict[str, int] = {}
     skills: list[str] = []
@@ -90,6 +92,7 @@ class Lineage(Strict):
 
 class Background(Strict):
     name: Text
+    icon: str = ""
     description: Text
     skills: list[str]
     gold: int

@@ -60,9 +60,9 @@ create:
   gender_btn:
     male: "♂️ Man"
     female: "♀️ Woman"
-  ask_lineage: "<b>{name}</b>, what lineage do you come from?"
-  ask_background: "Who were you before you became an adventurer?"
-  ask_class: "Choose your class:"
+  ask_lineage: "🧬 <b>{name}</b>, what lineage do you come from? <i>(ℹ️ /lineage)</i>"
+  ask_background: "📜 Who were you before you became an adventurer? <i>(ℹ️ /background)</i>"
+  ask_class: "⚔️ <b>Choose your class</b> <i>(ℹ️ /classes)</i>:"
   ask_abilities: |-
     🎲 <b>Assign your abilities</b> · {cls}
     Everything starts at 8. You have <b>{left}</b> of {budget} points left. Raising to 14 or 15 costs 2 points. ★ = your class's main ability. Tap an ability's name to see what it does.
@@ -71,13 +71,13 @@ create:
   points_left: "You still have {left} points to assign."
   cannot_change: "You can't change that ability any further."
   summary: |-
-    <b>{name}</b>
+    🦸 <b>{name}</b>
     {gender} · {lineage} · {background} · {cls}
 
     {stats}
-    Hit points: {hp}
+    ❤️ Hit points: <b>{hp}</b>
 
-    Confirm?
+    ✅ Confirm?
   done: "✨ <b>{name}</b> enters Crownreach. May your oaths guide you."
   cancelled: "Creation cancelled. Use /start whenever you like."
 

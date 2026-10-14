@@ -1,4 +1,5 @@
 soldier:
+  icon: "🪖"
   name: {es: Soldado, en: Soldier}
   description: {es: Serviste en las guerras fronterizas y aún oyes los tambores., en: You served in the border wars and still hear the drums.}
   skills: [athletics, intimidation]
@@ -6,6 +7,7 @@ soldier:
   items: {rope: 1}
 
 criminal:
+  icon: "🗝️"
   name: {es: Criminal, en: Criminal}
   description: {es: Las calles bajas de Crownreach te enseñaron a moverte sin ser visto., en: The low streets of Crownreach taught you to move unseen.}
   skills: [deception, stealth]
@@ -13,6 +15,7 @@ criminal:
   items: {dagger: 1}
 
 acolyte:
+  icon: "🙏"
   name: {es: Acólito, en: Acolyte}
   description: {es: Creciste entre incienso y plegarias en la capilla de la ciudad., en: You grew up among incense and prayers in the city chapel.}
   skills: [religion, insight]
@@ -20,6 +23,7 @@ acolyte:
   items: {healing_potion: 1}
 
 scholar:
+  icon: "📚"
   name: {es: Erudito, en: Scholar}
   description: {es: Pasaste años entre manuscritos que nadie más quería leer., en: You spent years among manuscripts nobody else wanted to read.}
   skills: [history, investigation]

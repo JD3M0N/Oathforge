@@ -1,35 +1,41 @@
 abilities:
   str:
+    icon: "💪"
     name: {es: Fuerza, en: Strength}
     short: {es: FUE, en: STR}
     effect:
       es: Ataque y daño con armas cuerpo a cuerpo (espadas, mazas). Atletismo.
       en: Attack and damage with melee weapons (swords, maces). Athletics.
   dex:
+    icon: "🏹"
     name: {es: Destreza, en: Dexterity}
     short: {es: DES, en: DEX}
     effect:
       es: Clase de armadura con armadura ligera, iniciativa, arcos y armas sutiles. Acrobacias, Sigilo, Juego de manos y salvaciones de DES.
       en: Armor class in light armor, initiative, bows and finesse weapons. Acrobatics, Stealth, Sleight of Hand and DEX saves.
   con:
+    icon: "🫀"
     name: {es: Constitución, en: Constitution}
     short: {es: CON, en: CON}
     effect:
       es: Puntos de vida. Cada punto de modificador suma vida en cada nivel.
       en: Hit points. Each point of modifier adds HP at every level.
   int:
+    icon: "🧠"
     name: {es: Inteligencia, en: Intelligence}
     short: {es: INT, en: INT}
     effect:
       es: Conjuros del Mago. Arcanos, Historia, Investigación y Religión.
       en: Mage spells. Arcana, History, Investigation and Religion.
   wis:
+    icon: "🦉"
     name: {es: Sabiduría, en: Wisdom}
     short: {es: SAB, en: WIS}
     effect:
       es: Conjuros y curación de Sacerdote y Druida. Percepción, Medicina, Perspicacia, Supervivencia y salvaciones de SAB.
       en: Priest and Druid spells and healing. Perception, Medicine, Insight, Survival and WIS saves.
   cha:
+    icon: "🎭"
     name: {es: Carisma, en: Charisma}
     short: {es: CAR, en: CHA}
     effect:

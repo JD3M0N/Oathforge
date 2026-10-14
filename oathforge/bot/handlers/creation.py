@@ -16,6 +16,7 @@ from telegram.ext import (
 
 from oathforge.bot.handlers.common import current_view, edit_or_send, load, send
 from oathforge.bot.keyboards import btn, cb, markup
+from oathforge.bot.render import CLASS_ICONS, attribute
 from oathforge.content import get_content
 from oathforge.database.session import session_scope
 from oathforge.engine import pointbuy
@@ -67,9 +68,9 @@ async def got_gender(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     new["gender"] = key
     c = get_content()
     lines = [t(lang, "create.ask_lineage", name=escape(new["name"])), ""]
-    lines += [f"<b>{lin.name.get(lang)}</b>: {lin.description.get(lang)} <i>{lin.trait_text.get(lang)}</i>"
+    lines += [f"{lin.icon} <b>{lin.name.get(lang)}</b>: {lin.description.get(lang)} <i>{lin.trait_text.get(lang)}</i>"
               for lin in c.lineages.values()]
-    rows = [[btn(lin.name.get(lang), cb("cc", f"lin:{k}"))] for k, lin in c.lineages.items()]
+    rows = [[btn(f"{lin.icon} {lin.name.get(lang)}", cb("cc", f"lin:{k}"))] for k, lin in c.lineages.items()]
     await edit_or_send(update, "\n".join(lines), markup(rows))
     return LINEAGE
 
@@ -84,9 +85,9 @@ async def got_lineage(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
         return LINEAGE
     context.user_data["new"]["lineage"] = key
     lines = [t(lang, "create.ask_background"), ""]
-    lines += [f"<b>{bg.name.get(lang)}</b>: {bg.description.get(lang)} "
+    lines += [f"{bg.icon} <b>{bg.name.get(lang)}</b>: {bg.description.get(lang)} "
               f"<i>({', '.join(c.skills[s].name.get(lang) for s in bg.skills)})</i>" for bg in c.backgrounds.values()]
-    rows = [[btn(bg.name.get(lang), cb("cc", f"bg:{k}"))] for k, bg in c.backgrounds.items()]
+    rows = [[btn(f"{bg.icon} {bg.name.get(lang)}", cb("cc", f"bg:{k}"))] for k, bg in c.backgrounds.items()]
     await edit_or_send(update, "\n".join(lines), markup(rows))
     return BACKGROUND
 
@@ -101,8 +102,9 @@ async def got_background(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         return BACKGROUND
     context.user_data["new"]["background"] = key
     lines = [t(lang, "create.ask_class"), ""]
-    lines += [f"<b>{cl.name.get(lang)}</b>: {cl.description.get(lang)}" for cl in c.classes.values()]
-    rows = [[btn(cl.name.get(lang), cb("cc", f"cls:{k}"))] for k, cl in c.classes.items()]
+    lines += [f"{CLASS_ICONS.get(k, '•')} <b>{cl.name.get(lang)}</b> · 🎲 d{cl.hit_die}: {cl.description.get(lang)}"
+              for k, cl in c.classes.items()]
+    rows = [[btn(f"{CLASS_ICONS.get(k, '•')} {cl.name.get(lang)}", cb("cc", f"cls:{k}"))] for k, cl in c.classes.items()]
     await edit_or_send(update, "\n".join(lines), markup(rows))
     return CLASS
 
@@ -137,10 +139,10 @@ def abilities_panel(new: dict, lang: str):
         bonus = lin.bonuses.get(a, 0)
         extra = t(lang, "create.lineage_bonus", bonus=f"{bonus:+d}") if bonus else ""
         star = " ★" if a == cls.primary else ""
-        lines.append(f"<b>{info.short.get(lang)} {final[a]}</b> ({modifier(final[a]):+d}){star}{extra}")
+        lines.append(f"<b>{attribute(a, final[a], lang)}</b>{star}{extra}")
         lines.append(f"<i>{escape(info.effect.get(lang))}</i>")
         rows.append([btn("➖", cb("cc", f"ab:{a}:-")),
-                     btn(f"{info.short.get(lang)} {scores[a]}", cb("cc", f"ab:{a}:i")),
+                     btn(f"{info.icon} {info.short.get(lang)} {scores[a]}", cb("cc", f"ab:{a}:i")),
                      btn("➕", cb("cc", f"ab:{a}:+"))])
     hp = max_hp(cls.hit_die, modifier(final["con"]), 1)
     lines += ["", t(lang, "create.ability_hp", hp=hp)]
@@ -191,12 +193,14 @@ async def _summary(update: Update, new: dict, lang: str) -> int:
     c = get_content()
     cls = c.classes[new["class"]]
     scores = characters.starting_scores(new["class"], new["lineage"], new["scores"])
-    stats = " · ".join(f"{c.abilities[a].short.get(lang)} {scores[a]} ({modifier(scores[a]):+d})" for a in c.abilities)
+    stats = [attribute(a, scores[a], lang) for a in c.abilities]
+    stats = "\n".join(" · ".join(stats[i:i + 3]) for i in range(0, len(stats), 3))
     hp = max_hp(cls.hit_die, modifier(scores["con"]), 1)
-    text = t(lang, "create.summary", name=escape(new["name"]), gender=t(lang, f"gender.{new['gender']}"),
-             lineage=c.lineages[new["lineage"]].name.get(lang),
-             background=c.backgrounds[new["background"]].name.get(lang), cls=cls.name.get(lang),
-             stats=stats, hp=hp)
+    lin, bg = c.lineages[new["lineage"]], c.backgrounds[new["background"]]
+    text = t(lang, "create.summary", name=escape(new["name"]),
+             gender=t(lang, f"create.gender_btn.{new['gender']}"),
+             lineage=f"{lin.icon} {lin.name.get(lang)}".strip(), background=f"{bg.icon} {bg.name.get(lang)}".strip(),
+             cls=f"{CLASS_ICONS.get(new['class'], '')} {cls.name.get(lang)}".strip(), stats=stats, hp=hp)
     rows = [[btn(t(lang, "btn.confirm"), cb("cc", "ok")), btn(t(lang, "btn.restart"), cb("cc", "redo"))]]
     await edit_or_send(update, text, markup(rows))
     return CONFIRM

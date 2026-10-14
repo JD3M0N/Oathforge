@@ -28,6 +28,8 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 ## 🧙 Clases y progresión · [clases.md](planning/clases.md) · [progresion.md](planning/progresion.md)
 
 - [ ] 🔴 Elegir especialización a nivel 5. *La ficha completa ya muestra la especialización cuando exista; con la cadena de misiones de v0.5.0 se llega a nivel 5 enseguida.*
+- [ ] 🔴 **Tutorial guiado hasta nivel 3**: al llegar a la plaza, «habla con la sargenta»; ella encarga las primeras misiones para explorar el mundo y enseña de forma divertida cada actividad (recolectar, fabricar, cazar, desollar, minar, viajar, descansar). Sustituye a las misiones 1–3 y desbloquea el resto de la cadena.
+- [ ] 🟡 Página de cada habilidad de clase, `/skill_<clave>` (por ejemplo «Imposición de manos»), con más detalle, y enlazada desde `/class_<clase>`, la subida de nivel y `/sheet`.
 - [ ] 🟡 ◐ **Sistema de descanso**: descanso corto en cualquier sitio (recuperar parte de la vida y algunos usos) y largo en posada. *Hecho: descanso gratis en el osario de la cripta (v0.5.0), el tónico del reposo (v0.6.2), descanso largo de 8 h de juego en la posada y «Curar heridas» en la capilla (v0.7.0). Falta: un descanso corto sin poción; decidir si el osario también debe tardar 8 h.*
 - [ ] 🟡 Siguiente clase: Explorador (Mago, Druida y Bardo en v0.4.0; Brujo en v0.4.4).
 - [ ] 🟢 Juramentos con consecuencias, títulos y cicatrices en la ficha.
@@ -48,6 +50,10 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 
 - [ ] 🟢 **Publicar en los canales de Telegram** ([inglés](https://t.me/OathForge), [español](https://t.me/OathForge_es)) desde el bot: el changelog de cada versión y el periódico *Herald of Aetherfall* con los rumores confirmados del mundo. Hoy los anuncios se publican a mano.
 - [ ] 🔴 Grupos de expedición y combate en grupo (0.8.0).
+- [ ] 🔴 **Creación de personaje más guiada**: `/lineage` y `/background` para consultar las opciones mientras eliges, con emojis en los textos.
+- [ ] 🟡 10–15 trasfondos: botones con los básicos y «Más… (/background)» para el resto.
+- [ ] 🟡 **Trasfondo propio**: lo escribe el jugador y la IA lo revisa (sin insultos, contenido inapropiado ni trampas); deja elegir 2 habilidades, como en D&D.
+- [ ] 🟡 **`/rulebook`** en el menú y en el primer mensaje: qué es el dado de golpe, la CA, las tiradas, las clases y qué se puede hacer en el juego.
 - [ ] 🟡 ◐ Comandos nuevos: `/map`, `/quests`, `/rest`, `/party`. *Hecho: `/quests` (v0.5.0), `/settings` y `/prof_<oficio>` (v0.7.0), `/map` (v0.7.6).*
 - [ ] 🟡 Pruebas de habilidad más claras: hoy salen como «🎲 Survival: 2 → 3 vs DC 13 ❌».
 - [ ] 🟡 Con ventaja o desventaja, mostrar los dos d20 y cuál cuenta (hoy solo sale uno).
@@ -118,3 +124,4 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] **Capilla del Alba** con «Curar heridas» por 3 de oro y **descanso largo** de 8 h de juego (80 min) acostado en la posada (v0.7.0).
 - [x] Arreglos de la partida de prueba del 13-10: barra de XP del nivel, «Jabalí A/B», 🧪 solo con pociones, tienda con estadísticas, la antorcha se vende por 1, «pensativo» en NPC femeninas (v0.7.0).
 - [x] Ilustraciones e icono propio para cada criatura del bestiario, retrato de la barda y archivo de prompt junto a cada imagen (v0.7.3).
+- [x] Emojis en la creación de personaje (linajes, trasfondos, «⚔️ Elige tu clase (ℹ️ /classes)», confirmación) y en los atributos: 💪 FUE, 🏹 DES, 🫀 CON, 🧠 INT, 🦉 SAB, 🎭 CAR (v0.7.7).

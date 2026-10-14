@@ -60,9 +60,9 @@ create:
   gender_btn:
     male: "♂️ Hombre"
     female: "♀️ Mujer"
-  ask_lineage: "<b>{name}</b>, ¿de qué linaje procedes?"
-  ask_background: "¿Quién eras antes de convertirte en aventurero?"
-  ask_class: "Elige tu clase:"
+  ask_lineage: "🧬 <b>{name}</b>, ¿de qué linaje procedes? <i>(ℹ️ /lineage)</i>"
+  ask_background: "📜 ¿Quién eras antes de convertirte en aventurero? <i>(ℹ️ /background)</i>"
+  ask_class: "⚔️ <b>Elige tu clase</b> <i>(ℹ️ /classes)</i>:"
   ask_abilities: |-
     🎲 <b>Reparte tus atributos</b> · {cls}
     Todos empiezan en 8. Te quedan <b>{left}</b> de {budget} puntos. Subir a 14 o a 15 cuesta 2 puntos. ★ = atributo principal de tu clase. Pulsa el nombre de un atributo para ver qué hace.
@@ -71,13 +71,13 @@ create:
   points_left: "Aún te quedan {left} puntos por repartir."
   cannot_change: "No puedes cambiar más ese atributo."
   summary: |-
-    <b>{name}</b>
+    🦸 <b>{name}</b>
     {gender} · {lineage} · {background} · {cls}
 
     {stats}
-    Puntos de vida: {hp}
+    ❤️ Puntos de vida: <b>{hp}</b>
 
-    ¿Confirmas?
+    ✅ ¿Confirmas?
   done: "✨ <b>{name}</b> entra en Crownreach. Que tus juramentos te guíen."
   cancelled: "Creación cancelada. Usa /start cuando quieras."
 

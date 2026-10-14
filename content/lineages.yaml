@@ -1,4 +1,5 @@
 human:
+  icon: "🧑"
   name: {es: Humano, en: Human}
   description:
     es: Adaptables y ambiciosos, los humanos fundaron Crownreach y pueblan cada rincón de Aetherfall.
@@ -8,6 +9,7 @@ human:
   trait_text: {es: "Versátil: +1 a todos los atributos.", en: "Versatile: +1 to every ability."}
 
 elf:
+  icon: "🧝"
   name: {es: Elfo, en: Elf}
   description:
     es: Longevos y atentos, los elfos recuerdan Thornwood cuando aún no tenía caminos.
@@ -18,6 +20,7 @@ elf:
   trait_text: {es: "Sentidos agudos: competencia en Percepción.", en: "Keen senses: proficient in Perception."}
 
 dwarf:
+  icon: "⛏️"
   name: {es: Enano, en: Dwarf}
   description:
     es: Tercos como la roca de Frosthold, los enanos resisten lo que derribaría a otros.
@@ -27,6 +30,7 @@ dwarf:
   trait_text: {es: "Resistencia al veneno: inmune al estado envenenado.", en: "Poison resilience: immune to the poisoned condition."}
 
 orc:
+  icon: "👹"
   name: {es: Orco, en: Orc}
   description:
     es: Fuertes y resistentes, los orcos han sido mercenarios, eruditos y reyes.
