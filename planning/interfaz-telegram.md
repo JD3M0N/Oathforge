@@ -22,7 +22,7 @@ Cómo se ve y se siente el juego dentro del chat. Fuente: [GDD](referencias/gdd-
 - **Escena compacta**: lugar, hora y clima, descripción, actores visibles, sucesos importantes y opciones, todo en un mensaje.
 - **Interfaz progresiva**: al principio pocas opciones claras; aparecen más botones cuando el personaje desbloquea sistemas.
 - **Un mensaje de estado que se edita** (turno, PV, decisiones) en lugar de diez mensajes por acción; los mensajes nuevos, solo para cambios narrativos.
-- Comandos que faltan: `/map`, `/party`, `/rest`.
+- Comandos que faltan: `/party`, `/rest`. `/map` existe desde la v0.7.6 (ver `mundo-y-misiones.md`).
 
 ### Acción rápida y acción libre (GDD §2.3)
 

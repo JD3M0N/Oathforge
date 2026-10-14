@@ -4,6 +4,17 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.6] - 2026-10-14
+
+### Añadido
+- `/map` (y el botón «🧭 Viajar», que abre la misma vista): dónde estás, a dónde puedes ir, cuánto tardas en minutos y yardas, y qué se puede hacer en cada lugar (tiendas, curandera, descanso, recolección, caza, fabricar, gremio y quién está ahora).
+- El mundo como grafo (`oathforge/services/world_map.py`): las salidas son aristas con peso en minutos de juego y distancia a 100 yd/min (ritmo normal de D&D; 1 km ≈ 1094 yd). Una salida puede fijar `yards:` si el terreno es lento (la galería inundada: 3 min, 150 yd).
+- Validación al arrancar: una ciudad tiene un único `hub`, solo se sale de ella desde él, sus calles no tienen peligro ni combates fijos y todos sus lugares están conectados. Un test comprueba que cada ruta va y vuelve igual.
+
+### Cambiado
+- En una ciudad vas directo a cualquier lugar por el camino más corto (Dijkstra); se sale de la ciudad solo desde la plaza. En tierras salvajes y mazmorras se avanza tramo a tramo (cada camino tira su emboscada; la cripta, sala a sala); el mapa enseña el resto de la zona con su ruta. El viaje sigue siendo instantáneo mientras probamos.
+- La IA también entiende «voy a la capilla» desde cualquier punto de la ciudad.
+
 ## [0.7.5] - 2026-10-14
 
 ### Añadido

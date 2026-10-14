@@ -28,6 +28,7 @@ Versionado `0.x.y`: sube **y** (parche) en arreglos y cambios pequeños; sube **
 - **0.7.0**: aficiones (cocina y pesca, sin plaza), Escribanía y Artificiería con pergaminos y bombas para el combate, guía `/prof_<oficio>`, Capilla del Alba («Curar heridas»), descanso largo de 8 h de juego, `/settings` con el aviso del dado decorativo, textos genéricos de respaldo en `content/fallbacks/` y Gemini 3.1 Flash-Lite para todo.
 - **0.7.1**: 612 textos de respaldo (12+ por caso, crónicas por oficio, narración por desenlace), aviso único que distingue presupuesto agotado de IA no disponible, y validación del catálogo al arrancar.
 - **0.7.3**: ilustración e icono propio para cada criatura del bestiario, retrato de la barda y un archivo de prompt junto a cada imagen.
+- **0.7.6**: `/map` sobre el grafo del mundo: rutas más cortas dentro de la ciudad, salida desde la plaza, tramo a tramo fuera, minutos y yardas y actividades de cada lugar.
 
 ## Próximo (candidatos)
 

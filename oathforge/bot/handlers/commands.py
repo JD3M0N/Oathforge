@@ -1,5 +1,5 @@
 """/hero /sheet /inventory /journal /quests /classes /class_<key> /report /professions /prof_<key> /settings /look
-/language /help."""
+/map /language /help."""
 
 import re
 
@@ -74,6 +74,13 @@ async def _report(session, char, lang):
     return render.report_page(await combat_service.battle_report(session, char), 0, lang)
 
 
+async def _map(session, char, lang):
+    """The map; during a fight, the combat panel (no walking away from it)."""
+    if char.state == "in_combat":
+        return await current_view(session, char, lang)
+    return render.map_view(char, lang)
+
+
 async def _professions(session, char, lang):
     return render.professions_view(char, lang)
 
@@ -105,6 +112,7 @@ async def help_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 def handlers() -> list[BaseHandler]:
     return [
         CommandHandler("look", _view(current_view)),
+        CommandHandler("map", _view(_map)),
         CommandHandler("hero", _view(render.hero)),
         CommandHandler("sheet", sheet),
         CommandHandler("inventory", _view(render.inventory_view)),

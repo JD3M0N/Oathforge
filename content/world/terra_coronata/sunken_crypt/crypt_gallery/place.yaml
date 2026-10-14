@@ -4,7 +4,7 @@ description:
   es: El agua negra te llega a las rodillas. Algo se mueve bajo la superficie, o quizá solo sea el eco.
   en: Black water rises to your knees. Something moves beneath the surface, or maybe it is only the echo.
 exits:
-  - {to: crypt_hall, minutes: 3}
+  - {to: crypt_hall, minutes: 3, yards: 150}  # agua a la rodilla: lento
   - {to: crypt_sanctum, minutes: 2}
 fixed_encounters:
   - {monsters: [crypt_skeleton], flag: cleared_crypt_gallery}

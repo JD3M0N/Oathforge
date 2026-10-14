@@ -6,6 +6,6 @@ description:
 exits:
   - {to: crypt_entrance, minutes: 2}
   - {to: crypt_ossuary, minutes: 2}
-  - {to: crypt_gallery, minutes: 3}
+  - {to: crypt_gallery, minutes: 3, yards: 150}  # agua a la rodilla: lento
 fixed_encounters:
   - {monsters: [crypt_skeleton, crypt_skeleton], flag: cleared_crypt_hall}

@@ -10,7 +10,7 @@ from oathforge.content.schemas import EncounterEntry, Exit, Location
 from oathforge.database.models import Character
 from oathforge.engine.checks import check, dc_for
 from oathforge.engine.dice import roll
-from oathforge.services import characters, combat_service, inventory, quests
+from oathforge.services import characters, combat_service, inventory, quests, world_map
 from oathforge.services.events import Outcome
 
 GAME_DAY_SECONDS = 4 * 3600  # one in-game day every four real hours
@@ -62,8 +62,7 @@ def npcs_present(location: str, now: float | None = None) -> list[str]:
 
 
 def exits(char: Character) -> list[Exit]:
-    loc = get_content().locations[char.location]
-    return [e for e in loc.exits if not e.requires_flag or char.flags.get(e.requires_flag)]
+    return world_map.open_exits(char, char.location)
 
 
 def encounter_table(loc: Location, now: float | None = None) -> list[EncounterEntry]:
@@ -88,12 +87,12 @@ def pending_fixed_encounter(char: Character):
 async def travel(session: AsyncSession, char: Character, dest: str, rng: random.Random) -> Outcome:
     if refusal := characters.ensure_free(char):
         return refusal
-    exit_ = next((e for e in exits(char) if e.to == dest), None)
-    if exit_ is None:
+    route = world_map.route_to(char, dest)  # a whole walk across the city, or one road or room elsewhere
+    if route is None:
         return Outcome.refused("explore.err.no_route")
     c = get_content()
     char.location = dest
-    out = Outcome().add("explore.arrived", place=c.locations[dest].name.model_dump(), minutes=exit_.minutes)
+    out = Outcome().add("explore.arrived", place=c.locations[dest].name.model_dump(), minutes=route.minutes)
 
     out.extend(await quests.on_visit(session, char, dest, rng))
 
@@ -102,7 +101,7 @@ async def travel(session: AsyncSession, char: Character, dest: str, rng: random.
         _, enc_out = await combat_service.start_encounter(session, char, list(fixed.monsters), rng, fixed.flag)
         return out.extend(enc_out)
     table = encounter_table(c.locations[dest])
-    if exit_.danger and table and rng.random() < exit_.danger * ENCOUNTER_CHANCE_PER_DANGER:
+    if route.danger and table and rng.random() < route.danger * ENCOUNTER_CHANCE_PER_DANGER:
         entry = rng.choices(table, weights=[e.weight for e in table])[0]
         out.add("explore.ambush")
         _, enc_out = await combat_service.start_encounter(session, char, list(entry.monsters), rng)

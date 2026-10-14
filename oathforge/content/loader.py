@@ -229,6 +229,7 @@ def validate_references(c: Content) -> None:
             need("skill", disc.skill, c.skills, f"location {key} discovery {dkey}")
             for i in disc.gives:
                 need("item", i, c.items, f"location {key} discovery {dkey}")
+    errors += _city_graph_errors(c)
     for key, recipe in c.recipes.items():
         need("profession", recipe.profession, c.professions, f"recipe {key}")
         for i in [*recipe.ingredients, *recipe.outputs]:
@@ -339,6 +340,40 @@ def validate_references(c: Content) -> None:
 
     if errors:
         raise ValueError("Content validation failed:\n  " + "\n  ".join(errors))
+
+
+def _city_graph_errors(c: Content) -> list[str]:
+    """A city is walked freely along shortest paths (services/world_map.py), so it must be safe to cross:
+    one hub, the only place with roads out; no dangerous streets nor fixed fights; every place reachable."""
+    errors: list[str] = []
+    for zkey, zone in c.zones.items():
+        if zone.kind != "city":
+            continue
+        places = {k: loc for k, loc in c.locations.items() if loc.zone == zkey}
+        hubs = [k for k, loc in places.items() if loc.hub]
+        if len(hubs) != 1:
+            errors.append(f"zone {zkey}: a city needs exactly one hub, found {len(hubs)}")
+            continue
+        for key, loc in places.items():
+            if loc.fixed_encounters:
+                errors.append(f"location {key}: fixed encounters in a city")
+            for ex in loc.exits:
+                if ex.to not in c.locations:
+                    continue
+                inside = c.locations[ex.to].zone == zkey
+                if not inside and not loc.hub:
+                    errors.append(f"location {key}: leaves the city to '{ex.to}' but is not its hub")
+                if inside and (ex.danger or ex.requires_flag):
+                    errors.append(f"location {key}: city street to '{ex.to}' with danger or a flag")
+        seen, todo = {hubs[0]}, [hubs[0]]
+        while todo:
+            for ex in places[todo.pop()].exits:
+                if ex.to in places and ex.to not in seen:
+                    seen.add(ex.to)
+                    todo.append(ex.to)
+        for key in sorted(set(places) - seen):
+            errors.append(f"location {key}: not reachable from the hub inside the city")
+    return errors
 
 
 def _validate_effect(c: Content, eff: dict, where: str, errors: list[str]) -> None:

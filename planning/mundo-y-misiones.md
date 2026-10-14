@@ -32,6 +32,14 @@
 - Misiones de clase (el Sacerdote purifica la capilla, el Guerrero entrena a la milicia).
 - Diario con pistas que la IA resume a partir de los hechos, sin inventar.
 
+### Mapa y rutas (v0.7.6)
+
+- **Grafo**: cada lugar es un nodo y cada `exit` una arista dirigida con peso en **minutos de juego**; la distancia sale del ritmo normal de D&D, 300 pies/min = **100 yd/min** (1 km ≈ 1094 yd; 1 yd = 0,9144 m). `yards:` en la salida cuando el terreno es lento. Las rutas van y vuelven igual (test).
+- **Ciudad**: movimiento libre por el camino más corto (Dijkstra sobre la zona). Solo se sale desde el `hub` (la plaza), que es el punto de partida de los viajes. El cargador exige un hub, calles sin peligro ni combates fijos y todo conectado.
+- **Tierras salvajes y mazmorras**: tramo a tramo; cada camino tira su emboscada y cada sala su combate fijo. El mapa enseña el resto de la zona salvaje con la ruta y los minutos, sin botón; en la mazmorra marca las salas despejadas.
+- `/map` y «🧭 Viajar» son la misma vista, con las actividades de cada lugar y quién está ahora.
+- **Pendiente**: el viaje es instantáneo (para probar); `/travel` con tiempo real, viajes entre ciudades desde su punto de partida, estados de descubrimiento y niebla de guerra.
+
 ### Geografía y exploración (GDD §3)
 
 - **Siete regiones** como objetivo de temporada (§3.2):

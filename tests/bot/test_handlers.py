@@ -171,6 +171,18 @@ async def test_full_flow(llm, monkeypatch):
     assert any("🎲" in t_ and "DM" in t_ for t_, _ in p.chat.sent[-2:])
 
 
+async def test_map_walks_across_the_city(llm):
+    p = Player(llm, tg_id=8)
+    await create(p)
+    await p.press(p.find("trv"))
+    assert "🗺️" in p.last[0] and "Salidas de la ciudad" in p.last[0]
+    await p.press(p.find("go", "crownreach_workshops"))  # plaza → market → workshops in one walk
+    assert (await char_row()).location == "crownreach_workshops"
+    assert any("5 minutos" in t_ for t_, _ in p.chat.sent[-3:])
+    await p.press(p.find("trv"))
+    assert "old_kings_road" not in str(p.buttons())  # you leave the city from the plaza
+
+
 async def test_combat_through_buttons(llm):
     p = Player(llm, tg_id=7, lang="en")
     await create(p)

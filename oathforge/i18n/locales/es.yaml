@@ -4,6 +4,7 @@
 cmd:
   start: "Empezar o volver a la escena"
   look: "Mirar alrededor"
+  map: "Mapa: dónde estás y a dónde ir"
   hero: "Resumen del héroe"
   sheet: "Ficha completa con retrato"
   inventory: "Inventario"
@@ -24,7 +25,7 @@ help:
     También puedes <b>escribir lo que quieras hacer</b>: «me escondo tras la barra y escucho», «intento robarle la bolsa al tabernero», «empujo el carro sobre el bandido».
     El Dungeon Master interpreta tu acción, el motor tira los dados y tú ves el resultado real.
 
-    Comandos: /look /hero /sheet /inventory /journal /quests /classes /report /professions /settings
+    Comandos: /look /map /hero /sheet /inventory /journal /quests /classes /report /professions /settings
   version: "<i>Oathforge v{version}</i>"
 
 settings:
@@ -150,8 +151,40 @@ scene:
   people: "👥 Aquí: {names}"
   hint: "Escribe cualquier acción o usa los botones."
 
-travel:
-  title: "🧭 ¿Hacia dónde vas?"
+map:
+  title: "🗺️ <b>Mapa</b> · {zone} ({kind})"
+  kind:
+    city: "ciudad"
+    wilds: "tierras salvajes"
+    dungeon: "mazmorra"
+  here: "📍 Estás en <b>{place}</b>"
+  nothing: "Aquí no hay nada especial que hacer."
+  city: "🏙️ <b>Por la ciudad</b> <i>(a pie, sin peligro)</i>"
+  exits_city: "🚪 <b>Salidas de la ciudad</b> <i>(desde {hub})</i>"
+  roads: "🧭 <b>Caminos desde aquí</b>"
+  rooms: "🕯️ <b>Pasos desde esta sala</b>"
+  beyond: "🌲 <b>Más lejos</b> <i>(paso a paso)</i>"
+  route: "{minutes} min · {yards} yd"
+  via: "por {places}"
+  gate: "🚪 salida de la ciudad"
+  cleared: "✅ despejada"
+  hint:
+    city: "Dentro de la ciudad vas directo a cualquier sitio por el camino más corto. Para salir, parte desde la plaza."
+    wilds: "Fuera de la ciudad se avanza camino a camino: cada uno con ⚠️ puede acabar en emboscada."
+    dungeon: "En la mazmorra se avanza sala a sala. Lo que guarda cada una te espera al entrar."
+  do:
+    shop: "🛒 Tienda de {npc}"
+    heal: "✨ Curar heridas ({cost} 🪙)"
+    rest: "🛏️ Descanso largo ({cost} 🪙)"
+    rest_free: "🛏️ Descanso largo (gratis)"
+    gather_mining: "⛏️ Minar"
+    gather_woodcutting: "🪓 Talar"
+    gather_herbalism: "🌿 Hierbas"
+    gather_fishing: "🎣 Pescar"
+    hunt: "🏹 Cazar y rastrear"
+    craft: "🔨 Fabricar"
+    guild: "📜 Gremio de oficios"
+    npc: "💬 {npc}"
 
 talk:
   title: "💬 ¿Con quién quieres hablar?"

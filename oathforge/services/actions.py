@@ -20,7 +20,9 @@ from oathforge.database.models import Character, User
 from oathforge.database.session import session_scope
 from oathforge.engine.checks import clamp_tier
 from oathforge.engine.combat import Action, EncounterState
-from oathforge.services import activities, audit, characters, combat_service, exploration, inventory, npcs, quests
+from oathforge.services import (
+    activities, audit, characters, combat_service, exploration, inventory, npcs, quests, world_map,
+)
 from oathforge.services.events import Outcome, facts
 
 
@@ -103,7 +105,7 @@ async def build_context(session: AsyncSession, char: Character, lang: str) -> Ac
         ctx.objects = {k: loc.scene_objects[k].name.en for k in state.scene_objects if k in loc.scene_objects}
         return ctx
     present = exploration.npcs_present(char.location)
-    ctx.exits = {e.to: c.locations[e.to].name.en for e in exploration.exits(char)}
+    ctx.exits = {r.to: c.locations[r.to].name.en for r in world_map.destinations(char)}
     ctx.npcs = {k: f"{c.npcs[k].name.en}, {c.npcs[k].title.en}" for k in present}
     for a in await quests.available_actions(session, char, present):
         ctx.quest_actions[a.ref] = a.action.label.en

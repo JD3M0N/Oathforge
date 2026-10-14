@@ -50,7 +50,7 @@ async def test_all_views_render(lang):
         for loc in c.locations:
             char.location = loc
             check(await render.scene(s, char, lang))
-            check(render.travel_menu(char, lang))
+            check(render.map_view(char, lang))
             check(render.talk_menu(char, lang))
             check(render.shop_menu(char, lang))
         for npc in c.npcs:

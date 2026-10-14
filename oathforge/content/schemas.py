@@ -307,9 +307,10 @@ class SceneObject(Strict):
 
 class Exit(Strict):
     to: str
-    minutes: int = 10
+    minutes: int = 10  # game minutes on foot: the edge weight of the world graph
     danger: int = Field(0, ge=0, le=3)
     requires_flag: str | None = None
+    yards: int | None = Field(None, gt=0)  # distance when the terrain is slow; else minutes × walking pace
 
 
 class EncounterEntry(Strict):
@@ -372,7 +373,7 @@ class Location(Strict):
     rest_cost: int | None = None  # long rest (8 game hours) at an inn
     healer: Healer | None = None  # "Cure wounds" for a few coins (the chapel)
     respawn: bool = False
-    hub: bool = False  # the zone's overview point (city plaza): shows "View city" when the zone has images
+    hub: bool = False  # the city's plaza: "View city" when the zone has images, and the only way out of the city
     # filled by the loader from the folder: world/<continent>/<zone>/<location>/place.yaml
     zone: str = ""
     continent: str = ""

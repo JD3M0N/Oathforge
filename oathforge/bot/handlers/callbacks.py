@@ -101,7 +101,7 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             talked = await quests.on_talk(session, char, arg, rng())  # "talk to Bram" objectives
             text, kb = await render.conversation(session, char, arg, lang)
         elif verb == "trv" and not in_combat:
-            text, kb = render.travel_menu(char, lang)
+            text, kb = render.map_view(char, lang)
         elif verb == "talkm" and not in_combat:
             text, kb = render.talk_menu(char, lang)
         elif verb == "inv":

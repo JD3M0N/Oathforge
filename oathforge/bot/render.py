@@ -17,7 +17,7 @@ from oathforge.engine.progression import MAX_LEVEL, XP_THRESHOLDS, skill_rank
 from oathforge.i18n import t
 from oathforge.services import (
     actions, activities, bestiary, characters, chronicles, combat_service, crafting, exploration, inventory, npcs, professions,
-    quests,
+    quests, world_map,
 )
 from oathforge.services.events import Outcome, render_event
 
@@ -370,16 +370,73 @@ def zone_caption(zone_key: str, lang: str) -> str:
     return f"🏙️ <b>{escape(zone.name.get(lang))}</b>\n\n{escape(desc.get(lang))}"
 
 
-def travel_menu(char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+def _place_activities(loc_key: str, lang: str) -> str:
+    """🛒 Tienda de Mira · 🛏️ Descanso largo (5 🪙) · 💬 Bram"""
+    parts = []
+    for key, params in world_map.activities(loc_key, exploration.npcs_present(loc_key)):
+        params = {k: v.get(lang, v.get("en")) if isinstance(v, dict) else v for k, v in params.items()}
+        parts.append(t(lang, f"map.do.{key}", **{k: escape(str(v)) for k, v in params.items()}))
+    return " · ".join(parts)
+
+
+def _route_lines(char: Character, route: world_map.Route, lang: str) -> list[str]:
+    """• <b>Capilla del Alba</b> · 4 min · 400 yd · por Plaza  (and what there is to do below)"""
     c = get_content()
+    loc = c.locations[route.to]
+    tags = [t(lang, "map.route", minutes=route.minutes, yards=route.yards)]
+    if route.via:
+        tags.append(t(lang, "map.via", places=escape(", ".join(c.locations[k].name.get(lang) for k in route.via))))
+    if loc.zone != c.locations[char.location].zone:
+        tags.append(escape(c.zones[loc.zone].name.get(lang)))
+    if loc.hub and loc.zone == c.locations[char.location].zone:
+        tags.append(t(lang, "map.gate"))
+    if world_map.cleared(char, route.to):
+        tags.append(t(lang, "map.cleared"))
+    lines = [f"• <b>{escape(loc.name.get(lang))}</b> · " + " · ".join(tags) + (" " + "⚠️" * route.danger
+                                                                              if route.danger else "")]
+    todo = _place_activities(route.to, lang)
+    if todo:
+        lines.append(f"      {todo}")
+    return lines
+
+
+def map_view(char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+    """/map and «Travel»: where you are, where you can go and how long it takes, and what there is to do.
+    In a city you walk straight anywhere and leave from the hub; in the wilds and dungeons, one stretch at a time."""
+    c = get_content()
+    here = c.locations[char.location]
+    zone = c.zones[here.zone]
+    lines = [t(lang, "map.title", zone=escape(zone.name.get(lang)), kind=t(lang, f"map.kind.{zone.kind}")),
+             t(lang, "map.here", place=escape(here.name.get(lang)))]
+    todo = _place_activities(char.location, lang)
+    lines.append(f"      {todo}" if todo else f"      <i>{t(lang, 'map.nothing')}</i>")
+    lines.append(RULE)
+    routes = world_map.destinations(char)
+    if zone.kind == "city":
+        inside = [r for r in routes if c.locations[r.to].zone == here.zone]
+        lines.append(t(lang, "map.city"))
+        for r in inside:
+            lines += _route_lines(char, r, lang)
+        hub, roads = world_map.departures(char)
+        if roads:
+            lines += ["", t(lang, "map.exits_city", hub=escape(c.locations[hub].name.get(lang)))]
+            for r in roads:
+                lines += _route_lines(char, r, lang)
+    else:
+        lines.append(t(lang, "map.rooms" if zone.kind == "dungeon" else "map.roads"))
+        for r in routes:
+            lines += _route_lines(char, r, lang)
+        far = world_map.beyond(char)
+        if far:
+            lines += ["", t(lang, "map.beyond")]
+            for r in far:
+                lines += _route_lines(char, r, lang)
+    lines += ["", f"<i>{t(lang, f'map.hint.{zone.kind}')}</i>"]
     n = nonce()
-    rows = []
-    for e in exploration.exits(char):
-        danger = "⚠️" * e.danger
-        rows.append([btn(f"🧭 {c.locations[e.to].name.get(lang)} · {e.minutes} min {danger}".strip(),
-                         cb("go", e.to, n))])
+    rows = [[btn(f"🧭 {c.locations[r.to].name.get(lang)} · {r.minutes} min {'⚠️' * r.danger}".strip(),
+                 cb("go", r.to, n))] for r in routes]
     rows.append([btn(t(lang, "btn.back"), cb("scene"))])
-    return t(lang, "travel.title"), markup(rows)
+    return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
 
 
 def talk_menu(char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:

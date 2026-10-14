@@ -1,3 +1,4 @@
+import dataclasses
 import re
 
 import yaml
@@ -161,3 +162,25 @@ def test_monster_art_icons_and_prompt_files(tmp_path):
     (tmp_path / "monsters/dragon").mkdir()
     with pytest.raises(ValueError, match="dragon"):
         scan_keyed_media(tmp_path, "monsters", c.monsters, MediaCatalog().monsters)
+
+
+def test_routes_go_both_ways_alike():
+    """Every A→B has a B→A with the same minutes, yards and danger (a flag may hide only one way)."""
+    c = load_content()
+    for key, loc in c.locations.items():
+        for e in loc.exits:
+            back = next((b for b in c.locations[e.to].exits if b.to == key), None)
+            assert back is not None, f"{key} → {e.to} has no way back"
+            assert (e.minutes, e.yards, e.danger) == (back.minutes, back.yards, back.danger), f"{key} ↔ {e.to}"
+
+
+def test_city_graph_rules():
+    from oathforge.content.loader import _city_graph_errors
+    c = load_content()
+    assert _city_graph_errors(c) == []
+    plaza, tavern = c.locations["crownreach_plaza"], c.locations["broken_crown_tavern"]
+    no_hub = {**c.locations, "crownreach_plaza": plaza.model_copy(update={"hub": False})}
+    assert any("exactly one hub" in e for e in _city_graph_errors(dataclasses.replace(c, locations=no_hub)))
+    road = tavern.exits[0].model_copy(update={"to": "old_kings_road"})
+    side_gate = {**c.locations, "broken_crown_tavern": tavern.model_copy(update={"exits": [*tavern.exits, road]})}
+    assert any("not its hub" in e for e in _city_graph_errors(dataclasses.replace(c, locations=side_gate)))

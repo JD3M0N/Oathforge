@@ -4,6 +4,7 @@
 cmd:
   start: "Start or return to the scene"
   look: "Look around"
+  map: "Map: where you are and where to go"
   hero: "Hero summary"
   sheet: "Full sheet with portrait"
   inventory: "Inventory"
@@ -24,7 +25,7 @@ help:
     You can also <b>type whatever you want to do</b>: "I hide behind the bar and listen", "I try to lift the keeper's purse", "I push the cart onto the bandit".
     The Dungeon Master interprets your action, the engine rolls the dice, and you see what really happened.
 
-    Commands: /look /hero /sheet /inventory /journal /quests /classes /report /professions /settings
+    Commands: /look /map /hero /sheet /inventory /journal /quests /classes /report /professions /settings
   version: "<i>Oathforge v{version}</i>"
 
 settings:
@@ -150,8 +151,40 @@ scene:
   people: "👥 Here: {names}"
   hint: "Type any action or use the buttons."
 
-travel:
-  title: "🧭 Where are you heading?"
+map:
+  title: "🗺️ <b>Map</b> · {zone} ({kind})"
+  kind:
+    city: "city"
+    wilds: "wilds"
+    dungeon: "dungeon"
+  here: "📍 You are at <b>{place}</b>"
+  nothing: "Nothing special to do here."
+  city: "🏙️ <b>Around the city</b> <i>(on foot, safe)</i>"
+  exits_city: "🚪 <b>Roads out of the city</b> <i>(from {hub})</i>"
+  roads: "🧭 <b>Roads from here</b>"
+  rooms: "🕯️ <b>Ways out of this room</b>"
+  beyond: "🌲 <b>Further away</b> <i>(step by step)</i>"
+  route: "{minutes} min · {yards} yd"
+  via: "through {places}"
+  gate: "🚪 way out of the city"
+  cleared: "✅ cleared"
+  hint:
+    city: "Inside the city you walk straight anywhere along the shortest way. To leave it, set out from the plaza."
+    wilds: "Outside the city you go one road at a time: any road marked ⚠️ may end in an ambush."
+    dungeon: "In the dungeon you go room by room. Whatever guards each one is waiting when you walk in."
+  do:
+    shop: "🛒 {npc}'s shop"
+    heal: "✨ Cure wounds ({cost} 🪙)"
+    rest: "🛏️ Long rest ({cost} 🪙)"
+    rest_free: "🛏️ Long rest (free)"
+    gather_mining: "⛏️ Mine"
+    gather_woodcutting: "🪓 Chop wood"
+    gather_herbalism: "🌿 Herbs"
+    gather_fishing: "🎣 Fish"
+    hunt: "🏹 Hunt and track"
+    craft: "🔨 Craft"
+    guild: "📜 Craft guild"
+    npc: "💬 {npc}"
 
 talk:
   title: "💬 Who do you want to talk to?"

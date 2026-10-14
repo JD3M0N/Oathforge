@@ -17,7 +17,7 @@ from oathforge.i18n import t
 log = logging.getLogger("oathforge")
 
 # Telegram's "/" menu; each needs a cmd.<name> description in every locale.
-MENU_COMMANDS = ("start", "look", "hero", "sheet", "inventory", "journal", "quests", "classes", "report",
+MENU_COMMANDS = ("start", "look", "map", "hero", "sheet", "inventory", "journal", "quests", "classes", "report",
                  "professions", "settings", "help")
 
 
