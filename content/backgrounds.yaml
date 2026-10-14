@@ -1,4 +1,5 @@
 soldier:
+  basic: true
   icon: "🪖"
   name: {es: Soldado, en: Soldier}
   description: {es: Serviste en las guerras fronterizas y aún oyes los tambores., en: You served in the border wars and still hear the drums.}
@@ -7,6 +8,7 @@ soldier:
   items: {rope: 1}
 
 criminal:
+  basic: true
   icon: "🗝️"
   name: {es: Criminal, en: Criminal}
   description: {es: Las calles bajas de Crownreach te enseñaron a moverte sin ser visto., en: The low streets of Crownreach taught you to move unseen.}
@@ -15,6 +17,7 @@ criminal:
   items: {dagger: 1}
 
 acolyte:
+  basic: true
   icon: "🙏"
   name: {es: Acólito, en: Acolyte}
   description: {es: Creciste entre incienso y plegarias en la capilla de la ciudad., en: You grew up among incense and prayers in the city chapel.}
@@ -23,9 +26,74 @@ acolyte:
   items: {healing_potion: 1}
 
 scholar:
+  basic: true
   icon: "📚"
   name: {es: Erudito, en: Scholar}
   description: {es: Pasaste años entre manuscritos que nadie más quería leer., en: You spent years among manuscripts nobody else wanted to read.}
   skills: [history, investigation]
   gold: 10
   items: {torch: 2}
+
+guild_artisan:
+  icon: "🔨"
+  name: {es: Artesano de gremio, en: Guild artisan}
+  description: {es: Aprendiste el oficio en un taller del Barrio de Oficios y sabes regatear como nadie., en: You learned your trade in a workshop of the Crafts Quarter and can haggle like nobody else.}
+  skills: [insight, persuasion]
+  gold: 15
+  items: {iron_ingot: 2}
+
+hermit:
+  icon: "🌿"
+  name: {es: Ermitaño, en: Hermit}
+  description: {es: Viviste años apartado en Thornwood entre hierbas y silencio., en: You lived for years apart in Thornwood among herbs and silence.}
+  skills: [medicine, religion]
+  gold: 5
+  items: {bloodroot: 2, restmoss: 1}
+
+noble:
+  icon: "👑"
+  name: {es: Noble, en: Noble}
+  description: {es: Tu apellido abre puertas en Crownreach… y también despierta rencores., en: Your family name opens doors in Crownreach… and stirs up grudges too.}
+  skills: [history, persuasion]
+  gold: 30
+  items: {copper_ring: 1}
+
+outlander:
+  icon: "🏕️"
+  name: {es: Forastero, en: Outlander}
+  description: {es: Creciste lejos de los caminos; la ciudad te parece ruidosa y el bosque es tu casa., en: You grew up far from the roads; the city feels noisy and the forest is your home.}
+  skills: [athletics, survival]
+  gold: 10
+  items: {skinning_knife: 1, raw_meat: 2}
+
+sailor:
+  icon: "⚓"
+  name: {es: Marinero, en: Sailor}
+  description: {es: Remaste en barcazas del río y aún caminas como si el suelo se moviera., en: You rowed river barges and still walk as if the ground were moving.}
+  skills: [athletics, perception]
+  gold: 10
+  items: {rope: 1, fishing_rod: 1}
+
+urchin:
+  icon: "🐀"
+  name: {es: Huérfano callejero, en: Urchin}
+  description: {es: Los tejados y las alcantarillas de Crownreach fueron tu escuela y tu cama., en: The rooftops and sewers of Crownreach were your school and your bed.}
+  skills: [sleight_of_hand, stealth]
+  gold: 10
+  items: {torch: 1}
+
+entertainer:
+  icon: "🎪"
+  name: {es: Artista, en: Entertainer}
+  description: {es: "Malabares, canciones y piruetas en las ferias: sabes ganarte a un público difícil.", en: "Juggling, songs and somersaults at fairs: you know how to win over a tough crowd."}
+  skills: [acrobatics, persuasion]
+  gold: 15
+  items: {hunter_stew: 1}
+
+folk_hero:
+  icon: "🌾"
+  name: {es: Héroe del pueblo, en: Folk hero}
+  description: {es: Plantaste cara a un recaudador abusivo y tu aldea aún canta tu nombre., en: You stood up to a cruel tax collector and your village still sings your name.}
+  skills: [insight, survival]
+  gold: 10
+  items: {sickle: 1}

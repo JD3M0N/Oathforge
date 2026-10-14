@@ -10,6 +10,8 @@ cmd:
   inventory: "Inventory"
   journal: "Adventure journal"
   quests: "Missions and progress"
+  lineage: "Lineages: bonuses and traits"
+  background: "Backgrounds: skills, gold and gear"
   classes: "Classes and their abilities"
   report: "Report of the last battle"
   professions: "Professions and masteries"
@@ -80,6 +82,9 @@ create:
     ✅ Confirm?
   done: "✨ <b>{name}</b> enters Crownreach. May your oaths guide you."
   cancelled: "Creation cancelled. Use /start whenever you like."
+  bg_more: "📜 More backgrounds ({n})…"
+  bg_basics: "◀ The basic ones"
+  bg_all: "<i>Every background: see what each one gives with /background.</i>"
 
 btn:
   full_sheet: "📜 Full sheet"
@@ -513,6 +518,13 @@ creature:
   beast: "Beast"
   undead: "Undead"
   humanoid: "Humanoid"
+
+lineages:
+  title: "🧬 <b>Lineages of Aetherfall</b>"
+  bonuses: "📈 {list}"
+
+backgrounds:
+  title: "📜 <b>Backgrounds</b>\nWho you were before adventuring: skills (🎓), starting gold (💰) and gear (🎒)."
 
 classes:
   title: "📚 <b>Oathforge classes</b>"

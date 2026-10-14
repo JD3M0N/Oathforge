@@ -50,8 +50,6 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 
 - [ ] 🟢 **Publicar en los canales de Telegram** ([inglés](https://t.me/OathForge), [español](https://t.me/OathForge_es)) desde el bot: el changelog de cada versión y el periódico *Herald of Aetherfall* con los rumores confirmados del mundo. Hoy los anuncios se publican a mano.
 - [ ] 🔴 Grupos de expedición y combate en grupo (0.8.0).
-- [ ] 🔴 **Creación de personaje más guiada**: `/lineage` y `/background` para consultar las opciones mientras eliges, con emojis en los textos.
-- [ ] 🟡 10–15 trasfondos: botones con los básicos y «Más… (/background)» para el resto.
 - [ ] 🟡 **Trasfondo propio**: lo escribe el jugador y la IA lo revisa (sin insultos, contenido inapropiado ni trampas); deja elegir 2 habilidades, como en D&D.
 - [ ] 🟡 **`/rulebook`** en el menú y en el primer mensaje: qué es el dado de golpe, la CA, las tiradas, las clases y qué se puede hacer en el juego.
 - [ ] 🟡 ◐ Comandos nuevos: `/map`, `/quests`, `/rest`, `/party`. *Hecho: `/quests` (v0.5.0), `/settings` y `/prof_<oficio>` (v0.7.0), `/map` (v0.7.6).*
@@ -125,3 +123,4 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] Arreglos de la partida de prueba del 13-10: barra de XP del nivel, «Jabalí A/B», 🧪 solo con pociones, tienda con estadísticas, la antorcha se vende por 1, «pensativo» en NPC femeninas (v0.7.0).
 - [x] Ilustraciones e icono propio para cada criatura del bestiario, retrato de la barda y archivo de prompt junto a cada imagen (v0.7.3).
 - [x] Emojis en la creación de personaje (linajes, trasfondos, «⚔️ Elige tu clase (ℹ️ /classes)», confirmación) y en los atributos: 💪 FUE, 🏹 DES, 🫀 CON, 🧠 INT, 🦉 SAB, 🎭 CAR (v0.7.7).
+- [x] `/lineage` (o `/race`) y `/background` para consultar las opciones a mitad de la creación, y 12 trasfondos: los 4 básicos como botón y «📜 Más trasfondos…» para el resto (v0.7.8).

@@ -15,7 +15,8 @@ from telegram.ext import (
 )
 
 from oathforge.bot.handlers.common import current_view, edit_or_send, load, send
-from oathforge.bot.keyboards import btn, cb, markup
+from oathforge.bot import render
+from oathforge.bot.keyboards import btn, cb, grid, markup
 from oathforge.bot.render import CLASS_ICONS, attribute
 from oathforge.content import get_content
 from oathforge.database.session import session_scope
@@ -84,11 +85,32 @@ async def got_lineage(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
     if key not in c.lineages or not {"name", "gender"} <= set(context.user_data.get("new", {})):
         return LINEAGE
     context.user_data["new"]["lineage"] = key
+    await edit_or_send(update, *background_step(lang))
+    return BACKGROUND
+
+
+def background_step(lang: str, everything: bool = False):
+    """The basic backgrounds explained, as buttons; "More…" swaps in a button for every background."""
+    c = get_content()
     lines = [t(lang, "create.ask_background"), ""]
-    lines += [f"{bg.icon} <b>{bg.name.get(lang)}</b>: {bg.description.get(lang)} "
-              f"<i>({', '.join(c.skills[s].name.get(lang) for s in bg.skills)})</i>" for bg in c.backgrounds.values()]
-    rows = [[btn(f"{bg.icon} {bg.name.get(lang)}", cb("cc", f"bg:{k}"))] for k, bg in c.backgrounds.items()]
-    await edit_or_send(update, "\n".join(lines), markup(rows))
+    if everything:
+        rows = grid([btn(f"{bg.icon} {bg.name.get(lang)}", cb("cc", f"bg:{k}")) for k, bg in c.backgrounds.items()])
+        rows.append([btn(t(lang, "create.bg_basics"), cb("cc", "bgl:basic"))])
+        lines.append(t(lang, "create.bg_all"))
+    else:
+        basic = {k: bg for k, bg in c.backgrounds.items() if bg.basic}
+        rows = [[btn(f"{bg.icon} {bg.name.get(lang)}", cb("cc", f"bg:{k}"))] for k, bg in basic.items()]
+        rows.append([btn(t(lang, "create.bg_more", n=len(c.backgrounds)), cb("cc", "bgl:all"))])
+        lines += [f"{bg.icon} <b>{escape(bg.name.get(lang))}</b>: {escape(bg.description.get(lang))}\n"
+                  f"<i>{render.background_line(bg, lang)}</i>\n" for bg in basic.values()]
+    return "\n".join(lines), markup(rows)
+
+
+async def more_backgrounds(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    q = update.callback_query
+    await q.answer()
+    lang = context.user_data.get("lang", "es")
+    await edit_or_send(update, *background_step(lang, everything=q.data.endswith(":all")))
     return BACKGROUND
 
 
@@ -248,7 +270,8 @@ def handler() -> ConversationHandler:
             NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, got_name)],
             GENDER: [CallbackQueryHandler(got_gender, pattern=r"^cc\|gen:")],
             LINEAGE: [CallbackQueryHandler(got_lineage, pattern=r"^cc\|lin:")],
-            BACKGROUND: [CallbackQueryHandler(got_background, pattern=r"^cc\|bg:")],
+            BACKGROUND: [CallbackQueryHandler(got_background, pattern=r"^cc\|bg:"),
+                         CallbackQueryHandler(more_backgrounds, pattern=r"^cc\|bgl:")],
             CLASS: [CallbackQueryHandler(got_class, pattern=r"^cc\|cls:")],
             ABILITIES: [CallbackQueryHandler(got_ability, pattern=r"^cc\|ab:")],
             CONFIRM: [CallbackQueryHandler(confirm, pattern=r"^cc\|(ok|redo)")],

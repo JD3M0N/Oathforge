@@ -403,6 +403,33 @@ async def test_point_buy_creation_uses_the_chosen_scores(llm):
     assert char.max_hp == 10 + 3
 
 
+async def test_lineage_and_background_help_during_creation(llm):
+    from oathforge.bot.handlers import commands
+
+    p = Player(llm, tg_id=64)
+    await creation.start(p.update(message="/start"), p.ctx)
+    await creation.got_name(p.update(message="Mara"), p.ctx)
+    await creation.got_gender(p.update(data="cc|gen:female"), p.ctx)
+    assert "/lineage" in p.last[0] and "🧝" in p.last[0]
+    await commands.lineages(p.update(message="/lineage"), p.ctx)  # no character yet: still works
+    assert "Sentidos agudos" in p.last[0] and "🏹 DES +2" in p.last[0]
+    assert await creation.got_lineage(p.update(data="cc|lin:elf"), p.ctx) == creation.BACKGROUND
+    assert "cc|bg:soldier|-" in p.buttons() and "cc|bg:sailor|-" not in p.buttons()  # only the basic ones
+    assert await creation.more_backgrounds(p.update(data="cc|bgl:all"), p.ctx) == creation.BACKGROUND
+    assert "cc|bg:sailor|-" in p.buttons() and len([b for b in p.buttons() if b.startswith("cc|bg:")]) >= 10
+    await commands.backgrounds(p.update(message="/background"), p.ctx)
+    assert "Marinero" in p.last[0] and "💰" in p.last[0]
+    assert await creation.got_background(p.update(data="cc|bg:sailor"), p.ctx) == creation.CLASS
+    assert "/classes" in p.last[0]
+    await creation.got_class(p.update(data="cc|cls:rogue"), p.ctx)
+    await creation.got_ability(p.update(data="cc|ab:rec"), p.ctx)
+    assert await creation.got_ability(p.update(data="cc|ab:ok"), p.ctx) == creation.CONFIRM
+    assert "⚓ Marinero" in p.last[0] and "💪 FUE" in p.last[0] and "❤️" in p.last[0]
+    await creation.confirm(p.update(data="cc|ok"), p.ctx)
+    char = await char_row()
+    assert char.background == "sailor" and char.gold == 10
+
+
 async def test_stale_combat_button_never_acts_twice(llm):
     from oathforge.database.models import CombatAction
     from sqlalchemy import func

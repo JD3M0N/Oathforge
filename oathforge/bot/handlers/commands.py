@@ -1,4 +1,4 @@
-"""/hero /sheet /inventory /journal /quests /classes /class_<key> /report /professions /prof_<key> /settings /look
+"""/lineage /background /hero /sheet /inventory /journal /quests /classes /class_<key> /report /professions /prof_<key> /settings /look
 /map /language /help."""
 
 import re
@@ -55,6 +55,22 @@ async def classes(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     m = CLASS_LINK.match((update.message.text or "").strip()) if update.message else None
     text, kb = render.class_page(m.group(1), lang, char) if m else render.classes_list(lang)
     await send(update, text, kb)
+
+
+async def lineages(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/lineage: also works halfway through character creation, to look before choosing."""
+    async with session_scope() as session:
+        user, _ = await load(session, update)
+        lang = user.language
+    await send(update, render.lineages_list(lang))
+
+
+async def backgrounds(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/background: every background, also during character creation."""
+    async with session_scope() as session:
+        user, _ = await load(session, update)
+        lang = user.language
+    await send(update, render.backgrounds_list(lang))
 
 
 PROF_LINK = re.compile(r"^/prof_([a-z_]+?)(?:@\w+)?$")
@@ -118,6 +134,8 @@ def handlers() -> list[BaseHandler]:
         CommandHandler("inventory", _view(render.inventory_view)),
         CommandHandler("journal", _view(render.journal)),
         CommandHandler("quests", _view(render.missions)),
+        CommandHandler(["lineage", "race"], lineages),
+        CommandHandler("background", backgrounds),
         CommandHandler("classes", classes),
         MessageHandler(filters.Regex(CLASS_LINK), classes),
         CommandHandler("report", _view(_report)),

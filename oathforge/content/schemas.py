@@ -93,6 +93,7 @@ class Lineage(Strict):
 class Background(Strict):
     name: Text
     icon: str = ""
+    basic: bool = False  # a button straight away at creation; the rest behind "More…"
     description: Text
     skills: list[str]
     gold: int

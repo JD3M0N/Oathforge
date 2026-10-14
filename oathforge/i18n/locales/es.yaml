@@ -10,6 +10,8 @@ cmd:
   inventory: "Inventario"
   journal: "Diario de aventuras"
   quests: "Misiones y progreso"
+  lineage: "Linajes: bonificadores y rasgos"
+  background: "Trasfondos: habilidades, oro y equipo"
   classes: "Clases y sus habilidades"
   report: "Informe de la última batalla"
   professions: "Oficios y maestrías"
@@ -80,6 +82,9 @@ create:
     ✅ ¿Confirmas?
   done: "✨ <b>{name}</b> entra en Crownreach. Que tus juramentos te guíen."
   cancelled: "Creación cancelada. Usa /start cuando quieras."
+  bg_more: "📜 Más trasfondos ({n})…"
+  bg_basics: "◀ Los básicos"
+  bg_all: "<i>Todos los trasfondos: mira qué da cada uno con /background.</i>"
 
 btn:
   full_sheet: "📜 Ficha completa"
@@ -513,6 +518,13 @@ creature:
   beast: "Bestia"
   undead: "No muerto"
   humanoid: "Humanoide"
+
+lineages:
+  title: "🧬 <b>Linajes de Aetherfall</b>"
+  bonuses: "📈 {list}"
+
+backgrounds:
+  title: "📜 <b>Trasfondos</b>\nQuién eras antes de la aventura: habilidades (🎓), oro inicial (💰) y equipo (🎒)."
 
 classes:
   title: "📚 <b>Clases de Oathforge</b>"

@@ -845,6 +845,43 @@ def _rewards_line(effects: list[dict], lang: str) -> str:
     return " · ".join(escape(p) for p in parts)
 
 
+# ---------------------------------------------------------------- lineages and backgrounds
+
+def lineages_list(lang: str) -> str:
+    """/lineage: every lineage with its bonuses, skills and trait."""
+    c = get_content()
+    lines = [t(lang, "lineages.title"), RULE]
+    for lin in c.lineages.values():
+        bonuses = " · ".join(f"{c.abilities[a].icon} {c.abilities[a].short.get(lang)} {n:+d}"
+                             for a, n in lin.bonuses.items())
+        lines += [f"{lin.icon} <b>{escape(lin.name.get(lang))}</b>", f"<i>{escape(lin.description.get(lang))}</i>",
+                  t(lang, "lineages.bonuses", list=bonuses)]
+        if lin.skills:
+            lines.append(t(lang, "classes.skills", list=escape(", ".join(c.skills[s].name.get(lang) for s in lin.skills))))
+        lines += [f"✨ {escape(lin.trait_text.get(lang))}", ""]
+    return "\n".join(lines).rstrip()[:MAX_MESSAGE]
+
+
+def background_line(bg, lang: str) -> str:
+    """'🎓 Athletics, Intimidation · 💰 15 · 🎒 Rope'."""
+    c = get_content()
+    parts = ["🎓 " + ", ".join(c.skills[s].name.get(lang) for s in bg.skills), f"💰 {bg.gold}"]
+    if bg.items:
+        parts.append("🎒 " + ", ".join(c.items[i].name.get(lang) + (f" ×{n}" if n > 1 else "")
+                                       for i, n in bg.items.items()))
+    return escape(" · ".join(parts))
+
+
+def backgrounds_list(lang: str) -> str:
+    """/background: every background with its skills, gold and starting items."""
+    c = get_content()
+    lines = [t(lang, "backgrounds.title"), RULE]
+    for bg in c.backgrounds.values():
+        lines += [f"{bg.icon} <b>{escape(bg.name.get(lang))}</b>", f"<i>{escape(bg.description.get(lang))}</i>",
+                  background_line(bg, lang), ""]
+    return "\n".join(lines).rstrip()[:MAX_MESSAGE]
+
+
 # ---------------------------------------------------------------- classes
 
 CLASS_ICONS = {"paladin": "🛡️", "rogue": "🗡️", "warrior": "⚔️", "priest": "✝️", "mage": "🔮", "druid": "🌿",

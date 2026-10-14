@@ -4,6 +4,15 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.8] - 2026-10-14
+
+### Añadido
+- `/lineage` (alias `/race`) y `/background`: cada linaje con sus bonificadores, competencias y rasgo, y cada trasfondo con sus habilidades, oro y equipo. Funcionan sin personaje y a mitad de la creación sin cortar el asistente.
+- 8 trasfondos nuevos (12 en total): artesano de gremio, ermitaño, noble, forastero, marinero, huérfano callejero, artista y héroe del pueblo, cada uno con 2 habilidades, oro y equipo inicial.
+
+### Cambiado
+- El paso de trasfondo explica los 4 básicos (habilidades, oro y equipo) y el botón «📜 Más trasfondos (12)…» muestra todos; «◀ Los básicos» vuelve.
+
 ## [0.7.7] - 2026-10-14
 
 ### Añadido
