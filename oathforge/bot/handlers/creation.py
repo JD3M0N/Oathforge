@@ -14,6 +14,7 @@ from telegram.ext import (
     filters,
 )
 
+from oathforge.ai import moderation
 from oathforge.bot.handlers.common import current_view, edit_or_send, load, send
 from oathforge.bot import render
 from oathforge.bot.keyboards import btn, cb, grid, markup
@@ -26,7 +27,7 @@ from oathforge.engine.progression import max_hp
 from oathforge.i18n import t
 from oathforge.services import audit, characters
 
-NAME, GENDER, LINEAGE, BACKGROUND, CLASS, ABILITIES, CONFIRM = range(7)
+NAME, GENDER, LINEAGE, BACKGROUND, CLASS, ABILITIES, CONFIRM, CUSTOM_TEXT, CUSTOM_SKILLS = range(9)
 GENDERS = ("male", "female")
 
 
@@ -93,16 +94,19 @@ def background_step(lang: str, everything: bool = False):
     """The basic backgrounds explained, as buttons; "More…" swaps in a button for every background."""
     c = get_content()
     lines = [t(lang, "create.ask_background"), ""]
+    listed = {k: bg for k, bg in c.backgrounds.items() if not bg.custom}
     if everything:
-        rows = grid([btn(f"{bg.icon} {bg.name.get(lang)}", cb("cc", f"bg:{k}")) for k, bg in c.backgrounds.items()])
+        rows = grid([btn(f"{bg.icon} {bg.name.get(lang)}", cb("cc", f"bg:{k}")) for k, bg in listed.items()])
         rows.append([btn(t(lang, "create.bg_basics"), cb("cc", "bgl:basic"))])
         lines.append(t(lang, "create.bg_all"))
     else:
-        basic = {k: bg for k, bg in c.backgrounds.items() if bg.basic}
+        basic = {k: bg for k, bg in listed.items() if bg.basic}
         rows = [[btn(f"{bg.icon} {bg.name.get(lang)}", cb("cc", f"bg:{k}"))] for k, bg in basic.items()]
-        rows.append([btn(t(lang, "create.bg_more", n=len(c.backgrounds)), cb("cc", "bgl:all"))])
+        rows.append([btn(t(lang, "create.bg_more", n=len(listed)), cb("cc", "bgl:all"))])
         lines += [f"{bg.icon} <b>{escape(bg.name.get(lang))}</b>: {escape(bg.description.get(lang))}\n"
                   f"<i>{render.background_line(bg, lang)}</i>\n" for bg in basic.values()]
+    if any(bg.custom for bg in c.backgrounds.values()):
+        rows.append([btn(t(lang, "create.custom_btn"), cb("cc", "bgc"))])
     return "\n".join(lines), markup(rows)
 
 
@@ -120,15 +124,112 @@ async def got_background(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     lang = context.user_data.get("lang", "es")
     key = q.data.split("|")[1].split(":")[1]
     c = get_content()
-    if key not in c.backgrounds:
+    new = context.user_data.get("new", {})
+    if key not in c.backgrounds or c.backgrounds[key].custom or "lineage" not in new:
         return BACKGROUND
-    context.user_data["new"]["background"] = key
+    new["background"] = key
+    new.pop("custom", None)
+    await edit_or_send(update, *class_step(lang))
+    return CLASS
+
+
+def class_step(lang: str):
+    c = get_content()
     lines = [t(lang, "create.ask_class"), ""]
     lines += [f"{CLASS_ICONS.get(k, '•')} <b>{cl.name.get(lang)}</b> · 🎲 d{cl.hit_die}: {cl.description.get(lang)}"
               for k, cl in c.classes.items()]
     rows = [[btn(f"{CLASS_ICONS.get(k, '•')} {cl.name.get(lang)}", cb("cc", f"cls:{k}"))] for k, cl in c.classes.items()]
-    await edit_or_send(update, "\n".join(lines), markup(rows))
-    return CLASS
+    return "\n".join(lines), markup(rows)
+
+
+# ---------------------------------------------------------------- a background of your own
+
+async def ask_custom(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    q = update.callback_query
+    await q.answer()
+    lang = context.user_data.get("lang", "es")
+    if "lineage" not in context.user_data.get("new", {}):
+        return BACKGROUND
+    kb = markup([[btn(t(lang, "create.custom_back"), cb("cc", "bgl:basic"))]])
+    await edit_or_send(update, t(lang, "create.custom_ask", title_max=moderation.TITLE_MAX,
+                                 story_max=moderation.STORY_MAX), kb)
+    return CUSTOM_TEXT
+
+
+async def got_custom_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """The AI reviews the name and story; without an answer from it, no custom background (pick a listed one)."""
+    lang = context.user_data.get("lang", "es")
+    new = context.user_data.get("new", {})
+    back = markup([[btn(t(lang, "create.custom_back"), cb("cc", "bgl:basic"))]])
+    parts = moderation.split_background(update.message.text or "")
+    if parts is None:
+        await send(update, t(lang, "create.custom_bad", title_max=moderation.TITLE_MAX,
+                             story_min=moderation.STORY_MIN, story_max=moderation.STORY_MAX), back)
+        return CUSTOM_TEXT
+    title, story = parts
+    await send(update, t(lang, "create.custom_checking"))
+    async with session_scope() as session:
+        user, _ = await load(session, update)
+        user_id = user.id
+    review = await moderation.review_background(context.bot_data["llm"], lang=lang, title=title, story=story,
+                                                user_id=user_id)
+    if review is None:
+        await send(update, t(lang, "create.custom_unavailable"), back)
+        return CUSTOM_TEXT
+    if not review.ok:
+        await send(update, t(lang, "create.custom_rejected", reason=escape(review.reason or "…")), back)
+        return CUSTOM_TEXT
+    new["custom"] = {"title": review.title, "story": story, "skills": []}
+    await send(update, *custom_skills_panel(new, lang))
+    return CUSTOM_SKILLS
+
+
+def custom_skills_panel(new: dict, lang: str):
+    c = get_content()
+    custom = new["custom"]
+    chosen = custom["skills"]
+    lines = [t(lang, "create.custom_ok", title=escape(custom["title"])), f"<i>{escape(custom['story'])}</i>", "",
+             t(lang, "create.custom_skills", n=characters.CUSTOM_SKILLS, chosen=len(chosen))]
+    buttons = [btn(("✅ " if key in chosen else f"{c.abilities[s.ability].icon} ") + s.name.get(lang),
+                   cb("cc", f"sk:{key}")) for key, s in c.skills.items()]
+    rows = grid(buttons)
+    if len(chosen) == characters.CUSTOM_SKILLS:
+        rows.append([btn(t(lang, "btn.continue"), cb("cc", "sk:ok"))])
+    rows.append([btn(t(lang, "create.custom_back"), cb("cc", "bgl:basic"))])
+    return "\n".join(lines), markup(rows)
+
+
+async def got_custom_skill(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Tap a skill to take or drop it; Continue once the 2 are chosen."""
+    q = update.callback_query
+    lang = context.user_data.get("lang", "es")
+    new = context.user_data.get("new", {})
+    key = q.data.split("|")[1].split(":")[1]
+    if "custom" not in new:
+        await q.answer()
+        return BACKGROUND
+    chosen = new["custom"]["skills"]
+    if key == "ok":
+        if len(chosen) != characters.CUSTOM_SKILLS:
+            await q.answer(t(lang, "create.custom_skills_left", n=characters.CUSTOM_SKILLS), show_alert=True)
+            return CUSTOM_SKILLS
+        await q.answer()
+        new["background"] = next(k for k, bg in get_content().backgrounds.items() if bg.custom)
+        await edit_or_send(update, *class_step(lang))
+        return CLASS
+    if key not in get_content().skills:
+        await q.answer()
+        return CUSTOM_SKILLS
+    if key in chosen:
+        chosen.remove(key)
+    elif len(chosen) < characters.CUSTOM_SKILLS:
+        chosen.append(key)
+    else:
+        await q.answer(t(lang, "create.custom_skills_full", n=characters.CUSTOM_SKILLS), show_alert=True)
+        return CUSTOM_SKILLS
+    await q.answer()
+    await edit_or_send(update, *custom_skills_panel(new, lang))
+    return CUSTOM_SKILLS
 
 
 async def got_class(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -219,9 +320,10 @@ async def _summary(update: Update, new: dict, lang: str) -> int:
     stats = "\n".join(" · ".join(stats[i:i + 3]) for i in range(0, len(stats), 3))
     hp = max_hp(cls.hit_die, modifier(scores["con"]), 1)
     lin, bg = c.lineages[new["lineage"]], c.backgrounds[new["background"]]
+    bg_name = escape(new["custom"]["title"]) if bg.custom else bg.name.get(lang)
     text = t(lang, "create.summary", name=escape(new["name"]),
              gender=t(lang, f"create.gender_btn.{new['gender']}"),
-             lineage=f"{lin.icon} {lin.name.get(lang)}".strip(), background=f"{bg.icon} {bg.name.get(lang)}".strip(),
+             lineage=f"{lin.icon} {lin.name.get(lang)}".strip(), background=f"{bg.icon} {bg_name}".strip(),
              cls=f"{CLASS_ICONS.get(new['class'], '')} {cls.name.get(lang)}".strip(), stats=stats, hp=hp)
     rows = [[btn(t(lang, "btn.confirm"), cb("cc", "ok")), btn(t(lang, "btn.restart"), cb("cc", "redo"))]]
     await edit_or_send(update, text, markup(rows))
@@ -245,7 +347,7 @@ async def confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         if char is None:
             char = await characters.create_character(session, user, new["name"], new["lineage"],
                                                      new["background"], new["class"], new["gender"],
-                                                     scores=new.get("scores"))
+                                                     scores=new.get("scores"), custom=new.get("custom"))
             await audit.log(session, user_id=user.id, character_id=char.id, verb="create", payload=new)
         text, kb = await current_view(session, char, lang)
     context.user_data.pop("new", None)
@@ -271,7 +373,12 @@ def handler() -> ConversationHandler:
             GENDER: [CallbackQueryHandler(got_gender, pattern=r"^cc\|gen:")],
             LINEAGE: [CallbackQueryHandler(got_lineage, pattern=r"^cc\|lin:")],
             BACKGROUND: [CallbackQueryHandler(got_background, pattern=r"^cc\|bg:"),
-                         CallbackQueryHandler(more_backgrounds, pattern=r"^cc\|bgl:")],
+                         CallbackQueryHandler(more_backgrounds, pattern=r"^cc\|bgl:"),
+                         CallbackQueryHandler(ask_custom, pattern=r"^cc\|bgc")],
+            CUSTOM_TEXT: [MessageHandler(filters.TEXT & ~filters.COMMAND, got_custom_text),
+                          CallbackQueryHandler(more_backgrounds, pattern=r"^cc\|bgl:")],
+            CUSTOM_SKILLS: [CallbackQueryHandler(got_custom_skill, pattern=r"^cc\|sk:"),
+                            CallbackQueryHandler(more_backgrounds, pattern=r"^cc\|bgl:")],
             CLASS: [CallbackQueryHandler(got_class, pattern=r"^cc\|cls:")],
             ABILITIES: [CallbackQueryHandler(got_ability, pattern=r"^cc\|ab:")],
             CONFIRM: [CallbackQueryHandler(confirm, pattern=r"^cc\|(ok|redo)")],

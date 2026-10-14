@@ -56,6 +56,26 @@ def valid_name(name: str) -> bool:
 
 # ---------------------------------------------------------------- creation
 
+CUSTOM_SKILLS = 2  # a player-written background picks this many skills, like a D&D background
+
+
+def background_name(char: Character, lang: str) -> str:
+    custom = char.custom_background
+    return custom["title"] if custom else get_content().backgrounds[char.background].name.get(lang)
+
+
+def background_story(char: Character, lang: str) -> str:
+    custom = char.custom_background
+    return custom["story"] if custom else get_content().backgrounds[char.background].description.get(lang)
+
+
+def valid_custom(custom: dict | None) -> bool:
+    c = get_content()
+    skills = (custom or {}).get("skills") or []
+    return (bool(custom) and bool(custom.get("title")) and bool(custom.get("story"))
+            and len(set(skills)) == CUSTOM_SKILLS == len(skills) and all(s in c.skills for s in skills))
+
+
 def starting_scores(class_key: str, lineage_key: str, base: dict[str, int] | None = None) -> dict[str, int]:
     """Point-buy scores (or the class's recommended array) plus lineage bonuses."""
     c = get_content()
@@ -67,22 +87,26 @@ def starting_scores(class_key: str, lineage_key: str, base: dict[str, int] | Non
 
 async def create_character(
     session: AsyncSession, user: User, name: str, lineage: str, background: str, class_key: str,
-    gender: str | None = None, scores: dict[str, int] | None = None,
+    gender: str | None = None, scores: dict[str, int] | None = None, custom: dict | None = None,
 ) -> Character:
+    """custom: the player-written background ({"title", "story", "skills"}) when the background is a custom one."""
     c = get_content()
     cls, bg, lin = c.classes[class_key], c.backgrounds[background], c.lineages[lineage]
+    if bg.custom != valid_custom(custom):
+        raise ValueError("a custom background needs a title, a story and exactly 2 known skills")
+    custom = {k: custom[k] for k in ("title", "story", "skills")} if bg.custom else None
     scores = starting_scores(class_key, lineage, scores)
     hp = progression.max_hp(cls.hit_die, modifier(scores["con"]), 1)
     char = Character(
         user_id=user.id, name=name.strip()[:NAME_MAX], lineage=lineage, background=background,
         class_key=class_key, gender=gender, abilities=scores, level=1, xp=0, hp=hp, max_hp=hp, gold=bg.gold,
         location=c.start_location, state="idle", flags={}, conditions={},
-        resources=full_resources(class_key, 1),
+        resources=full_resources(class_key, 1), custom_background=custom,
     )
     session.add(char)
     await session.flush()
 
-    proficient = set(cls.skills) | set(bg.skills) | set(lin.skills)
+    proficient = set(cls.skills) | set(custom["skills"] if custom else bg.skills) | set(lin.skills)
     for skill in c.skills:
         session.add(CharacterSkill(character_id=char.id, skill=skill, proficient=skill in proficient, xp=0, recent=[]))
 

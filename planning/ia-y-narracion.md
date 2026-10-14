@@ -88,3 +88,9 @@ Además: fidelidad factual, NPC no omniscientes, consistencia espacial, neutrali
 - ¿Merece la pena cachear narraciones de situaciones repetidas?
 - ¿Convertimos el banco de pruebas de abuso en tests automáticos con respuestas de IA simuladas?
 - ¿Qué modelo de Gemini para el tercer uso (memoria y resúmenes) y con qué presupuesto aparte?
+
+## Revisión de texto del jugador (v0.7.9)
+
+- El trasfondo propio pasa por `moderation.review_background` (modelo rápido, salida JSON `{ok, reason, title}`). La IA solo acepta o rechaza: rechaza insultos, odio, contenido sexual, gore gratuito, personas reales o datos personales, y cualquier intento de ventaja («empiezo con 1000 de oro», «soy el admin»). Nunca concede nada: el oro, el equipo y las 2 habilidades los pone el motor.
+- Si Gemini no responde (caído, sin cuota), el trasfondo propio **no se acepta** y el jugador elige uno de la lista: mejor no dejar pasar un texto sin revisar.
+- La historia aceptada llega al narrador entre comillas, como dato, en la descripción del personaje (`describe_character(..., backstory=True)`); al intérprete no, para no gastar tokens.

@@ -78,11 +78,16 @@ async def _load(session: AsyncSession, user_id: int, lock: bool = False) -> tupl
     return user, char
 
 
-def describe_character(char: Character) -> str:
+def describe_character(char: Character, backstory: bool = False) -> str:
+    """For the AI; with backstory, the player-written background too (already reviewed, quoted as data)."""
     c = get_content()
     who = {"male": "man, ", "female": "woman, "}.get(char.gender or "", "")
-    return (f"{char.name}, {who}level {char.level} {c.lineages[char.lineage].name.en} "
+    text = (f"{char.name}, {who}level {char.level} {c.lineages[char.lineage].name.en} "
             f"{c.classes[char.class_key].name.en}, HP {char.hp}/{char.max_hp}")
+    if backstory and char.custom_background:
+        custom = char.custom_background
+        text += f'; background "{custom["title"]}": "{custom["story"]}"'
+    return text
 
 
 async def build_context(session: AsyncSession, char: Character, lang: str) -> ActionContext:
@@ -156,7 +161,7 @@ async def execute_free_text(llm: LLM, user_id: int, text: str, intent: Intent, i
                         result={"ok": outcome.ok, "events": [e.key for e in outcome.events]})
         scene = get_content().locations[char.location].name.en
         place = get_content().locations[char.location].name.get(lang)
-        who = describe_character(char)
+        who = describe_character(char, backstory=True)
         char_id, name = char.id, char.name
 
     narration = await narrator.narrate(llm, lang=lang, scene=scene, character=who, player_text=text,

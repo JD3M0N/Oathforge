@@ -97,3 +97,13 @@ folk_hero:
   skills: [insight, survival]
   gold: 10
   items: {sickle: 1}
+
+# The player writes their own: name and story reviewed by the AI (oathforge/ai/moderation.py), 2 skills of their choice.
+custom:
+  custom: true
+  icon: "✍️"
+  name: {es: Trasfondo propio, en: Your own background}
+  description: {es: Una historia escrita por ti., en: A story of your own.}
+  skills: []
+  gold: 10
+  items: {torch: 1, rope: 1}

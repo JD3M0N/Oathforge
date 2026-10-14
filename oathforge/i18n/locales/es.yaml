@@ -85,6 +85,25 @@ create:
   bg_more: "📜 Más trasfondos ({n})…"
   bg_basics: "◀ Los básicos"
   bg_all: "<i>Todos los trasfondos: mira qué da cada uno con /background.</i>"
+  custom_btn: "✍️ Escribir mi propio trasfondo"
+  custom_back: "◀ Volver a los trasfondos"
+  custom_ask: |-
+    ✍️ <b>Tu propio trasfondo</b>
+    Escríbelo en un mensaje: en la <b>primera línea</b>, su nombre (hasta {title_max} caracteres), y <b>debajo</b>, tu historia (hasta {story_max}).
+
+    <i>Por ejemplo:
+    Hija del farero
+    Crecí cuidando la lámpara de un acantilado al que ya no llega ningún barco…</i>
+
+    La IA lo revisa antes de aceptarlo: sin insultos, nada inapropiado y sin trampas (nunca da oro ni poderes). Después eliges 2 habilidades.
+  custom_bad: "Así no encaja. Primera línea: el nombre (2–{title_max} caracteres). Debajo: tu historia ({story_min}–{story_max} caracteres)."
+  custom_checking: "🔎 Revisando tu trasfondo…"
+  custom_unavailable: "😔 La IA que revisa los trasfondos no responde ahora. Prueba dentro de un rato o elige uno de la lista."
+  custom_rejected: "🚫 Ese trasfondo no se puede aceptar: {reason}\nEscribe otro o vuelve a la lista."
+  custom_ok: "✅ <b>{title}</b> aceptado."
+  custom_skills: "🎓 Elige <b>{n}</b> habilidades que dominabas entonces ({chosen}/{n}):"
+  custom_skills_left: "Elige primero {n} habilidades."
+  custom_skills_full: "Ya tienes {n}: toca una para quitarla."
 
 btn:
   full_sheet: "📜 Ficha completa"
@@ -525,6 +544,7 @@ lineages:
 
 backgrounds:
   title: "📜 <b>Trasfondos</b>\nQuién eras antes de la aventura: habilidades (🎓), oro inicial (💰) y equipo (🎒)."
+  custom: "✍️ O escribe el tuyo al crear el personaje: la IA lo revisa y eliges 2 habilidades."
 
 classes:
   title: "📚 <b>Clases de Oathforge</b>"

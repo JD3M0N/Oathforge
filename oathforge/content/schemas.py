@@ -94,6 +94,7 @@ class Background(Strict):
     name: Text
     icon: str = ""
     basic: bool = False  # a button straight away at creation; the rest behind "More…"
+    custom: bool = False  # the player writes it: name, story and skills come from them
     description: Text
     skills: list[str]
     gold: int

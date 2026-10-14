@@ -4,6 +4,16 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.9] - 2026-10-14
+
+### Añadido
+- **Trasfondo propio**: «✍️ Escribir mi propio trasfondo» en la creación. El jugador escribe un nombre y una historia (20–300 caracteres), Gemini la revisa (`oathforge/ai/moderation.py`) y, si la acepta, elige 2 habilidades; empieza con 10 de oro, una antorcha y una cuerda.
+- La revisión rechaza insultos, odio, contenido sexual, gore gratuito, personas reales o datos personales y los intentos de ventaja («empiezo con mil de oro», «soy el admin»), y explica qué cambiar. Si la IA no responde, el trasfondo propio no se acepta y se ofrece la lista.
+- Columna `characters.custom_background` (migración 0007). El nombre y la historia salen en `/hero`, `/sheet`, las crónicas y el contexto del narrador.
+
+### Cambiado
+- `/background` recuerda que también se puede escribir uno propio.
+
 ## [0.7.8] - 2026-10-14
 
 ### Añadido

@@ -14,6 +14,7 @@ Cómo se ve y se siente el juego dentro del chat. Fuente: [GDD](referencias/gdd-
 - **v0.5.9**: `/report` y botón «📜 Informe» en el panel final: informe de la última batalla, con resumen y una página por ronda (botones ◀ ▶ que editan el mismo mensaje).
 - **v0.7.0**: `/settings` (⚙️ Ajustes) reúne idioma y tiradas manuales; `/roll` sale del menú. Las tiradas manuales están desactivadas por defecto y, al activarlas, un aviso explica que el dado de Telegram es un d6 decorativo y que la tirada real es el d20 del motor. La tirada pendiente se lanza con el botón «🎲 Tirar el dado». `/prof_<oficio>` abre la guía de cada oficio y afición.
 - **v0.7.7–0.7.8**: creación de personaje con emojis (linajes, trasfondos, clases, atributos y confirmación) y ayuda a mitad de la creación: `/lineage` (alias `/race`) y `/background` responden sin personaje y sin romper el asistente. El paso de trasfondo muestra los 4 básicos (`basic: true` en `content/backgrounds.yaml`) y «📜 Más trasfondos…» abre los 12. No están en el menú de Telegram: se llegará a ellos desde `/rulebook`.
+- **v0.7.9**: trasfondo propio. «✍️ Escribir mi propio trasfondo» pide nombre (primera línea) e historia (20–300 caracteres) en un mensaje; Gemini lo revisa (`oathforge/ai/moderation.py`) y, si lo acepta, el jugador elige 2 habilidades. Se guarda en `characters.custom_background` y sale en `/sheet` y en el contexto del narrador.
 - Canales de anuncios: https://t.me/OathForge (inglés) y https://t.me/OathForge_es (español).
 
 ## Ideas

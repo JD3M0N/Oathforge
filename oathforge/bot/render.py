@@ -589,7 +589,7 @@ def _sheet_top(c, cls, char: Character, gear: dict, lang: str) -> list[str]:
         t(lang, "sheet.identity", level=char.level, cls=cls.name.get(lang)),
         f"<i>{t(lang, 'gender.' + char.gender) + ' · ' if char.gender else ''}"
         f"{escape(c.lineages[char.lineage].name.get(lang))} · "
-        f"{escape(c.backgrounds[char.background].name.get(lang))}</i>",
+        f"{escape(characters.background_name(char, lang))}</i>",
         RULE,
         t(lang, "sheet.hp", hp=char.hp, max_hp=char.max_hp, bar=hp_bar(char.hp, char.max_hp)),
     ]
@@ -715,7 +715,7 @@ async def sheet(session: AsyncSession, char: Character, lang: str) -> tuple[str,
     # origins
     lines += ["", f"<b>{t(lang, 'sheet.origins')}</b>",
               f"🧬 <i>{escape(c.lineages[char.lineage].trait_text.get(lang))}</i>",
-              f"📖 <i>{escape(c.backgrounds[char.background].description.get(lang))}</i>"]
+              f"📖 <i>{escape(characters.background_story(char, lang))}</i>"]
 
     # professions and gathering masteries
     lines += ["", professions_line(char, lang), "", f"<b>{t(lang, 'sheet.hobbies')}</b>", *hobby_lines(char, lang),
@@ -877,8 +877,11 @@ def backgrounds_list(lang: str) -> str:
     c = get_content()
     lines = [t(lang, "backgrounds.title"), RULE]
     for bg in c.backgrounds.values():
+        if bg.custom:
+            continue
         lines += [f"{bg.icon} <b>{escape(bg.name.get(lang))}</b>", f"<i>{escape(bg.description.get(lang))}</i>",
                   background_line(bg, lang), ""]
+    lines.append(t(lang, "backgrounds.custom"))
     return "\n".join(lines).rstrip()[:MAX_MESSAGE]
 
 

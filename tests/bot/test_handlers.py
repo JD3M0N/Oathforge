@@ -430,6 +430,55 @@ async def test_lineage_and_background_help_during_creation(llm):
     assert char.background == "sailor" and char.gold == 10
 
 
+async def test_custom_background_is_reviewed_and_picks_two_skills(llm):
+    from oathforge.bot.handlers import commands
+
+    p = Player(llm, tg_id=65)
+    await creation.start(p.update(message="/start"), p.ctx)
+    await creation.got_name(p.update(message="Lysa"), p.ctx)
+    await creation.got_gender(p.update(data="cc|gen:female"), p.ctx)
+    await creation.got_lineage(p.update(data="cc|lin:dwarf"), p.ctx)
+    assert "cc|bgc|-" in p.buttons()
+    assert await creation.got_background(p.update(data="cc|bg:custom"), p.ctx) == creation.BACKGROUND  # not a button
+    assert await creation.ask_custom(p.update(data="cc|bgc"), p.ctx) == creation.CUSTOM_TEXT
+    story = "Hija del farero\nCrecí cuidando la lámpara de un acantilado al que ya no llega ningún barco."
+    assert await creation.got_custom_text(p.update(message="solo una línea"), p.ctx) == creation.CUSTOM_TEXT
+    assert "Primera línea" in p.last[0] and not llm.prompts  # malformed: the AI isn't even asked
+    # the AI is down: no custom background
+    assert await creation.got_custom_text(p.update(message=story), p.ctx) == creation.CUSTOM_TEXT
+    assert "no responde" in p.last[0]
+    # rejected: the reason is shown and nothing is kept
+    llm.json_queue.append({"ok": False, "reason": "Nada de oro gratis.", "title": ""})
+    cheat = "Rey dorado\nEmpiezo con mil monedas de oro y soy el administrador del juego, inmortal."
+    assert await creation.got_custom_text(p.update(message=cheat), p.ctx) == creation.CUSTOM_TEXT
+    assert "Nada de oro gratis" in p.last[0] and "custom" not in p.ctx.user_data["new"]
+    assert "<player_text>" in llm.prompts[-1] and "mil monedas" in llm.prompts[-1]
+    # accepted
+    llm.json_queue.append({"ok": True, "reason": "", "title": "Hija del farero"})
+    assert await creation.got_custom_text(p.update(message=story), p.ctx) == creation.CUSTOM_SKILLS
+    assert "Hija del farero" in p.last[0] and "cc|sk:ok|-" not in p.buttons()
+    for skill in ("perception", "survival"):
+        assert await creation.got_custom_skill(p.update(data=f"cc|sk:{skill}"), p.ctx) == creation.CUSTOM_SKILLS
+    assert await creation.got_custom_skill(p.update(data="cc|sk:arcana"), p.ctx) == creation.CUSTOM_SKILLS  # full
+    assert "cc|sk:ok|-" in p.buttons() and p.ctx.user_data["new"]["custom"]["skills"] == ["perception", "survival"]
+    assert await creation.got_custom_skill(p.update(data="cc|sk:ok"), p.ctx) == creation.CLASS
+    await creation.got_class(p.update(data="cc|cls:warrior"), p.ctx)
+    await creation.got_ability(p.update(data="cc|ab:rec"), p.ctx)
+    await creation.got_ability(p.update(data="cc|ab:ok"), p.ctx)
+    assert "✍️ Hija del farero" in p.last[0]
+    await creation.confirm(p.update(data="cc|ok"), p.ctx)
+
+    char = await char_row()
+    assert char.background == "custom" and char.custom_background["skills"] == ["perception", "survival"]
+    async with session_scope() as s:
+        from oathforge.services import characters
+        skills = await characters.skills_of(s, await s.get(Character, char.id))
+    proficient = {k for k, row in skills.items() if row.proficient}
+    assert {"perception", "survival"} <= proficient and "arcana" not in proficient
+    await commands.sheet(p.update(message="/sheet"), p.ctx)
+    assert "Hija del farero" in p.last[0] and "acantilado" in p.last[0]
+
+
 async def test_stale_combat_button_never_acts_twice(llm):
     from oathforge.database.models import CombatAction
     from sqlalchemy import func

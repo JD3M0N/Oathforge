@@ -85,6 +85,25 @@ create:
   bg_more: "📜 More backgrounds ({n})…"
   bg_basics: "◀ The basic ones"
   bg_all: "<i>Every background: see what each one gives with /background.</i>"
+  custom_btn: "✍️ Write my own background"
+  custom_back: "◀ Back to the backgrounds"
+  custom_ask: |-
+    ✍️ <b>Your own background</b>
+    Write it in one message: on the <b>first line</b> its name (up to {title_max} characters) and <b>below</b> your story (up to {story_max}).
+
+    <i>For example:
+    Lighthouse keeper's daughter
+    I grew up tending the beacon of a cliff that no ship visits any more…</i>
+
+    The AI reviews it before accepting it: no insults, nothing inappropriate and no tricks (it never gives gold or powers). Then you choose 2 skills.
+  custom_bad: "That doesn't fit. First line: the name (2–{title_max} characters). Below it: your story ({story_min}–{story_max} characters)."
+  custom_checking: "🔎 Reviewing your background…"
+  custom_unavailable: "😔 The AI that reviews backgrounds isn't answering right now. Try again in a while or pick one from the list."
+  custom_rejected: "🚫 That background can't be accepted: {reason}\nWrite another one, or go back to the list."
+  custom_ok: "✅ <b>{title}</b> accepted."
+  custom_skills: "🎓 Choose <b>{n}</b> skills you mastered back then ({chosen}/{n}):"
+  custom_skills_left: "Choose {n} skills first."
+  custom_skills_full: "You already have {n}: tap one to drop it."
 
 btn:
   full_sheet: "📜 Full sheet"
@@ -525,6 +544,7 @@ lineages:
 
 backgrounds:
   title: "📜 <b>Backgrounds</b>\nWho you were before adventuring: skills (🎓), starting gold (💰) and gear (🎒)."
+  custom: "✍️ Or write your own while creating your character: the AI reviews it and you choose 2 skills."
 
 classes:
   title: "📚 <b>Oathforge classes</b>"

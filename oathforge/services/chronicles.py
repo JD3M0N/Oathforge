@@ -93,7 +93,7 @@ def _facts(act: WorldActivity, char: Character) -> list[str]:
 def _hero(char: Character, lang: str) -> str:
     c = get_content()
     return (f"{char.name}, {c.lineages[char.lineage].name.get(lang)} {c.classes[char.class_key].name.get(lang)} "
-            f"(level {char.level}), {c.backgrounds[char.background].name.get(lang)}")
+            f"(level {char.level}), {characters.background_name(char, lang)}")
 
 
 async def tell(llm: LLM, activity_id: int, lang: str) -> Chronicle | None:
