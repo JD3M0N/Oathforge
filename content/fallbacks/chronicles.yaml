@@ -1,184 +1,1438 @@
-# Crónicas genéricas de las expediciones: se usan cuando el cronista de IA ya escribió las del día
-# (AI_USER_DAILY_CHRONICLES) o no responde. Se elige una por actividad, siempre la misma.
-# Marcadores: {name} el héroe · {place} el lugar · {loot} lo obtenido · {monster} la criatura.
-
+# Crónicas por desenlace y oficio; ver README.md.
 gather:
-  - es: >-
-      {name} trabajó sin prisa en {place}, con el ritmo paciente de quien sabe que la tierra no regala nada.
-      Cuando el sol se movió un palmo, la bolsa ya pesaba: {loot}. Un buen rato de oficio, sin sobresaltos.
-    en: >-
-      {name} worked unhurried at {place}, with the patient rhythm of someone who knows the land gives nothing
-      away. By the time the sun had moved a hand's width, the pack was heavy: {loot}. A good stretch of honest
-      work, without a single scare.
-  - es: >-
-      Hubo un momento de silencio total en {place}, roto solo por el golpe de la herramienta y la respiración de
-      {name}. Luego, el premio: {loot}. Nada épico, pero cada pieza cuenta cuando se vuelve a la ciudad.
-    en: >-
-      There was a moment of perfect silence at {place}, broken only by the strike of the tool and {name}'s
-      breathing. Then the reward: {loot}. Nothing epic, but every piece counts once you're back in the city.
-  - es: >-
-      {name} encontró su sitio en {place}, se arremangó y dejó que las manos hicieran lo que saben hacer. Al
-      terminar, con la espalda dolorida y la mirada satisfecha, contó lo conseguido: {loot}.
-    en: >-
-      {name} found a spot at {place}, rolled up their sleeves and let their hands do what they know. When it was
-      done, back aching and eyes content, they counted the haul: {loot}.
-
+- es: '{name}, tu expedición en {place} llega a su desenlace. El trabajo transcurre sin sobresaltos. Al terminar,
+    has obtenido {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. The work passes without incident. By the end, you
+    have obtained {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. No hay combate que interrumpa la faena. El fruto de
+    este rato de trabajo es {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. No fight interrupts the task. The yield from this
+    stretch of work is {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La tarea se cumple sin peligro. Dejas constancia de
+    lo conseguido: {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. The task is completed without danger. You take account
+    of what you obtained: {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La expedición resulta tranquila. Tu labor termina
+    con {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. The expedition proves peaceful. Your labour ends
+    with {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Trabajas sin que una amenaza te obligue a detenerte.
+    Al final de la actividad, cuentas {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. You work without a threat forcing you to stop. At
+    the end of the activity, you count {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Esta vez el trabajo no se convierte en una lucha.
+    Lo que has obtenido es {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. This time the work does not turn into a fight. What
+    you have obtained is {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La faena llega a su término sin incidentes. Su resultado
+    material es {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. The task reaches its end without incident. Its material
+    yield is {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Nada interrumpe la calma de la actividad. Cuando acabas,
+    lo conseguido se resume en {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. Nothing interrupts the calm of the activity. When
+    you finish, the yield amounts to {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Completas el trabajo sin tener que enfrentarte a una
+    emboscada. Obtienes {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. You finish the work without having to face an ambush.
+    You obtain {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. El oficio ocupa este tramo de tu aventura, sin combate.
+    Terminas con {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. Your craft occupies this stretch of your adventure,
+    without combat. You finish with {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. No todas las expediciones exigen una batalla. Esta
+    termina con el resultado de tu labor: {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. Not every expedition demands a battle. This one ends
+    with the yield of your labour: {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La actividad concluye en calma. Te detienes a hacer
+    balance de lo obtenido: {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. The activity concludes peacefully. You pause to take
+    stock of the yield: {loot}.'
+gather.mining:
+- es: '{name}, la piedra de {place} no distingue entre grandes nombres y manos de oficio: te exige trabajo. El trabajo
+    transcurre sin sobresaltos. Al terminar, has obtenido {loot}.'
+  en: '{name}, the stone of {place} makes no distinction between great names and working hands: it demands labour
+    of you. The work passes without incident. By the end, you have obtained {loot}.'
+- es: En {place}, {name}, buscas en la roca algo más útil que las promesas del camino. No hay combate que interrumpa
+    la faena. El fruto de este rato de trabajo es {loot}.
+  en: In {place}, {name}, you seek something in the rock more useful than the road's promises. No fight interrupts
+    the task. The yield from this stretch of work is {loot}.
+- es: '{name}, durante la extracción en {place}, tu mundo se reduce a la piedra y a la labor que tienes delante.
+    La tarea se cumple sin peligro. Dejas constancia de lo conseguido: {loot}.'
+  en: '{name}, during extraction in {place}, your world narrows to the stone and the work before you. The task is
+    completed without danger. You take account of what you obtained: {loot}.'
+- es: Trabajas la roca de {place}, {name}; el mineral no sale al encuentro de quien solo sabe desearlo. La expedición
+    resulta tranquila. Tu labor termina con {loot}.
+  en: You work the rock of {place}, {name}; ore does not come to meet those who only wish for it. The expedition
+    proves peaceful. Your labour ends with {loot}.
+- es: '{name}, en {place} cambias por un rato las grandes empresas por el oficio de extraer mineral. Trabajas sin
+    que una amenaza te obligue a detenerte. Al final de la actividad, cuentas {loot}.'
+  en: '{name}, in {place} you trade grand undertakings for the craft of extracting ore for a while. You work without
+    a threat forcing you to stop. At the end of the activity, you count {loot}.'
+- es: La minería de {place} reclama tu atención, {name}, sin épica que sustituya al esfuerzo. Esta vez el trabajo
+    no se convierte en una lucha. Lo que has obtenido es {loot}.
+  en: Mining in {place} claims your attention, {name}, with no heroics to replace effort. This time the work does
+    not turn into a fight. What you have obtained is {loot}.
+- es: '{name}, buscas lo aprovechable entre la piedra de {place}: una tarea concreta en un mundo lleno de enigmas.
+    La faena llega a su término sin incidentes. Su resultado material es {loot}.'
+  en: '{name}, you seek what can be used among the stone of {place}: a definite task in a world full of riddles.
+    The task reaches its end without incident. Its material yield is {loot}.'
+- es: En {place}, dedicas tu expedición a la extracción, {name}; hasta el acero empieza lejos de las batallas. Nada
+    interrumpe la calma de la actividad. Cuando acabas, lo conseguido se resume en {loot}.
+  en: In {place}, you devote your expedition to extraction, {name}; even steel begins far from battles. Nothing
+    interrupts the calm of the activity. When you finish, the yield amounts to {loot}.
+- es: '{name}, aplicas tu esfuerzo a la roca de {place}, donde las intenciones por sí solas no abren camino. Completas
+    el trabajo sin tener que enfrentarte a una emboscada. Obtienes {loot}.'
+  en: '{name}, you apply your effort to the rock of {place}, where intentions alone open no path. You finish the
+    work without having to face an ambush. You obtain {loot}.'
+- es: El mineral es tu propósito en {place}, {name}, y la piedra no tiene prisa por entregarlo. El oficio ocupa
+    este tramo de tu aventura, sin combate. Terminas con {loot}.
+  en: Ore is your purpose in {place}, {name}, and the stone is in no hurry to yield it. Your craft occupies this
+    stretch of your adventure, without combat. You finish with {loot}.
+- es: '{name}, la labor minera ocupa tu estancia en {place}; por este rato, importa lo que la roca guarda. No todas
+    las expediciones exigen una batalla. Esta termina con el resultado de tu labor: {loot}.'
+  en: '{name}, mining occupies your stay in {place}; for this stretch, what matters is what the rock holds. Not
+    every expedition demands a battle. This one ends with the yield of your labour: {loot}.'
+- es: 'En {place}, {name}, te dedicas a ese comienzo humilde de tantas empresas: trabajar la piedra. La actividad
+    concluye en calma. Te detienes a hacer balance de lo obtenido: {loot}.'
+  en: 'In {place}, {name}, you devote yourself to the humble beginning of so many ventures: working stone. The activity
+    concludes peacefully. You pause to take stock of the yield: {loot}.'
+gather.woodcutting:
+- es: '{name}, en {place} buscas madera, ese sustento discreto de techos, mangos y hogares. El trabajo transcurre
+    sin sobresaltos. Al terminar, has obtenido {loot}.'
+  en: '{name}, in {place} you seek wood, the quiet foundation of roofs, handles and homes. The work passes without
+    incident. By the end, you have obtained {loot}.'
+- es: La tala ocupa tu atención en {place}, {name}; la madera tiene exigencias que no entienden de títulos. No hay
+    combate que interrumpa la faena. El fruto de este rato de trabajo es {loot}.
+  en: Woodcutting holds your attention in {place}, {name}; wood makes demands that care nothing for titles. No fight
+    interrupts the task. The yield from this stretch of work is {loot}.
+- es: '{name}, trabajas la madera de {place}, lejos por un rato de las grandes palabras. La tarea se cumple sin
+    peligro. Dejas constancia de lo conseguido: {loot}.'
+  en: '{name}, you work the wood of {place}, away from grand words for a while. The task is completed without danger.
+    You take account of what you obtained: {loot}.'
+- es: 'En {place}, {name}, tu tarea es la tala: oficio antes que leyenda. La expedición resulta tranquila. Tu labor
+    termina con {loot}.'
+  en: 'In {place}, {name}, your task is woodcutting: craft before legend. The expedition proves peaceful. Your labour
+    ends with {loot}.'
+- es: '{name}, dedicas la expedición de {place} a la madera, sin que el trabajo necesite un nombre heroico. Trabajas
+    sin que una amenaza te obligue a detenerte. Al final de la actividad, cuentas {loot}.'
+  en: '{name}, you devote the expedition in {place} to wood, without the work needing a heroic name. You work without
+    a threat forcing you to stop. At the end of the activity, you count {loot}.'
+- es: La madera centra tu faena en {place}, {name}; su utilidad empieza mucho antes del taller. Esta vez el trabajo
+    no se convierte en una lucha. Lo que has obtenido es {loot}.
+  en: Wood is the focus of your task in {place}, {name}; its usefulness begins long before the workshop. This time
+    the work does not turn into a fight. What you have obtained is {loot}.
+- es: '{name}, entre las tareas de tala de {place}, el presente pesa más que cualquier historia por contar. La faena
+    llega a su término sin incidentes. Su resultado material es {loot}.'
+  en: '{name}, among the woodcutting tasks of {place}, the present weighs more than any story to tell. The task
+    reaches its end without incident. Its material yield is {loot}.'
+- es: Trabajas en la tala de {place}, {name}, buscando algo sólido en un mundo de promesas frágiles. Nada interrumpe
+    la calma de la actividad. Cuando acabas, lo conseguido se resume en {loot}.
+  en: You work at woodcutting in {place}, {name}, seeking something solid in a world of fragile promises. Nothing
+    interrupts the calm of the activity. When you finish, the yield amounts to {loot}.
+- es: '{name}, el oficio de la madera reclama esta parte de tu aventura en {place}. Completas el trabajo sin tener
+    que enfrentarte a una emboscada. Obtienes {loot}.'
+  en: '{name}, the woodcutter''s craft claims this part of your adventure in {place}. You finish the work without
+    having to face an ambush. You obtain {loot}.'
+- es: En {place}, la tala te ocupa, {name}; las grandes construcciones empiezan con labores como esta. El oficio
+    ocupa este tramo de tu aventura, sin combate. Terminas con {loot}.
+  en: In {place}, woodcutting keeps you occupied, {name}; great structures begin with tasks like this. Your craft
+    occupies this stretch of your adventure, without combat. You finish with {loot}.
+- es: '{name}, tu labor con la madera de {place} no necesita espectadores para tener sentido. No todas las expediciones
+    exigen una batalla. Esta termina con el resultado de tu labor: {loot}.'
+  en: '{name}, your work with the wood of {place} needs no audience to have meaning. Not every expedition demands
+    a battle. This one ends with the yield of your labour: {loot}.'
+- es: 'La expedición a {place} te encuentra dedicado a la tala, {name}, una tarea de oficio entre tantas incertidumbres.
+    La actividad concluye en calma. Te detienes a hacer balance de lo obtenido: {loot}.'
+  en: 'The expedition in {place} finds you devoted to woodcutting, {name}, a task of craft among so many uncertainties.
+    The activity concludes peacefully. You pause to take stock of the yield: {loot}.'
+gather.herbalism:
+- es: '{name}, en {place} buscas hierbas: no todo lo valioso en Aetherfall brilla como el oro. El trabajo transcurre
+    sin sobresaltos. Al terminar, has obtenido {loot}.'
+  en: '{name}, in {place} you seek herbs: not everything valuable in Aetherfall shines like gold. The work passes
+    without incident. By the end, you have obtained {loot}.'
+- es: En {place}, {name}, la recolección dirige tu atención a lo pequeño. No hay combate que interrumpa la faena.
+    El fruto de este rato de trabajo es {loot}.
+  en: In {place}, {name}, gathering turns your attention to small things. No fight interrupts the task. The yield
+    from this stretch of work is {loot}.
+- es: '{name}, examinas la vegetación de {place}; el oficio empieza por mirar donde otros apenas reparan. La tarea
+    se cumple sin peligro. Dejas constancia de lo conseguido: {loot}.'
+  en: '{name}, you examine the vegetation of {place}; the craft begins by looking where others barely notice. The
+    task is completed without danger. You take account of what you obtained: {loot}.'
+- es: Buscas plantas en {place}, {name}, entre detalles que una marcha apresurada dejaría atrás. La expedición resulta
+    tranquila. Tu labor termina con {loot}.
+  en: You seek plants in {place}, {name}, among details a hurried march would leave behind. The expedition proves
+    peaceful. Your labour ends with {loot}.
+- es: '{name}, la herboristería ocupa tu estancia en {place}: una labor de atención antes que de alardes. Trabajas
+    sin que una amenaza te obligue a detenerte. Al final de la actividad, cuentas {loot}.'
+  en: '{name}, herbalism occupies your stay in {place}: a task of attention rather than display. You work without
+    a threat forcing you to stop. At the end of the activity, you count {loot}.'
+- es: En {place}, te dedicas a recolectar hierbas, {name}; el mundo también se revela a esa escala. Esta vez el
+    trabajo no se convierte en una lucha. Lo que has obtenido es {loot}.
+  en: In {place}, you devote yourself to gathering herbs, {name}; the world reveals itself at that scale too. This
+    time the work does not turn into a fight. What you have obtained is {loot}.
+- es: '{name}, buscas el fruto de la herboristería en {place}, donde una planta puede merecer toda tu atención.
+    La faena llega a su término sin incidentes. Su resultado material es {loot}.'
+  en: '{name}, you seek the yield of herbalism in {place}, where a plant can deserve your full attention. The task
+    reaches its end without incident. Its material yield is {loot}.'
+- es: La vegetación de {place} centra tu labor, {name}; hoy importa lo que suele pasar inadvertido. Nada interrumpe
+    la calma de la actividad. Cuando acabas, lo conseguido se resume en {loot}.
+  en: The vegetation of {place} is the focus of your work, {name}; today what matters is what often goes unnoticed.
+    Nothing interrupts the calm of the activity. When you finish, the yield amounts to {loot}.
+- es: '{name}, cambias por un rato los grandes horizontes por las plantas de {place}. Completas el trabajo sin tener
+    que enfrentarte a una emboscada. Obtienes {loot}.'
+  en: '{name}, you trade great horizons for the plants of {place} for a while. You finish the work without having
+    to face an ambush. You obtain {loot}.'
+- es: En {place}, {name}, tu trabajo de recolectar hierbas da otro ritmo a la aventura. El oficio ocupa este tramo
+    de tu aventura, sin combate. Terminas con {loot}.
+  en: In {place}, {name}, your herb-gathering work gives adventure another rhythm. Your craft occupies this stretch
+    of your adventure, without combat. You finish with {loot}.
+- es: '{name}, la búsqueda de plantas en {place} te ocupa sin necesidad de grandes gestos. No todas las expediciones
+    exigen una batalla. Esta termina con el resultado de tu labor: {loot}.'
+  en: '{name}, the search for plants in {place} occupies you without any need for grand gestures. Not every expedition
+    demands a battle. This one ends with the yield of your labour: {loot}.'
+- es: 'Dedicas la expedición de {place} al oficio de las hierbas, {name}; incluso lo pequeño tiene su lugar. La
+    actividad concluye en calma. Te detienes a hacer balance de lo obtenido: {loot}.'
+  en: 'You devote the expedition in {place} to the herbalist''s craft, {name}; even small things have their place.
+    The activity concludes peacefully. You pause to take stock of the yield: {loot}.'
+gather.fishing:
+- es: '{name}, en {place} te dedicas a pescar; el agua no responde a las prisas de nadie. El trabajo transcurre
+    sin sobresaltos. Al terminar, has obtenido {loot}.'
+  en: '{name}, in {place} you devote yourself to fishing; water answers to nobody''s haste. The work passes without
+    incident. By the end, you have obtained {loot}.'
+- es: La pesca ocupa tu estancia en {place}, {name}, con una medida del tiempo distinta a la del combate. No hay
+    combate que interrumpa la faena. El fruto de este rato de trabajo es {loot}.
+  en: Fishing occupies your stay in {place}, {name}, with a measure of time different from battle's. No fight interrupts
+    the task. The yield from this stretch of work is {loot}.
+- es: '{name}, pones tu atención en la pesca de {place}; no todo se obtiene avanzando a grandes pasos. La tarea
+    se cumple sin peligro. Dejas constancia de lo conseguido: {loot}.'
+  en: '{name}, you turn your attention to fishing in {place}; not everything is gained by great strides. The task
+    is completed without danger. You take account of what you obtained: {loot}.'
+- es: En {place}, {name}, buscas lo que el agua pueda ofrecer sin que un juramento pueda ordenárselo. La expedición
+    resulta tranquila. Tu labor termina con {loot}.
+  en: In {place}, {name}, you seek what the water may offer, though no oath can command it. The expedition proves
+    peaceful. Your labour ends with {loot}.
+- es: '{name}, la labor de pescar centra tu expedición en {place}, entre espera y atención. Trabajas sin que una
+    amenaza te obligue a detenerte. Al final de la actividad, cuentas {loot}.'
+  en: '{name}, the work of fishing centres your expedition in {place}, between waiting and attention. You work without
+    a threat forcing you to stop. At the end of the activity, you count {loot}.'
+- es: Dedicas este rato a la pesca de {place}, {name}; el oficio también consiste en saber esperar. Esta vez el
+    trabajo no se convierte en una lucha. Lo que has obtenido es {loot}.
+  en: You devote this stretch to fishing in {place}, {name}; the craft also means knowing how to wait. This time
+    the work does not turn into a fight. What you have obtained is {loot}.
+- es: '{name}, el agua de {place} guarda el propósito de tu faena de pesca. La faena llega a su término sin incidentes.
+    Su resultado material es {loot}.'
+  en: '{name}, the water of {place} holds the purpose of your fishing task. The task reaches its end without incident.
+    Its material yield is {loot}.'
+- es: En {place}, {name}, la pesca aparta por un rato tu atención de las grandes empresas. Nada interrumpe la calma
+    de la actividad. Cuando acabas, lo conseguido se resume en {loot}.
+  en: In {place}, {name}, fishing draws your attention away from grand undertakings for a while. Nothing interrupts
+    the calm of the activity. When you finish, the yield amounts to {loot}.
+- es: '{name}, buscas el fruto de la pesca en {place}; tu tarea tiene más de paciencia que de ceremonia. Completas
+    el trabajo sin tener que enfrentarte a una emboscada. Obtienes {loot}.'
+  en: '{name}, you seek the yield of fishing in {place}; your task has more patience than ceremony in it. You finish
+    the work without having to face an ambush. You obtain {loot}.'
+- es: La actividad de pesca da forma a tu expedición en {place}, {name}, sin promesas hechas de antemano. El oficio
+    ocupa este tramo de tu aventura, sin combate. Terminas con {loot}.
+  en: Fishing shapes your expedition in {place}, {name}, with no promises made in advance. Your craft occupies this
+    stretch of your adventure, without combat. You finish with {loot}.
+- es: '{name}, trabajas en la pesca de {place}, donde querer una respuesta no basta para apresurarla. No todas las
+    expediciones exigen una batalla. Esta termina con el resultado de tu labor: {loot}.'
+  en: '{name}, you work at fishing in {place}, where wanting an answer is not enough to hurry it. Not every expedition
+    demands a battle. This one ends with the yield of your labour: {loot}.'
+- es: 'En {place}, dedicas tu atención al agua y a la pesca, {name}; el resto de Aetherfall puede esperar este rato.
+    La actividad concluye en calma. Te detienes a hacer balance de lo obtenido: {loot}.'
+  en: 'In {place}, you give your attention to the water and to fishing, {name}; the rest of Aetherfall can wait
+    this stretch. The activity concludes peacefully. You pause to take stock of the yield: {loot}.'
 stay_ok:
-  - es: >-
-      La jornada en {place} fue larga. {name} se adentró donde pocos se molestan en llegar, trabajó hasta que la
-      luz cambió de color y volvió con la carga a cuestas como una mula: {loot}. Nadie interrumpió el trabajo; hoy el mundo fue generoso.
-    en: >-
-      The day at {place} was a long one. {name} went where few bother to go, worked until the light changed
-      colour and came back loaded like a mule: {loot}. No one interfered; today the world was generous.
-  - es: >-
-      Hubo ruidos, sombras y más de una falsa alarma en {place}, pero {name} no se movió de su faena. Cuando por
-      fin cargó el botín al hombro, el esfuerzo había merecido la pena: {loot}.
-    en: >-
-      There were noises, shadows and more than one false alarm at {place}, but {name} stayed at the task. When
-      the load was finally on their shoulder, the effort had been worth it: {loot}.
-  - es: >-
-      {name} montó un pequeño campamento en {place} y se dedicó a ello con la constancia de un veterano. Al
-      volver, la mochila crujía por las costuras: {loot}. Las tabernas de Crownreach oirán hablar de este viaje.
-    en: >-
-      {name} set up a small camp at {place} and worked with a veteran's steadiness. On the way back the pack was
-      straining at the seams: {loot}. The taverns of Crownreach will hear about this trip.
-
+- es: '{name}, tu expedición en {place} llega a su desenlace. La expedición prolongada termina sin una emboscada.
+    Conservas lo obtenido durante el trabajo: {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. The extended expedition ends without an ambush. You
+    keep what the work yielded: {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Dedicas más tiempo a la faena y no surge ningún combate.
+    El resultado de tu labor es {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. You spend longer at the task and no fight arises.
+    The yield of your labour is {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La estancia larga llega a su fin sin sobresaltos.
+    Su balance es {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. The long stay reaches its end without incident. Its
+    yield is {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. El trabajo se prolonga, pero ninguna amenaza lo interrumpe.
+    Lo obtenido queda en tus manos: {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. The work goes on, but no threat interrupts it. The
+    yield stays in your hands: {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Completas una expedición larga sin tener que luchar.
+    De ella obtienes {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. You complete a long expedition without having to
+    fight. From it you obtain {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La espera y el oficio ocupan la estancia, sin una
+    emboscada al final. Conservas {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. Waiting and craft fill the stay, with no ambush at
+    the end. You keep {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Este tramo prolongado de trabajo no acaba en combate.
+    Su fruto es {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. This extended stretch of work does not end in combat.
+    Its yield is {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La faena larga se resuelve en calma. Haces balance
+    de lo obtenido: {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. The long task ends peacefully. You take stock of
+    what it yielded: {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. No tienes que disputar en combate el resultado de
+    la estancia. Terminas con {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. You do not have to fight for the yield of the stay.
+    You finish with {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La expedición te exige tiempo, pero no una batalla.
+    Lo conseguido es {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. The expedition asks for time, but not a battle. What
+    you obtain is {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Tras la estancia prolongada, no aparece una amenaza
+    que te obligue a combatir. Conservas {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. After the extended stay, no threat appears to force
+    you into combat. You keep {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. El trabajo largo concluye sin incidentes. Puedes contar
+    lo que ha producido: {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. The long work concludes without incident. You can
+    count what it produced: {loot}.'
+stay_ok.mining:
+- es: '{name}, la piedra de {place} no distingue entre grandes nombres y manos de oficio: te exige trabajo. La expedición
+    prolongada termina sin una emboscada. Conservas lo obtenido durante el trabajo: {loot}.'
+  en: '{name}, the stone of {place} makes no distinction between great names and working hands: it demands labour
+    of you. The extended expedition ends without an ambush. You keep what the work yielded: {loot}.'
+- es: En {place}, {name}, buscas en la roca algo más útil que las promesas del camino. Dedicas más tiempo a la faena
+    y no surge ningún combate. El resultado de tu labor es {loot}.
+  en: In {place}, {name}, you seek something in the rock more useful than the road's promises. You spend longer
+    at the task and no fight arises. The yield of your labour is {loot}.
+- es: '{name}, durante la extracción en {place}, tu mundo se reduce a la piedra y a la labor que tienes delante.
+    La estancia larga llega a su fin sin sobresaltos. Su balance es {loot}.'
+  en: '{name}, during extraction in {place}, your world narrows to the stone and the work before you. The long stay
+    reaches its end without incident. Its yield is {loot}.'
+- es: 'Trabajas la roca de {place}, {name}; el mineral no sale al encuentro de quien solo sabe desearlo. El trabajo
+    se prolonga, pero ninguna amenaza lo interrumpe. Lo obtenido queda en tus manos: {loot}.'
+  en: 'You work the rock of {place}, {name}; ore does not come to meet those who only wish for it. The work goes
+    on, but no threat interrupts it. The yield stays in your hands: {loot}.'
+- es: '{name}, en {place} cambias por un rato las grandes empresas por el oficio de extraer mineral. Completas una
+    expedición larga sin tener que luchar. De ella obtienes {loot}.'
+  en: '{name}, in {place} you trade grand undertakings for the craft of extracting ore for a while. You complete
+    a long expedition without having to fight. From it you obtain {loot}.'
+- es: La minería de {place} reclama tu atención, {name}, sin épica que sustituya al esfuerzo. La espera y el oficio
+    ocupan la estancia, sin una emboscada al final. Conservas {loot}.
+  en: Mining in {place} claims your attention, {name}, with no heroics to replace effort. Waiting and craft fill
+    the stay, with no ambush at the end. You keep {loot}.
+- es: '{name}, buscas lo aprovechable entre la piedra de {place}: una tarea concreta en un mundo lleno de enigmas.
+    Este tramo prolongado de trabajo no acaba en combate. Su fruto es {loot}.'
+  en: '{name}, you seek what can be used among the stone of {place}: a definite task in a world full of riddles.
+    This extended stretch of work does not end in combat. Its yield is {loot}.'
+- es: 'En {place}, dedicas tu expedición a la extracción, {name}; hasta el acero empieza lejos de las batallas.
+    La faena larga se resuelve en calma. Haces balance de lo obtenido: {loot}.'
+  en: 'In {place}, you devote your expedition to extraction, {name}; even steel begins far from battles. The long
+    task ends peacefully. You take stock of what it yielded: {loot}.'
+- es: '{name}, aplicas tu esfuerzo a la roca de {place}, donde las intenciones por sí solas no abren camino. No
+    tienes que disputar en combate el resultado de la estancia. Terminas con {loot}.'
+  en: '{name}, you apply your effort to the rock of {place}, where intentions alone open no path. You do not have
+    to fight for the yield of the stay. You finish with {loot}.'
+- es: El mineral es tu propósito en {place}, {name}, y la piedra no tiene prisa por entregarlo. La expedición te
+    exige tiempo, pero no una batalla. Lo conseguido es {loot}.
+  en: Ore is your purpose in {place}, {name}, and the stone is in no hurry to yield it. The expedition asks for
+    time, but not a battle. What you obtain is {loot}.
+- es: '{name}, la labor minera ocupa tu estancia en {place}; por este rato, importa lo que la roca guarda. Tras
+    la estancia prolongada, no aparece una amenaza que te obligue a combatir. Conservas {loot}.'
+  en: '{name}, mining occupies your stay in {place}; for this stretch, what matters is what the rock holds. After
+    the extended stay, no threat appears to force you into combat. You keep {loot}.'
+- es: 'En {place}, {name}, te dedicas a ese comienzo humilde de tantas empresas: trabajar la piedra. El trabajo
+    largo concluye sin incidentes. Puedes contar lo que ha producido: {loot}.'
+  en: 'In {place}, {name}, you devote yourself to the humble beginning of so many ventures: working stone. The long
+    work concludes without incident. You can count what it produced: {loot}.'
+stay_ok.woodcutting:
+- es: '{name}, en {place} buscas madera, ese sustento discreto de techos, mangos y hogares. La expedición prolongada
+    termina sin una emboscada. Conservas lo obtenido durante el trabajo: {loot}.'
+  en: '{name}, in {place} you seek wood, the quiet foundation of roofs, handles and homes. The extended expedition
+    ends without an ambush. You keep what the work yielded: {loot}.'
+- es: La tala ocupa tu atención en {place}, {name}; la madera tiene exigencias que no entienden de títulos. Dedicas
+    más tiempo a la faena y no surge ningún combate. El resultado de tu labor es {loot}.
+  en: Woodcutting holds your attention in {place}, {name}; wood makes demands that care nothing for titles. You
+    spend longer at the task and no fight arises. The yield of your labour is {loot}.
+- es: '{name}, trabajas la madera de {place}, lejos por un rato de las grandes palabras. La estancia larga llega
+    a su fin sin sobresaltos. Su balance es {loot}.'
+  en: '{name}, you work the wood of {place}, away from grand words for a while. The long stay reaches its end without
+    incident. Its yield is {loot}.'
+- es: 'En {place}, {name}, tu tarea es la tala: oficio antes que leyenda. El trabajo se prolonga, pero ninguna amenaza
+    lo interrumpe. Lo obtenido queda en tus manos: {loot}.'
+  en: 'In {place}, {name}, your task is woodcutting: craft before legend. The work goes on, but no threat interrupts
+    it. The yield stays in your hands: {loot}.'
+- es: '{name}, dedicas la expedición de {place} a la madera, sin que el trabajo necesite un nombre heroico. Completas
+    una expedición larga sin tener que luchar. De ella obtienes {loot}.'
+  en: '{name}, you devote the expedition in {place} to wood, without the work needing a heroic name. You complete
+    a long expedition without having to fight. From it you obtain {loot}.'
+- es: La madera centra tu faena en {place}, {name}; su utilidad empieza mucho antes del taller. La espera y el oficio
+    ocupan la estancia, sin una emboscada al final. Conservas {loot}.
+  en: Wood is the focus of your task in {place}, {name}; its usefulness begins long before the workshop. Waiting
+    and craft fill the stay, with no ambush at the end. You keep {loot}.
+- es: '{name}, entre las tareas de tala de {place}, el presente pesa más que cualquier historia por contar. Este
+    tramo prolongado de trabajo no acaba en combate. Su fruto es {loot}.'
+  en: '{name}, among the woodcutting tasks of {place}, the present weighs more than any story to tell. This extended
+    stretch of work does not end in combat. Its yield is {loot}.'
+- es: 'Trabajas en la tala de {place}, {name}, buscando algo sólido en un mundo de promesas frágiles. La faena larga
+    se resuelve en calma. Haces balance de lo obtenido: {loot}.'
+  en: 'You work at woodcutting in {place}, {name}, seeking something solid in a world of fragile promises. The long
+    task ends peacefully. You take stock of what it yielded: {loot}.'
+- es: '{name}, el oficio de la madera reclama esta parte de tu aventura en {place}. No tienes que disputar en combate
+    el resultado de la estancia. Terminas con {loot}.'
+  en: '{name}, the woodcutter''s craft claims this part of your adventure in {place}. You do not have to fight for
+    the yield of the stay. You finish with {loot}.'
+- es: En {place}, la tala te ocupa, {name}; las grandes construcciones empiezan con labores como esta. La expedición
+    te exige tiempo, pero no una batalla. Lo conseguido es {loot}.
+  en: In {place}, woodcutting keeps you occupied, {name}; great structures begin with tasks like this. The expedition
+    asks for time, but not a battle. What you obtain is {loot}.
+- es: '{name}, tu labor con la madera de {place} no necesita espectadores para tener sentido. Tras la estancia prolongada,
+    no aparece una amenaza que te obligue a combatir. Conservas {loot}.'
+  en: '{name}, your work with the wood of {place} needs no audience to have meaning. After the extended stay, no
+    threat appears to force you into combat. You keep {loot}.'
+- es: 'La expedición a {place} te encuentra dedicado a la tala, {name}, una tarea de oficio entre tantas incertidumbres.
+    El trabajo largo concluye sin incidentes. Puedes contar lo que ha producido: {loot}.'
+  en: 'The expedition in {place} finds you devoted to woodcutting, {name}, a task of craft among so many uncertainties.
+    The long work concludes without incident. You can count what it produced: {loot}.'
+stay_ok.herbalism:
+- es: '{name}, en {place} buscas hierbas: no todo lo valioso en Aetherfall brilla como el oro. La expedición prolongada
+    termina sin una emboscada. Conservas lo obtenido durante el trabajo: {loot}.'
+  en: '{name}, in {place} you seek herbs: not everything valuable in Aetherfall shines like gold. The extended expedition
+    ends without an ambush. You keep what the work yielded: {loot}.'
+- es: En {place}, {name}, la recolección dirige tu atención a lo pequeño. Dedicas más tiempo a la faena y no surge
+    ningún combate. El resultado de tu labor es {loot}.
+  en: In {place}, {name}, gathering turns your attention to small things. You spend longer at the task and no fight
+    arises. The yield of your labour is {loot}.
+- es: '{name}, examinas la vegetación de {place}; el oficio empieza por mirar donde otros apenas reparan. La estancia
+    larga llega a su fin sin sobresaltos. Su balance es {loot}.'
+  en: '{name}, you examine the vegetation of {place}; the craft begins by looking where others barely notice. The
+    long stay reaches its end without incident. Its yield is {loot}.'
+- es: 'Buscas plantas en {place}, {name}, entre detalles que una marcha apresurada dejaría atrás. El trabajo se
+    prolonga, pero ninguna amenaza lo interrumpe. Lo obtenido queda en tus manos: {loot}.'
+  en: 'You seek plants in {place}, {name}, among details a hurried march would leave behind. The work goes on, but
+    no threat interrupts it. The yield stays in your hands: {loot}.'
+- es: '{name}, la herboristería ocupa tu estancia en {place}: una labor de atención antes que de alardes. Completas
+    una expedición larga sin tener que luchar. De ella obtienes {loot}.'
+  en: '{name}, herbalism occupies your stay in {place}: a task of attention rather than display. You complete a
+    long expedition without having to fight. From it you obtain {loot}.'
+- es: En {place}, te dedicas a recolectar hierbas, {name}; el mundo también se revela a esa escala. La espera y
+    el oficio ocupan la estancia, sin una emboscada al final. Conservas {loot}.
+  en: In {place}, you devote yourself to gathering herbs, {name}; the world reveals itself at that scale too. Waiting
+    and craft fill the stay, with no ambush at the end. You keep {loot}.
+- es: '{name}, buscas el fruto de la herboristería en {place}, donde una planta puede merecer toda tu atención.
+    Este tramo prolongado de trabajo no acaba en combate. Su fruto es {loot}.'
+  en: '{name}, you seek the yield of herbalism in {place}, where a plant can deserve your full attention. This extended
+    stretch of work does not end in combat. Its yield is {loot}.'
+- es: 'La vegetación de {place} centra tu labor, {name}; hoy importa lo que suele pasar inadvertido. La faena larga
+    se resuelve en calma. Haces balance de lo obtenido: {loot}.'
+  en: 'The vegetation of {place} is the focus of your work, {name}; today what matters is what often goes unnoticed.
+    The long task ends peacefully. You take stock of what it yielded: {loot}.'
+- es: '{name}, cambias por un rato los grandes horizontes por las plantas de {place}. No tienes que disputar en
+    combate el resultado de la estancia. Terminas con {loot}.'
+  en: '{name}, you trade great horizons for the plants of {place} for a while. You do not have to fight for the
+    yield of the stay. You finish with {loot}.'
+- es: En {place}, {name}, tu trabajo de recolectar hierbas da otro ritmo a la aventura. La expedición te exige tiempo,
+    pero no una batalla. Lo conseguido es {loot}.
+  en: In {place}, {name}, your herb-gathering work gives adventure another rhythm. The expedition asks for time,
+    but not a battle. What you obtain is {loot}.
+- es: '{name}, la búsqueda de plantas en {place} te ocupa sin necesidad de grandes gestos. Tras la estancia prolongada,
+    no aparece una amenaza que te obligue a combatir. Conservas {loot}.'
+  en: '{name}, the search for plants in {place} occupies you without any need for grand gestures. After the extended
+    stay, no threat appears to force you into combat. You keep {loot}.'
+- es: 'Dedicas la expedición de {place} al oficio de las hierbas, {name}; incluso lo pequeño tiene su lugar. El
+    trabajo largo concluye sin incidentes. Puedes contar lo que ha producido: {loot}.'
+  en: 'You devote the expedition in {place} to the herbalist''s craft, {name}; even small things have their place.
+    The long work concludes without incident. You can count what it produced: {loot}.'
+stay_ok.fishing:
+- es: '{name}, en {place} te dedicas a pescar; el agua no responde a las prisas de nadie. La expedición prolongada
+    termina sin una emboscada. Conservas lo obtenido durante el trabajo: {loot}.'
+  en: '{name}, in {place} you devote yourself to fishing; water answers to nobody''s haste. The extended expedition
+    ends without an ambush. You keep what the work yielded: {loot}.'
+- es: La pesca ocupa tu estancia en {place}, {name}, con una medida del tiempo distinta a la del combate. Dedicas
+    más tiempo a la faena y no surge ningún combate. El resultado de tu labor es {loot}.
+  en: Fishing occupies your stay in {place}, {name}, with a measure of time different from battle's. You spend longer
+    at the task and no fight arises. The yield of your labour is {loot}.
+- es: '{name}, pones tu atención en la pesca de {place}; no todo se obtiene avanzando a grandes pasos. La estancia
+    larga llega a su fin sin sobresaltos. Su balance es {loot}.'
+  en: '{name}, you turn your attention to fishing in {place}; not everything is gained by great strides. The long
+    stay reaches its end without incident. Its yield is {loot}.'
+- es: 'En {place}, {name}, buscas lo que el agua pueda ofrecer sin que un juramento pueda ordenárselo. El trabajo
+    se prolonga, pero ninguna amenaza lo interrumpe. Lo obtenido queda en tus manos: {loot}.'
+  en: 'In {place}, {name}, you seek what the water may offer, though no oath can command it. The work goes on, but
+    no threat interrupts it. The yield stays in your hands: {loot}.'
+- es: '{name}, la labor de pescar centra tu expedición en {place}, entre espera y atención. Completas una expedición
+    larga sin tener que luchar. De ella obtienes {loot}.'
+  en: '{name}, the work of fishing centres your expedition in {place}, between waiting and attention. You complete
+    a long expedition without having to fight. From it you obtain {loot}.'
+- es: Dedicas este rato a la pesca de {place}, {name}; el oficio también consiste en saber esperar. La espera y
+    el oficio ocupan la estancia, sin una emboscada al final. Conservas {loot}.
+  en: You devote this stretch to fishing in {place}, {name}; the craft also means knowing how to wait. Waiting and
+    craft fill the stay, with no ambush at the end. You keep {loot}.
+- es: '{name}, el agua de {place} guarda el propósito de tu faena de pesca. Este tramo prolongado de trabajo no
+    acaba en combate. Su fruto es {loot}.'
+  en: '{name}, the water of {place} holds the purpose of your fishing task. This extended stretch of work does not
+    end in combat. Its yield is {loot}.'
+- es: 'En {place}, {name}, la pesca aparta por un rato tu atención de las grandes empresas. La faena larga se resuelve
+    en calma. Haces balance de lo obtenido: {loot}.'
+  en: 'In {place}, {name}, fishing draws your attention away from grand undertakings for a while. The long task
+    ends peacefully. You take stock of what it yielded: {loot}.'
+- es: '{name}, buscas el fruto de la pesca en {place}; tu tarea tiene más de paciencia que de ceremonia. No tienes
+    que disputar en combate el resultado de la estancia. Terminas con {loot}.'
+  en: '{name}, you seek the yield of fishing in {place}; your task has more patience than ceremony in it. You do
+    not have to fight for the yield of the stay. You finish with {loot}.'
+- es: La actividad de pesca da forma a tu expedición en {place}, {name}, sin promesas hechas de antemano. La expedición
+    te exige tiempo, pero no una batalla. Lo conseguido es {loot}.
+  en: Fishing shapes your expedition in {place}, {name}, with no promises made in advance. The expedition asks for
+    time, but not a battle. What you obtain is {loot}.
+- es: '{name}, trabajas en la pesca de {place}, donde querer una respuesta no basta para apresurarla. Tras la estancia
+    prolongada, no aparece una amenaza que te obligue a combatir. Conservas {loot}.'
+  en: '{name}, you work at fishing in {place}, where wanting an answer is not enough to hurry it. After the extended
+    stay, no threat appears to force you into combat. You keep {loot}.'
+- es: 'En {place}, dedicas tu atención al agua y a la pesca, {name}; el resto de Aetherfall puede esperar este rato.
+    El trabajo largo concluye sin incidentes. Puedes contar lo que ha producido: {loot}.'
+  en: 'In {place}, you give your attention to the water and to fishing, {name}; the rest of Aetherfall can wait
+    this stretch. The long work concludes without incident. You can count what it produced: {loot}.'
 stay_won:
-  - es: >-
-      Justo cuando {name} recogía en {place}, {monster} salió de las sombras atraído por el ruido. Fue un combate
-      sucio y breve, pero {name} quedó en pie y con toda la carga intacta: {loot}.
-    en: >-
-      Just as {name} was packing up at {place}, {monster} burst from the shadows, drawn by the noise. It was a
-      short, dirty fight, but {name} was left standing with the whole load intact: {loot}.
-  - es: >-
-      {place} no quería dejar marchar su tesoro. {monster} lo intentó y fracasó. {name} se limpió la sangre,
-      ajustó las correas de la bolsa y emprendió el regreso con todo: {loot}.
-    en: >-
-      {place} didn't want to let the treasure go. {monster} tried and failed. {name} wiped off the blood,
-      tightened the pack straps and set off for home with everything: {loot}.
-  - es: >-
-      La emboscada llegó en el peor momento, con las manos ocupadas y la carga a los pies. Aun así, {name} se
-      rehízo y despachó a {monster}. Nada se perdió: {loot}.
-    en: >-
-      The ambush came at the worst moment, hands full and the load at their feet. Even so, {name} recovered and
-      dealt with {monster}. Nothing was lost: {loot}.
-
+- es: '{name}, tu expedición en {place} llega a su desenlace. La emboscada de {monster} rompe la calma al terminar
+    el trabajo. Ganas el combate y conservas la carga; lo obtenido es {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. The ambush by {monster} breaks the calm as the work
+    ends. You win the fight and keep the load; the yield is {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La estancia acaba en un enfrentamiento con {monster}.
+    La victoria te permite conservar lo obtenido: {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. The stay ends in a confrontation with {monster}.
+    Victory lets you keep the yield: {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. El trabajo no es la última prueba: {monster} te embosca
+    al final. Vences y mantienes la carga, con {loot} como balance.'
+  en: '{name}, your expedition in {place} reaches its outcome. Work is not the last test: {monster} ambushes you
+    at the end. You prevail and keep the load, with {loot} as the yield.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Una emboscada de {monster} amenaza el cierre de la
+    expedición. El combate termina a tu favor y conservas {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. An ambush by {monster} threatens the expedition''s
+    end. The battle ends in your favour and you keep {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Al terminar la faena te enfrentas a {monster}. Ganas
+    la lucha sin perder la carga; el resultado es {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. As the task ends you face {monster}. You win the
+    fight without losing the load; the yield is {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La expedición larga desemboca en una emboscada de
+    {monster}. Sales del combate con la victoria y conservas {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. The long expedition leads into an ambush by {monster}.
+    You emerge from the fight victorious and keep {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Todavía queda una lucha cuando el trabajo termina:
+    la emboscada de {monster}. Vences y retienes lo obtenido, {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. A fight still awaits when the work ends: the ambush
+    by {monster}. You win and retain the yield, {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La faena da paso al combate contra {monster}. Tu victoria
+    preserva la carga y terminas con {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. The task gives way to battle against {monster}. Your
+    victory preserves the load and you finish with {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. {monster} te embosca después de la estancia prolongada.
+    El enfrentamiento se resuelve a tu favor y conservas {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. {monster} ambushes you after the extended stay. The
+    confrontation resolves in your favour and you keep {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. El final de la actividad exige afrontar la emboscada
+    de {monster}. La superas con una victoria y mantienes {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. The end of the activity requires facing the ambush
+    by {monster}. You overcome it with a victory and retain {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Cuando la expedición parecía terminada, te embosca
+    {monster}. Ganas el combate y la carga permanece contigo: {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. When the expedition seemed over, {monster} ambushes
+    you. You win the fight and the load stays with you: {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La larga labor termina con una amenaza, {monster},
+    y un combate. Vences y conservas el resultado de la expedición: {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. The long labour ends with a threat, {monster}, and
+    a fight. You win and keep the expedition''s yield: {loot}.'
+stay_won.mining:
+- es: '{name}, la piedra de {place} no distingue entre grandes nombres y manos de oficio: te exige trabajo. La emboscada
+    de {monster} rompe la calma al terminar el trabajo. Ganas el combate y conservas la carga; lo obtenido es {loot}.'
+  en: '{name}, the stone of {place} makes no distinction between great names and working hands: it demands labour
+    of you. The ambush by {monster} breaks the calm as the work ends. You win the fight and keep the load; the yield
+    is {loot}.'
+- es: 'En {place}, {name}, buscas en la roca algo más útil que las promesas del camino. La estancia acaba en un
+    enfrentamiento con {monster}. La victoria te permite conservar lo obtenido: {loot}.'
+  en: 'In {place}, {name}, you seek something in the rock more useful than the road''s promises. The stay ends in
+    a confrontation with {monster}. Victory lets you keep the yield: {loot}.'
+- es: '{name}, durante la extracción en {place}, tu mundo se reduce a la piedra y a la labor que tienes delante.
+    El trabajo no es la última prueba: {monster} te embosca al final. Vences y mantienes la carga, con {loot} como
+    balance.'
+  en: '{name}, during extraction in {place}, your world narrows to the stone and the work before you. Work is not
+    the last test: {monster} ambushes you at the end. You prevail and keep the load, with {loot} as the yield.'
+- es: Trabajas la roca de {place}, {name}; el mineral no sale al encuentro de quien solo sabe desearlo. Una emboscada
+    de {monster} amenaza el cierre de la expedición. El combate termina a tu favor y conservas {loot}.
+  en: You work the rock of {place}, {name}; ore does not come to meet those who only wish for it. An ambush by {monster}
+    threatens the expedition's end. The battle ends in your favour and you keep {loot}.
+- es: '{name}, en {place} cambias por un rato las grandes empresas por el oficio de extraer mineral. Al terminar
+    la faena te enfrentas a {monster}. Ganas la lucha sin perder la carga; el resultado es {loot}.'
+  en: '{name}, in {place} you trade grand undertakings for the craft of extracting ore for a while. As the task
+    ends you face {monster}. You win the fight without losing the load; the yield is {loot}.'
+- es: La minería de {place} reclama tu atención, {name}, sin épica que sustituya al esfuerzo. La expedición larga
+    desemboca en una emboscada de {monster}. Sales del combate con la victoria y conservas {loot}.
+  en: Mining in {place} claims your attention, {name}, with no heroics to replace effort. The long expedition leads
+    into an ambush by {monster}. You emerge from the fight victorious and keep {loot}.
+- es: '{name}, buscas lo aprovechable entre la piedra de {place}: una tarea concreta en un mundo lleno de enigmas.
+    Todavía queda una lucha cuando el trabajo termina: la emboscada de {monster}. Vences y retienes lo obtenido,
+    {loot}.'
+  en: '{name}, you seek what can be used among the stone of {place}: a definite task in a world full of riddles.
+    A fight still awaits when the work ends: the ambush by {monster}. You win and retain the yield, {loot}.'
+- es: En {place}, dedicas tu expedición a la extracción, {name}; hasta el acero empieza lejos de las batallas. La
+    faena da paso al combate contra {monster}. Tu victoria preserva la carga y terminas con {loot}.
+  en: In {place}, you devote your expedition to extraction, {name}; even steel begins far from battles. The task
+    gives way to battle against {monster}. Your victory preserves the load and you finish with {loot}.
+- es: '{name}, aplicas tu esfuerzo a la roca de {place}, donde las intenciones por sí solas no abren camino. {monster}
+    te embosca después de la estancia prolongada. El enfrentamiento se resuelve a tu favor y conservas {loot}.'
+  en: '{name}, you apply your effort to the rock of {place}, where intentions alone open no path. {monster} ambushes
+    you after the extended stay. The confrontation resolves in your favour and you keep {loot}.'
+- es: El mineral es tu propósito en {place}, {name}, y la piedra no tiene prisa por entregarlo. El final de la actividad
+    exige afrontar la emboscada de {monster}. La superas con una victoria y mantienes {loot}.
+  en: Ore is your purpose in {place}, {name}, and the stone is in no hurry to yield it. The end of the activity
+    requires facing the ambush by {monster}. You overcome it with a victory and retain {loot}.
+- es: '{name}, la labor minera ocupa tu estancia en {place}; por este rato, importa lo que la roca guarda. Cuando
+    la expedición parecía terminada, te embosca {monster}. Ganas el combate y la carga permanece contigo: {loot}.'
+  en: '{name}, mining occupies your stay in {place}; for this stretch, what matters is what the rock holds. When
+    the expedition seemed over, {monster} ambushes you. You win the fight and the load stays with you: {loot}.'
+- es: 'En {place}, {name}, te dedicas a ese comienzo humilde de tantas empresas: trabajar la piedra. La larga labor
+    termina con una amenaza, {monster}, y un combate. Vences y conservas el resultado de la expedición: {loot}.'
+  en: 'In {place}, {name}, you devote yourself to the humble beginning of so many ventures: working stone. The long
+    labour ends with a threat, {monster}, and a fight. You win and keep the expedition''s yield: {loot}.'
+stay_won.woodcutting:
+- es: '{name}, en {place} buscas madera, ese sustento discreto de techos, mangos y hogares. La emboscada de {monster}
+    rompe la calma al terminar el trabajo. Ganas el combate y conservas la carga; lo obtenido es {loot}.'
+  en: '{name}, in {place} you seek wood, the quiet foundation of roofs, handles and homes. The ambush by {monster}
+    breaks the calm as the work ends. You win the fight and keep the load; the yield is {loot}.'
+- es: 'La tala ocupa tu atención en {place}, {name}; la madera tiene exigencias que no entienden de títulos. La
+    estancia acaba en un enfrentamiento con {monster}. La victoria te permite conservar lo obtenido: {loot}.'
+  en: 'Woodcutting holds your attention in {place}, {name}; wood makes demands that care nothing for titles. The
+    stay ends in a confrontation with {monster}. Victory lets you keep the yield: {loot}.'
+- es: '{name}, trabajas la madera de {place}, lejos por un rato de las grandes palabras. El trabajo no es la última
+    prueba: {monster} te embosca al final. Vences y mantienes la carga, con {loot} como balance.'
+  en: '{name}, you work the wood of {place}, away from grand words for a while. Work is not the last test: {monster}
+    ambushes you at the end. You prevail and keep the load, with {loot} as the yield.'
+- es: 'En {place}, {name}, tu tarea es la tala: oficio antes que leyenda. Una emboscada de {monster} amenaza el
+    cierre de la expedición. El combate termina a tu favor y conservas {loot}.'
+  en: 'In {place}, {name}, your task is woodcutting: craft before legend. An ambush by {monster} threatens the expedition''s
+    end. The battle ends in your favour and you keep {loot}.'
+- es: '{name}, dedicas la expedición de {place} a la madera, sin que el trabajo necesite un nombre heroico. Al terminar
+    la faena te enfrentas a {monster}. Ganas la lucha sin perder la carga; el resultado es {loot}.'
+  en: '{name}, you devote the expedition in {place} to wood, without the work needing a heroic name. As the task
+    ends you face {monster}. You win the fight without losing the load; the yield is {loot}.'
+- es: La madera centra tu faena en {place}, {name}; su utilidad empieza mucho antes del taller. La expedición larga
+    desemboca en una emboscada de {monster}. Sales del combate con la victoria y conservas {loot}.
+  en: Wood is the focus of your task in {place}, {name}; its usefulness begins long before the workshop. The long
+    expedition leads into an ambush by {monster}. You emerge from the fight victorious and keep {loot}.
+- es: '{name}, entre las tareas de tala de {place}, el presente pesa más que cualquier historia por contar. Todavía
+    queda una lucha cuando el trabajo termina: la emboscada de {monster}. Vences y retienes lo obtenido, {loot}.'
+  en: '{name}, among the woodcutting tasks of {place}, the present weighs more than any story to tell. A fight still
+    awaits when the work ends: the ambush by {monster}. You win and retain the yield, {loot}.'
+- es: Trabajas en la tala de {place}, {name}, buscando algo sólido en un mundo de promesas frágiles. La faena da
+    paso al combate contra {monster}. Tu victoria preserva la carga y terminas con {loot}.
+  en: You work at woodcutting in {place}, {name}, seeking something solid in a world of fragile promises. The task
+    gives way to battle against {monster}. Your victory preserves the load and you finish with {loot}.
+- es: '{name}, el oficio de la madera reclama esta parte de tu aventura en {place}. {monster} te embosca después
+    de la estancia prolongada. El enfrentamiento se resuelve a tu favor y conservas {loot}.'
+  en: '{name}, the woodcutter''s craft claims this part of your adventure in {place}. {monster} ambushes you after
+    the extended stay. The confrontation resolves in your favour and you keep {loot}.'
+- es: En {place}, la tala te ocupa, {name}; las grandes construcciones empiezan con labores como esta. El final
+    de la actividad exige afrontar la emboscada de {monster}. La superas con una victoria y mantienes {loot}.
+  en: In {place}, woodcutting keeps you occupied, {name}; great structures begin with tasks like this. The end of
+    the activity requires facing the ambush by {monster}. You overcome it with a victory and retain {loot}.
+- es: '{name}, tu labor con la madera de {place} no necesita espectadores para tener sentido. Cuando la expedición
+    parecía terminada, te embosca {monster}. Ganas el combate y la carga permanece contigo: {loot}.'
+  en: '{name}, your work with the wood of {place} needs no audience to have meaning. When the expedition seemed
+    over, {monster} ambushes you. You win the fight and the load stays with you: {loot}.'
+- es: 'La expedición a {place} te encuentra dedicado a la tala, {name}, una tarea de oficio entre tantas incertidumbres.
+    La larga labor termina con una amenaza, {monster}, y un combate. Vences y conservas el resultado de la expedición:
+    {loot}.'
+  en: 'The expedition in {place} finds you devoted to woodcutting, {name}, a task of craft among so many uncertainties.
+    The long labour ends with a threat, {monster}, and a fight. You win and keep the expedition''s yield: {loot}.'
+stay_won.herbalism:
+- es: '{name}, en {place} buscas hierbas: no todo lo valioso en Aetherfall brilla como el oro. La emboscada de {monster}
+    rompe la calma al terminar el trabajo. Ganas el combate y conservas la carga; lo obtenido es {loot}.'
+  en: '{name}, in {place} you seek herbs: not everything valuable in Aetherfall shines like gold. The ambush by
+    {monster} breaks the calm as the work ends. You win the fight and keep the load; the yield is {loot}.'
+- es: 'En {place}, {name}, la recolección dirige tu atención a lo pequeño. La estancia acaba en un enfrentamiento
+    con {monster}. La victoria te permite conservar lo obtenido: {loot}.'
+  en: 'In {place}, {name}, gathering turns your attention to small things. The stay ends in a confrontation with
+    {monster}. Victory lets you keep the yield: {loot}.'
+- es: '{name}, examinas la vegetación de {place}; el oficio empieza por mirar donde otros apenas reparan. El trabajo
+    no es la última prueba: {monster} te embosca al final. Vences y mantienes la carga, con {loot} como balance.'
+  en: '{name}, you examine the vegetation of {place}; the craft begins by looking where others barely notice. Work
+    is not the last test: {monster} ambushes you at the end. You prevail and keep the load, with {loot} as the yield.'
+- es: Buscas plantas en {place}, {name}, entre detalles que una marcha apresurada dejaría atrás. Una emboscada de
+    {monster} amenaza el cierre de la expedición. El combate termina a tu favor y conservas {loot}.
+  en: You seek plants in {place}, {name}, among details a hurried march would leave behind. An ambush by {monster}
+    threatens the expedition's end. The battle ends in your favour and you keep {loot}.
+- es: '{name}, la herboristería ocupa tu estancia en {place}: una labor de atención antes que de alardes. Al terminar
+    la faena te enfrentas a {monster}. Ganas la lucha sin perder la carga; el resultado es {loot}.'
+  en: '{name}, herbalism occupies your stay in {place}: a task of attention rather than display. As the task ends
+    you face {monster}. You win the fight without losing the load; the yield is {loot}.'
+- es: En {place}, te dedicas a recolectar hierbas, {name}; el mundo también se revela a esa escala. La expedición
+    larga desemboca en una emboscada de {monster}. Sales del combate con la victoria y conservas {loot}.
+  en: In {place}, you devote yourself to gathering herbs, {name}; the world reveals itself at that scale too. The
+    long expedition leads into an ambush by {monster}. You emerge from the fight victorious and keep {loot}.
+- es: '{name}, buscas el fruto de la herboristería en {place}, donde una planta puede merecer toda tu atención.
+    Todavía queda una lucha cuando el trabajo termina: la emboscada de {monster}. Vences y retienes lo obtenido,
+    {loot}.'
+  en: '{name}, you seek the yield of herbalism in {place}, where a plant can deserve your full attention. A fight
+    still awaits when the work ends: the ambush by {monster}. You win and retain the yield, {loot}.'
+- es: La vegetación de {place} centra tu labor, {name}; hoy importa lo que suele pasar inadvertido. La faena da
+    paso al combate contra {monster}. Tu victoria preserva la carga y terminas con {loot}.
+  en: The vegetation of {place} is the focus of your work, {name}; today what matters is what often goes unnoticed.
+    The task gives way to battle against {monster}. Your victory preserves the load and you finish with {loot}.
+- es: '{name}, cambias por un rato los grandes horizontes por las plantas de {place}. {monster} te embosca después
+    de la estancia prolongada. El enfrentamiento se resuelve a tu favor y conservas {loot}.'
+  en: '{name}, you trade great horizons for the plants of {place} for a while. {monster} ambushes you after the
+    extended stay. The confrontation resolves in your favour and you keep {loot}.'
+- es: En {place}, {name}, tu trabajo de recolectar hierbas da otro ritmo a la aventura. El final de la actividad
+    exige afrontar la emboscada de {monster}. La superas con una victoria y mantienes {loot}.
+  en: In {place}, {name}, your herb-gathering work gives adventure another rhythm. The end of the activity requires
+    facing the ambush by {monster}. You overcome it with a victory and retain {loot}.
+- es: '{name}, la búsqueda de plantas en {place} te ocupa sin necesidad de grandes gestos. Cuando la expedición
+    parecía terminada, te embosca {monster}. Ganas el combate y la carga permanece contigo: {loot}.'
+  en: '{name}, the search for plants in {place} occupies you without any need for grand gestures. When the expedition
+    seemed over, {monster} ambushes you. You win the fight and the load stays with you: {loot}.'
+- es: 'Dedicas la expedición de {place} al oficio de las hierbas, {name}; incluso lo pequeño tiene su lugar. La
+    larga labor termina con una amenaza, {monster}, y un combate. Vences y conservas el resultado de la expedición:
+    {loot}.'
+  en: 'You devote the expedition in {place} to the herbalist''s craft, {name}; even small things have their place.
+    The long labour ends with a threat, {monster}, and a fight. You win and keep the expedition''s yield: {loot}.'
+stay_won.fishing:
+- es: '{name}, en {place} te dedicas a pescar; el agua no responde a las prisas de nadie. La emboscada de {monster}
+    rompe la calma al terminar el trabajo. Ganas el combate y conservas la carga; lo obtenido es {loot}.'
+  en: '{name}, in {place} you devote yourself to fishing; water answers to nobody''s haste. The ambush by {monster}
+    breaks the calm as the work ends. You win the fight and keep the load; the yield is {loot}.'
+- es: 'La pesca ocupa tu estancia en {place}, {name}, con una medida del tiempo distinta a la del combate. La estancia
+    acaba en un enfrentamiento con {monster}. La victoria te permite conservar lo obtenido: {loot}.'
+  en: 'Fishing occupies your stay in {place}, {name}, with a measure of time different from battle''s. The stay
+    ends in a confrontation with {monster}. Victory lets you keep the yield: {loot}.'
+- es: '{name}, pones tu atención en la pesca de {place}; no todo se obtiene avanzando a grandes pasos. El trabajo
+    no es la última prueba: {monster} te embosca al final. Vences y mantienes la carga, con {loot} como balance.'
+  en: '{name}, you turn your attention to fishing in {place}; not everything is gained by great strides. Work is
+    not the last test: {monster} ambushes you at the end. You prevail and keep the load, with {loot} as the yield.'
+- es: En {place}, {name}, buscas lo que el agua pueda ofrecer sin que un juramento pueda ordenárselo. Una emboscada
+    de {monster} amenaza el cierre de la expedición. El combate termina a tu favor y conservas {loot}.
+  en: In {place}, {name}, you seek what the water may offer, though no oath can command it. An ambush by {monster}
+    threatens the expedition's end. The battle ends in your favour and you keep {loot}.
+- es: '{name}, la labor de pescar centra tu expedición en {place}, entre espera y atención. Al terminar la faena
+    te enfrentas a {monster}. Ganas la lucha sin perder la carga; el resultado es {loot}.'
+  en: '{name}, the work of fishing centres your expedition in {place}, between waiting and attention. As the task
+    ends you face {monster}. You win the fight without losing the load; the yield is {loot}.'
+- es: Dedicas este rato a la pesca de {place}, {name}; el oficio también consiste en saber esperar. La expedición
+    larga desemboca en una emboscada de {monster}. Sales del combate con la victoria y conservas {loot}.
+  en: You devote this stretch to fishing in {place}, {name}; the craft also means knowing how to wait. The long
+    expedition leads into an ambush by {monster}. You emerge from the fight victorious and keep {loot}.
+- es: '{name}, el agua de {place} guarda el propósito de tu faena de pesca. Todavía queda una lucha cuando el trabajo
+    termina: la emboscada de {monster}. Vences y retienes lo obtenido, {loot}.'
+  en: '{name}, the water of {place} holds the purpose of your fishing task. A fight still awaits when the work ends:
+    the ambush by {monster}. You win and retain the yield, {loot}.'
+- es: En {place}, {name}, la pesca aparta por un rato tu atención de las grandes empresas. La faena da paso al combate
+    contra {monster}. Tu victoria preserva la carga y terminas con {loot}.
+  en: In {place}, {name}, fishing draws your attention away from grand undertakings for a while. The task gives
+    way to battle against {monster}. Your victory preserves the load and you finish with {loot}.
+- es: '{name}, buscas el fruto de la pesca en {place}; tu tarea tiene más de paciencia que de ceremonia. {monster}
+    te embosca después de la estancia prolongada. El enfrentamiento se resuelve a tu favor y conservas {loot}.'
+  en: '{name}, you seek the yield of fishing in {place}; your task has more patience than ceremony in it. {monster}
+    ambushes you after the extended stay. The confrontation resolves in your favour and you keep {loot}.'
+- es: La actividad de pesca da forma a tu expedición en {place}, {name}, sin promesas hechas de antemano. El final
+    de la actividad exige afrontar la emboscada de {monster}. La superas con una victoria y mantienes {loot}.
+  en: Fishing shapes your expedition in {place}, {name}, with no promises made in advance. The end of the activity
+    requires facing the ambush by {monster}. You overcome it with a victory and retain {loot}.
+- es: '{name}, trabajas en la pesca de {place}, donde querer una respuesta no basta para apresurarla. Cuando la
+    expedición parecía terminada, te embosca {monster}. Ganas el combate y la carga permanece contigo: {loot}.'
+  en: '{name}, you work at fishing in {place}, where wanting an answer is not enough to hurry it. When the expedition
+    seemed over, {monster} ambushes you. You win the fight and the load stays with you: {loot}.'
+- es: 'En {place}, dedicas tu atención al agua y a la pesca, {name}; el resto de Aetherfall puede esperar este rato.
+    La larga labor termina con una amenaza, {monster}, y un combate. Vences y conservas el resultado de la expedición:
+    {loot}.'
+  en: 'In {place}, you give your attention to the water and to fishing, {name}; the rest of Aetherfall can wait
+    this stretch. The long labour ends with a threat, {monster}, and a fight. You win and keep the expedition''s
+    yield: {loot}.'
 stay_fled:
-  - es: >-
-      {monster} cayó sobre {name} al final de la jornada en {place}. No era momento de heroísmos: {name} agarró lo
-      que pudo y corrió. Salvó la mitad de la carga, {loot}, y la piel entera, que no es poco.
-    en: >-
-      {monster} fell on {name} at the end of the day at {place}. It was no time for heroics: {name} grabbed what
-      they could and ran. Half the load was saved, {loot}, and their hide with it, which is no small thing.
-  - es: >-
-      Hay retiradas que son victorias. {name} dejó atrás parte del botín para que {monster} se entretuviera y
-      escapó de {place} con lo justo: {loot}. Mañana habrá otra oportunidad.
-    en: >-
-      Some retreats are victories. {name} left part of the haul behind to keep {monster} busy and escaped {place}
-      with just enough: {loot}. Tomorrow there will be another chance.
-  - es: >-
-      La huida desde {place} fue a trompicones, con {monster} pisándole los talones. Cuando por fin se detuvo,
-      {name} revisó la bolsa: medio cargamento, {loot}. Mejor que nada.
-    en: >-
-      The flight from {place} was a stumbling one, with {monster} on their heels. When at last they stopped,
-      {name} checked the pack: half a load, {loot}. Better than nothing.
-
+- es: '{name}, tu expedición en {place} llega a su desenlace. Al terminar la faena, {monster} te embosca. Logras
+    huir; de la carga, consigues conservar {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. As the task ends, {monster} ambushes you. You manage
+    to flee; of the load, you retain {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La estancia concluye con una emboscada de {monster}.
+    La huida deja una carga reducida: {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. The stay concludes with an ambush by {monster}. Escape
+    leaves a reduced load: {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. El trabajo desemboca en un enfrentamiento con {monster}.
+    Te retiras con éxito y conservas {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. The work leads into a confrontation with {monster}.
+    You retreat successfully and retain {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. No termina en calma la expedición: {monster} te embosca.
+    Escapas del combate, con {loot} como balance de lo salvado.'
+  en: '{name}, your expedition in {place} reaches its outcome. The expedition does not end peacefully: {monster}
+    ambushes you. You escape the battle, with {loot} as the tally of what was saved.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Tras el trabajo llega la emboscada de {monster}. Consigues
+    abandonar la lucha; la carga que conservas es {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. After the work comes the ambush by {monster}. You
+    manage to leave the fight; the load you keep is {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La amenaza de {monster} convierte el final en combate.
+    Huyes y retienes {loot} de la carga.'
+  en: '{name}, your expedition in {place} reaches its outcome. The threat of {monster} turns the ending into a battle.
+    You flee and retain {loot} from the load.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Una emboscada de {monster} interrumpe el cierre de
+    la estancia. Tu huida tiene éxito y lo conservado es {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. An ambush by {monster} interrupts the end of the
+    stay. Your escape succeeds and what you retain is {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La larga faena acaba frente a {monster}. Sales del
+    combate mediante la huida y conservas {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. The long task ends facing {monster}. You leave the
+    battle by fleeing and retain {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La expedición no termina con una victoria sobre {monster}.
+    Termina con tu escape y lo que mantienes de la carga: {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. The expedition does not end in victory over {monster}.
+    It ends in your escape and what remains of the load: {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Te embosca {monster} cuando concluye la actividad.
+    La retirada se consuma y el balance de lo salvado es {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. {monster} ambushes you as the activity concludes.
+    The retreat succeeds and the tally of what was saved is {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. El combate con {monster} sustituye la calma del trabajo.
+    Logras huir y conservar {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. Battle with {monster} replaces the calm of work.
+    You manage to flee and retain {loot}.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La emboscada de {monster} marca el desenlace de la
+    estancia. Escapas; lo que queda de la carga es {loot}.'
+  en: '{name}, your expedition in {place} reaches its outcome. The ambush by {monster} marks the stay''s outcome.
+    You escape; what remains of the load is {loot}.'
+stay_fled.mining:
+- es: '{name}, la piedra de {place} no distingue entre grandes nombres y manos de oficio: te exige trabajo. Al terminar
+    la faena, {monster} te embosca. Logras huir; de la carga, consigues conservar {loot}.'
+  en: '{name}, the stone of {place} makes no distinction between great names and working hands: it demands labour
+    of you. As the task ends, {monster} ambushes you. You manage to flee; of the load, you retain {loot}.'
+- es: 'En {place}, {name}, buscas en la roca algo más útil que las promesas del camino. La estancia concluye con
+    una emboscada de {monster}. La huida deja una carga reducida: {loot}.'
+  en: 'In {place}, {name}, you seek something in the rock more useful than the road''s promises. The stay concludes
+    with an ambush by {monster}. Escape leaves a reduced load: {loot}.'
+- es: '{name}, durante la extracción en {place}, tu mundo se reduce a la piedra y a la labor que tienes delante.
+    El trabajo desemboca en un enfrentamiento con {monster}. Te retiras con éxito y conservas {loot}.'
+  en: '{name}, during extraction in {place}, your world narrows to the stone and the work before you. The work leads
+    into a confrontation with {monster}. You retreat successfully and retain {loot}.'
+- es: 'Trabajas la roca de {place}, {name}; el mineral no sale al encuentro de quien solo sabe desearlo. No termina
+    en calma la expedición: {monster} te embosca. Escapas del combate, con {loot} como balance de lo salvado.'
+  en: 'You work the rock of {place}, {name}; ore does not come to meet those who only wish for it. The expedition
+    does not end peacefully: {monster} ambushes you. You escape the battle, with {loot} as the tally of what was
+    saved.'
+- es: '{name}, en {place} cambias por un rato las grandes empresas por el oficio de extraer mineral. Tras el trabajo
+    llega la emboscada de {monster}. Consigues abandonar la lucha; la carga que conservas es {loot}.'
+  en: '{name}, in {place} you trade grand undertakings for the craft of extracting ore for a while. After the work
+    comes the ambush by {monster}. You manage to leave the fight; the load you keep is {loot}.'
+- es: La minería de {place} reclama tu atención, {name}, sin épica que sustituya al esfuerzo. La amenaza de {monster}
+    convierte el final en combate. Huyes y retienes {loot} de la carga.
+  en: Mining in {place} claims your attention, {name}, with no heroics to replace effort. The threat of {monster}
+    turns the ending into a battle. You flee and retain {loot} from the load.
+- es: '{name}, buscas lo aprovechable entre la piedra de {place}: una tarea concreta en un mundo lleno de enigmas.
+    Una emboscada de {monster} interrumpe el cierre de la estancia. Tu huida tiene éxito y lo conservado es {loot}.'
+  en: '{name}, you seek what can be used among the stone of {place}: a definite task in a world full of riddles.
+    An ambush by {monster} interrupts the end of the stay. Your escape succeeds and what you retain is {loot}.'
+- es: En {place}, dedicas tu expedición a la extracción, {name}; hasta el acero empieza lejos de las batallas. La
+    larga faena acaba frente a {monster}. Sales del combate mediante la huida y conservas {loot}.
+  en: In {place}, you devote your expedition to extraction, {name}; even steel begins far from battles. The long
+    task ends facing {monster}. You leave the battle by fleeing and retain {loot}.
+- es: '{name}, aplicas tu esfuerzo a la roca de {place}, donde las intenciones por sí solas no abren camino. La
+    expedición no termina con una victoria sobre {monster}. Termina con tu escape y lo que mantienes de la carga:
+    {loot}.'
+  en: '{name}, you apply your effort to the rock of {place}, where intentions alone open no path. The expedition
+    does not end in victory over {monster}. It ends in your escape and what remains of the load: {loot}.'
+- es: El mineral es tu propósito en {place}, {name}, y la piedra no tiene prisa por entregarlo. Te embosca {monster}
+    cuando concluye la actividad. La retirada se consuma y el balance de lo salvado es {loot}.
+  en: Ore is your purpose in {place}, {name}, and the stone is in no hurry to yield it. {monster} ambushes you as
+    the activity concludes. The retreat succeeds and the tally of what was saved is {loot}.
+- es: '{name}, la labor minera ocupa tu estancia en {place}; por este rato, importa lo que la roca guarda. El combate
+    con {monster} sustituye la calma del trabajo. Logras huir y conservar {loot}.'
+  en: '{name}, mining occupies your stay in {place}; for this stretch, what matters is what the rock holds. Battle
+    with {monster} replaces the calm of work. You manage to flee and retain {loot}.'
+- es: 'En {place}, {name}, te dedicas a ese comienzo humilde de tantas empresas: trabajar la piedra. La emboscada
+    de {monster} marca el desenlace de la estancia. Escapas; lo que queda de la carga es {loot}.'
+  en: 'In {place}, {name}, you devote yourself to the humble beginning of so many ventures: working stone. The ambush
+    by {monster} marks the stay''s outcome. You escape; what remains of the load is {loot}.'
+stay_fled.woodcutting:
+- es: '{name}, en {place} buscas madera, ese sustento discreto de techos, mangos y hogares. Al terminar la faena,
+    {monster} te embosca. Logras huir; de la carga, consigues conservar {loot}.'
+  en: '{name}, in {place} you seek wood, the quiet foundation of roofs, handles and homes. As the task ends, {monster}
+    ambushes you. You manage to flee; of the load, you retain {loot}.'
+- es: 'La tala ocupa tu atención en {place}, {name}; la madera tiene exigencias que no entienden de títulos. La
+    estancia concluye con una emboscada de {monster}. La huida deja una carga reducida: {loot}.'
+  en: 'Woodcutting holds your attention in {place}, {name}; wood makes demands that care nothing for titles. The
+    stay concludes with an ambush by {monster}. Escape leaves a reduced load: {loot}.'
+- es: '{name}, trabajas la madera de {place}, lejos por un rato de las grandes palabras. El trabajo desemboca en
+    un enfrentamiento con {monster}. Te retiras con éxito y conservas {loot}.'
+  en: '{name}, you work the wood of {place}, away from grand words for a while. The work leads into a confrontation
+    with {monster}. You retreat successfully and retain {loot}.'
+- es: 'En {place}, {name}, tu tarea es la tala: oficio antes que leyenda. No termina en calma la expedición: {monster}
+    te embosca. Escapas del combate, con {loot} como balance de lo salvado.'
+  en: 'In {place}, {name}, your task is woodcutting: craft before legend. The expedition does not end peacefully:
+    {monster} ambushes you. You escape the battle, with {loot} as the tally of what was saved.'
+- es: '{name}, dedicas la expedición de {place} a la madera, sin que el trabajo necesite un nombre heroico. Tras
+    el trabajo llega la emboscada de {monster}. Consigues abandonar la lucha; la carga que conservas es {loot}.'
+  en: '{name}, you devote the expedition in {place} to wood, without the work needing a heroic name. After the work
+    comes the ambush by {monster}. You manage to leave the fight; the load you keep is {loot}.'
+- es: La madera centra tu faena en {place}, {name}; su utilidad empieza mucho antes del taller. La amenaza de {monster}
+    convierte el final en combate. Huyes y retienes {loot} de la carga.
+  en: Wood is the focus of your task in {place}, {name}; its usefulness begins long before the workshop. The threat
+    of {monster} turns the ending into a battle. You flee and retain {loot} from the load.
+- es: '{name}, entre las tareas de tala de {place}, el presente pesa más que cualquier historia por contar. Una
+    emboscada de {monster} interrumpe el cierre de la estancia. Tu huida tiene éxito y lo conservado es {loot}.'
+  en: '{name}, among the woodcutting tasks of {place}, the present weighs more than any story to tell. An ambush
+    by {monster} interrupts the end of the stay. Your escape succeeds and what you retain is {loot}.'
+- es: Trabajas en la tala de {place}, {name}, buscando algo sólido en un mundo de promesas frágiles. La larga faena
+    acaba frente a {monster}. Sales del combate mediante la huida y conservas {loot}.
+  en: You work at woodcutting in {place}, {name}, seeking something solid in a world of fragile promises. The long
+    task ends facing {monster}. You leave the battle by fleeing and retain {loot}.
+- es: '{name}, el oficio de la madera reclama esta parte de tu aventura en {place}. La expedición no termina con
+    una victoria sobre {monster}. Termina con tu escape y lo que mantienes de la carga: {loot}.'
+  en: '{name}, the woodcutter''s craft claims this part of your adventure in {place}. The expedition does not end
+    in victory over {monster}. It ends in your escape and what remains of the load: {loot}.'
+- es: En {place}, la tala te ocupa, {name}; las grandes construcciones empiezan con labores como esta. Te embosca
+    {monster} cuando concluye la actividad. La retirada se consuma y el balance de lo salvado es {loot}.
+  en: In {place}, woodcutting keeps you occupied, {name}; great structures begin with tasks like this. {monster}
+    ambushes you as the activity concludes. The retreat succeeds and the tally of what was saved is {loot}.
+- es: '{name}, tu labor con la madera de {place} no necesita espectadores para tener sentido. El combate con {monster}
+    sustituye la calma del trabajo. Logras huir y conservar {loot}.'
+  en: '{name}, your work with the wood of {place} needs no audience to have meaning. Battle with {monster} replaces
+    the calm of work. You manage to flee and retain {loot}.'
+- es: La expedición a {place} te encuentra dedicado a la tala, {name}, una tarea de oficio entre tantas incertidumbres.
+    La emboscada de {monster} marca el desenlace de la estancia. Escapas; lo que queda de la carga es {loot}.
+  en: The expedition in {place} finds you devoted to woodcutting, {name}, a task of craft among so many uncertainties.
+    The ambush by {monster} marks the stay's outcome. You escape; what remains of the load is {loot}.
+stay_fled.herbalism:
+- es: '{name}, en {place} buscas hierbas: no todo lo valioso en Aetherfall brilla como el oro. Al terminar la faena,
+    {monster} te embosca. Logras huir; de la carga, consigues conservar {loot}.'
+  en: '{name}, in {place} you seek herbs: not everything valuable in Aetherfall shines like gold. As the task ends,
+    {monster} ambushes you. You manage to flee; of the load, you retain {loot}.'
+- es: 'En {place}, {name}, la recolección dirige tu atención a lo pequeño. La estancia concluye con una emboscada
+    de {monster}. La huida deja una carga reducida: {loot}.'
+  en: 'In {place}, {name}, gathering turns your attention to small things. The stay concludes with an ambush by
+    {monster}. Escape leaves a reduced load: {loot}.'
+- es: '{name}, examinas la vegetación de {place}; el oficio empieza por mirar donde otros apenas reparan. El trabajo
+    desemboca en un enfrentamiento con {monster}. Te retiras con éxito y conservas {loot}.'
+  en: '{name}, you examine the vegetation of {place}; the craft begins by looking where others barely notice. The
+    work leads into a confrontation with {monster}. You retreat successfully and retain {loot}.'
+- es: 'Buscas plantas en {place}, {name}, entre detalles que una marcha apresurada dejaría atrás. No termina en
+    calma la expedición: {monster} te embosca. Escapas del combate, con {loot} como balance de lo salvado.'
+  en: 'You seek plants in {place}, {name}, among details a hurried march would leave behind. The expedition does
+    not end peacefully: {monster} ambushes you. You escape the battle, with {loot} as the tally of what was saved.'
+- es: '{name}, la herboristería ocupa tu estancia en {place}: una labor de atención antes que de alardes. Tras el
+    trabajo llega la emboscada de {monster}. Consigues abandonar la lucha; la carga que conservas es {loot}.'
+  en: '{name}, herbalism occupies your stay in {place}: a task of attention rather than display. After the work
+    comes the ambush by {monster}. You manage to leave the fight; the load you keep is {loot}.'
+- es: En {place}, te dedicas a recolectar hierbas, {name}; el mundo también se revela a esa escala. La amenaza de
+    {monster} convierte el final en combate. Huyes y retienes {loot} de la carga.
+  en: In {place}, you devote yourself to gathering herbs, {name}; the world reveals itself at that scale too. The
+    threat of {monster} turns the ending into a battle. You flee and retain {loot} from the load.
+- es: '{name}, buscas el fruto de la herboristería en {place}, donde una planta puede merecer toda tu atención.
+    Una emboscada de {monster} interrumpe el cierre de la estancia. Tu huida tiene éxito y lo conservado es {loot}.'
+  en: '{name}, you seek the yield of herbalism in {place}, where a plant can deserve your full attention. An ambush
+    by {monster} interrupts the end of the stay. Your escape succeeds and what you retain is {loot}.'
+- es: La vegetación de {place} centra tu labor, {name}; hoy importa lo que suele pasar inadvertido. La larga faena
+    acaba frente a {monster}. Sales del combate mediante la huida y conservas {loot}.
+  en: The vegetation of {place} is the focus of your work, {name}; today what matters is what often goes unnoticed.
+    The long task ends facing {monster}. You leave the battle by fleeing and retain {loot}.
+- es: '{name}, cambias por un rato los grandes horizontes por las plantas de {place}. La expedición no termina con
+    una victoria sobre {monster}. Termina con tu escape y lo que mantienes de la carga: {loot}.'
+  en: '{name}, you trade great horizons for the plants of {place} for a while. The expedition does not end in victory
+    over {monster}. It ends in your escape and what remains of the load: {loot}.'
+- es: En {place}, {name}, tu trabajo de recolectar hierbas da otro ritmo a la aventura. Te embosca {monster} cuando
+    concluye la actividad. La retirada se consuma y el balance de lo salvado es {loot}.
+  en: In {place}, {name}, your herb-gathering work gives adventure another rhythm. {monster} ambushes you as the
+    activity concludes. The retreat succeeds and the tally of what was saved is {loot}.
+- es: '{name}, la búsqueda de plantas en {place} te ocupa sin necesidad de grandes gestos. El combate con {monster}
+    sustituye la calma del trabajo. Logras huir y conservar {loot}.'
+  en: '{name}, the search for plants in {place} occupies you without any need for grand gestures. Battle with {monster}
+    replaces the calm of work. You manage to flee and retain {loot}.'
+- es: Dedicas la expedición de {place} al oficio de las hierbas, {name}; incluso lo pequeño tiene su lugar. La emboscada
+    de {monster} marca el desenlace de la estancia. Escapas; lo que queda de la carga es {loot}.
+  en: You devote the expedition in {place} to the herbalist's craft, {name}; even small things have their place.
+    The ambush by {monster} marks the stay's outcome. You escape; what remains of the load is {loot}.
+stay_fled.fishing:
+- es: '{name}, en {place} te dedicas a pescar; el agua no responde a las prisas de nadie. Al terminar la faena,
+    {monster} te embosca. Logras huir; de la carga, consigues conservar {loot}.'
+  en: '{name}, in {place} you devote yourself to fishing; water answers to nobody''s haste. As the task ends, {monster}
+    ambushes you. You manage to flee; of the load, you retain {loot}.'
+- es: 'La pesca ocupa tu estancia en {place}, {name}, con una medida del tiempo distinta a la del combate. La estancia
+    concluye con una emboscada de {monster}. La huida deja una carga reducida: {loot}.'
+  en: 'Fishing occupies your stay in {place}, {name}, with a measure of time different from battle''s. The stay
+    concludes with an ambush by {monster}. Escape leaves a reduced load: {loot}.'
+- es: '{name}, pones tu atención en la pesca de {place}; no todo se obtiene avanzando a grandes pasos. El trabajo
+    desemboca en un enfrentamiento con {monster}. Te retiras con éxito y conservas {loot}.'
+  en: '{name}, you turn your attention to fishing in {place}; not everything is gained by great strides. The work
+    leads into a confrontation with {monster}. You retreat successfully and retain {loot}.'
+- es: 'En {place}, {name}, buscas lo que el agua pueda ofrecer sin que un juramento pueda ordenárselo. No termina
+    en calma la expedición: {monster} te embosca. Escapas del combate, con {loot} como balance de lo salvado.'
+  en: 'In {place}, {name}, you seek what the water may offer, though no oath can command it. The expedition does
+    not end peacefully: {monster} ambushes you. You escape the battle, with {loot} as the tally of what was saved.'
+- es: '{name}, la labor de pescar centra tu expedición en {place}, entre espera y atención. Tras el trabajo llega
+    la emboscada de {monster}. Consigues abandonar la lucha; la carga que conservas es {loot}.'
+  en: '{name}, the work of fishing centres your expedition in {place}, between waiting and attention. After the
+    work comes the ambush by {monster}. You manage to leave the fight; the load you keep is {loot}.'
+- es: Dedicas este rato a la pesca de {place}, {name}; el oficio también consiste en saber esperar. La amenaza de
+    {monster} convierte el final en combate. Huyes y retienes {loot} de la carga.
+  en: You devote this stretch to fishing in {place}, {name}; the craft also means knowing how to wait. The threat
+    of {monster} turns the ending into a battle. You flee and retain {loot} from the load.
+- es: '{name}, el agua de {place} guarda el propósito de tu faena de pesca. Una emboscada de {monster} interrumpe
+    el cierre de la estancia. Tu huida tiene éxito y lo conservado es {loot}.'
+  en: '{name}, the water of {place} holds the purpose of your fishing task. An ambush by {monster} interrupts the
+    end of the stay. Your escape succeeds and what you retain is {loot}.'
+- es: En {place}, {name}, la pesca aparta por un rato tu atención de las grandes empresas. La larga faena acaba
+    frente a {monster}. Sales del combate mediante la huida y conservas {loot}.
+  en: In {place}, {name}, fishing draws your attention away from grand undertakings for a while. The long task ends
+    facing {monster}. You leave the battle by fleeing and retain {loot}.
+- es: '{name}, buscas el fruto de la pesca en {place}; tu tarea tiene más de paciencia que de ceremonia. La expedición
+    no termina con una victoria sobre {monster}. Termina con tu escape y lo que mantienes de la carga: {loot}.'
+  en: '{name}, you seek the yield of fishing in {place}; your task has more patience than ceremony in it. The expedition
+    does not end in victory over {monster}. It ends in your escape and what remains of the load: {loot}.'
+- es: La actividad de pesca da forma a tu expedición en {place}, {name}, sin promesas hechas de antemano. Te embosca
+    {monster} cuando concluye la actividad. La retirada se consuma y el balance de lo salvado es {loot}.
+  en: Fishing shapes your expedition in {place}, {name}, with no promises made in advance. {monster} ambushes you
+    as the activity concludes. The retreat succeeds and the tally of what was saved is {loot}.
+- es: '{name}, trabajas en la pesca de {place}, donde querer una respuesta no basta para apresurarla. El combate
+    con {monster} sustituye la calma del trabajo. Logras huir y conservar {loot}.'
+  en: '{name}, you work at fishing in {place}, where wanting an answer is not enough to hurry it. Battle with {monster}
+    replaces the calm of work. You manage to flee and retain {loot}.'
+- es: En {place}, dedicas tu atención al agua y a la pesca, {name}; el resto de Aetherfall puede esperar este rato.
+    La emboscada de {monster} marca el desenlace de la estancia. Escapas; lo que queda de la carga es {loot}.
+  en: In {place}, you give your attention to the water and to fishing, {name}; the rest of Aetherfall can wait this
+    stretch. The ambush by {monster} marks the stay's outcome. You escape; what remains of the load is {loot}.
 stay_lost:
-  - es: >-
-      La larga jornada de {name} en {place} terminó mal: {monster} fue más fuerte. La carga quedó esparcida por el
-      suelo y {name} despertó lejos de allí, con las manos vacías y una lección aprendida.
-    en: >-
-      {name}'s long day at {place} ended badly: {monster} was stronger. The load lay scattered on the ground and
-      {name} woke far from there, empty-handed and a lesson wiser.
-  - es: >-
-      Todo el trabajo en {place} se perdió en un instante cuando {monster} se interpuso. {name} cayó, pero no
-      para siempre. Las heridas cerrarán; la herramienta sigue en su sitio.
-    en: >-
-      All the work at {place} was lost in an instant when {monster} stepped in. {name} fell, but not forever. The
-      wounds will close; the tool is still where it belongs.
-  - es: >-
-      Hay días en que el mundo no perdona. En {place}, {monster} se llevó la victoria y el fruto de horas de
-      esfuerzo. {name} volverá con más experiencia y mejor preparación.
-    en: >-
-      Some days the world does not forgive. At {place}, {monster} took the victory and the fruit of hours of
-      work. {name} will be back, wiser and better prepared.
-
+- es: '{name}, tu expedición en {place} llega a su desenlace. La emboscada de {monster} termina en derrota. Pierdes
+    la carga de la expedición.'
+  en: '{name}, your expedition in {place} reaches its outcome. The ambush by {monster} ends in defeat. You lose
+    the expedition''s load.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Al final del trabajo te embosca {monster}. El combate
+    se resuelve en tu contra y la carga se pierde.'
+  en: '{name}, your expedition in {place} reaches its outcome. At the end of the work, {monster} ambushes you. The
+    fight resolves against you and the load is lost.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La estancia larga desemboca en una lucha con {monster}.
+    No vences, y no conservas la carga obtenida.'
+  en: '{name}, your expedition in {place} reaches its outcome. The long stay leads into a fight with {monster}.
+    You do not win, and you do not retain the gathered load.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La faena termina bajo la amenaza de {monster}. Pierdes
+    el combate y con él la carga.'
+  en: '{name}, your expedition in {place} reaches its outcome. The task ends under the threat of {monster}. You
+    lose the battle and the load with it.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. No basta el trabajo para asegurar su fruto: {monster}
+    te embosca. La derrota te deja sin la carga de esta estancia.'
+  en: '{name}, your expedition in {place} reaches its outcome. Work alone does not secure its yield: {monster} ambushes
+    you. Defeat leaves you without the load from this stay.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La expedición concluye en un combate contra {monster}.
+    La derrota supone perder lo reunido durante la faena.'
+  en: '{name}, your expedition in {place} reaches its outcome. The expedition concludes in battle against {monster}.
+    Defeat means losing what you gathered during the task.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. El cierre de la estancia trae una emboscada de {monster}.
+    El resultado es adverso y no queda carga que conservar.'
+  en: '{name}, your expedition in {place} reaches its outcome. The end of the stay brings an ambush by {monster}.
+    The outcome is adverse and no load remains to keep.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Después del trabajo llega la lucha con {monster}.
+    La pierdes, y el fruto material de la expedición también se pierde.'
+  en: '{name}, your expedition in {place} reaches its outcome. After the work comes the fight with {monster}. You
+    lose it, and the expedition''s material yield is lost too.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Te enfrentas a {monster} en la emboscada final. La
+    victoria no es tuya y la carga queda perdida.'
+  en: '{name}, your expedition in {place} reaches its outcome. You face {monster} in the final ambush. Victory is
+    not yours and the load is lost.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La larga actividad termina con la emboscada de {monster}.
+    No consigues vencer ni conservar la carga.'
+  en: '{name}, your expedition in {place} reaches its outcome. The long activity ends with the ambush by {monster}.
+    You neither win nor retain the load.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. El trabajo concluye, pero {monster} convierte el final
+    en combate. La derrota se lleva el resultado material de la estancia.'
+  en: '{name}, your expedition in {place} reaches its outcome. The work concludes, but {monster} turns the ending
+    into battle. Defeat takes the material yield of the stay.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Una emboscada de {monster} decide el cierre de la
+    expedición. Pierdes la lucha y la carga, sin que ese revés necesite humillación.'
+  en: '{name}, your expedition in {place} reaches its outcome. An ambush by {monster} decides the expedition''s
+    end. You lose the fight and the load, without that setback needing humiliation.'
+stay_lost.mining:
+- es: '{name}, la piedra de {place} no distingue entre grandes nombres y manos de oficio: te exige trabajo. La emboscada
+    de {monster} termina en derrota. Pierdes la carga de la expedición.'
+  en: '{name}, the stone of {place} makes no distinction between great names and working hands: it demands labour
+    of you. The ambush by {monster} ends in defeat. You lose the expedition''s load.'
+- es: En {place}, {name}, buscas en la roca algo más útil que las promesas del camino. Al final del trabajo te embosca
+    {monster}. El combate se resuelve en tu contra y la carga se pierde.
+  en: In {place}, {name}, you seek something in the rock more useful than the road's promises. At the end of the
+    work, {monster} ambushes you. The fight resolves against you and the load is lost.
+- es: '{name}, durante la extracción en {place}, tu mundo se reduce a la piedra y a la labor que tienes delante.
+    La estancia larga desemboca en una lucha con {monster}. No vences, y no conservas la carga obtenida.'
+  en: '{name}, during extraction in {place}, your world narrows to the stone and the work before you. The long stay
+    leads into a fight with {monster}. You do not win, and you do not retain the gathered load.'
+- es: Trabajas la roca de {place}, {name}; el mineral no sale al encuentro de quien solo sabe desearlo. La faena
+    termina bajo la amenaza de {monster}. Pierdes el combate y con él la carga.
+  en: You work the rock of {place}, {name}; ore does not come to meet those who only wish for it. The task ends
+    under the threat of {monster}. You lose the battle and the load with it.
+- es: '{name}, en {place} cambias por un rato las grandes empresas por el oficio de extraer mineral. No basta el
+    trabajo para asegurar su fruto: {monster} te embosca. La derrota te deja sin la carga de esta estancia.'
+  en: '{name}, in {place} you trade grand undertakings for the craft of extracting ore for a while. Work alone does
+    not secure its yield: {monster} ambushes you. Defeat leaves you without the load from this stay.'
+- es: La minería de {place} reclama tu atención, {name}, sin épica que sustituya al esfuerzo. La expedición concluye
+    en un combate contra {monster}. La derrota supone perder lo reunido durante la faena.
+  en: Mining in {place} claims your attention, {name}, with no heroics to replace effort. The expedition concludes
+    in battle against {monster}. Defeat means losing what you gathered during the task.
+- es: '{name}, buscas lo aprovechable entre la piedra de {place}: una tarea concreta en un mundo lleno de enigmas.
+    El cierre de la estancia trae una emboscada de {monster}. El resultado es adverso y no queda carga que conservar.'
+  en: '{name}, you seek what can be used among the stone of {place}: a definite task in a world full of riddles.
+    The end of the stay brings an ambush by {monster}. The outcome is adverse and no load remains to keep.'
+- es: En {place}, dedicas tu expedición a la extracción, {name}; hasta el acero empieza lejos de las batallas. Después
+    del trabajo llega la lucha con {monster}. La pierdes, y el fruto material de la expedición también se pierde.
+  en: In {place}, you devote your expedition to extraction, {name}; even steel begins far from battles. After the
+    work comes the fight with {monster}. You lose it, and the expedition's material yield is lost too.
+- es: '{name}, aplicas tu esfuerzo a la roca de {place}, donde las intenciones por sí solas no abren camino. Te
+    enfrentas a {monster} en la emboscada final. La victoria no es tuya y la carga queda perdida.'
+  en: '{name}, you apply your effort to the rock of {place}, where intentions alone open no path. You face {monster}
+    in the final ambush. Victory is not yours and the load is lost.'
+- es: El mineral es tu propósito en {place}, {name}, y la piedra no tiene prisa por entregarlo. La larga actividad
+    termina con la emboscada de {monster}. No consigues vencer ni conservar la carga.
+  en: Ore is your purpose in {place}, {name}, and the stone is in no hurry to yield it. The long activity ends with
+    the ambush by {monster}. You neither win nor retain the load.
+- es: '{name}, la labor minera ocupa tu estancia en {place}; por este rato, importa lo que la roca guarda. El trabajo
+    concluye, pero {monster} convierte el final en combate. La derrota se lleva el resultado material de la estancia.'
+  en: '{name}, mining occupies your stay in {place}; for this stretch, what matters is what the rock holds. The
+    work concludes, but {monster} turns the ending into battle. Defeat takes the material yield of the stay.'
+- es: 'En {place}, {name}, te dedicas a ese comienzo humilde de tantas empresas: trabajar la piedra. Una emboscada
+    de {monster} decide el cierre de la expedición. Pierdes la lucha y la carga, sin que ese revés necesite humillación.'
+  en: 'In {place}, {name}, you devote yourself to the humble beginning of so many ventures: working stone. An ambush
+    by {monster} decides the expedition''s end. You lose the fight and the load, without that setback needing humiliation.'
+stay_lost.woodcutting:
+- es: '{name}, en {place} buscas madera, ese sustento discreto de techos, mangos y hogares. La emboscada de {monster}
+    termina en derrota. Pierdes la carga de la expedición.'
+  en: '{name}, in {place} you seek wood, the quiet foundation of roofs, handles and homes. The ambush by {monster}
+    ends in defeat. You lose the expedition''s load.'
+- es: La tala ocupa tu atención en {place}, {name}; la madera tiene exigencias que no entienden de títulos. Al final
+    del trabajo te embosca {monster}. El combate se resuelve en tu contra y la carga se pierde.
+  en: Woodcutting holds your attention in {place}, {name}; wood makes demands that care nothing for titles. At the
+    end of the work, {monster} ambushes you. The fight resolves against you and the load is lost.
+- es: '{name}, trabajas la madera de {place}, lejos por un rato de las grandes palabras. La estancia larga desemboca
+    en una lucha con {monster}. No vences, y no conservas la carga obtenida.'
+  en: '{name}, you work the wood of {place}, away from grand words for a while. The long stay leads into a fight
+    with {monster}. You do not win, and you do not retain the gathered load.'
+- es: 'En {place}, {name}, tu tarea es la tala: oficio antes que leyenda. La faena termina bajo la amenaza de {monster}.
+    Pierdes el combate y con él la carga.'
+  en: 'In {place}, {name}, your task is woodcutting: craft before legend. The task ends under the threat of {monster}.
+    You lose the battle and the load with it.'
+- es: '{name}, dedicas la expedición de {place} a la madera, sin que el trabajo necesite un nombre heroico. No basta
+    el trabajo para asegurar su fruto: {monster} te embosca. La derrota te deja sin la carga de esta estancia.'
+  en: '{name}, you devote the expedition in {place} to wood, without the work needing a heroic name. Work alone
+    does not secure its yield: {monster} ambushes you. Defeat leaves you without the load from this stay.'
+- es: La madera centra tu faena en {place}, {name}; su utilidad empieza mucho antes del taller. La expedición concluye
+    en un combate contra {monster}. La derrota supone perder lo reunido durante la faena.
+  en: Wood is the focus of your task in {place}, {name}; its usefulness begins long before the workshop. The expedition
+    concludes in battle against {monster}. Defeat means losing what you gathered during the task.
+- es: '{name}, entre las tareas de tala de {place}, el presente pesa más que cualquier historia por contar. El cierre
+    de la estancia trae una emboscada de {monster}. El resultado es adverso y no queda carga que conservar.'
+  en: '{name}, among the woodcutting tasks of {place}, the present weighs more than any story to tell. The end of
+    the stay brings an ambush by {monster}. The outcome is adverse and no load remains to keep.'
+- es: Trabajas en la tala de {place}, {name}, buscando algo sólido en un mundo de promesas frágiles. Después del
+    trabajo llega la lucha con {monster}. La pierdes, y el fruto material de la expedición también se pierde.
+  en: You work at woodcutting in {place}, {name}, seeking something solid in a world of fragile promises. After
+    the work comes the fight with {monster}. You lose it, and the expedition's material yield is lost too.
+- es: '{name}, el oficio de la madera reclama esta parte de tu aventura en {place}. Te enfrentas a {monster} en
+    la emboscada final. La victoria no es tuya y la carga queda perdida.'
+  en: '{name}, the woodcutter''s craft claims this part of your adventure in {place}. You face {monster} in the
+    final ambush. Victory is not yours and the load is lost.'
+- es: En {place}, la tala te ocupa, {name}; las grandes construcciones empiezan con labores como esta. La larga
+    actividad termina con la emboscada de {monster}. No consigues vencer ni conservar la carga.
+  en: In {place}, woodcutting keeps you occupied, {name}; great structures begin with tasks like this. The long
+    activity ends with the ambush by {monster}. You neither win nor retain the load.
+- es: '{name}, tu labor con la madera de {place} no necesita espectadores para tener sentido. El trabajo concluye,
+    pero {monster} convierte el final en combate. La derrota se lleva el resultado material de la estancia.'
+  en: '{name}, your work with the wood of {place} needs no audience to have meaning. The work concludes, but {monster}
+    turns the ending into battle. Defeat takes the material yield of the stay.'
+- es: La expedición a {place} te encuentra dedicado a la tala, {name}, una tarea de oficio entre tantas incertidumbres.
+    Una emboscada de {monster} decide el cierre de la expedición. Pierdes la lucha y la carga, sin que ese revés
+    necesite humillación.
+  en: The expedition in {place} finds you devoted to woodcutting, {name}, a task of craft among so many uncertainties.
+    An ambush by {monster} decides the expedition's end. You lose the fight and the load, without that setback needing
+    humiliation.
+stay_lost.herbalism:
+- es: '{name}, en {place} buscas hierbas: no todo lo valioso en Aetherfall brilla como el oro. La emboscada de {monster}
+    termina en derrota. Pierdes la carga de la expedición.'
+  en: '{name}, in {place} you seek herbs: not everything valuable in Aetherfall shines like gold. The ambush by
+    {monster} ends in defeat. You lose the expedition''s load.'
+- es: En {place}, {name}, la recolección dirige tu atención a lo pequeño. Al final del trabajo te embosca {monster}.
+    El combate se resuelve en tu contra y la carga se pierde.
+  en: In {place}, {name}, gathering turns your attention to small things. At the end of the work, {monster} ambushes
+    you. The fight resolves against you and the load is lost.
+- es: '{name}, examinas la vegetación de {place}; el oficio empieza por mirar donde otros apenas reparan. La estancia
+    larga desemboca en una lucha con {monster}. No vences, y no conservas la carga obtenida.'
+  en: '{name}, you examine the vegetation of {place}; the craft begins by looking where others barely notice. The
+    long stay leads into a fight with {monster}. You do not win, and you do not retain the gathered load.'
+- es: Buscas plantas en {place}, {name}, entre detalles que una marcha apresurada dejaría atrás. La faena termina
+    bajo la amenaza de {monster}. Pierdes el combate y con él la carga.
+  en: You seek plants in {place}, {name}, among details a hurried march would leave behind. The task ends under
+    the threat of {monster}. You lose the battle and the load with it.
+- es: '{name}, la herboristería ocupa tu estancia en {place}: una labor de atención antes que de alardes. No basta
+    el trabajo para asegurar su fruto: {monster} te embosca. La derrota te deja sin la carga de esta estancia.'
+  en: '{name}, herbalism occupies your stay in {place}: a task of attention rather than display. Work alone does
+    not secure its yield: {monster} ambushes you. Defeat leaves you without the load from this stay.'
+- es: En {place}, te dedicas a recolectar hierbas, {name}; el mundo también se revela a esa escala. La expedición
+    concluye en un combate contra {monster}. La derrota supone perder lo reunido durante la faena.
+  en: In {place}, you devote yourself to gathering herbs, {name}; the world reveals itself at that scale too. The
+    expedition concludes in battle against {monster}. Defeat means losing what you gathered during the task.
+- es: '{name}, buscas el fruto de la herboristería en {place}, donde una planta puede merecer toda tu atención.
+    El cierre de la estancia trae una emboscada de {monster}. El resultado es adverso y no queda carga que conservar.'
+  en: '{name}, you seek the yield of herbalism in {place}, where a plant can deserve your full attention. The end
+    of the stay brings an ambush by {monster}. The outcome is adverse and no load remains to keep.'
+- es: La vegetación de {place} centra tu labor, {name}; hoy importa lo que suele pasar inadvertido. Después del
+    trabajo llega la lucha con {monster}. La pierdes, y el fruto material de la expedición también se pierde.
+  en: The vegetation of {place} is the focus of your work, {name}; today what matters is what often goes unnoticed.
+    After the work comes the fight with {monster}. You lose it, and the expedition's material yield is lost too.
+- es: '{name}, cambias por un rato los grandes horizontes por las plantas de {place}. Te enfrentas a {monster} en
+    la emboscada final. La victoria no es tuya y la carga queda perdida.'
+  en: '{name}, you trade great horizons for the plants of {place} for a while. You face {monster} in the final ambush.
+    Victory is not yours and the load is lost.'
+- es: En {place}, {name}, tu trabajo de recolectar hierbas da otro ritmo a la aventura. La larga actividad termina
+    con la emboscada de {monster}. No consigues vencer ni conservar la carga.
+  en: In {place}, {name}, your herb-gathering work gives adventure another rhythm. The long activity ends with the
+    ambush by {monster}. You neither win nor retain the load.
+- es: '{name}, la búsqueda de plantas en {place} te ocupa sin necesidad de grandes gestos. El trabajo concluye,
+    pero {monster} convierte el final en combate. La derrota se lleva el resultado material de la estancia.'
+  en: '{name}, the search for plants in {place} occupies you without any need for grand gestures. The work concludes,
+    but {monster} turns the ending into battle. Defeat takes the material yield of the stay.'
+- es: Dedicas la expedición de {place} al oficio de las hierbas, {name}; incluso lo pequeño tiene su lugar. Una
+    emboscada de {monster} decide el cierre de la expedición. Pierdes la lucha y la carga, sin que ese revés necesite
+    humillación.
+  en: You devote the expedition in {place} to the herbalist's craft, {name}; even small things have their place.
+    An ambush by {monster} decides the expedition's end. You lose the fight and the load, without that setback needing
+    humiliation.
+stay_lost.fishing:
+- es: '{name}, en {place} te dedicas a pescar; el agua no responde a las prisas de nadie. La emboscada de {monster}
+    termina en derrota. Pierdes la carga de la expedición.'
+  en: '{name}, in {place} you devote yourself to fishing; water answers to nobody''s haste. The ambush by {monster}
+    ends in defeat. You lose the expedition''s load.'
+- es: La pesca ocupa tu estancia en {place}, {name}, con una medida del tiempo distinta a la del combate. Al final
+    del trabajo te embosca {monster}. El combate se resuelve en tu contra y la carga se pierde.
+  en: Fishing occupies your stay in {place}, {name}, with a measure of time different from battle's. At the end
+    of the work, {monster} ambushes you. The fight resolves against you and the load is lost.
+- es: '{name}, pones tu atención en la pesca de {place}; no todo se obtiene avanzando a grandes pasos. La estancia
+    larga desemboca en una lucha con {monster}. No vences, y no conservas la carga obtenida.'
+  en: '{name}, you turn your attention to fishing in {place}; not everything is gained by great strides. The long
+    stay leads into a fight with {monster}. You do not win, and you do not retain the gathered load.'
+- es: En {place}, {name}, buscas lo que el agua pueda ofrecer sin que un juramento pueda ordenárselo. La faena termina
+    bajo la amenaza de {monster}. Pierdes el combate y con él la carga.
+  en: In {place}, {name}, you seek what the water may offer, though no oath can command it. The task ends under
+    the threat of {monster}. You lose the battle and the load with it.
+- es: '{name}, la labor de pescar centra tu expedición en {place}, entre espera y atención. No basta el trabajo
+    para asegurar su fruto: {monster} te embosca. La derrota te deja sin la carga de esta estancia.'
+  en: '{name}, the work of fishing centres your expedition in {place}, between waiting and attention. Work alone
+    does not secure its yield: {monster} ambushes you. Defeat leaves you without the load from this stay.'
+- es: Dedicas este rato a la pesca de {place}, {name}; el oficio también consiste en saber esperar. La expedición
+    concluye en un combate contra {monster}. La derrota supone perder lo reunido durante la faena.
+  en: You devote this stretch to fishing in {place}, {name}; the craft also means knowing how to wait. The expedition
+    concludes in battle against {monster}. Defeat means losing what you gathered during the task.
+- es: '{name}, el agua de {place} guarda el propósito de tu faena de pesca. El cierre de la estancia trae una emboscada
+    de {monster}. El resultado es adverso y no queda carga que conservar.'
+  en: '{name}, the water of {place} holds the purpose of your fishing task. The end of the stay brings an ambush
+    by {monster}. The outcome is adverse and no load remains to keep.'
+- es: En {place}, {name}, la pesca aparta por un rato tu atención de las grandes empresas. Después del trabajo llega
+    la lucha con {monster}. La pierdes, y el fruto material de la expedición también se pierde.
+  en: In {place}, {name}, fishing draws your attention away from grand undertakings for a while. After the work
+    comes the fight with {monster}. You lose it, and the expedition's material yield is lost too.
+- es: '{name}, buscas el fruto de la pesca en {place}; tu tarea tiene más de paciencia que de ceremonia. Te enfrentas
+    a {monster} en la emboscada final. La victoria no es tuya y la carga queda perdida.'
+  en: '{name}, you seek the yield of fishing in {place}; your task has more patience than ceremony in it. You face
+    {monster} in the final ambush. Victory is not yours and the load is lost.'
+- es: La actividad de pesca da forma a tu expedición en {place}, {name}, sin promesas hechas de antemano. La larga
+    actividad termina con la emboscada de {monster}. No consigues vencer ni conservar la carga.
+  en: Fishing shapes your expedition in {place}, {name}, with no promises made in advance. The long activity ends
+    with the ambush by {monster}. You neither win nor retain the load.
+- es: '{name}, trabajas en la pesca de {place}, donde querer una respuesta no basta para apresurarla. El trabajo
+    concluye, pero {monster} convierte el final en combate. La derrota se lleva el resultado material de la estancia.'
+  en: '{name}, you work at fishing in {place}, where wanting an answer is not enough to hurry it. The work concludes,
+    but {monster} turns the ending into battle. Defeat takes the material yield of the stay.'
+- es: En {place}, dedicas tu atención al agua y a la pesca, {name}; el resto de Aetherfall puede esperar este rato.
+    Una emboscada de {monster} decide el cierre de la expedición. Pierdes la lucha y la carga, sin que ese revés
+    necesite humillación.
+  en: In {place}, you give your attention to the water and to fishing, {name}; the rest of Aetherfall can wait this
+    stretch. An ambush by {monster} decides the expedition's end. You lose the fight and the load, without that
+    setback needing humiliation.
 track_tracks:
-  - es: >-
-      {name} siguió huellas, ramas rotas y excrementos por todo {place}. El rastro era viejo y la presa ya se había
-      ido. Ni un combate, pero cada pista enseña algo a quien sabe leerla.
-    en: >-
-      {name} followed prints, broken branches and droppings all across {place}. The trail was old and the prey
-      long gone. Not a fight to be had, but every sign teaches something to those who can read it.
-  - es: >-
-      Durante un buen rato, {name} se agachó, olfateó el viento y escuchó en {place}. Algo había pasado por allí,
-      pero no hoy. La paciencia del cazador también se entrena.
-    en: >-
-      For a long while {name} crouched, sniffed the wind and listened at {place}. Something had passed through,
-      but not today. A hunter's patience needs training too.
-  - es: >-
-      El rastro se perdió en un arroyo de {place}. {name} lo buscó en ambas orillas sin suerte, y volvió con las
-      botas mojadas y el ojo un poco más afinado.
-    en: >-
-      The trail vanished in a stream at {place}. {name} searched both banks without luck and came back with wet
-      boots and a slightly sharper eye.
-
+- es: '{name}, tu expedición en {place} llega a su desenlace. El rastreo solo revela huellas antiguas. No llegas
+    a combatir con una presa.'
+  en: '{name}, your expedition in {place} reaches its outcome. Tracking reveals only old signs. You do not come
+    to fight any prey.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Sigues las señales, pero el rastro es viejo. La búsqueda
+    termina sin un combate.'
+  en: '{name}, your expedition in {place} reaches its outcome. You follow the signs, but the trail is old. The search
+    ends without a fight.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Las huellas hablan de un paso anterior, no de un encuentro.
+    Terminas el rastreo sin luchar.'
+  en: '{name}, your expedition in {place} reaches its outcome. The tracks tell of an earlier passage, not an encounter.
+    You finish tracking without a fight.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Encuentras rastros antiguos y nada que desemboque
+    en combate. La búsqueda llega así a su fin.'
+  en: '{name}, your expedition in {place} reaches its outcome. You find old tracks and nothing that leads to combat.
+    The search comes to its end that way.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La presa no aparece durante este rastreo. Solo quedan
+    señales viejas que examinar.'
+  en: '{name}, your expedition in {place} reaches its outcome. The prey does not appear during this search. Only
+    old signs remain to examine.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La búsqueda te lleva a huellas que ya no conducen
+    a un encuentro. No se libra ninguna batalla.'
+  en: '{name}, your expedition in {place} reaches its outcome. The search takes you to tracks that no longer lead
+    to an encounter. No battle is fought.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. El rastro encontrado es antiguo. Concluyes la actividad
+    sin haber combatido.'
+  en: '{name}, your expedition in {place} reaches its outcome. The trail you find is old. You conclude the activity
+    without having fought.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Las señales no se convierten en una presa a la vista.
+    El rastreo termina con huellas viejas.'
+  en: '{name}, your expedition in {place} reaches its outcome. The signs do not turn into prey in sight. Tracking
+    ends with old prints.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. No hay encuentro al final de las pistas. Tu búsqueda
+    solo encuentra rastros antiguos.'
+  en: '{name}, your expedition in {place} reaches its outcome. There is no encounter at the end of the clues. Your
+    search finds only old tracks.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. El rastreo conserva su incertidumbre hasta el final.
+    Encuentras huellas antiguas, sin llegar al combate.'
+  en: '{name}, your expedition in {place} reaches its outcome. Tracking keeps its uncertainty to the end. You find
+    old prints without reaching combat.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Sigues un rastro que pertenece al pasado. La actividad
+    concluye sin una presa con la que luchar.'
+  en: '{name}, your expedition in {place} reaches its outcome. You follow a trail that belongs to the past. The
+    activity concludes without prey to fight.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Las pistas resultan demasiado viejas para este encuentro.
+    Tu rastreo acaba sin combate.'
+  en: '{name}, your expedition in {place} reaches its outcome. The clues prove too old for this encounter. Your
+    tracking ends without combat.'
 track_won:
-  - es: >-
-      {name} leyó cada huella de {place} hasta dar con {monster}. La presa no tuvo escapatoria: un acecho paciente,
-      un golpe certero y una caza digna de contarse.
-    en: >-
-      {name} read every print at {place} until finding {monster}. The prey had no way out: a patient stalk, a sure
-      strike and a hunt worth telling.
-  - es: >-
-      El viento cambió y {name} lo aprovechó. Cuando {monster} se dio cuenta, ya era tarde. En {place} quedó
-      escrito quién era el cazador y quién la presa.
-    en: >-
-      The wind shifted and {name} used it. By the time {monster} noticed, it was too late. At {place} it was made
-      clear who was the hunter and who the prey.
-  - es: >-
-      Siguiendo un rastro de sangre y pelo por {place}, {name} acorraló a {monster} y le plantó cara. La pelea fue
-      dura, pero {name} volvió con trofeos y con historia.
-    en: >-
-      Following a trail of blood and fur through {place}, {name} cornered {monster} and stood their ground. The
-      fight was hard, but the hunter came back with trophies and a story.
-
+- es: '{name}, tu expedición en {place} llega a su desenlace. El rastro te conduce hasta {monster}. Ganas el combate
+    que sigue al encuentro.'
+  en: '{name}, your expedition in {place} reaches its outcome. The trail leads you to {monster}. You win the battle
+    that follows the encounter.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Encuentras a {monster} tras seguir sus señales. La
+    lucha termina a tu favor.'
+  en: '{name}, your expedition in {place} reaches its outcome. You find {monster} after following its signs. The
+    fight ends in your favour.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La búsqueda desemboca en un enfrentamiento con {monster}.
+    Esta cacería concluye con tu victoria.'
+  en: '{name}, your expedition in {place} reaches its outcome. The search leads into a confrontation with {monster}.
+    This hunt concludes in your victory.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Das con {monster} al rastrear. El combate posterior
+    se resuelve con tu triunfo.'
+  en: '{name}, your expedition in {place} reaches its outcome. You find {monster} while tracking. The ensuing battle
+    resolves in your triumph.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. El rastreo deja de ser una búsqueda cuando encuentras
+    a {monster}. Vences en la lucha.'
+  en: '{name}, your expedition in {place} reaches its outcome. Tracking ceases to be a search when you find {monster}.
+    You prevail in the fight.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Las señales llevan al encuentro con {monster}. El
+    desenlace del combate te favorece.'
+  en: '{name}, your expedition in {place} reaches its outcome. The signs lead to an encounter with {monster}. The
+    battle''s outcome favours you.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Tu rastreo culmina frente a {monster}. Ganas el enfrentamiento
+    sin que eso necesite una leyenda.'
+  en: '{name}, your expedition in {place} reaches its outcome. Your tracking culminates before {monster}. You win
+    the confrontation without it needing a legend.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La presa, {monster}, aparece al final de la búsqueda.
+    El combate concluye con tu victoria.'
+  en: '{name}, your expedition in {place} reaches its outcome. The prey, {monster}, appears at the end of the search.
+    The battle concludes with your victory.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Al seguir el rastro das con {monster}. La lucha ya
+    tiene resultado: has vencido.'
+  en: '{name}, your expedition in {place} reaches its outcome. Following the trail brings you to {monster}. The
+    fight has its result: you have won.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Esta vez encuentras a {monster} y el rastreo da paso
+    al combate. La victoria es tuya.'
+  en: '{name}, your expedition in {place} reaches its outcome. This time you find {monster} and tracking gives way
+    to combat. Victory is yours.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La búsqueda culmina en un choque con {monster}. Lo
+    resuelves a tu favor.'
+  en: '{name}, your expedition in {place} reaches its outcome. The search culminates in a clash with {monster}.
+    You resolve it in your favour.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Del rastro pasas al encuentro con {monster}. De la
+    lucha, a una victoria confirmada.'
+  en: '{name}, your expedition in {place} reaches its outcome. From the trail you reach an encounter with {monster}.
+    From the fight, a confirmed victory.'
 track_fled:
-  - es: >-
-      {name} encontró a {monster} en {place}, y {monster} también dio con {name}. A veces la mejor caza es la que acaba
-      con todos vivos: {name} se retiró a tiempo.
-    en: >-
-      {name} found {monster} at {place}, and {monster} found them back. Sometimes the best hunt is the one that
-      ends with everyone alive: {name} withdrew in time.
-  - es: >-
-      El rastro llevó a {name} directo hasta {monster}, más grande y más fiero de lo esperado. {name} optó por
-      retirarse de {place}; la presa seguirá ahí otro día.
-    en: >-
-      The trail led {name} straight to {monster}, bigger and fiercer than expected. {name} chose to fall back from
-      {place}; the prey will still be there another day.
-  - es: >-
-      Tras horas de rastreo en {place}, el encuentro con {monster} duró apenas unos instantes. {name} midió sus
-      fuerzas y eligió vivir para cazar mañana.
-    en: >-
-      After hours of tracking at {place}, the clash with {monster} lasted mere moments. {name} weighed their
-      strength and chose to live to hunt tomorrow.
-
+- es: '{name}, tu expedición en {place} llega a su desenlace. El rastro te lleva hasta {monster}. Logras huir del
+    combate que sigue.'
+  en: '{name}, your expedition in {place} reaches its outcome. The trail takes you to {monster}. You manage to flee
+    the fight that follows.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Encuentras a {monster}, pero la cacería no acaba en
+    victoria. Escapas del enfrentamiento.'
+  en: '{name}, your expedition in {place} reaches its outcome. You find {monster}, but the hunt does not end in
+    victory. You escape the confrontation.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La búsqueda termina frente a {monster}. Tu salida
+    del combate es una huida lograda.'
+  en: '{name}, your expedition in {place} reaches its outcome. The search ends before {monster}. Your exit from
+    battle is a successful flight.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Sigues las señales hasta dar con {monster}. Después
+    de entrar en combate, consigues retirarte.'
+  en: '{name}, your expedition in {place} reaches its outcome. You follow the signs until you find {monster}. After
+    entering battle, you manage to retreat.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. El rastreo conduce a una lucha con {monster}. La huida
+    pone fin a tu participación.'
+  en: '{name}, your expedition in {place} reaches its outcome. Tracking leads to a fight with {monster}. Escape
+    ends your participation.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. No son solo huellas: encuentras a {monster}. La confrontación
+    acaba cuando logras huir.'
+  en: '{name}, your expedition in {place} reaches its outcome. It is not just tracks: you find {monster}. The confrontation
+    ends when you manage to flee.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La presa del rastreo es {monster}. El encuentro deriva
+    en combate y consigues escapar.'
+  en: '{name}, your expedition in {place} reaches its outcome. The prey you track is {monster}. The encounter leads
+    to battle and you manage to escape.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Das con {monster} al final de las pistas. La lucha
+    queda atrás mediante tu retirada.'
+  en: '{name}, your expedition in {place} reaches its outcome. You find {monster} at the end of the clues. The fight
+    is left behind through your retreat.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La búsqueda culmina con {monster} ante ti. No ganas
+    el combate: sales de él por la huida.'
+  en: '{name}, your expedition in {place} reaches its outcome. The search culminates with {monster} before you.
+    You do not win the battle: you leave it by fleeing.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Rastrear te lleva al encuentro con {monster}. Esta
+    vez, el final es una retirada efectiva.'
+  en: '{name}, your expedition in {place} reaches its outcome. Tracking leads you to an encounter with {monster}.
+    This time, the ending is a successful retreat.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Encuentras a {monster} y se libra un combate. Consigues
+    abandonarlo sin reclamar una victoria.'
+  en: '{name}, your expedition in {place} reaches its outcome. You find {monster} and a battle is fought. You manage
+    to leave it without claiming a victory.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. El rastro desemboca en la lucha contra {monster}.
+    Logras escapar, y ahí termina esta cacería.'
+  en: '{name}, your expedition in {place} reaches its outcome. The trail leads into the fight against {monster}.
+    You manage to escape, and there this hunt ends.'
 track_lost:
-  - es: >-
-      La presa resultó ser el cazador. En {place}, {monster} sorprendió a {name} y acabó con su resistencia. Una
-      derrota amarga, pero el rastro sigue allí, esperando.
-    en: >-
-      The prey turned out to be the hunter. At {place}, {monster} surprised {name} and left them beaten. A bitter
-      defeat, but the trail is still there, waiting.
-  - es: >-
-      {name} siguió a {monster} demasiado lejos por {place}. Cuando quiso darse cuenta, ya no había vuelta atrás.
-      Hoy ganó la bestia.
-    en: >-
-      {name} followed {monster} too deep into {place}. By the time they noticed, there was no turning back. Today
-      the beast won.
-  - es: >-
-      En {place}, {monster} defendió su territorio con uñas y dientes, y {name} cayó. Las cicatrices de hoy serán
-      la experiencia de mañana.
-    en: >-
-      At {place}, {monster} defended its ground tooth and claw, and {name} fell. Today's scars will be tomorrow's
-      experience.
+- es: '{name}, tu expedición en {place} llega a su desenlace. Encuentras a {monster} al seguir el rastro. El combate
+    termina en tu derrota.'
+  en: '{name}, your expedition in {place} reaches its outcome. You find {monster} by following the trail. The battle
+    ends in your defeat.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La búsqueda culmina frente a {monster}. Esta vez no
+    consigues vencer.'
+  en: '{name}, your expedition in {place} reaches its outcome. The search culminates before {monster}. This time
+    you do not manage to win.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. El rastro conduce a un combate con {monster}. El desenlace
+    se vuelve contra ti.'
+  en: '{name}, your expedition in {place} reaches its outcome. The trail leads to a battle with {monster}. The outcome
+    turns against you.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Das con la presa, {monster}, pero pierdes la lucha.
+    La cacería termina con ese revés.'
+  en: '{name}, your expedition in {place} reaches its outcome. You find the prey, {monster}, but lose the fight.
+    The hunt ends with that setback.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Las señales te llevan hasta {monster}. La derrota
+    cierra el enfrentamiento posterior.'
+  en: '{name}, your expedition in {place} reaches its outcome. The signs take you to {monster}. Defeat closes the
+    ensuing confrontation.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Rastrear da resultado al encontrar a {monster}. El
+    combate, sin embargo, no termina a tu favor.'
+  en: '{name}, your expedition in {place} reaches its outcome. Tracking succeeds in finding {monster}. The battle,
+    however, does not end in your favour.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La búsqueda desemboca en una lucha con {monster}.
+    No ganas esta batalla.'
+  en: '{name}, your expedition in {place} reaches its outcome. The search leads into a fight with {monster}. You
+    do not win this battle.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Encuentras a {monster} y afrontas el combate. El resultado
+    es una derrota, no una vergüenza.'
+  en: '{name}, your expedition in {place} reaches its outcome. You find {monster} and face the battle. The result
+    is a defeat, not a disgrace.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. El rastro no estaba vacío: aguardaba el encuentro
+    con {monster}. Pierdes el enfrentamiento.'
+  en: '{name}, your expedition in {place} reaches its outcome. The trail was not empty: the encounter with {monster}
+    awaited. You lose the confrontation.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Llegas hasta {monster} siguiendo sus señales. Esta
+    cacería concluye en derrota.'
+  en: '{name}, your expedition in {place} reaches its outcome. You reach {monster} by following its signs. This
+    hunt concludes in defeat.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. La presa aparece al final del rastreo: {monster}.
+    El combate se resuelve en tu contra.'
+  en: '{name}, your expedition in {place} reaches its outcome. The prey appears at the end of tracking: {monster}.
+    The fight resolves against you.'
+- es: '{name}, tu expedición en {place} llega a su desenlace. Buscar te lleva a {monster}, y el encuentro a una
+    batalla. La victoria no es tuya esta vez.'
+  en: '{name}, your expedition in {place} reaches its outcome. Searching leads you to {monster}, and the encounter
+    to a battle. Victory is not yours this time.'

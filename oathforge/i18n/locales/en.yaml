@@ -597,6 +597,8 @@ chronicle:
   title: "📜 <b>Expedition chronicle</b>"
   footer_ai: "📜 Chronicle {used}/{limit} today"
   footer_rest: "📜 The chronicler has written all {limit} chronicles for today; come back tomorrow."
+  no_loot: "no materials"
+  creature: "the creature"
   footer_generic: "📜 From the guild archives"
 
 prof:

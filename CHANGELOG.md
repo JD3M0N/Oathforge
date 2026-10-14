@@ -4,6 +4,19 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.1] - 2026-10-14
+
+### Añadido
+- 612 variantes de respaldo en español e inglés: 348 crónicas, 168 narraciones, 72 réplicas de PNJ y 24 avisos; al menos 12 por caso.
+- Crónicas propias de minería, tala, hierbas y pesca para cada desenlace de recolección o estancia larga, conservando las crónicas ya guardadas.
+- Validación de cobertura, variantes distintas, traducciones y marcadores; guía de mantenimiento en `content/fallbacks/README.md`.
+
+### Arreglado
+- La narración de respaldo prioriza victoria, derrota y huida, distingue el robo fallido y no presenta el inicio de descanso como curación.
+- Un fallo de conversación muestra una réplica neutral y un único aviso; las compras y demás botones siguen funcionando.
+- Los avisos distinguen presupuesto diario del juego agotado de indisponibilidad sin causa confirmada, sin prometer una recuperación inmediata.
+- Las respuestas de IA vacías también activan el respaldo.
+
 ## [0.7.0] - 2026-10-13
 
 ### Añadido

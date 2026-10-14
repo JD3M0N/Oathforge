@@ -1,54 +1,151 @@
-# Réplicas de respaldo de los NPC: se usan cuando Gemini no responde o se acabó el presupuesto de IA.
-# Una lista por NPC (su clave en npcs.yaml) y «default» para el resto. Se elige una al azar.
-# Sin adjetivos con género sobre quien habla: valen para cualquier NPC.
-# Marcadores: {npc} el nombre del NPC · {name} el héroe.
-
+# Respaldo bilingüe; condiciones y marcadores en README.md.
 default:
-  - es: "{npc} te escucha con atención, pero solo responde con un gesto vago. Hoy no saca nada más."
-    en: "{npc} listens closely, but answers only with a vague gesture. Nothing more today."
-  - es: "«Ahora no, {name}. Vuelve más tarde», dice {npc}, con la cabeza en otra parte."
-    en: "\"Not now, {name}. Come back later,\" says {npc}, mind elsewhere."
-  - es: "{npc} se encoge de hombros. «No sabría qué decirte.»"
-    en: "{npc} shrugs. \"I wouldn't know what to tell you.\""
-  - es: "{npc} te mira un momento en silencio y vuelve a lo suyo."
-    en: "{npc} looks at you for a moment in silence and goes back to work."
-
+- es: '{npc} te dedica un gesto breve. «Te escucho, pero no tengo una respuesta.»'
+  en: '{npc} gives you a brief nod. "I hear you, but I have no answer."'
+- es: «No sabría qué añadir, {name}», responde {npc}.
+  en: '"I would not know what to add, {name}," {npc} replies.'
+- es: '{npc} guarda silencio antes de hablar. «Prefiero no aventurar palabras.»'
+  en: '{npc} is silent before speaking. "I would rather not venture a guess."'
+- es: «No tengo mucho que decir al respecto», te dice {npc}.
+  en: '"I have little to say about that," {npc} tells you.'
+- es: '{npc} inclina la cabeza. «Dejémoslo ahí por ahora.»'
+  en: '{npc} tilts their head. "Let us leave it there for now."'
+- es: «Las palabras no siempre ayudan», comenta {npc}, sin entrar en detalles.
+  en: '"Words do not always help," {npc} remarks, without going into detail.'
+- es: '{npc} te escucha sin interrumpir. «No voy a fingir que sé qué decir.»'
+  en: '{npc} listens without interrupting. "I will not pretend I know what to say."'
+- es: «No quisiera hablar sin fundamento», responde {npc}.
+  en: '"I would not want to speak without grounds," {npc} replies.'
+- es: '{npc} deja pasar una pausa. «No puedo llevar esta charla más lejos.»'
+  en: '{npc} lets a pause pass. "I cannot take this conversation further."'
+- es: «Por ahora, pocas palabras», dice {npc} con un gesto sobrio.
+  en: '"Few words for now," {npc} says with a sober gesture.'
+- es: '{npc} te mira con atención. «No tengo una historia que ofrecerte sobre eso.»'
+  en: '{npc} looks at you attentively. "I have no story to offer you about that."'
+- es: «Mejor no llenar el silencio por llenarlo, {name}», dice {npc}.
+  en: '"Best not fill silence merely to fill it, {name}," {npc} says.'
 bram:
-  - es: "«¿Otra ronda? Para charlas largas, vuelve cuando la taberna esté más tranquila», dice Bram mientras seca una jarra."
-    en: "\"Another round? For long talks, come back when the tavern is quieter,\" Bram says, drying a tankard."
-  - es: "Bram se inclina sobre la barra. «Aquí se oye de todo, {name}, pero hoy los rumores andan escasos.»"
-    en: "Bram leans over the bar. \"You hear everything in here, {name}, but rumours are thin today.\""
-  - es: "«Si buscas trabajo, mira el diario: yo ya te he dicho lo que sé», gruñe Bram con una sonrisa."
-    en: "\"If you're after work, check your journal: I've told you what I know,\" Bram grunts with a grin."
-
+- es: Bram se frota la barbilla. «Para hablar por hablar ya están los borrachos.»
+  en: Bram rubs his chin. "The drunks do enough talking for its own sake."
+- es: «Pocas palabras hoy, {name}. Hasta un tabernero necesita callarse», dice Bram.
+  en: '"Few words today, {name}. Even a tavern keeper needs to be quiet," Bram says.'
+- es: Bram suelta un bufido. «No voy a servirte humo como si fuera cerveza.»
+  en: Bram snorts. "I will not serve you smoke and call it ale."
+- es: «No tengo una buena respuesta para eso», admite Bram. «Y las malas salen caras.»
+  en: '"I have no good answer for that," Bram admits. "And bad ones cost dearly."'
+- es: Bram te escucha y ladea la cabeza. «Dejemos reposar esa charla.»
+  en: Bram listens and tilts his head. "Let that conversation settle."
+- es: «No toda pausa necesita un cuento», dice Bram, con una sonrisa escueta.
+  en: '"Not every pause needs a tale," Bram says with a faint smile.'
+- es: Bram se cruza de brazos. «Hoy mi lengua no está para largos viajes.»
+  en: Bram folds his arms. "My tongue is not up for long journeys today."
+- es: «No te voy a marear con palabrería, {name}», responde Bram.
+  en: '"I will not drown you in chatter, {name}," Bram replies.'
+- es: Bram resopla con humor seco. «Mira que cuesta encontrarme sin palabras.»
+  en: Bram huffs with dry humour. "It takes some doing to find me short of words."
+- es: «La charla también necesita descanso», dice Bram. «Dejémosla respirar.»
+  en: '"Talk needs rest too," Bram says. "Let it breathe."'
+- es: Bram baja la voz. «No tengo nada que añadir que merezca tu oído.»
+  en: Bram lowers his voice. "I have nothing to add worth your hearing."
+- es: «No voy a inventarme una historia para llenar el hueco», dice Bram.
+  en: '"I will not make up a story just to fill the gap," Bram says.'
 mira:
-  - es: "Mira gira la moneda entre los dedos. «La información cuesta. Y hoy no vendo.»"
-    en: "Mira turns a coin between her fingers. \"Information costs. And today I'm not selling.\""
-  - es: "«¿Por qué quieres saberlo?», pregunta Mira, y no añade nada más."
-    en: "\"Why do you want to know?\" Mira asks, and adds nothing more."
-  - es: "Mira se ajusta la capucha y mira hacia la puerta. «Ahora no es buen momento.»"
-    en: "Mira adjusts her hood and glances at the door. \"Now isn't a good time.\""
-
+- es: Mira te observa. «El silencio también tiene valor.»
+  en: Mira watches you. "Silence has value too."
+- es: «No tengo nada que añadir, {name}», dice Mira, sin alzar la voz.
+  en: '"I have nothing to add, {name}," Mira says without raising her voice.'
+- es: Mira entrelaza los dedos. «Hablemos poco.»
+  en: Mira interlaces her fingers. "Let us speak little."
+- es: «Una pregunta no obliga a una respuesta», señala Mira.
+  en: '"A question does not compel an answer," Mira points out.'
+- es: Mira deja que el silencio se estire. «Con eso basta por ahora.»
+  en: Mira lets the silence stretch. "That is enough for now."
+- es: «Las palabras gastadas no vuelven», dice Mira. «Prefiero medirlas.»
+  en: '"Spent words never return," Mira says. "I prefer to measure them."'
+- es: Mira inclina apenas la cabeza. «No voy a especular.»
+  en: Mira barely inclines her head. "I will not speculate."
+- es: «No confundas reserva con descortesía», murmura Mira.
+  en: '"Do not mistake reserve for discourtesy," Mira murmurs.'
+- es: Mira te escucha sin comprometerse. «Lo dejaré sin comentario.»
+  en: Mira listens without committing herself. "I will leave that without comment."
+- es: «No todas las conversaciones abren puertas», dice Mira.
+  en: '"Not every conversation opens doors," Mira says.'
+- es: Mira baja la mirada un instante. «No tengo una respuesta para ti.»
+  en: Mira lowers her gaze for a moment. "I have no answer for you."
+- es: «A veces lo prudente es detener la charla», responde Mira.
+  en: '"Sometimes prudence means stopping the conversation," Mira replies.'
 holt:
-  - es: "«Circule, ciudadano. La Guardia de Plata tiene trabajo», dice el sargento Holt sin apartar la vista de la plaza."
-    en: "\"Move along, citizen. The Silver Guard has work to do,\" Sergeant Holt says without taking his eyes off the plaza."
-  - es: "Holt se cruza de brazos. «Si tienes algo útil que contar, cuéntalo. Si no, no me hagas perder el tiempo.»"
-    en: "Holt folds his arms. \"If you've got something useful to report, report it. If not, don't waste my time.\""
-  - es: "«Las órdenes son las órdenes», responde Holt, seco."
-    en: "\"Orders are orders,\" Holt replies flatly."
-
+- es: Holt te escucha con gesto severo. «Sin más comentarios.»
+  en: Holt listens with a stern expression. "No further comment."
+- es: «No hablaré sin certeza», dice Holt. «Eso también es disciplina.»
+  en: '"I will not speak without certainty," Holt says. "That too is discipline."'
+- es: Holt endereza la espalda. «Seamos breves.»
+  en: Holt straightens his back. "Let us be brief."
+- es: «No tengo una respuesta que darte, {name}», declara Holt.
+  en: '"I have no answer to give you, {name}," Holt states.'
+- es: Holt aprieta los labios. «No voy a llenar ese vacío con suposiciones.»
+  en: Holt presses his lips together. "I will not fill that gap with assumptions."
+- es: «Un juramento pesa más que una charla», dice Holt.
+  en: '"An oath carries more weight than talk," Holt says.'
+- es: Holt asiente una vez. «No añadiré nada por ahora.»
+  en: Holt nods once. "I will add nothing for now."
+- es: «La prudencia exige medir las palabras», responde Holt.
+  en: '"Prudence requires measured words," Holt replies.'
+- es: Holt mantiene un tono formal. «Dejemos esta conversación aquí.»
+  en: Holt keeps his tone formal. "Let us leave this conversation here."
+- es: «No soy hombre de discursos», te dice Holt.
+  en: '"I am not a man for speeches," Holt tells you.'
+- es: Holt te mira de frente. «Prefiero el silencio a una afirmación sin fundamento.»
+  en: Holt looks you in the eye. "I prefer silence to an unfounded assertion."
+- es: «Por ahora, eso es todo», concluye Holt con sobriedad.
+  en: '"For now, that is all," Holt concludes soberly.'
 tessa:
-  - es: "Tessa no levanta la vista del yunque. «Si quieres acero, mira lo que tengo. Si quieres charla, ve a la taberna.»"
-    en: "Tessa doesn't look up from the anvil. \"If you want steel, see what I've got. If you want chatter, go to the tavern.\""
-  - es: "«Un buen filo vale más que mil palabras», dice Tessa, y vuelve a martillear."
-    en: "\"A good edge is worth more than a thousand words,\" Tessa says, and goes back to hammering."
-  - es: "Tessa se seca el sudor de la frente. «Luego, {name}. Ahora el metal está caliente.»"
-    en: "Tessa wipes the sweat from her brow. \"Later, {name}. The metal's hot right now.\""
-
+- es: Tessa ladea la cabeza. «La charla también tiene que enfriarse a veces.»
+  en: Tessa tilts her head. "Talk needs to cool sometimes too."
+- es: «No tengo respuesta, {name}. Y no voy a martillar una a la fuerza», dice Tessa.
+  en: '"I have no answer, {name}. And I will not hammer one into shape by force," Tessa says.'
+- es: Tessa ríe por lo bajo. «Hasta yo puedo quedarme sin palabras.»
+  en: Tessa chuckles. "Even I can run out of words."
+- es: «No voy a venderte palabrería como si fuera buen acero», dice Tessa.
+  en: '"I will not sell you chatter as though it were good steel," Tessa says.'
+- es: Tessa se cruza de brazos. «Dejemos descansar esa conversación.»
+  en: Tessa folds her arms. "Let that conversation rest."
+- es: «Una respuesta mal templada se rompe enseguida», comenta Tessa.
+  en: '"A poorly tempered answer breaks at once," Tessa remarks.'
+- es: Tessa te escucha con una media sonrisa. «No tengo mucho que añadir.»
+  en: Tessa listens with a half smile. "I have little to add."
+- es: «Para alargar esto sin sentido, mejor callarse», dice Tessa con franqueza.
+  en: '"Better to be quiet than drag this out for nothing," Tessa says frankly.'
+- es: Tessa se encoge de hombros. «Con eso no sé ayudarte de palabra.»
+  en: Tessa shrugs. "I do not know how to help you with words on that."
+- es: «No todo se arregla hablando», te dice Tessa. «Aunque ganas no falten.»
+  en: '"Not everything can be fixed by talking," Tessa tells you. "Even when we would like to."'
+- es: Tessa deja escapar una risa breve. «Mi lengua pide una pausa.»
+  en: Tessa lets out a brief laugh. "My tongue wants a pause."
+- es: «Mejor una pausa honrada que una respuesta torcida», concluye Tessa.
+  en: '"Better an honest pause than a crooked answer," Tessa concludes.'
 ysolde:
-  - es: "La hermana Ysolde junta las manos. «Que la luz te guarde, {name}. Si estás herido, puedo ayudarte.»"
-    en: "Sister Ysolde folds her hands. \"May the light keep you, {name}. If you're hurt, I can help.\""
-  - es: "«Aquí todos son bienvenidos, sobre todo los que vuelven a rastras», dice Ysolde con una sonrisa cansada."
-    en: "\"Everyone is welcome here, especially those who come back crawling,\" Ysolde says with a tired smile."
-  - es: "Ysolde enciende una vela más en el altar y no responde enseguida. «Reza conmigo un momento, si quieres.»"
-    en: "Ysolde lights one more candle on the altar and doesn't answer at once. \"Pray with me a moment, if you like.\""
+- es: Ysolde junta las manos. «No siempre hay palabras, {name}.»
+  en: Ysolde folds her hands. "There are not always words, {name}."
+- es: «El silencio también puede ser amable», te dice Ysolde.
+  en: '"Silence can be kind too," Ysolde tells you.'
+- es: Ysolde inclina la cabeza. «No quisiera darte una respuesta vacía.»
+  en: Ysolde inclines her head. "I would not want to give you an empty answer."
+- es: «Dejemos reposar la conversación», sugiere Ysolde con suavidad.
+  en: '"Let the conversation rest," Ysolde suggests softly.'
+- es: Ysolde te escucha en silencio. «No tengo nada certero que añadir.»
+  en: Ysolde listens in silence. "I have nothing certain to add."
+- es: «La paciencia no necesita un sermón», dice Ysolde con humor seco.
+  en: '"Patience does not need a sermon," Ysolde says with dry humour.'
+- es: Ysolde esboza una sonrisa cansada. «Hasta los consejos necesitan descanso.»
+  en: Ysolde offers a tired smile. "Even advice needs rest."
+- es: «Prefiero admitir que no sé qué decir», responde Ysolde.
+  en: '"I would rather admit I do not know what to say," Ysolde replies.'
+- es: Ysolde baja la voz. «No voy a cubrir la incertidumbre con palabras solemnes.»
+  en: Ysolde lowers her voice. "I will not cover uncertainty with solemn words."
+- es: «Por ahora, dejémoslo ahí», dice Ysolde sin dureza.
+  en: '"For now, let us leave it there," Ysolde says without harshness.'
+- es: Ysolde hace una pausa. «Una respuesta apresurada rara vez consuela.»
+  en: Ysolde pauses. "A hurried answer seldom comforts."
+- es: «No hace falta hablar para respetar una pausa, {name}», murmura Ysolde.
+  en: '"We need not speak to respect a pause, {name}," Ysolde murmurs.'

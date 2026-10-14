@@ -295,3 +295,26 @@ async def test_concurrent_claims_pay_once(is_postgres):
         if act.status == "done":  # no ambush: paid exactly once
             total = sum([await inventory.count(s, char, k) for k in act.result["items"]])
             assert total == sum(act.result["items"].values())
+
+
+async def test_saved_fallback_survives_catalog_change_without_repaying(llm, monkeypatch):
+    from oathforge.ai import fallbacks
+    from oathforge.services import inventory
+
+    cid = await new_character()
+    activity_id = await _done_activity(cid)
+    first = await chronicles.tell(llm, activity_id, "es")
+    assert not first.ai
+    async with session_scope() as session:
+        char = await get_char(session, cid)
+        before = (char.gold, char.xp, char.hp,
+                  sorted((item.item_key, item.qty) for item in await inventory.items_of(session, char)))
+    monkeypatch.setattr(fallbacks, "pick", lambda *args, **kwargs: pytest.fail("must keep stored chronicle"))
+    count = len(llm.prompts)
+    second = await chronicles.tell(llm, activity_id, "es")
+    assert second.text == first.text and len(llm.prompts) == count
+    async with session_scope() as session:
+        char = await get_char(session, cid)
+        after = (char.gold, char.xp, char.hp,
+                 sorted((item.item_key, item.qty) for item in await inventory.items_of(session, char)))
+        assert before == after

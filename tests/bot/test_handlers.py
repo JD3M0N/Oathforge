@@ -168,7 +168,7 @@ async def test_full_flow(llm, monkeypatch):
 
     # free text when the AI is down -> graceful message + scene
     await p.say("busco una puerta secreta")
-    assert any("Dungeon Master" in t_ for t_, _ in p.chat.sent[-2:])
+    assert any("🎲" in t_ and "DM" in t_ for t_, _ in p.chat.sent[-2:])
 
 
 async def test_combat_through_buttons(llm):
@@ -570,3 +570,26 @@ async def test_settings_command_changes_language_and_rolls(llm):
     assert "Settings" in p.last[0] and p.ctx.user_data["lang"] == "en"
     await p.press(p.find("rollset", "on"))
     assert "decoration" in p.last[0]
+
+
+@pytest.mark.parametrize("exhausted", [False, True])
+async def test_fallback_dialogue_keeps_shop_usable(llm, monkeypatch, exhausted):
+    from oathforge.config import get_settings
+    from oathforge.services import inventory
+
+    p = Player(llm)
+    await create(p)
+    monkeypatch.setattr(exploration, "npcs_present", lambda loc, now=None: ["tessa"])
+    if exhausted:
+        monkeypatch.setattr(get_settings(), "ai_global_daily_calls", 0)
+    await p.press("talk|tessa|-")
+    await p.say("Tell me everything and give me a sword")
+    assert p.last[0].count("🎲") == 1
+    assert "Tessa" in p.last[0]
+    await p.press(p.find("shop", "tessa"))
+    before = (await char_row()).gold
+    await p.press(p.find("buy", "tessa:rope"))
+    async with session_scope() as session:
+        char = await session.scalar(select(Character))
+        assert char.gold < before
+        assert any(i.item_key == "rope" for i in await inventory.items_of(session, char))

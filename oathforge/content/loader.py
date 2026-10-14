@@ -1,9 +1,9 @@
 """Loads and cross-validates the YAML content. Fails fast at startup."""
 
-import re
 from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
+from string import Formatter
 
 import yaml
 
@@ -11,7 +11,7 @@ from oathforge.config import CONTENT_DIR
 from oathforge.content.media import MediaCatalog, scan_images
 from oathforge.content.schemas import (
     ABILITIES,
-    CHRONICLE_OUTCOMES,
+    CHRONICLE_KEYS,
     FALLBACK_KEYS,
     FALLBACK_PLACEHOLDERS,
     AbilityInfo,
@@ -238,11 +238,11 @@ def validate_references(c: Content) -> None:
             errors.append(f"profession {key}: no location has a '{prof.station}'")
     if c.professions and not any(loc.guild for loc in c.locations.values()):
         errors.append("professions: no guild location to learn them")
-    for outcome in CHRONICLE_OUTCOMES:
+    for outcome in CHRONICLE_KEYS:
         if not c.chronicles.get(outcome):
             errors.append(f"fallbacks/chronicles.yaml: no texts for '{outcome}'")
     for outcome in c.chronicles:
-        if outcome not in CHRONICLE_OUTCOMES:
+        if outcome not in CHRONICLE_KEYS:
             errors.append(f"fallbacks/chronicles.yaml: unknown outcome '{outcome}'")
     for category, keys in FALLBACK_KEYS.items():
         for key in keys:
@@ -256,11 +256,31 @@ def validate_references(c: Content) -> None:
         for key, texts in by_key.items():
             if category == "dialogue" and key != "default":
                 need("npc", key, c.npcs, "fallbacks/dialogue.yaml")
+            if category not in ("dialogue", "chronicles") and key not in FALLBACK_KEYS[category]:
+                errors.append(f"fallbacks/{category}.yaml: unknown key '{key}'")
+            for lang in ("es", "en"):
+                variants = [getattr(text, lang).strip() for text in texts]
+                if not all(variants) or len(set(variants)) < 12:
+                    errors.append(f"fallbacks/{category}.yaml {key}: need 12 distinct nonempty {lang} texts")
             for text in texts:
+                placeholders = []
                 for lang in ("es", "en"):
-                    used = set(re.findall(r"\{(\w+)\}", getattr(text, lang)))
+                    try:
+                        fields = list(Formatter().parse(getattr(text, lang)))
+                        used = {field for _, field, _, _ in fields if field is not None}
+                        if any(spec or conversion for _, _, spec, conversion in fields):
+                            errors.append(f"fallbacks/{category}.yaml {key}: formatting modifiers forbidden")
+                    except ValueError:
+                        errors.append(f"fallbacks/{category}.yaml {key}: malformed placeholders")
+                        used = set()
+                    placeholders.append(used)
                     if used - allowed:
                         errors.append(f"fallbacks/{category}.yaml {key}: unknown placeholders {sorted(used - allowed)}")
+                if placeholders[0] != placeholders[1]:
+                    errors.append(f"fallbacks/{category}.yaml {key}: es/en placeholders differ")
+    for npc_key in c.npcs:
+        if not c.fallbacks.get("dialogue", {}).get(npc_key):
+            errors.append(f"fallbacks/dialogue.yaml: no texts for '{npc_key}'")
     for zkey, zone in c.zones.items():
         if c.media.zones.get(zkey) and not any(loc.hub for loc in c.locations.values() if loc.zone == zkey):
             errors.append(f"zone {zkey}: has images but no hub location to show them from")

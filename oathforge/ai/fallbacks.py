@@ -15,10 +15,11 @@ class _Keep(dict):
         return "{" + key + "}"
 
 
-def pick(category: str, key: str, lang: str, seed: int | None = None, **values) -> str:
-    """A text of ``category`` for ``key`` (or its "default"): fixed by ``seed``, else at random."""
+def pick(category: str, key: str, lang: str, seed: int | None = None,
+         context: str | None = None, **values) -> str:
+    """Try key.context, key, then default; fixed by seed, otherwise chosen at random."""
     by_key = get_content().fallbacks.get(category, {})
-    texts = by_key.get(key) or by_key.get("default") or []
+    texts = (by_key.get(f"{key}.{context}") if context else None) or by_key.get(key) or by_key.get("default") or []
     if not texts:
         return ""
     text = texts[seed % len(texts)] if seed is not None else random.choice(texts)

@@ -7,9 +7,11 @@ from sqlalchemy import select
 from oathforge.ai.client import Budget
 from oathforge.ai.intent_parser import ActionContext, Intent, validate
 from oathforge.config import Settings
+from oathforge.content import get_content
 from oathforge.database.models import AiUsage, Character
 from oathforge.database.session import session_scope
 from oathforge.services import actions, characters, exploration, npcs
+from oathforge.services.events import render
 
 pytestmark = pytest.mark.usefixtures("database")
 
@@ -140,4 +142,5 @@ async def test_exhausted_budget_tells_the_player(llm):
     res = await actions.handle_free_text(llm, uid, "salgo a la plaza", random.Random(0))
     assert res.outcome.error == "ai.budget_exhausted" and not llm.prompts
     line, out = await actions.talk(llm, uid, "bram", "hola")
-    assert line and out.events[0].key == "ai.budget_exhausted" and not llm.prompts
+    assert line and len(out.events) == 1 and not llm.prompts
+    assert render(out, "es")[0] in [v.es for v in get_content().fallbacks["freetext"]["budget_exhausted"]]

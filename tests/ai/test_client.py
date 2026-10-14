@@ -120,3 +120,34 @@ async def test_daily_quota_skips_the_model_for_hours(monkeypatch):
     monkeypatch.setattr("oathforge.ai.client.time.monotonic", lambda: now + 3600)  # an hour later
     assert await llm.text(tier="narrative", system="s", prompt="p", user_id=None) == "second"
     assert client.calls == [NARRATIVE, FAST, FAST]
+
+
+async def test_invalid_json_returns_none():
+    from oathforge.ai.intent_parser import Intent
+
+    llm, client = make_llm("not valid json")
+    result = await llm.json(tier="fast", system="s", prompt="p", schema=Intent, user_id=None)
+    assert result is None and client.calls == [FAST]
+
+
+async def test_empty_narration_returns_none():
+    llm, client = make_llm("   ")
+    assert await llm.text(tier="narrative", system="s", prompt="p", user_id=None) is None
+    assert client.calls == [NARRATIVE]
+
+
+async def test_no_api_key_uses_null_client():
+    from oathforge.ai.client import NullLLM, build_llm
+
+    llm = build_llm(Settings(gemini_api_key=""))
+    assert isinstance(llm, NullLLM)
+    assert await llm.text(tier="fast", system="s", prompt="p", user_id=None) is None
+
+
+async def test_global_budget_blocks_provider(database):
+    llm, client = make_llm("must not be called")
+    from oathforge.ai.client import Budget
+
+    llm.budget = Budget(Settings(ai_global_daily_calls=0))
+    assert await llm.text(tier="fast", system="s", prompt="p", user_id=None) is None
+    assert client.calls == []

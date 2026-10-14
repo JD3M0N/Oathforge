@@ -1,10 +1,53 @@
-# Avisos cuando el Dungeon Master (Gemini) no puede interpretar una acción escrita.
-# Se elige uno al azar. Marcadores: {name} el héroe.
-
+# Respaldo bilingüe; condiciones y marcadores en README.md.
 unavailable:
-  - es: "🎲 El Dungeon Master se ha quedado sin voz un momento. Usa los botones mientras se recupera."
-    en: "🎲 The Dungeon Master has lost their voice for a moment. Use the buttons while they recover."
-  - es: "🎲 El Dungeon Master está consultando sus notas y no te ha oído. Sigue con los botones; las acciones escritas vuelven enseguida."
-    en: "🎲 The Dungeon Master is checking their notes and didn't hear you. Carry on with the buttons; written actions will be back soon."
-  - es: "🎲 Hay demasiado ruido en la mesa: el Dungeon Master no entiende tu acción ahora mismo. Los botones funcionan igual."
-    en: "🎲 It's too noisy at the table: the Dungeon Master can't follow your action right now. The buttons work as usual."
+- es: 🎲 El DM no está disponible para conversar ahora. Puedes seguir usando las opciones del menú.
+  en: 🎲 The DM is unavailable for conversation right now. You can keep using the menu options.
+- es: 🎲 El DM no puede atender el texto libre en este momento. Los botones siguen disponibles.
+  en: 🎲 The DM cannot handle free text right now. The buttons are still available.
+- es: 🎲 La voz del DM no llega a la mesa ahora mismo. Continúa tu partida con los botones.
+  en: 🎲 The DM's voice is not reaching the table right now. Continue your game with the buttons.
+- es: 🎲 No podemos consultar al DM ahora. Puedes comprar y actuar mediante las opciones disponibles.
+  en: 🎲 We cannot consult the DM right now. You can shop and act through the available options.
+- es: 🎲 La conversación con el DM está interrumpida. Las opciones del menú siguen funcionando.
+  en: 🎲 Conversation with the DM is interrupted. The menu options still work.
+- es: 🎲 El DM no puede responder a tus palabras ahora. Sigue jugando desde los botones del menú.
+  en: 🎲 The DM cannot respond to your words right now. Keep playing with the menu buttons.
+- es: 🎲 Por ahora no hay respuesta del DM. Tu aventura puede continuar con las opciones de pantalla.
+  en: 🎲 There is no response from the DM right now. Your adventure can continue with the on-screen options.
+- es: 🎲 Falta la voz del DM para seguir esta charla. Puedes usar las acciones del menú.
+  en: 🎲 The DM's voice is unavailable to continue this conversation. You can use the menu actions.
+- es: 🎲 El DM no está atendiendo acciones escritas ahora. Elige una opción de los botones para continuar.
+  en: 🎲 The DM is not handling written actions right now. Choose one of the button options to continue.
+- es: 🎲 No hay conexión con la narración del DM en este momento. Los controles del juego siguen disponibles.
+  en: 🎲 The DM's narration is unavailable at the moment. The game controls are still available.
+- es: 🎲 El DM no puede continuar este intercambio ahora mismo. Las interacciones del menú siguen abiertas.
+  en: 🎲 The DM cannot continue this exchange right now. Menu interactions remain available.
+- es: 🎲 La respuesta del DM no está disponible. Puedes continuar con los botones, incluidas las compras donde se
+    ofrezcan.
+  en: 🎲 The DM's response is unavailable. You can continue with the buttons, including shopping where offered.
+budget_exhausted:
+- es: 🎲 Se ha alcanzado el límite diario del DM. Puedes seguir jugando con las opciones del menú.
+  en: 🎲 The DM's daily limit has been reached. You can keep playing with the menu options.
+- es: 🎲 El DM ha consumido su presupuesto diario de conversación. Los botones siguen disponibles.
+  en: 🎲 The DM has used up its daily conversation budget. The buttons are still available.
+- es: 🎲 No quedan consultas disponibles dentro del límite diario del DM. Continúa con los botones.
+  en: 🎲 No consultations remain within the DM's daily limit. Continue with the buttons.
+- es: 🎲 El límite diario impide al DM atender más texto libre. Las acciones del menú siguen funcionando.
+  en: 🎲 The daily limit prevents the DM from handling more free text. Menu actions still work.
+- es: 🎲 Por el límite diario, el DM no puede seguir esta conversación. Puedes usar las opciones de pantalla.
+  en: 🎲 Because of the daily limit, the DM cannot continue this conversation. You can use the on-screen options.
+- es: 🎲 Las consultas diarias del DM han llegado a su límite. Tu partida continúa mediante los botones.
+  en: 🎲 The DM's daily consultations have reached their limit. Your game continues through the buttons.
+- es: 🎲 El presupuesto de hoy no permite otra respuesta del DM. Las interacciones del menú siguen disponibles.
+  en: 🎲 Today's budget does not allow another DM response. Menu interactions are still available.
+- es: 🎲 Se agotó el cupo diario para consultar al DM. Puedes seguir comprando y actuando con los botones disponibles.
+  en: 🎲 The daily allowance for consulting the DM is exhausted. You can keep shopping and acting with the available
+    buttons.
+- es: 🎲 El DM ha alcanzado el máximo diario de uso. El menú te permite continuar la aventura.
+  en: 🎲 The DM has reached its daily usage limit. The menu lets you continue the adventure.
+- es: 🎲 No hay margen en el presupuesto diario del DM para esta charla. Sigue con las opciones del menú.
+  en: 🎲 There is no room in the DM's daily budget for this conversation. Continue with the menu options.
+- es: 🎲 La conversación libre está limitada por el cupo diario del DM. Puedes continuar desde los botones de pantalla.
+  en: 🎲 Free conversation is restricted by the DM's daily allowance. You can continue using the on-screen buttons.
+- es: 🎲 El cupo diario del DM está completo. Las compras y otras acciones siguen accesibles desde sus botones.
+  en: 🎲 The DM's daily allowance is fully used. Shopping and other actions remain accessible through their buttons.

@@ -1,50 +1,352 @@
-# Narración de respaldo de las acciones escritas: una frase de ambiente cuando Gemini no responde.
-# El resultado real (tiradas, oro, daño) sale siempre debajo; esto solo pone el tono.
-# Claves: el tipo de desenlace (actions.narration_key). Se elige una al azar.
-# Marcadores: {name} el héroe · {place} el lugar.
-
+# Narración por hechos del motor; ver README.md.
 default:
-  - es: "{name} actúa sin dudar. El mundo responde a su manera."
-    en: "{name} acts without hesitation. The world answers in its own way."
-  - es: "Por un instante, todo en {place} parece contener el aliento."
-    en: "For a moment, everything at {place} seems to hold its breath."
-
+- es: En {place}, tu atención sigue puesta en lo que te rodea. Hay cosas que aún no se dejan comprender.
+  en: In {place}, your attention stays on your surroundings. Some things still resist understanding.
+- es: Aetherfall guarda sus respuestas con celo. Tú sigues formando parte de sus preguntas.
+  en: Aetherfall guards its answers jealously. You remain part of its questions.
+- es: Tu historia continúa en {place}, entre lo que conoces y lo que todavía se te escapa.
+  en: Your story continues in {place}, between what you know and what still eludes you.
+- es: Por un instante, {place} parece pesar más en tu conciencia que el resto del mundo.
+  en: For a moment, {place} seems to weigh more in your awareness than the rest of the world.
+- es: Hay algo implacable en la forma en que el mundo sigue adelante. Tú estás aquí, en {place}.
+  en: There is something relentless about the way the world goes on. You are here, in {place}.
+- es: En {place}, tus intenciones se encuentran con un mundo que no se explica fácilmente.
+  en: In {place}, your intentions meet a world that does not explain itself easily.
+- es: Aetherfall no descubre todos sus secretos de una vez. Tu atención permanece en el presente.
+  en: Aetherfall does not reveal all its secrets at once. Your attention stays in the present.
+- es: Tu mirada vuelve a lo inmediato. El resto de Aetherfall parece lejano desde {place}.
+  en: Your gaze returns to what is at hand. The rest of Aetherfall seems distant from {place}.
+- es: En {place}, hasta un momento corriente puede sentirse cargado de preguntas.
+  en: In {place}, even an ordinary moment can feel laden with questions.
+- es: Tu aventura sigue entre certezas escasas. El mundo conserva la suya, inescrutable.
+  en: Your adventure continues among few certainties. The world keeps its own, inscrutable.
+- es: El presente te reclama en {place}. Lo desconocido puede esperar un instante.
+  en: The present claims your attention in {place}. The unknown can wait a moment.
+- es: Tu atención regresa a {place}. Aetherfall tiene demasiados recovecos para abarcarlo de una mirada.
+  en: Your attention returns to {place}. Aetherfall has too many corners to take in at a glance.
 success:
-  - es: "{name} lo hace con la soltura de quien lo ha practicado mil veces."
-    en: "{name} does it with the ease of someone who has practised it a thousand times."
-  - es: "Sale bien. {name} se permite media sonrisa."
-    en: "It works. {name} allows a half smile."
-  - es: "Con calma y buen pulso, {name} consigue lo que buscaba."
-    en: "With calm and a steady hand, {name} gets what they were after."
-
+- es: Tu intento supera la prueba. Por una vez, la dificultad cede.
+  en: Your attempt passes the test. For once, the difficulty yields.
+- es: Encuentras la manera de resolverlo. El obstáculo de este intento queda superado.
+  en: You find a way through. The obstacle in this attempt is overcome.
+- es: Esta vez lo consigues. El resultado pone fin a la incertidumbre de la prueba.
+  en: This time you manage it. The result ends the uncertainty of the test.
+- es: La prueba se resuelve a tu favor. No necesitas adornar ese hecho.
+  en: The test resolves in your favour. That fact needs no embellishment.
+- es: Tu intento da resultado en {place}. Una dificultad menos en este momento.
+  en: Your attempt works in {place}. One less difficulty in this moment.
+- es: Logras superar lo que se te exigía. El acierto queda en tu historia.
+  en: You meet what was required of you. The success becomes part of your story.
+- es: Das con una solución para esta prueba. El resultado confirma tu acierto.
+  en: You find a solution to this test. The result confirms your success.
+- es: El intento prospera. En {place}, esta prueba ya tiene respuesta.
+  en: The attempt succeeds. In {place}, this test now has its answer.
+- es: Consigues resolver la dificultad planteada. Esta vez, el desenlace te favorece.
+  en: You resolve the difficulty before you. This time, the outcome favours you.
+- es: Superas la prueba en {place}. Es un acierto concreto, sin promesas sobre el siguiente.
+  en: You pass the test in {place}. A definite success, with no promises about the next one.
+- es: Tu intento llega a buen término. La incertidumbre deja paso al resultado.
+  en: Your attempt comes to a successful end. Uncertainty gives way to the result.
+- es: Esta dificultad no te detiene. La prueba queda superada.
+  en: This difficulty does not stop you. The test is passed.
 failure:
-  - es: "No sale como {name} esperaba. Otra vez será."
-    en: "It doesn't go the way {name} hoped. Another time."
-  - es: "{name} lo intenta, pero algo se tuerce en el último momento."
-    en: "{name} tries, but something goes wrong at the last moment."
-  - es: "Un mal paso, un descuido: {place} no se lo pone fácil a {name}."
-    en: "A misstep, a lapse: {place} doesn't make it easy for {name}."
-
+- es: Tu intento no supera la prueba. Aetherfall no concede todos los pasos.
+  en: Your attempt fails the test. Aetherfall does not grant every step.
+- es: Esta vez no lo consigues. El resultado deja poco lugar a dudas.
+  en: This time you do not manage it. The result leaves little doubt.
+- es: La dificultad se impone a tu intento. Eso es todo lo que este momento decide.
+  en: The difficulty overcomes your attempt. That is all this moment decides.
+- es: No alcanzas lo que exigía la prueba. El esfuerzo no cambia su desenlace.
+  en: You do not meet what the test required. Effort does not change its outcome.
+- es: Tu intento se queda corto en {place}. No todos los obstáculos ceden.
+  en: Your attempt falls short in {place}. Not every obstacle yields.
+- es: La prueba termina sin el acierto que buscabas. El relato también guarda estos momentos.
+  en: The test ends without the success you sought. The account keeps these moments too.
+- es: No encuentras una solución en este intento. La dificultad permanece sin resolver.
+  en: You find no solution in this attempt. The difficulty remains unresolved.
+- es: El resultado no te favorece. La prueba de {place} ha sido demasiado esta vez.
+  en: The result does not favour you. The test in {place} was too much this time.
+- es: Intentarlo no ha bastado. Esta prueba queda como un tropiezo en tu historia.
+  en: Trying was not enough. This test remains a setback in your story.
+- es: Tu propósito encuentra resistencia y el intento falla. No hay victoria que narrar aquí.
+  en: Your purpose meets resistance and the attempt fails. There is no victory to tell here.
+- es: La prueba no sale adelante. En {place}, también hay lugar para los reveses.
+  en: The test does not succeed. In {place}, setbacks have their place too.
+- es: Esta vez la respuesta es un fracaso. Tu intento no consigue superar la dificultad.
+  en: This time the answer is failure. Your attempt does not overcome the difficulty.
 travel:
-  - es: "{name} se echa el camino a la espalda y no mira atrás."
-    en: "{name} shoulders the road and doesn't look back."
-  - es: "Paso a paso, {name} deja atrás el sitio de antes."
-    en: "Step by step, {name} leaves the old place behind."
-
-combat:
-  - es: "Acero, gritos y polvo. {name} no cede terreno."
-    en: "Steel, shouts and dust. {name} gives no ground."
-  - es: "{name} aprieta los dientes y se lanza a por ello."
-    en: "{name} grits their teeth and goes for it."
-  - es: "El combate no espera: {name} actúa antes de pensarlo dos veces."
-    en: "The fight doesn't wait: {name} acts before thinking twice."
-
-steal:
-  - es: "Dedos rápidos, mirada distraída: {name} prueba suerte."
-    en: "Quick fingers, a distracted look: {name} tries their luck."
-  - es: "{name} espera el momento justo y alarga la mano."
-    en: "{name} waits for the right moment and reaches out."
-
+- es: Llegas a {place}. Tu historia cambia de escenario.
+  en: You reach {place}. Your story changes its setting.
+- es: Dejas atrás el lugar anterior y entras en {place}.
+  en: You leave the previous place behind and enter {place}.
+- es: El trayecto termina en {place}. Ahora ese es tu entorno.
+  en: The journey ends in {place}. That is now your setting.
+- es: Tu recorrido te lleva a {place}, otro nombre en el camino de tu historia.
+  en: Your route takes you to {place}, another name on the road of your story.
+- es: Ya estás en {place}. Lo que dejaste atrás pertenece al tramo anterior.
+  en: You are now in {place}. What you left behind belongs to the previous stretch.
+- es: Alcanzas {place}. El viaje entre ambos lugares queda concluido.
+  en: You reach {place}. The journey between the two places is complete.
+- es: Tu marcha desemboca en {place}. La escena cambia contigo.
+  en: Your passage brings you to {place}. The scene changes with you.
+- es: El lugar anterior queda atrás. Tu presente está en {place}.
+  en: The previous place is behind you. Your present is in {place}.
+- es: Has llegado a {place}; el desplazamiento ya forma parte del relato.
+  en: You have arrived in {place}; the journey is now part of the account.
+- es: Cambias de lugar. {place} es donde continúa tu aventura.
+  en: You change locations. {place} is where your adventure continues.
+- es: 'Tu camino alcanza su destino inmediato: {place}.'
+  en: 'Your path reaches its immediate destination: {place}.'
+- es: Entras en {place}, y el escenario de tu siguiente decisión queda establecido.
+  en: You enter {place}, and the setting of your next decision is established.
+steal_success:
+- es: Consigues sustraer las monedas. El resultado no dice que hayas pasado inadvertidamente.
+  en: You manage to take the coins. The result does not mean you went unnoticed.
+- es: Tu intento de robo da fruto. Las sospechas son otra parte del asunto.
+  en: Your theft bears fruit. Suspicion is another part of the matter.
+- es: Las monedas cambian de manos por tu acción. No confundes el botín con la impunidad.
+  en: The coins change hands through your action. You do not mistake the haul for impunity.
+- es: Obtienes las monedas que intentabas robar. El resto lo cuentan las consecuencias del acto.
+  en: You obtain the coins you tried to steal. The consequences of the act tell the rest.
+- es: Tu mano logra el objetivo del robo. Eso no garantiza silencio a tu alrededor.
+  en: Your hand achieves the theft's aim. That does not guarantee silence around you.
+- es: El robo se consuma en {place}. Conseguirlo y no despertar sospechas son cosas distintas.
+  en: The theft is accomplished in {place}. Succeeding and avoiding suspicion are different things.
+- es: Te haces con las monedas. El acierto queda registrado junto a sus consecuencias.
+  en: You take possession of the coins. The success is recorded alongside its consequences.
+- es: La sustracción tiene éxito. No hay en ese éxito una promesa de seguridad.
+  en: The theft succeeds. That success contains no promise of safety.
+- es: Consigues lo que buscaba este intento de robo. Aetherfall no borra por ello lo ocurrido.
+  en: You achieve what this theft attempted. Aetherfall does not erase the deed for that.
+- es: El intento termina con las monedas en tu poder. El relato no oculta cómo llegaron.
+  en: The attempt ends with the coins in your possession. The account does not conceal how they arrived.
+- es: Robas las monedas en {place}. Lo sucedido tiene un nombre, aunque no una excusa.
+  en: You steal the coins in {place}. The deed has a name, if not an excuse.
+- es: El botín del robo pasa a tus manos. Que el intento prospere no vuelve inocente el gesto.
+  en: The theft's haul passes into your hands. Success does not make the gesture innocent.
+steal_failure:
+- es: Te descubren durante el intento de robo. Las monedas no llegan a tus manos.
+  en: You are caught during the attempted theft. The coins never reach your hands.
+- es: El robo fracasa y quedas al descubierto. No hay botín que celebrar.
+  en: The theft fails and you are exposed. There is no haul to celebrate.
+- es: Tu intento es advertido antes de conseguir las monedas. La discreción no te acompaña esta vez.
+  en: Your attempt is noticed before you get the coins. Discretion does not favour you this time.
+- es: No logras consumar el robo. Te han sorprendido en el intento.
+  en: You fail to complete the theft. You have been caught in the attempt.
+- es: La mano que buscaba monedas queda en evidencia. El robo termina en fracaso.
+  en: The hand seeking coins is exposed. The theft ends in failure.
+- es: En {place}, tu intento de robo no pasa inadvertido. Las monedas siguen fuera de tu alcance.
+  en: In {place}, your attempted theft does not go unnoticed. The coins remain beyond your grasp.
+- es: Te pillan antes de obtener el botín. El intento ya no puede ocultarse.
+  en: You are caught before obtaining the haul. The attempt can no longer be hidden.
+- es: El robo se malogra. Queda claro lo que estabas intentando.
+  en: The theft goes wrong. What you were attempting is clear.
+- es: No consigues las monedas y tu propósito queda expuesto.
+  en: You do not get the coins, and your purpose is exposed.
+- es: Esta vez el robo no tiene éxito. Te descubren en plena tentativa.
+  en: This time the theft does not succeed. You are discovered in the attempt.
+- es: El intento de sustraer monedas termina contigo al descubierto.
+  en: The attempt to take coins ends with you exposed.
+- es: Tu tentativa fracasa en {place}. No has obtenido el botín, y te han visto intentarlo.
+  en: Your attempt fails in {place}. You have not gained the haul, and you were seen trying.
 rest:
-  - es: "{name} se deja caer y cierra los ojos. Por fin, un respiro."
-    en: "{name} sinks down and closes their eyes. At last, a breather."
+- es: Comienzas a descansar en {place}. Por ahora, basta con concederte esa pausa.
+  en: You begin resting in {place}. For now, it is enough to allow yourself that pause.
+- es: Dejas que empiece el reposo. Hasta en Aetherfall hay momentos para bajar el ritmo.
+  en: You let rest begin. Even in Aetherfall there are moments to slow down.
+- es: Tu descanso comienza. La espera tiene una medida distinta a la prisa del camino.
+  en: Your rest begins. Waiting has a different measure from the haste of the road.
+- es: Te dispones a reposar en {place}. No es tiempo todavía de dar la pausa por terminada.
+  en: You settle into rest in {place}. It is not yet time to call the pause over.
+- es: Haces sitio al descanso. El mundo puede seguir girando mientras empieza tu reposo.
+  en: You make room for rest. The world can keep turning as your respite begins.
+- es: Inicias una pausa en {place}. La quietud también pide su tiempo.
+  en: You begin a pause in {place}. Stillness asks for its time too.
+- es: Empiezas a descansar. Por una vez, la urgencia tendrá que esperar.
+  en: You start resting. For once, urgency will have to wait.
+- es: Tu reposo apenas comienza. Dejas que el tiempo haga su parte.
+  en: Your rest has only just begun. You let time play its part.
+- es: La pausa empieza en {place}. Todavía queda descanso por delante.
+  en: The pause begins in {place}. There is still rest ahead.
+- es: Te concedes el comienzo de un descanso. No todo se consigue apresurando los pasos.
+  en: You allow yourself the beginning of a rest. Not everything is gained by hurrying your steps.
+- es: En {place}, comienzas a reposar. El siguiente momento puede llegar sin que lo persigas.
+  en: In {place}, you begin to rest. The next moment can arrive without your chasing it.
+- es: Das inicio a tu descanso. Esta vez, esperar forma parte del camino.
+  en: You begin your rest. This time, waiting is part of the journey.
+use_item:
+- es: Recurres al objeto que has elegido. En Aetherfall, lo que llevas contigo también cuenta.
+  en: You turn to the item you chose. In Aetherfall, what you carry matters too.
+- es: Utilizas el objeto en {place}. Un recurso deja de ser una posibilidad y entra en juego.
+  en: You use the item in {place}. A resource stops being a possibility and comes into play.
+- es: Haces uso del objeto. Las decisiones pequeñas también tienen su momento.
+  en: You make use of the item. Small decisions have their moment too.
+- es: 'Tu elección está hecha: utilizas el objeto. No siempre hacen falta grandes gestos.'
+  en: 'Your choice is made: you use the item. Great gestures are not always needed.'
+- es: Empleas el objeto elegido en {place}. Lo cotidiano también forma parte de la aventura.
+  en: You employ the chosen item in {place}. The ordinary is part of adventure too.
+- es: Recurres a lo que tienes a mano. El uso del objeto ocupa este instante de tu atención.
+  en: You turn to what you have at hand. Using the item occupies this moment of your attention.
+- es: 'Utilizas el objeto sin perder de vista dónde estás: {place}.'
+  en: 'You use the item without losing sight of where you are: {place}.'
+- es: El objeto que elegiste entra en uso. Hasta los recursos modestos tienen un lugar en Aetherfall.
+  en: The item you chose comes into use. Even modest resources have a place in Aetherfall.
+- es: Has usado el objeto. Tu atención vuelve a lo que te rodea.
+  en: You have used the item. Your attention returns to your surroundings.
+- es: En {place}, haces uso de tu recurso. Una elección concreta entre tantas incertidumbres.
+  en: In {place}, you make use of your resource. One definite choice among so many uncertainties.
+- es: Usas lo que has elegido. En este mundo, prepararse también consiste en saber cuándo recurrir a ello.
+  en: You use what you chose. In this world, preparation also means knowing when to turn to it.
+- es: El uso del objeto queda hecho. El momento pasa y tú sigues atento a tu situación.
+  en: The item has been used. The moment passes and you remain attentive to your situation.
+quest:
+- es: Intervienes en el asunto que te ocupa. En Aetherfall, los compromisos rara vez son ligeros.
+  en: You intervene in the matter at hand. In Aetherfall, commitments are seldom light.
+- es: Tu acción se entrelaza con este encargo. Hay historias que pesan más al formar parte de ellas.
+  en: Your action becomes woven into this undertaking. Some stories weigh more when you become part of them.
+- es: Das este paso en la misión. Los juramentos y las decisiones comparten una larga sombra.
+  en: You take this step in the quest. Oaths and decisions share a long shadow.
+- es: Actúas en {place}, con este asunto todavía en tu atención. No todos los hilos son fáciles de seguir.
+  en: You act in {place}, with this matter still holding your attention. Not every thread is easy to follow.
+- es: Tu intervención queda ligada a la misión. Aetherfall tiene memoria para los compromisos.
+  en: Your intervention becomes tied to the quest. Aetherfall has a memory for commitments.
+- es: Haces tu parte en este momento del encargo. La historia ya te incluye entre sus nombres.
+  en: You play your part in this moment of the undertaking. The story already includes you among its names.
+- es: Llevas a cabo la acción elegida. Este asunto tiene ahora otro instante con tu nombre.
+  en: You carry out the chosen action. This matter now has another moment bearing your name.
+- es: La misión ocupa de nuevo tu atención. Actúas entre preguntas que no siempre admiten respuestas sencillas.
+  en: The quest holds your attention again. You act among questions that do not always allow simple answers.
+- es: Tu elección cobra forma en {place}. Los asuntos de Aetherfall rara vez se dejan mirar desde fuera.
+  en: Your choice takes shape in {place}. The matters of Aetherfall seldom let you watch from outside.
+- es: Intervienes en este encargo. Hay una diferencia entre oír una historia y encontrarte dentro de ella.
+  en: You intervene in this undertaking. There is a difference between hearing a story and finding yourself inside
+    it.
+- es: Tu acción se suma a este asunto. El peso de los compromisos no siempre hace ruido.
+  en: Your action joins this matter. The weight of commitments does not always make a sound.
+- es: Este paso de la misión ya está dado. En {place}, tu historia y este encargo vuelven a encontrarse.
+  en: This step of the quest has been taken. In {place}, your story and this undertaking meet again.
+no_effect:
+- es: Tu intención queda en palabras. El mundo no cambia por ella.
+  en: Your intention remains in words. The world does not change through it.
+- es: No se produce ningún efecto con este intento. En {place}, la situación permanece igual.
+  en: This attempt produces no effect. In {place}, the situation remains unchanged.
+- es: Lo que planteas no se convierte en una acción efectiva.
+  en: What you propose does not become an effective action.
+- es: Tus palabras no alteran el curso de los hechos.
+  en: Your words do not alter the course of events.
+- es: Este intento no cambia la situación. No hay consecuencias nuevas que narrar.
+  en: This attempt does not change the situation. There are no new consequences to tell.
+- es: La intención no basta para modificar lo que te rodea.
+  en: Intention is not enough to change what surrounds you.
+- es: No ocurre nada nuevo como resultado de este intento.
+  en: Nothing new happens as a result of this attempt.
+- es: En {place}, lo que has expresado queda sin efecto.
+  en: In {place}, what you expressed has no effect.
+- es: Tu propuesta no modifica el estado de las cosas.
+  en: Your proposal does not change the state of things.
+- es: Este momento no trae un cambio a tu situación.
+  en: This moment brings no change to your situation.
+- es: El intento queda sin efecto sobre el mundo.
+  en: The attempt has no effect on the world.
+- es: No hay una acción resuelta detrás de estas palabras.
+  en: There is no resolved action behind these words.
+combat:
+- es: El enfrentamiento sigue abierto. Tu acción forma parte de una lucha aún sin desenlace.
+  en: The confrontation remains open. Your action is part of a fight not yet decided.
+- es: La lucha continúa en {place}. Este intercambio no pone fin al combate.
+  en: The fight continues in {place}. This exchange does not end the battle.
+- es: Tu turno queda escrito entre los hechos del combate. Todavía no hay un final.
+  en: Your turn is written among the facts of the battle. There is no ending yet.
+- es: El combate sigue su curso contigo. No se ha decidido aún.
+  en: The battle runs its course with you. It has not yet been decided.
+- es: En {place}, la confrontación permanece abierta tras tu acción.
+  en: In {place}, the confrontation remains open after your action.
+- es: Tu intervención se resuelve dentro de una lucha que continúa.
+  en: Your intervention resolves within a fight that continues.
+- es: Este momento del combate ya tiene resultado. El enfrentamiento entero, todavía no.
+  en: This moment of the battle has its result. The whole confrontation does not yet.
+- es: La lucha no concluye con este intercambio. Tu historia sigue dentro de ella.
+  en: The fight does not conclude with this exchange. Your story remains within it.
+- es: Otro instante del enfrentamiento queda atrás. El combate permanece activo.
+  en: Another instant of the confrontation passes. The battle remains active.
+- es: Tu acción encuentra respuesta en los hechos. La lucha aún no termina.
+  en: Your action finds its answer in the facts. The fight is not over yet.
+- es: El desenlace del combate sigue pendiente. Este intercambio ya forma parte del relato.
+  en: The battle's outcome is still pending. This exchange is now part of the account.
+- es: En {place}, tu enfrentamiento continúa sin una conclusión definitiva.
+  en: In {place}, your confrontation continues without a final conclusion.
+victory:
+- es: El combate termina con tu victoria. El desenlace ya no pende de un hilo.
+  en: The battle ends in your victory. The outcome no longer hangs by a thread.
+- es: Vences en este enfrentamiento. El relato no necesita convertirlo en una victoria fácil.
+  en: You win this confrontation. The account need not turn it into an easy victory.
+- es: La lucha se resuelve a tu favor. Este combate ya ha terminado.
+  en: The fight resolves in your favour. This battle is over.
+- es: Tu victoria pone fin al enfrentamiento. Lo demás queda en sus consecuencias.
+  en: Your victory ends the confrontation. The rest lies in its consequences.
+- es: 'El desenlace te favorece: has ganado el combate.'
+  en: 'The outcome favours you: you have won the battle.'
+- es: La confrontación concluye contigo del lado vencedor.
+  en: The confrontation concludes with you on the winning side.
+- es: Ganas esta batalla de tu historia. No hace falta exagerar lo ocurrido.
+  en: You win this battle in your story. There is no need to exaggerate what happened.
+- es: El resultado final es una victoria para ti. La lucha deja de estar pendiente.
+  en: The final result is a victory for you. The fight is no longer undecided.
+- es: Tu enfrentamiento termina en triunfo. El alcance de ese triunfo lo marcan los hechos.
+  en: Your confrontation ends in triumph. The facts define the scope of that triumph.
+- es: Has vencido. El combate queda cerrado con ese desenlace.
+  en: You have won. The battle closes with that outcome.
+- es: 'La victoria ya no es una posibilidad: es el resultado de tu combate.'
+  en: 'Victory is no longer a possibility: it is your battle''s result.'
+- es: Esta lucha acaba a tu favor. La crónica guarda tu victoria tal como ocurrió.
+  en: This fight ends in your favour. The chronicle keeps your victory as it happened.
+defeat:
+- es: El combate termina en derrota. Aetherfall no ha cedido esta vez.
+  en: The battle ends in defeat. Aetherfall has not yielded this time.
+- es: Pierdes el enfrentamiento. Hasta las voluntades más firmes conocen el revés.
+  en: You lose the confrontation. Even the firmest wills know setbacks.
+- es: La lucha se resuelve en tu contra. Sus consecuencias quedan en los hechos.
+  en: The fight resolves against you. Its consequences remain in the facts.
+- es: Esta batalla no termina a tu favor. La derrota cierra el combate.
+  en: This battle does not end in your favour. Defeat closes the fight.
+- es: El resultado es una derrota para ti. No hay victoria que inventar.
+  en: The result is a defeat for you. There is no victory to invent.
+- es: Tu resistencia no basta para ganar este enfrentamiento. El combate concluye.
+  en: Your resistance is not enough to win this confrontation. The battle concludes.
+- es: La lucha termina y has perdido. Tu relato conserva ese desenlace sin desprecio.
+  en: The fight ends and you have lost. Your account keeps that outcome without contempt.
+- es: El desenlace adverso pone fin al enfrentamiento. Esta vez no venciste.
+  en: The adverse outcome ends the confrontation. This time you did not win.
+- es: Tu combate queda cerrado por una derrota. El mundo no concede todas las victorias.
+  en: Your battle closes in defeat. The world does not grant every victory.
+- es: La victoria no te corresponde en esta lucha. Su resultado ya es definitivo.
+  en: Victory is not yours in this fight. Its result is now final.
+- es: Pierdes esta batalla de tu historia. Los hechos cuentan sus consecuencias.
+  en: You lose this battle in your story. The facts tell its consequences.
+- es: El enfrentamiento concluye en tu contra. La crónica no confunde derrota con deshonra.
+  en: The confrontation concludes against you. The chronicle does not mistake defeat for dishonour.
+fled:
+- es: Logras huir del combate. El enfrentamiento termina para ti con esa retirada.
+  en: You manage to flee the battle. The confrontation ends for you with that retreat.
+- es: Tu huida tiene éxito. La lucha queda atrás sin una victoria que atribuirte.
+  en: Your escape succeeds. The fight is behind you, without a victory to claim.
+- es: Abandonas el enfrentamiento mediante la huida. Ese es el desenlace.
+  en: You leave the confrontation by fleeing. That is the outcome.
+- es: Consigues retirarte del combate. Los hechos determinan qué consecuencias deja.
+  en: You manage to retreat from battle. The facts determine its consequences.
+- es: La lucha termina para ti al escapar. No hace falta llamar triunfo a la retirada.
+  en: The fight ends for you when you escape. There is no need to call retreat a triumph.
+- es: Tu intento de huida prospera. Ya no continúas dentro de ese combate.
+  en: Your escape attempt succeeds. You are no longer in that battle.
+- es: Sales del enfrentamiento por la vía de la retirada.
+  en: You leave the confrontation by retreating.
+- es: La huida pone fin a tu participación en la lucha.
+  en: Escape ends your participation in the fight.
+- es: Consigues abandonar el combate. Dejas atrás la lucha, sin llamar victoria a tu retirada.
+  en: You manage to leave the battle. You leave the fight behind without calling your retreat a victory.
+- es: Tu salida del enfrentamiento se resuelve con éxito. Has huido.
+  en: Your exit from the confrontation succeeds. You have fled.
+- es: El combate queda atrás tras tu retirada. Lo sucedido mantiene su propio peso.
+  en: The battle is behind you after your retreat. What happened keeps its own weight.
+- es: Escapas de la lucha. Esta parte de tu historia termina con una huida efectiva.
+  en: You escape the fight. This part of your story ends with a successful flight.

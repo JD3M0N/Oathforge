@@ -222,7 +222,7 @@ class GeminiLLM:
 
     async def text(self, *, tier: Tier, system: str, prompt: str, user_id: int | None) -> str | None:
         raw = await self._generate(tier, system, prompt, user_id)
-        return raw.strip() if raw else None
+        return (raw.strip() or None) if raw else None
 
 
 def build_llm(settings: Settings | None = None) -> LLM:

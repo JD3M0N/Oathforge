@@ -37,7 +37,17 @@ FALLBACK_PLACEHOLDERS = {
     "narration": {"name", "place"},
     "freetext": {"name"},
 }
-FALLBACK_KEYS = {"dialogue": ("default",), "narration": ("default",), "freetext": ("unavailable",)}
+CHRONICLE_SKILLS = ("mining", "woodcutting", "herbalism", "fishing")
+CHRONICLE_KEYS = CHRONICLE_OUTCOMES + tuple(
+    f"{outcome}.{skill}" for outcome in CHRONICLE_OUTCOMES[:5] for skill in CHRONICLE_SKILLS
+)
+FALLBACK_KEYS = {
+    "chronicles": CHRONICLE_KEYS,
+    "dialogue": ("default",),
+    "narration": ("default", "success", "failure", "travel", "steal_success", "steal_failure",
+                  "rest", "use_item", "quest", "no_effect", "combat", "victory", "defeat", "fled"),
+    "freetext": ("unavailable", "budget_exhausted"),
+}
 
 # crafting stations a location can have (Location.stations); each profession works at one
 Station = Literal[

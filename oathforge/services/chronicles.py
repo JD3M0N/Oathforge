@@ -64,15 +64,15 @@ def _values(act: WorldActivity, char: Character, lang: str) -> dict:
     return {
         "name": char.name,
         "place": c.locations[act.location].name.get(lang),
-        "loot": activities.loot_text(res.get("items") or {})[lang],
-        "monster": c.monsters[monster].name.get(lang) if monster in c.monsters else "",
+        "loot": activities.loot_text(res["items"])[lang] if res.get("items") else t(lang, "chronicle.no_loot"),
+        "monster": c.monsters[monster].name.get(lang) if monster in c.monsters else t(lang, "chronicle.creature"),
     }
 
 
 def generic(act: WorldActivity, char: Character, lang: str) -> str:
     """A hand-written text for this outcome, picked by the activity's seed."""
     return fallbacks.pick("chronicles", (act.result or {}).get("outcome", "gather"), lang, seed=act.seed,
-                          **_values(act, char, lang))
+                          context=act.skill, **_values(act, char, lang))
 
 
 def _facts(act: WorldActivity, char: Character) -> list[str]:
@@ -83,7 +83,7 @@ def _facts(act: WorldActivity, char: Character) -> list[str]:
         facts.append(f"Materials the hero brings back: {v['loot']}.")
     elif res["outcome"] in ("stay_lost",):
         facts.append("The hero brings back nothing.")
-    if v["monster"]:
+    if res.get("monster") in get_content().monsters:
         facts.append(f"Creature involved: {v['monster']}.")
     if res.get("xp"):
         facts.append(f"The hero's {characters.mastery_name(act.skill)['en'].lower()} skill improved a little.")
