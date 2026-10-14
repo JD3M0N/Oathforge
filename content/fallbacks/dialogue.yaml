@@ -1,4 +1,4 @@
-# Respaldo bilingüe; condiciones y marcadores en README.md.
+# Respaldo bilingüe; condiciones y marcadores en planning/ia-y-narracion.md.
 default:
 - es: '{npc} te dedica un gesto breve. «Te escucho, pero no tengo una respuesta.»'
   en: '{npc} gives you a brief nod. "I hear you, but I have no answer."'

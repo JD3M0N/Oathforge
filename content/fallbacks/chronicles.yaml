@@ -1,4 +1,4 @@
-# Crónicas por desenlace y oficio; ver README.md.
+# Crónicas por desenlace y oficio; ver planning/ia-y-narracion.md.
 gather:
 - es: '{name}, tu expedición en {place} llega a su desenlace. El trabajo transcurre sin sobresaltos. Al terminar,
     has obtenido {loot}.'

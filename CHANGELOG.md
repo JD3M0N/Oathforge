@@ -4,6 +4,11 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.2] - 2026-10-14
+
+### Cambiado
+- La guía de los textos de respaldo pasa de `content/fallbacks/README.md` a `planning/ia-y-narracion.md`; los YAML de respaldo apuntan ahí.
+
 ## [0.7.1] - 2026-10-14
 
 ### Añadido
