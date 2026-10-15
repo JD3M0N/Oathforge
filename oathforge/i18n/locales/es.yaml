@@ -118,6 +118,9 @@ btn:
   rulebook: "📘 Reglamento"
   full_sheet: "📜 Ficha completa"
   report: "📜 Informe"
+  summary_report: "📊 Resumen"
+  full_report: "📜 Informe"
+  powers: "✨ Acciones"
   summary: "📜 Resumen"
   first_round: "Ronda 1 ▶"
   prev_round: "◀ Ronda anterior"
@@ -463,6 +466,8 @@ combat:
   start: "Combate contra: {enemies}.\n👁 Míralos: {links}"
   hp_left: " · ❤️ {hp}/{max_hp}"
   round: "── Ronda {round} ──"
+  round_zero: "── Ronda 0 · Iniciativa ──"
+  powers_title: "✨ <b>Acciones</b>: elige un poder"
   initiative: "⏱️ Iniciativa: {order}"
   adv: " con ventaja"
   dis: " con desventaja"
@@ -652,7 +657,8 @@ classes:
   specializations: "🌟 <b>Especializaciones (nivel 5)</b>"
 
 report:
-  title: "📜 <b>Informe de batalla</b> · {place}"
+  title: "📊 <b>Resumen de batalla</b> · {place}"
+  full_title: "📜 <b>Informe de batalla</b> · {place}"
   none: "Todavía no has terminado ninguna batalla."
   result:
     victory: "Victoria"

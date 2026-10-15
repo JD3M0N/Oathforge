@@ -27,7 +27,7 @@ log = logging.getLogger(__name__)
 
 # verbs that only show something (no nonce, no state change)
 VIEWS = {"scene", "trv", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jrl", "jq", "jrb", "jb", "jbi", "jrr",
-         "shopm", "shop", "sellm", "cbp", "lang", "city", "cls", "clsl", "rep", "prof", "profsw", "profcf", "pg", "crf", "rb",
+         "shopm", "shop", "sellm", "cbp", "lang", "city", "cls", "clsl", "rep", "prof", "profsw", "profcf", "pg", "crf", "rb", "repf",
          "mst", "hob"}
 
 
@@ -134,6 +134,13 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             enc_id, _, page = arg.partition(":")
             report = await combat_service.battle_report(session, char, int(enc_id) if enc_id.isdigit() else None)
             text, kb = render.report_page(report, int(page) if page.isdigit() else 0, lang)
+        elif verb == "repf":  # the full report: every round, in as many messages as needed, then the summary
+            report = await combat_service.battle_report(session, char, int(arg) if arg.isdigit() else None)
+            for message in render.full_report(report, lang):
+                await send(update, message)
+            text, kb = render.report_page(report, 0, lang)
+            await send(update, text, kb)
+            return
         elif verb == "prof":
             text, kb = render.professions_view(char, lang)
         elif verb == "profsw" and not in_combat:
@@ -385,8 +392,9 @@ async def _combat(update: Update, context, arg: str, n: str) -> None:
             await edit_or_send(update, text, kb)
             return
 
-        if kind == "itms":  # the list of scrolls and bombs
-            text, kb = render.combat_panel(char, enc.state, lang, target_menu="items", version=enc.version)
+        if kind in ("itms", "pwrs"):  # the list of scrolls and bombs, or of class powers
+            menu = "items" if kind == "itms" else "powers"
+            text, kb = render.combat_panel(char, enc.state, lang, target_menu=menu, version=enc.version)
             await edit_or_send(update, text, kb)
             return
 

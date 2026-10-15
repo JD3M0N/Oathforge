@@ -145,8 +145,11 @@ class Action(BaseModel):
 
 def start(state: EncounterState, rng: random.Random) -> list[LogEntry]:
     """Roll initiative, then let enemies act until it is a player's turn."""
-    for c in state.combatants.values():
-        c.initiative = d20(rng).kept + c.dex_mod
+    rolls = {}
+    for cid, c in state.combatants.items():
+        r = d20(rng).kept
+        c.initiative = r + c.dex_mod
+        rolls[cid] = [r, c.dex_mod]
     state.order = sorted(
         state.combatants,
         key=lambda cid: (
@@ -157,8 +160,9 @@ def start(state: EncounterState, rng: random.Random) -> list[LogEntry]:
         reverse=True,
     )
     state.turn_index = 0
-    logs = [LogEntry(key="combat.round", params={"round": state.round}),
-            LogEntry(key="combat.initiative", params={"order": list(state.order)})]
+    logs = [LogEntry(key="combat.round", params={"round": 0}),  # round 0: who goes first
+            LogEntry(key="combat.initiative", params={"order": list(state.order), "rolls": rolls}),
+            LogEntry(key="combat.round", params={"round": state.round})]
     logs += _begin_turn(state, rng)
     logs += _run_enemies(state, rng)
     _append(state, logs)
@@ -511,6 +515,8 @@ def _attack(state, attacker, target, profile: AttackProfile, rng, extra, weapon:
         "actor": attacker.id, "target": target.id, "weapon": profile.name,
         "roll": r.kept, "total": total, "ac": target.ac, "adv": adv and not dis, "dis": dis and not adv,
     }
+    if len(r.rolls) > 1:  # advantage or disadvantage: both dice, and which one counts
+        params["rolls"] = list(r.rolls)
     if not hit:
         return [LogEntry(key="combat.miss", params=params)]
 

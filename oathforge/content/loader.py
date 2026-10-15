@@ -233,6 +233,9 @@ def validate_references(c: Content) -> None:
             for i in disc.gives:
                 need("item", i, c.items, f"location {key} discovery {dkey}")
     errors += _city_graph_errors(c)
+    for key, cls in c.classes.items():
+        for a in cls.signature:
+            need("ability", a, cls.abilities, f"class {key} signature")
     for key, recipe in c.recipes.items():
         need("profession", recipe.profession, c.professions, f"recipe {key}")
         for i in [*recipe.ingredients, *recipe.outputs]:

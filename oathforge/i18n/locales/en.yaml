@@ -118,6 +118,9 @@ btn:
   rulebook: "📘 Rulebook"
   full_sheet: "📜 Full sheet"
   report: "📜 Report"
+  summary_report: "📊 Summary"
+  full_report: "📜 Report"
+  powers: "✨ Actions"
   summary: "📜 Summary"
   first_round: "Round 1 ▶"
   prev_round: "◀ Previous round"
@@ -463,6 +466,8 @@ combat:
   start: "Fighting: {enemies}.\n👁 See them: {links}"
   hp_left: " · ❤️ {hp}/{max_hp}"
   round: "── Round {round} ──"
+  round_zero: "── Round 0 · Initiative ──"
+  powers_title: "✨ <b>Actions</b>: pick a power"
   initiative: "⏱️ Initiative: {order}"
   adv: " with advantage"
   dis: " with disadvantage"
@@ -652,7 +657,8 @@ classes:
   specializations: "🌟 <b>Specializations (level 5)</b>"
 
 report:
-  title: "📜 <b>Battle report</b> · {place}"
+  title: "📊 <b>Battle summary</b> · {place}"
+  full_title: "📜 <b>Battle report</b> · {place}"
   none: "You haven't finished any battle yet."
   result:
     victory: "Victory"

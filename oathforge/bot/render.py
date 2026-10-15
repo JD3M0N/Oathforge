@@ -1301,6 +1301,21 @@ async def rumors(session: AsyncSession, lang: str) -> tuple[str, InlineKeyboardM
 
 # ---------------------------------------------------------------- combat
 
+def combat_powers(state: EncounterState, me, defs: dict, lang: str) -> list[tuple[str, str]]:
+    """Class powers usable right now: actions (✨) while the action is free, then bonus actions (⚡)."""
+    out = []
+    if not me.action_used:
+        for key, uses in me.abilities.items():
+            a = defs.get(key)
+            if a is None or a.action != "action" or (uses is not None and uses <= 0):
+                continue
+            out.append((key, f"✨ {a.name.get(lang)}" + (f" ({uses})" if uses is not None else "")))
+    for key in available_bonus_actions(state, me, defs):
+        uses = me.abilities.get(key)
+        out.append((key, f"⚡ {defs[key].name.get(lang)}" + (f" ({uses})" if uses is not None else "")))
+    return out
+
+
 def combat_token(version: int | None, turn_index: int) -> str:
     """Third field of every combat button: "<encounter.version>.<turn_index>.<nonce>"."""
     return f"{version or 0}.{turn_index}.{nonce()}"
@@ -1320,7 +1335,7 @@ def combat_blocks(state: EncounterState, entries: list, lang: str, with_end: boo
             continue
         text = escape(render_event(combat_service.log_event(state, e), lang))
         if e.key == "combat.round":
-            blocks.append([f"<i>{text}</i>"])
+            blocks.append([f"<i>{t(lang, 'combat.round_zero') if e.params.get('round') == 0 else text}</i>"])
         elif e.key in FOLLOW_UPS and blocks and not blocks[-1][0].startswith("<i>"):
             blocks[-1].append(f"   └ {text}")
         else:
@@ -1373,8 +1388,30 @@ def report_page(report: "combat_service.BattleReport | None", page: int, lang: s
     rows = [nav] if nav else []
     if page > 1:
         rows.append([btn(t(lang, "btn.summary"), go(0))])
+    if pages:
+        rows.append([btn(t(lang, "btn.full_report"), cb("repf", str(report.encounter_id)))])
     rows.append(back)
     return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
+
+
+def full_report(report: "combat_service.BattleReport | None", lang: str) -> list[str]:
+    """The whole battle, round after round and blow by blow, in as many messages as it needs."""
+    if report is None:
+        return [t(lang, "report.none")]
+    c = get_content()
+    place = c.locations[report.location].name.get(lang) if report.location in c.locations else report.location
+    messages, lines = [], [t(lang, "report.full_title", place=escape(place)), RULE]
+    for number, entries in report.rounds:
+        title = t(lang, "combat.round_zero") if number == 0 else t(lang, "combat.round", round=number)
+        block = [f"<b>{title}</b>", *(line for b in combat_blocks(report.state, entries, lang) for line in b
+                                      if not line.startswith("<i>")), ""]
+        if sum(len(x) + 1 for x in lines + block) > MAX_MESSAGE:
+            messages.append("\n".join(lines).rstrip())
+            lines = []
+        lines += block
+    lines.append(f"{REPORT_ICON.get(report.status, '⚔️')} <b>{t(lang, 'report.result.' + report.status)}</b>")
+    messages.append("\n".join(lines).rstrip())
+    return [m[:MAX_MESSAGE] for m in messages]
 
 
 def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str | None = None,
@@ -1407,7 +1444,8 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
         if beasts:
             rows.append([btn(t(lang, "btn.skin", seconds=activities.skin_seconds(beasts)),
                              cb("act", "skin:skinning", nonce()))])
-        rows.append([btn(t(lang, "btn.report"), cb("rep")), btn(t(lang, "btn.continue"), cb("scene"))])
+        rows.append([btn(t(lang, "btn.summary_report"), cb("rep")), btn(t(lang, "btn.full_report"), cb("repf"))])
+        rows.append([btn(t(lang, "btn.continue"), cb("scene"))])
         return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
 
     me = state.combatants["p1"]
@@ -1424,7 +1462,7 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
         rows.append([btn(t(lang, "btn.back"), cb("cbp"))])
         return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
 
-    if target_menu:
+    if target_menu and target_menu != "powers":
         kind, _, arg = target_menu.partition(":")
         spell = kind == "abl" and arg in defs and defs[arg].kind in ("spell", "save", "curse")
         ranged = any(a.key == arg and a.ranged for a in me.attacks) or kind in ("obj", "itm") or spell
@@ -1433,20 +1471,23 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
         rows.append([btn(t(lang, "btn.back"), cb("cbp"))])
         return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
 
-    buttons = []
+    powers = combat_powers(state, me, defs, lang)  # [(key, label)], action abilities then bonus ones
+    featured = next((p for k in c.classes[char.class_key].signature for p in powers if p[0] == k), None)
+    if target_menu == "powers":  # "✨ Actions": every other power you can use now
+        lines[-1] = t(lang, "combat.powers_title")
+        rows += [[btn(label, cb("cb", f"abl:{key}", n))] for key, label in powers if (key, label) != featured]
+        rows.append([btn(t(lang, "btn.back"), cb("cbp"))])
+        return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
+
+    top = []
     if not me.action_used:
-        for a in me.attacks:
-            buttons.append(btn(f"⚔️ {a.name[lang]}", cb("cb", f"atk:{a.key}", n)))
-        for key, uses in me.abilities.items():
-            a = defs.get(key)
-            if a is None or a.action != "action" or (uses is not None and uses <= 0):
-                continue
-            label = f"✨ {a.name.get(lang)}" + (f" ({uses})" if uses is not None else "")
-            buttons.append(btn(label, cb("cb", f"abl:{key}", n)))
-    for key in available_bonus_actions(state, me, defs):
-        uses = me.abilities.get(key)
-        label = f"⚡ {defs[key].name.get(lang)}" + (f" ({uses})" if uses is not None else "")
-        buttons.append(btn(label, cb("cb", f"abl:{key}", n)))
+        top = [btn(f"⚔️ {a.name[lang]}", cb("cb", f"atk:{a.key}", n)) for a in me.attacks]
+    if featured:
+        top.append(btn(f"🌟 {featured[1].split(' ', 1)[1]}", cb("cb", f"abl:{featured[0]}", n)))
+    rows += grid(top)
+    buttons = []
+    if any(p != featured for p in powers):
+        buttons.append(btn(t(lang, "btn.powers"), cb("cb", "pwrs", n)))
     if not me.action_used:
         buttons.append(btn(t(lang, "btn.defend"), cb("cb", "def", n)))
         if me.consumables.get("healing_potion", 0) > 0:
@@ -1463,6 +1504,6 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
     if not me.action_used:
         buttons.append(btn(t(lang, "btn.flee"), cb("cb", "flee", n)))
     buttons.append(btn(t(lang, "btn.end_turn"), cb("cb", "end", n)))
-    rows = grid(buttons)
+    rows += grid(buttons)
     lines.append(f"<i>{t(lang, 'combat.hint')}</i>")
     return "\n".join(lines)[:MAX_MESSAGE], markup(rows)

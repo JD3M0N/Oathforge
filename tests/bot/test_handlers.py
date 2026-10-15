@@ -211,13 +211,20 @@ async def test_combat_through_buttons(llm):
     assert any("XP" in t_ for t_, _ in p.chat.sent[-3:])
     # battle report: the button on the final panel, then the rounds, then /report
     await p.press(p.find("rep"))
-    assert "Battle report" in p.last[0] and "Victory" in p.last[0]
+    assert "Battle summary" in p.last[0] and "Victory" in p.last[0]
     await p.press(p.find("rep", f"{enc.id}:1"))
-    assert "Round 1" in p.last[0] and "Initiative" in p.last[0]
+    assert "Round 0" in p.last[0] and "Initiative" in p.last[0]  # who goes first, before round 1
+    await p.press(p.find("rep", f"{enc.id}:2"))
+    assert "Round 1" in p.last[0]
     from oathforge.bot.handlers import commands
     report = next(h for h in commands.handlers() if "report" in getattr(h, "commands", ()))
     await report.callback(p.update(message="/report"), p.ctx)
-    assert "Battle report" in p.last[0]
+    assert "Battle summary" in p.last[0]
+    sent = len(p.chat.sent)
+    await p.press(p.find("repf"))  # every round in detail, then the summary again
+    full = "".join(t_ for t_, _ in p.chat.sent[sent:-1])
+    assert "Battle report" in full and "Round 0" in full and "Round 1" in full and "Victory" in full
+    assert "Battle summary" in p.last[0]
     await p.press(p.find("scene"))
     assert "Sunken Crypt" in p.last[0]
 
@@ -262,7 +269,9 @@ async def test_mage_fireball_asks_for_a_target_and_rolls_saves(llm):
     await p.press("scene|-|-")
     await p.press(p.find("trv"))
     await p.press(p.find("go", "crypt_entrance"))
-    assert p.find("cb", "abl:fire_bolt") and p.find("cb", "abl:sleep")
+    assert "abl:fire_bolt" in str(p.buttons()) and "abl:sleep" not in str(p.buttons())  # featured, the rest in ✨
+    await p.press(p.find("cb", "pwrs"))
+    assert "abl:sleep" in str(p.buttons()) and "abl:fire_bolt" not in str(p.buttons())
     await p.press(p.find("cb", "abl:fireball"))
     if any(parse(b)[1].count(":") == 2 for b in p.buttons()):  # target menu shown
         await p.press(next(b for b in p.buttons() if parse(b)[0] == "cb" and parse(b)[1].count(":") == 2))
@@ -280,6 +289,7 @@ async def test_warlock_hex_is_a_bonus_action_with_a_target(llm):
     await p.press(p.find("trv"))
     await p.press(p.find("go", "crypt_entrance"))
     assert p.find("cb", "abl:eldritch_blast")
+    await p.press(p.find("cb", "pwrs"))
     await p.press(p.find("cb", "abl:hex"))
     if any(parse(b)[1].count(":") == 2 for b in p.buttons()):  # target menu shown
         await p.press(next(b for b in p.buttons() if parse(b)[0] == "cb" and parse(b)[1].count(":") == 2))

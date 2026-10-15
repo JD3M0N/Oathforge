@@ -147,6 +147,8 @@ class GameClass(Strict):
     description: Text
     hit_die: int
     primary: str
+    # featured combat button: the first of these the hero has and can use (the rest go to "✨ Actions")
+    signature: list[str] = []
     casting: Literal["int", "wis", "cha"] | None = None  # spell attacks and healing use this modifier
     array: dict[str, int]
     skills: list[str]

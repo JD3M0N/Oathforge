@@ -188,10 +188,11 @@ async def test_tracking_prey_gives_trophies_and_skinning(monkeypatch):
         assert characters.mastery_xp(char, "tracking") == gathering.TRACK_XP_WIN
         act = await activity(s, cid)
         assert act.result["outcome"] == "track_won" and act.result["monster"] == "boar"
-        assert characters.pending_skin(char) == ["boar"]
+        beasts = characters.pending_skin(char)
+        assert beasts and set(beasts) == {"boar"}  # one or two boars, as the tracks led
         assert (await activities.start(s, char, "skin", "skinning", now)).ok and char.state == "busy"
-        out = await activities.claim(s, char, now + 15)
-        assert out.ok and characters.mastery_xp(char, "skinning") == gathering.SKIN_XP
+        out = await activities.claim(s, char, now + 15 * len(beasts))
+        assert out.ok and characters.mastery_xp(char, "skinning") == gathering.SKIN_XP * len(beasts)
         assert not characters.pending_skin(char)
 
 

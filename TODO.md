@@ -26,10 +26,10 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 
 - [ ] 🟡 IA enemiga táctica (proteger al sanador, priorizar amenazas) y jefes por fases con aviso previo.
 - [ ] 🟢 Nuevos tipos de acción: defender a un aliado, negociar una tregua, rendirse.
-- [ ] 🟢 Mostrar la **ronda 0** en el panel de combate: la tirada de iniciativa antes de la ronda 1.
-- [ ] 🟡 **Resumen e informe** de batalla por separado: lo que hoy sale en «📜 Informe» pasa a «Resumen», y el informe cuenta todas las rondas en detalle, qué hizo cada uno.
+- [x] La **ronda 0** en el panel y en el informe: la tirada de iniciativa de cada uno (d20 + DES) antes de la ronda 1 (v0.7.22).
+- [x] **Resumen e informe** de batalla por separado: «📊 Resumen» con las cifras y «📜 Informe» con todas las rondas seguidas, golpe a golpe (v0.7.22).
 - [x] Ver contra quién luchas: al empezar un combate, «👁 Míralos: /monster_<clave>» con **solo la imagen** de cada enemigo (v0.7.19).
-- [ ] 🟡 **Botones de combate por clase**: los normales, uno destacado con la habilidad principal de la clase (Golpe divino en el Paladín) y un botón «✨ Acciones» con el resto de poderes disponibles.
+- [x] **Botones de combate por clase**: los ataques, uno destacado 🌟 con la habilidad principal (`signature` en `classes.yaml`; Golpe Consagrado en el Paladín) y «✨ Acciones» con el resto de poderes (v0.7.22).
 
 ## 🧙 Clases y progresión · [clases.md](planning/clases.md) · [progresion.md](planning/progresion.md)
 
@@ -69,7 +69,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] **Botones fijos del juego** (teclado de Telegram) con lo principal: 🧝 Héroe, 🗺 Mapa, 🎒 Inventario, 📖 Diario (v0.7.17).
 - [ ] 🟡 ◐ Comandos nuevos: `/map`, `/quests`, `/rest`, `/party`. *Hecho: `/quests` (v0.5.0), `/settings` y `/prof_<oficio>` (v0.7.0), `/map` (v0.7.6).*
 - [ ] 🟡 Pruebas de habilidad más claras: hoy salen como «🎲 Survival: 2 → 3 vs DC 13 ❌».
-- [ ] 🟡 Con ventaja o desventaja, mostrar los dos d20 y cuál cuenta (hoy solo sale uno).
+- [x] Con ventaja o desventaja salen los dos d20 y cuál cuenta: «🎲 [6 · 14] → 14» (v0.7.22).
 - [ ] 🟢 Explicar las ⚠️ de los viajes (probabilidad de emboscada) y la leyenda ●/○/· de las competencias en `/sheet`.
 - [ ] 🟢 Gramática de los textos generados: «Llegas **al** Mercado», «Llegas **a la** Taberna…» (artículo por lugar) y «1 ronda» en singular en el informe.
 - [ ] 🟡 **Moverse por el mundo sin que sea tedioso** con `/map`: por ejemplo, tras matar al jefe de la Cripta, salir y volver a la ciudad desde el mapa. *Falta pensar el diseño.*

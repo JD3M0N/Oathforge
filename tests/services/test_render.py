@@ -223,9 +223,9 @@ async def test_battle_report(lang):
 
         report = await combat_service.battle_report(s, char)
         assert report.encounter_id == enc.id and report.status == "victory"
-        assert [n for n, _ in report.rounds] == list(range(1, len(report.rounds) + 1))
+        assert [n for n, _ in report.rounds] == list(range(0, len(report.rounds)))  # round 0: initiative
         assert report.rounds[0][1][0].key == "combat.initiative"  # the opening logs are kept too
-        assert len(report.rounds) == report.state.round
+        assert len(report.rounds) == report.state.round + 1
         everything = [e for _, es in report.rounds for e in es]
         dealt = sum(e.params["amount"] for e in everything if e.key == "combat.damage" and e.params["target"] != "p1")
         assert report.stats["dealt"] == dealt > 0

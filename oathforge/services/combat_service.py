@@ -224,6 +224,9 @@ def log_event(state: EncounterState, entry: LogEntry) -> Event:
     if isinstance(p.get("roll"), int) and isinstance(p.get("total"), int):  # 🎲 14 +5 = 19
         diff = p["total"] - p["roll"]
         p["bonus"] = f" {diff:+d}" if diff else ""
+    rolls = p.pop("rolls", None)
+    if isinstance(rolls, list) and len(rolls) == 2:  # 🎲 [6 · 14] → 14 +5 = 19
+        p["roll"] = f"[{rolls[0]} · {rolls[1]}] → {p['roll']}"
     if "row" in p:
         p["row"] = _both(f"row.{p['row']}")
     if "success" in p:
@@ -237,10 +240,15 @@ def log_event(state: EncounterState, entry: LogEntry) -> Event:
         p.pop("crit", None)
     if "order" in p:
         order = p.pop("order")
-        p["order"] = {
-            lang: " · ".join(f"{state.combatants[i].name[lang]} {state.combatants[i].initiative}" for i in order)
-            for lang in ("es", "en")
-        }
+        dice = rolls if isinstance(rolls, dict) else {}  # since v0.7.22: each d20 and its DEX modifier
+
+        def one(i, lang):
+            name, total = state.combatants[i].name[lang], state.combatants[i].initiative
+            if i in dice:
+                d, mod = dice[i]
+                return f"{name} {total} (🎲 {d}{mod:+d})" if mod else f"{name} {total} (🎲 {d})"
+            return f"{name} {total}"
+        p["order"] = {lang: " · ".join(one(i, lang) for i in order) for lang in ("es", "en")}
     return Event(entry.key, p)
 
 

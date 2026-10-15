@@ -9,6 +9,7 @@ paladin:
   skills: [athletics, persuasion]
   items: {longsword: 1, chain_mail: 1, shield: 1, healing_potion: 1}
   equip: [longsword, chain_mail, shield]
+  signature: [consecrated_strike]
   abilities:
     consecrated_strike:
       name: {es: Golpe Consagrado, en: Consecrated Strike}
@@ -67,6 +68,7 @@ rogue:
   skills: [sleight_of_hand, perception]
   items: {dagger: 1, shortbow: 1, leather_armor: 1, healing_potion: 1}
   equip: [dagger, shortbow, leather_armor]
+  signature: [cunning_hide]
   abilities:
     sneak_attack:
       name: {es: Ataque Furtivo, en: Sneak Attack}
@@ -107,6 +109,7 @@ warrior:
   skills: [athletics, intimidation]
   items: {warhammer: 1, handaxe: 1, chain_mail: 1, shield: 1, healing_potion: 1}
   equip: [warhammer, handaxe, chain_mail, shield]
+  signature: [action_surge, second_wind]
   abilities:
     second_wind:
       name: {es: Segundo Aliento, en: Second Wind}
@@ -163,6 +166,7 @@ priest:
   skills: [medicine, religion]
   items: {mace: 1, scale_mail: 1, shield: 1, healing_potion: 1}
   equip: [mace, scale_mail, shield]
+  signature: [sacred_flame]
   abilities:
     sacred_flame:
       name: {es: Llama Sagrada, en: Sacred Flame}
@@ -225,6 +229,7 @@ mage:
   skills: [arcana, history]
   items: {quarterstaff: 1, dagger: 1, healing_potion: 1}
   equip: [quarterstaff]
+  signature: [fire_bolt]
   abilities:
     fire_bolt:
       name: {es: Rayo de Fuego, en: Fire Bolt}
@@ -287,6 +292,7 @@ druid:
   skills: [survival, medicine]
   items: {quarterstaff: 1, leather_armor: 1, shield: 1, healing_potion: 1}
   equip: [quarterstaff, leather_armor, shield]
+  signature: [thorn_whip]
   abilities:
     thorn_whip:
       name: {es: Látigo de Espinas, en: Thorn Whip}
@@ -349,6 +355,7 @@ bard:
   skills: [persuasion, deception]
   items: {rapier: 1, dagger: 1, leather_armor: 1, healing_potion: 1}
   equip: [rapier, leather_armor]
+  signature: [vicious_mockery]
   abilities:
     vicious_mockery:
       name: {es: Burla Cruel, en: Vicious Mockery}
@@ -413,6 +420,7 @@ warlock:
   skills: [arcana, intimidation]
   items: {quarterstaff: 1, dagger: 1, leather_armor: 1, healing_potion: 1}
   equip: [quarterstaff, leather_armor]
+  signature: [eldritch_blast]
   abilities:
     eldritch_blast:
       name: {es: Estallido Sobrenatural, en: Eldritch Blast}

@@ -4,6 +4,19 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.22] - 2026-10-15
+
+### Añadido
+- **Ronda 0** en el panel y en el informe: la iniciativa de cada uno con su d20 y su DES, antes de la ronda 1.
+- Con ventaja o desventaja salen **los dos d20** y el que cuenta: «🎲 [6 · 14] → 14 +5 = 19».
+- **Botones por clase**:
+  - en la primera fila, los ataques y la habilidad destacada 🌟 de la clase (`signature` en `classes.yaml`: Golpe Consagrado, Esconderse, Oleada de Acción o Segundo Aliento, Llama Sagrada, Rayo de Fuego, Látigo de Espinas, Burla Cruel y Estallido Sobrenatural);
+  - «✨ Acciones» abre el resto de poderes que puedes usar en ese momento.
+- **Informe completo**: «📜 Informe» cuenta todas las rondas seguidas, quién hizo qué, en varios mensajes si hace falta.
+
+### Cambiado
+- Lo que antes era «📜 Informe» es ahora «📊 Resumen»: el resultado, las cifras y el botín, con las páginas por ronda.
+
 ## [0.7.21] - 2026-10-15
 
 ### Añadido
