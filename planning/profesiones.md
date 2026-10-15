@@ -82,7 +82,7 @@ Oathforge no tiene puntos de maná: los conjuros gastan usos (`Character.resourc
 
 | Lugar | Desde | Maestría | Emboscada | Caza |
 |---|---|---|---|---|
-| Mina del Paso Viejo (`ironvein_mine`) | Camino del Viejo Rey | Minería (pico) | 25 % | Ratas gigantes, murciélagos |
+| Mina del Paso Viejo (`ironvein_mine`) | Camino del Viejo Rey | Minería (pico) | 25 % | Ratas gigantes, murciélagos (de día y de noche) |
 | Arboleda Antigua (`elderwood_grove`) | Bosque de los Susurros | Tala (hacha) | 20 % | Lobos, jabalíes |
 | Claro de la Raíz Roja (`redroot_clearing`) | Bosque de los Susurros | Herboristería (hoz) | 20 % | — |
 | Ribera de Silverbrook (`silverbrook_bank`) | Camino del Viejo Rey | Pesca (caña) | 0 % | — |

@@ -370,6 +370,7 @@ quest:
     craft: "Craft: {target}"
     rest: "Rest at {target}"
     heal: "Get healed at {target}"
+    read: "Look up in the /rulebook: {target}"
   err:
     unavailable: "That is no longer possible."
 

@@ -126,6 +126,27 @@ classes:
       Warrior and Paladin hold the front line, the Rogue strikes from the shadows, Mage, Warlock and Druid cast spells, Priest and Bard look after the party.
       Every class and its abilities: /classes
 
+activities:
+  icon: "🧺"
+  title: {es: Actividades, en: Activities}
+  body:
+    es: |-
+      Fuera de la ciudad, cada lugar tiene sus actividades. Llevan tiempo real: mientras trabajas no puedes viajar ni hacer otra cosa, y el bot te avisa al acabar.
+      • ⛏️ Minar (pico), 🪓 talar (hacha), 🌿 recolectar hierbas (hoz) y 🎣 pescar (caña): «Trabajar» dura 5 min y da unos pocos materiales.
+      • ⏳ Expedición larga: 15 min y mucho más botín, pero a veces te tienden una emboscada.
+      • 🐾 Rastrear: 5 min siguiendo huellas; casi siempre encuentras una presa y la puedes cazar.
+      • 🏹 Cazar: pelear contra lo que vive en el lugar. Con el cuchillo de desollar, las bestias dan pieles y carne.
+      • 🛏️ Descansar: en la taberna, 8 horas de juego (80 min) para recuperar PV y habilidades.
+      Cada actividad sube su maestría, de 0 a 5: con más rango, más botín.
+    en: |-
+      Outside the city, each place has its own activities. They take real time: while you work you cannot travel or do anything else, and the bot tells you when you are done.
+      • ⛏️ Mining (pickaxe), 🪓 woodcutting (axe), 🌿 herb gathering (sickle) and 🎣 fishing (rod): "Work" takes 5 min and gives a few materials.
+      • ⏳ Long expedition: 15 min and much more loot, but sometimes you are ambushed.
+      • 🐾 Tracking: 5 min following tracks; you almost always find prey you can hunt.
+      • 🏹 Hunting: fight whatever lives in the place. With a skinning knife, beasts give hides and meat.
+      • 🛏️ Resting: at the tavern, 8 game hours (80 min) to recover HP and abilities.
+      Each activity raises its mastery, from 0 to 5: the higher the rank, the more loot.
+
 professions:
   icon: "⛏️"
   title: {es: Recolección y oficios, en: Gathering and crafts}

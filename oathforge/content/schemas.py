@@ -494,12 +494,12 @@ class QuestStage(Strict):
 
 class QuestObjective(Strict):
     """Counted goal of a mission: kill `count` monsters, talk to an NPC, reach a place, gather, skin or craft
-    `count` of an item, finish a long rest or get healed."""
+    `count` of an item, finish a long rest, get healed or open a /rulebook section."""
 
     # kill: monster · talk: npc · visit: location · gather / skin / craft: item obtained (counts quantity)
-    # rest / heal: location, or "any" (a long rest that ends / the chapel healer)
-    kind: Literal["kill", "talk", "visit", "gather", "skin", "craft", "rest", "heal"]
-    target: str  # monster, npc, location or item key ("any" for rest / heal)
+    # rest / heal: location, or "any" (a long rest that ends / the chapel healer) · read: rulebook section
+    kind: Literal["kill", "talk", "visit", "gather", "skin", "craft", "rest", "heal", "read"]
+    target: str  # monster, npc, location, item or rulebook section key ("any" for rest / heal)
     count: int = 1
 
 

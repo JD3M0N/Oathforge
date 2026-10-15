@@ -13,21 +13,22 @@ tut_muster:
     es: La sargenta Vale recibe a los recién llegados en la plaza. Dice que la ciudad necesita manos… y que las tuyas parecen servir.
     en: Sergeant Vale greets newcomers in the plaza. She says the city needs hands… and yours look useful.
   hint:
-    es: Estás en la plaza. Pulsa «💬 Hablar» y elige a la sargenta Vale.
-    en: You are in the plaza. Press "💬 Talk" and pick Sergeant Vale.
+    es: Estás en la plaza. Pulsa «💬 Hablar» y elige a la sargenta Vale. Luego abre el /rulebook y lee «🧺 Actividades».
+    en: You are in the plaza. Press "💬 Talk" and pick Sergeant Vale. Then open the /rulebook and read "🧺 Activities".
   start_stage: active
   objective_stage: active
   complete_stage: done
   objectives:
     - {kind: talk, target: vale}
+    - {kind: read, target: activities}
   rewards:
     - xp: 25
     - give_item: {skinning_knife: 1}
   stages:
     active:
       journal:
-        es: Preséntate a la sargenta Vale en la plaza de Crownreach.
-        en: Report to Sergeant Vale in Crownreach Plaza.
+        es: "Preséntate a la sargenta Vale en la plaza de Crownreach. «Antes de salir, lee el reglamento», te dice: el /rulebook explica cómo funciona todo, y «🧺 Actividades», qué es minar, talar, recolectar o desollar."
+        en: "Report to Sergeant Vale in Crownreach Plaza. \"Read the rulebook before you head out,\" she tells you: the /rulebook explains how everything works, and \"🧺 Activities\" what mining, woodcutting, gathering or skinning are."
       location_text:
         crownreach_plaza:
           es: "Una sargenta de la Guardia de Plata, con la voz de quien ha gritado a mil reclutas, llama a los recién llegados: «¡Eh, cara nueva! Ven aquí». 🗨️ Habla con ella para empezar."
@@ -48,14 +49,15 @@ tut_town:
     es: «Un recluta que se pierde en su propia ciudad no me sirve», dice Vale. Quiere que conozcas la taberna y el Barrio de Oficios.
     en: "\"A recruit who gets lost in their own city is no use to me,\" says Vale. She wants you to know the tavern and Craftsmen's Row."
   hint:
-    es: Abre /map (o «🧭 Viajar»). En la ciudad vas directo a cualquier lugar. Ve al Barrio de Oficios y habla con Bram en la taberna.
-    en: Open /map (or "🧭 Travel"). In the city you go straight anywhere. Visit Craftsmen's Row and talk to Bram at the tavern.
+    es: Abre /map (o «🧭 Viajar»). En la ciudad vas directo a cualquier lugar. Ve al Barrio de Oficios y luego a la taberna La Corona Rota, y habla allí con Bram.
+    en: Open /map (or "🧭 Travel"). In the city you go straight anywhere. Visit Craftsmen's Row, then the Broken Crown Tavern, and talk to Bram there.
   start_stage: locked
   unlock_stage: active
   objective_stage: active
   complete_stage: done
   objectives:
     - {kind: visit, target: crownreach_workshops}
+    - {kind: visit, target: broken_crown_tavern}
     - {kind: talk, target: bram}
   rewards:
     - xp: 25
@@ -66,8 +68,8 @@ tut_town:
       journal: {es: La sargenta Vale tiene algo que enseñarte., en: Sergeant Vale has something to show you.}
     active:
       journal:
-        es: Visita el Barrio de Oficios (talleres y gremio) y habla con Bram, el tabernero.
-        en: Visit Craftsmen's Row (workshops and guild) and talk to Bram, the tavern keeper.
+        es: Visita el Barrio de Oficios (talleres y gremio) y la taberna La Corona Rota, y habla allí con Bram, el tabernero.
+        en: Visit Craftsmen's Row (workshops and guild) and the Broken Crown Tavern, and talk to Bram, the tavern keeper, there.
       location_text:
         crownreach_workshops:
           es: Yunques, alambiques y tinteros. Aquí se aprende un oficio y se fabrica con lo que traes de fuera (🛠️ Oficios).
@@ -245,11 +247,11 @@ tut_bats:
   legacy_done: [night_wings]
   name: {es: Alas al anochecer, en: Wings at Dusk}
   summary:
-    es: Cuando cae el sol, una bandada de murciélagos sale de las grietas del prado y ataca al ganado.
-    en: When the sun sets, a swarm of bats pours out of the meadow's cracks and attacks the livestock.
+    es: Cada anochecer, una bandada de murciélagos sale de la Mina del Paso Viejo y ataca al ganado del prado. Vale quiere cortarla de raíz, en su nido.
+    en: Every dusk, a swarm of bats pours out of Old Pass Mine and attacks the meadow's livestock. Vale wants it stopped at the root, in its nest.
   hint:
-    es: Vuelve al Prado de los Colmillos de noche (de 20:00 a 06:00 del juego; la escena indica si es de día o de noche) y pulsa «🏹 Cazar». Mientras esperas, puedes recolectar o descansar.
-    en: Go back to Tusk Meadow at night (20:00 to 06:00 game time; the scene shows whether it is day or night) and press "🏹 Hunt". While you wait, you can gather or rest.
+    es: Ve a la Mina del Paso Viejo y pulsa «🏹 Cazar». En las galerías hay murciélagos a cualquier hora (y alguna rata).
+    en: Go to Old Pass Mine and press "🏹 Hunt". There are bats in the tunnels at any hour (and the odd rat).
   start_stage: locked
   unlock_stage: active
   objective_stage: active
@@ -261,11 +263,11 @@ tut_bats:
   stages:
     locked:
       state: locked
-      journal: {es: Algo acecha el prado cuando oscurece., en: Something stalks the meadow after dark.}
+      journal: {es: Algo sale de la mina cuando oscurece., en: Something comes out of the mine after dark.}
     active:
       journal:
-        es: Acaba con tres murciélagos del prado. Solo salen de noche.
-        en: Kill three of the meadow bats. They only come out at night.
+        es: Acaba con tres murciélagos en su nido de la Mina del Paso Viejo.
+        en: Kill three bats in their nest in Old Pass Mine.
     done:
       state: completed
       journal:

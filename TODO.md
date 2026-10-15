@@ -33,9 +33,10 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 
 ## 🧙 Clases y progresión · [clases.md](planning/clases.md) · [progresion.md](planning/progresion.md)
 
-- [ ] 🟡 Probar el tutorial con la beta: cuánto se tarda en llegar a nivel 3 y dónde se atasca la gente (sobre todo la espera hasta la noche para los murciélagos).
-- [ ] 🔴 **El tutorial no debe depender de la hora**: que haya murciélagos en la mina de día y de noche, y que «Alas al anochecer» mande a cazarlos allí.
-- [ ] 🟡 «Calles de Crownreach» debe mandarte también a la taberna (ir a la taberna y hablar con Bram), no solo al Barrio de Oficios.
+- [ ] 🟡 Probar el tutorial con la beta: cuánto se tarda en llegar a nivel 3 y dónde se atasca la gente (la espera hasta la noche para los murciélagos ya no existe desde la v0.7.15).
+- [x] **El tutorial ya no depende de la hora**: murciélagos en la mina de día y de noche, y «Alas al anochecer» manda a cazarlos allí (v0.7.15).
+- [x] «Calles de Crownreach» manda también a la taberna (ir y hablar con Bram), no solo al Barrio de Oficios (v0.7.15).
+- [x] El tutorial enseña el `/rulebook`: «Alistamiento» pide leer su sección nueva «🧺 Actividades» (recolectar, minar, talar, pescar, expedición larga, rastrear, cazar, descansar) (v0.7.15).
 - [ ] 🔴 **Tutorial acelerado**: en las misiones del tutorial, y solo ahí, recolectar, minar, desollar, etc. son instantáneos. Sin trampas: solo cuenta la acción que pide la misión activa y una vez.
 - [ ] 🟢 **Campamento de entrenamiento** al acabar el tutorial (nivel 3–5, a reescalar): misiones opcionales de 3 a 5 por clase para sentir qué es ser Paladín, Bardo, Pícaro…, y hacer ahí el juramento y entrar en la clase. Los nuevos pueden saltárselo. Ver cómo encaja con la compra de atributos por puntos.
 - [ ] 🔴 Elegir especialización a nivel 5. *La ficha completa ya muestra la especialización cuando exista; con la cadena de misiones de v0.5.0 se llega a nivel 5 enseguida.*
@@ -163,3 +164,5 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] Bram ya no habla de «problemas al norte»: manda a los nuevos con la sargenta Vale y les ofrece el fogón (v0.7.13).
 - [x] Arreglado «📜 Más trasfondos…»: volvía siempre a los 4 básicos y no se podía elegir, por ejemplo, Noble (v0.7.14).
 - [x] `GAME_CLOCK_OFFSET_HOURS` en `.env` adelanta el reloj del juego para hacer pruebas, por ejemplo de noche a día (v0.7.14).
+
+- [ ] agregar un hobby que sea arqueologia, cartografia, juegos de taberna, primeros auxilios

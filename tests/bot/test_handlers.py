@@ -541,9 +541,10 @@ async def test_journal_missions_and_bestiary_views(llm, monkeypatch):
     await p.press(p.find("jrm"))
     await p.press(p.find("jq", "tut_town"))
     assert "🔒" in p.last[0]
-    # talking to the sergeant completes the first mission and opens the next
+    # talking to the sergeant and reading the rulebook's Activities page complete the first mission
     await p.press("talk|vale|-")
-    assert any("Alistamiento" in t_ for t_, _ in p.chat.sent[-3:])
+    await p.press("rb|activities|-")
+    assert "Actividades" in p.chat.sent[-2][0] and "Alistamiento" in p.last[0]
     await p.press("jq|tut_town|-")
     assert "Barrio de Oficios" in p.last[0] and "Bram" in p.last[0]
     await p.press("jrb|-|-")

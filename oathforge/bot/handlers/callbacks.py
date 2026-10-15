@@ -66,7 +66,10 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
                 await edit_or_send(update, t(lang, "lang.changed"))
                 return
         if verb == "rb":  # the rulebook too (it is offered in the very first message)
+            read = await quests.on_read(session, char, arg, rng()) if char is not None else None
             await edit_or_send(update, *render.rulebook(lang, arg))
+            if read is not None and read.events:  # "look it up in the rulebook" objectives
+                await send_outcome(update, read, lang)
             return
         if verb in ("cls", "clsl"):  # class pages work without a character too
             text, kb = render.class_page(arg, lang, char) if verb == "cls" else render.classes_list(lang)

@@ -4,6 +4,20 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.15] - 2026-10-15
+
+### Añadido
+- Objetivo de misión `read`: abrir una sección del `/rulebook`. El diario lo muestra como «Consulta en el /rulebook: …».
+- Sección «🧺 Actividades» en el `/rulebook`: minar, talar, recolectar hierbas, pescar, expedición larga, rastrear, cazar y descansar, con lo que dura cada una y la herramienta que pide.
+- «Alistamiento», la primera misión del tutorial, pide leer esa sección después de hablar con Vale.
+
+### Cambiado
+- El tutorial ya no depende de la hora:
+  - en la Mina del Paso Viejo hay murciélagos de día y de noche (más que antes, junto a las ratas);
+  - «Alas al anochecer» manda a cazarlos a la mina.
+- «Calles de Crownreach» pide también ir a la taberna La Corona Rota, además del Barrio de Oficios, antes de hablar con Bram.
+- Los tests ignoran `GAME_CLOCK_OFFSET_HOURS` del `.env`.
+
 ## [0.7.14] - 2026-10-14
 
 ### Añadido

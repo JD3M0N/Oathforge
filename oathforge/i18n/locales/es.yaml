@@ -370,6 +370,7 @@ quest:
     craft: "Fabrica: {target}"
     rest: "Descansa en {target}"
     heal: "Cúrate en {target}"
+    read: "Consulta en el /rulebook: {target}"
   err:
     unavailable: "Eso ya no es posible."
 

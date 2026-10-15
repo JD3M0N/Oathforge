@@ -544,7 +544,11 @@ async def test_mission_chain_talk_then_hunt():
     rng = random.Random(1)
     async with session_scope() as s:
         char = await get_char(s, cid)
-        out = await quests.on_talk(s, char, "vale", rng)
+        await quests.on_talk(s, char, "vale", rng)
+        assert (await quests.progress(s, char))["tut_muster"].state == "active"  # still has to read the rulebook
+        await quests.on_read(s, char, "dice", rng)  # another page does not count
+        assert (await quests.progress(s, char))["tut_muster"].state == "active"
+        out = await quests.on_read(s, char, "activities", rng)
         prog = await quests.progress(s, char)
         assert prog["tut_muster"].state == "completed" and prog["tut_town"].state == "active"
         assert char.xp == 25 and any(e.key == "quest.new" for e in out.events)
@@ -554,6 +558,8 @@ async def test_mission_chain_talk_then_hunt():
         await quests.on_talk(s, char, "bram", rng)
         assert (await quests.progress(s, char))["tut_town"].state == "active"  # still has to see the workshops
         await quests.on_visit(s, char, "crownreach_workshops", rng)
+        assert (await quests.progress(s, char))["tut_town"].state == "active"  # and the tavern
+        await quests.on_visit(s, char, "broken_crown_tavern", rng)
         prog = await quests.progress(s, char)
         assert prog["tut_town"].state == "completed" and prog["tut_boars"].state == "active"
 
@@ -596,8 +602,10 @@ async def test_whole_chain_reaches_level_five():
         char = await get_char(s, cid)
         # the tutorial: one activity per mission, from level 1 to 3
         await quests.on_talk(s, char, "vale", rng)
+        await quests.on_read(s, char, "activities", rng)
         await quests.on_talk(s, char, "bram", rng)
         await quests.on_visit(s, char, "crownreach_workshops", rng)
+        await quests.on_visit(s, char, "broken_crown_tavern", rng)
         for _ in range(2):
             await fight(char, "boar")
         await quests.on_items(s, char, "skin", {"boar_hide": 1}, rng)
@@ -667,6 +675,14 @@ async def test_veterans_of_the_old_chain_skip_the_tutorial():
 
 
 # ---------------------------------------------------------------- hunting and bestiary
+
+@pytest.mark.parametrize("night", [False, True])
+async def test_the_mine_has_bats_day_and_night(monkeypatch, night):
+    """The tutorial's bat hunt («Alas al anochecer») does not depend on the hour."""
+    monkeypatch.setattr(exploration, "is_night", lambda now=None: night)
+    loc = get_content().locations["ironvein_mine"]
+    assert any("cave_bat" in e.monsters for e in exploration.encounter_table(loc))
+
 
 @pytest.mark.parametrize("night,expected", [(False, {"boar"}), (True, {"cave_bat"})])
 async def test_hunt_uses_the_day_or_night_table(monkeypatch, night, expected):

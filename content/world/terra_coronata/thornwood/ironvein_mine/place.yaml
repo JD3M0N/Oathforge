@@ -11,9 +11,10 @@ description:
 exits:
   - {to: old_kings_road, minutes: 25, danger: 1}
 encounters:
-  - {monsters: [giant_rat], weight: 3}
-  - {monsters: [giant_rat, giant_rat], weight: 2}
-  - {monsters: [cave_bat, cave_bat], weight: 1}
+  - {monsters: [giant_rat], weight: 2}
+  - {monsters: [giant_rat, giant_rat], weight: 1}
+  - {monsters: [cave_bat], weight: 2}
+  - {monsters: [cave_bat, cave_bat], weight: 3}  # de día y de noche: el tutorial («Alas al anochecer») los caza aquí
 gathering:
   - skill: mining
     tool: pickaxe

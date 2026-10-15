@@ -154,7 +154,7 @@ boar:
 cave_bat:
   name: {es: Murciélago de cueva, en: Cave bat}
   icon: 🦇
-  description: {es: Un murciélago del tamaño de un halcón que caza al anochecer., en: A hawk-sized bat that hunts at dusk.}
+  description: {es: Un murciélago del tamaño de un halcón que anida en las galerías y caza al anochecer., en: A hawk-sized bat that roosts in mine tunnels and hunts at dusk.}
   hp: 6
   ac: 12
   dex: 2
@@ -165,11 +165,11 @@ cave_bat:
   loot:
     - {item: bat_wing, chance: 0.5}
   type: beast
-  active: night
-  habitat: {es: Prado de los Colmillos (de noche), en: Tusk Meadow (at night)}
+  active: any
+  habitat: {es: Mina del Paso Viejo (siempre) y Prado de los Colmillos (de noche), en: Old Pass Mine (always) and Tusk Meadow (at night)}
   lore:
-    es: Sale de las grietas del prado cuando cae el sol. Débil por separado, peligroso en bandada.
-    en: Pours out of the meadow's cracks when the sun sets. Weak alone, dangerous in a swarm.
+    es: Duerme a oscuras en la mina y, cuando cae el sol, sale por las grietas del prado. Débil por separado, peligroso en bandada.
+    en: Sleeps in the dark of the mine and, when the sun sets, pours out of the meadow's cracks. Weak alone, dangerous in a swarm.
 
 old_tusk:
   name: {es: El Viejo Colmillo, en: Old Tusk}

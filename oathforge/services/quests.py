@@ -97,6 +97,8 @@ def objective_target(obj: QuestObjective) -> dict:
     c = get_content()
     if obj.target == "any":
         return dict(ANYWHERE)
+    if obj.kind == "read":
+        return c.rulebook[obj.target].title.model_dump()
     pool = {"kill": c.monsters, "talk": c.npcs, "visit": c.locations, "gather": c.items, "skin": c.items,
             "craft": c.items, "rest": c.locations, "heal": c.locations}[obj.kind]
     return pool[obj.target].name.model_dump()
@@ -142,6 +144,11 @@ async def on_talk(session: AsyncSession, char: Character, npc: str, rng: random.
 
 async def on_visit(session: AsyncSession, char: Character, location: str, rng: random.Random) -> Outcome:
     return await advance(session, char, "visit", location, rng)
+
+
+async def on_read(session: AsyncSession, char: Character, section: str, rng: random.Random) -> Outcome:
+    """A /rulebook page opened: "look it up in the rulebook" objectives."""
+    return await advance(session, char, "read", section, rng)
 
 
 async def on_items(session: AsyncSession, char: Character, kind: str, items: dict[str, int],

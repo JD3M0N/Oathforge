@@ -33,6 +33,7 @@ def artifacts_dir(tmp_path_factory):
     """Debug artifacts from tests go to a temp dir, never to the repo's artifacts/."""
     settings = get_settings()
     settings.artifacts_dir = tmp_path_factory.mktemp("artifacts")
+    settings.game_clock_offset_hours = 0  # a GAME_CLOCK_OFFSET_HOURS in .env (for playtesting) never moves tests
     return settings.artifacts_dir
 
 
