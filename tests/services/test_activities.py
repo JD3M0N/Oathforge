@@ -444,3 +444,15 @@ async def test_tutorial_skinning_guarantees_the_hide_once():
             hides.append(got.get("boar_hide", 0))
         assert hides[0] >= 1  # the first skinning, whatever the dice say
         assert char.flags["tutorial_boosts"] == ["tut_boars"]
+
+
+async def test_fishing_levels_the_fishing_hobby():
+    cid = await new_character(location="silverbrook_bank", tools=("fishing_rod",))
+    now = time.time()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        assert (await activities.start(s, char, "gather", "fishing", now)).ok
+        out = await activities.claim(s, char, now + gathering.GATHER_SECONDS)
+        assert char.professions["xp"]["fishing"] == gathering.GATHER_XP and "fishing" not in (char.masteries or {})
+        assert any(e.key == "prof.xp" for e in out.events)
+        assert characters.mastery_xp(char, "fishing") == gathering.GATHER_XP

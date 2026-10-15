@@ -13,10 +13,10 @@ blacksmithing:
   guide:
     es: >-
       Mina hierro y carbón en la Mina del Paso Viejo (⛏️ Minería), funde lingotes en el yunque y, a rango 1,
-      forja espadas con un tablón de carpintería. Los lingotes también los piden la peletería y la artificiería.
+      forja espadas con un tablón de carpintería. Los lingotes también los piden la peletería y la ingeniería.
     en: >-
       Mine iron and coal at Ironvein Mine (⛏️ Mining), smelt ingots at the anvil and, at rank 1, forge swords
-      with a carpentry plank. Leatherworking and artificing need ingots too.
+      with a carpentry plank. Leatherworking and engineering need ingots too.
 
 alchemy:
   name: {es: Alquimia, en: Alchemy}
@@ -94,8 +94,8 @@ scribing:
       both you write scrolls: Fire Bolt from the start, Cure Wounds and Aegis at rank 1, Sleep at rank 2. In combat,
       "🎒 Items" casts them even if your class knows no magic.
 
-artificing:
-  name: {es: Artificiería, en: Artificing}
+engineering:
+  name: {es: Ingeniería, en: Engineering}
   icon: "💣"
   station: workbench
   description:
@@ -110,6 +110,24 @@ artificing:
       Powder comes from coal and iron ore (⛏️ Mining) and fuses from plant fibre (🌿 Herbalism, 🪓 Woodcutting).
       Smoke bomb from the start (escape without a roll), fire bomb at rank 1 (burns a whole row) and flash bomb at
       rank 2 (stuns). In combat, from "🎒 Items".
+
+fishing:
+  name: {es: Pesca, en: Fishing}
+  icon: "🎣"
+  practice: fishing
+  hobby: true
+  description:
+    es: Afición libre. Pescar en la ribera con caña; los peces van a la cocina.
+    en: A free hobby. Fishing at the riverbank with a rod; the fish go to the kitchen.
+  guide:
+    es: >-
+      No ocupa plaza de oficio ni tiene recetas: sube pescando. En la Ribera de Silverbrook, con una caña de
+      pescar, pulsa «🎣 Pescar» ({gather_min} min) o haz una expedición larga. A rango 3 aparecen truchas de escama
+      plateada, que la 🍲 Cocina convierte en raciones mejores.
+    en: >-
+      It takes no profession slot and has no recipes: it grows by fishing. At Silverbrook Bank, with a fishing rod,
+      press "🎣 Fish" ({gather_min} min) or go on a long expedition. At rank 3 come silverscale trout, which 🍲
+      Cooking turns into better rations.
 
 cooking:
   name: {es: Cocina, en: Cooking}

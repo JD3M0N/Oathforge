@@ -97,8 +97,8 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🔴 ◐ **Profesiones y recolección** · [profesiones.md](planning/profesiones.md). *Hecho (v0.6.0): actividades de campo, maestrías, mina, arboleda, claro y ribera, desuello y crónicas. Hecho (v0.6.1): oficios con 2 plazas, Barrio de Oficios, recetas y `/professions`. Hecho (v0.6.2): poción de maná y tónico del reposo. Hecho (v0.7.0): Escribanía y Artificiería (pergaminos y bombas para el combate), Cocina y Pesca como aficiones sin plaza y guía `/prof_<oficio>`. Falta: probar el balance con la beta (sobre todo la bomba de fuego, que da a toda una fila).*
 - [ ] 🟢 Afinidades de maestría a rango 3, durabilidad de herramientas y vetas que se agotan (después de la beta).
 - [ ] 🟡 **Desollar como acción con duración**: 10 s para presas pequeñas y más según la presa, en vez de hacerse sola tras el combate.
-- [ ] 🟡 **Pesca como afición de verdad**, igual que la Cocina (hoy por dentro es una maestría, `gathering.HOBBIES`).
-- [ ] 🟡 Renombrar **Artificiería → Ingeniería** (y así no se confunde con la clase Artificiero).
+- [x] **Pesca como afición de verdad**, igual que la Cocina: entrada en `professions.yaml` con `practice: fishing`, su XP con la de los oficios y su guía `/prof_fishing` (v0.7.20).
+- [x] Renombrada **Artificiería → Ingeniería** (`engineering`), con migración de los personajes (v0.7.20).
 - [ ] 🟢 **Recetas por tier** (T1–T3) y, dentro de cada uno, básica, media y compleja (con mejores nombres): la básica usa materiales del propio oficio, la media añade algo de una afición y la compleja algo de otro oficio (un vial de hierro del herrero). Investigar si tiene sentido o hay algo mejor.
 - [ ] 🟡 **Inventario y almacenamiento**: cofre o almacén para guardar objetos fuera de la mochila.
 - [ ] 🟡 Sumideros de oro: reparaciones, tasas, viajes.

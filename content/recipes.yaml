@@ -132,32 +132,32 @@ scroll_sleep:
   xp: 30
 
 black_powder:
-  profession: artificing
+  profession: engineering
   ingredients: {coal: 2, iron_ore: 1}
   outputs: {black_powder: 2}
   xp: 6
 
 fuse:
-  profession: artificing
+  profession: engineering
   ingredients: {plant_fiber: 2}
   outputs: {fuse: 2}
   xp: 4
 
 smoke_bomb:
-  profession: artificing
+  profession: engineering
   ingredients: {black_powder: 1, fuse: 1, plant_fiber: 1}
   outputs: {smoke_bomb: 1}
   xp: 10
 
 fire_bomb:
-  profession: artificing
+  profession: engineering
   min_rank: 1
   ingredients: {black_powder: 2, fuse: 1}
   outputs: {fire_bomb: 1}
   xp: 18
 
 flash_bomb:
-  profession: artificing
+  profession: engineering
   min_rank: 2
   ingredients: {black_powder: 1, fuse: 1, copper_ore: 1}
   outputs: {flash_bomb: 1}

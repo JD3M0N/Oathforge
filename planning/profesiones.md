@@ -10,8 +10,8 @@ El bucle que buscamos: **ir a una zona → elegir actividad → esperar o arries
 
 - **Nivel del personaje**: combate, atributos y habilidades de clase. No cambia.
 - **Maestrías de campo** (v0.6.0): minería, tala, herboristería, desuello y rastreo. Libres para todos, sin plazas, rango 0–5. No son habilidades d20: «Supervivencia» sigue existiendo para las tiradas.
-- **Oficios** (v0.6.1, v0.7.0): herrería, alquimia, carpintería, peletería, joyería, escribanía y artificiería; **dos activos** a la vez.
-- **Aficiones** (v0.7.0): cocina y pesca. Opcionales y sin plaza: cualquiera las practica y las sube si quiere. Por dentro, la pesca sigue siendo una maestría (`gathering.HOBBIES`) y la cocina un oficio con `hobby: true`; solo cambia cómo se muestran y que no ocupan plaza.
+- **Oficios** (v0.6.1, v0.7.0): herrería, alquimia, carpintería, peletería, joyería, escribanía e ingeniería (artificiería hasta la v0.7.20, para no confundirla con la clase Artificiero); **dos activos** a la vez.
+- **Aficiones** (v0.7.0): cocina y pesca. Opcionales y sin plaza: cualquiera las practica y las sube si quiere. Desde la v0.7.20 las dos son entradas de `professions.yaml` con `hobby: true`: la cocina tiene estación y recetas, y la pesca, `practice: fishing` (sin estación ni recetas: sube pescando en la ribera). Su XP se guarda con la de los oficios (`characters.professions.xp`); la migración 0008 movió la XP de pesca que había en `masteries`.
 
 ### Actividades de campo (v0.6.0)
 
@@ -47,7 +47,7 @@ El bucle que buscamos: **ir a una zona → elegir actividad → esperar o arries
 | 🧵 Peletería | Cuero curtido (2 cuero de jabalí o 1 piel de lobo) | Cuero reforzado, CA 12 (3 cuero curtido + 1 lingote) |
 | 💍 Joyería | Anillo de cobre (2 cobre + 1 carbón) | Anillo con gema, rango 2 (anillo + gema en bruto) |
 | 📜 Escribanía | 2 tintas (raíz + carbón), 2 pergaminos (cuero de jabalí), pergamino de dardo de fuego (tinta + pergamino) | Curar heridas y Égida, rango 1 (+ raíz / + hoja de luna); Sueño, rango 2 (2 tintas + pergamino + hoja de luna) |
-| 💣 Artificiería | 2 pólvoras (2 carbón + mena de hierro), 2 mechas (2 fibras), bomba de humo (pólvora + mecha + fibra) | Bomba de fuego, rango 1 (2 pólvoras + mecha); bomba cegadora, rango 2 (pólvora + mecha + cobre) |
+| 💣 Ingeniería | 2 pólvoras (2 carbón + mena de hierro), 2 mechas (2 fibras), bomba de humo (pólvora + mecha + fibra) | Bomba de fuego, rango 1 (2 pólvoras + mecha); bomba cegadora, rango 2 (pólvora + mecha + cobre) |
 | 🍲 Cocina (afición) | Estofado del cazador, 1d6+2 PV (2 carne + 1 raíz) | 2 raciones del pescador, 2d4+1 PV (2 peces + 1 raíz) |
 
 Las armas fabricadas no son más fuertes que las de tienda (la espada de hierro pega como la espada larga y se vende mejor); el cuero reforzado da +1 CA sobre el cuero normal. Los ingredientes cruzan oficios: la espada necesita un tablón de carpintería y el cuero reforzado, un lingote de herrería.

@@ -384,7 +384,7 @@ gem_ring:
   value: 110
   stackable: true
 
-# ---------------------------------------------------------------- scribing and artificing (v0.7.0)
+# ---------------------------------------------------------------- scribing and engineering (v0.7.0; engineering was artificing until v0.7.20)
 
 ink:
   name: {es: Tinta, en: Ink}

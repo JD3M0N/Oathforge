@@ -7,8 +7,8 @@ d20 skills. Bonus units from rank never give extra XP, so progress cannot snowba
 import random
 from dataclasses import dataclass, field
 
-MASTERIES = ("mining", "woodcutting", "herbalism", "skinning", "fishing", "tracking")
-HOBBIES = ("fishing",)  # masteries shown as an optional hobby (with cooking), not as a field mastery
+MASTERIES = ("mining", "woodcutting", "herbalism", "skinning", "tracking")  # field masteries
+GATHER_SKILLS = (*MASTERIES, "fishing")  # what a place can offer: a mastery, or fishing (a hobby since v0.7.20)
 RANK_XP = (0, 80, 240, 500, 900, 1500)  # accumulated XP for ranks 0..5
 MAX_RANK = len(RANK_XP) - 1
 

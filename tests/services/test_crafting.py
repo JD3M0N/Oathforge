@@ -107,16 +107,16 @@ async def test_cooking_is_a_hobby_without_a_slot():
         char.professions = {"active": ["cooking", "alchemy"], "xp": {"cooking": 30}}  # learned before v0.7.0
         assert professions.active(char) == ["alchemy"]  # the slot is free again
         assert "cooking" in professions.usable(char) and professions.xp(char, "cooking") == 30
-        assert (await professions.learn(s, char, "artificing")).ok
-        assert professions.active(char) == ["alchemy", "artificing"]
+        assert (await professions.learn(s, char, "engineering")).ok
+        assert professions.active(char) == ["alchemy", "engineering"]
 
 
-async def test_scribing_and_artificing_recipes():
+async def test_scribing_and_engineering_recipes():
     cid = await new_character()
     async with session_scope() as s:
         char = await get_char(s, cid)
         await professions.learn(s, char, "scribing")
-        await professions.learn(s, char, "artificing")
+        await professions.learn(s, char, "engineering")
         await inventory.add_item(s, char, "bloodroot", 1)
         await inventory.add_item(s, char, "coal", 3)
         await inventory.add_item(s, char, "boar_hide", 1)

@@ -757,7 +757,6 @@ mastery:
     woodcutting: "Felling trees in the grove: oak and ash logs."
     herbalism: "Gathering herbs in woods and clearings: bloodroot, moonleaf, restmoss and fiber."
     skinning: "Taking hide and meat from the beasts you bring down. Done when you win the fight."
-    fishing: "Fishing at the riverbank: fish for cooking."
     tracking: "Following tracks in hunting grounds until you find prey; beat it for trophies."
   tool: "🧰 Tool: {tool} · {link}"
   places: "📍 Where: {list}"
@@ -766,7 +765,7 @@ mastery:
 hobby:
   title: "🍲 <b>Hobbies</b>"
   intro: "Optional and slot-free: anyone can practice them on top of their 2 professions."
-  guide: "📖 Guide and recipes: {link}"
+  guide: "📖 Guide: {link}"
 
 chronicle:
   title: "📜 <b>Expedition chronicle</b>"
@@ -825,4 +824,4 @@ station:
   jeweler_bench: "jeweler’s bench"
   hearth: "hearth"
   scribe_desk: "scribe's desk"
-  workbench: "artificer's bench"
+  workbench: "engineer's bench"

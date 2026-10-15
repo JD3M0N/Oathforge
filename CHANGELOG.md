@@ -4,6 +4,18 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.20] - 2026-10-15
+
+### Cambiado
+- **Artificiería → Ingeniería** (clave `engineering`), para no confundirla con la clase Artificiero. Su estación es el «banco de ingeniero». `/prof_artificing` sigue llevando a `/prof_engineering`.
+- **La Pesca es una afición de verdad**, como la Cocina:
+  - es una entrada de `professions.yaml` con `practice: fishing`: sin estación ni recetas, sube pescando;
+  - su XP se guarda con la de los oficios y avisa como un oficio («📈 +10 XP de Pesca»);
+  - tiene guía propia, `/prof_fishing`.
+
+  `gathering.HOBBIES` desaparece: las maestrías de campo son minería, tala, herboristería, desuello y rastreo.
+- Migración `0008`: cambia `artificing` por `engineering` en los oficios guardados y mueve la XP de pesca de las maestrías a la afición.
+
 ## [0.7.19] - 2026-10-15
 
 ### Añadido

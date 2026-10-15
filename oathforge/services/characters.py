@@ -301,15 +301,34 @@ def mastery_name(skill: str) -> dict:
     return {lang: t(lang, f"mastery.name.{skill}") for lang in ("es", "en")}
 
 
+def hobby_of(skill: str) -> str | None:
+    """The hobby practised through this field activity (fishing), if any."""
+    return next((k for k, p in get_content().professions.items() if p.practice == skill), None)
+
+
 def mastery_xp(char: Character, skill: str) -> int:
+    hobby = hobby_of(skill)
+    if hobby is not None:
+        return int((char.professions or {}).get("xp", {}).get(hobby, 0))
     return int((char.masteries or {}).get(skill, 0))
 
 
 def grant_mastery(char: Character, skill: str, amount: int, out: Outcome) -> None:
-    """Gathering masteries (mining, tracking...) grow 0-5 with use, apart from d20 skills."""
+    """Gathering masteries (mining, tracking...) grow 0-5 with use, apart from d20 skills. Fishing levels
+    the Fishing hobby instead, stored with the professions like Cooking."""
     if amount <= 0:
         return
     before = mastery_xp(char, skill)
+    hobby = hobby_of(skill)
+    if hobby is not None:
+        profs = char.professions or {}
+        char.professions = {"active": list(profs.get("active", [])), "xp": {**profs.get("xp", {}), hobby: before + amount}}
+        name = get_content().professions[hobby].name.model_dump()
+        out.add("prof.xp", prof=name, amount=amount)
+        rank = gathering.rank_for(before + amount)
+        if rank > gathering.rank_for(before):
+            out.add("prof.rank", prof=name, rank=rank)
+        return
     char.masteries = {**(char.masteries or {}), skill: before + amount}
     out.add("mastery.xp", skill=mastery_name(skill), amount=amount)
     rank = gathering.rank_for(before + amount)

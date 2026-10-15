@@ -1,7 +1,7 @@
 """Crafting professions: two active, learned and swapped at the guild (Craftsmen's Row).
 
 Swapping keeps the XP of the profession you drop, so trying another one never wastes progress.
-Hobbies (cooking) take no slot: everyone can practise them.
+Hobbies (cooking, fishing) take no slot: everyone can practise them. Fishing has no station: it levels by fishing.
 """
 
 from sqlalchemy.ext.asyncio import AsyncSession

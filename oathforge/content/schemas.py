@@ -394,7 +394,9 @@ class Profession(Strict):
     name: Text
     description: Text
     icon: str
-    station: Station
+    station: Station | None = None  # where it is crafted
+    # a gathering hobby (fishing): no station nor recipes, it levels by doing that field activity
+    practice: str | None = None
     hobby: bool = False
     guide: Text | None = None  # how to play it, for /prof_<key>
 

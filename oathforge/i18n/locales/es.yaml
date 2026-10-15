@@ -757,7 +757,6 @@ mastery:
     woodcutting: "Talar árboles en la arboleda: troncos de roble y de fresno."
     herbalism: "Recoger hierbas en bosques y claros: raíz de sangre, hoja de luna, musgo del reposo y fibra."
     skinning: "Sacar piel y carne de las bestias que abates. Se hace al ganar el combate."
-    fishing: "Pescar en la ribera: peces para la cocina."
     tracking: "Seguir huellas en las zonas de caza hasta dar con una presa; si la vences, da trofeos."
   tool: "🧰 Herramienta: {tool} · {link}"
   places: "📍 Dónde: {list}"
@@ -766,7 +765,7 @@ mastery:
 hobby:
   title: "🍲 <b>Aficiones</b>"
   intro: "Opcionales y sin plaza: cualquiera puede practicarlas además de sus 2 oficios."
-  guide: "📖 Guía y recetas: {link}"
+  guide: "📖 Guía: {link}"
 
 chronicle:
   title: "📜 <b>Crónica de la expedición</b>"
@@ -825,4 +824,4 @@ station:
   jeweler_bench: "banco de joyero"
   hearth: "fogón"
   scribe_desk: "mesa de escriba"
-  workbench: "banco de artificiero"
+  workbench: "banco de ingeniero"

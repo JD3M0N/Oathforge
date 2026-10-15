@@ -260,7 +260,7 @@ def activity_panel(char: Character, act, lines: list[str], n: str, lang: str) ->
     return "\n".join(lines), markup(rows)
 
 
-FIELD_MASTERIES = tuple(m for m in gathering.MASTERIES if m not in gathering.HOBBIES)
+FIELD_MASTERIES = gathering.MASTERIES
 
 
 def mastery_lines(char: Character, lang: str, skills: tuple[str, ...] = FIELD_MASTERIES) -> list[str]:
@@ -276,10 +276,9 @@ def mastery_lines(char: Character, lang: str, skills: tuple[str, ...] = FIELD_MA
 def hobby_lines(char: Character, lang: str) -> list[str]:
     """Cooking and fishing: optional, no slot."""
     c = get_content()
-    lines = [t(lang, "prof.line", icon=c.professions[k].icon, name=escape(c.professions[k].name.get(lang)),
-               stars=_stars(professions.rank(char, k)), progress=_progress(professions.xp(char, k)))
-             + f" · /prof_{k}" for k in professions.hobbies()]
-    return lines + mastery_lines(char, lang, gathering.HOBBIES)
+    return [t(lang, "prof.line", icon=c.professions[k].icon, name=escape(c.professions[k].name.get(lang)),
+              stars=_stars(professions.rank(char, k)), progress=_progress(professions.xp(char, k)))
+            + f" · /prof_{k}" for k in professions.hobbies()]
 
 
 def _stars(rank: int) -> str:
@@ -387,10 +386,8 @@ def hobbies_view(char: Character | None, lang: str) -> tuple[str, InlineKeyboard
         head = f"{prof.icon} <b>{escape(prof.name.get(lang))}</b>"
         if char is not None:
             head += f" {_stars(professions.rank(char, k))} · {_progress(professions.xp(char, k))}"
-        lines += [head, f"<i>{escape(prof.description.get(lang))}</i>", _station_place(prof.station, lang),
+        lines += [head, f"<i>{escape(prof.description.get(lang))}</i>", *_where(prof, lang),
                   t(lang, "hobby.guide", link=f"/prof_{k}"), ""]
-    for skill in gathering.HOBBIES:  # fishing: a mastery played as a hobby
-        lines += [*mastery_entry(skill, lang, char), ""]
     rows = [crafts_tabs(lang, "hob")] if char is not None else [[btn(t(lang, "btn.tab_masteries"), cb("mst"))]]
     return "\n".join(lines).rstrip()[:MAX_MESSAGE], markup(rows)
 
@@ -418,16 +415,32 @@ def swap_confirm(char: Character, arg: str, lang: str) -> tuple[str, InlineKeybo
     return text, markup(rows)
 
 
+def _where(prof, lang: str) -> list[str]:
+    """Where a profession is worked: its station, or for fishing the tool and the places."""
+    if prof.station is not None:
+        return [_station_place(prof.station, lang)]
+    c = get_content()
+    tool, places = _mastery_tool_and_places(prof.practice, lang)
+    lines = [t(lang, "mastery.tool", tool=escape(c.items[tool].name.get(lang)), link=f"/item_{tool}")] if tool else []
+    if places:
+        lines.append(t(lang, "mastery.places", list=escape(", ".join(dict.fromkeys(places)))))
+    return lines
+
+
 def _station_place(station: str, lang: str) -> str:
     c = get_content()
     places = [loc.name.get(lang) for loc in c.locations.values() if station in loc.stations]
     return t(lang, "prof.station", station=t(lang, f"station.{station}"), place=escape(", ".join(places)))
 
 
+RENAMED_PROFESSIONS = {"artificing": "engineering"}  # old /prof_<key> links keep working
+
+
 def profession_page(key: str, lang: str, char: Character | None = None) -> tuple[str, InlineKeyboardMarkup | None]:
     """/prof_<key>: a profession or hobby at a glance, like /class_<key>: what it does, where, from what,
     and every recipe by rank (yours marked when the player has a character)."""
     c = get_content()
+    key = RENAMED_PROFESSIONS.get(key, key)
     prof = c.professions.get(key)
     if prof is None:
         return professions_view(char, lang) if char else (t(lang, "prof.err.unknown"), None)
@@ -435,13 +448,15 @@ def profession_page(key: str, lang: str, char: Character | None = None) -> tuple
              + (f" · {t(lang, 'prof.hobby_tag')}" if prof.hobby else ""),
              f"<i>{escape(prof.description.get(lang))}</i>", RULE]
     if prof.guide:
-        lines += [escape(prof.guide.get(lang)), ""]
-    lines.append(_station_place(prof.station, lang))
+        guide = RULE_NUMBER.sub(lambda m: str(rule_numbers().get(m.group(1), m.group(0))), prof.guide.get(lang))
+        lines += [escape(guide), ""]
+    lines += _where(prof, lang)
     if char is not None and (prof.hobby or key in professions.active(char) or professions.xp(char, key)):
         lines.append(t(lang, "prof.your_rank", stars=_stars(professions.rank(char, key)),
                        progress=_progress(professions.xp(char, key))))
-    lines += [RULE, f"<b>{t(lang, 'prof.recipes')}</b>"]
     recipes = sorted((r for r in c.recipes.values() if r.profession == key), key=lambda r: r.min_rank)
+    if recipes:
+        lines += [RULE, f"<b>{t(lang, 'prof.recipes')}</b>"]
     for r in recipes:
         mark = ("✅ " if professions.rank(char, key) >= r.min_rank else "🔒 ") if char is not None else ""
         outs = ", ".join(f"{c.items[i].name.get(lang)} ×{q}" for i, q in r.outputs.items())
@@ -463,7 +478,8 @@ async def craft_menu(session: AsyncSession, char: Character, lang: str) -> tuple
         lines.append(t(lang, "craft.none"))
         for k in professions.usable(char):
             prof = c.professions[k]
-            lines.append(f"{prof.icon} {escape(prof.name.get(lang))}: {_station_place(prof.station, lang)}")
+            if prof.station is not None:
+                lines.append(f"{prof.icon} {escape(prof.name.get(lang))}: {_station_place(prof.station, lang)}")
     for key, r in recipes.items():
         prof = c.professions[r.profession]
         locked = professions.rank(char, r.profession) < r.min_rank

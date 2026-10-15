@@ -32,7 +32,7 @@ from oathforge.content.schemas import (
     Text,
     Zone,
 )
-from oathforge.engine.gathering import MASTERIES
+from oathforge.engine.gathering import GATHER_SKILLS
 
 EFFECT_KINDS = {
     "give_item", "take_item", "gold", "reputation", "set_flag", "xp",
@@ -222,7 +222,7 @@ def validate_references(c: Content) -> None:
             need("item", g.tool, c.items, f"location {key} gathering {g.skill}")
             for r in g.resources:
                 need("item", r.item, c.items, f"location {key} gathering {g.skill}")
-            if g.skill not in MASTERIES:
+            if g.skill not in GATHER_SKILLS:
                 errors.append(f"location {key}: unknown mastery '{g.skill}'")
             if not any(r.min_rank == 0 for r in g.resources):
                 errors.append(f"location {key} gathering {g.skill}: nothing to find at rank 0")
@@ -241,8 +241,12 @@ def validate_references(c: Content) -> None:
             errors.append(f"recipe {key}: needs ingredients and outputs")
     stations = {s for loc in c.locations.values() for s in loc.stations}
     for key, prof in c.professions.items():
-        if prof.station not in stations:
+        if prof.station is None and prof.practice is None:
+            errors.append(f"profession {key}: needs a station or a practice")
+        if prof.station is not None and prof.station not in stations:
             errors.append(f"profession {key}: no location has a '{prof.station}'")
+        if prof.practice is not None and (prof.practice not in GATHER_SKILLS or not prof.hobby):
+            errors.append(f"profession {key}: practice '{prof.practice}' must be a gathering skill of a hobby")
     if c.professions and not any(loc.guild for loc in c.locations.values()):
         errors.append("professions: no guild location to learn them")
     for outcome in CHRONICLE_KEYS:
