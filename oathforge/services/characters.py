@@ -301,6 +301,31 @@ def mastery_name(skill: str) -> dict:
     return {lang: t(lang, f"mastery.name.{skill}") for lang in ("es", "en")}
 
 
+STATS = "stats"  # char.flags: counters for the journal's statistics (since v0.7.23)
+
+
+def stats(char: Character) -> dict:
+    return dict((char.flags or {}).get(STATS) or {})
+
+
+def bump_stats(char: Character, **amounts: int) -> None:
+    """Add to the character's counters (yards walked, battles won, dodges...)."""
+    if not any(amounts.values()):
+        return
+    st = stats(char)
+    for key, n in amounts.items():
+        st[key] = int(st.get(key, 0)) + n
+    char.flags = {**(char.flags or {}), STATS: st}
+
+
+def visited(char: Character, location: str) -> None:
+    st = stats(char)
+    places = list(st.get("places", []))
+    if location not in places:
+        st["places"] = places + [location]
+        char.flags = {**(char.flags or {}), STATS: st}
+
+
 PENDING_SKIN = "pending_skin"  # char.flags: the beasts just killed, waiting for /skin where they fell
 
 

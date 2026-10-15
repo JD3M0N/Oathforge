@@ -159,6 +159,7 @@ btn:
   make: "🔨 {item}"
   missions: "📜 Misiones"
   quest_log: "📚 Registro"
+  stats: "📈 Estadísticas"
   tab_professions: "🛠️ Oficios"
   skin: "🔪 Desollar · {seconds} s"
   tab_masteries: "⛏️ Maestrías"
@@ -351,6 +352,17 @@ sheet:
 
 ai:
   budget_exhausted: "🤖 El Dungeon Master ha agotado sus fuerzas por hoy. Sigue jugando con los botones; se recupera a medianoche."
+
+stats:
+  title: "📈 <b>Estadísticas</b>"
+  distance: "🥾 Distancia recorrida: {yards} yardas"
+  places: "🗺 Lugares visitados: {places} · ciudades: {cities}"
+  battles: "⚔️ Combates: {won} ganados · {lost} perdidos · {fled} huidas"
+  kills: "💀 Monstruos derrotados: {n}"
+  dodges: "💨 Esquivas: {n} ataques enemigos fallados"
+  crits: "💥 Golpes críticos: {n}"
+  activities: "🧺 Actividades terminadas: {n}"
+  since: "Los monstruos cuentan desde siempre; lo demás, desde la v0.7.23."
 
 journal:
   title: "📖 <b>Diario de aventuras</b>"

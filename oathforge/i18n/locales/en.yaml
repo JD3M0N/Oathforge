@@ -159,6 +159,7 @@ btn:
   make: "🔨 {item}"
   missions: "📜 Missions"
   quest_log: "📚 Log"
+  stats: "📈 Statistics"
   tab_professions: "🛠️ Professions"
   skin: "🔪 Skin · {seconds} s"
   tab_masteries: "⛏️ Masteries"
@@ -351,6 +352,17 @@ sheet:
 
 ai:
   budget_exhausted: "🤖 The Dungeon Master is spent for today. Keep playing with the buttons; it recovers at midnight."
+
+stats:
+  title: "📈 <b>Statistics</b>"
+  distance: "🥾 Distance walked: {yards} yards"
+  places: "🗺 Places visited: {places} · cities: {cities}"
+  battles: "⚔️ Battles: {won} won · {lost} lost · {fled} fled"
+  kills: "💀 Monsters defeated: {n}"
+  dodges: "💨 Dodges: {n} enemy attacks missed"
+  crits: "💥 Critical hits: {n}"
+  activities: "🧺 Activities finished: {n}"
+  since: "Monsters count from the start; the rest, since v0.7.23."
 
 journal:
   title: "📖 <b>Adventure journal</b>"

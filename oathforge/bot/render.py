@@ -1006,7 +1006,7 @@ async def journal(session: AsyncSession, char: Character, lang: str) -> tuple[st
     lines.append(f"<i>{t(lang, 'journal.hint')}</i>")
     kb = markup([[btn(t(lang, "btn.missions"), cb("jrm")), btn(t(lang, "btn.quest_log"), cb("jrl"))],
                  [btn(t(lang, "btn.bestiary"), cb("jrb")), btn(t(lang, "btn.rumors"), cb("jrr"))],
-                 [btn(t(lang, "btn.back"), cb("scene"))]])
+                 [btn(t(lang, "btn.stats"), cb("jrs")), btn(t(lang, "btn.back"), cb("scene"))]])
     return "\n".join(lines)[:MAX_MESSAGE], kb
 
 
@@ -1026,6 +1026,27 @@ async def missions(session: AsyncSession, char: Character, lang: str) -> tuple[s
     lines.append(f"<i>{t(lang, 'journal.missions_hint' if rows else 'journal.no_current')}</i>")
     rows.append([btn(t(lang, "btn.quest_log"), cb("jrl")), btn(t(lang, "btn.back"), cb("jr"))])
     return "\n".join(lines), markup(rows)
+
+
+def stats_view(char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+    """The journal's statistics: how far you walked, where you have been, what you fought."""
+    c = get_content()
+    st = characters.stats(char)
+    places = [p for p in st.get("places", []) if p in c.locations]
+    cities = {c.locations[p].zone for p in places if c.zones[c.locations[p].zone].kind == "city"}
+    kills = {k: v.get("killed", 0) for k, v in (char.bestiary or {}).items() if v.get("killed")}
+    top = sorted(kills.items(), key=lambda kv: -kv[1])[:3]
+    lines = [t(lang, "stats.title"), RULE,
+             t(lang, "stats.distance", yards=f"{int(st.get('yards', 0)):,}".replace(",", ".")),
+             t(lang, "stats.places", places=len(places), cities=len(cities)),
+             t(lang, "stats.battles", won=st.get("battles_victory", 0), lost=st.get("battles_defeat", 0),
+               fled=st.get("battles_fled", 0)),
+             t(lang, "stats.kills", n=sum(kills.values()))]
+    if top:
+        lines.append("      " + escape(", ".join(f"{c.monsters[k].name.get(lang)} ×{n}" for k, n in top if k in c.monsters)))
+    lines += [t(lang, "stats.dodges", n=st.get("dodges", 0)), t(lang, "stats.crits", n=st.get("crits", 0)),
+              t(lang, "stats.activities", n=st.get("activities", 0)), "", f"<i>{t(lang, 'stats.since')}</i>"]
+    return "\n".join(lines), markup([[btn(t(lang, "btn.back"), cb("jr"))]])
 
 
 async def quest_log(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:

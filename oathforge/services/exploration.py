@@ -115,6 +115,8 @@ async def travel(session: AsyncSession, char: Character, dest: str, rng: random.
         return Outcome.refused("explore.err.no_route")
     c = get_content()
     characters.drop_pending_skin(char)
+    characters.bump_stats(char, yards=route.yards)
+    characters.visited(char, dest)
     char.location = dest
     out = Outcome().add("explore.arrived", place=c.locations[dest].name.model_dump(), minutes=route.minutes)
 

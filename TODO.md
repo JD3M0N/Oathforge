@@ -40,7 +40,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] **Tutorial acelerado**: en las misiones del tutorial, la primera recolección o desuello que pide la misión activa termina al momento y da justo lo que falta, una vez por misión (v0.7.16).
 - [ ] 🟢 **Campamento de entrenamiento** al acabar el tutorial (nivel 3–5, a reescalar): misiones opcionales de 3 a 5 por clase para sentir qué es ser Paladín, Bardo, Pícaro…, y hacer ahí el juramento y entrar en la clase. Los nuevos pueden saltárselo. Ver cómo encaja con la compra de atributos por puntos.
 - [ ] 🔴 Elegir especialización a nivel 5. *La ficha completa ya muestra la especialización cuando exista; con la cadena de misiones de v0.5.0 se llega a nivel 5 enseguida.*
-- [ ] 🟢 Escribir el texto largo (`details`) de las habilidades de cada clase para `/skill_<clave>` (hoy solo el Paladín).
+- [x] Texto largo (`details`) de todas las habilidades de las 8 clases para `/skill_<clave>` (v0.7.23).
 - [ ] 🟡 ◐ **Sistema de descanso**: descanso corto en cualquier sitio (recuperar parte de la vida y algunos usos) y largo en posada. *Hecho: descanso gratis en el osario de la cripta (v0.5.0), el tónico del reposo (v0.6.2), descanso largo de 8 h de juego en la posada y «Curar heridas» en la capilla (v0.7.0). Falta: un descanso corto sin poción; decidir si el osario también debe tardar 8 h.*
 - [ ] 🟡 Siguientes clases: **Explorador (Ranger) y Artificiero** (Mago, Druida y Bardo en v0.4.0; Brujo en v0.4.4).
 - [ ] 🟢 Juramentos con consecuencias, títulos y cicatrices en la ficha.
@@ -83,7 +83,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] `/masteries` y `/hobbies` (como `/classes`), enlazadas con `/professions` y desde el `/rulebook` (v0.7.19).
 - [x] **Actividades que terminan solas**: al empezar, un mensaje propio en vez de la escena repetida; al acabar, el bot manda lo obtenido aunque estés desconectado (y tras un reinicio). Sin «Recoger»: solo «🔄 Actualizar» y «Abandonar» (v0.7.21).
 - [x] **Crónica y botín en un solo mensaje**: «⛏️ ✅ Terminas tu trabajo en X», «📜 crónica», lo obtenido, la XP y «Crónica 1/15» (v0.7.21). *Si no convence el formato, se ajusta en `render.activity_result`.*
-- [ ] 🟢 **Estadísticas del personaje** en una pestaña del diario: distancia recorrida, ciudades visitadas, monstruos matados, esquivas…
+- [x] **Estadísticas del personaje** en «📈 Estadísticas» del diario: distancia, lugares y ciudades visitados, combates, monstruos derrotados, esquivas, críticos y actividades (v0.7.23).
 - [ ] 🟢 Duelos PvP con consentimiento y sin pérdidas.
 
 ## 🌍 Mundo, misiones y economía · [mundo-y-misiones.md](planning/mundo-y-misiones.md) · [comercio.md](planning/comercio.md)

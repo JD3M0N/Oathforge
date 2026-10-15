@@ -197,6 +197,7 @@ async def claim(session: AsyncSession, char: Character, now: float | None = None
     rng = random.Random(act.seed)
     loc = c.locations[act.location]
     char.state = "idle"
+    characters.bump_stats(char, activities=1)
     if act.kind == "rest":
         _finish(act, "rest", {}, 0, now)
         return exploration.wake_rested(char).extend(await quests.advance(session, char, "rest", act.location, rng))

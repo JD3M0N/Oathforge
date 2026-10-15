@@ -47,6 +47,9 @@ paladin:
     extra_attack:
       name: {es: Ataque Extra, en: Extra Attack}
       description: {es: Atacas dos veces con tu acción de ataque., en: You attack twice with your attack action.}
+      details:
+        es: "Años de juramento y entrenamiento hacen que tu brazo no descanse. Cuando atacas con el arma, golpeas dos veces en la misma acción, cada golpe con su tirada. Combínalo con Golpe Consagrado: el daño radiante se suma al golpe que acierte."
+        en: "Years of oath and training keep your arm from resting. When you attack with your weapon, you strike twice in the same action, each with its own roll. Pair it with Consecrated Strike: the radiant damage joins the blow that lands."
       level: 5
       kind: passive
       action: none
@@ -75,6 +78,9 @@ rogue:
       description:
         es: Una vez por turno, daño extra con armas sutiles o a distancia si tienes ventaja o el objetivo sufre un estado.
         en: Once per turn, extra damage with finesse or ranged weapons when you have advantage or the target has a condition.
+      details:
+        es: "Sabes dónde duele. Una vez por turno, si atacas con un arma sutil (daga, estoque) o a distancia y tienes ventaja, o el objetivo está aturdido, envenenado, dormido o con otro estado, sumas dados de daño extra. Esconderte antes es la forma más fiable de conseguirlo."
+        en: "You know where it hurts. Once per turn, if you attack with a finesse weapon (dagger, rapier) or a ranged one and you have advantage, or the target is stunned, poisoned, asleep or under another condition, you add extra damage dice. Hiding first is the surest way to get it."
       level: 1
       kind: passive
       action: none
@@ -82,12 +88,18 @@ rogue:
     cunning_hide:
       name: {es: Esconderse, en: Hide}
       description: {es: "Acción adicional: tirada de Sigilo; si tienes éxito, tu próximo ataque tiene ventaja.", en: "Bonus action: Stealth roll; on success your next attack has advantage."}
+      details:
+        es: "Te fundes con las sombras sin perder el ritmo. Como acción adicional haces una tirada de Sigilo; si la superas, tu próximo ataque tiene ventaja, y con ventaja llega el Ataque Furtivo. No tiene usos: puedes hacerlo cada turno."
+        en: "You melt into the shadows without losing your stride. As a bonus action you make a Stealth roll; if it succeeds, your next attack has advantage, and with advantage comes Sneak Attack. It has no uses: you can do it every turn."
       level: 2
       kind: hide
       action: bonus
     uncanny_dodge:
       name: {es: Esquiva Asombrosa, en: Uncanny Dodge}
       description: {es: El primer golpe que recibes cada ronda hace la mitad de daño., en: The first hit you take each round deals half damage.}
+      details:
+        es: "Ves venir el golpe y te apartas lo justo. El primer ataque que te acierta en cada ronda te hace solo la mitad de daño. Es automático: no gasta acciones."
+        en: "You see the blow coming and step aside just enough. The first attack that hits you each round deals only half damage. It is automatic: it costs no action."
       level: 3
       kind: passive
       action: none
@@ -114,6 +126,9 @@ warrior:
     second_wind:
       name: {es: Segundo Aliento, en: Second Wind}
       description: {es: "Acción adicional: recuperas 1d10 + tu nivel en PV.", en: "Bonus action: recover 1d10 + your level in HP."}
+      details:
+        es: "Respiras hondo y te obligas a seguir. Como acción adicional recuperas 1d10 + tu nivel en PV, así que puedes curarte y atacar en el mismo turno. Un uso por descanso: guárdalo para cuando la pelea se tuerza."
+        en: "You take a deep breath and force yourself on. As a bonus action you recover 1d10 + your level in HP, so you can heal and attack in the same turn. One use per rest: keep it for when the fight turns."
       level: 1
       kind: heal
       action: bonus
@@ -123,6 +138,9 @@ warrior:
     defense_style:
       name: {es: "Estilo de combate: Defensa", en: "Fighting Style: Defense"}
       description: {es: "+1 a la CA.", en: "+1 AC."}
+      details:
+        es: "Te entrenaron para no dejar huecos en la guardia. Siempre tienes +1 a la CA, sin hacer nada."
+        en: "You were trained to leave no gaps in your guard. You always have +1 AC, with no action needed."
       level: 1
       kind: passive
       action: none
@@ -130,6 +148,9 @@ warrior:
     action_surge:
       name: {es: Oleada de Acción, en: Action Surge}
       description: {es: "Acción adicional, tras usar tu acción: recuperas la acción y puedes actuar otra vez.", en: "Bonus action, after using your action: you get your action back and can act again."}
+      details:
+        es: "Cuando la batalla lo exige, sacas fuerzas de donde no hay. Después de usar tu acción, gastas tu acción adicional en recuperarla y vuelves a actuar: dos ataques, o atacar y beber una poción. Un uso por descanso."
+        en: "When the battle demands it, you find strength from nowhere. After using your action, you spend your bonus action to get it back and act again: two attacks, or attack and drink a potion. One use per rest."
       level: 2
       kind: surge
       action: bonus
@@ -137,6 +158,9 @@ warrior:
     improved_critical:
       name: {es: Crítico Mejorado, en: Improved Critical}
       description: {es: Tus ataques son críticos con 19 o 20., en: Your attacks score a critical hit on a 19 or 20.}
+      details:
+        es: "Conoces los puntos débiles de cualquier armadura. Tus ataques son críticos con un 19 o un 20 natural, y un crítico dobla los dados de daño."
+        en: "You know the weak points of any armor. Your attacks are critical hits on a natural 19 or 20, and a critical doubles the damage dice."
       level: 3
       kind: passive
       action: none
@@ -144,6 +168,9 @@ warrior:
     extra_attack:
       name: {es: Ataque Extra, en: Extra Attack}
       description: {es: Atacas dos veces con tu acción de ataque., en: You attack twice with your attack action.}
+      details:
+        es: "La disciplina de mil combates hace que tu arma no se detenga. Cuando atacas, golpeas dos veces en la misma acción, cada golpe con su tirada."
+        en: "The discipline of a thousand fights keeps your weapon moving. When you attack, you strike twice in the same action, each with its own roll."
       level: 5
       kind: passive
       action: none
@@ -171,6 +198,9 @@ priest:
     sacred_flame:
       name: {es: Llama Sagrada, en: Sacred Flame}
       description: {es: "Ataque de conjuro a distancia (SAB): 1d8 de daño radiante. Ilimitado.", en: "Ranged spell attack (WIS): 1d8 radiant damage. Unlimited."}
+      details:
+        es: "Una llama de luz cae sobre el enemigo desde lo alto. Es un ataque de conjuro a distancia con tu SAB que hace 1d8 de daño radiante, el doble contra no muertos. No tiene usos: es tu ataque de siempre."
+        en: "A flame of light falls on the enemy from above. It is a ranged spell attack with your WIS that deals 1d8 radiant damage, double against undead. It has no uses: it is your everyday attack."
       level: 1
       kind: spell
       damage: 1d8
@@ -178,6 +208,9 @@ priest:
     healing_word:
       name: {es: Palabra Sanadora, en: Healing Word}
       description: {es: "Acción adicional: recuperas 2d4 + SAB PV.", en: "Bonus action: recover 2d4 + WIS HP."}
+      details:
+        es: "Una palabra de tu fe basta para cerrar heridas. Como acción adicional recuperas 2d4 + SAB PV, y te queda la acción para atacar. Dos usos por descanso."
+        en: "A word of your faith is enough to close wounds. As a bonus action you recover 2d4 + WIS HP, and you keep your action to attack. Two uses per rest."
       level: 1
       kind: heal
       action: bonus
@@ -187,6 +220,9 @@ priest:
     turn_undead:
       name: {es: Expulsar No-muertos, en: Turn Undead}
       description: {es: "Todos los no-muertos enemigos sufren 2d6 de daño radiante y quedan aturdidos un turno.", en: "Every undead enemy takes 2d6 radiant damage and is stunned for a turn."}
+      details:
+        es: "Alzas tu símbolo sagrado y los muertos recuerdan que deberían estar quietos. Todos los no muertos enemigos reciben 2d6 de daño radiante y quedan aturdidos un turno. Contra cualquier otra criatura no hace nada: úsalo en la cripta."
+        en: "You raise your holy symbol and the dead remember they should lie still. Every undead enemy takes 2d6 radiant damage and is stunned for a turn. Against any other creature it does nothing: use it in the crypt."
       level: 2
       kind: turn
       uses: 1
@@ -198,6 +234,9 @@ priest:
     bless:
       name: {es: Bendición, en: Bless}
       description: {es: "+2 a tus tiradas de ataque durante 3 turnos.", en: "+2 to your attack rolls for 3 turns."}
+      details:
+        es: "Tu dios guía tu mano. Durante 3 turnos sumas +2 a tus tiradas de ataque. Úsalo al principio de una pelea larga para sacarle todo el partido."
+        en: "Your god guides your hand. For 3 turns you add +2 to your attack rolls. Use it at the start of a long fight to get the most out of it."
       level: 3
       kind: buff
       uses: 1
@@ -206,6 +245,9 @@ priest:
     divine_strike:
       name: {es: Golpe Divino, en: Divine Strike}
       description: {es: "Una vez por turno, tus golpes con arma cuerpo a cuerpo añaden 1d8 de daño radiante.", en: "Once per turn, your melee weapon hits add 1d8 radiant damage."}
+      details:
+        es: "Tu arma lleva la marca de tu dios. Una vez por turno, cuando aciertas con un arma cuerpo a cuerpo, sumas 1d8 de daño radiante. Es automático."
+        en: "Your weapon bears your god's mark. Once per turn, when you hit with a melee weapon, you add 1d8 radiant damage. It is automatic."
       level: 5
       kind: passive
       action: none
@@ -234,6 +276,9 @@ mage:
     fire_bolt:
       name: {es: Rayo de Fuego, en: Fire Bolt}
       description: {es: "Ataque de conjuro a distancia (INT): 1d10 de daño de fuego. Ilimitado.", en: "Ranged spell attack (INT): 1d10 fire damage. Unlimited."}
+      details:
+        es: "Una chispa en la punta de los dedos que estalla en llamas. Es un ataque de conjuro a distancia con tu INT que hace 1d10 de daño de fuego. No tiene usos: es tu ataque de siempre, también desde la retaguardia."
+        en: "A spark at your fingertips that bursts into flame. It is a ranged spell attack with your INT that deals 1d10 fire damage. It has no uses: it is your everyday attack, from the back row too."
       level: 1
       kind: spell
       damage: 1d10
@@ -241,6 +286,9 @@ mage:
     mage_armor:
       name: {es: Armadura de Mago, en: Mage Armor}
       description: {es: "+3 a la CA si no llevas armadura.", en: "+3 AC while you wear no armor."}
+      details:
+        es: "Una fuerza invisible te envuelve como una coraza. Si no llevas armadura, tienes +3 a la CA siempre, sin gastar acciones."
+        en: "An invisible force wraps you like a breastplate. If you wear no armor, you always have +3 AC, with no action needed."
       level: 1
       kind: passive
       action: none
@@ -248,6 +296,9 @@ mage:
     sleep:
       name: {es: Dormir, en: Sleep}
       description: {es: "Un enemigo hace una salvación de SAB; si falla, se duerme 2 turnos (ventaja contra él; despierta al recibir daño).", en: "One enemy makes a WIS save; on a failure it falls asleep for 2 turns (advantage against it; it wakes when damaged)."}
+      details:
+        es: "Un susurro y los párpados del enemigo pesan como el plomo. Hace una salvación de SAB; si falla, se duerme 2 turnos: no actúa y tus ataques tienen ventaja, pero despierta si recibe daño. Dos usos por descanso."
+        en: "A whisper and the enemy's eyelids weigh like lead. It makes a WIS save; on a failure it falls asleep for 2 turns: it does not act and your attacks have advantage, but it wakes up if it takes damage. Two uses per rest."
       level: 2
       kind: save
       uses: 2
@@ -257,6 +308,9 @@ mage:
     fireball:
       name: {es: Bola de Fuego, en: Fireball}
       description: {es: "Toda la fila del objetivo hace una salvación de DES: 3d6 de fuego, la mitad si la supera.", en: "The target's whole row makes a DEX save: 3d6 fire, half on a success."}
+      details:
+        es: "Una perla de fuego que vuela hasta el enemigo y revienta. Toda su fila hace una salvación de DES: 3d6 de daño de fuego, la mitad si la supera. Ideal contra grupos en primera línea. Un uso por descanso."
+        en: "A bead of fire that flies to the enemy and bursts. Its whole row makes a DEX save: 3d6 fire damage, half on a success. Ideal against groups in the front line. One use per rest."
       level: 3
       kind: save
       uses: 1
@@ -268,6 +322,9 @@ mage:
     magic_missile:
       name: {es: Proyectil Mágico, en: Magic Missile}
       description: {es: "Tres dardos que nunca fallan: 3d4+3 de daño de fuerza.", en: "Three darts that never miss: 3d4+3 force damage."}
+      details:
+        es: "Tres dardos de luz que buscan su blanco solos. No hay tirada: siempre aciertan y hacen 3d4+3 de daño de fuerza. Perfecto para rematar a un enemigo con CA alta. Dos usos por descanso."
+        en: "Three darts of light that find their mark on their own. There is no roll: they always hit and deal 3d4+3 force damage. Perfect to finish off an enemy with high AC. Two uses per rest."
       level: 5
       kind: spell
       uses: 2
@@ -297,6 +354,9 @@ druid:
     thorn_whip:
       name: {es: Látigo de Espinas, en: Thorn Whip}
       description: {es: "Ataque de conjuro a distancia (SAB): 1d6 de daño perforante. Ilimitado.", en: "Ranged spell attack (WIS): 1d6 piercing damage. Unlimited."}
+      details:
+        es: "Un látigo de enredaderas con espinas brota de tu mano. Es un ataque de conjuro a distancia con tu SAB que hace 1d6 de daño perforante. No tiene usos."
+        en: "A whip of thorny vines springs from your hand. It is a ranged spell attack with your WIS that deals 1d6 piercing damage. It has no uses."
       level: 1
       kind: spell
       damage: 1d6
@@ -304,6 +364,9 @@ druid:
     cure_wounds:
       name: {es: Curar Heridas, en: Cure Wounds}
       description: {es: "Recuperas 1d8 + SAB PV.", en: "Recover 1d8 + WIS HP."}
+      details:
+        es: "La savia de la tierra cierra tus heridas. Usas tu acción para recuperar 1d8 + SAB PV. Dos usos por descanso."
+        en: "The sap of the earth closes your wounds. You use your action to recover 1d8 + WIS HP. Two uses per rest."
       level: 1
       kind: heal
       uses: 2
@@ -312,6 +375,9 @@ druid:
     entangle:
       name: {es: Enredar, en: Entangle}
       description: {es: "Toda la fila del objetivo hace una salvación de DES; quien falla queda enredado 2 turnos (ventaja contra él, desventaja en sus ataques).", en: "The target's whole row makes a DEX save; those who fail are entangled for 2 turns (advantage against them, disadvantage on their attacks)."}
+      details:
+        es: "Las raíces brotan del suelo y atrapan a todo lo que pisa. Toda la fila del objetivo hace una salvación de DES; quien falla queda enredado 2 turnos: tus ataques tienen ventaja contra él y él ataca con desventaja. Un uso por descanso."
+        en: "Roots burst from the ground and seize everything on it. The target's whole row makes a DEX save; whoever fails is restrained for 2 turns: your attacks have advantage against it and it attacks with disadvantage. One use per rest."
       level: 2
       kind: save
       uses: 1
@@ -322,6 +388,9 @@ druid:
     wild_shape:
       name: {es: Forma Salvaje, en: Wild Shape}
       description: {es: "Acción adicional: adoptas forma de oso y ganas 2d8 + tu nivel en PV temporales.", en: "Bonus action: you take the shape of a bear and gain 2d8 + your level in temporary HP."}
+      details:
+        es: "Tu cuerpo crece y se cubre de pelo: eres un oso. Como acción adicional ganas 2d8 + tu nivel en PV temporales, que se pierden antes que los tuyos. Un uso por descanso."
+        en: "Your body grows and is covered in fur: you are a bear. As a bonus action you gain 2d8 + your level in temporary HP, lost before your own. One use per rest."
       level: 3
       kind: buff
       action: bonus
@@ -333,6 +402,9 @@ druid:
     elemental_fury:
       name: {es: Furia Elemental, en: Elemental Fury}
       description: {es: Sumas tu SAB al daño de tus conjuros., en: You add your WIS to the damage of your spells.}
+      details:
+        es: "La naturaleza responde con rabia a tu llamada. Sumas tu SAB al daño de tus conjuros de ataque. Es automático."
+        en: "Nature answers your call with fury. You add your WIS to the damage of your attack spells. It is automatic."
       level: 5
       kind: passive
       action: none
@@ -360,6 +432,9 @@ bard:
     vicious_mockery:
       name: {es: Burla Cruel, en: Vicious Mockery}
       description: {es: "Un enemigo hace una salvación de SAB: si falla, 1d4 de daño psíquico y miedo 1 turno. Ilimitado.", en: "One enemy makes a WIS save: on a failure, 1d4 psychic damage and fear for 1 turn. Unlimited."}
+      details:
+        es: "Una burla tan cruel que duele de verdad. El enemigo hace una salvación de SAB; si falla, recibe 1d4 de daño psíquico y queda con miedo un turno (ataca con desventaja). No tiene usos."
+        en: "A taunt so cruel it really hurts. The enemy makes a WIS save; on a failure it takes 1d4 psychic damage and is frightened for a turn (it attacks with disadvantage). It has no uses."
       level: 1
       kind: save
       save: wis
@@ -370,6 +445,9 @@ bard:
     bardic_inspiration:
       name: {es: Inspiración Bárdica, en: Bardic Inspiration}
       description: {es: "Acción adicional: tu próxima tirada de ataque suma 1d6.", en: "Bonus action: your next attack roll adds 1d6."}
+      details:
+        es: "Una nota que te recuerda por qué luchas. Como acción adicional, tu próxima tirada de ataque suma 1d6. Dos usos por descanso."
+        en: "A note that reminds you why you fight. As a bonus action, your next attack roll adds 1d6. Two uses per rest."
       level: 1
       kind: buff
       action: bonus
@@ -379,6 +457,9 @@ bard:
     song_of_healing:
       name: {es: Canción Sanadora, en: Song of Healing}
       description: {es: "Acción adicional: recuperas 1d4 + CAR PV.", en: "Bonus action: recover 1d4 + CHA HP."}
+      details:
+        es: "Una canción suave que calma el dolor. Como acción adicional recuperas 1d4 + CAR PV, y te queda la acción. Dos usos por descanso."
+        en: "A soft song that eases the pain. As a bonus action you recover 1d4 + CHA HP, and you keep your action. Two uses per rest."
       level: 2
       kind: heal
       action: bonus
@@ -388,6 +469,9 @@ bard:
     hypnotic_pattern:
       name: {es: Patrón Hipnótico, en: Hypnotic Pattern}
       description: {es: "Toda la fila del objetivo hace una salvación de SAB; quien falla queda aturdido 1 turno.", en: "The target's whole row makes a WIS save; those who fail are stunned for 1 turn."}
+      details:
+        es: "Luces de colores giran en el aire y nadie puede apartar la mirada. Toda la fila del objetivo hace una salvación de SAB; quien falla queda aturdido un turno. Un uso por descanso."
+        en: "Colored lights whirl in the air and no one can look away. The target's whole row makes a WIS save; whoever fails is stunned for a turn. One use per rest."
       level: 3
       kind: save
       uses: 1
@@ -398,6 +482,9 @@ bard:
     cutting_words:
       name: {es: Palabras Cortantes, en: Cutting Words}
       description: {es: El primer golpe que recibes cada ronda hace la mitad de daño., en: The first hit you take each round deals half damage.}
+      details:
+        es: "Una palabra a tiempo hace que el golpe del enemigo pierda fuerza. El primer ataque que te acierta en cada ronda te hace la mitad de daño. Es automático."
+        en: "A well-timed word makes the enemy's blow lose its strength. The first attack that hits you each round deals half damage. It is automatic."
       level: 5
       kind: passive
       action: none
@@ -425,6 +512,9 @@ warlock:
     eldritch_blast:
       name: {es: Estallido Sobrenatural, en: Eldritch Blast}
       description: {es: "Ataque de conjuro a distancia (CAR): 1d10 de daño de fuerza. Ilimitado.", en: "Ranged spell attack (CHA): 1d10 force damage. Unlimited."}
+      details:
+        es: "Un rayo de energía crepitante, regalo de tu patrón. Es un ataque de conjuro a distancia con tu CAR que hace 1d10 de daño de fuerza. No tiene usos: es tu ataque de siempre."
+        en: "A beam of crackling energy, a gift from your patron. It is a ranged spell attack with your CHA that deals 1d10 force damage. It has no uses: it is your everyday attack."
       level: 1
       kind: spell
       damage: 1d10
@@ -432,6 +522,9 @@ warlock:
     hex:
       name: {es: Maleficio, en: Hex}
       description: {es: "Acción adicional: maldices a un enemigo 3 turnos, sin salvación; cada golpe que le das suma 1d6 de daño necrótico.", en: "Bonus action: you curse one enemy for 3 turns, no save; each hit you land on it adds 1d6 necrotic damage."}
+      details:
+        es: "Señalas al enemigo y tu patrón lo marca. Como acción adicional lo maldices 3 turnos, sin salvación: cada golpe que le das suma 1d6 de daño necrótico. Úsalo primero y ataca después. Dos usos por descanso."
+        en: "You point at the enemy and your patron marks it. As a bonus action you curse it for 3 turns, with no save: every hit you land adds 1d6 necrotic damage. Cast it first, then attack. Two uses per rest."
       level: 1
       kind: curse
       action: bonus
@@ -441,6 +534,9 @@ warlock:
     shadow_armor:
       name: {es: Armadura de Sombras, en: Shadow Armor}
       description: {es: "Acción adicional: las sombras te envuelven y ganas 2d4 + CAR PV temporales.", en: "Bonus action: shadows wrap around you and you gain 2d4 + CHA temporary HP."}
+      details:
+        es: "Las sombras se te pegan como una segunda piel. Como acción adicional ganas 2d4 + CAR PV temporales, que se pierden antes que los tuyos. Un uso por descanso."
+        en: "The shadows cling to you like a second skin. As a bonus action you gain 2d4 + CHA temporary HP, lost before your own. One use per rest."
       level: 2
       kind: buff
       action: bonus
@@ -450,6 +546,9 @@ warlock:
     void_whispers:
       name: {es: Susurros del Vacío, en: Void Whispers}
       description: {es: "Toda la fila del objetivo hace una salvación de SAB: 2d6 de daño psíquico, la mitad si la supera; quien falla queda con miedo 1 turno.", en: "The target's whole row makes a WIS save: 2d6 psychic damage, half on a success; those who fail are frightened for 1 turn."}
+      details:
+        es: "Voces del vacío llenan la cabeza de tus enemigos. Toda la fila del objetivo hace una salvación de SAB: 2d6 de daño psíquico, la mitad si la supera, y quien falla queda con miedo un turno. Un uso por descanso."
+        en: "Voices from the void fill your enemies' heads. The target's whole row makes a WIS save: 2d6 psychic damage, half on a success, and whoever fails is frightened for a turn. One use per rest."
       level: 3
       kind: save
       uses: 1
@@ -463,6 +562,9 @@ warlock:
     agonizing_blast:
       name: {es: Estallido Agónico, en: Agonizing Blast}
       description: {es: Sumas tu CAR al daño de tus conjuros., en: You add your CHA to the damage of your spells.}
+      details:
+        es: "Tu patrón afila tu poder. Sumas tu CAR al daño de tus conjuros de ataque, también al Estallido Sobrenatural. Es automático."
+        en: "Your patron sharpens your power. You add your CHA to the damage of your attack spells, Eldritch Blast included. It is automatic."
       level: 5
       kind: passive
       action: none

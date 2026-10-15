@@ -4,6 +4,19 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.23] - 2026-10-15
+
+### Añadido
+- «📈 Estadísticas» en el diario:
+  - distancia recorrida;
+  - lugares y ciudades visitados;
+  - combates ganados, perdidos y huidas;
+  - monstruos derrotados (los tres más cazados);
+  - esquivas (ataques enemigos fallados), golpes críticos y actividades terminadas.
+
+  Los monstruos cuentan desde siempre (salen del bestiario); lo demás, desde esta versión.
+- Texto largo (`details`) para todas las habilidades de las 8 clases, en `/skill_<clave>`. Antes solo lo tenía el Paladín.
+
 ## [0.7.22] - 2026-10-15
 
 ### Añadido

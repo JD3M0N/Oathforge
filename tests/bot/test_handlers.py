@@ -842,3 +842,20 @@ async def test_masteries_and_hobbies_pages(llm):
     await p.press("hob|-|-")
     assert "Cocina" in p.last[0] and "Pesca" in p.last[0] and "☆" in p.last[0]
     assert {"prof|-|-", "mst|-|-"} <= set(p.buttons())
+
+
+async def test_journal_statistics(llm):
+    p = Player(llm, tg_id=75)
+    await create(p)
+    await p.press("trv|-|-")
+    await p.press(p.find("go", "broken_crown_tavern"))
+    await p.press("jr|-|-")
+    await p.press(p.find("jrs"))
+    assert "Estadísticas" in p.last[0] and "Lugares visitados: 1" in p.last[0] and "yardas" in p.last[0]
+    assert "Distancia recorrida: 0 yardas" not in p.last[0]
+
+
+def test_every_class_ability_has_its_long_text():
+    from oathforge.content import get_content
+    missing = [f"{k}.{a}" for k, cl in get_content().classes.items() for a, ab in cl.abilities.items() if not ab.details]
+    assert missing == []

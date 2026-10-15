@@ -87,6 +87,7 @@ async def start_encounter(
 
     session.add(CombatAction(encounter_id=enc.id, round=1, actor="start", action={},
                              result=[entry.model_dump(mode="json") for entry in logs]))
+    _count(char, logs)
     out = Outcome(encounter_id=enc.id)
     out.add("combat.start", enemies=_names_list([state.combatants[k] for k in state.combatants if k != "p1"]),
             links=" ".join(f"/monster_{k}" for k in dict.fromkeys(monster_keys)))
@@ -123,11 +124,19 @@ async def act(
     session.add(CombatAction(encounter_id=enc.id, round=state.round, actor="p1",
                              action=action.model_dump(mode="json"),
                              result=[entry.model_dump(mode="json") for entry in logs]))
+    _count(char, logs)
     out = Outcome(encounter_id=enc.id)
     out.events += [log_event(state, e) for e in logs]
     await _sync_and_maybe_finish(session, char, enc, state, rng, out)
     _record(enc, char, state, action, logs)
     return out
+
+
+def _count(char: Character, logs: list[LogEntry]) -> None:
+    """Statistics: attacks against the hero that missed (dodges) and the hero's critical hits."""
+    dodges = sum(1 for e in logs if e.key == "combat.miss" and e.params.get("target") == "p1")
+    crits = sum(1 for e in logs if e.key == "combat.crit" and e.params.get("actor") == "p1")
+    characters.bump_stats(char, dodges=dodges, crits=crits)
 
 
 def _record(enc: Encounter, char: Character, state: EncounterState, action: Action | None,
@@ -151,6 +160,7 @@ async def _sync_and_maybe_finish(session, char, enc, state: EncounterState, rng,
         return
     enc.status = state.status
     char.state = "idle"
+    characters.bump_stats(char, **{f"battles_{state.status}": 1})
     c = get_content()
     first = len(out.events)
     if state.status == "victory":
