@@ -394,3 +394,53 @@ async def test_completing_item_objectives_caps_the_count(errands):
         prog = (await quests.progress(s, char))["errands"]
         assert prog.state == "completed" and prog.counters["0"] == 50 and prog.counters["2"] == 1
         assert char.xp == xp + 10 and any(e.key == "text" for e in out.events)
+
+
+async def _activate(s, char, qkey):
+    from oathforge.content import get_content
+    from oathforge.services import quests
+    quest = get_content().quests[qkey]
+    p = (await quests.ensure_progress(s, char))[qkey]
+    p.stage, p.state, p.counters = quest.objective_stage, "active", {}
+
+
+async def test_tutorial_gathering_is_instant_once_and_only_what_it_asks_for():
+    from oathforge.services import quests
+    cid = await new_character()
+    now = time.time()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        await _activate(s, char, "tut_mine")  # 3 iron ore
+        out = await activities.start(s, char, "gather", "mining", now)
+        assert out.ok and char.state == "idle" and any(e.key == "activity.tutorial" for e in out.events)
+        assert await inventory.count(s, char, "iron_ore") == 3 and await inventory.count(s, char, "coal") == 0
+        assert (await quests.progress(s, char))["tut_mine"].state == "completed"
+        assert await activities.open_activity(s, char) is None  # nothing to collect, nothing running
+        # the shortcut was used: the next one takes its normal time
+        await _activate(s, char, "tut_mine")
+        assert (await activities.start(s, char, "gather", "mining", now)).ok and char.state == "busy"
+
+
+async def test_no_tutorial_shortcut_for_another_resource_or_outside_the_tutorial():
+    cid = await new_character()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        await _activate(s, char, "tut_herbs")  # bloodroot: the mine has none
+        assert (await activities.start(s, char, "gather", "mining")).ok and char.state == "busy"
+    cid = await new_character(tg_id=2)
+    async with session_scope() as s:
+        char = await get_char(s, cid)  # only "Mustering In" is active: nothing to gather
+        assert (await activities.start(s, char, "stay", "mining")).ok and char.state == "busy"
+
+
+async def test_tutorial_skinning_guarantees_the_hide_once():
+    cid = await new_character(location="tusk_meadow", tools=("skinning_knife",))
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        await _activate(s, char, "tut_boars")  # 2 boars and 1 boar hide
+        hides = []
+        for seed in range(6):
+            got = await activities.skin(s, char, ["boar"], random.Random(seed), Outcome())
+            hides.append(got.get("boar_hide", 0))
+        assert hides[0] >= 1  # the first skinning, whatever the dice say
+        assert char.flags["tutorial_boosts"] == ["tut_boars"]

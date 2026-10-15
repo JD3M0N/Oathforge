@@ -4,6 +4,18 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.16] - 2026-10-15
+
+### Añadido
+- **Tutorial acelerado**. Las misiones del tutorial llevan `tutorial: true`. Cuando una pide recolectar o desollar algo:
+  - la primera recolección o expedición en un lugar que tiene ese recurso termina al momento, sin emboscada, y da justo lo que falta (por ejemplo, 3 menas de hierro);
+  - el primer desuello da seguro el cuero que pide.
+
+  Solo cuenta la acción que pide la misión activa, y una vez por misión. Lo demás dura lo normal.
+
+### Cambiado
+- Las pistas de «Raíz de sangre» y «Hierro para la Guardia» avisan de que la primera vez termina al momento.
+
 ## [0.7.15] - 2026-10-15
 
 ### Añadido

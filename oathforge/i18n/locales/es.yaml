@@ -677,6 +677,7 @@ activity:
     rest: "Durmiendo en {place}"
   cancelled: "Abandonas la tarea. No te llevas nada."
   bonus: "🍀 Tu maestría te da algo extra: {loot}."
+  tutorial: "⚡ Tutorial: Vale te enseña el atajo y terminas al momento ({skill} en {place}). Fuera del tutorial, esto lleva su tiempo."
   stay_ambush: "⚠️ Cuando cargas lo obtenido ({loot}), algo sale de las sombras... Victoria: te lo llevas todo. Huida: la mitad. Derrota: lo pierdes."
   stay_saved: "📦 Conservas toda la carga de la expedición."
   stay_half: "📦 En la huida se pierde la mitad de la carga."

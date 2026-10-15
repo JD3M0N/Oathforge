@@ -2,10 +2,12 @@
 # recogidos, desollados o fabricados, descansos, curaciones) y dan `rewards`; la siguiente se desbloquea con
 # `after` (misión completada) o `unlock_flag`. El diario las ordena por `order`.
 # 1-8: el tutorial de la sargenta Vale (de nivel 1 a 3, una actividad por misión); 9-11 llevan a nivel 5.
+# `tutorial`: la primera actividad que encaja con su objetivo termina al momento y da lo que falta (una vez).
 # `legacy_done`: quien completó alguna de esas misiones antiguas empieza con esta completada (sin recompensa).
 
 tut_muster:
   order: 1
+  tutorial: true
   giver: vale
   legacy_done: [night_wings]
   name: {es: Alistamiento, en: Mustering In}
@@ -41,6 +43,7 @@ tut_muster:
 
 tut_town:
   order: 2
+  tutorial: true
   giver: vale
   after: tut_muster
   legacy_done: [night_wings]
@@ -82,6 +85,7 @@ tut_town:
 
 tut_boars:
   order: 3
+  tutorial: true
   giver: vale
   after: tut_town
   legacy_done: [night_wings]
@@ -122,6 +126,7 @@ tut_boars:
 
 tut_herbs:
   order: 4
+  tutorial: true
   giver: vale
   after: tut_boars
   legacy_done: [night_wings]
@@ -130,8 +135,8 @@ tut_herbs:
     es: La capilla se queda sin raíz de sangre y la Guardia sin pociones. Vale te manda al bosque con la hoz.
     en: The chapel is running out of bloodroot and the Guard out of potions. Vale sends you to the woods with the sickle.
   hint:
-    es: Sal por la plaza al Camino del Viejo Rey y sigue hasta el Bosque de los Susurros (o el Claro de la Raíz Roja). Pulsa «🌿 Recolectar hierbas» y pulsa «🎁 Recoger» cuando acabe. Los caminos con ⚠️ pueden traer emboscadas.
-    en: Leave through the plaza to the Old King's Road and on to the Whispering Woods (or Redroot Clearing). Press "🌿 Gather herbs" and "🎁 Collect" when it's done. Roads marked ⚠️ may bring ambushes.
+    es: Sal por la plaza al Camino del Viejo Rey y sigue hasta el Bosque de los Susurros (o el Claro de la Raíz Roja). Pulsa «🌿 Recolectar hierbas» (en el tutorial, la primera vez termina al momento). Los caminos con ⚠️ pueden traer emboscadas.
+    en: Leave through the plaza to the Old King's Road and on to the Whispering Woods (or Redroot Clearing). Press "🌿 Gather herbs" (in the tutorial, the first time is done at once). Roads marked ⚠️ may bring ambushes.
   start_stage: locked
   unlock_stage: active
   objective_stage: active
@@ -164,6 +169,7 @@ tut_herbs:
 
 tut_stew:
   order: 5
+  tutorial: true
   giver: vale
   after: tut_herbs
   legacy_done: [night_wings]
@@ -203,6 +209,7 @@ tut_stew:
 
 tut_mine:
   order: 6
+  tutorial: true
   giver: vale
   after: tut_stew
   legacy_done: [night_wings]
@@ -211,8 +218,8 @@ tut_mine:
     es: Los caminos del norte están cortados y la herrera Tessa no tiene hierro. Vale te manda a la mina con el pico.
     en: The northern roads are cut off and Tessa the smith has no iron. Vale sends you to the mine with the pickaxe.
   hint:
-    es: Por el Camino del Viejo Rey llegas a la Mina del Paso Viejo. Pulsa «⛏️ Minar»; con la «🏕️ Expedición larga» sacas más, pero puede haber emboscada.
-    en: The Old King's Road takes you to the Old Pass Mine. Press "⛏️ Mine"; a "🏕️ Long expedition" yields more, but you may be ambushed.
+    es: Por el Camino del Viejo Rey llegas a la Mina del Paso Viejo. Pulsa «⛏️ Minar» (en el tutorial, la primera vez termina al momento). Fuera del tutorial, la «🏕️ Expedición larga» saca más, pero puede haber emboscada.
+    en: The Old King's Road takes you to the Old Pass Mine. Press "⛏️ Mine" (in the tutorial, the first time is done at once). Outside the tutorial, a "🏕️ Long expedition" yields more, but you may be ambushed.
   start_stage: locked
   unlock_stage: active
   objective_stage: active
@@ -242,6 +249,7 @@ tut_mine:
 
 tut_bats:
   order: 7
+  tutorial: true
   giver: vale
   after: tut_mine
   legacy_done: [night_wings]
@@ -276,6 +284,7 @@ tut_bats:
 
 tut_chapel:
   order: 8
+  tutorial: true
   giver: vale
   after: tut_bats
   legacy_done: [night_wings]

@@ -146,6 +146,30 @@ async def on_visit(session: AsyncSession, char: Character, location: str, rng: r
     return await advance(session, char, "visit", location, rng)
 
 
+TUTORIAL_BOOSTS = "tutorial_boosts"  # char.flags: tutorial missions whose shortcut was already used
+
+
+async def tutorial_boost(session: AsyncSession, char: Character, kind: str,
+                         candidates: set[str]) -> tuple[str, str, int] | None:
+    """The accelerated tutorial: (mission, item, how many are missing) when an active tutorial mission asks
+    to `kind` (gather / skin) one of the `candidates` and its shortcut is still unused. Once per mission."""
+    used = set((char.flags or {}).get(TUTORIAL_BOOSTS, []))
+    prog = await ensure_progress(session, char)
+    for qkey, quest in ordered_quests():
+        p = prog[qkey]
+        if not quest.tutorial or qkey in used or p.state != "active" or p.stage != quest.objective_stage:
+            continue
+        for obj, n in objective_progress(quest, p):
+            if obj.kind == kind and obj.target in candidates and n < obj.count:
+                return qkey, obj.target, obj.count - n
+    return None
+
+
+def use_tutorial_boost(char: Character, quest_key: str) -> None:
+    flags = char.flags or {}
+    char.flags = {**flags, TUTORIAL_BOOSTS: [*flags.get(TUTORIAL_BOOSTS, []), quest_key]}
+
+
 async def on_read(session: AsyncSession, char: Character, section: str, rng: random.Random) -> Outcome:
     """A /rulebook page opened: "look it up in the rulebook" objectives."""
     return await advance(session, char, "read", section, rng)

@@ -24,6 +24,8 @@
   | 7 | Alas al anochecer | 3 murciélagos en la mina (a cualquier hora desde la v0.7.15) | caza en grupo de enemigos | 75 | — |
   | 8 | Heridas de guerra | Hablar con Ysolde + volver con Vale | curación y descanso | 40 | poción de curación |
 
+  **Tutorial acelerado** (v0.7.16): las misiones llevan `tutorial: true`. La primera recolección (o expedición) o desuello que encaja con el objetivo activo termina al momento, sin emboscada, y da justo lo que falta. Una vez por misión (`char.flags.tutorial_boosts`); lo demás dura lo normal.
+
   Total: 425 de misión + unos 95 de combates ≈ 520 → nivel 3. Quien ya había completado «Alas al anochecer» tiene el tutorial hecho (`legacy_done`, sin recompensa).
 
   | # | Misión | Objetivo | XP |

@@ -88,6 +88,12 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str,
     if await open_activity(session, char, lock=True):
         return Outcome.refused("activity.err.busy")
     now = _now(now)
+    if kind in ("gather", "stay"):
+        rank = gathering.rank_for(characters.mastery_xp(char, skill))
+        here = {r.item for r in g.resources if r.min_rank <= rank}
+        boost = await quests.tutorial_boost(session, char, "gather", here)
+        if boost:
+            return await _tutorial_gather(session, char, kind, skill, loc, boost, now)
     seconds = gathering.SECONDS[kind]
     act = WorldActivity(character_id=char.id, location=char.location, kind=kind, skill=skill, started_at=now,
                         ends_at=now + seconds, status="running", seed=secrets.randbits(48), result={})
@@ -100,6 +106,21 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str,
                              minutes=seconds // 60)
     return Outcome().add(f"activity.started.{kind}", skill=characters.mastery_name(skill),
                          place=loc.name.model_dump(), minutes=seconds // 60)
+
+
+async def _tutorial_gather(session, char, kind: str, skill: str, loc: Location, boost, now: float) -> Outcome:
+    """The tutorial's shortcut: done at once, with exactly what the mission still asks for, no ambush."""
+    qkey, item, missing = boost
+    quests.use_tutorial_boost(char, qkey)
+    items = {item: missing}
+    xp = gathering.GATHER_XP
+    session.add(WorldActivity(character_id=char.id, location=char.location, kind=kind, skill=skill, started_at=now,
+                              ends_at=now, status="done", resolved_at=now, seed=0,
+                              result={"outcome": "tutorial", "items": items, "xp": xp}))
+    out = Outcome().add("activity.tutorial", skill=characters.mastery_name(skill), place=loc.name.model_dump())
+    await _give(session, char, items, out, random.Random())
+    characters.grant_mastery(char, skill, xp, out)
+    return out
 
 
 async def cancel(session: AsyncSession, char: Character, now: float | None = None) -> Outcome:
@@ -204,6 +225,11 @@ async def skin(session: AsyncSession, char: Character, monster_keys: list[str], 
     for key in beasts:
         for item, qty in gathering.roll_harvest(rng, c.monsters[key].harvest, rank).items():
             got[item] = got.get(item, 0) + qty
+    boost = await quests.tutorial_boost(session, char, "skin", {h.item for k in beasts for h in c.monsters[k].harvest})
+    if boost:  # the tutorial's shortcut: what the mission asks for is guaranteed
+        qkey, item, missing = boost
+        quests.use_tutorial_boost(char, qkey)
+        got[item] = max(got.get(item, 0), missing)
     if got:
         out.add("activity.trophies" if trophy else "activity.skinned", loot=loot_text(got))
         for key, qty in got.items():
