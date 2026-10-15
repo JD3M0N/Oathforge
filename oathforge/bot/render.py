@@ -42,6 +42,27 @@ def panel_only(key: str) -> bool:
         and not key.startswith("combat.err.")
 
 
+def activity_result(outcome: Outcome, skill: str, lang: str, chronicle: str | None = None,
+                    footer: str | None = None) -> str:
+    """A finished field activity in one message: "✅ Terminas tu trabajo en X" with the craft's emoji, the
+    chronicle, what was obtained and the XP, and "Crónica 1/15"."""
+    head, rest = None, []
+    for ev in outcome.events:
+        if ev.key in LEVEL_KEYS or panel_only(ev.key):
+            continue
+        if head is None and (ev.key.startswith("activity.done.") or ev.key == "activity.track_tracks"):
+            head = escape(render_event(ev, lang))
+        else:
+            rest.append(f"• {escape(render_event(ev, lang))}")
+    parts = [f"{ACTIVITY_ICON.get(skill, '✅')} <b>{head}</b>" if head else ""]
+    if chronicle:
+        parts.append(f"📜 <i>{escape(chronicle)}</i>")
+    parts.append("\n".join(rest))
+    if footer:
+        parts.append(f"<i>{escape(footer)}</i>")
+    return "\n\n".join(p for p in parts if p)[:MAX_MESSAGE]
+
+
 def outcome_text(outcome: Outcome, lang: str, narration: str | None = None) -> str:
     parts: list[str] = []
     if narration:
@@ -187,7 +208,8 @@ def status_line(char: Character, lang: str) -> str:
 
 # ---------------------------------------------------------------- scene
 
-async def scene(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+async def scene(session: AsyncSession, char: Character, lang: str,
+                started: str | None = None) -> tuple[str, InlineKeyboardMarkup]:
     c = get_content()
     loc = c.locations[char.location]
     night = exploration.is_night()
@@ -205,7 +227,7 @@ async def scene(session: AsyncSession, char: Character, lang: str) -> tuple[str,
     n = nonce()
     act = await activities.open_activity(session, char)
     if act is not None and act.status == "running":
-        return activity_panel(char, act, lines, n, lang)
+        return activity_panel(char, act, lines, n, lang, started)
     buttons = [btn(t(lang, "btn.travel"), cb("trv")), btn(t(lang, "btn.investigate"), cb("look", "-", n))]
     if present:
         buttons.append(btn(t(lang, "btn.talk"), cb("talkm")))
@@ -241,20 +263,28 @@ MASTERY_ICON = {"mining": "⛏️", "woodcutting": "🪓", "herbalism": "🌿", 
                 "tracking": "🐾"}
 
 
-def activity_panel(char: Character, act, lines: list[str], n: str, lang: str) -> tuple[str, InlineKeyboardMarkup]:
-    """The scene while a field activity runs: what, how long is left, Collect / Refresh / Abandon."""
-    left = activities.remaining_minutes(act)
-    lines = lines[:2] + ["", t(lang, "activity.panel_title", what=escape(activities.describe(act, lang))),
-                         t(lang, "activity.ready") if left == 0 else t(lang, "activity.left", minutes=left)]
+ACTIVITY_ICON = {**MASTERY_ICON, "rest": "🛏️"}
+
+
+def activity_panel(char: Character, act, lines: list[str], n: str, lang: str,
+                   started: str | None = None) -> tuple[str, InlineKeyboardMarkup]:
+    """The scene while a field activity runs: what, how long is left, Refresh / Abandon. It ends by itself
+    (the bot sends the result), so there is nothing to collect. ``started``: the line of the moment it began."""
+    seconds = activities.remaining_seconds(act)
+    rest = act.kind == "rest"
+    if seconds == 0:
+        left = t(lang, "activity.ready_rest" if rest else "activity.ready")
+    elif seconds < 60:
+        left = t(lang, "activity.left_seconds", seconds=seconds)
+    else:
+        left = t(lang, "activity.left", minutes=activities.remaining_minutes(act))
+    icon = ACTIVITY_ICON.get(act.skill, "⏳")
+    head = escape(started) if started else t(lang, "activity.panel_title", what=escape(activities.describe(act, lang)))
+    lines = lines[:2] + ["", f"{icon} {head}", f"⏳ {left}"]
     if act.kind == "stay":
         lines.append(t(lang, "activity.stay_warning"))
-    rest = act.kind == "rest"
-    if rest and left == 0:
-        lines[-1] = t(lang, "activity.ready_rest")
     lines += ["", f"<i>{t(lang, 'activity.busy_hint_rest' if rest else 'activity.busy_hint')}</i>"]
-    claim = t(lang, "btn.wake" if rest else "btn.claim")
-    first = [btn(claim, cb("actc", "-", n))] if left == 0 else [btn(t(lang, "btn.refresh"), cb("scene"))]
-    rows = [first + [btn(t(lang, "btn.abandon"), cb("actx", "-", n))],
+    rows = [[btn(t(lang, "btn.refresh"), cb("actc", "-", n)), btn(t(lang, "btn.abandon"), cb("actx", "-", n))],
             [btn(t(lang, "btn.inventory"), cb("inv")), btn(t(lang, "btn.sheet"), cb("hero")),
              btn(t(lang, "btn.journal"), cb("jr"))]]
     return "\n".join(lines), markup(rows)
@@ -1373,6 +1403,10 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
     rows: list = []
     if state.status != "active":
         lines += [RULE, f"<b>{t(lang, 'combat.end.' + state.status)}</b>"]
+        beasts = characters.pending_skin(char) if state.status == "victory" else []
+        if beasts:
+            rows.append([btn(t(lang, "btn.skin", seconds=activities.skin_seconds(beasts)),
+                             cb("act", "skin:skinning", nonce()))])
         rows.append([btn(t(lang, "btn.report"), cb("rep")), btn(t(lang, "btn.continue"), cb("scene"))])
         return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
 

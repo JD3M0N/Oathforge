@@ -81,8 +81,8 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] «👥 Aquí:» de la escena como lista, un PNJ por línea (v0.7.18).
 - [x] `/rulebook` → «Actividades» y «Recolección y oficios» con cada acción en detalle (duración, qué da, emboscada, rastreo…), con las cifras del motor (v0.7.19).
 - [x] `/masteries` y `/hobbies` (como `/classes`), enlazadas con `/professions` y desde el `/rulebook` (v0.7.19).
-- [ ] 🟡 **Actividades que terminan solas**: al empezar a trabajar, un mensaje bonito en vez del panel de escena repetido; al acabar, el bot te manda lo obtenido aunque estés desconectado. Sin botón «Recoger»: solo «🔄 Actualizar» y «Abandonar».
-- [ ] 🟡 **Crónica y botín en un solo mensaje**: «✅ Terminas tu trabajo en X» con el emoji del oficio, «📜 Crónica: …», lo obtenido, la XP y «Crónica 1/15». Probar formatos antes de decidir.
+- [x] **Actividades que terminan solas**: al empezar, un mensaje propio en vez de la escena repetida; al acabar, el bot manda lo obtenido aunque estés desconectado (y tras un reinicio). Sin «Recoger»: solo «🔄 Actualizar» y «Abandonar» (v0.7.21).
+- [x] **Crónica y botín en un solo mensaje**: «⛏️ ✅ Terminas tu trabajo en X», «📜 crónica», lo obtenido, la XP y «Crónica 1/15» (v0.7.21). *Si no convence el formato, se ajusta en `render.activity_result`.*
 - [ ] 🟢 **Estadísticas del personaje** en una pestaña del diario: distancia recorrida, ciudades visitadas, monstruos matados, esquivas…
 - [ ] 🟢 Duelos PvP con consentimiento y sin pérdidas.
 
@@ -96,7 +96,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🔴 **Entregar las misiones a quien las dio**: al cumplir los objetivos la misión queda «lista para entregar»; al hablar con ese PNJ cobras la recompensa y te da la siguiente.
 - [ ] 🔴 ◐ **Profesiones y recolección** · [profesiones.md](planning/profesiones.md). *Hecho (v0.6.0): actividades de campo, maestrías, mina, arboleda, claro y ribera, desuello y crónicas. Hecho (v0.6.1): oficios con 2 plazas, Barrio de Oficios, recetas y `/professions`. Hecho (v0.6.2): poción de maná y tónico del reposo. Hecho (v0.7.0): Escribanía y Artificiería (pergaminos y bombas para el combate), Cocina y Pesca como aficiones sin plaza y guía `/prof_<oficio>`. Falta: probar el balance con la beta (sobre todo la bomba de fuego, que da a toda una fila).*
 - [ ] 🟢 Afinidades de maestría a rango 3, durabilidad de herramientas y vetas que se agotan (después de la beta).
-- [ ] 🟡 **Desollar como acción con duración**: 10 s para presas pequeñas y más según la presa, en vez de hacerse sola tras el combate.
+- [x] **Desollar como acción con duración**: `/skin` o «🔪 Desollar» tras la victoria, 10 s para presas pequeñas y más según la presa (`skin_seconds`); la pieza se pierde si te vas (v0.7.21).
 - [x] **Pesca como afición de verdad**, igual que la Cocina: entrada en `professions.yaml` con `practice: fishing`, su XP con la de los oficios y su guía `/prof_fishing` (v0.7.20).
 - [x] Renombrada **Artificiería → Ingeniería** (`engineering`), con migración de los personajes (v0.7.20).
 - [ ] 🟢 **Recetas por tier** (T1–T3) y, dentro de cada uno, básica, media y compleja (con mejores nombres): la básica usa materiales del propio oficio, la media añade algo de una afición y la compleja algo de otro oficio (un vial de hierro del herrero). Investigar si tiene sentido o hay algo mejor.

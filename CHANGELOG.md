@@ -4,6 +4,23 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.21] - 2026-10-15
+
+### Añadido
+- **Las actividades terminan solas.** Cada 10 s, el bot cierra las tareas de campo (trabajar, expedición, rastreo, descanso, desuello) que han llegado a su hora y te manda el resultado aunque hayas cerrado Telegram.
+  - Si una expedición acaba en emboscada, llega el aviso con el panel de combate, que espera a que vuelvas.
+  - Un reinicio del bot no pierde nada: el temporizador está en la base de datos.
+- **Desollar con `/skin`** o con el botón «🔪 Desollar» del panel de victoria. Es una actividad corta:
+  - 10 s por presa pequeña, 15 el jabalí, 20 el lobo y 40 el Viejo Colmillo (`skin_seconds` en `monsters.yaml`);
+  - si viajas o empiezas otra cosa, la pieza se pierde.
+
+  En el tutorial, el primer desuello sigue siendo instantáneo.
+
+### Cambiado
+- Al empezar una actividad llega un solo mensaje («Te pones a trabajar…», cuánto falta y «🔄 Actualizar» / «Abandonar») en vez del aviso y la escena repetida. Ya no hay botón «Recoger».
+- La crónica y el botín llegan en un solo mensaje: «⛏️ ✅ Terminas tu trabajo en X», la crónica, lo obtenido, la XP y «Crónica 1/15».
+- El desuello ya no es automático al ganar; los trofeos del rastreo sí.
+
 ## [0.7.20] - 2026-10-15
 
 ### Cambiado

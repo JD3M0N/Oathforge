@@ -1,5 +1,6 @@
 """Timed field activities: Gather (5 min, safe), Stay (15 min, more loot, may end in an ambush)
-and Track (5 min, then a fight with the prey). A long rest at an inn is one too (80 min asleep).
+and Track (5 min, then a fight with the prey). A long rest at an inn is one too (80 min asleep), and so is
+skinning the beasts just killed (/skin, a few seconds).
 
     start  -> the character is busy until ``ends_at`` (unix seconds stored in the database)
     claim  -> the result is rolled once from the activity's seed, stored and paid
@@ -24,7 +25,7 @@ from oathforge.i18n import t
 from oathforge.services import characters, combat_service, exploration, inventory, quests
 from oathforge.services.events import Outcome
 
-KINDS = ("gather", "stay", "track", "rest")
+KINDS = ("gather", "stay", "track", "rest", "skin")
 OPEN = ("running", "awaiting_combat")
 SKINNING_KNIFE = "skinning_knife"
 
@@ -79,6 +80,13 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str,
         if not loc.hunting:
             return Outcome.refused("activity.err.unavailable")
         skill = "tracking"
+    elif kind == "skin":
+        beasts = characters.pending_skin(char)
+        if not beasts:
+            return Outcome.refused("activity.err.nothing_to_skin")
+        if await inventory.count(session, char, SKINNING_KNIFE) == 0:
+            return Outcome.refused("activity.err.no_tool", tool=c.items[SKINNING_KNIFE].name.model_dump())
+        skill = "skinning"
     else:
         g = _gathering(loc, skill)
         if kind not in ("gather", "stay") or g is None:
@@ -88,15 +96,23 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str,
     if await open_activity(session, char, lock=True):
         return Outcome.refused("activity.err.busy")
     now = _now(now)
+    characters.drop_pending_skin(char)  # skinning now, or something else: the carcasses are left behind
+    if kind == "skin":
+        harvest = {h.item for k in beasts for h in c.monsters[k].harvest}
+        if await quests.tutorial_boost(session, char, "skin", harvest):  # the tutorial's shortcut: at once
+            out = Outcome().add("activity.tutorial", skill=characters.mastery_name(skill), place=loc.name.model_dump())
+            await skin(session, char, beasts, random.Random(), out)
+            return out
     if kind in ("gather", "stay"):
         rank = gathering.rank_for(characters.mastery_xp(char, skill))
         here = {r.item for r in g.resources if r.min_rank <= rank}
         boost = await quests.tutorial_boost(session, char, "gather", here)
         if boost:
             return await _tutorial_gather(session, char, kind, skill, loc, boost, now)
-    seconds = gathering.SECONDS[kind]
+    seconds = skin_seconds(beasts) if kind == "skin" else gathering.SECONDS[kind]
     act = WorldActivity(character_id=char.id, location=char.location, kind=kind, skill=skill, started_at=now,
-                        ends_at=now + seconds, status="running", seed=secrets.randbits(48), result={})
+                        ends_at=now + seconds, status="running", seed=secrets.randbits(48),
+                        result={"monsters": beasts} if kind == "skin" else {})
     session.add(act)
     await session.flush()
     char.state = "busy"
@@ -105,7 +121,26 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str,
         return Outcome().add("activity.started.rest", place=loc.name.model_dump(), cost=loc.rest_cost,
                              minutes=seconds // 60)
     return Outcome().add(f"activity.started.{kind}", skill=characters.mastery_name(skill),
-                         place=loc.name.model_dump(), minutes=seconds // 60)
+                         place=loc.name.model_dump(), minutes=seconds // 60, seconds=seconds)
+
+
+def skin_seconds(monster_keys: list[str]) -> int:
+    c = get_content()
+    return sum(c.monsters[k].skin_seconds for k in monster_keys)
+
+
+async def offer_skinning(session: AsyncSession, char: Character, monster_keys: list[str], out: Outcome) -> None:
+    """After a victory: the beasts that can be skinned wait for /skin where they fell."""
+    c = get_content()
+    beasts = [k for k in monster_keys if c.monsters[k].harvest]
+    if not beasts:
+        return
+    if await inventory.count(session, char, SKINNING_KNIFE) == 0:
+        out.add("activity.no_knife")
+        return
+    char.flags = {**(char.flags or {}), characters.PENDING_SKIN: {"monsters": beasts, "location": char.location}}
+    names = {lang: ", ".join(c.monsters[k].name.get(lang) for k in beasts) for lang in ("es", "en")}
+    out.add("activity.can_skin", beasts=names, seconds=skin_seconds(beasts))
 
 
 async def _tutorial_gather(session, char, kind: str, skill: str, loc: Location, boost, now: float) -> Outcome:
@@ -167,6 +202,12 @@ async def claim(session: AsyncSession, char: Character, now: float | None = None
         return exploration.wake_rested(char).extend(await quests.advance(session, char, "rest", act.location, rng))
     if act.kind == "track":
         return await _claim_track(session, char, act, loc, rng, now)
+    if act.kind == "skin":
+        beasts = (act.result or {}).get("monsters", [])
+        out = Outcome().add("activity.done.skin", place=loc.name.model_dump())
+        got = await skin(session, char, beasts, rng, out)
+        _finish(act, "skin", got, gathering.SKIN_XP * len(beasts), now)
+        return out
 
     g = _gathering(loc, act.skill)
     rank = gathering.rank_for(characters.mastery_xp(char, act.skill))
@@ -280,6 +321,17 @@ async def on_encounter_end(session: AsyncSession, char: Character, status: str, 
 
 def remaining_minutes(act: WorldActivity, now: float | None = None) -> int:
     return max(0, math.ceil((act.ends_at - _now(now)) / 60))
+
+
+def remaining_seconds(act: WorldActivity, now: float | None = None) -> int:
+    return max(0, math.ceil(act.ends_at - _now(now)))
+
+
+async def due(session: AsyncSession, now: float | None = None) -> list[int]:
+    """Characters whose running activity is over: they get the result without pressing anything."""
+    rows = await session.scalars(select(WorldActivity.character_id)
+                                 .where(WorldActivity.status == "running", WorldActivity.ends_at <= _now(now)))
+    return sorted(set(rows))
 
 
 def describe(act: WorldActivity, lang: str) -> str:

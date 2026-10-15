@@ -21,7 +21,7 @@ from oathforge.content import get_content
 from oathforge.database.models import WorldActivity
 from oathforge.database.session import session_scope
 from oathforge.i18n import t
-from oathforge.services import characters, chronicles, combat_service, media
+from oathforge.services import activities, characters, chronicles, combat_service, media
 from oathforge.services.events import Outcome
 
 log = logging.getLogger(__name__)
@@ -123,33 +123,61 @@ async def send_chronicle(update: Update, context: ContextTypes.DEFAULT_TYPE, act
         await send(update, f"{t(lang, 'chronicle.title')}\n\n<i>{escape(ch.text)}</i>\n\n{chronicles.footer(ch, lang)}")
 
 
-def schedule_ready_ping(update: Update, context: ContextTypes.DEFAULT_TYPE, char_id: int, seconds: int) -> None:
-    """A heads-up when the activity just started is done. Best effort: the timer itself lives in the
-    database, so a restart only loses this message, never the activity."""
-    jobs = getattr(context, "job_queue", None)
-    if jobs is None or update.effective_chat is None:
-        return
-    jobs.run_once(_ready_ping, when=seconds + 1, chat_id=update.effective_chat.id,
-                  data={"char_id": char_id, "lang": context.user_data.get("lang", "es")})
+class BotChat:
+    """A private chat reached through the bot (no update to answer): the player may be offline."""
+
+    def __init__(self, bot, chat_id: int):
+        self.bot, self.id = bot, chat_id
+
+    async def send_message(self, text: str, **kwargs):
+        return await self.bot.send_message(self.id, text, **kwargs)
 
 
-async def _ready_ping(context: ContextTypes.DEFAULT_TYPE) -> None:
-    job = context.job
-    char_id, lang = job.data["char_id"], job.data["lang"]
+async def send_activity_result(chat, telegram_id: int, llm, outcome: Outcome, lang: str) -> None:
+    """What a finished activity gave, with its chronicle, in one message; level-ups as their own cards."""
+    if outcome.activity_id:
+        async with session_scope() as session:
+            act = await session.get(WorldActivity, outcome.activity_id)
+            skill = act.skill if act else ""
+        async with keep_typing(chat):
+            ch = await chronicles.tell(llm, outcome.activity_id, lang)
+        text = render.activity_result(outcome, skill, lang, ch.text if ch else None,
+                                      chronicles.footer(ch, lang) if ch else None)
+    else:
+        text = render.outcome_text(outcome, lang)
+    for message in [text, *render.level_up_cards(outcome, lang)]:
+        if message:
+            await chat.send_message(message, parse_mode=ParseMode.HTML, disable_web_page_preview=True)
+            recorder.outgoing(telegram_id, message, [], edited=False)
+
+
+async def finish_due_activities(context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Every few seconds (JobQueue): activities whose time is up end by themselves, and the player gets the
+    result even if Telegram is closed. The timer lives in the database, so a restart loses nothing."""
     async with session_scope() as session:
-        act = await session.scalar(select(WorldActivity).where(WorldActivity.character_id == char_id,
-                                                               WorldActivity.status == "running"))
-        if act is None or act.ends_at > time.time():  # collected, abandoned, or a newer activity
+        due = await activities.due(session)
+    for char_id in due:
+        try:
+            await _finish_one(context, char_id)
+        except Exception:  # one player's problem never stops the others
+            log.warning("could not finish the activity of character %s", char_id, exc_info=True)
+
+
+async def _finish_one(context: ContextTypes.DEFAULT_TYPE, char_id: int) -> None:
+    async with session_scope() as session:
+        char = await session.scalar(select(Character).where(Character.id == char_id).with_for_update())
+        if char is None:
             return
-        place = get_content().locations[act.location].name.get(lang)
-        rest = act.kind == "rest"
-    kb = markup([[btn(t(lang, "btn.wake" if rest else "btn.claim"), cb("actc", "-", nonce()))]])
-    try:
-        await context.bot.send_message(job.chat_id, t(lang, "activity.ready_ping_rest" if rest else "activity.ready_ping",
-                                                      place=escape(place)),
-                                       parse_mode=ParseMode.HTML, reply_markup=kb)
-    except Exception:  # a heads-up only
-        log.warning("could not send the activity ping", exc_info=True)
+        user = await session.get(User, char.user_id)
+        lang, telegram_id = user.language, user.telegram_id
+        out = await activities.claim(session, char)  # locked and checked again: a button press can't pay twice
+        if not out.ok:
+            return
+        text, kb = await current_view(session, char, lang)
+    chat = BotChat(context.bot, telegram_id)
+    await send_activity_result(chat, telegram_id, context.bot_data["llm"], out, lang)
+    await chat.send_message(text, parse_mode=ParseMode.HTML, reply_markup=kb, disable_web_page_preview=True)
+    recorder.outgoing(telegram_id, text, [b.text for row in kb.inline_keyboard for b in row] if kb else [], edited=False)
 
 
 async def edit_or_send(update: Update, text: str, kb: InlineKeyboardMarkup | None = None) -> None:

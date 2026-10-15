@@ -94,8 +94,8 @@ tut_boars:
     es: Los jabalíes destrozan los campos al sur de la ciudad. Vale quiere ver cómo peleas… y cómo aprovechas lo que cazas.
     en: Boars are wrecking the fields south of the city. Vale wants to see how you fight… and how you use what you hunt.
   hint:
-    es: El Prado de los Colmillos sale directo de la plaza (20 min, sin peligro). De día, pulsa «🏹 Cazar». Con el cuchillo, al ganar desuellas solo.
-    en: Tusk Meadow leaves straight from the plaza (20 min, safe). By day, press "🏹 Hunt". With the knife, you skin the beasts when you win.
+    es: El Prado de los Colmillos sale directo de la plaza (20 min, sin peligro). De día, pulsa «🏹 Cazar». Al ganar, pulsa «🔪 Desollar» o /skin para sacar el cuero (unos segundos).
+    en: Tusk Meadow leaves straight from the plaza (20 min, safe). By day, press "🏹 Hunt". When you win, press "🔪 Skin" or /skin to take the hide (a few seconds).
   start_stage: locked
   unlock_stage: active
   objective_stage: active

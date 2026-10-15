@@ -9,7 +9,7 @@ from telegram.ext import BaseHandler, CommandHandler, ContextTypes, MessageHandl
 from oathforge import __version__
 from oathforge.bot import render
 from oathforge.bot.handlers.common import current_view, load, offer_keyboard, send, send_photos
-from oathforge.bot.keyboards import btn, cb, fixed_key, fixed_pattern, markup
+from oathforge.bot.keyboards import btn, cb, fixed_key, fixed_pattern, markup, nonce
 from oathforge.content import get_content
 from oathforge.database.session import session_scope
 from oathforge.i18n import t
@@ -140,6 +140,12 @@ async def profession_guide(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     await send(update, text, kb)
 
 
+async def skin(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/skin: skin the beasts you just killed (a few seconds), like the "🔪 Skin" button."""
+    from oathforge.bot.handlers import callbacks  # callbacks imports the views from here
+    await callbacks._act(update, context, "act", "skin:skinning", nonce())
+
+
 async def masteries(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """/masteries: the field masteries (no character needed)."""
     async with session_scope() as session:
@@ -223,6 +229,7 @@ def handlers() -> list[BaseHandler]:
         CommandHandler("professions", _view(_professions)),
         MessageHandler(filters.Regex(PROF_LINK), profession_guide),
         CommandHandler("masteries", masteries),
+        CommandHandler("skin", skin),
         CommandHandler("hobbies", hobbies),
         CommandHandler("settings", settings),
         CommandHandler("language", language),

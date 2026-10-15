@@ -9,19 +9,19 @@ from telegram.ext import CallbackQueryHandler, ContextTypes
 
 from oathforge.bot import render
 from oathforge.bot.handlers.common import (
-    current_view, edit_or_send, load, offer_keyboard, rate_ok, rng, schedule_ready_ping, send, send_chronicle, send_outcome, send_photos,
+    current_view, edit_or_send, load, offer_keyboard, rate_ok, rng, send, send_activity_result, send_chronicle, send_outcome,
+    send_photos,
 )
 from oathforge.bot.keyboards import btn, cb, markup, parse
 from oathforge.content import get_content
 from oathforge.database.session import session_scope
-from oathforge.engine import gathering
 from oathforge.engine.combat import Action, EncounterState, valid_targets
 from oathforge.i18n import t
 from oathforge.ai.intent_parser import Intent
 from oathforge.services import (
     actions, activities, audit, bestiary, characters, combat_service, crafting, exploration, inventory, npcs, professions, quests,
 )
-from oathforge.services.events import Outcome
+from oathforge.services.events import Outcome, render_event
 
 log = logging.getLogger(__name__)
 
@@ -202,7 +202,8 @@ async def _act(update: Update, context, verb: str, arg: str, n: str, rolled_at: 
                 stale = False
                 char_id = char.id
                 out = await _dispatch(session, char, verb, arg, r, context)
-                text, kb = await _after(session, char, lang, verb, arg, context)
+                text, kb = await _after(session, char, lang, verb, arg, context, out)
+                telegram_id = user.telegram_id
     if early is not None:
         await send(update, *early)
         return
@@ -210,14 +211,23 @@ async def _act(update: Update, context, verb: str, arg: str, n: str, rolled_at: 
         await send(update, t(lang, "err.stale"))
         await send(update, text, kb)
         return
-    if out.events:
-        await send_outcome(update, out, lang)
-    if out.activity_id:  # a field activity just finished: its chronicle, after the facts
-        await send_chronicle(update, context, out.activity_id, lang)
-    if verb in ("act", "rest") and out.ok:
-        kind = "rest" if verb == "rest" else arg.partition(":")[0]
-        schedule_ready_ping(update, context, char_id, gathering.SECONDS[kind])
+    if verb == "actc" and out.error in ("activity.err.not_ready", "activity.err.none"):
+        pass  # "🔄 Refresh" before the end (or after the bot delivered it): just the view again
+    elif verb == "actc" and out.ok:  # pressed right as it ended: the same message the bot would send
+        await send_activity_result(update.effective_chat, telegram_id, context.bot_data["llm"], out, lang)
+    elif _started(out):
+        pass  # the panel below says it all
+    else:
+        if out.events:
+            await send_outcome(update, out, lang)
+        if out.activity_id:  # an ambushed stay or a tracked prey just ended: its chronicle
+            await send_chronicle(update, context, out.activity_id, lang)
     await send(update, text, kb)
+
+
+def _started(out: Outcome) -> str | None:
+    """The key of "you start working" when this action just started a timed activity."""
+    return next((e.key for e in out.events if e.key.startswith("activity.started.")), None) if out.ok else None
 
 
 async def _dispatch(session, char, verb: str, arg: str, r, context) -> Outcome:
@@ -268,9 +278,12 @@ async def _dispatch(session, char, verb: str, arg: str, r, context) -> Outcome:
     return Outcome.refused("err.unknown")
 
 
-async def _after(session, char, lang: str, verb: str, arg: str, context):
+async def _after(session, char, lang: str, verb: str, arg: str, context, out: Outcome | None = None):
     """Which view to show after an action."""
     await session.flush()
+    if out is not None and _started(out):  # a nice "you start working" panel instead of the scene again
+        ev = next(e for e in out.events if e.key.startswith("activity.started."))
+        return await render.scene(session, char, lang, started=render_event(ev, lang))
     if char.state == "in_combat":
         return await current_view(session, char, lang)
     npc = context.user_data.get("talk")

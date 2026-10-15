@@ -69,6 +69,7 @@ grey_wolf:
   attacks:
     - {name: {es: Mordisco, en: Bite}, to_hit: 4, damage: 2d4+2, damage_type: piercing, applies: {status: bleeding, turns: 2, chance: 0.25}}
   xp: 50
+  skin_seconds: 20
   harvest:
     - {item: wolf_pelt, chance: 0.7}
     - {item: raw_meat, chance: 0.5}
@@ -141,6 +142,7 @@ boar:
   xp: 25
   loot:
     - {item: boar_tusk, chance: 0.6}
+  skin_seconds: 15
   harvest:
     - {item: boar_hide, chance: 0.7}
     - {item: raw_meat, chance: 0.8, qty: 2}
@@ -185,6 +187,7 @@ old_tusk:
   gold: 3d10
   loot:
     - {item: boar_tusk, chance: 1.0, qty: 3}
+  skin_seconds: 40
   harvest:
     - {item: boar_hide, chance: 1.0, qty: 2}
     - {item: raw_meat, chance: 1.0, qty: 4}

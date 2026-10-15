@@ -301,6 +301,20 @@ def mastery_name(skill: str) -> dict:
     return {lang: t(lang, f"mastery.name.{skill}") for lang in ("es", "en")}
 
 
+PENDING_SKIN = "pending_skin"  # char.flags: the beasts just killed, waiting for /skin where they fell
+
+
+def pending_skin(char: Character) -> list[str]:
+    pending = (char.flags or {}).get(PENDING_SKIN) or {}
+    return list(pending.get("monsters", [])) if pending.get("location") == char.location else []
+
+
+def drop_pending_skin(char: Character) -> None:
+    """Leaving or starting something else: the carcasses are left behind."""
+    if PENDING_SKIN in (char.flags or {}):
+        char.flags = {k: v for k, v in char.flags.items() if k != PENDING_SKIN}
+
+
 def hobby_of(skill: str) -> str | None:
     """The hobby practised through this field activity (fishing), if any."""
     return next((k for k, p in get_content().professions.items() if p.practice == skill), None)

@@ -8,7 +8,7 @@ from telegram.ext import Application, ContextTypes, TypeHandler
 from oathforge import __version__, recorder
 
 from oathforge.ai.client import build_llm
-from oathforge.bot.handlers import callbacks, commands, creation, text
+from oathforge.bot.handlers import callbacks, commands, common, creation, text
 from oathforge.config import get_settings
 from oathforge.content import get_content
 from oathforge.database.session import dispose_engine, init_engine
@@ -79,12 +79,15 @@ def build_app() -> Application:
     app.add_handler(callbacks.handler())
     app.add_handler(text.handler())
     app.add_error_handler(on_error)
+    # field activities end by themselves: the result reaches the player even offline
+    app.job_queue.run_repeating(common.finish_due_activities, interval=10, first=5)
     return app
 
 
 def main() -> None:
     logging.basicConfig(format="%(asctime)s %(levelname)s %(name)s: %(message)s", level=logging.INFO)
     logging.getLogger("httpx").setLevel(logging.WARNING)
+    logging.getLogger("apscheduler").setLevel(logging.WARNING)  # the activity sweep runs every 10 s
     log.info("Oathforge v%s", __version__)
     recorder.start(get_settings())
     build_app().run_polling(allowed_updates=Update.ALL_TYPES)

@@ -184,11 +184,15 @@ async def test_tracking_prey_gives_trophies_and_skinning(monkeypatch):
         assert out.events[0].key == "activity.track_found" and char.state == "in_combat"
         out = await fight_to_the_end(s, char)
         keys = [e.key for e in out.events]
-        assert "activity.skinned" in keys or "activity.trophies" in keys
+        assert "activity.trophies" in keys and "activity.can_skin" in keys  # trophies now, the carcass later
         assert characters.mastery_xp(char, "tracking") == gathering.TRACK_XP_WIN
-        assert characters.mastery_xp(char, "skinning") > 0
         act = await activity(s, cid)
         assert act.result["outcome"] == "track_won" and act.result["monster"] == "boar"
+        assert characters.pending_skin(char) == ["boar"]
+        assert (await activities.start(s, char, "skin", "skinning", now)).ok and char.state == "busy"
+        out = await activities.claim(s, char, now + 15)
+        assert out.ok and characters.mastery_xp(char, "skinning") == gathering.SKIN_XP
+        assert not characters.pending_skin(char)
 
 
 async def test_tracking_finds_the_mission_boss_first():
@@ -456,3 +460,31 @@ async def test_fishing_levels_the_fishing_hobby():
         assert char.professions["xp"]["fishing"] == gathering.GATHER_XP and "fishing" not in (char.masteries or {})
         assert any(e.key == "prof.xp" for e in out.events)
         assert characters.mastery_xp(char, "fishing") == gathering.GATHER_XP
+
+
+
+async def test_skinning_waits_for_skin_and_is_lost_when_leaving(monkeypatch):
+    monkeypatch.setattr(exploration, "is_night", lambda now=None: False)  # boars
+    cid = await new_character(location="tusk_meadow", tools=("skinning_knife",))
+    now = time.time()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        char.hp = char.max_hp = 300
+        await combat_service.start_encounter(s, char, ["boar"], random.Random(0))
+        out = await fight_to_the_end(s, char)
+        assert "activity.can_skin" in [e.key for e in out.events] and "activity.skinned" not in [e.key for e in out.events]
+        assert await inventory.count(s, char, "boar_hide") == 0
+        out = await activities.start(s, char, "skin", "skinning", now)
+        act = await activity(s, cid)
+        assert out.ok and act.ends_at - act.started_at == 15  # a boar: 15 s
+        assert (await activities.claim(s, char, now + 5)).error == "activity.err.not_ready"
+        await activities.claim(s, char, now + 15)
+        assert characters.mastery_xp(char, "skinning") == gathering.SKIN_XP
+        assert (await activities.start(s, char, "skin", "skinning", now)).error == "activity.err.nothing_to_skin"
+        # another kill, then leaving: the carcass stays behind
+        await combat_service.start_encounter(s, char, ["boar"], random.Random(1))
+        await fight_to_the_end(s, char)
+        assert characters.pending_skin(char) == ["boar"]
+        await exploration.travel(s, char, "crownreach_plaza", random.Random(0))
+        char.location = "tusk_meadow"
+        assert (await activities.start(s, char, "skin", "skinning", now)).error == "activity.err.nothing_to_skin"

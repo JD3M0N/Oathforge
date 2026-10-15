@@ -131,21 +131,21 @@ activities:
   title: {es: Actividades, en: Activities}
   body:
     es: |-
-      Fuera de la ciudad, cada lugar tiene sus actividades. Llevan tiempo real: mientras trabajas no puedes viajar ni hacer otra cosa, y el bot te avisa al acabar.
+      Fuera de la ciudad, cada lugar tiene sus actividades. Llevan tiempo real: mientras trabajas no puedes viajar ni hacer otra cosa. Al acabar, el bot te manda lo obtenido aunque hayas cerrado Telegram.
       • ⛏️ Minar (pico), 🪓 talar (hacha), 🌿 recolectar hierbas (hoz) y 🎣 pescar (caña): «Trabajar» dura {gather_min} min y da {gather_units} materiales. Sin peligro.
       • 🏕️ Expedición larga: {stay_min} min y {stay_units} materiales, más XP. Al final puede haber emboscada ({ambush} según el lugar): si ganas te lo llevas todo, si huyes la mitad y si caes lo pierdes.
       • 🐾 Rastrear: {track_min} min siguiendo huellas. El {prey_pct} % de las veces das con una presa y peleas; si la vences, te llevas trofeos además del desuello.
       • 🏹 Cazar: pelear al momento contra lo que vive en el lugar.
-      • 🔪 Desollar: con el cuchillo de desollar, las bestias que abates dan pieles y carne.
+      • 🔪 Desollar: tras vencer a una bestia, /skin con el cuchillo de desollar (10 s una presa pequeña, más las grandes) da pieles y carne. Si te vas o empiezas otra cosa, la pieza se pierde.
       • 🛏️ Descansar: en la taberna, 8 horas de juego ({rest_min} min) para recuperar PV y habilidades.
       Cada actividad sube su maestría, de 0 a {max_rank}: cada rango da un {bonus_pct} % más de probabilidad de botín extra (hasta {bonus_cap} %) y abre recursos más raros. Todas: /masteries
     en: |-
-      Outside the city, each place has its own activities. They take real time: while you work you cannot travel or do anything else, and the bot tells you when you are done.
+      Outside the city, each place has its own activities. They take real time: while you work you cannot travel or do anything else. When it ends, the bot sends you what you got even if you closed Telegram.
       • ⛏️ Mining (pickaxe), 🪓 woodcutting (axe), 🌿 herb gathering (sickle) and 🎣 fishing (rod): "Work" takes {gather_min} min and gives {gather_units} materials. No danger.
       • 🏕️ Long expedition: {stay_min} min and {stay_units} materials, more XP. At the end you may be ambushed ({ambush} depending on the place): win and you keep it all, flee and you keep half, fall and you lose it.
       • 🐾 Tracking: {track_min} min following tracks. {prey_pct} % of the time you find prey and fight it; beat it and you get trophies on top of skinning.
       • 🏹 Hunting: fight whatever lives in the place, right away.
-      • 🔪 Skinning: with a skinning knife, the beasts you bring down give hides and meat.
+      • 🔪 Skinning: after beating a beast, /skin with a skinning knife (10 s for small prey, more for big ones) gives hides and meat. If you leave or start something else, the carcass is lost.
       • 🛏️ Resting: at the tavern, 8 game hours ({rest_min} min) to recover HP and abilities.
       Each activity raises its mastery, from 0 to {max_rank}: every rank adds {bonus_pct} % chance of bonus loot (up to {bonus_cap} %) and opens rarer resources. All of them: /masteries
 

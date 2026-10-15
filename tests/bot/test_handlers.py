@@ -673,9 +673,13 @@ async def test_mining_buttons_collect_and_chronicle(llm):
         char.location = "ironvein_mine"
         await inventory.add_item(s, char, "pickaxe")
     await p.press("scene|-|-")
+    sent = len(p.chat.sent)
     await p.press(p.find("act", "gather:mining"))
-    assert "Minería" in p.chat.sent[-2][0]  # started
-    assert "Termina en 5 min" in p.last[0] and "actx" in str(p.buttons())
+    assert len(p.chat.sent) == sent + 1  # one message: "you start working", not the scene again
+    assert "Te pones a trabajar" in p.last[0] and "Minería" in p.last[0]
+    assert "Termina en 5 min" in p.last[0] and "actx" in str(p.buttons()) and "Recoger" not in str(p.last[1])
+    await p.press(p.find("actc"))  # 🔄 Refresh before the end: just the panel again, no error
+    assert "Termina en" in p.last[0] and "Aún no ha terminado" not in p.chat.sent[-2][0]
     await p.press("trv|-|-")  # an old travel button: the travel menu is not offered while busy
     assert "Termina en" in p.last[0]
     async with session_scope() as s:
@@ -684,10 +688,46 @@ async def test_mining_buttons_collect_and_chronicle(llm):
     await p.press("scene|-|-")
     llm.text_queue.append("Aldric arranca la mena de la roca con paciencia.")
     await p.press(p.find("actc"))
-    texts = [t_ for t_, _ in p.chat.sent[-3:]]
-    assert any("Mena de hierro" in t_ or "Carbón" in t_ for t_ in texts)
-    assert any("Crónica" in t_ and "Aldric arranca" in t_ and "1/15" in t_ for t_ in texts)
+    result = p.chat.sent[-2][0]  # chronicle and loot in a single message
+    assert "⛏️" in result and "Terminas tu trabajo" in result and "Aldric arranca" in result
+    assert ("Mena de hierro" in result or "Carbón" in result) and "XP de Minería" in result and "1/15" in result
     assert "Viajar" in str(p.last[1].inline_keyboard)  # back to the normal scene
+
+
+class FakeBot:
+    def __init__(self, chat: Chat):
+        self.chat, self.id = chat, 999
+
+    async def send_message(self, chat_id, text, **kwargs):
+        await self.chat.send_message(text, **kwargs)
+
+
+async def test_activities_end_by_themselves_even_offline(llm):
+    from oathforge.bot.handlers import common
+    from oathforge.database.models import WorldActivity
+    from oathforge.services import inventory
+
+    p = Player(llm, tg_id=74)
+    await create(p)
+    async with session_scope() as s:
+        char = await s.scalar(select(Character).with_for_update())
+        char.location = "ironvein_mine"
+        await inventory.add_item(s, char, "pickaxe")
+    await p.press("scene|-|-")
+    await p.press(p.find("act", "gather:mining"))
+    job = SimpleNamespace(bot=FakeBot(p.chat), bot_data={"llm": llm})
+    sent = len(p.chat.sent)
+    await common.finish_due_activities(job)  # not over yet: nothing
+    assert len(p.chat.sent) == sent
+    async with session_scope() as s:
+        act = await s.scalar(select(WorldActivity).with_for_update())
+        act.ends_at -= 600
+    await common.finish_due_activities(job)
+    assert "Terminas tu trabajo" in p.chat.sent[-2][0] and "Viajar" in str(p.last[1].inline_keyboard)
+    sent = len(p.chat.sent)
+    await common.finish_due_activities(job)  # paid once
+    await p.press("actc|-|x1")  # an old Refresh button
+    assert "Terminas tu trabajo" not in "".join(t_ or "" for t_, _ in p.chat.sent[sent:])
 
 
 async def test_learn_a_profession_and_craft(llm):
