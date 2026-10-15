@@ -165,6 +165,7 @@ async def test_full_flow(llm, monkeypatch):
     # shop
     await p.press("shopm|-|-")
     await p.press(p.find("shop", "mira"))
+    await p.press(p.find("shopg", "mira:tools"))  # the shop opens by category
     await p.press(p.find("buy", "mira:rope"))
     await p.press(p.find("sellm", "mira"))
 
@@ -354,7 +355,7 @@ async def test_hero_summary_and_full_sheet_with_portrait(llm):
 
     p = Player(llm, tg_id=12)
     await create(p)
-    await p.press(p.find("hero"))  # the scene's 🦸 button: summary, no photo
+    await p.press("hero|-|-")  # 🧝 Hero (fixed keyboard / buttons): summary, no photo
     assert "Aldric" in p.last[0] and "CD" not in p.last[0] and not p.chat.photos
     full = p.find("sheet")
 
@@ -792,6 +793,7 @@ async def test_fallback_dialogue_keeps_shop_usable(llm, monkeypatch, exhausted):
     assert "Tessa" in p.last[0]
     await p.press(p.find("shop", "tessa"))
     before = (await char_row()).gold
+    await p.press(p.find("shopg", "tessa:tools"))
     await p.press(p.find("buy", "tessa:rope"))
     async with session_scope() as session:
         char = await session.scalar(select(Character))

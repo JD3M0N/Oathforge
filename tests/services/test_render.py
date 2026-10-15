@@ -8,6 +8,7 @@ from sqlalchemy import select
 
 from oathforge.bot import render
 from oathforge.content import get_content
+from oathforge.i18n import t
 from oathforge.database.models import Character
 from oathforge.database.session import session_scope
 from oathforge.services import characters, combat_service, quests
@@ -236,9 +237,25 @@ async def test_battle_report(lang):
         summary, kb = render.report_page(report, 0, lang)
         check((summary, kb))
         assert "✨" in summary and "report." not in summary
+        labels = [b.text for row in kb.inline_keyboard for b in row]
+        assert any(("Ronda 0" if lang == "es" else "Round 0") in x for x in labels)  # page 1 is round 0
+        full = render.full_report(report, lang)
+        assert sum(m.count(t(lang, "combat.end.victory")) for m in full) == 1  # the result only once
         for page in range(1, len(report.rounds) + 1):
             text, kb = render.report_page(report, page, lang)
             check((text, kb))
             assert "combat." not in text
         data = [b.callback_data for row in kb.inline_keyboard for b in row]
         assert f"rep|{enc.id}:0|-" in data or len(report.rounds) == 1
+
+
+async def test_map_while_busy_has_no_roads():
+    async with session_scope() as s:
+        user = await characters.get_or_create_user(s, 77, "es")
+        char = await characters.create_character(s, user, "Aldric", "human", "soldier", "paladin")
+        text, kb = render.map_view(char, "es")
+        assert any(b.callback_data.startswith("go|") for row in kb.inline_keyboard for b in row)
+        char.state = "busy"
+        text, kb = render.map_view(char, "es")
+        assert "Estás ocupado" in text
+        assert not any(b.callback_data.startswith("go|") for row in kb.inline_keyboard for b in row)

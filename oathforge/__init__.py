@@ -1,3 +1,3 @@
 """Oathforge: narrative Telegram RPG with an AI Dungeon Master."""
 
-__version__ = "0.7.25"
+__version__ = "0.7.26"

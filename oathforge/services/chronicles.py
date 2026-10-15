@@ -65,7 +65,8 @@ def _values(act: WorldActivity, char: Character, lang: str) -> dict:
         "name": char.name,
         "place": c.locations[act.location].name.get(lang),
         "loot": activities.loot_text(res["items"])[lang] if res.get("items") else t(lang, "chronicle.no_loot"),
-        "monster": c.monsters[monster].name.get(lang) if monster in c.monsters else t(lang, "chronicle.creature"),
+        "monster": ((c.monsters[monster].indefinite or c.monsters[monster].name).get(lang) if monster in c.monsters
+                    else t(lang, "chronicle.creature")),
     }
 
 

@@ -42,8 +42,20 @@ def panel_only(key: str) -> bool:
         and not key.startswith("combat.err.")
 
 
+END_RESULT = {"won": "victory", "fled": "fled", "lost": "defeat"}
+
+
+def activity_title(act, lang: str) -> str | None:
+    """"Rastreo en Prado de los Colmillos · 🏆 Victoria" for an activity that ended in a fight."""
+    outcome = (act.result or {}).get("outcome", "")
+    result = END_RESULT.get(outcome.rpartition("_")[2])
+    if result is None:
+        return None
+    return f"{activities.describe(act, lang)} · {REPORT_ICON.get(result, '')} {t(lang, 'report.result.' + result)}"
+
+
 def activity_result(outcome: Outcome, skill: str, lang: str, chronicle: str | None = None,
-                    footer: str | None = None) -> str:
+                    footer: str | None = None, title: str | None = None) -> str:
     """A finished field activity in one message: "✅ Terminas tu trabajo en X" with the craft's emoji, the
     chronicle, what was obtained and the XP, and "Crónica 1/15"."""
     head, rest = None, []
@@ -54,6 +66,7 @@ def activity_result(outcome: Outcome, skill: str, lang: str, chronicle: str | No
             head = escape(render_event(ev, lang))
         else:
             rest.append(f"• {escape(render_event(ev, lang))}")
+    head = head or (escape(title) if title else None)
     parts = [f"{ACTIVITY_ICON.get(skill, '✅')} <b>{head}</b>" if head else ""]
     if chronicle:
         parts.append(f"📜 <i>{escape(chronicle)}</i>")
@@ -253,9 +266,7 @@ async def scene(session: AsyncSession, char: Character, lang: str,
     for a in await quests.available_actions(session, char, present):
         if a.action.npc is None:
             rows.append([btn(a.action.label.get(lang), cb("qa", a.ref, n))])
-    rows.append([btn(t(lang, "btn.inventory"), cb("inv")), btn(t(lang, "btn.sheet"), cb("hero")),
-                 btn(t(lang, "btn.journal"), cb("jr"))])
-    return "\n".join(lines), markup(rows)
+    return "\n".join(lines), markup(rows)  # inventory, hero and journal live in the fixed keyboard
 
 
 SKINNING_TOOL = activities.SKINNING_KNIFE
@@ -284,9 +295,7 @@ def activity_panel(char: Character, act, lines: list[str], n: str, lang: str,
     if act.kind == "stay":
         lines.append(t(lang, "activity.stay_warning"))
     lines += ["", f"<i>{t(lang, 'activity.busy_hint_rest' if rest else 'activity.busy_hint')}</i>"]
-    rows = [[btn(t(lang, "btn.refresh"), cb("actc", "-", n)), btn(t(lang, "btn.abandon"), cb("actx", "-", n))],
-            [btn(t(lang, "btn.inventory"), cb("inv")), btn(t(lang, "btn.sheet"), cb("hero")),
-             btn(t(lang, "btn.journal"), cb("jr"))]]
+    rows = [[btn(t(lang, "btn.refresh"), cb("actc", "-", n)), btn(t(lang, "btn.abandon"), cb("actx", "-", n))]]
     return "\n".join(lines), markup(rows)
 
 
@@ -611,6 +620,9 @@ def map_view(char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
                 lines += _route_lines(char, r, lang)
     lines += ["", f"<i>{t(lang, f'map.hint.{zone.kind}')}</i>"]
     n = nonce()
+    if char.state != "idle":  # busy with an activity: the map, but no roads to take
+        lines += ["", t(lang, "map.busy")]
+        return "\n".join(lines)[:MAX_MESSAGE], markup([[btn(t(lang, "btn.back"), cb("scene"))]])
     rows = [[btn(f"🧭 {c.locations[r.to].name.get(lang)} · {r.minutes} min {'⚠️' * r.danger}".strip(),
                  cb("go", r.to, n))] for r in routes]
     rows.append([btn(t(lang, "btn.back"), cb("scene"))])
@@ -651,24 +663,31 @@ def shop_menu(char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
     return t(lang, "shop.choose"), markup(rows)
 
 
-async def shop(session: AsyncSession, char: Character, npc_key: str, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+async def shop(session: AsyncSession, char: Character, npc_key: str, lang: str,
+               group: str | None = None) -> tuple[str, InlineKeyboardMarkup]:
+    """A shop: first its categories (weapons, armor...), then the items of the one you pick, to buy."""
     c = get_content()
     npc = c.npcs[npc_key]
     rep = await npcs.reputation_with(session, char, npc.faction)
     n = nonce()
     lines = [t(lang, "shop.title", npc=escape(npc.name.get(lang)), gold=char.gold)]
-    rows = []
     groups: dict[str, list[str]] = {}
     for key in npc.shop.items:
-        item = c.items[key]
-        price = inventory.buy_price(key, rep)
-        stats = item_stats(key, lang)
-        groups.setdefault(_shop_group(item), []).append(
-            f"• <b>{escape(item.name.get(lang))}</b>{' · ' + escape(stats) if stats else ''} · {price} 🪙")
-        rows.append([btn(f"{item.name.get(lang)} · {price} 🪙", cb("buy", f"{npc_key}:{key}", n))])
-    for group in SHOP_GROUPS:
-        if groups.get(group):
-            lines += ["", f"<b>{t(lang, f'shop.group.{group}')}</b>", *groups[group]]
+        groups.setdefault(_shop_group(c.items[key]), []).append(key)
+    rows = []
+    if group in groups:
+        lines += ["", f"<b>{t(lang, f'shop.group.{group}')}</b>"]
+        for key in groups[group]:
+            item, price = c.items[key], inventory.buy_price(key, rep)
+            stats = item_stats(key, lang)
+            lines.append(f"• <b>{escape(item.name.get(lang))}</b>{' · ' + escape(stats) if stats else ''} · {price} 🪙"
+                         f" · /item_{key}")
+            rows.append([btn(f"{item.name.get(lang)} · {price} 🪙", cb("buy", f"{npc_key}:{key}", n))])
+        rows.append([btn(t(lang, "btn.back"), cb("shop", npc_key))])
+        return "\n".join(lines), markup(rows)
+    lines += ["", f"<i>{t(lang, 'shop.pick_group')}</i>"]
+    rows += grid([btn(f"{t(lang, f'shop.group.{g}')} ({len(groups[g])})", cb("shopg", f"{npc_key}:{g}"))
+                  for g in SHOP_GROUPS if groups.get(g)])
     if npc.shop.buys:
         rows.append([btn(t(lang, "btn.sell"), cb("sellm", npc_key))])
     rows.append([btn(t(lang, "btn.back"), cb("scene"))])
@@ -1028,6 +1047,11 @@ async def missions(session: AsyncSession, char: Character, lang: str) -> tuple[s
     return "\n".join(lines), markup(rows)
 
 
+def fmt_int(n: int, lang: str) -> str:
+    """3.400 in Spanish, 3,400 in English."""
+    return f"{n:,}".replace(",", "." if lang == "es" else ",")
+
+
 def stats_view(char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
     """The journal's statistics: how far you walked, where you have been, what you fought."""
     c = get_content()
@@ -1037,7 +1061,7 @@ def stats_view(char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
     kills = {k: v.get("killed", 0) for k, v in (char.bestiary or {}).items() if v.get("killed")}
     top = sorted(kills.items(), key=lambda kv: -kv[1])[:3]
     lines = [t(lang, "stats.title"), RULE,
-             t(lang, "stats.distance", yards=f"{int(st.get('yards', 0)):,}".replace(",", ".")),
+             t(lang, "stats.distance", yards=fmt_int(int(st.get("yards", 0)), lang)),
              t(lang, "stats.places", places=len(places), cities=len(cities)),
              t(lang, "stats.battles", won=st.get("battles_victory", 0), lost=st.get("battles_defeat", 0),
                fled=st.get("battles_fled", 0)),
@@ -1401,11 +1425,14 @@ def report_page(report: "combat_service.BattleReport | None", page: int, lang: s
 
     def go(p: int) -> str:
         return cb("rep", f"{report.encounter_id}:{p}")
+    def round_of(p: int) -> int:  # page p shows report.rounds[p - 1]; round 0 is the initiative
+        return report.rounds[p - 1][0]
     nav = []
     if page > 0:
-        nav.append(btn(t(lang, "btn.prev_round") if page > 1 else t(lang, "btn.summary"), go(page - 1)))
+        nav.append(btn(t(lang, "btn.round_prev", n=round_of(page - 1)) if page > 1 else t(lang, "btn.summary"),
+                       go(page - 1)))
     if page < pages:
-        nav.append(btn(t(lang, "btn.first_round") if page == 0 else t(lang, "btn.next_round"), go(page + 1)))
+        nav.append(btn(t(lang, "btn.round_next", n=round_of(page + 1)), go(page + 1)))
     rows = [nav] if nav else []
     if page > 1:
         rows.append([btn(t(lang, "btn.summary"), go(0))])
@@ -1430,8 +1457,7 @@ def full_report(report: "combat_service.BattleReport | None", lang: str) -> list
             messages.append("\n".join(lines).rstrip())
             lines = []
         lines += block
-    lines.append(f"{REPORT_ICON.get(report.status, '⚔️')} <b>{t(lang, 'report.result.' + report.status)}</b>")
-    messages.append("\n".join(lines).rstrip())
+    messages.append("\n".join(lines).rstrip())  # the log already ends with "🏆 Victory!"
     return [m[:MAX_MESSAGE] for m in messages]
 
 

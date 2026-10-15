@@ -285,7 +285,8 @@ class Monster(Strict):
     gold: str = "0"
     loot: list[LootEntry] = []
     harvest: list[HarvestEntry] = []
-    skin_seconds: int = 10  # how long /skin takes for one of these (small prey 10 s, more for big ones)
+    skin_seconds: int = 10
+    indefinite: Text | None = None  # "un murciélago de cueva" / "a cave bat", for generic texts  # how long /skin takes for one of these (small prey 10 s, more for big ones)
     cowardly: bool = False
     immune: list[str] = []  # statuses
     type: CreatureType = "humanoid"

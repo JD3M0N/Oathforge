@@ -60,7 +60,7 @@ def render_event(ev: Event, lang: str, links: bool = True) -> str:
         return str(params["text"])
     text = t(lang, ev.key, **params)
     if links and ev.key in ("loot.item", "loot.lost_item") and params.get("item_key"):
-        text += f" · /item_{params['item_key']}"  # tappable: what it is and what it is for
+        text = text.rstrip(".") + f" · /item_{params['item_key']}"  # tappable: what it is and what it is for
     return text
 
 

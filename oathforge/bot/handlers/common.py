@@ -139,10 +139,11 @@ async def send_activity_result(chat, telegram_id: int, llm, outcome: Outcome, la
         async with session_scope() as session:
             act = await session.get(WorldActivity, outcome.activity_id)
             skill = act.skill if act else ""
+            title = render.activity_title(act, lang) if act else None
         async with keep_typing(chat):
             ch = await chronicles.tell(llm, outcome.activity_id, lang)
         text = render.activity_result(outcome, skill, lang, ch.text if ch else None,
-                                      chronicles.footer(ch, lang) if ch else None)
+                                      chronicles.footer(ch, lang) if ch else None, title)
     else:
         text = render.outcome_text(outcome, lang)
     for message in [text, *render.level_up_cards(outcome, lang)]:

@@ -27,6 +27,13 @@ mana_potion:
   outputs: {mana_potion: 1}
   xp: 18
 
+mana_potion_bat:  # the same potion from what the bats drop
+  profession: alchemy
+  min_rank: 1
+  ingredients: {bat_wing: 2, water_flask: 1}
+  outputs: {mana_potion: 1}
+  xp: 18
+
 rest_draught:
   profession: alchemy
   min_rank: 3

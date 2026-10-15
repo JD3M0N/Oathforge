@@ -4,6 +4,26 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.26] - 2026-10-15
+
+Más arreglos de la partida de prueba.
+
+### Arreglado
+- Informe de batalla:
+  - «🏆 Victoria» ya no sale dos veces al final del informe completo;
+  - los botones del resumen dicen la ronda real («Ronda 0 ▶», «◀ Ronda 1»).
+- Tras una emboscada o una presa rastreada, la crónica llega en el mismo mensaje que el botín, con el resultado en la cabecera.
+- Las crónicas genéricas nombran a la criatura con artículo: «te topas con un murciélago de cueva» y no «You find Cave bat».
+- `/map` estando ocupado ya no enseña caminos que no se pueden tomar: dice que estás ocupado.
+- «Obtienes: … ×1 · /item_…» sin el punto antes del enlace.
+- En inglés, las cifras de las estadísticas llevan coma («3,400 yards»).
+
+### Cambiado
+- Las tiendas se abren por categorías (⚔️ Armas, 🛡️ Armaduras, 🧪 Consumibles, 🧰 Herramientas…), con la ficha `/item_` de cada objeto. Después de comprar sigues en la misma categoría.
+- La poción de curación cuesta 20 de oro (antes, 50).
+- El ala de murciélago es un material y sirve para la poción de maná (receta nueva de alquimia, rango 1).
+- La escena y el panel de actividad ya no repiten Inventario · Héroe · Diario: están en el teclado fijo. El icono de Héroe es 🧝 en todas partes.
+
 ## [0.7.25] - 2026-10-15
 
 Arreglos de la partida de prueba con Brannoc.

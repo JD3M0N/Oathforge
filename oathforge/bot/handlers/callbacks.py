@@ -27,7 +27,7 @@ log = logging.getLogger(__name__)
 
 # verbs that only show something (no nonce, no state change)
 VIEWS = {"scene", "trv", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jrl", "jrs", "jq", "jrb", "jb", "jbi", "jrr",
-         "shopm", "shop", "sellm", "cbp", "lang", "city", "cls", "clsl", "rep", "prof", "profsw", "profcf", "pg", "crf", "rb", "repf",
+         "shopm", "shop", "shopg", "sellm", "cbp", "lang", "city", "cls", "clsl", "rep", "prof", "profsw", "profcf", "pg", "crf", "rb", "repf",
          "mst", "hob"}
 
 
@@ -163,6 +163,9 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             text, kb = render.shop_menu(char, lang)
         elif verb == "shop" and not in_combat and arg in exploration.npcs_present(char.location):
             text, kb = await render.shop(session, char, arg, lang)
+        elif verb == "shopg" and not in_combat and arg.partition(":")[0] in exploration.npcs_present(char.location):
+            npc_key, _, group = arg.partition(":")
+            text, kb = await render.shop(session, char, npc_key, lang, group)
         elif verb == "sellm" and not in_combat and arg in exploration.npcs_present(char.location):
             text, kb = await render.sell_menu(session, char, arg, lang)
         else:  # scene, cbp, bye, lang, or anything not allowed right now
@@ -301,7 +304,9 @@ async def _after(session, char, lang: str, verb: str, arg: str, context, out: Ou
     if verb in ("buy", "sell"):
         npc_key = arg.partition(":")[0]
         if verb == "buy":
-            return await render.shop(session, char, npc_key, lang)
+            what = arg.partition(":")[2]
+            group = render._shop_group(get_content().items[what]) if what in get_content().items else None
+            return await render.shop(session, char, npc_key, lang, group)
         return await render.sell_menu(session, char, npc_key, lang)
     if verb in ("eq", "use"):
         return await render.inventory_view(session, char, lang)
@@ -434,16 +439,17 @@ async def _combat(update: Update, context, arg: str, n: str) -> None:
         finished = enc.status != "active"
         # rewards / quest updates appear after the panel; per-hit logs already live in the panel
         summary = Outcome(events=[e for e in out.events if not e.key.startswith("combat.")
-                                  or e.key == "combat.defeat_penalty"])
+                                  or e.key == "combat.defeat_penalty"], activity_id=out.activity_id)
         error = out.error
+        telegram_id = user.telegram_id
 
     if error:  # the callback was already answered, so surface the refusal as a message
         await send(update, "⚠️ " + t(lang, error))
     await edit_or_send(update, text, kb)
-    if finished and summary.events:
+    if finished and out.activity_id:  # an ambushed stay or a tracked prey: rewards and chronicle together
+        await send_activity_result(update.effective_chat, telegram_id, context.bot_data["llm"], summary, lang)
+    elif finished and summary.events:
         await send_outcome(update, summary, lang)
-    if finished and out.activity_id:  # an ambushed stay or a tracked prey: the expedition's chronicle
-        await send_chronicle(update, context, out.activity_id, lang)
 
 
 def fresh_token(token: str, version: int | None, turn_index: int) -> bool:
