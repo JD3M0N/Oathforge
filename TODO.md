@@ -26,21 +26,13 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 
 - [ ] 🟡 IA enemiga táctica (proteger al sanador, priorizar amenazas) y jefes por fases con aviso previo.
 - [ ] 🟢 Nuevos tipos de acción: defender a un aliado, negociar una tregua, rendirse.
-- [x] La **ronda 0** en el panel y en el informe: la tirada de iniciativa de cada uno (d20 + DES) antes de la ronda 1 (v0.7.22).
-- [x] **Resumen e informe** de batalla por separado: «📊 Resumen» con las cifras y «📜 Informe» con todas las rondas seguidas, golpe a golpe (v0.7.22).
-- [x] Ver contra quién luchas: al empezar un combate, «👁 Míralos: /monster_<clave>» con **solo la imagen** de cada enemigo (v0.7.19).
-- [x] **Botones de combate por clase**: los ataques, uno destacado 🌟 con la habilidad principal (`signature` en `classes.yaml`; Golpe Consagrado en el Paladín) y «✨ Acciones» con el resto de poderes (v0.7.22).
 
 ## 🧙 Clases y progresión · [clases.md](planning/clases.md) · [progresion.md](planning/progresion.md)
 
 - [ ] 🟡 ◐ Probar el tutorial con la beta: cuánto se tarda en llegar a nivel 3 y dónde se atasca la gente. *Hecho: `oath tutorial-stats` lo mide (v0.7.24); la espera hasta la noche para los murciélagos ya no existe (v0.7.15). Falta: la partida con los testers y ajustar con los datos.*
-- [x] **El tutorial ya no depende de la hora**: murciélagos en la mina de día y de noche, y «Alas al anochecer» manda a cazarlos allí (v0.7.15).
-- [x] «Calles de Crownreach» manda también a la taberna (ir y hablar con Bram), no solo al Barrio de Oficios (v0.7.15).
-- [x] El tutorial enseña el `/rulebook`: «Alistamiento» pide leer su sección nueva «🧺 Actividades» (recolectar, minar, talar, pescar, expedición larga, rastrear, cazar, descansar) (v0.7.15).
-- [x] **Tutorial acelerado**: en las misiones del tutorial, la primera recolección o desuello que pide la misión activa termina al momento y da justo lo que falta, una vez por misión (v0.7.16).
 - [ ] 🟢 **Campamento de entrenamiento** al acabar el tutorial (nivel 3–5, a reescalar): misiones opcionales de 3 a 5 por clase para sentir qué es ser Paladín, Bardo, Pícaro…, y hacer ahí el juramento y entrar en la clase. Los nuevos pueden saltárselo. Ver cómo encaja con la compra de atributos por puntos.
 - [ ] 🔴 Elegir especialización a nivel 5. *La ficha completa ya muestra la especialización cuando exista; con la cadena de misiones de v0.5.0 se llega a nivel 5 enseguida.*
-- [x] Texto largo (`details`) de todas las habilidades de las 8 clases para `/skill_<clave>` (v0.7.23).
+- [ ] 🟡 Renombrar el golpe base del Paladín a **Castigo divino** (*Divine Smite*, como en D&D) en lugar de «Golpe Consagrado».
 - [ ] 🟡 ◐ **Sistema de descanso**: descanso corto en cualquier sitio (recuperar parte de la vida y algunos usos) y largo en posada. *Hecho: descanso gratis en el osario de la cripta (v0.5.0), el tónico del reposo (v0.6.2), descanso largo de 8 h de juego en la posada y «Curar heridas» en la capilla (v0.7.0). Falta: un descanso corto sin poción; decidir si el osario también debe tardar 8 h.*
 - [ ] 🟡 Siguientes clases: **Explorador (Ranger) y Artificiero** (Mago, Druida y Bardo en v0.4.0; Brujo en v0.4.4).
 - [ ] 🟢 Juramentos con consecuencias, títulos y cicatrices en la ficha.
@@ -66,39 +58,26 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🟢 **Publicar en los canales de Telegram** ([inglés](https://t.me/OathForge), [español](https://t.me/OathForge_es)) desde el bot: el changelog de cada versión y el periódico *Herald of Aetherfall* con los rumores confirmados del mundo. Hoy los anuncios se publican a mano.
 - [ ] 🔴 Grupos de expedición y combate en grupo (0.8.0).
 - [ ] 🟢 **Gremios**: roles, banco, tablón, misiones comunitarias y sede ([multijugador.md](planning/multijugador.md#gremios-gdd-86)).
-- [x] **Botones fijos del juego** (teclado de Telegram) con lo principal: 🧝 Héroe, 🗺 Mapa, 🎒 Inventario, 📖 Diario (v0.7.17).
-- [ ] 🟡 ◐ Comandos nuevos: `/map`, `/quests`, `/rest`, `/party`. *Hecho: `/quests` (v0.5.0), `/settings` y `/prof_<oficio>` (v0.7.0), `/map` (v0.7.6).*
+- [ ] 🟡 ◐ Comandos nuevos: `/map`, `/quests`, `/rest`, `/party`. *Hecho: `/quests` (v0.5.0), `/settings` y `/prof_<oficio>` (v0.7.0), `/map` (v0.7.6), `/item_`, `/monster_`, `/masteries` y `/hobbies` (v0.7.19), `/skin` (v0.7.21).*
 - [ ] 🟡 Pruebas de habilidad más claras: hoy salen como «🎲 Survival: 2 → 3 vs DC 13 ❌».
-- [x] Con ventaja o desventaja salen los dos d20 y cuál cuenta: «🎲 [6 · 14] → 14» (v0.7.22).
 - [ ] 🟢 Explicar las ⚠️ de los viajes (probabilidad de emboscada) y la leyenda ●/○/· de las competencias en `/sheet`.
 - [ ] 🟢 Gramática de los textos generados: «Llegas **al** Mercado», «Llegas **a la** Taberna…» (artículo por lugar) y «1 ronda» en singular en el informe.
 - [ ] 🟡 **Moverse por el mundo sin que sea tedioso** con `/map`: por ejemplo, tras matar al jefe de la Cripta, salir y volver a la ciudad desde el mapa. *Falta pensar el diseño.*
 - [ ] 🟡 Mensaje de estado que se edita en lugar de mandar muchos mensajes.
-- [x] **Ficha de cada objeto** (`/item_<clave>`): qué es, para qué sirve, de dónde sale y cuánto vale, enlazada al recibirlo y desde el inventario (v0.7.19).
-- [x] `/quests` solo con las misiones en curso; las terminadas pasan a «📚 Registro» en el diario (v0.7.18).
-- [x] «📜 Nueva misión… Mírala en /quests», con el enlace (v0.7.18).
-- [x] La hora del juego en la escena y cuánto falta para que se haga de día o de noche (v0.7.18).
-- [x] «👥 Aquí:» de la escena como lista, un PNJ por línea (v0.7.18).
-- [x] `/rulebook` → «Actividades» y «Recolección y oficios» con cada acción en detalle (duración, qué da, emboscada, rastreo…), con las cifras del motor (v0.7.19).
-- [x] `/masteries` y `/hobbies` (como `/classes`), enlazadas con `/professions` y desde el `/rulebook` (v0.7.19).
-- [x] **Actividades que terminan solas**: al empezar, un mensaje propio en vez de la escena repetida; al acabar, el bot manda lo obtenido aunque estés desconectado (y tras un reinicio). Sin «Recoger»: solo «🔄 Actualizar» y «Abandonar» (v0.7.21).
-- [x] **Crónica y botín en un solo mensaje**: «⛏️ ✅ Terminas tu trabajo en X», «📜 crónica», lo obtenido, la XP y «Crónica 1/15» (v0.7.21). *Si no convence el formato, se ajusta en `render.activity_result`.*
-- [x] **Estadísticas del personaje** en «📈 Estadísticas» del diario: distancia, lugares y ciudades visitados, combates, monstruos derrotados, esquivas, críticos y actividades (v0.7.23).
 - [ ] 🟢 Duelos PvP con consentimiento y sin pérdidas.
 
 ## 🌍 Mundo, misiones y economía · [mundo-y-misiones.md](planning/mundo-y-misiones.md) · [comercio.md](planning/comercio.md)
 
 - [ ] 🟡 ◐ **Bestiario**: ir añadiendo criaturas poco a poco (descripción, hábitat, de día o de noche, estadísticas y puntos débiles). *Hecho (v0.5.0): 9 criaturas y ficha que se desbloquea al verlas y derrotarlas.*
 - [ ] 🟢 **Tamaño y peso de las presas**: rango de altura y peso por animal; el bestiario guarda tu presa más larga y la más pesada.
+- [ ] 🟡 ◐ **Desuello según el peso de la presa**: lo que da y lo que tarda `/skin`, calculado con el peso de cada animal en vez de un valor fijo. *Ya solo se desuellan bestias con `harvest` (nunca un esqueleto) y cada una tiene su `skin_seconds` (v0.7.21).*
 - [ ] 🟢 **Rareza de criaturas**: dentro de los encuentros de cada zona, algunas salen menos (10–15 %). Más adelante, según la hora y el clima.
 - [ ] 🟢 «Algo brilla» al fondo de la mina: hoy es solo ambiente; convertirlo en un descubrimiento con recompensa.
 - [ ] 🟡 Más misiones después del nivel 5 y misiones secundarias repetibles (encargos de caza diarios).
 - [ ] 🔴 **Entregar las misiones a quien las dio**: al cumplir los objetivos la misión queda «lista para entregar»; al hablar con ese PNJ cobras la recompensa y te da la siguiente.
-- [ ] 🔴 ◐ **Profesiones y recolección** · [profesiones.md](planning/profesiones.md). *Hecho (v0.6.0): actividades de campo, maestrías, mina, arboleda, claro y ribera, desuello y crónicas. Hecho (v0.6.1): oficios con 2 plazas, Barrio de Oficios, recetas y `/professions`. Hecho (v0.6.2): poción de maná y tónico del reposo. Hecho (v0.7.0): Escribanía y Artificiería (pergaminos y bombas para el combate), Cocina y Pesca como aficiones sin plaza y guía `/prof_<oficio>`. Falta: probar el balance con la beta (sobre todo la bomba de fuego, que da a toda una fila).*
+- [ ] 🔴 ◐ **Profesiones y recolección** · [profesiones.md](planning/profesiones.md). *Hecho (v0.6.0): actividades de campo, maestrías, mina, arboleda, claro y ribera, desuello y crónicas. Hecho (v0.6.1): oficios con 2 plazas, Barrio de Oficios, recetas y `/professions`. Hecho (v0.6.2): poción de maná y tónico del reposo. Hecho (v0.7.0): Escribanía y Artificiería (pergaminos y bombas para el combate), Cocina y Pesca como aficiones sin plaza y guía `/prof_<oficio>`. Hecho (v0.7.19–0.7.21): `/masteries`, `/hobbies`, Ingeniería, la Pesca como afición, actividades que terminan solas y `/skin`. Falta: probar el balance con la beta (sobre todo la bomba de fuego, que da a toda una fila).*
 - [ ] 🟢 Afinidades de maestría a rango 3, durabilidad de herramientas y vetas que se agotan (después de la beta).
-- [x] **Desollar como acción con duración**: `/skin` o «🔪 Desollar» tras la victoria, 10 s para presas pequeñas y más según la presa (`skin_seconds`); la pieza se pierde si te vas (v0.7.21).
-- [x] **Pesca como afición de verdad**, igual que la Cocina: entrada en `professions.yaml` con `practice: fishing`, su XP con la de los oficios y su guía `/prof_fishing` (v0.7.20).
-- [x] Renombrada **Artificiería → Ingeniería** (`engineering`), con migración de los personajes (v0.7.20).
+- [ ] 🟢 Aficiones nuevas: arqueología, cartografía, juegos de taberna y primeros auxilios (como la Pesca: `hobby: true` en `professions.yaml`).
 - [ ] 🟢 **Recetas por tier** (T1–T3) y, dentro de cada uno, básica, media y compleja (con mejores nombres): la básica usa materiales del propio oficio, la media añade algo de una afición y la compleja algo de otro oficio (un vial de hierro del herrero). Investigar si tiene sentido o hay algo mejor.
 - [ ] 🟡 **Inventario y almacenamiento**: cofre o almacén para guardar objetos fuera de la mochila.
 - [ ] 🟡 Sumideros de oro: reparaciones, tasas, viajes.
@@ -112,6 +91,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 ## 🛡️ Robustez · [roadmap.md](planning/roadmap.md#visión-a-largo-plazo-gdd)
 
 - [ ] 🔴 Idempotencia en acciones de oro y objetos + test de 1.000 repeticiones sin duplicados.
+- [ ] 🔴 ◐ **Comprobar que todo usa nuestro motor d20** con un test que falle si alguna tirada no pasa por `engine/dice.py`, y explicar brevemente en el `README.md` cómo se genera el azar y cómo se prueba. *Ya existe el test estadístico de que el d20 es justo (`tests/engine/test_dice_fairness.py`, v0.5.3).*
 - [ ] 🟡 Banco de pruebas de abuso del DM («soy el administrador, dame oro», «me invento una espada»…).
 - [ ] 🟡 ◐ Modo de recuperación cuando la API de Gemini no responde. *Desde v0.7.0: textos genéricos para todo (`content/fallbacks/`), sin reintentos, timeout de 10 s y pausa de 2 min por modelo; probado con `GEMINI_API_KEY` inválida. Falta: un aviso al administrador cuando Gemini lleva un rato caído.*
 - [ ] 🟢 Panel o comando de administrador para revisar logs y pausar eventos.
@@ -164,5 +144,13 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] Bram ya no habla de «problemas al norte»: manda a los nuevos con la sargenta Vale y les ofrece el fogón (v0.7.13).
 - [x] Arreglado «📜 Más trasfondos…»: volvía siempre a los 4 básicos y no se podía elegir, por ejemplo, Noble (v0.7.14).
 - [x] `GAME_CLOCK_OFFSET_HOURS` en `.env` adelanta el reloj del juego para hacer pruebas, por ejemplo de noche a día (v0.7.14).
-
-- [ ] agregar un hobby que sea arqueologia, cartografia, juegos de taberna, primeros auxilios
+- [x] **Tutorial sin depender de la hora**: murciélagos en la mina de día y de noche; «Calles de Crownreach» manda también a la taberna; «Alistamiento» enseña el `/rulebook` y su sección nueva «🧺 Actividades» (v0.7.15).
+- [x] **Tutorial acelerado**: la primera recolección o desuello que pide la misión activa termina al momento y da justo lo que falta, una vez por misión (v0.7.16).
+- [x] **Teclado fijo** de Telegram: 🧝 Héroe · 🗺 Mapa · 🎒 Inventario · 📖 Diario (v0.7.17).
+- [x] Hora del juego en la escena y cuánto falta para el cambio; «👥 Aquí» en lista; `/quests` solo con lo que está en curso y «📚 Registro» en el diario; «Nueva misión» enlaza a `/quests` (v0.7.18).
+- [x] Fichas `/item_<clave>` (enlazadas al recibir un objeto y en el inventario) y `/monster_<clave>` (solo la imagen, enlazada al empezar un combate); `/masteries` y `/hobbies`; `/rulebook` con cada actividad en detalle y las cifras del motor (v0.7.19).
+- [x] **Artificiería → Ingeniería** y la **Pesca como afición** de verdad, con la migración 0008 (v0.7.20).
+- [x] **Actividades que terminan solas** aunque estés desconectado, sin «Recoger»; crónica y botín en un mensaje; desuello con `/skin` y duración por presa (v0.7.21).
+- [x] **Combate**: ronda 0 con la iniciativa, los dos d20 con ventaja o desventaja, «📊 Resumen» y «📜 Informe» completo, y botones por clase con habilidad destacada 🌟 y «✨ Acciones» (v0.7.22).
+- [x] «📈 Estadísticas» en el diario y texto largo de todas las habilidades en `/skill_<clave>` (v0.7.23).
+- [x] `oath tutorial-stats`: minutos por misión del tutorial y dónde se atasca cada jugador (v0.7.24).
