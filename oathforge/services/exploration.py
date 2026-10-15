@@ -56,9 +56,27 @@ def open_discoveries(char: Character) -> dict:
             and not tried(char, f"discover:{k}")}
 
 
+DAWN, DUSK = 6, 20  # game hours: night is from DUSK to DAWN
+
+
 def is_night(now: float | None = None) -> bool:
     h = game_hour(now)
-    return h >= 20 or h < 6
+    return h >= DUSK or h < DAWN
+
+
+def clock(now: float | None = None) -> str:
+    """The game time as "14:20"."""
+    minutes = int((game_time(now) % GAME_DAY_SECONDS) / GAME_DAY_SECONDS * 24 * 60)
+    return f"{minutes // 60:02d}:{minutes % 60:02d}"
+
+
+def until_switch(now: float | None = None) -> int:
+    """Real minutes until day turns to night or night to day."""
+    seconds_into_day = game_time(now) % GAME_DAY_SECONDS
+    hour = GAME_DAY_SECONDS / 24
+    switches = [DAWN * hour, DUSK * hour, (24 + DAWN) * hour]
+    nxt = min(s for s in switches if s > seconds_into_day)
+    return max(1, round((nxt - seconds_into_day) / 60))
 
 
 def npcs_present(location: str, now: float | None = None) -> list[str]:

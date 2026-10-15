@@ -287,6 +287,11 @@ async def test_chapel_cures_wounds_for_a_few_coins():
 def test_day_night_clock():
     assert exploration.game_hour(0) == 0 and exploration.is_night(0)
     assert not exploration.is_night(exploration.GAME_DAY_SECONDS / 2)
+    hour = exploration.GAME_DAY_SECONDS / 24  # ten real minutes
+    assert exploration.clock(0) == "00:00" and exploration.clock(14.5 * hour) == "14:30"
+    assert exploration.until_switch(0) == 60  # midnight: dawn at 06:00, six game hours away
+    assert exploration.until_switch(19 * hour) == 10  # dusk at 20:00
+    assert exploration.until_switch(23 * hour) == 70  # night: dawn tomorrow
 
 
 # ---------------------------------------------------------------- inventory & shops

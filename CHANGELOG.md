@@ -4,6 +4,17 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.18] - 2026-10-15
+
+### Añadido
+- La escena muestra la hora del juego y cuánto falta para el cambio, por ejemplo «☀️ 14:30 · anochece en 55 min».
+- «📚 Registro» en el diario: las misiones terminadas, cada una con su página.
+
+### Cambiado
+- `/quests` solo enseña las misiones en curso o disponibles; las terminadas están en el registro.
+- «👥 Aquí:» de la escena es una lista, un PNJ por línea.
+- «📜 Nueva misión…» enlaza a `/quests`.
+
 ## [0.7.17] - 2026-10-15
 
 ### Añadido

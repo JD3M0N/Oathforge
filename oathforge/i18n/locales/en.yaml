@@ -155,6 +155,7 @@ btn:
   replace: "Drop {prof}"
   make: "🔨 {item}"
   missions: "📜 Missions"
+  quest_log: "📚 Log"
   bestiary: "🐉 Bestiary"
   creature_art: "🖼️ View illustration"
   rumors: "🗣️ Rumors"
@@ -179,10 +180,10 @@ btn:
   end_turn: "⏭️ End turn"
 
 scene:
-  day: "☀️ Day"
-  night: "🌙 Night"
+  day: "☀️ {clock} · dusk in {minutes} min"
+  night: "🌙 {clock} · dawn in {minutes} min"
   status: "{time} · ❤️ {hp}/{max_hp} · 🪙 {gold}"
-  people: "👥 Here: {names}"
+  people: "👥 Here:"
   hint: "Type any action or use the buttons."
 
 map:
@@ -327,7 +328,10 @@ journal:
   current: "In progress"
   no_current: "You have no missions in progress."
   hint: "Tap \"Missions\" for objectives and rewards, or \"Bestiary\" for the creatures you know."
-  missions_title: "📜 <b>Missions</b> · {done}/{total} completed"
+  missions_title: "📜 <b>Missions in progress</b> · {done}/{total} completed"
+  log_title: "📚 <b>Mission log</b> · {n} finished"
+  log_hint: "Tap a mission to recall how it ended."
+  log_empty: "You have not finished any mission yet."
   missions_hint: "Tap a mission to see its progress."
   locked_name: "Locked mission"
   unlocks_after: "Unlocks after completing \"{quest}\"."
@@ -365,7 +369,7 @@ quest:
   updated: "Journal updated: {quest}."
   completed: "Quest completed: {quest}."
   failed: "Quest failed: {quest}."
-  new: "📜 New mission: {quest}. Check your journal."
+  new: "📜 New mission: {quest}. See it in /quests."
   progress: "{quest}: {target} {n}/{count}."
   objective:
     kill: "Defeat: {target}"

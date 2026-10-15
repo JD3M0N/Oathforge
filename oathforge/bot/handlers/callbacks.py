@@ -26,7 +26,7 @@ from oathforge.services.events import Outcome
 log = logging.getLogger(__name__)
 
 # verbs that only show something (no nonce, no state change)
-VIEWS = {"scene", "trv", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jq", "jrb", "jb", "jbi", "jrr",
+VIEWS = {"scene", "trv", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jrl", "jq", "jrb", "jb", "jbi", "jrr",
          "shopm", "shop", "sellm", "cbp", "lang", "city", "cls", "clsl", "rep", "prof", "profsw", "profcf", "pg", "crf", "rb"}
 
 
@@ -121,6 +121,8 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             text, kb = await render.journal(session, char, lang)
         elif verb == "jrm":
             text, kb = await render.missions(session, char, lang)
+        elif verb == "jrl":
+            text, kb = await render.quest_log(session, char, lang)
         elif verb == "jq":
             text, kb = await render.mission(session, char, arg, lang)
         elif verb == "rep":  # "<encounter_id>:<page>", or "-" for the latest battle

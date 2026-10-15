@@ -75,10 +75,10 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🟡 **Moverse por el mundo sin que sea tedioso** con `/map`: por ejemplo, tras matar al jefe de la Cripta, salir y volver a la ciudad desde el mapa. *Falta pensar el diseño.*
 - [ ] 🟡 Mensaje de estado que se edita en lugar de mandar muchos mensajes.
 - [ ] 🟡 **Ficha de cada objeto** (`/item_<clave>`): qué es, para qué sirve y cuánto vale, con un botón para verla al recibirlo (por ejemplo, el cuchillo de desollar que da Vale).
-- [ ] 🟡 `/quests` solo con las misiones activas; las completadas pasan a un registro en el diario.
-- [ ] 🟢 «📜 Nueva misión… Mírala en el diario» con el enlace a `/quests`.
-- [ ] 🟡 Ver la hora del juego en la escena y cuánto falta para que se haga de día o de noche.
-- [ ] 🟢 «👥 Aquí:» de la escena como lista, un PNJ por línea.
+- [x] `/quests` solo con las misiones en curso; las terminadas pasan a «📚 Registro» en el diario (v0.7.18).
+- [x] «📜 Nueva misión… Mírala en /quests», con el enlace (v0.7.18).
+- [x] La hora del juego en la escena y cuánto falta para que se haga de día o de noche (v0.7.18).
+- [x] «👥 Aquí:» de la escena como lista, un PNJ por línea (v0.7.18).
 - [ ] 🟡 `/rulebook` → «Recolección y oficios» con más detalle: cada acción posible (minar 5 min y qué da, expedición larga de 15 min y su emboscada, rastrear…).
 - [ ] 🟡 `/professions`, `/masteries` y `/hobbies` (como `/classes`), con su botón y su sección en `/rulebook`.
 - [ ] 🟡 **Actividades que terminan solas**: al empezar a trabajar, un mensaje bonito en vez del panel de escena repetido; al acabar, el bot te manda lo obtenido aunque estés desconectado. Sin botón «Recoger»: solo «🔄 Actualizar» y «Abandonar».

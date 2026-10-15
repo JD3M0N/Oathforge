@@ -541,7 +541,8 @@ async def test_journal_missions_and_bestiary_views(llm, monkeypatch):
     await p.press(p.find("jq", "tut_muster"))
     assert "Vale" in p.last[0] and "25 XP" in p.last[0]
     await p.press(p.find("jrm"))
-    await p.press(p.find("jq", "tut_town"))
+    assert "jq|tut_town|-" not in p.buttons()  # /quests: only what is in progress
+    await p.press("jq|tut_town|-")
     assert "🔒" in p.last[0]
     # talking to the sergeant and reading the rulebook's Activities page complete the first mission
     await p.press("talk|vale|-")
@@ -549,6 +550,10 @@ async def test_journal_missions_and_bestiary_views(llm, monkeypatch):
     assert "Actividades" in p.chat.sent[-2][0] and "Alistamiento" in p.last[0]
     await p.press("jq|tut_town|-")
     assert "Barrio de Oficios" in p.last[0] and "Bram" in p.last[0]
+    await p.press("jrl|-|-")  # finished missions: the journal's log
+    assert "1 terminadas" in p.last[0] and "jq|tut_muster|-" in p.buttons()
+    await p.press("jq|tut_muster|-")
+    assert "jrl|-|-" in p.buttons()  # back to the log
     await p.press("jrb|-|-")
     assert "0/10" in p.last[0]
     await p.press("jrr|-|-")

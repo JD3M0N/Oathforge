@@ -178,7 +178,8 @@ def level_up_cards(outcome: Outcome, lang: str) -> list[str]:
 
 def status_line(char: Character, lang: str) -> str:
     night = exploration.is_night()
-    tod = t(lang, "scene.night" if night else "scene.day")
+    tod = t(lang, "scene.night" if night else "scene.day", clock=exploration.clock(),
+            minutes=exploration.until_switch())
     injured = " · " + t(lang, "sheet.injured") if char.conditions.get("injured") else ""
     return t(lang, "scene.status", time=tod, hp=char.hp, max_hp=char.max_hp, gold=char.gold) + injured
 
@@ -196,8 +197,8 @@ async def scene(session: AsyncSession, char: Character, lang: str) -> tuple[str,
     for extra in await quests.location_texts(session, char):
         lines += ["", f"<i>{escape(extra[lang])}</i>"]
     if present:
-        names = ", ".join(f"{c.npcs[k].name.get(lang)} ({c.npcs[k].title.get(lang)})" for k in present)
-        lines += ["", t(lang, "scene.people", names=escape(names))]
+        lines += ["", t(lang, "scene.people")]
+        lines += [f"• {escape(c.npcs[k].name.get(lang))} <i>({escape(c.npcs[k].title.get(lang))})</i>" for k in present]
     lines += ["", f"<i>{t(lang, 'scene.hint')}</i>"]
 
     n = nonce()
@@ -857,22 +858,37 @@ async def journal(session: AsyncSession, char: Character, lang: str) -> tuple[st
     else:
         lines += [f"<i>{t(lang, 'journal.no_current')}</i>", ""]
     lines.append(f"<i>{t(lang, 'journal.hint')}</i>")
-    kb = markup([[btn(t(lang, "btn.missions"), cb("jrm")), btn(t(lang, "btn.bestiary"), cb("jrb"))],
-                 [btn(t(lang, "btn.rumors"), cb("jrr")), btn(t(lang, "btn.back"), cb("scene"))]])
+    kb = markup([[btn(t(lang, "btn.missions"), cb("jrm")), btn(t(lang, "btn.quest_log"), cb("jrl"))],
+                 [btn(t(lang, "btn.bestiary"), cb("jrb")), btn(t(lang, "btn.rumors"), cb("jrr"))],
+                 [btn(t(lang, "btn.back"), cb("scene"))]])
     return "\n".join(lines)[:MAX_MESSAGE], kb
 
 
+FINISHED = ("completed", "failed")
+
+
 async def missions(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+    """/quests: only what is in progress or on offer; finished missions live in the journal's log."""
     entries = await quests.journal(session, char)
     done = sum(1 for _, q, p in entries if quests.stage_of(q, p)[1] == "completed")
     lines = [t(lang, "journal.missions_title", done=done, total=len(entries)), ""]
     rows = []
     for key, quest, prog in entries:
         _, state = quests.stage_of(quest, prog)
-        name = quest.name.get(lang) if state != "locked" else t(lang, "journal.locked_name")
-        rows.append([btn(f"{QUEST_ICONS[state]} {name}", cb("jq", key))])
-    lines.append(f"<i>{t(lang, 'journal.missions_hint')}</i>")
-    rows.append([btn(t(lang, "btn.back"), cb("jr"))])
+        if state in ("active", "available"):
+            rows.append([btn(f"{QUEST_ICONS[state]} {quest.name.get(lang)}", cb("jq", key))])
+    lines.append(f"<i>{t(lang, 'journal.missions_hint' if rows else 'journal.no_current')}</i>")
+    rows.append([btn(t(lang, "btn.quest_log"), cb("jrl")), btn(t(lang, "btn.back"), cb("jr"))])
+    return "\n".join(lines), markup(rows)
+
+
+async def quest_log(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+    """The journal's log: the missions already finished."""
+    entries = [(k, q, p) for k, q, p in await quests.journal(session, char) if quests.stage_of(q, p)[1] in FINISHED]
+    lines = [t(lang, "journal.log_title", n=len(entries)), ""]
+    rows = [[btn(f"{QUEST_ICONS[quests.stage_of(q, p)[1]]} {q.name.get(lang)}", cb("jq", k))] for k, q, p in entries]
+    lines.append(f"<i>{t(lang, 'journal.log_hint' if rows else 'journal.log_empty')}</i>")
+    rows.append([btn(t(lang, "btn.missions"), cb("jrm")), btn(t(lang, "btn.back"), cb("jr"))])
     return "\n".join(lines), markup(rows)
 
 
@@ -884,6 +900,8 @@ async def mission(session: AsyncSession, char: Character, key: str, lang: str) -
         return t(lang, "quest.err.unavailable"), back
     quest, prog = entry
     stage, state = quests.stage_of(quest, prog)
+    if state in FINISHED:  # opened from the log: back to it
+        back = markup([[btn(t(lang, "btn.back"), cb("jrl"))]])
     if state == "locked":
         lines = [f"🔒 <b>{t(lang, 'journal.locked_name')}</b>", "",
                  f"<i>{escape(quest.stages[stage].journal.get(lang))}</i>"]
