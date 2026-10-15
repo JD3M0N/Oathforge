@@ -33,7 +33,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 
 ## 🧙 Clases y progresión · [clases.md](planning/clases.md) · [progresion.md](planning/progresion.md)
 
-- [ ] 🟡 Probar el tutorial con la beta: cuánto se tarda en llegar a nivel 3 y dónde se atasca la gente (la espera hasta la noche para los murciélagos ya no existe desde la v0.7.15).
+- [ ] 🟡 ◐ Probar el tutorial con la beta: cuánto se tarda en llegar a nivel 3 y dónde se atasca la gente. *Hecho: `oath tutorial-stats` lo mide (v0.7.24); la espera hasta la noche para los murciélagos ya no existe (v0.7.15). Falta: la partida con los testers y ajustar con los datos.*
 - [x] **El tutorial ya no depende de la hora**: murciélagos en la mina de día y de noche, y «Alas al anochecer» manda a cazarlos allí (v0.7.15).
 - [x] «Calles de Crownreach» manda también a la taberna (ir y hablar con Bram), no solo al Barrio de Oficios (v0.7.15).
 - [x] El tutorial enseña el `/rulebook`: «Alistamiento» pide leer su sección nueva «🧺 Actividades» (recolectar, minar, talar, pescar, expedición larga, rastrear, cazar, descansar) (v0.7.15).

@@ -52,6 +52,7 @@ Antes de editar nada, comprueba la rama (`git branch --show-current`) y el usuar
 .venv\Scripts\oath delete-player Aldric # borrar un jugador por nombre o id de Telegram (--yes para confirmar)
 .venv\Scripts\alembic upgrade head      # migraciones
 .venv\Scripts\oath simulate --level 1-5   # simulador de combates para el balance
+.venv\Scripts\oath tutorial-stats        # minutos por misión del tutorial y dónde se atasca cada jugador
 .venv\Scripts\oath tgtest send "/start"   # jugar con el bot desde la cuenta de prueba (también press, show)
 ```
 

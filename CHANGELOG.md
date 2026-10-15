@@ -4,6 +4,19 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.24] - 2026-10-15
+
+### Añadido
+- `oath tutorial-stats`: para medir el tutorial en la beta. Muestra:
+  - la mediana de minutos reales de cada misión;
+  - cuántos jugadores la acabaron y cuántos están en ella;
+  - por jugador, cuántas misiones lleva, en cuánto tiempo y en cuál está atascado y desde cuándo.
+
+  Usa las fechas que ya guarda la base de datos, sin migración. Quien tiene el tutorial hecho por `legacy_done` no cuenta.
+
+### Cambiado
+- `planning/roadmap.md`: 0.7.15–0.7.24 hechas; lo siguiente es la 0.8.0 (multijugador).
+
 ## [0.7.23] - 2026-10-15
 
 ### Añadido

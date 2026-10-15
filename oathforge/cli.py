@@ -17,6 +17,7 @@ COMMANDS = [
     ("Pruebas", [
         ("tgtest", "send|press|show|login", "Juega con el bot desde la cuenta de prueba."),
         ("simulate", "[--level 1-5]", "Simula combates para el balance (--help)."),
+        ("tutorial-stats", "", "Cuánto tarda cada jugador en cada misión del tutorial y dónde se atasca."),
     ]),
     ("Ayuda", [
         ("help", "", "Muestra esta ayuda."),
@@ -132,6 +133,41 @@ async def delete_player(query: str | None, confirm: bool) -> None:
         await engine.dispose()
 
 
+async def tutorial_stats() -> None:
+    """Real minutes per tutorial mission, per player and as a median, and where each one is stuck."""
+    from statistics import median
+
+    from sqlalchemy.ext.asyncio import AsyncSession
+
+    from oathforge.content import get_content
+    from oathforge.services import admin
+
+    quests = get_content().quests
+    engine = _db()
+    try:
+        async with AsyncSession(engine) as session:
+            runs = await admin.tutorial_runs(session)
+    finally:
+        await engine.dispose()
+    if not runs:
+        print("nadie ha empezado el tutorial")
+        return
+    tut = [k for k, q in sorted(quests.items(), key=lambda kv: kv[1].order) if q.tutorial]
+    print(f"{len(runs)} jugadores · {sum(r.done for r in runs)} han terminado el tutorial\n")
+    print("Mediana de minutos reales por misión (jugadores que la acabaron):")
+    for k in tut:
+        times = [r.minutes[k] for r in runs if k in r.minutes]
+        stuck = sum(1 for r in runs if r.current == k)
+        med = f"{median(times):6.1f} min" if times else "     —    "
+        print(f"  {quests[k].order}. {quests[k].name.es:28} {med}  ({len(times)} la acabaron, {stuck} están en ella)")
+    print("\nPor jugador:")
+    for r in runs:
+        total = sum(r.minutes.values())
+        where = "terminado" if r.done else (f"en «{quests[r.current].name.es}» desde hace {r.waiting:.0f} min"
+                                            if r.current else "sin misión del tutorial activa")
+        print(f"  {r.name:20} nivel {r.level}  {len(r.minutes)}/{len(tut)} misiones en {total:.0f} min · {where}")
+
+
 def main(argv: list[str] | None = None) -> None:
     args = sys.argv[1:] if argv is None else argv
     command = args[0] if args else "help"
@@ -150,6 +186,8 @@ def main(argv: list[str] | None = None) -> None:
         from oathforge.tools.simulate import main as simulate
 
         simulate(rest)
+    elif command == "tutorial-stats":
+        asyncio.run(tutorial_stats())
     elif command == "reset-players":
         asyncio.run(reset_players("--yes" in rest))
     elif command == "delete-player":

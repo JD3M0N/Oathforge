@@ -743,3 +743,20 @@ async def test_two_enemies_of_the_same_kind_get_letters():
         enc, _ = await combat_service.start_encounter(s, char, ["boar", "boar", "cave_bat"], random.Random(0))
         names = {c.name["es"] for k, c in EncounterState.model_validate(enc.state).combatants.items() if k != "p1"}
         assert names == {"Jabalí A", "Jabalí B", "Murciélago de cueva"}
+
+
+async def test_tutorial_runs_time_each_mission():
+    from datetime import datetime, timedelta, timezone
+
+    from oathforge.services import admin
+    _, cid = await new_character()
+    rng = random.Random(0)
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        await quests.on_talk(s, char, "vale", rng)
+        await quests.on_read(s, char, "activities", rng)
+    async with session_scope() as s:
+        runs = await admin.tutorial_runs(s, now=datetime.now(timezone.utc) + timedelta(minutes=30))
+        run = next(r for r in runs if r.name == "Aldric")
+        assert list(run.minutes) == ["tut_muster"] and run.current == "tut_town" and not run.done
+        assert 29 < run.waiting < 31  # stuck on the second mission for half an hour

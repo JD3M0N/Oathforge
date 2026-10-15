@@ -33,6 +33,11 @@ Versionado `0.x.y`: sube **y** (parche) en arreglos y cambios pequeños; sube **
   - **Creación de personaje**: emojis en la creación y los atributos, `/lineage` y `/background`, 12 trasfondos y trasfondo propio revisado por la IA.
   - **Ayuda**: `/rulebook` y páginas `/skill_<clave>`.
   - **Misiones**: objetivos nuevos (recoger, desollar, fabricar, descansar, curarse) y el tutorial de la sargenta Vale hasta nivel 3.
+- **0.7.15–0.7.24**: pulido antes del multijugador.
+  - **Tutorial**: sin depender de la hora, acelerado (la primera recolección o desuello que pide es instantánea), con el `/rulebook` y la taberna; `oath tutorial-stats` para medirlo en la beta.
+  - **Interfaz**: teclado fijo, hora del juego en la escena, `/quests` y registro, fichas `/item_` y `/monster_`, `/masteries` y `/hobbies`, estadísticas en el diario.
+  - **Actividades**: terminan solas y llegan aunque estés desconectado, crónica y botín en un mensaje, desuello con `/skin`; Ingeniería y la Pesca como afición.
+  - **Combate**: ronda 0, los dos d20 con ventaja, resumen e informe completo, botones por clase con habilidad destacada.
 
 ## Próximo (candidatos)
 
@@ -42,7 +47,7 @@ Versionado `0.x.y`: sube **y** (parche) en arreglos y cambios pequeños; sube **
 - **0.5.x**: balance de la cadena de misiones y de la caza con datos de `artifacts/battles/` y del simulador (`artifacts/simulations/`): subir a Mago y Druida a nivel 1-2; más criaturas en el bestiario.
 - **0.6.x**: especializaciones a nivel 5 (los datos ya existen; con la cadena de 0.5.0 se llega a nivel 5 enseguida).
 - **0.7.x**:
-  - balance del tutorial con datos de la beta (cuánto tarda, dónde se atasca la gente);
+  - balance del tutorial con datos de la beta (`oath tutorial-stats`);
   - economía: encargos, sumideros de oro y balance de oficios (ver `comercio.md`).
 - **0.8.0**: grupos cooperativos y combate en grupo (fase 3, ver `multijugador.md`).
 - **0.9.0** (propuesta): audio: música de la taberna y voces de NPC (ver `audiovisual.md`).
