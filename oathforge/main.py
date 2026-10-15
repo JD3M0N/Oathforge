@@ -5,7 +5,7 @@ import logging
 from telegram import BotCommand, Update
 from telegram.ext import Application, ContextTypes, TypeHandler
 
-from oathforge import __version__, recorder
+from oathforge import __version__, pidfile, recorder
 
 from oathforge.ai.client import build_llm
 from oathforge.bot.handlers import callbacks, commands, common, creation, text
@@ -90,7 +90,11 @@ def main() -> None:
     logging.getLogger("apscheduler").setLevel(logging.WARNING)  # the activity sweep runs every 10 s
     log.info("Oathforge v%s", __version__)
     recorder.start(get_settings())
-    build_app().run_polling(allowed_updates=Update.ALL_TYPES)
+    pidfile.write()  # so `oath stop` / `oath restart` can find this bot
+    try:
+        build_app().run_polling(allowed_updates=Update.ALL_TYPES)
+    finally:
+        pidfile.remove()
 
 
 if __name__ == "__main__":

@@ -109,11 +109,12 @@ create:
   custom_skills_full: "Ya tienes {n}: toca una para quitarla."
 
 kb:
+  place: "📍 Lugar"
   hero: "🧝 Héroe"
   map: "🗺 Mapa"
   inventory: "🎒 Inventario"
   journal: "📖 Diario"
-  ready: "⌨️ Debajo del chat tienes los atajos fijos: 🧝 Héroe, 🗺 Mapa, 🎒 Inventario y 📖 Diario."
+  ready: "⌨️ Debajo del chat tienes los atajos fijos: 📍 Lugar (dónde estás y qué puedes hacer), 🧝 Héroe, 🗺 Mapa, 🎒 Inventario y 📖 Diario."
 btn:
   rulebook: "📘 Reglamento"
   full_sheet: "📜 Ficha completa"

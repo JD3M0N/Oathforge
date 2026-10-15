@@ -203,7 +203,8 @@ async def help_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def fixed_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """A press on the fixed keyboard: the same view as its command (never free text for the AI)."""
-    views = {"hero": render.hero, "map": _map, "inventory": render.inventory_view, "journal": render.journal}
+    views = {"place": current_view, "hero": render.hero, "map": _map, "inventory": render.inventory_view,
+             "journal": render.journal}  # 📍: the scene, like /start or /look (the combat panel if fighting)
     await _view(views[fixed_key(update.message.text)])(update, context)
 
 

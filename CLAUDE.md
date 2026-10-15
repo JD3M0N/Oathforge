@@ -48,6 +48,7 @@ Antes de editar nada, comprueba la rama (`git branch --show-current`) y el usuar
 ```powershell
 .venv\Scripts\python -m pytest          # tests (Postgres si TEST_DATABASE_URL conecta; si no, SQLite)
 .venv\Scripts\oath bot                 # arrancar el bot
+.venv\Scripts\oath restart             # reiniciar el bot en marcha (lo arranca en segundo plano); oath stop lo para
 .venv\Scripts\oath reset-players       # borrar todos los jugadores (--yes para confirmar)
 .venv\Scripts\oath delete-player Aldric # borrar un jugador por nombre o id de Telegram (--yes para confirmar)
 .venv\Scripts\alembic upgrade head      # migraciones

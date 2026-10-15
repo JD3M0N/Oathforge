@@ -806,16 +806,17 @@ async def test_fixed_keyboard_after_creation_and_its_buttons(llm):
     await create(p)
     fixed = [kb for _, kb in p.chat.sent if isinstance(kb, ReplyKeyboardMarkup)]
     assert len(fixed) == 1 and fixed[0].is_persistent
-    assert [b.text for row in fixed[0].keyboard for b in row] == ["🧝 Héroe", "🗺 Mapa", "🎒 Inventario", "📖 Diario"]
+    assert [b.text for row in fixed[0].keyboard for b in row] == ["📍 Lugar", "🧝 Héroe", "🗺 Mapa", "🎒 Inventario",
+                                                                   "📖 Diario"]
     for label, expect in (("🎒 Inventario", "Inventario"), ("📖 Diario", "Diario de aventuras"),
-                          ("🗺 Mapa", "Mapa"), ("🧝 Héroe", "Aldric")):
+                          ("🗺 Mapa", "Mapa"), ("🧝 Héroe", "Aldric"), ("📍 Lugar", "Plaza de Crownreach")):
         await commands.fixed_button(p.update(message=label), p.ctx)
         assert expect in p.last[0]
     assert len([kb for _, kb in p.chat.sent if isinstance(kb, ReplyKeyboardMarkup)]) == 1  # sent once
     await p.press("setl|en|-")  # another language: the labels follow on the next view
     await p.press("inv|-|-")
     fixed = [kb for _, kb in p.chat.sent if isinstance(kb, ReplyKeyboardMarkup)]
-    assert len(fixed) == 2 and fixed[-1].keyboard[0][0].text == "🧝 Hero"
+    assert len(fixed) == 2 and fixed[-1].keyboard[0][1].text == "🧝 Hero"
     await commands.fixed_button(p.update(message="🎒 Inventario"), p.ctx)  # the old labels still work
     assert "Inventory" in p.last[0]
 

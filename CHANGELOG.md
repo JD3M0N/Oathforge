@@ -4,6 +4,16 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.27] - 2026-10-15
+
+### Añadido
+- **«📍 Lugar»** en el teclado fijo: muestra la escena, lo mismo que `/start` o `/look` (dónde estás, tu vida, quién hay y lo que puedes hacer), o el combate si estás peleando. El teclado queda así: 📍 Lugar · 🧝 Héroe · 🗺 Mapa / 🎒 Inventario · 📖 Diario. Quien ya tenía el de 4 botones recibe el nuevo en su siguiente vista.
+- `oath restart` y `oath stop`, en `oath help`:
+  - `oath stop` para el bot en marcha;
+  - `oath restart` lo para y lo arranca de nuevo en segundo plano, con la salida en `artifacts/logs/bot-console.log`.
+
+  El bot guarda su PID en `.run/bot.pid`. Un bot arrancado antes de esta versión se encuentra por su línea de comandos.
+
 ## [0.7.26] - 2026-10-15
 
 Más arreglos de la partida de prueba.

@@ -109,11 +109,12 @@ create:
   custom_skills_full: "You already have {n}: tap one to drop it."
 
 kb:
+  place: "📍 Here"
   hero: "🧝 Hero"
   map: "🗺 Map"
   inventory: "🎒 Inventory"
   journal: "📖 Journal"
-  ready: "⌨️ Below the chat you have fixed shortcuts: 🧝 Hero, 🗺 Map, 🎒 Inventory and 📖 Journal."
+  ready: "⌨️ Below the chat you have fixed shortcuts: 📍 Here (where you are and what you can do), 🧝 Hero, 🗺 Map, 🎒 Inventory and 📖 Journal."
 btn:
   rulebook: "📘 Rulebook"
   full_sheet: "📜 Full sheet"

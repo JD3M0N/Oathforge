@@ -21,6 +21,7 @@ Cómo se ve y se siente el juego dentro del chat. Fuente: [GDD](referencias/gdd-
 - **v0.7.18**: la escena muestra la hora del juego y cuánto falta para que anochezca o amanezca (`exploration.clock`, `until_switch`), y «👥 Aquí:» como lista. `/quests` solo con lo que está en curso; las misiones terminadas pasan a «📚 Registro» en el diario (verbo `jrl`).
 - **v0.7.19**: fichas de consulta. `/item_<clave>` (qué es, para qué sirve, ingrediente de, dónde se consigue, valor), enlazada en cada «Obtienes…» y en el inventario; `/monster_<clave>` con solo la imagen, enlazada al empezar un combate; `/masteries` y `/hobbies` con pestañas entre ellas y `/professions`. El `/rulebook` admite `{marcadores}` que se rellenan con las cifras del motor (`render.rule_numbers`).
 - **v0.7.23**: «📈 Estadísticas» en el diario (contadores en `char.flags.stats`, escritos desde `services/`; los monstruos salen del bestiario) y texto largo en todas las páginas `/skill_<clave>`.
+- **v0.7.25–0.7.27**: arreglos de la partida de prueba con Brannoc (Ysolde cura gratis en la beta, jabalíes de noche, respaldo de PNJ con la pista, tiendas por categorías, informe y crónicas) y «📍 Lugar» en el teclado fijo (5 botones, `KEYBOARD_VERSION`).
 - Canales de anuncios: https://t.me/OathForge (inglés) y https://t.me/OathForge_es (español).
 
 ## Ideas

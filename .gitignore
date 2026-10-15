@@ -10,3 +10,6 @@ artifacts/
 
 # oathforge tgtest: login session of the Telegram test account
 .telegram/
+
+# PID of the running bot (oath stop / oath restart)
+.run/

@@ -154,3 +154,6 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] **Combate**: ronda 0 con la iniciativa, los dos d20 con ventaja o desventaja, «📊 Resumen» y «📜 Informe» completo, y botones por clase con habilidad destacada 🌟 y «✨ Acciones» (v0.7.22).
 - [x] «📈 Estadísticas» en el diario y texto largo de todas las habilidades en `/skill_<clave>` (v0.7.23).
 - [x] `oath tutorial-stats`: minutos por misión del tutorial y dónde se atasca cada jugador (v0.7.24).
+- [x] Arreglos de la partida de prueba con Brannoc: Ysolde cura gratis y cierra heridas graves en la beta (nadie se queda atascado herido y sin oro), jabalíes también de noche, respaldo de PNJ con la pista de la misión, aviso de poca vida y «lo siguiente» de cada misión (v0.7.25).
+- [x] Informe sin el resultado repetido y con la ronda real en los botones, crónica y botín juntos tras emboscadas y rastreos, criaturas con artículo en las crónicas, `/map` ocupado sin caminos, tiendas por categorías, poción a 20 de oro, el ala de murciélago para la poción de maná y la escena sin botones repetidos (v0.7.26).
+- [x] «📍 Lugar» en el teclado fijo y `oath restart` / `oath stop` (v0.7.27).

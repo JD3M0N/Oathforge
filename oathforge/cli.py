@@ -9,6 +9,8 @@ import textwrap
 COMMANDS = [
     ("Bot", [
         ("bot", "", "Arranca el bot (Ctrl+C para pararlo)."),
+        ("stop", "", "Para el bot que está en marcha."),
+        ("restart", "", "Reinicia el bot: lo para si está en marcha y lo arranca en segundo plano."),
     ]),
     ("Jugadores", [
         ("delete-player", "[id|nombre] [--yes]", "Borra un jugador; sin nombre, los lista."),
@@ -168,6 +170,43 @@ async def tutorial_stats() -> None:
         print(f"  {r.name:20} nivel {r.level}  {len(r.minutes)}/{len(tut)} misiones en {total:.0f} min · {where}")
 
 
+def stop_bot() -> bool:
+    """Stop the bot started with `oath bot` (found by its PID file). True if one was running."""
+    from oathforge import pidfile
+
+    pid = pidfile.read()
+    pids = [pid] if pid is not None and pidfile.alive(pid) else pidfile.find_running()
+    pidfile.PATH.unlink(missing_ok=True)
+    if not pids:
+        print("no hay ningún bot en marcha")
+        return False
+    for p in pids:
+        pidfile.kill(p)
+        print(f"bot parado (PID {p})")
+    return True
+
+
+def restart_bot() -> None:
+    """Stop the running bot, if any, and start a new one in the background (output to artifacts/logs/)."""
+    import subprocess
+    import time
+    from pathlib import Path
+
+    stop_bot()
+    time.sleep(1)  # let Telegram release the polling of the old one
+    log = Path("artifacts") / "logs" / "bot-console.log"
+    log.parent.mkdir(parents=True, exist_ok=True)
+    kwargs = {}
+    if sys.platform == "win32":
+        kwargs["creationflags"] = subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP
+    else:
+        kwargs["start_new_session"] = True
+    with open(log, "ab") as out:
+        proc = subprocess.Popen([sys.executable, "-m", "oathforge", "bot"], stdout=out, stderr=subprocess.STDOUT,
+                                stdin=subprocess.DEVNULL, **kwargs)
+    print(f"bot arrancado en segundo plano (PID {proc.pid}); salida en {log}")
+
+
 def main(argv: list[str] | None = None) -> None:
     args = sys.argv[1:] if argv is None else argv
     command = args[0] if args else "help"
@@ -178,6 +217,10 @@ def main(argv: list[str] | None = None) -> None:
         from oathforge.main import main as run_bot
 
         run_bot()
+    elif command == "stop":
+        stop_bot()
+    elif command == "restart":
+        restart_bot()
     elif command == "tgtest":
         from oathforge.tools.tgtest import main as tgtest
 
