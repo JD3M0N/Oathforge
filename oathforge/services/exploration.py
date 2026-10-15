@@ -148,7 +148,10 @@ async def hunt(session: AsyncSession, char: Character, rng: random.Random) -> Ou
         return Outcome().add("explore.hunt_boss").extend(enc_out)
     table = encounter_table(loc)
     entry = rng.choices(table, weights=[e.weight for e in table])[0]
-    out = Outcome().add("explore.hunt_night" if is_night() and loc.night_encounters else "explore.hunt_day")
+    out = Outcome()
+    if char.hp * 2 < char.max_hp:
+        out.add("explore.low_hp", hp=char.hp, max_hp=char.max_hp)
+    out.add("explore.hunt_night" if is_night() and loc.night_encounters else "explore.hunt_day")
     _, enc_out = await combat_service.start_encounter(session, char, list(entry.monsters), rng)
     return out.extend(enc_out)
 
@@ -224,22 +227,22 @@ def wake_rested(char: Character) -> Outcome:
 
 
 async def cure_wounds(session: AsyncSession, char: Character, rng: random.Random) -> Outcome:
-    """The chapel's healer: a few coins for a quick heal. Grave wounds still need a long rest."""
+    """The chapel's healer: a quick heal that also closes grave wounds (the "injured" condition)."""
     loc = get_content().locations[char.location]
     if loc.healer is None:
         return Outcome.refused("explore.err.no_healer")
     if refusal := characters.ensure_free(char):
         return refusal
-    cap = inventory.hp_cap(char)
-    if char.hp >= cap:
-        return Outcome.refused("explore.err.injured_cap" if cap < char.max_hp else "inv.err.full_hp")
-    if char.gold < loc.healer.cost:
-        return Outcome.refused("shop.err.no_gold", price=loc.healer.cost)
-    char.gold -= loc.healer.cost
+    injured = bool(char.conditions.get("injured"))
+    if char.hp >= char.max_hp and not injured:
+        return Outcome.refused("inv.err.full_hp")
+    # beta: Ysolde heals for free and closes grave wounds, so nobody gets stuck injured and broke after a
+    # defeat; revisit with the economy (healer.cost stays in place.yaml for then)
+    if injured:
+        char.conditions = {k: v for k, v in char.conditions.items() if k != "injured"}
     before = char.hp
-    char.hp = min(cap, char.hp + roll(loc.healer.heal, rng).total)
-    out = Outcome().add("explore.healed", cost=loc.healer.cost, amount=char.hp - before, hp=char.hp,
-                        max_hp=char.max_hp)
-    if cap < char.max_hp:
+    char.hp = min(char.max_hp, char.hp + roll(loc.healer.heal, rng).total)
+    out = Outcome().add("explore.healed", amount=char.hp - before, hp=char.hp, max_hp=char.max_hp)
+    if injured:
         out.add("explore.healed_injured")
     return out.extend(await quests.advance(session, char, "heal", char.location, rng))

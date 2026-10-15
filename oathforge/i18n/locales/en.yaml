@@ -132,7 +132,7 @@ btn:
   talk: "💬 Talk"
   shop: "🛒 Trade"
   rest: "🛏️ Long rest ({cost} 🪙)"
-  heal: "🙏 Cure wounds ({cost} 🪙)"
+  heal: "🙏 Cure wounds (free)"
   wake: "☀️ Get up"
   inventory: "🎒 Inventory"
   sheet: "🦸 Hero"
@@ -230,6 +230,7 @@ map:
     npc: "💬 {npc}"
 
 talk:
+  quest_hint: "{npc} reminds you what to do: \"{hint}\""
   title: "💬 Who do you want to talk to?"
   hint: "Type what you say to {npc}."
   trust_up: "{npc} trusts you more ({trust})."
@@ -389,6 +390,7 @@ check:
 explore:
   arrived: "You reach {place} after {minutes} minutes on the road."
   ambush: "Ambush!"
+  low_hp: "⚠️ You are low on health ({hp}/{max_hp}) and there may be a fight. Heal first: Sister Ysolde, a potion or a rest."
   nothing_more: "There is nothing left to discover here."
   found_nothing: "You find nothing out of the ordinary."
   already_tried: "You already searched this place today. Tomorrow, or once you have improved, you may spot something new."
@@ -397,14 +399,14 @@ explore:
   hunt_night: "🦇 You wade into the dark grass. Something flutters above your head."
   hunt_boss: "🐗 The ground trembles. Something huge pushes through the grass."
   rested: "☀️ You get up rested after eight hours of sleep. You recover all your strength: {hp} HP and every use."
-  healed: "🙏 Sister Ysolde murmurs a prayer and bandages you ({cost} gold): you recover {amount} HP ({hp}/{max_hp})."
-  healed_injured: "Grave wounds don't close with bandages: for that you need a long rest."
+  healed: "🙏 Sister Ysolde murmurs a prayer and bandages you: you recover {amount} HP ({hp}/{max_hp})."
+  healed_injured: "✨ Her prayer closes your grave wounds too: you are no longer injured."
   err:
     in_combat: "You are in the middle of a fight!"
     no_route: "You can't go there from here."
     no_rest: "There is nowhere to rest here."
     no_healer: "There is no one here to cure wounds."
-    injured_cap: "Bandages can't do more for your grave wounds. You need a long rest."
+    injured_cap: "Potions don't close grave wounds: get healed by Sister Ysolde or rest at the inn."
     no_hunting: "There is nothing to hunt here."
 
 quest:
@@ -413,6 +415,7 @@ quest:
   failed: "Quest failed: {quest}."
   new: "📜 New mission: {quest}. See it in /quests."
   progress: "{quest}: {target} {n}/{count}."
+  next: "📜 {quest}: next, {step}."
   objective:
     kill: "Defeat: {target}"
     talk: "Talk to {target}"

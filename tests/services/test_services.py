@@ -267,19 +267,22 @@ async def test_abandoned_rest_heals_nothing_and_keeps_the_gold():
         assert char.hp == 1 and char.gold == 10 and char.state == "idle"
 
 
-async def test_chapel_cures_wounds_for_a_few_coins():
+async def test_chapel_cures_wounds_for_free_and_closes_grave_ones():
     _, cid = await new_character()
     async with session_scope() as s:
         char = await get_char(s, cid)
         char.location = "crownreach_chapel"
-        assert (await exploration.cure_wounds(s, char, random.Random(0))).error == "inv.err.full_hp"  # free when healthy
+        assert (await exploration.cure_wounds(s, char, random.Random(0))).error == "inv.err.full_hp"
         char.hp = 1
         out = await exploration.cure_wounds(s, char, random.Random(0))
-        assert out.ok and char.gold == 15 - 3 and 1 + 5 <= char.hp <= 1 + 12
-        char.hp, char.conditions = 1, {"injured": True}
-        await exploration.cure_wounds(s, char, random.Random(0))
-        assert char.hp <= char.max_hp // 2  # grave wounds still need a long rest
-        assert (await exploration.cure_wounds(s, char, random.Random(0))).error == "explore.err.injured_cap"
+        assert out.ok and char.gold == 15 and 1 + 5 <= char.hp <= 1 + 12  # free during the beta
+        # after a defeat: injured and broke, Ysolde still helps and closes the grave wounds
+        char.hp, char.gold, char.conditions = 1, 0, {"injured": True}
+        out = await exploration.cure_wounds(s, char, random.Random(0))
+        assert out.ok and "injured" not in char.conditions and "explore.healed_injured" in [e.key for e in out.events]
+        char.hp = char.max_hp // 2
+        char.conditions = {"injured": True}  # even at the half-HP cap, she can close them
+        assert (await exploration.cure_wounds(s, char, random.Random(0))).ok and "injured" not in char.conditions
         char.location = "crownreach_plaza"
         assert (await exploration.cure_wounds(s, char, random.Random(0))).error == "explore.err.no_healer"
 
@@ -680,6 +683,33 @@ async def test_veterans_of_the_old_chain_skip_the_tutorial():
 
 
 # ---------------------------------------------------------------- hunting and bestiary
+
+@pytest.mark.parametrize("night", [False, True])
+async def test_the_meadow_has_boars_day_and_night(monkeypatch, night):
+    """«Tusks in the Meadow» does not depend on the hour either."""
+    monkeypatch.setattr(exploration, "is_night", lambda now=None: night)
+    loc = get_content().locations["tusk_meadow"]
+    assert any("boar" in e.monsters for e in exploration.encounter_table(loc))
+
+
+async def test_a_single_objective_says_what_comes_next():
+    _, cid = await new_character()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        out = await quests.on_talk(s, char, "vale", random.Random(0))
+        nxt = [e for e in out.events if e.key == "quest.next"]
+        assert nxt and "rulebook" in nxt[0].params["step"]["en"]
+
+
+async def test_a_quest_giver_repeats_the_hint_when_the_ai_is_down(llm):
+    from oathforge.services import actions
+    user_id, cid = await new_character()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        char.location = "crownreach_plaza"
+    line, _ = await actions.talk(llm, user_id, "vale", "¿Y ahora qué?")  # the fake LLM answers nothing
+    assert "te recuerda lo que toca" in line and "/rulebook" in line
+
 
 @pytest.mark.parametrize("night", [False, True])
 async def test_the_mine_has_bats_day_and_night(monkeypatch, night):

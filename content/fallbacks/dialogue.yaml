@@ -150,6 +150,10 @@ ysolde:
 - es: «No hace falta hablar para respetar una pausa, {name}», murmura Ysolde.
   en: '"We need not speak to respect a pause, {name}," Ysolde murmurs.'
 vale:
+- es: Vale da un golpecito al diario que llevas. «Tu siguiente orden está ahí, recluta. Y en /quests.»
+  en: 'Vale taps the journal you carry. "Your next order is in there, recruit. And in /quests."'
+- es: «Si te pierdes, pulsa 📍 y mira lo que hay a tu alrededor», dice Vale señalando la plaza.
+  en: '"If you get lost, press 📍 and look at what is around you," Vale says, pointing at the plaza.'
 - es: Vale se cruza de brazos. «Menos charla y más botas en el barro, {name}.»
   en: Vale crosses her arms. "Less talk, more boots in the mud, {name}."
 - es: «Eso me lo cuentas cuando vuelvas entero», dice Vale con una risotada.
@@ -168,9 +172,5 @@ vale:
   en: '"First do what I told you. Then we talk," Vale says, and that is that.'
 - es: Vale escupe a un lado. «En mis tiempos no se preguntaba tanto.»
   en: Vale spits to one side. "In my day recruits didn't ask so many questions."
-- es: "«Buena pregunta. Respuesta corta: no lo sé», admite Vale encogiéndose de hombros."
-  en: '"Good question. Short answer: I don''t know," Vale admits with a shrug.'
-- es: Vale mira al cielo. «Si oscurece, al prado van los murciélagos, no los valientes.»
-  en: Vale looks at the sky. "When it gets dark, the bats go to the meadow, not the brave."
 - es: «Come, duerme y afila el acero, {name}. Lo demás viene solo», dice Vale.
   en: '"Eat, sleep and sharpen your steel, {name}. The rest comes on its own," says Vale.'

@@ -132,7 +132,7 @@ btn:
   talk: "💬 Hablar"
   shop: "🛒 Comerciar"
   rest: "🛏️ Descanso largo ({cost} 🪙)"
-  heal: "🙏 Curar heridas ({cost} 🪙)"
+  heal: "🙏 Curar heridas (gratis)"
   wake: "☀️ Levantarse"
   inventory: "🎒 Inventario"
   sheet: "🦸 Héroe"
@@ -230,6 +230,7 @@ map:
     npc: "💬 {npc}"
 
 talk:
+  quest_hint: "{npc} te recuerda lo que toca: «{hint}»"
   title: "💬 ¿Con quién quieres hablar?"
   hint: "Escribe lo que le dices a {npc}."
   trust_up: "{npc} confía más en ti ({trust})."
@@ -389,6 +390,7 @@ check:
 explore:
   arrived: "Llegas a {place} tras {minutes} minutos de camino."
   ambush: "¡Emboscada!"
+  low_hp: "⚠️ Vas con poca vida ({hp}/{max_hp}) y puede haber pelea. Cúrate antes: la hermana Ysolde, una poción o un descanso."
   nothing_more: "Ya no queda nada que descubrir aquí."
   found_nothing: "No encuentras nada fuera de lo común."
   already_tried: "Ya has registrado este lugar hoy. Mañana, o cuando hayas mejorado, quizá veas algo nuevo."
@@ -397,14 +399,14 @@ explore:
   hunt_night: "🦇 Te adentras en la hierba oscura. Algo aletea sobre tu cabeza."
   hunt_boss: "🐗 La tierra tiembla. Algo enorme se abre paso entre la hierba."
   rested: "☀️ Te levantas descansado tras ocho horas de sueño. Recuperas todas tus fuerzas: {hp} PV y todos tus usos."
-  healed: "🙏 La hermana Ysolde murmura una plegaria y te venda ({cost} de oro): recuperas {amount} PV ({hp}/{max_hp})."
-  healed_injured: "Las heridas graves no se cierran con vendas: para eso necesitas un descanso largo."
+  healed: "🙏 La hermana Ysolde murmura una plegaria y te venda: recuperas {amount} PV ({hp}/{max_hp})."
+  healed_injured: "✨ Su plegaria cierra también tus heridas graves: ya no estás herido."
   err:
     in_combat: "¡Estás en pleno combate!"
     no_route: "No puedes ir allí desde aquí."
     no_rest: "Aquí no hay dónde descansar."
     no_healer: "Aquí no hay quien cure heridas."
-    injured_cap: "Tus heridas graves no se curan más con vendas. Necesitas un descanso largo."
+    injured_cap: "Las pociones no cierran heridas graves: cúrate con la hermana Ysolde o descansa en la posada."
     no_hunting: "Aquí no hay nada que cazar."
 
 quest:
@@ -413,6 +415,7 @@ quest:
   failed: "Misión fallida: {quest}."
   new: "📜 Nueva misión: {quest}. Mírala en /quests."
   progress: "{quest}: {target} {n}/{count}."
+  next: "📜 {quest}: ahora, {step}."
   objective:
     kill: "Derrota: {target}"
     talk: "Habla con {target}"

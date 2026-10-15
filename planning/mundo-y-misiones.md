@@ -17,7 +17,7 @@
   |---|---|---|---|---|---|
   | 1 | Alistamiento | Hablar con Vale + leer «🧺 Actividades» en el `/rulebook` | hablar con PNJ, el reglamento | 25 | cuchillo de desollar |
   | 2 | Calles de Crownreach | Ir al Barrio de Oficios y a la taberna + hablar con Bram | `/map`, moverse por la ciudad | 25 | 5 de oro |
-  | 3 | Colmillos en el prado | 2 jabalíes + 1 cuero desollado | caza, combate, desuello | 100 | hoz |
+  | 3 | Colmillos en el prado | 2 jabalíes + 1 cuero desollado (de día o de noche desde la v0.7.25) | caza, combate, desuello | 100 | hoz |
   | 4 | Raíz de sangre | Recoger 3 raíces de sangre | salir de la ciudad, recolección, emboscadas | 50 | 5 de oro |
   | 5 | Guiso del cazador | Fabricar un estofado del cazador | aficiones, fogón, fabricar | 50 | pico |
   | 6 | Hierro para la Guardia | Sacar 3 menas de hierro | minería, expedición larga | 60 | 10 de oro |

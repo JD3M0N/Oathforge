@@ -4,6 +4,19 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.25] - 2026-10-15
+
+Arreglos de la partida de prueba con Brannoc.
+
+### Arreglado
+- **Herido y sin oro ya no te deja atascado.** Durante la beta, la hermana Ysolde cura gratis y cierra también las heridas graves de una derrota. Antes cobraba 3 de oro y no curaba a quien estaba herido, y el descanso cuesta 5.
+- **«Colmillos en el prado» se puede hacer a cualquier hora**: de noche, en el prado salen también jabalíes.
+- **Si la IA no responde, quien te dio la misión te recuerda lo que toca**: la pista de la misión activa, en vez de una frase genérica como «no lo sé».
+
+### Añadido
+- Aviso de poca vida (menos de la mitad) al cazar, rastrear o empezar una expedición larga.
+- Al cumplir un objetivo de una misión que aún no ha terminado, el bot dice lo siguiente. Por ejemplo, tras hablar con Vale: «📜 Alistamiento: ahora, Consulta en el /rulebook: Actividades».
+
 ## [0.7.24] - 2026-10-15
 
 ### Añadido

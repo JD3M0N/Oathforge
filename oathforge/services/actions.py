@@ -19,6 +19,7 @@ from oathforge.content import get_content
 from oathforge.database.models import Character, User
 from oathforge.database.session import session_scope
 from oathforge.engine.checks import clamp_tier
+from oathforge.i18n import t
 from oathforge.engine.combat import Action, EncounterState
 from oathforge.services import (
     activities, audit, characters, combat_service, exploration, inventory, npcs, quests, world_map,
@@ -249,8 +250,13 @@ async def _ai_down_reason(user_id: int) -> str:
     return "unavailable" if await Budget(get_settings()).allow(user_id) else "budget_exhausted"
 
 
-def _dialogue_fallback(npc_key: str, lang: str, npc: str, name: str, reason: str) -> tuple[str, Outcome]:
-    line = fallbacks.pick("dialogue", npc_key, lang, npc=npc, name=name)
+def _dialogue_fallback(npc_key: str, lang: str, npc: str, name: str, reason: str,
+                       hint: dict | None = None) -> tuple[str, Outcome]:
+    """The NPC's line when the AI is out: a quest giver repeats what to do next, the rest say a generic line."""
+    if hint:
+        line = t(lang, "talk.quest_hint", npc=npc, hint=hint[lang])
+    else:
+        line = fallbacks.pick("dialogue", npc_key, lang, npc=npc, name=name)
     seed = random.randrange(2**32)
     notice = {language: fallbacks.pick("freetext", reason, language, seed=seed, name=name)
               for language in ("es", "en")}
@@ -268,8 +274,9 @@ async def talk(llm: LLM, user_id: int, npc_key: str, text: str) -> tuple[str, Ou
         if npc is None or npc_key not in exploration.npcs_present(char.location):
             return "", Outcome.refused("talk.err.not_here")
         name = char.name
+        hint = await quests.giver_hint(session, char, npc_key)
         if not await Budget(get_settings()).allow(user_id):
-            return _dialogue_fallback(npc_key, lang, npc.name.get(lang), name, "budget_exhausted")
+            return _dialogue_fallback(npc_key, lang, npc.name.get(lang), name, "budget_exhausted", hint)
         rel = await npcs.relationship(session, npc_key, char)
         trust = rel.trust
         memories = [m.text for m in await npcs.recall(session, npc_key, char)]
@@ -284,7 +291,7 @@ async def talk(llm: LLM, user_id: int, npc_key: str, text: str) -> tuple[str, Ou
     )
     out = Outcome()
     if reply is None:  # Gemini down: a generic line in the NPC's voice
-        return _dialogue_fallback(npc_key, lang, npc.name.get(lang), name, await _ai_down_reason(user_id))
+        return _dialogue_fallback(npc_key, lang, npc.name.get(lang), name, await _ai_down_reason(user_id), hint)
 
     async with session_scope() as session:
         _, char = await _load(session, user_id, lock=True)

@@ -120,8 +120,11 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str,
         char.gold -= loc.rest_cost
         return Outcome().add("activity.started.rest", place=loc.name.model_dump(), cost=loc.rest_cost,
                              minutes=seconds // 60)
-    return Outcome().add(f"activity.started.{kind}", skill=characters.mastery_name(skill),
-                         place=loc.name.model_dump(), minutes=seconds // 60, seconds=seconds)
+    out = Outcome().add(f"activity.started.{kind}", skill=characters.mastery_name(skill),
+                        place=loc.name.model_dump(), minutes=seconds // 60, seconds=seconds)
+    if kind in ("track", "stay") and char.hp * 2 < char.max_hp:  # this may end in a fight
+        out.add("explore.low_hp", hp=char.hp, max_hp=char.max_hp)
+    return out
 
 
 def skin_seconds(monster_keys: list[str]) -> int:

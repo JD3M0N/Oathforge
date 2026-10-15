@@ -21,10 +21,10 @@ exits:
 encounters:
   - {monsters: [boar], weight: 3}
   - {monsters: [boar, boar], weight: 2}
-night_encounters:
+night_encounters:  # also boars, so the tutorial ("Tusks in the Meadow") works at any hour
+  - {monsters: [boar], weight: 4}
   - {monsters: [cave_bat], weight: 2}
-  - {monsters: [cave_bat, cave_bat], weight: 3}
-  - {monsters: [cave_bat, cave_bat, cave_bat], weight: 1}
+  - {monsters: [cave_bat, cave_bat], weight: 2}
 fixed_encounters:
   - {monsters: [old_tusk], flag: cleared_old_tusk, if_flag: old_tusk_hunt}
 discoveries:

@@ -12,6 +12,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from oathforge.content import get_content
+from oathforge.i18n import t
 from oathforge.content.schemas import Quest, QuestAction, QuestObjective
 from oathforge.database.models import Character, QuestProgress
 from oathforge.engine.checks import check, dc_for
@@ -131,9 +132,14 @@ async def advance(session: AsyncSession, char: Character, kind: str, target: str
             out.text(quest.stages[quest.complete_stage].journal)
             await apply_effects(session, char, quest.rewards, out, rng)
             _set_stage(quest, p, quest.complete_stage, out)
-        elif hit[0].count > 1:
+        elif hit[0].count > 1 and hit[1] < hit[0].count:
             out.add("quest.progress", quest=quest.name.model_dump(), target=objective_target(hit[0]),
                     n=hit[1], count=hit[0].count)
+        else:  # that objective is done but the mission is not: say what comes next
+            nxt = next(o for i, o in enumerate(quest.objectives) if int(counters.get(str(i), 0)) < o.count)
+            out.add("quest.next", quest=quest.name.model_dump(),
+                    step={lang: t(lang, f"quest.objective.{nxt.kind}", target=objective_target(nxt)[lang])
+                          for lang in ("es", "en")})
     await refresh(session, char, out)
     return out
 
@@ -168,6 +174,15 @@ async def tutorial_boost(session: AsyncSession, char: Character, kind: str,
 def use_tutorial_boost(char: Character, quest_key: str) -> None:
     flags = char.flags or {}
     char.flags = {**flags, TUTORIAL_BOOSTS: [*flags.get(TUTORIAL_BOOSTS, []), quest_key]}
+
+
+async def giver_hint(session: AsyncSession, char: Character, npc_key: str) -> dict | None:
+    """The hint of the first active mission this NPC gave, for when the AI cannot answer for them."""
+    prog = await ensure_progress(session, char)
+    for qkey, quest in ordered_quests():
+        if quest.giver == npc_key and quest.hint and prog[qkey].state == "active":
+            return quest.hint.model_dump()
+    return None
 
 
 async def on_read(session: AsyncSession, char: Character, section: str, rng: random.Random) -> Outcome:

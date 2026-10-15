@@ -246,7 +246,7 @@ async def scene(session: AsyncSession, char: Character, lang: str,
     if loc.rest_cost is not None:
         buttons.append(btn(t(lang, "btn.rest", cost=loc.rest_cost), cb("rest", "-", n)))
     if loc.healer is not None:
-        buttons.append(btn(t(lang, "btn.heal", cost=loc.healer.cost), cb("heal", "-", n)))
+        buttons.append(btn(t(lang, "btn.heal"), cb("heal", "-", n)))  # free during the beta
     if loc.hub and c.media.zone_images(loc.zone, night):
         buttons.append(btn(t(lang, "btn.view_city"), cb("city")))
     rows = grid(buttons)

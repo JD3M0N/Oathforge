@@ -148,7 +148,7 @@ boar:
     - {item: raw_meat, chance: 0.8, qty: 2}
   type: beast
   active: day
-  habitat: {es: Prado de los Colmillos (de día), en: Tusk Meadow (by day)}
+  habitat: {es: Prado de los Colmillos (de día y de noche), en: Tusk Meadow (day and night)}
   lore:
     es: Hoza en los campos al sur de Crownreach y embiste a quien se acerque. Sus colmillos se venden bien en el mercado.
     en: Roots through the fields south of Crownreach and charges anyone who comes close. Its tusks sell well at the market.
