@@ -28,19 +28,24 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🟢 Nuevos tipos de acción: defender a un aliado, negociar una tregua, rendirse.
 - [ ] 🟢 Mostrar la **ronda 0** en el panel de combate: la tirada de iniciativa antes de la ronda 1.
 - [ ] 🟡 **Resumen e informe** de batalla por separado: lo que hoy sale en «📜 Informe» pasa a «Resumen», y el informe cuenta todas las rondas en detalle, qué hizo cada uno.
-- [ ] 🟡 Ver contra quién luchas: al empezar un combate, un botón o un `/monster_<clave>` con la imagen y la ficha de cada enemigo.
+- [ ] 🟡 Ver contra quién luchas: al empezar un combate, un botón o un `/monster_<clave>` con **solo la imagen** de cada enemigo; la ficha no, porque aún no sabes qué va a hacer.
+- [ ] 🟡 **Botones de combate por clase**: los normales, uno destacado con la habilidad principal de la clase (Golpe divino en el Paladín) y un botón «✨ Acciones» con el resto de poderes disponibles.
 
 ## 🧙 Clases y progresión · [clases.md](planning/clases.md) · [progresion.md](planning/progresion.md)
 
 - [ ] 🟡 Probar el tutorial con la beta: cuánto se tarda en llegar a nivel 3 y dónde se atasca la gente (sobre todo la espera hasta la noche para los murciélagos).
 - [ ] 🔴 **El tutorial no debe depender de la hora**: que haya murciélagos en la mina de día y de noche, y que «Alas al anochecer» mande a cazarlos allí.
 - [ ] 🟡 «Calles de Crownreach» debe mandarte también a la taberna (ir a la taberna y hablar con Bram), no solo al Barrio de Oficios.
+- [ ] 🔴 **Tutorial acelerado**: en las misiones del tutorial, y solo ahí, recolectar, minar, desollar, etc. son instantáneos. Sin trampas: solo cuenta la acción que pide la misión activa y una vez.
+- [ ] 🟢 **Campamento de entrenamiento** al acabar el tutorial (nivel 3–5, a reescalar): misiones opcionales de 3 a 5 por clase para sentir qué es ser Paladín, Bardo, Pícaro…, y hacer ahí el juramento y entrar en la clase. Los nuevos pueden saltárselo. Ver cómo encaja con la compra de atributos por puntos.
 - [ ] 🔴 Elegir especialización a nivel 5. *La ficha completa ya muestra la especialización cuando exista; con la cadena de misiones de v0.5.0 se llega a nivel 5 enseguida.*
 - [ ] 🟢 Escribir el texto largo (`details`) de las habilidades de cada clase para `/skill_<clave>` (hoy solo el Paladín).
 - [ ] 🟡 ◐ **Sistema de descanso**: descanso corto en cualquier sitio (recuperar parte de la vida y algunos usos) y largo en posada. *Hecho: descanso gratis en el osario de la cripta (v0.5.0), el tónico del reposo (v0.6.2), descanso largo de 8 h de juego en la posada y «Curar heridas» en la capilla (v0.7.0). Falta: un descanso corto sin poción; decidir si el osario también debe tardar 8 h.*
-- [ ] 🟡 Siguiente clase: Explorador (Mago, Druida y Bardo en v0.4.0; Brujo en v0.4.4).
+- [ ] 🟡 Siguientes clases: **Explorador (Ranger) y Artificiero** (Mago, Druida y Bardo en v0.4.0; Brujo en v0.4.4).
 - [ ] 🟢 Juramentos con consecuencias, títulos y cicatrices en la ficha.
-- [ ] 🟢 Ranuras de equipo y objetos con procedencia (quién los fabricó o encontró).
+- [ ] 🟡 **Ranuras de equipo**: hoy hay 4 (arma principal, a distancia, mano secundaria/escudo y cuerpo). Ampliar a cabeza, manos, pies, cuello (amuleto), 2 anillos y capa, y decidir cuántas caben en `/sheet` sin que pese ([progresion.md](planning/progresion.md)).
+- [ ] 🟢 Objetos con procedencia (quién los fabricó o encontró).
+- [ ] 🟢 **Sistema de logros**.
 
 ## 🎨 Audiovisual · [audiovisual.md](planning/audiovisual.md)
 
@@ -53,17 +58,20 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🟢 Modo silencioso y efectos de sonido solo en momentos clave.
 - [ ] 🟢 Biblia visual (paleta, estilo, ropa por facción) antes de generar nada.
 - [ ] 🟢 Imagen de cada linaje en `/lineage`, para ver cómo es un humano, un elfo… o sea que te permita verlo si tocas humano y asi
+- [ ] 🟢 Foto de perfil para el bot y los canales de Telegram.
 
 ## 📱 Telegram y multijugador · [interfaz-telegram.md](planning/interfaz-telegram.md) · [multijugador.md](planning/multijugador.md)
 
 - [ ] 🟢 **Publicar en los canales de Telegram** ([inglés](https://t.me/OathForge), [español](https://t.me/OathForge_es)) desde el bot: el changelog de cada versión y el periódico *Herald of Aetherfall* con los rumores confirmados del mundo. Hoy los anuncios se publican a mano.
 - [ ] 🔴 Grupos de expedición y combate en grupo (0.8.0).
+- [ ] 🟢 **Gremios**: roles, banco, tablón, misiones comunitarias y sede ([multijugador.md](planning/multijugador.md#gremios-gdd-86)).
+- [ ] 🔴 **Botones fijos del juego** (teclado de Telegram) con lo principal: 🧝 Héroe, 🗺️ Mapa, 🎒 Inventario, 📖 Diario.
 - [ ] 🟡 ◐ Comandos nuevos: `/map`, `/quests`, `/rest`, `/party`. *Hecho: `/quests` (v0.5.0), `/settings` y `/prof_<oficio>` (v0.7.0), `/map` (v0.7.6).*
 - [ ] 🟡 Pruebas de habilidad más claras: hoy salen como «🎲 Survival: 2 → 3 vs DC 13 ❌».
 - [ ] 🟡 Con ventaja o desventaja, mostrar los dos d20 y cuál cuenta (hoy solo sale uno).
 - [ ] 🟢 Explicar las ⚠️ de los viajes (probabilidad de emboscada) y la leyenda ●/○/· de las competencias en `/sheet`.
 - [ ] 🟢 Gramática de los textos generados: «Llegas **al** Mercado», «Llegas **a la** Taberna…» (artículo por lugar) y «1 ronda» en singular en el informe.
-- [ ] 🟢 Moverse más cómodo con `/map`: por ejemplo, tras matar al jefe de la Cripta, salir y volver a la ciudad desde el mapa.
+- [ ] 🟡 **Moverse por el mundo sin que sea tedioso** con `/map`: por ejemplo, tras matar al jefe de la Cripta, salir y volver a la ciudad desde el mapa. *Falta pensar el diseño.*
 - [ ] 🟡 Mensaje de estado que se edita en lugar de mandar muchos mensajes.
 - [ ] 🟡 **Ficha de cada objeto** (`/item_<clave>`): qué es, para qué sirve y cuánto vale, con un botón para verla al recibirlo (por ejemplo, el cuchillo de desollar que da Vale).
 - [ ] 🟡 `/quests` solo con las misiones activas; las completadas pasan a un registro en el diario.
@@ -71,20 +79,32 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🟡 Ver la hora del juego en la escena y cuánto falta para que se haga de día o de noche.
 - [ ] 🟢 «👥 Aquí:» de la escena como lista, un PNJ por línea.
 - [ ] 🟡 `/rulebook` → «Recolección y oficios» con más detalle: cada acción posible (minar 5 min y qué da, expedición larga de 15 min y su emboscada, rastrear…).
+- [ ] 🟡 `/professions`, `/masteries` y `/hobbies` (como `/classes`), con su botón y su sección en `/rulebook`.
+- [ ] 🟡 **Actividades que terminan solas**: al empezar a trabajar, un mensaje bonito en vez del panel de escena repetido; al acabar, el bot te manda lo obtenido aunque estés desconectado. Sin botón «Recoger»: solo «🔄 Actualizar» y «Abandonar».
+- [ ] 🟡 **Crónica y botín en un solo mensaje**: «✅ Terminas tu trabajo en X» con el emoji del oficio, «📜 Crónica: …», lo obtenido, la XP y «Crónica 1/15». Probar formatos antes de decidir.
+- [ ] 🟢 **Estadísticas del personaje** en una pestaña del diario: distancia recorrida, ciudades visitadas, monstruos matados, esquivas…
 - [ ] 🟢 Duelos PvP con consentimiento y sin pérdidas.
 
 ## 🌍 Mundo, misiones y economía · [mundo-y-misiones.md](planning/mundo-y-misiones.md) · [comercio.md](planning/comercio.md)
 
 - [ ] 🟡 ◐ **Bestiario**: ir añadiendo criaturas poco a poco (descripción, hábitat, de día o de noche, estadísticas y puntos débiles). *Hecho (v0.5.0): 9 criaturas y ficha que se desbloquea al verlas y derrotarlas.*
+- [ ] 🟢 **Tamaño y peso de las presas**: rango de altura y peso por animal; el bestiario guarda tu presa más larga y la más pesada.
+- [ ] 🟢 **Rareza de criaturas**: dentro de los encuentros de cada zona, algunas salen menos (10–15 %). Más adelante, según la hora y el clima.
 - [ ] 🟢 «Algo brilla» al fondo de la mina: hoy es solo ambiente; convertirlo en un descubrimiento con recompensa.
 - [ ] 🟡 Más misiones después del nivel 5 y misiones secundarias repetibles (encargos de caza diarios).
 - [ ] 🔴 **Entregar las misiones a quien las dio**: al cumplir los objetivos la misión queda «lista para entregar»; al hablar con ese PNJ cobras la recompensa y te da la siguiente.
 - [ ] 🔴 ◐ **Profesiones y recolección** · [profesiones.md](planning/profesiones.md). *Hecho (v0.6.0): actividades de campo, maestrías, mina, arboleda, claro y ribera, desuello y crónicas. Hecho (v0.6.1): oficios con 2 plazas, Barrio de Oficios, recetas y `/professions`. Hecho (v0.6.2): poción de maná y tónico del reposo. Hecho (v0.7.0): Escribanía y Artificiería (pergaminos y bombas para el combate), Cocina y Pesca como aficiones sin plaza y guía `/prof_<oficio>`. Falta: probar el balance con la beta (sobre todo la bomba de fuego, que da a toda una fila).*
 - [ ] 🟢 Afinidades de maestría a rango 3, durabilidad de herramientas y vetas que se agotan (después de la beta).
+- [ ] 🟡 **Desollar como acción con duración**: 10 s para presas pequeñas y más según la presa, en vez de hacerse sola tras el combate.
+- [ ] 🟡 **Pesca como afición de verdad**, igual que la Cocina (hoy por dentro es una maestría, `gathering.HOBBIES`).
+- [ ] 🟡 Renombrar **Artificiería → Ingeniería** (y así no se confunde con la clase Artificiero).
+- [ ] 🟢 **Recetas por tier** (T1–T3) y, dentro de cada uno, básica, media y compleja (con mejores nombres): la básica usa materiales del propio oficio, la media añade algo de una afición y la compleja algo de otro oficio (un vial de hierro del herrero). Investigar si tiene sentido o hay algo mejor.
+- [ ] 🟡 **Inventario y almacenamiento**: cofre o almacén para guardar objetos fuera de la mochila.
 - [ ] 🟡 Sumideros de oro: reparaciones, tasas, viajes.
 - [ ] 🟡 `world_facts` y eventos encadenados (por ejemplo, la crisis del hierro).
 - [ ] 🟢 Rumores con veracidad (verdadero, falso, incompleto) que se puedan investigar.
 - [ ] 🟢 Más facciones (Verdant Pact para el Bosque, Hollow Choir para la Cripta).
+- [ ] 🟢 **Eventos**: batallas por bandos en el bosque, defender la ciudad de una invasión, raids globales semanales…
 - [ ] 🟢 Contratos entre jugadores con oro en custodia.
 - [ ] 🟢 Segunda región (Frosthold o Stormport).
 

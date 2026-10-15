@@ -41,6 +41,7 @@ Antes de editar nada, comprueba la rama (`git branch --show-current`) y el usuar
 - Solo escriben estado los módulos de `oathforge/services/`.
 - Todo texto visible para el jugador existe en español e inglés (`oathforge/i18n/locales/`, o `{es, en}` en `content/*.yaml`).
 - Proveedor de IA: Gemini (`google-genai`). No cambiar de proveedor sin que Josue lo pida.
+- Josue suele poner ejemplos con el Paladín porque es la clase que prueba: salvo que diga lo contrario, el ejemplo vale para todas las clases.
 
 ## Comandos
 
