@@ -132,33 +132,39 @@ activities:
   body:
     es: |-
       Fuera de la ciudad, cada lugar tiene sus actividades. Llevan tiempo real: mientras trabajas no puedes viajar ni hacer otra cosa, y el bot te avisa al acabar.
-      • ⛏️ Minar (pico), 🪓 talar (hacha), 🌿 recolectar hierbas (hoz) y 🎣 pescar (caña): «Trabajar» dura 5 min y da unos pocos materiales.
-      • ⏳ Expedición larga: 15 min y mucho más botín, pero a veces te tienden una emboscada.
-      • 🐾 Rastrear: 5 min siguiendo huellas; casi siempre encuentras una presa y la puedes cazar.
-      • 🏹 Cazar: pelear contra lo que vive en el lugar. Con el cuchillo de desollar, las bestias dan pieles y carne.
-      • 🛏️ Descansar: en la taberna, 8 horas de juego (80 min) para recuperar PV y habilidades.
-      Cada actividad sube su maestría, de 0 a 5: con más rango, más botín.
+      • ⛏️ Minar (pico), 🪓 talar (hacha), 🌿 recolectar hierbas (hoz) y 🎣 pescar (caña): «Trabajar» dura {gather_min} min y da {gather_units} materiales. Sin peligro.
+      • 🏕️ Expedición larga: {stay_min} min y {stay_units} materiales, más XP. Al final puede haber emboscada ({ambush} según el lugar): si ganas te lo llevas todo, si huyes la mitad y si caes lo pierdes.
+      • 🐾 Rastrear: {track_min} min siguiendo huellas. El {prey_pct} % de las veces das con una presa y peleas; si la vences, te llevas trofeos además del desuello.
+      • 🏹 Cazar: pelear al momento contra lo que vive en el lugar.
+      • 🔪 Desollar: con el cuchillo de desollar, las bestias que abates dan pieles y carne.
+      • 🛏️ Descansar: en la taberna, 8 horas de juego ({rest_min} min) para recuperar PV y habilidades.
+      Cada actividad sube su maestría, de 0 a {max_rank}: cada rango da un {bonus_pct} % más de probabilidad de botín extra (hasta {bonus_cap} %) y abre recursos más raros. Todas: /masteries
     en: |-
       Outside the city, each place has its own activities. They take real time: while you work you cannot travel or do anything else, and the bot tells you when you are done.
-      • ⛏️ Mining (pickaxe), 🪓 woodcutting (axe), 🌿 herb gathering (sickle) and 🎣 fishing (rod): "Work" takes 5 min and gives a few materials.
-      • ⏳ Long expedition: 15 min and much more loot, but sometimes you are ambushed.
-      • 🐾 Tracking: 5 min following tracks; you almost always find prey you can hunt.
-      • 🏹 Hunting: fight whatever lives in the place. With a skinning knife, beasts give hides and meat.
-      • 🛏️ Resting: at the tavern, 8 game hours (80 min) to recover HP and abilities.
-      Each activity raises its mastery, from 0 to 5: the higher the rank, the more loot.
+      • ⛏️ Mining (pickaxe), 🪓 woodcutting (axe), 🌿 herb gathering (sickle) and 🎣 fishing (rod): "Work" takes {gather_min} min and gives {gather_units} materials. No danger.
+      • 🏕️ Long expedition: {stay_min} min and {stay_units} materials, more XP. At the end you may be ambushed ({ambush} depending on the place): win and you keep it all, flee and you keep half, fall and you lose it.
+      • 🐾 Tracking: {track_min} min following tracks. {prey_pct} % of the time you find prey and fight it; beat it and you get trophies on top of skinning.
+      • 🏹 Hunting: fight whatever lives in the place, right away.
+      • 🔪 Skinning: with a skinning knife, the beasts you bring down give hides and meat.
+      • 🛏️ Resting: at the tavern, 8 game hours ({rest_min} min) to recover HP and abilities.
+      Each activity raises its mastery, from 0 to {max_rank}: every rank adds {bonus_pct} % chance of bonus loot (up to {bonus_cap} %) and opens rarer resources. All of them: /masteries
 
 professions:
   icon: "⛏️"
   title: {es: Recolección y oficios, en: Gathering and crafts}
   body:
     es: |-
-      Fuera de la ciudad puedes minar, talar, recoger hierbas, pescar y rastrear presas. Son actividades con tiempo: vuelves con materiales y una crónica de lo que pasó, y a veces con una emboscada.
-      Con los materiales fabricas en el Barrio de Oficios: armas, pociones, pergaminos o bombas. Tienes 2 oficios activos; Cocina y Pesca son aficiones sin plaza.
-      Tus oficios y maestrías: /professions
+      Hay tres cosas distintas:
+      • ⛏️ Maestrías de campo (minería, tala, herboristería, desuello, rastreo): libres para todos, suben con las actividades. /masteries
+      • 🛠️ Oficios (herrería, alquimia, carpintería, peletería, joyería, escribanía, artificiería): tienes {slots} plazas. Se aprenden gratis en el Barrio de Oficios; cambiar uno cuesta {swap_cost} de oro y no pierdes lo aprendido. /professions
+      • 🍲 Aficiones (cocina y pesca): opcionales y sin plaza. /hobbies
+      Con los materiales del campo fabricas en la estación de cada oficio: armas, armaduras, pociones, anillos, pergaminos o bombas. Fabricar es al momento si tienes los ingredientes y el rango.
     en: |-
-      Outside the city you can mine, chop wood, gather herbs, fish and track prey. They take time: you come back with materials and a chronicle of what happened, and sometimes with an ambush.
-      With the materials you craft in the Crafts Quarter: weapons, potions, scrolls or bombs. You have 2 active professions; Cooking and Fishing are hobbies that take no slot.
-      Your professions and masteries: /professions
+      There are three different things:
+      • ⛏️ Field masteries (mining, woodcutting, herbalism, skinning, tracking): free for everyone, they grow with activities. /masteries
+      • 🛠️ Professions (blacksmithing, alchemy, carpentry, leatherworking, jewelcrafting, scribing, artificing): you have {slots} slots. You learn them for free in Craftsmen’s Row; swapping one costs {swap_cost} gold and you keep what you learned. /professions
+      • 🍲 Hobbies (cooking and fishing): optional and slot-free. /hobbies
+      With field materials you craft at each profession's station: weapons, armor, potions, rings, scrolls or bombs. Crafting is instant if you have the ingredients and the rank.
 
 travel:
   icon: "🧭"

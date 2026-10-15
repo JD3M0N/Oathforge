@@ -766,3 +766,29 @@ async def test_fixed_keyboard_after_creation_and_its_buttons(llm):
     assert len(fixed) == 2 and fixed[-1].keyboard[0][0].text == "🧝 Hero"
     await commands.fixed_button(p.update(message="🎒 Inventario"), p.ctx)  # the old labels still work
     assert "Inventory" in p.last[0]
+
+
+async def test_item_and_monster_pages(llm):
+    p = Player(llm, tg_id=72)
+    await create(p)
+    await p.press("talk|vale|-")
+    await p.press("rb|activities|-")  # Mustering In: the knife, with its link
+    assert "/item_skinning_knife" in p.last[0]
+    await commands.item(p.update(message="/item_skinning_knife"), p.ctx)
+    assert "Cuchillo de desollar" in p.last[0] and "Desuello" in p.last[0] and "Vale 8 de oro" in p.last[0]
+    await commands.item(p.update(message="/item_nope"), p.ctx)
+    assert "No conozco ese objeto" in p.last[0]
+    await commands.monster(p.update(message="/monster_cave_bat"), p.ctx)
+    assert p.chat.photos and "Murciélago de cueva" in p.last[0]  # the picture and its name, nothing else
+    await p.press("inv|-|-")
+    assert "/item_skinning_knife" in p.last[0]
+
+
+async def test_masteries_and_hobbies_pages(llm):
+    p = Player(llm, tg_id=73)
+    await commands.masteries(p.update(message="/masteries"), p.ctx)  # no character needed
+    assert "Minería" in p.last[0] and "/item_pickaxe" in p.last[0] and "Mina del Paso Viejo" in p.last[0]
+    await create(p)
+    await p.press("hob|-|-")
+    assert "Cocina" in p.last[0] and "Pesca" in p.last[0] and "☆" in p.last[0]
+    assert {"prof|-|-", "mst|-|-"} <= set(p.buttons())

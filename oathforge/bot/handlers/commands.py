@@ -94,6 +94,39 @@ async def skill(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await send(update, *render.skill_page(m.group(1) if m else "", lang, char))
 
 
+ITEM_LINK = re.compile(r"^/item_([a-z0-9_]+?)(?:@\w+)?$")
+
+
+async def item(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/item_<key>: what an item is and what it is for (tappable wherever an item is obtained)."""
+    async with session_scope() as session:
+        user, _ = await load(session, update)
+        lang = context.user_data["lang"] = user.language
+    m = ITEM_LINK.match((update.message.text or "").strip()) if update.message else None
+    await send(update, render.item_page(m.group(1) if m else "", lang))
+
+
+MONSTER_LINK = re.compile(r"^/monster_([a-z0-9_]+?)(?:@\w+)?$")
+
+
+async def monster(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/monster_<key>: only the creature's picture and name, to see what you are up against (its
+    bestiary entry, with what it does, is earned by meeting it)."""
+    async with session_scope() as session:
+        user, _ = await load(session, update)
+        lang = context.user_data["lang"] = user.language
+        m = MONSTER_LINK.match((update.message.text or "").strip()) if update.message else None
+        key = m.group(1) if m else ""
+        if key not in get_content().monsters:
+            await send(update, t(lang, "monster.err.unknown"))
+            return
+        images = get_content().media.monster_images(key)
+        if images:
+            await send_photos(session, update, context, images, render.creature_caption(key, lang))
+            return
+    await send(update, f"{render.creature_caption(key, lang)}\n<i>{t(lang, 'monster.no_image')}</i>")
+
+
 PROF_LINK = re.compile(r"^/prof_([a-z_]+?)(?:@\w+)?$")
 
 
@@ -105,6 +138,22 @@ async def profession_guide(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         m = PROF_LINK.match((update.message.text or "").strip()) if update.message else None
         text, kb = render.profession_page(m.group(1) if m else "", lang, char)
     await send(update, text, kb)
+
+
+async def masteries(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/masteries: the field masteries (no character needed)."""
+    async with session_scope() as session:
+        user, char = await load(session, update)
+        lang = context.user_data["lang"] = user.language
+    await send(update, *render.masteries_view(char, lang))
+
+
+async def hobbies(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/hobbies: cooking and fishing (no character needed)."""
+    async with session_scope() as session:
+        user, char = await load(session, update)
+        lang = context.user_data["lang"] = user.language
+    await send(update, *render.hobbies_view(char, lang))
 
 
 async def _report(session, char, lang):
@@ -168,9 +217,13 @@ def handlers() -> list[BaseHandler]:
         CommandHandler("classes", classes),
         MessageHandler(filters.Regex(CLASS_LINK), classes),
         MessageHandler(filters.Regex(SKILL_LINK), skill),
+        MessageHandler(filters.Regex(ITEM_LINK), item),
+        MessageHandler(filters.Regex(MONSTER_LINK), monster),
         CommandHandler("report", _view(_report)),
         CommandHandler("professions", _view(_professions)),
         MessageHandler(filters.Regex(PROF_LINK), profession_guide),
+        CommandHandler("masteries", masteries),
+        CommandHandler("hobbies", hobbies),
         CommandHandler("settings", settings),
         CommandHandler("language", language),
         CommandHandler("help", help_cmd),

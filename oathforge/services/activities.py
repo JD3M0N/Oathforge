@@ -146,7 +146,7 @@ async def _give(session: AsyncSession, char: Character, items: dict[str, int], o
     c = get_content()
     for key, qty in items.items():
         await inventory.add_item(session, char, key, qty)
-        out.add("loot.item", item=c.items[key].name.model_dump(), qty=qty)
+        out.add("loot.item", item=c.items[key].name.model_dump(), qty=qty, item_key=key)
     out.extend(await quests.on_items(session, char, "gather", items, rng))
 
 

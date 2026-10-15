@@ -1,5 +1,6 @@
 """Message text + keyboards. HTML parse mode; every dynamic string is escaped."""
 
+import re
 from html import escape
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -331,8 +332,67 @@ def professions_view(char: Character, lang: str) -> tuple[str, InlineKeyboardMar
         rows += grid(learnable)
     else:
         lines.append(t(lang, "prof.go_guild"))
+    rows.append(crafts_tabs(lang, "prof"))
     rows.append([btn(t(lang, "btn.back"), cb("scene"))])
     return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
+
+
+def crafts_tabs(lang: str, here: str) -> list:
+    """🛠️ Professions · ⛏️ Masteries · 🍲 Hobbies: the three pages link to each other."""
+    tabs = (("prof", "btn.tab_professions"), ("mst", "btn.tab_masteries"), ("hob", "btn.tab_hobbies"))
+    return [btn(t(lang, label), cb(verb)) for verb, label in tabs if verb != here]
+
+
+def _mastery_tool_and_places(skill: str, lang: str) -> tuple[str | None, list[str]]:
+    c = get_content()
+    if skill == "skinning":
+        return SKINNING_TOOL, [m.name.get(lang) for m in c.monsters.values() if m.harvest]
+    if skill == "tracking":
+        return None, [loc.name.get(lang) for loc in c.locations.values() if loc.hunting]
+    found = [(g.tool, loc.name.get(lang)) for loc in c.locations.values() for g in loc.gathering if g.skill == skill]
+    return (found[0][0] if found else None), [place for _, place in found]
+
+
+def mastery_entry(skill: str, lang: str, char: Character | None) -> list[str]:
+    c = get_content()
+    tool, places = _mastery_tool_and_places(skill, lang)
+    head = f"{MASTERY_ICON[skill]} <b>{escape(t(lang, f'mastery.name.{skill}'))}</b>"
+    if char is not None:
+        xp = characters.mastery_xp(char, skill)
+        head += f" {_stars(gathering.rank_for(xp))} · {_progress(xp)}"
+    lines = [head, f"<i>{escape(t(lang, f'mastery.desc.{skill}'))}</i>"]
+    if tool:
+        lines.append(t(lang, "mastery.tool", tool=escape(c.items[tool].name.get(lang)), link=f"/item_{tool}"))
+    if places:
+        key = "mastery.beasts" if skill == "skinning" else "mastery.places"
+        lines.append(t(lang, key, list=escape(", ".join(dict.fromkeys(places)))))
+    return lines
+
+
+def masteries_view(char: Character | None, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+    """/masteries: the field masteries, free for everyone, 0-5 with use."""
+    lines = [t(lang, "mastery.title"), f"<i>{t(lang, 'mastery.intro', cap=round(gathering.BONUS_CAP * 100))}</i>", RULE]
+    for skill in FIELD_MASTERIES:
+        lines += [*mastery_entry(skill, lang, char), ""]
+    rows = [crafts_tabs(lang, "mst")] if char is not None else [[btn(t(lang, "btn.tab_hobbies"), cb("hob"))]]
+    return "\n".join(lines).rstrip()[:MAX_MESSAGE], markup(rows)
+
+
+def hobbies_view(char: Character | None, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+    """/hobbies: optional, no profession slot (cooking, fishing)."""
+    c = get_content()
+    lines = [t(lang, "hobby.title"), f"<i>{t(lang, 'hobby.intro')}</i>", RULE]
+    for k in professions.hobbies():
+        prof = c.professions[k]
+        head = f"{prof.icon} <b>{escape(prof.name.get(lang))}</b>"
+        if char is not None:
+            head += f" {_stars(professions.rank(char, k))} · {_progress(professions.xp(char, k))}"
+        lines += [head, f"<i>{escape(prof.description.get(lang))}</i>", _station_place(prof.station, lang),
+                  t(lang, "hobby.guide", link=f"/prof_{k}"), ""]
+    for skill in gathering.HOBBIES:  # fishing: a mastery played as a hobby
+        lines += [*mastery_entry(skill, lang, char), ""]
+    rows = [crafts_tabs(lang, "hob")] if char is not None else [[btn(t(lang, "btn.tab_masteries"), cb("mst"))]]
+    return "\n".join(lines).rstrip()[:MAX_MESSAGE], markup(rows)
 
 
 def swap_menu(char: Character, key: str, lang: str) -> tuple[str, InlineKeyboardMarkup]:
@@ -611,6 +671,45 @@ def item_stats(key: str, lang: str) -> str:
     return ""
 
 
+ITEM_ICON = {"weapon": "⚔️", "armor": "🛡️", "shield": "🛡️", "consumable": "🧪", "tool": "🧰", "quest": "📜",
+             "material": "🧱", "trinket": "💍"}
+
+
+def item_page(key: str, lang: str) -> str:
+    """/item_<key>: what an item is, what it is for, where it comes from and what it is worth."""
+    c = get_content()
+    item = c.items.get(key)
+    if item is None:
+        return t(lang, "item.err.unknown")
+    lines = [f"{ITEM_ICON[item.type]} <b>{escape(item.name.get(lang))}</b>",
+             f"<i>{t(lang, f'item.type.{item.type}')}</i>", RULE, escape(item.description.get(lang))]
+    stats = item_stats(key, lang)
+    if stats:
+        lines += ["", t(lang, "item.use", what=escape(stats))]
+    used_in = sorted({c.items[next(iter(r.outputs))].name.get(lang) + f" ({c.professions[r.profession].icon})"
+                      for r in c.recipes.values() if key in r.ingredients})
+    if used_in:
+        lines.append(t(lang, "item.ingredient", list=escape(", ".join(used_in))))
+    sources = []
+    sources += [loc.name.get(lang) for loc in c.locations.values()
+                if any(r.item == key for g in loc.gathering for r in g.resources)]
+    sources += [f"{creature_icon(m)} {m.name.get(lang)}" for m in c.monsters.values()
+                if any(x.item == key for x in [*m.loot, *m.harvest])]
+    sources += [f"{c.professions[r.profession].icon} {c.professions[r.profession].name.get(lang)}"
+                for r in c.recipes.values() if key in r.outputs]
+    sources += [f"🛒 {n.name.get(lang)}" for n in c.npcs.values() if n.shop and key in n.shop.items]
+    sources += [f"📜 {q.name.get(lang)}" for q in c.quests.values()
+                if any(key in (eff.get("give_item") or {}) for eff in q.rewards)]
+    if sources:
+        lines.append(t(lang, "item.sources", list=escape(", ".join(dict.fromkeys(sources)))))
+    lines.append("")
+    if item.sellable and item.value:
+        lines.append(t(lang, "item.value", value=item.value, sell=inventory.sell_price(key, 0)))
+    else:
+        lines.append(t(lang, "item.no_value"))
+    return "\n".join(lines)[:MAX_MESSAGE]
+
+
 async def sell_menu(session: AsyncSession, char: Character, npc_key: str, lang: str) -> tuple[str, InlineKeyboardMarkup]:
     c = get_content()
     rep = await npcs.reputation_with(session, char, c.npcs[npc_key].faction)
@@ -822,7 +921,8 @@ async def inventory_view(session: AsyncSession, char: Character, lang: str) -> t
         item = c.items[inst.item_key]
         qty = f" ×{inst.qty}" if inst.qty > 1 else ""
         worn = " ✅" if inst.equipped_slot else ""
-        lines.append(f"• {escape(item.name.get(lang))}{qty}{worn}: <i>{escape(item.description.get(lang))}</i>")
+        lines.append(f"• {escape(item.name.get(lang))}{qty}{worn}: <i>{escape(item.description.get(lang))}</i>"
+                     f" · /item_{inst.item_key}")
         if item.slot:
             label = t(lang, "btn.unequip" if inst.equipped_slot else "btn.equip", item=item.name.get(lang))
             rows.append([btn(label, cb("eq", str(inst.id), n))])
@@ -940,6 +1040,23 @@ def _rewards_line(effects: list[dict], lang: str) -> str:
 
 # ---------------------------------------------------------------- rulebook
 
+RULE_NUMBER = re.compile(r"\{(\w+)\}")
+
+
+def rule_numbers() -> dict:
+    """{placeholders} in content/rulebook.yaml, straight from the engine, so the rulebook never goes stale."""
+    ambush = [g.stay_ambush for loc in get_content().locations.values() for g in loc.gathering if g.stay_ambush]
+    return {
+        "gather_min": gathering.GATHER_SECONDS // 60, "stay_min": gathering.STAY_SECONDS // 60,
+        "track_min": gathering.TRACK_SECONDS // 60, "rest_min": gathering.REST_SECONDS // 60,
+        "gather_units": "{}–{}".format(*gathering.GATHER_UNITS), "stay_units": "{}–{}".format(*gathering.STAY_UNITS),
+        "ambush": f"{round(min(ambush) * 100)}–{round(max(ambush) * 100)} %" if ambush else "—",
+        "prey_pct": round(gathering.TRACK_PREY_CHANCE * 100), "bonus_pct": round(gathering.BONUS_PER_RANK * 100),
+        "bonus_cap": round(gathering.BONUS_CAP * 100), "max_rank": gathering.MAX_RANK,
+        "slots": professions.SLOTS, "swap_cost": professions.SWAP_COST,
+    }
+
+
 def rulebook(lang: str, key: str | None = None) -> tuple[str, InlineKeyboardMarkup]:
     """/rulebook: an index of sections as buttons; each section a page with ◀ ▶ (edits the same message)."""
     c = get_content()
@@ -950,7 +1067,8 @@ def rulebook(lang: str, key: str | None = None) -> tuple[str, InlineKeyboardMark
         buttons = [btn(f"{sec.icon} {sec.title.get(lang)}", cb("rb", k)) for k, sec in c.rulebook.items()]
         return "\n".join(lines)[:MAX_MESSAGE], markup(grid(buttons))
     sec = c.rulebook[key]
-    lines = [f"{sec.icon} <b>{escape(sec.title.get(lang))}</b>", RULE, escape(sec.body.get(lang))]
+    body = RULE_NUMBER.sub(lambda m: str(rule_numbers().get(m.group(1), m.group(0))), sec.body.get(lang))
+    lines = [f"{sec.icon} <b>{escape(sec.title.get(lang))}</b>", RULE, escape(body)]
     if key == "abilities":  # the six abilities and what each is for, straight from abilities.yaml
         lines.append("")
         lines += [f"{a.icon} <b>{escape(a.name.get(lang))}</b>: {escape(a.effect.get(lang))}" for a in c.abilities.values()]

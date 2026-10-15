@@ -27,7 +27,8 @@ log = logging.getLogger(__name__)
 
 # verbs that only show something (no nonce, no state change)
 VIEWS = {"scene", "trv", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jrl", "jq", "jrb", "jb", "jbi", "jrr",
-         "shopm", "shop", "sellm", "cbp", "lang", "city", "cls", "clsl", "rep", "prof", "profsw", "profcf", "pg", "crf", "rb"}
+         "shopm", "shop", "sellm", "cbp", "lang", "city", "cls", "clsl", "rep", "prof", "profsw", "profcf", "pg", "crf", "rb",
+         "mst", "hob"}
 
 
 async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -70,6 +71,10 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             await edit_or_send(update, *render.rulebook(lang, arg))
             if read is not None and read.events:  # "look it up in the rulebook" objectives
                 await send_outcome(update, read, lang)
+            return
+        if verb in ("mst", "hob"):  # masteries and hobbies too
+            text, kb = render.masteries_view(char, lang) if verb == "mst" else render.hobbies_view(char, lang)
+            await edit_or_send(update, text, kb)
             return
         if verb in ("cls", "clsl"):  # class pages work without a character too
             text, kb = render.class_page(arg, lang, char) if verb == "cls" else render.classes_list(lang)

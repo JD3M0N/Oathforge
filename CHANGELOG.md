@@ -4,6 +4,27 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.19] - 2026-10-15
+
+### Añadido
+- `/item_<clave>`, por ejemplo `/item_skinning_knife`: la ficha de un objeto. Muestra:
+  - qué es y para qué sirve;
+  - de qué recetas es ingrediente;
+  - dónde se consigue (lugares, criaturas, oficios, tiendas y misiones);
+  - cuánto vale y por cuánto se vende.
+
+  Cada «Obtienes…» y cada línea del inventario la enlazan.
+- `/monster_<clave>`: solo la imagen y el nombre de una criatura. Al empezar un combate, «👁 Míralos:» enlaza a cada enemigo.
+- `/masteries` y `/hobbies`, como `/classes`: cada maestría con su herramienta y dónde se practica, y cada afición con su estación y su guía. Funcionan sin personaje y se enlazan con `/professions` mediante pestañas.
+
+### Cambiado
+- `/rulebook`:
+  - «Actividades» explica cada acción con su duración, qué da y su riesgo;
+  - «Recolección y oficios» distingue maestrías, oficios y aficiones.
+
+  Las cifras salen del motor, así que no se desfasan.
+- `/help` lista `/masteries`, `/hobbies` y `/rulebook`.
+
 ## [0.7.18] - 2026-10-15
 
 ### Añadido

@@ -88,7 +88,8 @@ async def start_encounter(
     session.add(CombatAction(encounter_id=enc.id, round=1, actor="start", action={},
                              result=[entry.model_dump(mode="json") for entry in logs]))
     out = Outcome(encounter_id=enc.id)
-    out.add("combat.start", enemies=_names_list([state.combatants[k] for k in state.combatants if k != "p1"]))
+    out.add("combat.start", enemies=_names_list([state.combatants[k] for k in state.combatants if k != "p1"]),
+            links=" ".join(f"/monster_{k}" for k in dict.fromkeys(monster_keys)))
     out.events += [log_event(state, e) for e in logs]
     await _sync_and_maybe_finish(session, char, enc, state, rng, out)
     _record(enc, char, state, None, logs)
@@ -164,7 +165,7 @@ async def _sync_and_maybe_finish(session, char, enc, state: EncounterState, rng,
             for loot in c.monsters[cb.ref].loot:
                 if rng.random() < loot.chance:
                     await inventory.add_item(session, char, loot.item, loot.qty)
-                    out.add("loot.item", item=c.items[loot.item].name.model_dump(), qty=loot.qty)
+                    out.add("loot.item", item=c.items[loot.item].name.model_dump(), qty=loot.qty, item_key=loot.item)
         await activities.skin(session, char, [cb.ref for cb in defeated], rng, out)
         if enc.fixed_flag:
             char.flags = {**char.flags, enc.fixed_flag: True}

@@ -54,11 +54,14 @@ def localize(value, lang: str):
     return value
 
 
-def render_event(ev: Event, lang: str) -> str:
+def render_event(ev: Event, lang: str, links: bool = True) -> str:
     params = {k: localize(v, lang) for k, v in ev.params.items()}
     if ev.key == "text":
         return str(params["text"])
-    return t(lang, ev.key, **params)
+    text = t(lang, ev.key, **params)
+    if links and ev.key in ("loot.item", "loot.lost_item") and params.get("item_key"):
+        text += f" · /item_{params['item_key']}"  # tappable: what it is and what it is for
+    return text
 
 
 def render(outcome: Outcome, lang: str) -> list[str]:
@@ -66,4 +69,5 @@ def render(outcome: Outcome, lang: str) -> list[str]:
 
 
 def facts(outcome: Outcome) -> list[str]:
-    return render(outcome, "en")
+    """What happened, in English, for the AI (no tappable links)."""
+    return [render_event(e, "en", links=False) for e in outcome.events]

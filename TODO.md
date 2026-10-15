@@ -28,7 +28,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🟢 Nuevos tipos de acción: defender a un aliado, negociar una tregua, rendirse.
 - [ ] 🟢 Mostrar la **ronda 0** en el panel de combate: la tirada de iniciativa antes de la ronda 1.
 - [ ] 🟡 **Resumen e informe** de batalla por separado: lo que hoy sale en «📜 Informe» pasa a «Resumen», y el informe cuenta todas las rondas en detalle, qué hizo cada uno.
-- [ ] 🟡 Ver contra quién luchas: al empezar un combate, un botón o un `/monster_<clave>` con **solo la imagen** de cada enemigo; la ficha no, porque aún no sabes qué va a hacer.
+- [x] Ver contra quién luchas: al empezar un combate, «👁 Míralos: /monster_<clave>» con **solo la imagen** de cada enemigo (v0.7.19).
 - [ ] 🟡 **Botones de combate por clase**: los normales, uno destacado con la habilidad principal de la clase (Golpe divino en el Paladín) y un botón «✨ Acciones» con el resto de poderes disponibles.
 
 ## 🧙 Clases y progresión · [clases.md](planning/clases.md) · [progresion.md](planning/progresion.md)
@@ -74,13 +74,13 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🟢 Gramática de los textos generados: «Llegas **al** Mercado», «Llegas **a la** Taberna…» (artículo por lugar) y «1 ronda» en singular en el informe.
 - [ ] 🟡 **Moverse por el mundo sin que sea tedioso** con `/map`: por ejemplo, tras matar al jefe de la Cripta, salir y volver a la ciudad desde el mapa. *Falta pensar el diseño.*
 - [ ] 🟡 Mensaje de estado que se edita en lugar de mandar muchos mensajes.
-- [ ] 🟡 **Ficha de cada objeto** (`/item_<clave>`): qué es, para qué sirve y cuánto vale, con un botón para verla al recibirlo (por ejemplo, el cuchillo de desollar que da Vale).
+- [x] **Ficha de cada objeto** (`/item_<clave>`): qué es, para qué sirve, de dónde sale y cuánto vale, enlazada al recibirlo y desde el inventario (v0.7.19).
 - [x] `/quests` solo con las misiones en curso; las terminadas pasan a «📚 Registro» en el diario (v0.7.18).
 - [x] «📜 Nueva misión… Mírala en /quests», con el enlace (v0.7.18).
 - [x] La hora del juego en la escena y cuánto falta para que se haga de día o de noche (v0.7.18).
 - [x] «👥 Aquí:» de la escena como lista, un PNJ por línea (v0.7.18).
-- [ ] 🟡 `/rulebook` → «Recolección y oficios» con más detalle: cada acción posible (minar 5 min y qué da, expedición larga de 15 min y su emboscada, rastrear…).
-- [ ] 🟡 `/professions`, `/masteries` y `/hobbies` (como `/classes`), con su botón y su sección en `/rulebook`.
+- [x] `/rulebook` → «Actividades» y «Recolección y oficios» con cada acción en detalle (duración, qué da, emboscada, rastreo…), con las cifras del motor (v0.7.19).
+- [x] `/masteries` y `/hobbies` (como `/classes`), enlazadas con `/professions` y desde el `/rulebook` (v0.7.19).
 - [ ] 🟡 **Actividades que terminan solas**: al empezar a trabajar, un mensaje bonito en vez del panel de escena repetido; al acabar, el bot te manda lo obtenido aunque estés desconectado. Sin botón «Recoger»: solo «🔄 Actualizar» y «Abandonar».
 - [ ] 🟡 **Crónica y botín en un solo mensaje**: «✅ Terminas tu trabajo en X» con el emoji del oficio, «📜 Crónica: …», lo obtenido, la XP y «Crónica 1/15». Probar formatos antes de decidir.
 - [ ] 🟢 **Estadísticas del personaje** en una pestaña del diario: distancia recorrida, ciudades visitadas, monstruos matados, esquivas…

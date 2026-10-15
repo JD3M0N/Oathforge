@@ -28,7 +28,7 @@ help:
     También puedes <b>escribir lo que quieras hacer</b>: «me escondo tras la barra y escucho», «intento robarle la bolsa al tabernero», «empujo el carro sobre el bandido».
     El Dungeon Master interpreta tu acción, el motor tira los dados y tú ves el resultado real.
 
-    Comandos: /look /map /hero /sheet /inventory /journal /quests /classes /report /professions /settings
+    Comandos: /look /map /hero /sheet /inventory /journal /quests /classes /report /professions /masteries /hobbies /rulebook /settings
   version: "<i>Oathforge v{version}</i>"
 
 settings:
@@ -156,6 +156,9 @@ btn:
   make: "🔨 {item}"
   missions: "📜 Misiones"
   quest_log: "📚 Registro"
+  tab_professions: "🛠️ Oficios"
+  tab_masteries: "⛏️ Maestrías"
+  tab_hobbies: "🍲 Aficiones"
   bestiary: "🐉 Bestiario"
   creature_art: "🖼️ Ver ilustración"
   rumors: "🗣️ Rumores"
@@ -259,6 +262,29 @@ shop:
     restore_spell_charge: "🔮 +1 uso de conjuro"
     short_rest: "💤 descanso corto"
     combat: "⚔️ para usar en combate"
+
+item:
+  type:
+    weapon: "Arma"
+    armor: "Armadura"
+    shield: "Escudo"
+    consumable: "Consumible"
+    tool: "Herramienta"
+    quest: "Objeto de misión"
+    material: "Material"
+    trinket: "Baratija"
+  use: "⚙️ Sirve para: {what}"
+  ingredient: "🔨 Ingrediente de: {list}"
+  sources: "📍 Se consigue en: {list}"
+  value: "🪙 Vale {value} de oro · se vende por unas {sell} 🪙"
+  no_value: "🪙 No se puede vender."
+  err:
+    unknown: "No conozco ese objeto. Mira tu /inventory."
+
+monster:
+  no_image: "Aún no tiene ilustración."
+  err:
+    unknown: "No conozco esa criatura."
 
 inv:
   title: "🎒 <b>Inventario</b> · 🪙 {gold}"
@@ -433,7 +459,7 @@ combat:
   panel_title: "⚔️ <b>Combate</b> · Ronda {round}"
   your_turn: "Tu turno"
   hint: "También puedes escribir una acción libre."
-  start: "Combate contra: {enemies}."
+  start: "Combate contra: {enemies}.\n👁 Míralos: {links}"
   hp_left: " · ❤️ {hp}/{max_hp}"
   round: "── Ronda {round} ──"
   initiative: "⏱️ Iniciativa: {order}"
@@ -724,6 +750,23 @@ mastery:
     tracking: "Rastreo"
   xp: "📈 +{amount} XP de {skill}."
   rank: "⭐ ¡{skill} sube a rango {rank}!"
+  title: "⛏️ <b>Maestrías de campo</b>"
+  intro: "Libres para todos: no ocupan plaza de oficio. Suben de 0 a 5 con el uso y cada rango da más botín (hasta +{cap} %) y recursos más raros."
+  desc:
+    mining: "Picar vetas en minas y galerías: mena de hierro, carbón, cobre y gemas."
+    woodcutting: "Talar árboles en la arboleda: troncos de roble y de fresno."
+    herbalism: "Recoger hierbas en bosques y claros: raíz de sangre, hoja de luna, musgo del reposo y fibra."
+    skinning: "Sacar piel y carne de las bestias que abates. Se hace al ganar el combate."
+    fishing: "Pescar en la ribera: peces para la cocina."
+    tracking: "Seguir huellas en las zonas de caza hasta dar con una presa; si la vences, da trofeos."
+  tool: "🧰 Herramienta: {tool} · {link}"
+  places: "📍 Dónde: {list}"
+  beasts: "🐾 Bestias que se desuellan: {list}"
+
+hobby:
+  title: "🍲 <b>Aficiones</b>"
+  intro: "Opcionales y sin plaza: cualquiera puede practicarlas además de sus 2 oficios."
+  guide: "📖 Guía y recetas: {link}"
 
 chronicle:
   title: "📜 <b>Crónica de la expedición</b>"

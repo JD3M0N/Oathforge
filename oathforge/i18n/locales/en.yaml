@@ -28,7 +28,7 @@ help:
     You can also <b>type whatever you want to do</b>: "I hide behind the bar and listen", "I try to lift the keeper's purse", "I push the cart onto the bandit".
     The Dungeon Master interprets your action, the engine rolls the dice, and you see what really happened.
 
-    Commands: /look /map /hero /sheet /inventory /journal /quests /classes /report /professions /settings
+    Commands: /look /map /hero /sheet /inventory /journal /quests /classes /report /professions /masteries /hobbies /rulebook /settings
   version: "<i>Oathforge v{version}</i>"
 
 settings:
@@ -156,6 +156,9 @@ btn:
   make: "🔨 {item}"
   missions: "📜 Missions"
   quest_log: "📚 Log"
+  tab_professions: "🛠️ Professions"
+  tab_masteries: "⛏️ Masteries"
+  tab_hobbies: "🍲 Hobbies"
   bestiary: "🐉 Bestiary"
   creature_art: "🖼️ View illustration"
   rumors: "🗣️ Rumors"
@@ -259,6 +262,29 @@ shop:
     restore_spell_charge: "🔮 +1 spell use"
     short_rest: "💤 short rest"
     combat: "⚔️ for use in combat"
+
+item:
+  type:
+    weapon: "Weapon"
+    armor: "Armor"
+    shield: "Shield"
+    consumable: "Consumable"
+    tool: "Tool"
+    quest: "Quest item"
+    material: "Material"
+    trinket: "Trinket"
+  use: "⚙️ Used for: {what}"
+  ingredient: "🔨 Ingredient of: {list}"
+  sources: "📍 Found at: {list}"
+  value: "🪙 Worth {value} gold · sells for about {sell} 🪙"
+  no_value: "🪙 Cannot be sold."
+  err:
+    unknown: "I do not know that item. Check your /inventory."
+
+monster:
+  no_image: "No illustration yet."
+  err:
+    unknown: "I do not know that creature."
 
 inv:
   title: "🎒 <b>Inventory</b> · 🪙 {gold}"
@@ -433,7 +459,7 @@ combat:
   panel_title: "⚔️ <b>Combat</b> · Round {round}"
   your_turn: "Your turn"
   hint: "You can also type a free action."
-  start: "Fighting: {enemies}."
+  start: "Fighting: {enemies}.\n👁 See them: {links}"
   hp_left: " · ❤️ {hp}/{max_hp}"
   round: "── Round {round} ──"
   initiative: "⏱️ Initiative: {order}"
@@ -724,6 +750,23 @@ mastery:
     tracking: "Tracking"
   xp: "📈 +{amount} {skill} XP."
   rank: "⭐ {skill} rises to rank {rank}!"
+  title: "⛏️ <b>Field masteries</b>"
+  intro: "Free for everyone: they take no profession slot. They grow from 0 to 5 with use, and each rank gives more loot (up to +{cap} %) and rarer resources."
+  desc:
+    mining: "Picking veins in mines and tunnels: iron ore, coal, copper and gems."
+    woodcutting: "Felling trees in the grove: oak and ash logs."
+    herbalism: "Gathering herbs in woods and clearings: bloodroot, moonleaf, restmoss and fiber."
+    skinning: "Taking hide and meat from the beasts you bring down. Done when you win the fight."
+    fishing: "Fishing at the riverbank: fish for cooking."
+    tracking: "Following tracks in hunting grounds until you find prey; beat it for trophies."
+  tool: "🧰 Tool: {tool} · {link}"
+  places: "📍 Where: {list}"
+  beasts: "🐾 Beasts you can skin: {list}"
+
+hobby:
+  title: "🍲 <b>Hobbies</b>"
+  intro: "Optional and slot-free: anyone can practice them on top of their 2 professions."
+  guide: "📖 Guide and recipes: {link}"
 
 chronicle:
   title: "📜 <b>Expedition chronicle</b>"
