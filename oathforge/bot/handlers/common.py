@@ -16,7 +16,7 @@ from oathforge import recorder
 from oathforge.bot import render
 from oathforge.content.media import MediaAsset
 from oathforge.database.models import Character, User
-from oathforge.bot.keyboards import btn, cb, markup, nonce
+from oathforge.bot.keyboards import FIXED, btn, cb, fixed_keyboard, markup, nonce
 from oathforge.content import get_content
 from oathforge.database.models import WorldActivity
 from oathforge.database.session import session_scope
@@ -81,6 +81,17 @@ async def current_view(session: AsyncSession, char: Character, lang: str) -> tup
     if enc is not None:
         return render.combat_panel(char, enc.state, lang, version=enc.version)
     return await render.scene(session, char, lang)
+
+
+async def offer_keyboard(update: Update, user: User, lang: str, force: bool = False) -> None:
+    """The fixed keyboard (🧝 🗺 🎒 📖) once per language, so players who started before it get it too.
+    Call it inside the session: it remembers that it was sent."""
+    if not force and (user.settings or {}).get("keyboard") == lang:
+        return
+    characters.set_setting(user, "keyboard", lang)
+    text = t(lang, "kb.ready")
+    await update.effective_chat.send_message(text, reply_markup=fixed_keyboard(lang))
+    recorder.outgoing(update.effective_user.id, text, [t(lang, f"kb.{k}") for k in FIXED], edited=False)
 
 
 def _record(update: Update, text: str, kb: InlineKeyboardMarkup | None, edited: bool) -> None:

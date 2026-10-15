@@ -7,7 +7,9 @@ from telegram.ext import ConversationHandler
 import pytest
 from sqlalchemy import select
 
-from oathforge.bot.handlers import callbacks, creation, text
+from telegram import ReplyKeyboardMarkup
+
+from oathforge.bot.handlers import callbacks, commands, creation, text
 from oathforge.bot.keyboards import parse
 from oathforge.database.models import Character, Encounter
 from oathforge.database.session import session_scope
@@ -82,11 +84,11 @@ class Player:
 
     def buttons(self):
         kb = self.last[1]
-        return [b.callback_data for row in kb.inline_keyboard for b in row] if kb else []
+        return [b.callback_data for row in getattr(kb, "inline_keyboard", ()) for b in row]
 
     def find(self, verb, arg=None):
         for data in (d for text_, kb in reversed(self.chat.sent) if kb
-                     for row in kb.inline_keyboard for b in row for d in [b.callback_data]):
+                     for row in getattr(kb, "inline_keyboard", ()) for b in row for d in [b.callback_data]):
             v, a, _ = parse(data)
             if v == verb and (arg is None or a == arg or a.startswith(arg)):
                 return data
@@ -740,3 +742,22 @@ async def test_fallback_dialogue_keeps_shop_usable(llm, monkeypatch, exhausted):
         char = await session.scalar(select(Character))
         assert char.gold < before
         assert any(i.item_key == "rope" for i in await inventory.items_of(session, char))
+
+
+async def test_fixed_keyboard_after_creation_and_its_buttons(llm):
+    p = Player(llm, tg_id=71)
+    await create(p)
+    fixed = [kb for _, kb in p.chat.sent if isinstance(kb, ReplyKeyboardMarkup)]
+    assert len(fixed) == 1 and fixed[0].is_persistent
+    assert [b.text for row in fixed[0].keyboard for b in row] == ["🧝 Héroe", "🗺 Mapa", "🎒 Inventario", "📖 Diario"]
+    for label, expect in (("🎒 Inventario", "Inventario"), ("📖 Diario", "Diario de aventuras"),
+                          ("🗺 Mapa", "Mapa"), ("🧝 Héroe", "Aldric")):
+        await commands.fixed_button(p.update(message=label), p.ctx)
+        assert expect in p.last[0]
+    assert len([kb for _, kb in p.chat.sent if isinstance(kb, ReplyKeyboardMarkup)]) == 1  # sent once
+    await p.press("setl|en|-")  # another language: the labels follow on the next view
+    await p.press("inv|-|-")
+    fixed = [kb for _, kb in p.chat.sent if isinstance(kb, ReplyKeyboardMarkup)]
+    assert len(fixed) == 2 and fixed[-1].keyboard[0][0].text == "🧝 Hero"
+    await commands.fixed_button(p.update(message="🎒 Inventario"), p.ctx)  # the old labels still work
+    assert "Inventory" in p.last[0]

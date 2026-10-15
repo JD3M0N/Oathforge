@@ -58,7 +58,7 @@ create:
 
     A world that existed before you and will go on after you leave. Taverns remember, factions scheme, and your deeds leave marks.
 
-    📖 New to the game? The /rulebook explains rolls, AC, hit points, classes and everything you can do.
+    📘 New to the game? The /rulebook explains rolls, AC, hit points, classes and everything you can do.
   ask_name: "What is your character's name? (2–24 letters)"
   bad_name: "That name won't do. Use 2 to 24 letters, spaces, apostrophes or hyphens."
   ask_gender: "<b>{name}</b>, is your character a man or a woman? It sets their portrait and how the world speaks to them."
@@ -108,8 +108,14 @@ create:
   custom_skills_left: "Choose {n} skills first."
   custom_skills_full: "You already have {n}: tap one to drop it."
 
+kb:
+  hero: "🧝 Hero"
+  map: "🗺 Map"
+  inventory: "🎒 Inventory"
+  journal: "📖 Journal"
+  ready: "⌨️ Below the chat you have fixed shortcuts: 🧝 Hero, 🗺 Map, 🎒 Inventory and 📖 Journal."
 btn:
-  rulebook: "📖 Rulebook"
+  rulebook: "📘 Rulebook"
   full_sheet: "📜 Full sheet"
   report: "📜 Report"
   summary: "📜 Summary"
@@ -127,7 +133,7 @@ btn:
   wake: "☀️ Get up"
   inventory: "🎒 Inventory"
   sheet: "🦸 Hero"
-  journal: "📜 Journal"
+  journal: "📖 Journal"
   hunt: "🏹 Hunt"
   roll: "🎲 Roll the die"
   roll_on: "✅ Turn manual rolls on"
@@ -149,7 +155,7 @@ btn:
   replace: "Drop {prof}"
   make: "🔨 {item}"
   missions: "📜 Missions"
-  bestiary: "📖 Bestiary"
+  bestiary: "🐉 Bestiary"
   creature_art: "🖼️ View illustration"
   rumors: "🗣️ Rumors"
   recommended: "⭐ Recommended ({cls})"
@@ -316,7 +322,7 @@ ai:
   budget_exhausted: "🤖 The Dungeon Master is spent for today. Keep playing with the buttons; it recovers at midnight."
 
 journal:
-  title: "📜 <b>Adventure journal</b>"
+  title: "📖 <b>Adventure journal</b>"
   rumors: "Recent rumors"
   current: "In progress"
   no_current: "You have no missions in progress."
@@ -589,9 +595,9 @@ skill:
   bonus_damage: "💥 Once per turn, +{dice} {type} on a melee hit"
 
 rulebook:
-  title: "📖 <b>Rulebook of Aetherfall</b>"
+  title: "📘 <b>Rulebook of Aetherfall</b>"
   intro: "What you need to play, one section at a time. Tap one to open it."
-  index: "📖 Index"
+  index: "📘 Index"
 
 lineages:
   title: "🧬 <b>Lineages of Aetherfall</b>"
@@ -630,7 +636,7 @@ report:
   hint: "Step through the rounds with the buttons to see every roll."
 
 bestiary:
-  title: "📖 <b>Bestiary</b> · {seen}/{total} creatures"
+  title: "🐉 <b>Bestiary</b> · {seen}/{total} creatures"
   hint: "Tap a creature. The more you defeat, the more you learn about it."
   empty: "You haven't met any creature yet. Go hunting."
   unknown: "You know nothing about that creature."

@@ -8,8 +8,8 @@ from telegram.ext import BaseHandler, CommandHandler, ContextTypes, MessageHandl
 
 from oathforge import __version__
 from oathforge.bot import render
-from oathforge.bot.handlers.common import current_view, load, send, send_photos
-from oathforge.bot.keyboards import btn, cb, markup
+from oathforge.bot.handlers.common import current_view, load, offer_keyboard, send, send_photos
+from oathforge.bot.keyboards import btn, cb, fixed_key, fixed_pattern, markup
 from oathforge.content import get_content
 from oathforge.database.session import session_scope
 from oathforge.i18n import t
@@ -24,6 +24,7 @@ def _view(builder):
             if char is None:
                 text, kb = t(lang, "start.need_character"), None
             else:
+                await offer_keyboard(update, user, lang)
                 text, kb = await builder(session, char, lang)
         await send(update, text, kb)
     return handle
@@ -145,8 +146,15 @@ async def help_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await send(update, f'{t(lang, "help.text")}\n\n{t(lang, "help.version", version=__version__)}')
 
 
+async def fixed_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """A press on the fixed keyboard: the same view as its command (never free text for the AI)."""
+    views = {"hero": render.hero, "map": _map, "inventory": render.inventory_view, "journal": render.journal}
+    await _view(views[fixed_key(update.message.text)])(update, context)
+
+
 def handlers() -> list[BaseHandler]:
     return [
+        MessageHandler(filters.Regex(fixed_pattern()), fixed_button),
         CommandHandler("look", _view(current_view)),
         CommandHandler("map", _view(_map)),
         CommandHandler("hero", _view(render.hero)),

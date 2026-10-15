@@ -9,7 +9,7 @@ from telegram.ext import CallbackQueryHandler, ContextTypes
 
 from oathforge.bot import render
 from oathforge.bot.handlers.common import (
-    current_view, edit_or_send, load, rate_ok, rng, schedule_ready_ping, send, send_chronicle, send_outcome, send_photos,
+    current_view, edit_or_send, load, offer_keyboard, rate_ok, rng, schedule_ready_ping, send, send_chronicle, send_outcome, send_photos,
 )
 from oathforge.bot.keyboards import btn, cb, markup, parse
 from oathforge.content import get_content
@@ -78,6 +78,7 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
         if char is None:
             await edit_or_send(update, t(lang, "start.need_character"))
             return
+        await offer_keyboard(update, user, lang)
         in_combat = char.state != "idle"  # fighting or busy with a field activity: no menus to leave
         loc = get_content().locations[char.location]
         if verb == "city" and not in_combat and loc.hub:

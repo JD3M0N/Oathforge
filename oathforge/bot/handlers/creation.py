@@ -15,7 +15,7 @@ from telegram.ext import (
 )
 
 from oathforge.ai import moderation
-from oathforge.bot.handlers.common import current_view, edit_or_send, load, send
+from oathforge.bot.handlers.common import current_view, edit_or_send, load, offer_keyboard, send
 from oathforge.bot import render
 from oathforge.bot.keyboards import btn, cb, grid, markup
 from oathforge.bot.render import CLASS_ICONS, attribute
@@ -36,6 +36,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         user, char = await load(session, update)
         lang = user.language
         if char is not None:
+            await offer_keyboard(update, user, lang, force=True)
             text, kb = await current_view(session, char, lang)
     if char is not None:
         await send(update, text, kb)
@@ -351,8 +352,9 @@ async def confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
                                                      scores=new.get("scores"), custom=new.get("custom"))
             await audit.log(session, user_id=user.id, character_id=char.id, verb="create", payload=new)
         text, kb = await current_view(session, char, lang)
+        await edit_or_send(update, t(lang, "create.done", name=escape(new["name"])))
+        await offer_keyboard(update, user, lang, force=True)
     context.user_data.pop("new", None)
-    await edit_or_send(update, t(lang, "create.done", name=escape(new["name"])))
     await send(update, text, kb)
     return ConversationHandler.END
 

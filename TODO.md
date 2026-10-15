@@ -66,7 +66,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🟢 **Publicar en los canales de Telegram** ([inglés](https://t.me/OathForge), [español](https://t.me/OathForge_es)) desde el bot: el changelog de cada versión y el periódico *Herald of Aetherfall* con los rumores confirmados del mundo. Hoy los anuncios se publican a mano.
 - [ ] 🔴 Grupos de expedición y combate en grupo (0.8.0).
 - [ ] 🟢 **Gremios**: roles, banco, tablón, misiones comunitarias y sede ([multijugador.md](planning/multijugador.md#gremios-gdd-86)).
-- [ ] 🔴 **Botones fijos del juego** (teclado de Telegram) con lo principal: 🧝 Héroe, 🗺️ Mapa, 🎒 Inventario, 📖 Diario.
+- [x] **Botones fijos del juego** (teclado de Telegram) con lo principal: 🧝 Héroe, 🗺 Mapa, 🎒 Inventario, 📖 Diario (v0.7.17).
 - [ ] 🟡 ◐ Comandos nuevos: `/map`, `/quests`, `/rest`, `/party`. *Hecho: `/quests` (v0.5.0), `/settings` y `/prof_<oficio>` (v0.7.0), `/map` (v0.7.6).*
 - [ ] 🟡 Pruebas de habilidad más claras: hoy salen como «🎲 Survival: 2 → 3 vs DC 13 ❌».
 - [ ] 🟡 Con ventaja o desventaja, mostrar los dos d20 y cuál cuenta (hoy solo sale uno).

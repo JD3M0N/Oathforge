@@ -4,6 +4,16 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.17] - 2026-10-15
+
+### Añadido
+- **Teclado fijo** bajo el chat: 🧝 Héroe · 🗺 Mapa · 🎒 Inventario · 📖 Diario.
+  - Llega al crear el personaje y con `/start`. Quien ya jugaba lo recibe en su siguiente vista, una vez por idioma.
+  - Cada botón abre lo mismo que su comando (`/hero`, `/map`, `/inventory`, `/journal`) y nunca llega a la IA como texto libre.
+
+### Cambiado
+- Iconos: el diario pasa a 📖, el reglamento a 📘 y el bestiario a 🐉, para que no se repitan.
+
 ## [0.7.16] - 2026-10-15
 
 ### Añadido
