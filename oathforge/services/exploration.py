@@ -14,7 +14,10 @@ from oathforge.services import characters, combat_service, inventory, quests, wo
 from oathforge.services.events import Outcome
 
 GAME_DAY_SECONDS = 4 * 3600  # one in-game day every four real hours
-ENCOUNTER_CHANCE_PER_DANGER = 0.15
+ENCOUNTER_CHANCE_PER_DANGER = 0.15  # one road: 15 % per ⚠️
+TRIP_EXTRA_PER_STRETCH = 0.05  # each further dangerous road on a longer trip
+TRIP_CHANCE_CAP = 0.45  # a trip rolls one ambush at most, never above this
+TRIP = "trip"  # char.flags: a trip stopped halfway ({"to": place, "rolled": True}), to carry on
 
 
 def game_time(now: float | None = None) -> float:
@@ -97,41 +100,89 @@ def encounter_table(loc: Location, level: int, now: float | None = None) -> list
 
 
 def pending_fixed_encounter(char: Character):
-    for fe in get_content().locations[char.location].fixed_encounters:
-        if char.flags.get(fe.flag):
-            continue
-        if fe.if_flag and not char.flags.get(fe.if_flag):
-            continue
-        if fe.unless_flag and char.flags.get(fe.unless_flag):
-            continue
-        return fe
-    return None
+    return world_map.blocks_passage(char, char.location)
+
+
+def trip(char: Character) -> str | None:
+    """Where a trip stopped halfway was heading, if the character can still carry on."""
+    to = ((char.flags or {}).get(TRIP) or {}).get("to")
+    return to if to and to != char.location and world_map.route_to(char, to) else None
+
+
+def drop_trip(char: Character) -> None:
+    if TRIP in (char.flags or {}):
+        char.flags = {k: v for k, v in char.flags.items() if k != TRIP}
+
+
+def trip_chance(route: world_map.Route) -> float:
+    """One ambush roll for the whole trip: the worst road sets it, each further dangerous road adds a little."""
+    risky = sum(1 for s in route.stretches if s.danger)
+    if not risky:
+        return 0.0
+    return min(TRIP_CHANCE_CAP, ENCOUNTER_CHANCE_PER_DANGER * route.danger + TRIP_EXTRA_PER_STRETCH * (risky - 1))
+
+
+def _ambush_stop(char: Character, route: world_map.Route, rng: random.Random):
+    """Where on the way the ambush happens, or None: a dangerous road with creatures at its end, weighted by
+    danger. A place whose own fight is waiting (a crypt room) keeps that fight instead."""
+    c = get_content()
+    spots = [(i, s) for i, s in enumerate(route.stretches)
+             if s.danger and encounter_table(c.locations[s.to], char.level) and not world_map.blocks_passage(char, s.to)]
+    chance = trip_chance(route)
+    if not spots or not chance or rng.random() >= chance:
+        return None
+    return spots[0] if len(spots) == 1 else rng.choices(spots, weights=[s.danger for _, s in spots])[0]
+
+
+def _names(keys) -> dict:
+    c = get_content()
+    return {lang: ", ".join(c.locations[k].name.get(lang) for k in keys) for lang in ("es", "en")}
 
 
 async def travel(session: AsyncSession, char: Character, dest: str, rng: random.Random) -> Outcome:
+    """Go anywhere the map offers: the engine walks the way and rolls one ambush for the whole trip, which
+    stops it halfway (the rest is kept to carry on, with no further roll)."""
     if refusal := characters.ensure_free(char):
         return refusal
-    route = world_map.route_to(char, dest)  # a whole walk across the city, or one road or room elsewhere
+    route = world_map.route_to(char, dest)
     if route is None:
         return Outcome.refused("explore.err.no_route")
     c = get_content()
+    pending = (char.flags or {}).get(TRIP) or {}
+    rolled = pending.get("to") == dest and pending.get("rolled")  # carrying on: the trip already rolled
+    drop_trip(char)
     characters.drop_pending_skin(char)
-    characters.bump_stats(char, yards=route.yards)
-    characters.visited(char, dest)
-    char.location = dest
-    out = Outcome().add("explore.arrived", place=c.locations[dest].name.model_dump(), yards=route.yards)
 
-    out.extend(await quests.on_visit(session, char, dest, rng))
+    stop = None if rolled else _ambush_stop(char, route, rng)
+    walked = route.stretches[:stop[0] + 1] if stop else route.stretches
+    end = walked[-1].to if walked else dest
+    yards = sum(s.yards for s in walked) if walked else route.yards
+    characters.bump_stats(char, yards=yards)
+    out = Outcome()
+    passed = [s.to for s in walked[:-1]]
+    for place in passed + [end]:
+        characters.visited(char, place)
+    char.location = end
+    if stop:
+        out.add("explore.trip_stopped", place=c.locations[end].name.model_dump(),
+                dest=c.locations[dest].name.model_dump(), yards=yards)
+        char.flags = {**char.flags, TRIP: {"to": dest, "rolled": True}}
+    elif passed:
+        out.add("explore.arrived_via", place=c.locations[end].name.model_dump(), via=_names(passed), yards=yards)
+    else:
+        out.add("explore.arrived", place=c.locations[end].name.model_dump(), yards=yards)
+    for place in passed + [end]:
+        out.extend(await quests.on_visit(session, char, place, rng))
 
-    fixed = pending_fixed_encounter(char)
-    if fixed:
-        _, enc_out = await combat_service.start_encounter(session, char, list(fixed.monsters), rng, fixed.flag)
-        return out.extend(enc_out)
-    table = encounter_table(c.locations[dest], char.level)
-    if route.danger and table and rng.random() < route.danger * ENCOUNTER_CHANCE_PER_DANGER:
+    if stop:
+        table = encounter_table(c.locations[end], char.level)
         entry = rng.choices(table, weights=[e.weight for e in table])[0]
         out.add("explore.ambush")
         _, enc_out = await combat_service.start_encounter(session, char, list(entry.monsters), rng)
+        return out.extend(enc_out)
+    fixed = pending_fixed_encounter(char)
+    if fixed:
+        _, enc_out = await combat_service.start_encounter(session, char, list(fixed.monsters), rng, fixed.flag)
         out.extend(enc_out)
     return out
 
@@ -252,3 +303,46 @@ async def cure_wounds(session: AsyncSession, char: Character, rng: random.Random
     if injured:
         out.add("explore.healed_injured")
     return out.extend(await quests.advance(session, char, "heal", char.location, rng))
+
+
+def _objective_spots(char: Character, kind: str, target: str) -> set[str]:
+    """Places where a mission objective can be done (derived from the world, never a secret one)."""
+    c = get_content()
+    if kind == "visit" or (kind in ("rest", "heal") and target != "any"):
+        return {target}
+    if kind == "talk":
+        return {loc for loc in [c.npcs[target].schedule.get("night" if is_night() else "day")] if loc}
+    if kind == "kill":
+        return {k for k, loc in c.locations.items()
+                if any(target in e.monsters for e in [*loc.encounters, *loc.night_encounters, *loc.fixed_encounters])}
+    if kind == "gather":
+        return {k for k, loc in c.locations.items() if any(r.item == target for g in loc.gathering for r in g.resources)}
+    if kind == "craft":
+        return {k for k, loc in c.locations.items() if loc.stations}
+    return set()
+
+
+async def objective_routes(session: AsyncSession, char: Character, limit: int = 2) -> list[tuple[dict, world_map.Route]]:
+    """The nearest known place for the next step of each active mission: (mission name, route). Only places
+    the character could go to from the map anyway, so it never gives a secret away."""
+    c = get_content()
+    prog = await quests.progress(session, char)
+    routes = {r.to: r for r in world_map.destinations(char)}
+    out: list[tuple[dict, world_map.Route]] = []
+    for qkey, quest in quests.ordered_quests():
+        p = prog.get(qkey)
+        if p is None or p.state != "active":
+            continue
+        spots: set[str] = {a.location for a in quest.actions.values() if a.location and p.stage in a.stages}
+        if p.stage == quest.objective_stage:
+            nxt = next((o for o, n in quests.objective_progress(quest, p) if n < o.count), None)
+            if nxt is not None:
+                spots |= _objective_spots(char, nxt.kind, nxt.target)
+        if char.location in spots:
+            continue
+        best = min((routes[k] for k in spots if k in routes), key=lambda r: (r.minutes, r.to), default=None)
+        if best is not None and all(best.to != r.to for _, r in out):
+            out.append((quest.name.model_dump(), best))
+        if len(out) >= limit:
+            break
+    return out

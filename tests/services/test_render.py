@@ -11,7 +11,7 @@ from oathforge.content import get_content
 from oathforge.i18n import t
 from oathforge.database.models import Character
 from oathforge.database.session import session_scope
-from oathforge.services import characters, combat_service, quests
+from oathforge.services import characters, combat_service, exploration, quests
 
 pytestmark = pytest.mark.usefixtures("database")
 ALLOWED = {"b", "i", "s", "u", "code", "pre", "a"}
@@ -51,7 +51,7 @@ async def test_all_views_render(lang):
         for loc in c.locations:
             char.location = loc
             check(await render.scene(s, char, lang))
-            check(render.map_view(char, lang))
+            check(await render.map_view(s, char, lang))
             check(render.talk_menu(char, lang))
             check(render.shop_menu(char, lang))
         for npc in c.npcs:
@@ -253,9 +253,21 @@ async def test_map_while_busy_has_no_roads():
     async with session_scope() as s:
         user = await characters.get_or_create_user(s, 77, "es")
         char = await characters.create_character(s, user, "Aldric", "human", "soldier", "paladin")
-        text, kb = render.map_view(char, "es")
+        text, kb = await render.map_view(s, char, "es")
         assert any(b.callback_data.startswith("go|") for row in kb.inline_keyboard for b in row)
         char.state = "busy"
-        text, kb = render.map_view(char, "es")
+        text, kb = await render.map_view(s, char, "es")
         assert "Estás ocupado" in text
         assert not any(b.callback_data.startswith("go|") for row in kb.inline_keyboard for b in row)
+
+
+async def test_map_offers_the_mission_goal():
+    async with session_scope() as s:
+        user = await characters.get_or_create_user(s, 78, "es")
+        char = await characters.create_character(s, user, "Aldric", "human", "soldier", "paladin")
+        char.location = "crownreach_chapel"
+        goals = await exploration.objective_routes(s, char)
+        assert goals and all(r.to != "crownreach_chapel" for _, r in goals)
+        text, kb = await render.map_view(s, char, "es")
+        assert "Tu objetivo" in text
+        assert any(b.text.startswith("📜") and b.callback_data.startswith("go|") for row in kb.inline_keyboard for b in row)

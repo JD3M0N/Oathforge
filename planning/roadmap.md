@@ -33,11 +33,12 @@ Versionado `0.x.y`: sube **y** (parche) en arreglos y cambios pequeños; sube **
   - **Creación de personaje**: emojis en la creación y los atributos, `/lineage` y `/background`, 12 trasfondos y trasfondo propio revisado por la IA.
   - **Ayuda**: `/rulebook` y páginas `/skill_<clave>`.
   - **Misiones**: objetivos nuevos (recoger, desollar, fabricar, descansar, curarse) y el tutorial de la sargenta Vale hasta nivel 3.
-- **0.7.15–0.7.30**: pulido antes del multijugador (0.7.28–0.7.30: tutorial más fácil, IA resistente a fallos de Gemini y viaje sin tiempos).
+- **0.7.15–0.7.31**: pulido antes del multijugador (0.7.28–0.7.31: tutorial más fácil, IA resistente a fallos de Gemini y viaje sin tiempos).
   - **Tutorial**: sin depender de la hora, acelerado (la primera recolección o desuello que pide es instantánea), con el `/rulebook` y la taberna; `oath tutorial-stats` para medirlo en la beta.
   - **Interfaz**: teclado fijo, hora del juego en la escena, `/quests` y registro, fichas `/item_` y `/monster_`, `/masteries` y `/hobbies`, estadísticas en el diario.
   - **Actividades**: terminan solas y llegan aunque estés desconectado, crónica y botín en un mensaje, desuello con `/skin`; Ingeniería y la Pesca como afición.
   - **Combate**: ronda 0, los dos d20 con ventaja, resumen e informe completo, botones por clase con habilidad destacada.
+- **0.8.0**: viajar sin tedio: a cualquier lugar conocido en un toque (Dijkstra entre zonas, sin atravesar salas con enemigos), una tirada de emboscada por viaje con «▶️ Seguir», botón 📜 al objetivo de la misión y el mapa que se convierte en la escena al llegar.
 
 ## Próximo (candidatos)
 
@@ -49,8 +50,9 @@ Versionado `0.x.y`: sube **y** (parche) en arreglos y cambios pequeños; sube **
 - **0.7.x**:
   - balance del tutorial con datos de la beta (`oath tutorial-stats`);
   - economía: encargos, sumideros de oro y balance de oficios (ver `comercio.md`).
-- **0.8.0**: grupos cooperativos y combate en grupo (fase 3, ver `multijugador.md`).
-- **0.9.0** (propuesta): audio: música de la taberna y voces de NPC (ver `audiovisual.md`).
+- **0.8.x**: expediciones: escenas de viaje con decisiones, estilos de viaje, atajos y favoritos (fase 2 del viaje, ver `mundo-y-misiones.md`).
+- **0.9.0**: grupos cooperativos y combate en grupo (fase 3, ver `multijugador.md`).
+- **0.10.0** (propuesta): audio: música de la taberna y voces de NPC (ver `audiovisual.md`).
 - Más adelante: salvaciones de FUE/CON/INT/CAR para monstruos, IA enemiga con habilidades, mercado entre jugadores, PvP, Mini App, TTS.
 
 ## Visión a largo plazo (GDD)

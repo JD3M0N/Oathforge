@@ -404,6 +404,7 @@ async def defeat_penalty(char: Character, out: Outcome) -> None:
     char.gold -= lost
     char.hp = max(1, char.max_hp // 2)
     char.location = c.respawn_location
+    char.flags = {k: v for k, v in (char.flags or {}).items() if k != "trip"}  # exploration.TRIP: the trip ends here
     char.state = "idle"
     char.conditions = {**char.conditions, "injured": True}
     out.add("combat.defeat_penalty" if lost else "combat.defeat_penalty_free", gold=lost, place=c.locations[c.respawn_location].name.model_dump())

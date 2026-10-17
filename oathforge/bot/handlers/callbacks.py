@@ -27,7 +27,7 @@ from oathforge.services.events import Outcome, render_event
 log = logging.getLogger(__name__)
 
 # verbs that only show something (no nonce, no state change)
-VIEWS = {"scene", "trv", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jrl", "jrs", "jq", "jrb", "jb", "jbi", "jrr",
+VIEWS = {"scene", "trv", "trvz", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jrl", "jrs", "jq", "jrb", "jb", "jbi", "jrr",
          "shopm", "shop", "shopg", "sellm", "cbp", "lang", "city", "cls", "clsl", "rep", "prof", "profsw", "profcf", "pg", "crf", "rb", "repf",
          "mst", "hob"}
 
@@ -116,8 +116,8 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             context.user_data["talk"] = arg
             talked = await quests.on_talk(session, char, arg, rng())  # "talk to Bram" objectives
             text, kb = await render.conversation(session, char, arg, lang)
-        elif verb == "trv" and not in_combat:
-            text, kb = render.map_view(char, lang)
+        elif verb in ("trv", "trvz") and not in_combat:
+            text, kb = await render.map_view(session, char, lang, arg if verb == "trvz" else None)
         elif verb == "talkm" and not in_combat:
             text, kb = render.talk_menu(char, lang)
         elif verb == "inv":
@@ -233,12 +233,18 @@ async def _act(update: Update, context, verb: str, arg: str, n: str, rolled_at: 
         await send_activity_result(update.effective_chat, telegram_id, context.bot_data["llm"], out, lang)
     elif _started(out):
         pass  # the panel below says it all
+    elif verb == "go" and out.ok and out.events and all(e.key in ARRIVALS for e in out.events):
+        await edit_or_send(update, f"{render.outcome_text(out, lang)}\n\n{text}", kb)  # the map turns into the place
+        return
     else:
         if out.events:
             await send_outcome(update, out, lang)
         if out.activity_id:  # an ambushed stay or a tracked prey just ended: its chronicle
             await send_chronicle(update, context, out.activity_id, lang)
     await send(update, text, kb)
+
+
+ARRIVALS = {"explore.arrived", "explore.arrived_via"}  # a quiet arrival: nothing else happened on the way
 
 
 def _started(out: Outcome) -> str | None:

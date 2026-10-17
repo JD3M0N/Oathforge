@@ -60,9 +60,9 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🟢 **Gremios**: roles, banco, tablón, misiones comunitarias y sede ([multijugador.md](planning/multijugador.md#gremios-gdd-86)).
 - [ ] 🟡 ◐ Comandos nuevos: `/map`, `/quests`, `/rest`, `/party`. *Hecho: `/quests` (v0.5.0), `/settings` y `/prof_<oficio>` (v0.7.0), `/map` (v0.7.6), `/item_`, `/monster_`, `/masteries` y `/hobbies` (v0.7.19), `/skin` (v0.7.21).*
 - [ ] 🟡 Pruebas de habilidad más claras: hoy salen como «🎲 Survival: 2 → 3 vs DC 13 ❌».
-- [ ] 🟢 Explicar las ⚠️ de los viajes (probabilidad de emboscada) y la leyenda ●/○/· de las competencias en `/sheet`.
+- [ ] 🟢 ◐ Explicar las ⚠️ de los viajes (probabilidad de emboscada) y la leyenda ●/○/· de las competencias en `/sheet`. *Hecho: las ⚠️ en el mapa y en el `/rulebook` (v0.8.0). Falta: la leyenda de `/sheet`.*
 - [ ] 🟢 Gramática de los textos generados: «Llegas **al** Mercado», «Llegas **a la** Taberna…» (artículo por lugar) y «1 ronda» en singular en el informe.
-- [ ] 🟡 **Moverse por el mundo sin que sea tedioso** con `/map`: por ejemplo, tras matar al jefe de la Cripta, salir y volver a la ciudad desde el mapa. *Falta pensar el diseño.*
+- [ ] 🟢 Expediciones: escenas de viaje con decisiones, estilos prudente/explorador/directo, atajos desbloqueables y favoritos ([mundo-y-misiones.md](planning/mundo-y-misiones.md#fase-2-del-viaje-expediciones-pendiente)).
 - [ ] 🟡 Mensaje de estado que se edita en lugar de mandar muchos mensajes.
 - [ ] 🟢 Duelos PvP con consentimiento y sin pérdidas.
 
@@ -157,3 +157,4 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] Arreglos de la partida de prueba con Brannoc: Ysolde cura gratis y cierra heridas graves en la beta (nadie se queda atascado herido y sin oro), jabalíes también de noche, respaldo de PNJ con la pista de la misión, aviso de poca vida y «lo siguiente» de cada misión (v0.7.25).
 - [x] Informe sin el resultado repetido y con la ronda real en los botones, crónica y botín juntos tras emboscadas y rastreos, criaturas con artículo en las crónicas, `/map` ocupado sin caminos, tiendas por categorías, poción a 20 de oro, el ala de murciélago para la poción de maná y la escena sin botones repetidos (v0.7.26).
 - [x] «📍 Lugar» en el teclado fijo y `oath restart` / `oath stop` (v0.7.27).
+- [x] Moverse por el mundo sin que sea tedioso: a cualquier lugar conocido en un toque (de la cripta despejada a la plaza), una tirada de emboscada por viaje, «▶️ Seguir» tras una emboscada y botón 📜 al objetivo de la misión (v0.8.0).

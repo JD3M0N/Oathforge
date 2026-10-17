@@ -4,6 +4,27 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.8.0] - 2026-10-17
+
+Moverse por el mapa sin tedio: eliges adónde ir y el juego pone el camino.
+
+### Añadido
+- **Viaje directo a cualquier lugar conocido**, también entre zonas. De la cripta despejada a la plaza, o de la plaza a la mina, en un toque. Lo nuevo se sigue explorando tramo a tramo. El camino solo pasa por lugares visitados y sin combate fijo pendiente: a una sala con guardianes se entra, pero no se atraviesa.
+- **Una tirada de emboscada por viaje**: 15 % × peor ⚠️ + 5 % por cada tramo ⚠️ extra, con un tope del 45 %. Con un solo tramo, igual que antes. Si sale, el viaje se para en un tramo peligroso y la escena ofrece «▶️ Seguir hacia…», que termina el viaje sin otra tirada. La derrota lo cancela.
+- **Botón 📜 al objetivo** en el mapa. Lleva al lugar conocido más cercano donde se cumple el siguiente paso de cada misión activa: hablar con alguien, visitar, cazar, recolectar, fabricar. No revela sitios que no conozcas.
+- Fase 2 del viaje (expediciones, estilos, atajos, favoritos) diseñada en `planning/mundo-y-misiones.md`.
+
+### Cambiado
+- **Mapa nuevo**:
+  1. dónde estás;
+  2. 📜 objetivo;
+  3. esta zona;
+  4. las demás zonas conocidas (con más de 2 lugares, un botón abre la zona);
+  5. 🌫️ «Sin explorar» (antes «Más lejos»).
+- Desde cualquier calle de la ciudad, las salidas (pasando por la plaza) están a un toque.
+- **Menos mensajes**: al llegar sin nada más que contar, el mensaje del mapa se convierte en la escena del lugar («Llegas a X por Y, Z (N yd de camino)»).
+- El `/rulebook` («Viajar y explorar») y las pistas del mapa explican el viaje directo y qué significan las ⚠️.
+
 ## [0.7.31] - 2026-10-17
 
 Ajuste tras repetir el tutorial con una druida.
