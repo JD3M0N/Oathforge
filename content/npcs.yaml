@@ -46,6 +46,9 @@ vale:
   greeting:
     es: "«¡Eh, cara nueva! Crownreach necesita manos y las tuyas parecen servir. Te enseño lo básico y te pago por aprenderlo. ¿Trato?»"
     en: "\"Hey, new face! Crownreach needs hands and yours look useful. I'll teach you the basics and pay you to learn them. Deal?\""
+  greeting_return:
+    es: "«¡Mira quién vuelve entero! Ya no eres una cara nueva, recluta. Dime qué necesitas… o ve a ganarte el pan.»"
+    en: "\"Look who came back in one piece! You're no new face any more, recruit. Tell me what you need… or go earn your keep.\""
   persona: >-
     Sergeant Vale is a stocky, sunburnt veteran of the border wars who now trains the Silver Guard's recruits in
     Crownreach Plaza, day and night. Loud, blunt and impatient, but warm underneath: she jokes, teases, and is
@@ -68,6 +71,9 @@ holt:
   greeting:
     es: "«Ciudadano. Si tienes noticias del bosque, habla rápido. Si no, circula.»"
     en: "\"Citizen. If you have news from the forest, speak quickly. If not, move along.\""
+  greeting_return:
+    es: "«Ah, tú. La Guardia sabe quién cumple. Habla rápido: ¿qué traes?»"
+    en: "\"Ah, you. The Guard knows who delivers. Speak quickly: what do you bring?\""
   persona: >-
     Sergeant Holt is a weathered, rigid but honest officer of the Silver Guard. Formal, terse, dutiful.
     Grieves silently for missing soldiers. Values oaths and truth; distrusts thieves and the Syndicate.

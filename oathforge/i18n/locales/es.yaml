@@ -208,7 +208,7 @@ map:
   busy: "⏳ Estás ocupado: espera a que termine tu tarea o abandónala para viajar."
   rooms: "🕯️ <b>Pasos desde esta sala</b>"
   beyond: "🌲 <b>Más lejos</b> <i>(paso a paso)</i>"
-  route: "{minutes} min · {yards} yd"
+  route: "{yards} yd"
   via: "por {places}"
   gate: "🚪 salida de la ciudad"
   cleared: "✅ despejada"
@@ -390,7 +390,7 @@ check:
   already_tried: "Ya intentaste {skill} aquí hoy. Tendrás que volver mañana o cuando hayas mejorado."
 
 explore:
-  arrived: "Llegas a {place} tras {minutes} minutos de camino."
+  arrived: "Llegas a {place} ({yards} yd de camino)."
   ambush: "¡Emboscada!"
   low_hp: "⚠️ Vas con poca vida ({hp}/{max_hp}) y puede haber pelea. Cúrate antes: la hermana Ysolde, una poción o un descanso."
   nothing_more: "Ya no queda nada que descubrir aquí."

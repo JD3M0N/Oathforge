@@ -4,7 +4,7 @@
 
 - Aetherfall: Crownreach (plaza, taberna La Corona Rota, mercado), el Camino del Viejo Rey, el Bosque de los Susurros, el Prado de los Colmillos y la Cripta Hundida (5 salas + jefe).
 - **Zona de caza** (v0.5.0): el Prado de los Colmillos, a 20 minutos de la plaza y sin peligro en el camino. Botón «🏹 Cazar»: de día salen jabalíes y de noche murciélagos (`night_encounters`). El Viejo Colmillo aparece cuando la misión 6 está activa.
-- **Capilla del Alba** (v0.7.0), a 2 min de la plaza: la hermana Ysolde cura heridas por 3 de oro (1d8+4 PV, sin pasar del techo de «herido»). La inscripción del altar se mudó aquí desde la plaza.
+- **Capilla del Alba** (v0.7.0), a 2 min de la plaza: la hermana Ysolde cura heridas (diseño: 3 de oro y 1d8+4 PV; en la beta, gratis y todos los PV desde la 0.7.28). La inscripción del altar se mudó aquí desde la plaza.
 - **Descanso largo** (v0.7.0): en la posada, 5 de oro y 8 horas de juego (80 min reales) acostado, como una actividad (`kind: rest`): ocupado, aviso al despertar y «Levantarse» para recuperar PV, usos y «herido». Levantarse antes no cura ni devuelve el oro.
 - Reloj día/noche (un día de juego = 4 horas reales); los NPC tienen horario.
 - Misiones como máquinas de estados en YAML (`content/quests.yaml`): etapas, acciones (botón o texto libre con tirada) y disparadores.
@@ -131,3 +131,10 @@
 - ¿Cuál es la segunda región: Frosthold (crisis del hierro, profesiones) o Stormport (comercio, contrabando)?
 - ¿Adoptamos los nombres en inglés del GDD (Thornwood…) o los traducimos como hasta ahora?
 - ¿Los eventos del mundo los aprueba un administrador al principio (§10.6) o se aplican solos?
+
+## Ajustes tras la prueba de las 11 misiones (0.7.28–0.7.30)
+
+- El prado, a nivel 1, solo saca 1 jabalí (o 1 murciélago de noche); las parejas llegan a nivel 2 (`min_level` en `encounters`).
+- Ysolde cura todos los PV y cierra las heridas graves mientras dure la beta; `healer.heal` y `healer.cost` quedan para cuando entre la economía.
+- Al terminar «Heridas de guerra», Vale manda al Bosque de los Susurros (ahí empieza «El relicario sellado»); Holt solo cuenta cuando llevas el relicario.
+- El viaje es instantáneo y solo enseña la distancia en yardas; si más adelante gasta tiempo, habrá que mover el reloj de juego (hoy va a tiempo real: 1 día = 4 h) y avisarlo en el rulebook.

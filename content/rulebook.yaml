@@ -172,9 +172,11 @@ travel:
   body:
     es: |-
       En la ciudad vas directo a cualquier lugar. Para salir, pasa por la plaza. Fuera se avanza tramo a tramo, y cada camino con ⚠️ puede traer una emboscada.
-      El mapa enseña dónde estás, a dónde puedes ir, cuánto tardas y qué se puede hacer en cada lugar: /map
+      El mapa enseña dónde estás, a dónde puedes ir, a qué distancia (en yardas) y qué se puede hacer en cada lugar: /map
+      En la beta viajar es instantáneo: la distancia es solo una referencia y no gasta tiempo. Lo que sí lleva tiempo real son las actividades.
       Los botones cubren lo habitual, pero también puedes escribir lo que quieras hacer («me escondo tras la barra y escucho»): la IA lo interpreta y el motor decide qué pasa.
     en: |-
       In the city you go straight anywhere. To leave it, go through the plaza. Outside you move leg by leg, and every road with ⚠️ may bring an ambush.
-      The map shows where you are, where you can go, how long it takes and what you can do in each place: /map
+      The map shows where you are, where you can go, how far it is (in yards) and what you can do in each place: /map
+      In the beta, travelling is instant: the distance is only a reference and takes no time. What does take real time are the activities.
       Buttons cover the usual, but you can also type whatever you want to do ("I hide behind the bar and listen"): the AI interprets it and the engine decides what happens.

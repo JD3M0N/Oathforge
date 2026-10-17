@@ -33,7 +33,7 @@ Versionado `0.x.y`: sube **y** (parche) en arreglos y cambios pequeños; sube **
   - **Creación de personaje**: emojis en la creación y los atributos, `/lineage` y `/background`, 12 trasfondos y trasfondo propio revisado por la IA.
   - **Ayuda**: `/rulebook` y páginas `/skill_<clave>`.
   - **Misiones**: objetivos nuevos (recoger, desollar, fabricar, descansar, curarse) y el tutorial de la sargenta Vale hasta nivel 3.
-- **0.7.15–0.7.24**: pulido antes del multijugador.
+- **0.7.15–0.7.30**: pulido antes del multijugador (0.7.28–0.7.30: tutorial más fácil, IA resistente a fallos de Gemini y viaje sin tiempos).
   - **Tutorial**: sin depender de la hora, acelerado (la primera recolección o desuello que pide es instantánea), con el `/rulebook` y la taberna; `oath tutorial-stats` para medirlo en la beta.
   - **Interfaz**: teclado fijo, hora del juego en la escena, `/quests` y registro, fichas `/item_` y `/monster_`, `/masteries` y `/hobbies`, estadísticas en el diario.
   - **Actividades**: terminan solas y llegan aunque estés desconectado, crónica y botín en un mensaje, desuello con `/skin`; Ingeniería y la Pesca como afición.

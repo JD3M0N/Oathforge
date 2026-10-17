@@ -181,7 +181,7 @@ async def test_map_walks_across_the_city(llm):
     assert "🗺️" in p.last[0] and "Salidas de la ciudad" in p.last[0]
     await p.press(p.find("go", "crownreach_workshops"))  # plaza → market → workshops in one walk
     assert (await char_row()).location == "crownreach_workshops"
-    assert any("5 minutos" in t_ for t_, _ in p.chat.sent[-3:])
+    assert any("500 yd" in t_ for t_, _ in p.chat.sent[-3:])
     await p.press(p.find("trv"))
     assert "old_kings_road" not in str(p.buttons())  # you leave the city from the plaza
 

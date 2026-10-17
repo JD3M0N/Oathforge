@@ -623,7 +623,7 @@ def map_view(char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
     if char.state != "idle":  # busy with an activity: the map, but no roads to take
         lines += ["", t(lang, "map.busy")]
         return "\n".join(lines)[:MAX_MESSAGE], markup([[btn(t(lang, "btn.back"), cb("scene"))]])
-    rows = [[btn(f"🧭 {c.locations[r.to].name.get(lang)} · {r.minutes} min {'⚠️' * r.danger}".strip(),
+    rows = [[btn(f"🧭 {c.locations[r.to].name.get(lang)} · {r.yards} yd {'⚠️' * r.danger}".strip(),
                  cb("go", r.to, n))] for r in routes]
     rows.append([btn(t(lang, "btn.back"), cb("scene"))])
     return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
@@ -641,7 +641,10 @@ async def conversation(session: AsyncSession, char: Character, npc_key: str, lan
     c = get_content()
     npc = c.npcs[npc_key]
     text = [f"💬 <b>{escape(npc.name.get(lang))}</b>, {escape(npc.title.get(lang))}", ""]
-    text.append(escape(line) if line else escape(npc.greeting.get(lang)))
+    greeting = npc.greeting
+    if not line and npc.greeting_return is not None and await quests.finished_giver(session, char, npc_key):
+        greeting = npc.greeting_return
+    text.append(escape(line) if line else escape(greeting.get(lang)))
     text += ["", f"<i>{t(lang, 'talk.hint', npc=escape(npc.name.get(lang)))}</i>"]
     n = nonce()
     present = exploration.npcs_present(char.location)
@@ -982,7 +985,8 @@ async def inventory_view(session: AsyncSession, char: Character, lang: str) -> t
     n = nonce()
     lines = [t(lang, "inv.title", gold=char.gold), ""]
     rows = []
-    for inst in await inventory.items_of(session, char):
+    # what you wear first, so two copies of the same weapon are easy to tell apart
+    for inst in sorted(await inventory.items_of(session, char), key=lambda i: not i.equipped_slot):
         item = c.items[inst.item_key]
         qty = f" ×{inst.qty}" if inst.qty > 1 else ""
         worn = " ✅" if inst.equipped_slot else ""
@@ -990,6 +994,7 @@ async def inventory_view(session: AsyncSession, char: Character, lang: str) -> t
                      f" · /item_{inst.item_key}")
         if item.slot:
             label = t(lang, "btn.unequip" if inst.equipped_slot else "btn.equip", item=item.name.get(lang))
+            label = f"{SLOT_ICONS.get(inst.equipped_slot or item.slot, '')} {label}".strip()
             rows.append([btn(label, cb("eq", str(inst.id), n))])
         elif inventory.effects_of(item):
             rows.append([btn(t(lang, "btn.use", item=item.name.get(lang)), cb("use", inst.item_key, n))])

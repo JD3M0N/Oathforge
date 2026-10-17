@@ -19,7 +19,7 @@ async def test_city_walk_takes_the_shortest_way():
         assert route.via == ("crownreach_plaza", "crownreach_market")
         out = await exploration.travel(s, char, "crownreach_chapel", random.Random(0))
         assert out.ok and char.location == "crownreach_chapel"
-        assert out.events[0].params["minutes"] == 4
+        assert out.events[0].params["yards"] == 400
 
 
 async def test_leave_the_city_only_from_its_hub():

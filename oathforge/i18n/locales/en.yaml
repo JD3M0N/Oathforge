@@ -208,7 +208,7 @@ map:
   busy: "⏳ You are busy: wait for your task to end, or abandon it, to travel."
   rooms: "🕯️ <b>Ways out of this room</b>"
   beyond: "🌲 <b>Further away</b> <i>(step by step)</i>"
-  route: "{minutes} min · {yards} yd"
+  route: "{yards} yd"
   via: "through {places}"
   gate: "🚪 way out of the city"
   cleared: "✅ cleared"
@@ -390,7 +390,7 @@ check:
   already_tried: "You already tried {skill} here today. Come back tomorrow, or once you have improved."
 
 explore:
-  arrived: "You reach {place} after {minutes} minutes on the road."
+  arrived: "You reach {place} ({yards} yd on the road)."
   ambush: "Ambush!"
   low_hp: "⚠️ You are low on health ({hp}/{max_hp}) and there may be a fight. Heal first: Sister Ysolde, a potion or a rest."
   nothing_more: "There is nothing left to discover here."

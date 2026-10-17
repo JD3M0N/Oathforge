@@ -4,6 +4,14 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.30] - 2026-10-17
+
+### Cambiado
+- **Sin tiempos de viaje.** El mapa, los botones de viaje y el aviso de llegada enseñan solo la distancia en yardas («Llegas a Taberna La Corona Rota (200 yd de camino)»). En la beta viajar es instantáneo; el `/rulebook` («Viajar y explorar») lo explica. Los minutos de las actividades (minar, rastrear, descansar…) no cambian.
+- **Saludo de quien ya te conoce**: Vale y Holt saludan de otra forma cuando ya has terminado una misión suya (`greeting_return` en `npcs.yaml`).
+- Inventario: lo equipado sale primero y los botones de equipar/quitar llevan el icono del hueco, para distinguir dos armas iguales.
+- Crónicas de plantilla: «ocupa tu estancia en…» pasa a «ocupa tu jornada en…» en todas las crónicas de plantilla.
+
 ## [0.7.29] - 2026-10-17
 
 Gemini ya no deja sin IA a todo el bot por un fallo suelto.

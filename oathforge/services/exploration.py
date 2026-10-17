@@ -119,7 +119,7 @@ async def travel(session: AsyncSession, char: Character, dest: str, rng: random.
     characters.bump_stats(char, yards=route.yards)
     characters.visited(char, dest)
     char.location = dest
-    out = Outcome().add("explore.arrived", place=c.locations[dest].name.model_dump(), minutes=route.minutes)
+    out = Outcome().add("explore.arrived", place=c.locations[dest].name.model_dump(), yards=route.yards)
 
     out.extend(await quests.on_visit(session, char, dest, rng))
 

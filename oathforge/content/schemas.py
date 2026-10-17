@@ -448,6 +448,7 @@ class Npc(Strict):
     faction: str | None = None
     schedule: dict[Literal["day", "night"], str]
     greeting: Text
+    greeting_return: Text | None = None  # instead of `greeting` once the hero has finished one of their missions
     persona: str
     goals: str
     secrets: str

@@ -185,6 +185,12 @@ async def giver_hint(session: AsyncSession, char: Character, npc_key: str) -> di
     return None
 
 
+async def finished_giver(session: AsyncSession, char: Character, npc_key: str) -> bool:
+    """Whether the hero has completed a mission this NPC gave (the NPC greets them as someone known)."""
+    prog = await ensure_progress(session, char)
+    return any(quest.giver == npc_key and prog[qkey].state == "completed" for qkey, quest in ordered_quests())
+
+
 async def on_read(session: AsyncSession, char: Character, section: str, rng: random.Random) -> Outcome:
     """A /rulebook page opened: "look it up in the rulebook" objectives."""
     return await advance(session, char, "read", section, rng)
