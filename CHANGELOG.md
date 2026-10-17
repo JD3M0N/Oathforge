@@ -4,6 +4,11 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.8.1] - 2026-10-17
+
+### Añadido
+- `tests/features.md`: checklist de lo que hay que probar siempre, jugando con la cuenta de prueba, tras una feature grande (personaje, mapa y viaje, combate, actividades, comercio, misiones, diario). Cada feature grande añade sus casillas.
+
 ## [0.8.0] - 2026-10-17
 
 Moverse por el mapa sin tedio: eliges adónde ir y el juego pone el camino.
