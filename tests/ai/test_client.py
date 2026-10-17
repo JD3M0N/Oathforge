@@ -75,10 +75,39 @@ async def test_invalid_request_is_not_retried():
     assert client.calls == [FAST]
 
 
-async def test_a_model_never_retries_itself():
+async def test_the_last_model_retries_once_after_an_overload(monkeypatch):
+    monkeypatch.setattr("oathforge.ai.client.OVERLOAD_RETRY_DELAY", 0)
     llm, client = make_llm(api_error(503), "ok")
+    assert await llm.text(tier="fast", system="s", prompt="p", user_id=None) == "ok"
+    assert client.calls == [FAST, FAST]
+
+
+async def test_two_overloads_in_a_row_go_generic_and_cool_down(monkeypatch):
+    monkeypatch.setattr("oathforge.ai.client.OVERLOAD_RETRY_DELAY", 0)
+    llm, client = make_llm(api_error(503), api_error(503), "never used")
+    assert await llm.text(tier="fast", system="s", prompt="p", user_id=None) is None
+    assert await llm.text(tier="fast", system="s", prompt="p", user_id=None) is None  # cooling down: no call
+    assert client.calls == [FAST, FAST]
+
+
+async def test_timeouts_are_not_retried():
+    llm, client = make_llm(TimeoutError(), "never used")
     assert await llm.text(tier="fast", system="s", prompt="p", user_id=None) is None
     assert client.calls == [FAST]
+
+
+async def test_the_backup_model_is_used_last_for_every_tier():
+    client = ScriptedClient(api_error(503), api_error(503), "from backup")
+    llm = GeminiLLM(Settings(gemini_model_fast=FAST, gemini_model_narrative=NARRATIVE, gemini_model_chronicle=FAST,
+                             gemini_model_fallback="backup"),
+                    client=client)
+    llm.budget = OpenBudget()
+    assert await llm.text(tier="narrative", system="s", prompt="p", user_id=None) == "from backup"
+    assert client.calls == [NARRATIVE, FAST, "backup"]
+    llm._cooldown_until.clear()
+    client.outcomes = [api_error(503), "chronicle from backup"]
+    assert await llm.text(tier="chronicle", system="s", prompt="p", user_id=None) == "chronicle from backup"
+    assert client.calls[-2:] == [FAST, "backup"]
 
 
 async def test_one_model_for_everything_goes_generic_while_it_cools_down():

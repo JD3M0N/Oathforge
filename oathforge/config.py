@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     gemini_model_narrative: str = "gemini-3.1-flash-lite"
     gemini_thinking_level: str = "low"  # narrative tier only; "" leaves the model default
     gemini_model_chronicle: str = "gemini-3.1-flash-lite"  # expedition chronicles (gather, stay, track)
+    gemini_model_fallback: str = ""  # optional: tried last, for every tier, when the others fail
 
     ai_user_daily_calls: int = 150  # testing phase (0.2.x)
     ai_user_daily_tokens: int = 200_000
@@ -27,7 +28,7 @@ class Settings(BaseSettings):
     ai_global_daily_calls: int = 5_000
     ai_timeout_seconds: float = 10.0  # then the generic text, and the model cools down
     ai_chronicle_timeout_seconds: float = 8.0
-    ai_model_cooldown_seconds: float = 120.0
+    ai_model_cooldown_seconds: float = 20.0  # after a timeout or overload; a daily quota (429) skips far longer
 
     # testing only: moves the game clock forward for everyone (e.g. 12 turns night into day). 1 game hour = 10 min.
     game_clock_offset_hours: float = 0.0

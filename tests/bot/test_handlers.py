@@ -862,3 +862,24 @@ def test_every_class_ability_has_its_long_text():
     from oathforge.content import get_content
     missing = [f"{k}.{a}" for k, cl in get_content().classes.items() for a, ab in cl.abilities.items() if not ab.details]
     assert missing == []
+
+
+async def test_network_errors_are_not_shown_to_the_player():
+    """A Telegram timeout is logged as a warning: no traceback and no «Algo salió mal» message."""
+    from types import SimpleNamespace
+
+    from telegram import Update
+    from telegram.error import TimedOut
+
+    from oathforge.main import on_error
+
+    sent = []
+
+    class Chat:
+        async def send_message(self, text):
+            sent.append(text)
+
+    update = Update(update_id=1)
+    update._effective_chat = Chat()  # noqa: SLF001
+    await on_error(update, SimpleNamespace(error=TimedOut("Timed out"), user_data={}))
+    assert sent == []

@@ -96,6 +96,9 @@ class Budget:
 
 # HTTP codes worth another try (on this model later, or on the fallback now).
 TRANSIENT_CODES = {408, 429, 500, 502, 503, 504}
+# overload answers arrive in a second or two, so the last model gets one more go right away
+OVERLOAD_CODES = {500, 502, 503, 504}
+OVERLOAD_RETRY_DELAY = 1.0
 MAX_COOLDOWN_SECONDS = 24 * 3600
 _RETRY_DELAY = re.compile(r"retryDelay['\"]?\s*[:=]\s*['\"]?(\d+(?:\.\d+)?)s")
 
@@ -132,16 +135,19 @@ class GeminiLLM:
             tier, self.s.gemini_model_narrative)
 
     def _candidates(self, tier: Tier) -> list[str]:
-        """Models to try in order: the tier's model, then (narrative only) the fast one if it is different.
+        """Models to try in order: the tier's model, then (narrative only) the fast one if it is different,
+        then the optional fallback model (any tier).
 
-        A model that recently failed (overload, quota, timeout) is skipped while it cools down, and a
-        model never retries itself: when Gemini is down the player gets the generic text at once
-        instead of waiting for another timeout.
+        A model that recently failed (overload, quota, timeout) is skipped while it cools down. Only the
+        last model left retries itself, once, and only after an overload answer: a timeout goes straight
+        to the generic text so the player never waits for a second one.
         """
         now = time.monotonic()
         models = [self._model(tier)]
         if tier == "narrative" and self.s.gemini_model_fast not in models:
             models.append(self.s.gemini_model_fast)
+        if self.s.gemini_model_fallback and self.s.gemini_model_fallback not in models:
+            models.append(self.s.gemini_model_fallback)
         return [m for m in models if self._cooldown_until.get(m, 0) <= now]
 
     def _config(self, tier: Tier, system: str, schema):
@@ -167,25 +173,35 @@ class GeminiLLM:
         timeout = self.s.ai_chronicle_timeout_seconds if tier == "chronicle" else self.s.ai_timeout_seconds
         for attempt, model in enumerate(models):
             config = self._config(tier if model == self._model(tier) else "fast", system, schema)
-            try:
-                resp = await asyncio.wait_for(
-                    self.client.aio.models.generate_content(model=model, contents=prompt, config=config),
-                    timeout=timeout,
-                )
-            except Exception as e:  # network, quota, timeout: degrade gracefully
-                error = f"{model}: {str(e) or type(e).__name__}"
-                code = getattr(e, "code", None)
-                if isinstance(code, int) and code not in TRANSIENT_CODES:
-                    log.error("gemini call to %s rejected (%s), check the configuration: %s", model, code, e)
-                    self._record(tier, model, purpose, system, prompt, None, error, None, started, user_id)
-                    return None
-                cooldown = cooldown_for(e, self.s.ai_model_cooldown_seconds)
-                self._cooldown_until[model] = time.monotonic() + cooldown
-                if cooldown > self.s.ai_model_cooldown_seconds:
-                    log.warning("gemini model %s out of quota, skipping it for %.0f min", model, cooldown / 60)
-                else:
-                    log.warning("gemini call to %s failed (attempt %d): %s", model, attempt + 1,
-                                str(e) or type(e).__name__)
+            last = attempt == len(models) - 1
+            resp = None
+            for tries in (1, 2):
+                try:
+                    resp = await asyncio.wait_for(
+                        self.client.aio.models.generate_content(model=model, contents=prompt, config=config),
+                        timeout=timeout,
+                    )
+                    break
+                except Exception as e:  # network, quota, timeout: degrade gracefully
+                    error = f"{model}: {str(e) or type(e).__name__}"
+                    code = getattr(e, "code", None)
+                    if isinstance(code, int) and code not in TRANSIENT_CODES:
+                        log.error("gemini call to %s rejected (%s), check the configuration: %s", model, code, e)
+                        self._record(tier, model, purpose, system, prompt, None, error, None, started, user_id)
+                        return None
+                    if last and tries == 1 and code in OVERLOAD_CODES:
+                        log.warning("gemini call to %s overloaded (%s), trying once more", model, code)
+                        await asyncio.sleep(OVERLOAD_RETRY_DELAY)
+                        continue
+                    cooldown = cooldown_for(e, self.s.ai_model_cooldown_seconds)
+                    self._cooldown_until[model] = time.monotonic() + cooldown
+                    if cooldown > self.s.ai_model_cooldown_seconds:
+                        log.warning("gemini model %s out of quota, skipping it for %.0f min", model, cooldown / 60)
+                    else:
+                        log.warning("gemini call to %s failed (attempt %d): %s", model, attempt + 1,
+                                    str(e) or type(e).__name__)
+                    break
+            if resp is None:
                 continue
             usage = resp.usage_metadata
             await self.budget.record(

@@ -94,3 +94,10 @@ Además: fidelidad factual, NPC no omniscientes, consistencia espacial, neutrali
 - El trasfondo propio pasa por `moderation.review_background` (modelo rápido, salida JSON `{ok, reason, title}`). La IA solo acepta o rechaza: rechaza insultos, odio, contenido sexual, gore gratuito, personas reales o datos personales, y cualquier intento de ventaja («empiezo con 1000 de oro», «soy el admin»). Nunca concede nada: el oro, el equipo y las 2 habilidades los pone el motor.
 - Si Gemini no responde (caído, sin cuota), el trasfondo propio **no se acepta** y el jugador elige uno de la lista: mejor no dejar pasar un texto sin revisar.
 - La historia aceptada llega al narrador entre comillas, como dato, en la descripción del personaje (`describe_character(..., backstory=True)`); al intérprete no, para no gastar tokens.
+
+## Resiliencia ante fallos de Gemini (v0.7.29)
+
+- Cada modelo que falla (timeout, 5xx, 429) se salta mientras dura su cooldown: 20 s por defecto; con 429 y `retryDelay`, lo que diga Google.
+- Orden de candidatos: modelo del tipo de llamada → rápido (solo narrativa) → `GEMINI_MODEL_FALLBACK` (opcional, todos los tipos).
+- Solo el último candidato se reintenta, una vez, y solo ante una sobrecarga (500/502/503/504). Un timeout va directo al texto de respaldo.
+- Pendiente: una configuración con un modelo distinto por tipo de llamada, y medir cuántas llamadas se pierden por día (`artifacts/ai/`).

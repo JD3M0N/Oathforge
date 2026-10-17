@@ -5,6 +5,7 @@ import logging
 
 from sqlalchemy.orm.exc import StaleDataError
 from telegram import Update
+from telegram.error import NetworkError
 from telegram.ext import CallbackQueryHandler, ContextTypes
 
 from oathforge.bot import render
@@ -37,7 +38,10 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     if not rate_ok(context, update.effective_user.id):
         await q.answer(t(context.user_data.get("lang", "es"), "err.rate"), show_alert=False)
         return
-    await q.answer()
+    try:
+        await q.answer()
+    except NetworkError as e:  # the spinner on the button is decoration: do the action anyway
+        log.warning("could not answer a button press (%s); continuing", type(e).__name__)
     try:
         if verb in VIEWS:
             await _view(update, context, verb, arg)

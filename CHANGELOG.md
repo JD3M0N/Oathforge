@@ -4,6 +4,18 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.29] - 2026-10-17
+
+Gemini ya no deja sin IA a todo el bot por un fallo suelto.
+
+### Cambiado
+- **Reintento tras una sobrecarga**: si el último modelo disponible responde 500/502/503/504, se reintenta una vez a los 1 s. Los timeouts no se reintentan (el jugador nunca espera dos).
+- **Cooldown corto**: tras un timeout o una sobrecarga, un modelo se salta 20 s (antes, 120 s). La cuota diaria (429) sigue saltándose las horas que indique Google.
+- **Modelo de respaldo opcional**: `GEMINI_MODEL_FALLBACK` en `.env` se prueba el último, para cualquier tipo de llamada, si fallan los demás. Vacío por defecto.
+
+### Arreglado
+- Un `TimedOut` de Telegram al pulsar un botón ya no muestra «Algo salió mal»: la acción se hace igualmente. Los errores de red de Telegram se registran como aviso, sin traceback ni mensaje al jugador.
+
 ## [0.7.28] - 2026-10-17
 
 Tutorial más fácil para todas las clases, tras jugar las 11 misiones con una pícara.

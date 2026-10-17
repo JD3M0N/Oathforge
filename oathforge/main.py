@@ -3,6 +3,7 @@
 import logging
 
 from telegram import BotCommand, Update
+from telegram.error import NetworkError
 from telegram.ext import Application, ContextTypes, TypeHandler
 
 from oathforge import __version__, pidfile, recorder
@@ -22,6 +23,10 @@ MENU_COMMANDS = ("start", "look", "map", "hero", "sheet", "inventory", "journal"
 
 
 async def on_error(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if isinstance(context.error, NetworkError):  # a slow or dropped connection to Telegram, not a bug
+        log.warning("telegram network error (%s): %s", type(context.error).__name__, context.error)
+        recorder.error("telegram network", context.error)
+        return
     log.exception("unhandled error", exc_info=context.error)
     recorder.error("telegram handler", context.error)
     if isinstance(update, Update) and update.effective_chat:
