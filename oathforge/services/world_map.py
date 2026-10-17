@@ -126,7 +126,7 @@ def activities(loc_key: str, present: list[str]) -> list[tuple[str, dict]]:
     for name in shops:
         out.append(("shop", {"npc": name}))
     if loc.healer is not None:
-        out.append(("heal", {"cost": loc.healer.cost}))
+        out.append(("heal_free", {}))  # free during the beta; ("heal", {"cost": loc.healer.cost}) when the economy arrives
     if loc.rest_cost is not None:
         out.append(("rest_free" if loc.rest_cost == 0 else "rest", {"cost": loc.rest_cost}))
     out += [(f"gather_{g.skill}", {}) for g in loc.gathering]

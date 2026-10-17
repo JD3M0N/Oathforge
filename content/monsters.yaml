@@ -7,7 +7,7 @@ bandit:
   ac: 12
   dex: 1
   attacks:
-    - {name: {es: Cimitarra, en: Scimitar}, to_hit: 2, damage: 1d4+1, damage_type: slashing}
+    - {name: {es: Cimitarra, en: Scimitar}, to_hit: 2, damage: 1d4, damage_type: slashing}
   xp: 25
   gold: 2d6
   loot:
@@ -92,7 +92,7 @@ crypt_skeleton:
   ac: 13
   dex: 2
   attacks:
-    - {name: {es: Espada oxidada, en: Rusted sword}, to_hit: 2, damage: 1d4+1, damage_type: slashing}
+    - {name: {es: Espada oxidada, en: Rusted sword}, to_hit: 2, damage: 1d4, damage_type: slashing}
   xp: 50
   gold: 1d4
   immune: [poisoned, frightened, bleeding]
@@ -145,7 +145,7 @@ boar:
   ac: 11
   dex: 0
   attacks:
-    - {name: {es: Colmillo, en: Tusk}, to_hit: 2, damage: 1d4+1, damage_type: slashing}
+    - {name: {es: Colmillo, en: Tusk}, to_hit: 2, damage: 1d4, damage_type: slashing}
   xp: 25
   loot:
     - {item: boar_tusk, chance: 0.6}

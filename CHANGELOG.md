@@ -4,6 +4,14 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.31] - 2026-10-17
+
+Ajuste tras repetir el tutorial con una druida.
+
+### Cambiado
+- Jabalí, bandido y esqueleto de la cripta hacen 1d4 de daño (antes 1d4+1 tras la 0.7.28; originalmente 1d6+1). En el simulador, a nivel 1 las 8 clases ganan al menos un 92 % de los 1 contra 1 con jabalí, bandido, murciélago y esqueleto (mago y druida, las más frágiles, entre un 92 y un 96 %).
+- El mapa enseña «Curar heridas (gratis)» en la capilla (decía 3 🪙, pero en la beta no se cobra).
+
 ## [0.7.30] - 2026-10-17
 
 ### Cambiado

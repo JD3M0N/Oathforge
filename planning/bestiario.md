@@ -19,7 +19,7 @@
 
 ## Balance de las criaturas del tutorial (0.7.28)
 
-Jabalí, bandido y esqueleto: 7 PV, ataque +2 y 1d4+1; murciélago: 5 PV, +3 y 1d4; capitán bandido: 26 PV, +4 y 1d8+1; Viejo Colmillo: 24 PV, +4 y 2d6+1. Objetivo: que mago y druida (las clases más frágiles) ganen casi siempre 1 contra 1 a nivel 1 (`oath simulate --level 1-5`). Las parejas salen desde el nivel 2 (`min_level`). Pendiente: el lobo gris (a nivel 1 la pícara gana un 40 % y el druida un 20 %) y la tabla de encuentros del camino con el capitán.
+Jabalí, bandido y esqueleto: 7 PV, ataque +2 y 1d4 (0.7.31); murciélago: 5 PV, +3 y 1d4; capitán bandido: 26 PV, +4 y 1d8+1; Viejo Colmillo: 24 PV, +4 y 2d6+1. Objetivo: que mago y druida (las clases más frágiles) ganen casi siempre 1 contra 1 a nivel 1 (`oath simulate --level 1-5`). Las parejas salen desde el nivel 2 (`min_level`). Pendiente: el lobo gris (a nivel 1 la pícara gana un 40 % y el druida un 20 %) y la tabla de encuentros del camino con el capitán.
 
 ## Preguntas abiertas
 

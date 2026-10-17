@@ -219,6 +219,7 @@ map:
   do:
     shop: "🛒 {npc}'s shop"
     heal: "✨ Cure wounds ({cost} 🪙)"
+    heal_free: "✨ Cure wounds (free)"
     rest: "🛏️ Long rest ({cost} 🪙)"
     rest_free: "🛏️ Long rest (free)"
     gather_mining: "⛏️ Mine"
