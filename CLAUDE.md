@@ -1,6 +1,8 @@
 # Oathforge — instrucciones para Claude
 
-RPG narrativo para Telegram: un motor d20 determinista decide y Gemini narra. Ver `README.md` para la arquitectura.
+RPG narrativo para Telegram: un motor d20 determinista decide y Gemini narra. Las reglas de trabajo comunes (invariantes, mapa del repo, cómo leer gastando pocos tokens, pruebas y versionado) están en `AGENTS.md`:
+
+@AGENTS.md
 
 ## Ramas (obligatorio)
 
@@ -20,28 +22,12 @@ Antes de editar nada, comprueba la rama (`git branch --show-current`) y el usuar
 ## Commits y PR
 
 - No añadas `Co-Authored-By` ni ninguna atribución a Claude en commits ni en PR.
+- Versionado obligatorio en cada commit (ver `AGENTS.md`). Los commits automáticos de la Action de TODO no suben versión.
 
-## Versionado (obligatorio en cada commit)
+## Josue
 
-- La versión vive solo en `oathforge/__init__.py` (`__version__`); `pyproject.toml` la lee de ahí.
-- Cada commit con cambios sube la versión: **parche** `0.1.1 → 0.1.2` para arreglos y cambios pequeños; **menor** `0.1.x → 0.2.0` para una feature grande. `1.0.0` queda reservado para la primera versión pública estable.
-- En el mismo commit, añade la entrada en `CHANGELOG.md` (Añadido / Cambiado / Arreglado) y, si cambia el plan, `planning/roadmap.md`.
-- Asunto del commit: `vX.Y.Z: resumen corto`. Cuerpo: la misma lista de cambios que el CHANGELOG.
-- Los commits automáticos de la Action de TODO no suben versión.
-- `CHANGELOG.md` sirve de contexto: léelo para saber qué cambió y cuándo.
-
-## planning/ y artifacts/
-
-- `planning/`: ideas y decisiones de diseño por tema (clases, combate, comercio…). Actualízala cuando una idea se implemente o se decida algo.
-- `artifacts/` (ignorada por git): registro local de partidas para depurar y analizar: conversaciones, eventos, combates, llamadas a Gemini y errores (`oathforge/recorder.py`). **No la leas salvo que la tarea lo requiera** (depurar un bug concreto, analizar una partida o el balance). Si hace falta, localiza el archivo concreto por fecha, `telegram_id` o id de combate y lee solo ese; nunca la recorras entera.
-
-## Reglas del proyecto
-
-- **La IA nunca decide resultados.** Interpreta texto → intención; el motor valida, tira dados y guarda; la IA narra lo que pasó.
-- Solo escriben estado los módulos de `oathforge/services/`.
-- Todo texto visible para el jugador existe en español e inglés (`oathforge/i18n/locales/`, o `{es, en}` en `content/*.yaml`).
-- Proveedor de IA: Gemini (`google-genai`). No cambiar de proveedor sin que Josue lo pida.
-- Josue suele poner ejemplos con el Paladín porque es la clase que prueba: salvo que diga lo contrario, el ejemplo vale para todas las clases.
+- Suele poner ejemplos con el Paladín porque es la clase que prueba: salvo que diga lo contrario, el ejemplo vale para todas las clases.
+- `content/officina/` es su laboratorio de imágenes y prompts: no lo toques ni lo leas salvo que lo pida.
 
 ## Comandos
 

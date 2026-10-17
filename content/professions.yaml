@@ -1,6 +1,6 @@
 # Oficios: cada personaje tiene dos activos (se aprenden y cambian en el Barrio de Oficios).
 # Una afición (hobby: true) no ocupa plaza: cualquiera la practica y la sube si quiere.
-# Cada uno trabaja en una estación (Location.stations). Diseño en planning/profesiones.md.
+# Cada uno trabaja en una estación (Location.stations). Diseño en planning/opificia.md.
 # guide: la mini guía de /prof_<clave>.
 
 blacksmithing:

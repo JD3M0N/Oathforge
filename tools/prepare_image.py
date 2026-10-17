@@ -5,7 +5,7 @@
     .venv\\Scripts\\python tools/prepare_image.py wolf.jpg content/monsters/grey_wolf/images/portrait.jpg --kind portrait --trim-bottom 64
 
 ``--trim-bottom`` first drops a strip at the bottom (fake signatures or text painted by the generator).
-Sizes are in planning/audiovisual.md ("Escala de las imágenes"). Requires Pillow (dev extra).
+Sizes are in planning/ars.md ("Escala de las imágenes"). Requires Pillow (dev extra).
 """
 
 import argparse

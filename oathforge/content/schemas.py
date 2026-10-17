@@ -393,7 +393,7 @@ class Location(Strict):
 
 
 class Profession(Strict):
-    """A crafting profession; a character keeps two active (see planning/profesiones.md).
+    """A crafting profession; a character keeps two active (see planning/opificia.md).
 
     A hobby (cooking) takes no slot: everyone can practise it and level it if they want.
     """

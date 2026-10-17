@@ -13,3 +13,7 @@ artifacts/
 
 # PID of the running bot (oath stop / oath restart)
 .run/
+
+# image lab: only its README is tracked (planning/ars.md)
+content/officina/*
+!content/officina/README.md

@@ -1,4 +1,4 @@
 # Mundo de Aetherfall: world/<continente>/<zona>/<lugar>/place.yaml
-# Cada carpeta puede tener images/ y audio/ (ver planning/audiovisual.md).
+# Cada carpeta puede tener images/ y audio/ (ver planning/ars.md).
 start: crownreach_plaza
 continents: [terra_coronata]

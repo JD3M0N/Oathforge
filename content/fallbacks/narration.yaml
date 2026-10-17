@@ -1,4 +1,4 @@
-# Narración por hechos del motor; ver planning/ia-y-narracion.md.
+# Narración por hechos del motor; ver planning/narratio.md.
 default:
 - es: En {place}, tu atención sigue puesta en lo que te rodea. Hay cosas que aún no se dejan comprender.
   en: In {place}, your attention stays on your surroundings. Some things still resist understanding.

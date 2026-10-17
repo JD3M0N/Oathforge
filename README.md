@@ -4,22 +4,22 @@ RPG narrativo multijugador para Telegram, ambientado en **Aetherfall**. Un Dunge
 
 > Regla de oro: **la IA nunca decide resultados.** Convierte el texto libre en una intención estructurada; el motor la valida, tira los dados y guarda el resultado; después la IA narra *exactamente* lo que pasó.
 
-## Estado: vertical slice en solitario (fases 1–2)
+## Estado: beta en solitario
 
-Qué cambió en cada versión está en [CHANGELOG.md](CHANGELOG.md); aquí solo la idea del proyecto.
+Qué cambió en cada versión está en [CHANGELOG.md](CHANGELOG.md); qué viene, en [planning/iter.md](planning/iter.md). Aquí solo la idea del proyecto.
 
-- Creación de personaje: hombre o mujer, 4 linajes, 4 trasfondos, 8 clases (Paladín, Pícaro, Guerrero, Sacerdote, Mago, Druida, Bardo, Brujo) con habilidades hasta nivel 5, atributos por compra de puntos (27, como en D&D) y retrato por clase y sexo.
-- Crownreach (plaza, taberna La Corona Rota, mercado), el Camino del Viejo Rey, el Bosque de los Susurros, el Prado de los Colmillos (caza: jabalíes de día, murciélagos de noche), la Mina del Paso Viejo, la Arboleda Antigua, el Claro de la Raíz Roja, la Ribera de Silverbrook y la Cripta Hundida (5 salas + jefe).
-- Actividades de campo con espera real: minar, talar, recolectar hierbas y pescar (5 min), expediciones largas con emboscada (15 min) y rastreo de presas, con 6 maestrías que suben de rango. Con los materiales se fabrica en 6 oficios (dos activos a la vez): herrería, alquimia, carpintería, peletería, cocina y joyería. Cada expedición termina con una crónica personal escrita por la IA (con un presupuesto diario y textos genéricos cuando se agota).
-- Cadena de 6 misiones hasta nivel 5, con su avance en el diario (`/journal`, `/quests`), y bestiario que se completa al ver y derrotar criaturas.
-- Tiradas manuales opcionales (`/roll`): la prueba de habilidad espera a que el jugador lance el dado animado; el resultado lo calcula el motor.
-- Combate por turnos: iniciativa, acción/acción adicional/movimiento, vanguardia/retaguardia, críticos, ataque furtivo, conjuros, tiradas de salvación, área por filas, PV temporales, estados alterados y objetos del escenario.
+- Creación de personaje: hombre o mujer, 4 linajes, 12 trasfondos (o uno propio revisado por la IA), 8 clases (Paladín, Pícaro, Guerrero, Sacerdote, Mago, Druida, Bardo, Brujo) con habilidades hasta nivel 5, atributos por compra de puntos (27, como en D&D) y retrato por clase y sexo.
+- Crownreach (plaza, taberna La Corona Rota, mercado, Barrio de Oficios, Capilla del Alba), el Camino del Viejo Rey, el Bosque de los Susurros, el Prado de los Colmillos, la Mina del Paso Viejo, la Arboleda Antigua, el Claro de la Raíz Roja, la Ribera de Silverbrook y la Cripta Hundida.
+- Viaje en un toque a cualquier lugar conocido (`/map`), con una tirada de emboscada por viaje y un botón 📜 al objetivo de la misión.
+- Actividades de campo que terminan solas aunque estés desconectado: minar, talar, recolectar hierbas y pescar, expediciones largas con emboscada, rastreo y desuello, con 5 maestrías que suben de rango. Se fabrica en 7 oficios (dos activos a la vez: herrería, alquimia, carpintería, peletería, joyería, escribanía e ingeniería) y 2 aficiones (cocina y pesca). Cada actividad termina con una crónica personal escrita por la IA (con presupuesto diario y textos genéricos cuando se agota).
+- Tutorial de 10 misiones con la sargenta Vale (hablar, ciudad, tiendas, caza, desuello, recolección, cocina, minería, curación y descanso, y el Viejo Colmillo como jefe), después la misión ramificada «El relicario sellado» y la cripta. Diario con misiones, registro, bestiario, rumores y estadísticas.
+- Combate por turnos: iniciativa, acción/acción adicional/movimiento, vanguardia/retaguardia, críticos, ataque furtivo, conjuros, salvaciones, área por filas, PV temporales, estados, objetos del escenario, pergaminos y bombas, e informe de batalla.
 - Tipos de daño y de criatura: resistencias, vulnerabilidades e inmunidades (los esqueletos temen el contundente y lo radiante).
-- Misión ramificada «El relicario sellado»: devolverlo al Pacto de Plata, venderlo al Sindicato Carmesí o abrirlo tú mismo.
-- NPC con memoria (Bram, Mira, Holt, Tessa), confianza, reputación con facciones, robos que se recuerdan, tiendas con precios según reputación.
+- NPC con memoria (Vale, Bram, Mira, Holt, Tessa, Ysolde), confianza, reputación con dos facciones, robos que se recuerdan y tiendas con precios según reputación.
 - Rumores del mundo: cuando alguien derrota al guardián, las tabernas lo cuentan a los demás jugadores.
-- Español e inglés desde el primer día (`/language`).
-- Tablas preparadas para grupos (`parties`, `party_members`, `encounter_participants`); el juego cooperativo es la fase 3.
+- Consulta dentro del juego: `/rulebook`, `/classes`, `/skill_…`, `/item_…`, `/monster_…`, `/professions`.
+- Español e inglés desde el primer día (`/settings`).
+- Tablas preparadas para grupos (`parties`, `party_members`, `encounter_participants`); el juego cooperativo es el siguiente paso.
 
 ## Puesta en marcha (Windows)
 
@@ -65,6 +65,7 @@ oathforge/
   database/   modelos SQLAlchemy y sesión
 content/      todo el contenido del juego en YAML validado al arrancar
   world/      mundo → continente → zona → lugar, con images/ y audio/ en cada carpeta
+  officina/   laboratorio de imágenes y prompts (fuera del juego y de git, salvo su README)
 tools/        utilidades (prepare_image.py: escala y optimiza imágenes)
 migrations/   Alembic
 ```
@@ -95,7 +96,8 @@ Las misiones son máquinas de estados: `stages`, `actions` (botones o acciones l
 ## Versiones, planning y artifacts
 
 - **Versión** en `oathforge/__init__.py`; cambios en [CHANGELOG.md](CHANGELOG.md). Cada commit sube la versión (`0.1.1 → 0.1.2`; `0.2.0` para features grandes) y su asunto empieza por `vX.Y.Z:`.
-- **[planning/](planning/)**: ideas y decisiones por tema (clases, combate, comercio, roadmap…).
+- **[planning/](planning/README.md)**: [Possibilium](planning/Possibilium.md) (el libro de ideas) y un resumen por tema con nombre latino (`ordines`, `pugna`, `opificia`, `mundus`…); la hoja de ruta es [`iter.md`](planning/iter.md).
+- **[AGENTS.md](AGENTS.md)**: cómo trabajar en el repo (invariantes, mapa de módulos, pruebas) gastando pocos tokens.
 - **`artifacts/`** (local, no se sube): cada partida queda registrada para depurar y analizar.
   - `conversations/<día>/<telegram_id>.md`: lo que escribe el jugador y lo que responde el bot.
   - `battles/<día>/<id>-<lugar>.md` y `.json`: combates turno a turno con tiradas y resultado.
@@ -132,9 +134,12 @@ git commit -am "todo: bugs de la cripta"
 git push
 ```
 
-## Pendiente (siguientes fases)
+## Pendiente (siguientes pasos)
 
-- Grupos cooperativos, combate en grupo y PvP (fase 3).
+Detalle y orden en [planning/iter.md](planning/iter.md):
+
+- Grupos cooperativos y combate en grupo; después PvP con consentimiento.
 - Elección de especialización a nivel 5 (los datos ya existen).
-- Temporizador de turnos con JobQueue (innecesario en solitario: los enemigos solo actúan tras el jugador).
-- Profesiones, mercado entre jugadores, eventos mundiales encadenados, TTS y Mini App.
+- Encargos entre jugadores, mercado y sumideros de oro.
+- Eventos mundiales encadenados (la crisis del hierro) y una segunda región.
+- Imágenes de lugares y NPC, música de taberna y voces (planning/ars.md); Mini App.

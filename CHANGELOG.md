@@ -1,8 +1,26 @@
 # Changelog
 
-Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/); versionado `0.x.y` (ver `planning/roadmap.md`).
+Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/); versionado `0.x.y` (ver `planning/iter.md`).
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
+
+## [0.8.3] - 2026-10-17
+
+Planning reorganizado: un libro de ideas, resúmenes por tema en latín y una guía para trabajar gastando pocos tokens.
+
+### Añadido
+- `planning/Possibilium.md`: el libro de lo posible. Todas las ideas, alternativas y preguntas con IDs (`CLA-01`, `MIN-01`, `COO-01`…), la base vigente de la 0.8.2 y sus discrepancias, paquetes implementables y backlog semilla; en los anexos, el texto íntegro de los cuatro PDF de diseño y las versiones anteriores del planning.
+- `planning/ars.md`: dirección audiovisual (auditoría de imágenes, biblia visual, cinco estilos, quince prompts para Leonardo, música, voces, mapas, formatos y licencias).
+- `AGENTS.md`: invariantes, mapa del repo, cómo leer barato, pruebas y versionado para cualquier agente; `CLAUDE.md` lo importa.
+- `content/officina/`: laboratorio de imágenes con su prompt al lado. El bot no lo lee y git solo guarda su README.
+
+### Cambiado
+- Planning en latín, cada archivo como resumen de Possibilium (estado actual, decidido, próximo y preguntas): `iter` (antes `roadmap`), `ordines` (clases), `progressio`, `pugna` (combate), `opificia` (profesiones), `mercatura` (comercio), `mundus` (mundo y misiones), `bestiarium`, `societas` (multijugador), `narratio` (IA) y `facies` (interfaz Telegram).
+- README raíz al día (12 trasfondos, 7 oficios y 2 aficiones, tutorial de 10 misiones, viaje directo); TODO y comentarios de `content/` y del código apuntan a los archivos nuevos.
+
+### Eliminado
+- `planning/referencias/`: los cuatro PDF (GDD, guía audiovisual, The Living Oath y Roadmap) y su README; su texto está en los anexos de Possibilium y los binarios en el historial de git.
+- Los antiguos `planning/*.md` por tema y `planning/audiovisual.md`.
 
 ## [0.8.2] - 2026-10-17
 

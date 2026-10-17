@@ -1,0 +1,51 @@
+# Iter — hoja de ruta
+
+Qué entra en cada versión. El detalle de cada versión publicada está en [`../CHANGELOG.md`](../CHANGELOG.md); las ideas y su justificación, en [Possibilium](Possibilium.md) (paquetes en §28).
+
+Versionado `0.x.y`: **y** (parche) en arreglos y cambios pequeños; **x** (menor) en features grandes. `1.0.0` queda reservado para la primera versión pública estable.
+
+## Hecho (resumen)
+
+| Versión | Qué trajo |
+|---|---|
+| 0.1.x | Vertical slice en solitario: creación, Crownreach, camino, bosque y cripta, combate por turnos, relicario, NPC con memoria, tiendas, rumores, es/en; `artifacts/` |
+| 0.2.x | Guerrero y Sacerdote, tipos de daño y criatura; hoja de héroe; límite de 150 llamadas de IA |
+| 0.3.0 | Mundo en carpetas, catálogo de imágenes, caché `file_id`, «Ver ciudad» |
+| 0.4.x | Mago, Druida, Bardo y Brujo; salvaciones, área por fila, PV temporales, maldiciones; elección de sexo; comandos `oathforge` |
+| 0.5.x | Misiones en cadena y diario, Prado de los Colmillos, bestiario, compra por puntos, `/roll`, retratos de las 8 clases, simulador, `tgtest`, subida de nivel, `/classes`, informe de batalla |
+| 0.6.x | Actividades de campo con espera, maestrías, oficios, recetas, `/professions`, crónicas con presupuesto, pociones con efectos tipados |
+| 0.7.0–0.7.13 | Aficiones, Escribanía e Ingeniería (pergaminos y bombas), capilla, descanso largo, `/settings`, textos de respaldo, bestiario ilustrado, `/map`, `oath`, trasfondos (12 + propio), `/rulebook`, `/skill_`, tutorial de Vale |
+| 0.7.14–0.7.31 | Pulido antes del multijugador: tutorial sin horas y acelerado, teclado fijo, fichas `/item_` y `/monster_`, actividades que terminan solas, `/skin`, ronda 0 y botones por clase, estadísticas, `tutorial-stats`, resiliencia de Gemini, viaje sin tiempos, balance para mago y druida |
+| 0.8.0 | Viaje directo a lugares conocidos, una emboscada por viaje, «▶️ Seguir», 📜 al objetivo |
+| 0.8.1 | `tests/features.md`: checklist de pruebas tras una feature grande |
+| 0.8.2 | Tutorial de 10 misiones sin mazmorras (Viejo Colmillo como jefe final), objetivo `hunt`, beta instantánea y pociones a 1 de oro |
+| 0.8.3 | Planning reorganizado: Possibilium, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md`, `content/officina/` |
+
+## Próximo (candidatos, no compromisos)
+
+- **0.8.x**:
+  - balance del tutorial con datos de la beta (`oath tutorial-stats`, [mundus](mundus.md));
+  - arreglos de diálogo de PNJ (Bram y el fogón, confianza al preguntar; [narratio](narratio.md));
+  - lobo gris y camino del capitán ([bestiarium](bestiarium.md)).
+- **0.9.0**: cooperativo mínimo de dos jugadores en la cripta (PKG-01 núcleo confiable + PKG-02; [societas](societas.md)). Antes: idempotencia del texto libre, contexto versionado y reserva de IA (CORE-01..03, AI-01..02).
+- **0.9.x**: cooperativo de 2–4 con ritmo y ausencias (PKG-03).
+- **0.10.0**: especializaciones a nivel 5, una por clase (PKG-04; [ordines](ordines.md)), y un juramento verificable ([progressio](progressio.md)).
+- **0.11.0**: encargos NPC y entre jugadores con custodia, sumideros de oro (PKG-05; [mercatura](mercatura.md), [opificia](opificia.md)).
+- **0.12.0**: un evento que cambia Crownreach: la crisis del hierro (PKG-08; [mundus](mundus.md)).
+- **Producción audiovisual en paralelo** (no bloquea lo anterior): estilo, tres portadas de lugar, un retrato de NPC y una pista ([ars](ars.md) §16).
+- **Expediciones** (fase 2 del viaje: escenas, estilos, atajos, favoritos) cuando haya contenido que las merezca.
+- **Más adelante**: segunda región (Frosthold o Stormport), afinidades de maestría, más clases (Explorador), gremios, PvP con consentimiento, Mini App, TTS.
+
+## Antes de invitar a amigos (GDD §17.6)
+
+- Cero duplicados en 1.000 repeticiones automatizadas de acciones económicas críticas.
+- El 100 % de los cambios de turno respeta iniciativa y permisos.
+- El bot recupera personajes y aventuras tras un reinicio.
+- El DM nunca aumenta oro ni inventario por texto libre.
+- Los jugadores saben salir de una escena y volver al menú.
+- Hay modo de recuperación cuando la API de IA no responde.
+- Los registros permiten investigar un combate o intercambio.
+
+## Riesgos principales
+
+Sobrealcance, narrador incoherente, desequilibrio entre clases, spam en Telegram, coste de IA, inflación, duplicados y dependencia de un hosting gratuito.
