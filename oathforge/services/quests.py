@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from oathforge.config import get_settings
 from oathforge.content import get_content
 from oathforge.i18n import t
 from oathforge.content.schemas import Quest, QuestAction, QuestObjective
@@ -100,13 +101,18 @@ def objective_target(obj: QuestObjective) -> dict:
         return dict(ANYWHERE)
     if obj.kind == "read":
         return c.rulebook[obj.target].title.model_dump()
-    pool = {"kill": c.monsters, "talk": c.npcs, "visit": c.locations, "gather": c.items, "skin": c.items,
+    pool = {"kill": c.monsters, "hunt": c.locations, "talk": c.npcs, "visit": c.locations, "gather": c.items, "skin": c.items,
             "craft": c.items, "rest": c.locations, "heal": c.locations}[obj.kind]
     return pool[obj.target].name.model_dump()
 
 
+def objective_key(obj: QuestObjective) -> str:
+    """The i18n key of "what to do": "any" targets have their own wording ("Take a long rest")."""
+    return f"quest.objective.{obj.kind}" + ("_any" if obj.target == "any" else "")
+
+
 def _matches(obj: QuestObjective, kind: str, target: str) -> bool:
-    return obj.kind == kind and (obj.target == target or (obj.target == "any" and kind in ("rest", "heal")))
+    return obj.kind == kind and (obj.target == target or (obj.target == "any" and kind in ("hunt", "rest", "heal")))
 
 
 async def advance(session: AsyncSession, char: Character, kind: str, target: str, rng: random.Random,
@@ -138,7 +144,7 @@ async def advance(session: AsyncSession, char: Character, kind: str, target: str
         else:  # that objective is done but the mission is not: say what comes next
             nxt = next(o for i, o in enumerate(quest.objectives) if int(counters.get(str(i), 0)) < o.count)
             out.add("quest.next", quest=quest.name.model_dump(),
-                    step={lang: t(lang, f"quest.objective.{nxt.kind}", target=objective_target(nxt)[lang])
+                    step={lang: t(lang, objective_key(nxt), target=objective_target(nxt)[lang])
                           for lang in ("es", "en")})
     await refresh(session, char, out)
     return out
@@ -159,7 +165,8 @@ async def tutorial_boost(session: AsyncSession, char: Character, kind: str,
                          candidates: set[str]) -> tuple[str, str, int] | None:
     """The accelerated tutorial: (mission, item, how many are missing) when an active tutorial mission asks
     to `kind` (gather / skin) one of the `candidates` and its shortcut is still unused. Once per mission."""
-    used = set((char.flags or {}).get(TUTORIAL_BOOSTS, []))
+    # beta only: the shortcut works every time, not once per mission
+    used = set() if get_settings().beta_instant_tutorial else set((char.flags or {}).get(TUTORIAL_BOOSTS, []))
     prog = await ensure_progress(session, char)
     for qkey, quest in ordered_quests():
         p = prog[qkey]
@@ -169,6 +176,12 @@ async def tutorial_boost(session: AsyncSession, char: Character, kind: str,
             if obj.kind == kind and obj.target in candidates and n < obj.count:
                 return qkey, obj.target, obj.count - n
     return None
+
+
+async def in_tutorial(session: AsyncSession, char: Character) -> bool:
+    """Whether a tutorial mission is under way."""
+    prog = await ensure_progress(session, char)
+    return any(quest.tutorial and prog[qkey].state == "active" for qkey, quest in ordered_quests())
 
 
 def use_tutorial_boost(char: Character, quest_key: str) -> None:

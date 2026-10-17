@@ -32,16 +32,18 @@ Cada pasada se hace con una clase distinta (la que menos se haya probado) y se a
 - [ ] Botín y crónica en el mismo mensaje
 - [ ] Huida
 - [ ] Derrota → heridas graves; Ysolde las cura gratis (beta)
-- [ ] Jefes del tutorial (Guardián de la cripta, Viejo Colmillo) ganables por la clase más frágil sin esperar un descanso largo
+- [ ] El jefe del tutorial (Viejo Colmillo) es ganable por la clase más frágil
 - [ ] Aviso de poca vida al cazar/rastrear/expedición
 
 ## Actividades
-- [ ] Cazar y rastrear (texto propio del lugar)
+- [ ] Cazar y rastrear (texto propio del lugar); las misiones de caza cuentan de día y de noche
+- [ ] Beta: en el tutorial las actividades terminan al momento; el descanso largo es instantáneo
 - [ ] Recolectar hierbas, minar
 - [ ] Descanso largo en la taberna
 - [ ] Fabricar (estofado, poción de maná con ala de murciélago)
 - [ ] El atajo del tutorial al desollar no deja sin la carne que pide la misión siguiente
-- [ ] Poción de maná: qué conjuro recupera
+- [ ] Poción de maná: con varios conjuros gastados, deja elegir cuál recupera
+- [ ] Beta: pociones de vida y de maná a 1 de oro
 
 ## Comercio e inventario
 - [ ] Tienda por categorías; tras comprar sigues en la categoría
@@ -52,7 +54,7 @@ Cada pasada se hace con una clase distinta (la que menos se haya probado) y se a
 - [ ] Aceptar y entregar misiones; al cumplir un objetivo, aviso del siguiente
 - [ ] Saludo de regreso (`greeting_return`) tras terminar una misión del NPC
 - [ ] Sin IA: el NPC recuerda la pista de la misión activa
-- [ ] Las 11 misiones del tutorial se completan; anotar minutos de cada una
+- [ ] Las 10 misiones del tutorial se completan sin pasar por la cripta; anotar minutos de cada una
 
 ## Diario y reglas
 - [ ] 📖 Diario: misiones activas/hechas, 📈 Estadísticas

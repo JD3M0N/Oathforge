@@ -257,7 +257,7 @@ async def scene(session: AsyncSession, char: Character, lang: str,
     if loc.guild:
         buttons.append(btn(t(lang, "btn.professions"), cb("prof")))
     if loc.rest_cost is not None:
-        buttons.append(btn(t(lang, "btn.rest", cost=loc.rest_cost), cb("rest", "-", n)))
+        buttons.append(btn(t(lang, "btn.rest" if loc.rest_cost else "btn.rest_free", cost=loc.rest_cost), cb("rest", "-", n)))
     if loc.healer is not None:
         buttons.append(btn(t(lang, "btn.heal"), cb("heal", "-", n)))  # free during the beta
     if loc.hub and c.media.zone_images(loc.zone, night):
@@ -1034,7 +1034,14 @@ async def inventory_view(session: AsyncSession, char: Character, lang: str) -> t
             label = f"{SLOT_ICONS.get(inst.equipped_slot or item.slot, '')} {label}".strip()
             rows.append([btn(label, cb("eq", str(inst.id), n))])
         elif inventory.effects_of(item):
-            rows.append([btn(t(lang, "btn.use", item=item.name.get(lang)), cb("use", inst.item_key, n))])
+            spells = inventory.spell_choices(char, item)
+            if len(spells) > 1:  # a mana potion with several spells spent: pick which one comes back
+                cls = c.classes[char.class_key]
+                rows.extend([btn(t(lang, "btn.use_on", item=item.name.get(lang), ability=cls.abilities[k].name.get(lang),
+                                   uses=char.resources.get(k, 0), max=cls.abilities[k].uses),
+                                 cb("use", f"{inst.item_key}:{k}", n))] for k in spells)
+            else:
+                rows.append([btn(t(lang, "btn.use", item=item.name.get(lang)), cb("use", inst.item_key, n))])
     rows.append([btn(t(lang, "btn.back"), cb("scene"))])
     return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
 
@@ -1046,7 +1053,7 @@ def _objective_line(obj, done: int, lang: str) -> str:
     target = quests.objective_target(obj)[lang]
     mark = "☑️" if done >= obj.count else "▫️"
     count = f" {done}/{obj.count}" if obj.count > 1 else ""
-    return f"{mark} {escape(t(lang, 'quest.objective.' + obj.kind, target=target))}{count}"
+    return f"{mark} {escape(t(lang, quests.objective_key(obj), target=target))}{count}"
 
 
 async def journal(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:

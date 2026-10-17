@@ -186,12 +186,12 @@ old_tusk:
   indefinite: {es: "ese viejo jabalí, el Viejo Colmillo", en: "that old boar, Old Tusk"}
   icon: 🦣
   description: {es: Un jabalí enorme cubierto de cicatrices y puntas de flecha rotas., en: A huge boar covered in scars and broken arrowheads.}
-  hp: 24
-  ac: 12
+  hp: 18
+  ac: 11
   dex: 0
   wis: 1
   attacks:
-    - {name: {es: Embestida, en: Gore}, to_hit: 4, damage: 2d6+1, damage_type: slashing, applies: {status: bleeding, turns: 2, chance: 0.3}}
+    - {name: {es: Embestida, en: Gore}, to_hit: 3, damage: 1d8+1, damage_type: slashing, applies: {status: bleeding, turns: 2, chance: 0.3}}
   xp: 300
   gold: 3d10
   loot:

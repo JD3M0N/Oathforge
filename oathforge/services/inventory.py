@@ -143,6 +143,13 @@ def spent_abilities(char: Character, spells_only: bool) -> list[tuple[str, int]]
     return sorted(out, key=lambda kv: -kv[1])
 
 
+def spell_choices(char: Character, item) -> list[str]:
+    """The spent spells a spell-restoring item could bring back (empty for any other item)."""
+    if not any(isinstance(e, RestoreSpellCharge) for e in effects_of(item)):
+        return []
+    return [k for k, _ in spent_abilities(char, spells_only=True)]
+
+
 def _restore_use(char: Character, key: str, amount: int, out: Outcome) -> None:
     a = get_content().classes[char.class_key].abilities[key]
     char.resources = {**char.resources, key: min(a.uses, char.resources[key] + amount)}
@@ -163,7 +170,8 @@ def _refusal(char: Character, effect, now: float) -> str | None:
 
 
 async def use_item_outside_combat(session: AsyncSession, char: Character, key: str, rng: random.Random,
-                                  now: float | None = None) -> Outcome:
+                                  now: float | None = None, ability: str | None = None) -> Outcome:
+    """Use a consumable. ``ability``: which spent spell a mana potion brings back (default: the most spent)."""
     item = get_content().items.get(key)
     effects = effects_of(item) if item else []
     if not effects:
@@ -187,7 +195,8 @@ async def use_item_outside_combat(session: AsyncSession, char: Character, key: s
             out.add("inv.healed", item=name, amount=char.hp - before, hp=char.hp, max_hp=char.max_hp)
         elif isinstance(effect, RestoreSpellCharge):
             out.add("inv.used", item=name)
-            _restore_use(char, spent_abilities(char, spells_only=True)[0][0], effect.amount, out)
+            spent = [k for k, _ in spent_abilities(char, spells_only=True)]
+            _restore_use(char, ability if ability in spent else spent[0], effect.amount, out)
         else:  # short rest: part of the HP, a use back, then the cooldown; never lifts "injured"
             out.add("inv.short_rest", item=name)
             char.hp = min(hp_cap(char), char.hp + max(1, round(char.max_hp * effect.hp_percent)))

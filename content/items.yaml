@@ -101,7 +101,7 @@ healing_potion:
   name: {es: Poción de curación, en: Healing potion}
   description: {es: Un líquido rojo que cierra heridas. Recupera 2d4+2 PV., en: A red liquid that closes wounds. Restores 2d4+2 HP.}
   type: consumable
-  value: 20
+  value: 1  # beta only: real price 20
   stackable: true
   heal: 2d4+2
 
@@ -356,7 +356,7 @@ mana_potion:
   name: {es: Poción de maná, en: Mana potion}
   description: {es: "Un líquido azul que brilla como la hoja de luna. Devuelve un uso de un conjuro gastado (solo clases que lanzan conjuros, fuera de combate).", en: "A blue liquid that glows like moonleaf. Gives back one use of a spent spell (spellcasting classes only, outside combat)."}
   type: consumable
-  value: 60
+  value: 1  # beta only: real price 60
   stackable: true
   effects:
     - {type: restore_spell_charge, amount: 1}

@@ -118,6 +118,7 @@ class EncounterState(BaseModel):
     combatants: dict[str, Combatant] = {}
     scene_objects: dict[str, SceneObjectState] = {}
     status: Literal["active", "victory", "defeat", "fled"] = "active"
+    hunt: bool = False  # started from 🏹 Hunt / 🐾 Track: a victory counts for "hunt" objectives
     log: list[LogEntry] = Field(default_factory=list)
 
     @property

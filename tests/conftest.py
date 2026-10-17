@@ -34,7 +34,19 @@ def artifacts_dir(tmp_path_factory):
     settings = get_settings()
     settings.artifacts_dir = tmp_path_factory.mktemp("artifacts")
     settings.game_clock_offset_hours = 0  # a GAME_CLOCK_OFFSET_HOURS in .env (for playtesting) never moves tests
+    # beta only: tests check the real timed activities; the beta shortcuts have their own tests (beta fixture)
+    settings.beta_instant_rest = False
+    settings.beta_instant_tutorial = False
     return settings.artifacts_dir
+
+
+@pytest.fixture
+def beta():
+    """Turn the beta shortcuts on for one test (instant long rest, instant tutorial activities)."""
+    settings = get_settings()
+    settings.beta_instant_rest = settings.beta_instant_tutorial = True
+    yield settings
+    settings.beta_instant_rest = settings.beta_instant_tutorial = False
 
 
 @pytest.fixture

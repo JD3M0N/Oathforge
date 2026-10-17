@@ -1,8 +1,10 @@
 # Misiones. Las que tienen `objectives` se completan solas al cumplirlos (muertes, charlas, lugares, objetos
 # recogidos, desollados o fabricados, descansos, curaciones) y dan `rewards`; la siguiente se desbloquea con
 # `after` (misión completada) o `unlock_flag`. El diario las ordena por `order`.
-# 1-8: el tutorial de la sargenta Vale (de nivel 1 a 3, una actividad por misión); 9-11 llevan a nivel 5.
-# `tutorial`: la primera actividad que encaja con su objetivo termina al momento y da lo que falta (una vez).
+# 1-10: el tutorial (Vale, Bram): hablar, ciudad, tiendas, cazar, desollar, recolectar, cocinar, minar, curarse y
+# descansar, y un jefe en el prado. Sin mazmorras. 11-12 (relicario y cripta) son la primera aventura después.
+# `tutorial`: la actividad que encaja con su objetivo termina al momento y da lo que falta (en la beta, siempre;
+# fuera de la beta, una vez por misión).
 # `legacy_done`: quien completó alguna de esas misiones antiguas empieza con esta completada (sin recompensa).
 
 tut_muster:
@@ -83,26 +85,64 @@ tut_town:
         es: Ya sabes moverte por Crownreach. Bram te invitó a una cerveza «para la próxima».
         en: You know your way around Crownreach now. Bram offered you a beer "for next time".
 
-tut_boars:
+tut_market:
   order: 3
   tutorial: true
   giver: vale
   after: tut_town
+  legacy_done: [tut_boars, night_wings]
+  name: {es: El mercado, en: The Market}
+  summary:
+    es: «Nadie sale de la ciudad sin pociones», dice Vale. Quiere que conozcas a quienes las venden.
+    en: "\"Nobody leaves the city without potions,\" says Vale. She wants you to meet the people who sell them."
+  hint:
+    es: Ve al Mercado de Crownreach y habla con Mira y con Tessa («💬 Hablar»). Con «🛒 Comerciar» ves sus tiendas; durante la beta las pociones cuestan 1 de oro.
+    en: Go to Crownreach Market and talk to Mira and Tessa ("💬 Talk"). "🛒 Trade" opens their shops; during the beta potions cost 1 gold.
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: talk, target: mira}
+    - {kind: talk, target: tessa}
+  rewards:
+    - xp: 25
+    - gold: 5
+    - give_item: {healing_potion: 1}
+  stages:
+    locked:
+      state: locked
+      journal: {es: Vale habla de pociones., en: Vale is talking about potions.}
+    active:
+      journal:
+        es: Habla con Mira y con Tessa en el Mercado de Crownreach. De día están en sus puestos; de noche, en la taberna.
+        en: Talk to Mira and Tessa at Crownreach Market. By day they are at their stalls; at night, in the tavern.
+    done:
+      state: completed
+      journal:
+        es: Mira te guiñó un ojo y Tessa te miró las manos («blandas»). Vale te regaló una poción «para el prado».
+        en: Mira winked at you and Tessa looked at your hands ("soft"). Vale gave you a potion "for the meadow".
+
+tut_boars:
+  order: 4
+  tutorial: true
+  giver: vale
+  after: tut_market
   legacy_done: [night_wings]
   name: {es: Colmillos en el prado, en: Tusks in the Meadow}
   summary:
     es: Los jabalíes destrozan los campos al sur de la ciudad. Vale quiere ver cómo peleas… y cómo aprovechas lo que cazas.
     en: Boars are wrecking the fields south of the city. Vale wants to see how you fight… and how you use what you hunt.
   hint:
-    es: El Prado de los Colmillos sale directo de la plaza. Ve con la vida llena y una poción a mano; pulsa «🏹 Cazar», a cualquier hora. Al ganar, pulsa «🔪 Desollar» o /skin para sacar el cuero (unos segundos).
-    en: Tusk Meadow leaves straight from the plaza. Go with full health and a potion at hand; press "🏹 Hunt", at any hour. When you win, press "🔪 Skin" or /skin to take the hide (a few seconds).
+    es: El Prado de los Colmillos sale directo de la plaza. Ve con la vida llena y una poción a mano y pulsa «🏹 Cazar» (cuenta cualquier presa, de día o de noche). Al ganar, pulsa «🔪 Desollar» o /skin para sacar la carne.
+    en: Tusk Meadow leaves straight from the plaza. Go with full health and a potion at hand and press "🏹 Hunt" (any prey counts, day or night). When you win, press "🔪 Skin" or /skin to take the meat.
   start_stage: locked
   unlock_stage: active
   objective_stage: active
   complete_stage: done
   objectives:
-    - {kind: kill, target: boar, count: 2}
-    - {kind: skin, target: boar_hide}
+    - {kind: hunt, target: tusk_meadow, count: 2}
+    - {kind: skin, target: raw_meat, count: 2}
   rewards:
     - xp: 100
     - give_item: {sickle: 1}
@@ -112,8 +152,8 @@ tut_boars:
       journal: {es: Algo hoza en los campos del sur., en: Something is rooting in the southern fields.}
     active:
       journal:
-        es: Caza dos jabalíes en el Prado de los Colmillos y consigue una piel desollando.
-        en: Hunt two boars in Tusk Meadow and get a hide by skinning.
+        es: Caza dos veces en el Prado de los Colmillos y consigue 2 de carne desollando. Te hará falta para el guiso.
+        en: Hunt twice in Tusk Meadow and get 2 raw meat by skinning. You'll need it for the stew.
       location_text:
         tusk_meadow:
           es: "La hierba está removida a hozadas. Un recluta de la Guardia te grita desde la valla: «¡Cuidado con los colmillos, que no perdonan!»."
@@ -121,11 +161,11 @@ tut_boars:
     done:
       state: completed
       journal:
-        es: El prado respira. Vale asintió al ver la piel («no está mal») y te dio una hoz.
-        en: The meadow breathes again. Vale nodded at the hide ("not bad") and gave you a sickle.
+        es: El prado respira. Vale asintió al ver la carne («no está mal; guárdala») y te dio una hoz.
+        en: The meadow breathes again. Vale nodded at the meat ("not bad; keep it") and gave you a sickle.
 
 tut_herbs:
-  order: 4
+  order: 5
   tutorial: true
   giver: vale
   after: tut_boars
@@ -135,8 +175,8 @@ tut_herbs:
     es: La capilla se queda sin raíz de sangre y la Guardia sin pociones. Vale te manda al bosque con la hoz.
     en: The chapel is running out of bloodroot and the Guard out of potions. Vale sends you to the woods with the sickle.
   hint:
-    es: Sal por la plaza al Camino del Viejo Rey y sigue hasta el Bosque de los Susurros (o el Claro de la Raíz Roja). Pulsa «🌿 Recolectar hierbas» (en el tutorial, la primera vez termina al momento). Los caminos con ⚠️ pueden traer emboscadas.
-    en: Leave through the plaza to the Old King's Road and on to the Whispering Woods (or Redroot Clearing). Press "🌿 Gather herbs" (in the tutorial, the first time is done at once). Roads marked ⚠️ may bring ambushes.
+    es: Sal por la plaza al Camino del Viejo Rey y sigue hasta el Bosque de los Susurros (o el Claro de la Raíz Roja). Pulsa «🌿 Recolectar hierbas» (en el tutorial termina al momento). Los caminos con ⚠️ pueden traer emboscadas.
+    en: Leave through the plaza to the Old King's Road and on to the Whispering Woods (or Redroot Clearing). Press "🌿 Gather herbs" (in the tutorial it is done at once). Roads marked ⚠️ may bring ambushes.
   start_stage: locked
   unlock_stage: active
   objective_stage: active
@@ -168,7 +208,7 @@ tut_herbs:
         en: "You came back with bloodroot and few scratches. Keep some: you'll need it for cooking."
 
 tut_stew:
-  order: 5
+  order: 6
   tutorial: true
   giver: vale
   after: tut_herbs
@@ -208,7 +248,7 @@ tut_stew:
         en: The stew smelled so good half the room asked for the recipe. Vale gave you a pickaxe and another job.
 
 tut_mine:
-  order: 6
+  order: 7
   tutorial: true
   giver: vale
   after: tut_stew
@@ -218,8 +258,8 @@ tut_mine:
     es: Los caminos del norte están cortados y la herrera Tessa no tiene hierro. Vale te manda a la mina con el pico.
     en: The northern roads are cut off and Tessa the smith has no iron. Vale sends you to the mine with the pickaxe.
   hint:
-    es: Por el Camino del Viejo Rey llegas a la Mina del Paso Viejo. Pulsa «⛏️ Minar» (en el tutorial, la primera vez termina al momento). Fuera del tutorial, la «🏕️ Expedición larga» saca más, pero puede haber emboscada.
-    en: The Old King's Road takes you to the Old Pass Mine. Press "⛏️ Mine" (in the tutorial, the first time is done at once). Outside the tutorial, a "🏕️ Long expedition" yields more, but you may be ambushed.
+    es: Por el Camino del Viejo Rey llegas a la Mina del Paso Viejo. Pulsa «⛏️ Minar» (en el tutorial termina al momento). Fuera del tutorial, la «🏕️ Expedición larga» saca más, pero puede haber emboscada.
+    en: The Old King's Road takes you to the Old Pass Mine. Press "⛏️ Mine" (in the tutorial it is done at once). Outside the tutorial, a "🏕️ Long expedition" yields more, but you may be ambushed.
   start_stage: locked
   unlock_stage: active
   objective_stage: active
@@ -248,7 +288,7 @@ tut_mine:
         en: Tessa kissed the ore (literally) and Vale paid you. Now for something darker.
 
 tut_bats:
-  order: 7
+  order: 8
   tutorial: true
   giver: vale
   after: tut_mine
@@ -258,14 +298,14 @@ tut_bats:
     es: Cada anochecer, una bandada de murciélagos sale de la Mina del Paso Viejo y ataca al ganado del prado. Vale quiere cortarla de raíz, en su nido.
     en: Every dusk, a swarm of bats pours out of Old Pass Mine and attacks the meadow's livestock. Vale wants it stopped at the root, in its nest.
   hint:
-    es: Ve a la Mina del Paso Viejo y pulsa «🏹 Cazar». En las galerías hay murciélagos a cualquier hora (y alguna rata).
-    en: Go to Old Pass Mine and press "🏹 Hunt". There are bats in the tunnels at any hour (and the odd rat).
+    es: Ve a la Mina del Paso Viejo y pulsa «🏹 Cazar» tres veces. Cuenta cualquier presa de las galerías (murciélagos o ratas), de día o de noche.
+    en: Go to Old Pass Mine and press "🏹 Hunt" three times. Any prey in the tunnels counts (bats or rats), day or night.
   start_stage: locked
   unlock_stage: active
   objective_stage: active
   complete_stage: done
   objectives:
-    - {kind: kill, target: cave_bat, count: 3}
+    - {kind: hunt, target: ironvein_mine, count: 3}
   rewards:
     - xp: 75
   stages:
@@ -274,8 +314,8 @@ tut_bats:
       journal: {es: Algo sale de la mina cuando oscurece., en: Something comes out of the mine after dark.}
     active:
       journal:
-        es: Acaba con tres murciélagos en su nido de la Mina del Paso Viejo.
-        en: Kill three bats in their nest in Old Pass Mine.
+        es: "Limpia el nido: caza tres veces en la Mina del Paso Viejo."
+        en: "Clear the nest: hunt three times in Old Pass Mine."
     done:
       state: completed
       journal:
@@ -283,7 +323,7 @@ tut_bats:
         en: The meadow nights are quiet again. The tavern is already talking about you.
 
 tut_chapel:
-  order: 8
+  order: 9
   tutorial: true
   giver: vale
   after: tut_bats
@@ -293,34 +333,36 @@ tut_chapel:
     es: «Nadie vuelve entero de ahí fuera», dice Vale. Antes de darte por listo, quiere que conozcas a la hermana Ysolde.
     en: "\"Nobody comes back whole from out there,\" says Vale. Before she calls you ready, she wants you to meet Sister Ysolde."
   hint:
-    es: Ve a la Capilla del Alba y habla con la hermana Ysolde («🙏 Curar heridas», gratis durante la beta). Para todo lo demás, descanso largo en la posada. Después, vuelve con Vale.
-    en: Go to the Chapel of the Dawn and talk to Sister Ysolde ("🙏 Heal wounds", free during the beta). For everything else, a long rest at the inn. Then report back to Vale.
+    es: Ve a la Capilla del Alba y habla con la hermana Ysolde («🙏 Curar heridas», gratis durante la beta). Luego haz un «🛏️ Descanso largo» en la taberna, que devuelve la vida y los usos de tus habilidades (en la beta, al momento). Después, vuelve con Vale.
+    en: Go to the Chapel of the Dawn and talk to Sister Ysolde ("🙏 Heal wounds", free during the beta). Then take a "🛏️ Long rest" at the tavern, which restores your health and your abilities' uses (at once during the beta). Then report back to Vale.
   start_stage: locked
   unlock_stage: active
   objective_stage: active
   complete_stage: done
   objectives:
     - {kind: talk, target: ysolde}
+    - {kind: rest, target: any}
     - {kind: talk, target: vale}
   rewards:
     - xp: 40
     - give_item: {healing_potion: 1}
+    - set_flag: old_tusk_hunt
   stages:
     locked:
       state: locked
       journal: {es: Falta una última lección., en: One last lesson remains.}
     active:
       journal:
-        es: Habla con la hermana Ysolde en la Capilla del Alba y vuelve a informar a Vale.
-        en: Talk to Sister Ysolde at the Chapel of the Dawn and report back to Vale.
+        es: Habla con la hermana Ysolde en la Capilla del Alba, descansa en la taberna y vuelve a informar a Vale.
+        en: Talk to Sister Ysolde at the Chapel of the Dawn, rest at the tavern and report back to Vale.
     done:
       state: completed
       journal:
-        es: «Ya no eres un recluta», dijo Vale. «Dicen que en el Bosque de los Susurros desaparecen patrullas. Echa un vistazo y, si encuentras algo, llévaselo al sargento Holt».
-        en: "\"You're no recruit any more,\" Vale said. \"Word is patrols keep vanishing in the Whispering Woods. Take a look and, if you find anything, bring it to Sergeant Holt.\""
+        es: "«Casi estás listo», dijo Vale. «Una última prueba: Bram, en la taberna, lleva años hablando de un jabalí que nadie ha podido abatir»."
+        en: "\"You're almost ready,\" Vale said. \"One last test: Bram, at the tavern, has been talking for years about a boar nobody could bring down.\""
 
 crypt_bones:
-  order: 10
+  order: 12
   giver: holt
   unlock_flag: crypt_unlocked
   name: {es: Huesos inquietos, en: Restless Bones}
@@ -354,16 +396,17 @@ crypt_bones:
         en: The bone guards have fallen. Only their lord remains, in the sanctum.
 
 old_tusk:
-  order: 11
+  order: 10
+  tutorial: true
   giver: bram
-  unlock_flag: old_tusk_hunt
+  after: tut_chapel
   name: {es: El Viejo Colmillo, en: Old Tusk}
   summary:
-    es: Con la cripta en paz, Bram te cuenta la leyenda del jabalí que ningún cazador ha logrado abatir.
-    en: With the crypt at peace, Bram tells you the legend of the boar no hunter has ever brought down.
+    es: Bram te cuenta la leyenda del jabalí que ningún cazador ha logrado abatir. Es la última prueba de Vale.
+    en: Bram tells you the legend of the boar no hunter has ever brought down. It is Vale's last test.
   hint:
-    es: Ve al Prado de los Colmillos. El Viejo Colmillo te estará esperando.
-    en: Go to Tusk Meadow. Old Tusk will be waiting for you.
+    es: "Descansa antes (vida y habilidades llenas) y ve al Prado de los Colmillos. Pulsa «🏹 Cazar»: el Viejo Colmillo te estará esperando. Lleva pociones."
+    en: 'Rest first (full health and abilities) and go to Tusk Meadow. Press "🏹 Hunt": Old Tusk will be waiting for you. Bring potions.'
   start_stage: locked
   unlock_stage: active
   objective_stage: active
@@ -388,17 +431,17 @@ old_tusk:
     done:
       state: completed
       journal:
-        es: El Viejo Colmillo ha caído. Su cabeza ya cuelga sobre la barra de La Corona Rota.
-        en: Old Tusk has fallen. Its head now hangs above the bar of the Broken Crown.
+        es: "El Viejo Colmillo ha caído y su cabeza ya cuelga sobre la barra de La Corona Rota. Vale te da por formado. Bram baja la voz: «Dicen que en el Bosque de los Susurros desaparecen patrullas. Si encuentras algo, llévaselo al sargento Holt»."
+        en: "Old Tusk has fallen and its head now hangs above the bar of the Broken Crown. Vale calls you trained. Bram lowers his voice: \"Word is patrols keep vanishing in the Whispering Woods. If you find anything, bring it to Sergeant Holt.\""
 
 sealed_box:
   name: {es: El relicario sellado, en: The Sealed Reliquary}
   summary:
     es: Un mensajero de la Guardia de Plata desapareció en el Bosque de los Susurros con una caja que muchos quieren.
     en: A Silver Guard courier vanished in the Whispering Woods carrying a box many people want.
-  order: 9
+  order: 11
   giver: holt
-  after: tut_chapel
+  after: old_tusk
   start_stage: locked
   unlock_stage: not_started
   hint:

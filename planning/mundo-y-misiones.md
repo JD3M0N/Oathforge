@@ -11,30 +11,32 @@
 - «El relicario sellado», con tres finales.
 - **Cadena de misiones** (v0.5.0), automática: al completar una se abre la siguiente (`after` o `unlock_flag`). Las misiones con `objectives` (matar N, hablar con, ir a) cuentan solas y dan `rewards`; el avance se guarda en `quest_progress.counters`. El diario muestra las misiones en curso con su avance y, en «Misiones», la ficha de cada una (quién la da, objetivos, pista y recompensa).
 
-  **Tutorial de la sargenta Vale** (v0.7.13, misiones 1–8). Sustituye a las antiguas «Bienvenido a Crownreach», «Colmillos en el prado» y «Alas al anochecer». Vale está en la plaza día y noche; el primer mensaje de la plaza invita a hablar con ella. Cada misión enseña una cosa y su recompensa es la herramienta de la siguiente:
+  **Tutorial** (v0.8.2, misiones 1–10, sin mazmorras). Vale (y Bram para el final) enseñan una cosa por misión; la recompensa suele ser la herramienta de la siguiente:
 
   | # | Misión | Objetivo | Enseña | XP | Recompensa |
   |---|---|---|---|---|---|
   | 1 | Alistamiento | Hablar con Vale + leer «🧺 Actividades» en el `/rulebook` | hablar con PNJ, el reglamento | 25 | cuchillo de desollar |
   | 2 | Calles de Crownreach | Ir al Barrio de Oficios y a la taberna + hablar con Bram | `/map`, moverse por la ciudad | 25 | 5 de oro |
-  | 3 | Colmillos en el prado | 2 jabalíes + 1 cuero desollado (de día o de noche desde la v0.7.25) | caza, combate, desuello | 100 | hoz |
-  | 4 | Raíz de sangre | Recoger 3 raíces de sangre | salir de la ciudad, recolección, emboscadas | 50 | 5 de oro |
-  | 5 | Guiso del cazador | Fabricar un estofado del cazador | aficiones, fogón, fabricar | 50 | pico |
-  | 6 | Hierro para la Guardia | Sacar 3 menas de hierro | minería, expedición larga | 60 | 10 de oro |
-  | 7 | Alas al anochecer | 3 murciélagos en la mina (a cualquier hora desde la v0.7.15) | caza en grupo de enemigos | 75 | — |
-  | 8 | Heridas de guerra | Hablar con Ysolde + volver con Vale | curación y descanso | 40 | poción de curación |
+  | 3 | El mercado | Hablar con Mira y con Tessa | tiendas | 25 | 5 de oro + poción |
+  | 4 | Colmillos en el prado | Cazar 2 veces en el prado + 2 de carne desollando | caza, combate, desuello | 100 | hoz |
+  | 5 | Raíz de sangre | Recoger 3 raíces de sangre | salir de la ciudad, recolección, emboscadas | 50 | 5 de oro |
+  | 6 | Guiso del cazador | Fabricar un estofado del cazador | aficiones, fogón, fabricar | 50 | pico |
+  | 7 | Hierro para la Guardia | Sacar 3 menas de hierro | minería | 60 | 10 de oro |
+  | 8 | Alas al anochecer | Cazar 3 veces en la mina | caza contra grupos | 75 | — |
+  | 9 | Heridas de guerra | Hablar con Ysolde + descanso largo + volver con Vale | curación y descanso | 40 | poción |
+  | 10 | El Viejo Colmillo | El jabalí jefe del prado (Bram) | jefe | 300 | 80 de oro |
 
-  **Tutorial acelerado** (v0.7.16): las misiones llevan `tutorial: true`. La primera recolección (o expedición) o desuello que encaja con el objetivo activo termina al momento, sin emboscada, y da justo lo que falta. Una vez por misión (`char.flags.tutorial_boosts`); lo demás dura lo normal.
+  - **Objetivo `hunt`** (v0.8.2): cuenta cada victoria de 🏹 Cazar o 🐾 Rastrear en ese lugar, contra cualquier criatura, de día o de noche (el combate guarda `hunt` en su estado). Las misiones de caza del tutorial lo usan en vez de `kill`, así no dependen de la hora.
+  - **📜 al objetivo**: cuenta solo las criaturas que salen a esta hora y a tu nivel (o un combate fijo pendiente). Las misiones sin objetivos contados (el relicario) apuntan a sus acciones (lugar o PNJ) y, si no tienen, al jefe de sus disparadores.
+  - **Beta** (`config.py`, `# beta only`): mientras hay una misión del tutorial activa, toda actividad con tiempo termina al momento; el descanso largo es instantáneo para todos; las pociones de vida y de maná cuestan 1 de oro.
+  - Con el Viejo Colmillo (18 PV, CA 11, 1d8+1) el mago de nivel 4 gana el 89 % en el simulador (sin pociones).
 
-  Total: 425 de misión + unos 95 de combates ≈ 520 → nivel 3. Quien ya había completado «Alas al anochecer» tiene el tutorial hecho (`legacy_done`, sin recompensa).
+  Al acabar el tutorial, Bram habla de las patrullas perdidas del bosque: empieza la primera aventura.
 
   | # | Misión | Objetivo | XP |
   |---|---|---|---|
-  | 9 | El relicario sellado | Tres caminos hasta el Guardián | 50 + 100 + 300 |
-  | 10 | Huesos inquietos | 3 esqueletos de la cripta | 300 |
-  | 11 | El Viejo Colmillo | El jabalí jefe | 300 |
-
-  Con la XP de los combates se llega a nivel 2 en la misión 3, a 3 al acabar el tutorial, a 4 en la cripta y a 5 al vencer al Guardián.
+  | 11 | El relicario sellado | Tres caminos hasta el Guardián | 50 + 100 + 300 |
+  | 12 | Huesos inquietos | 3 esqueletos de la cripta | 300 |
 - Facciones con reputación: Pacto de Plata y Sindicato Carmesí.
 - Rumores: lo que hace un jugador se cuenta en las tabernas de los demás.
 

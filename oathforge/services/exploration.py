@@ -196,7 +196,7 @@ async def hunt(session: AsyncSession, char: Character, rng: random.Random) -> Ou
         return Outcome.refused("explore.err.no_hunting")
     fixed = pending_fixed_encounter(char)
     if fixed:
-        _, enc_out = await combat_service.start_encounter(session, char, list(fixed.monsters), rng, fixed.flag)
+        _, enc_out = await combat_service.start_encounter(session, char, list(fixed.monsters), rng, fixed.flag, hunt=True)
         return Outcome().add("explore.hunt_boss").extend(enc_out)
     table = encounter_table(loc, char.level)
     entry = rng.choices(table, weights=[e.weight for e in table])[0]
@@ -209,7 +209,7 @@ async def hunt(session: AsyncSession, char: Character, rng: random.Random) -> Ou
         out.text(own)
     else:
         out.add("explore.hunt_night" if night else "explore.hunt_day")
-    _, enc_out = await combat_service.start_encounter(session, char, list(entry.monsters), rng)
+    _, enc_out = await combat_service.start_encounter(session, char, list(entry.monsters), rng, hunt=True)
     return out.extend(enc_out)
 
 
@@ -305,16 +305,33 @@ async def cure_wounds(session: AsyncSession, char: Character, rng: random.Random
     return out.extend(await quests.advance(session, char, "heal", char.location, rng))
 
 
+def _fixed_here(char: Character, loc: Location, monster: str) -> bool:
+    """A fixed fight with this monster still waits here for this character."""
+    flags = char.flags or {}
+    return any(monster in f.monsters and not flags.get(f.flag)
+               and (not f.if_flag or flags.get(f.if_flag)) and not (f.unless_flag and flags.get(f.unless_flag))
+               for f in loc.fixed_encounters)
+
+
+def _npc_spot(npc: str) -> set[str]:
+    loc = get_content().npcs[npc].schedule.get("night" if is_night() else "day")
+    return {loc} if loc else set()
+
+
 def _objective_spots(char: Character, kind: str, target: str) -> set[str]:
-    """Places where a mission objective can be done (derived from the world, never a secret one)."""
+    """Places where a mission objective can be done right now (derived from the world, never a secret one).
+    A creature counts only where it shows up at this hour and level, or where its fixed fight still waits."""
     c = get_content()
-    if kind == "visit" or (kind in ("rest", "heal") and target != "any"):
+    if target == "any":  # anywhere it can be done: a hunting ground, an inn, a healer
+        return {k for k, loc in c.locations.items()
+                if {"hunt": loc.hunting, "rest": loc.rest_cost is not None, "heal": loc.healer is not None}.get(kind)}
+    if kind in ("visit", "hunt", "rest", "heal"):
         return {target}
     if kind == "talk":
-        return {loc for loc in [c.npcs[target].schedule.get("night" if is_night() else "day")] if loc}
+        return _npc_spot(target)
     if kind == "kill":
         return {k for k, loc in c.locations.items()
-                if any(target in e.monsters for e in [*loc.encounters, *loc.night_encounters, *loc.fixed_encounters])}
+                if any(target in e.monsters for e in encounter_table(loc, char.level)) or _fixed_here(char, loc, target)}
     if kind == "gather":
         return {k for k, loc in c.locations.items() if any(r.item == target for g in loc.gathering for r in g.resources)}
     if kind == "craft":
@@ -322,18 +339,33 @@ def _objective_spots(char: Character, kind: str, target: str) -> set[str]:
     return set()
 
 
-async def objective_routes(session: AsyncSession, char: Character, limit: int = 2) -> list[tuple[dict, world_map.Route]]:
-    """The nearest known place for the next step of each active mission: (mission name, route). Only places
-    the character could go to from the map anyway, so it never gives a secret away."""
+def _stage_spots(char: Character, quest, stage: str) -> set[str]:
+    """Where a mission without counted objectives moves on from this stage: its actions (a place, or the NPC
+    who takes them) or, when it has none, the fixed fights of its "defeat" triggers."""
     c = get_content()
+    spots: set[str] = set()
+    for a in quest.actions.values():
+        if stage in a.stages:
+            spots |= {a.location} if a.location else (_npc_spot(a.npc) if a.npc else set())
+    if spots:  # what the mission asks for first; a boss that also ends it (going it alone) is not the way
+        return spots
+    for trig in quest.triggers:
+        if trig.event == "defeat" and stage in trig.stages:
+            spots |= {k for k, loc in c.locations.items() if _fixed_here(char, loc, trig.target)}
+    return spots
+
+
+async def objective_routes(session: AsyncSession, char: Character, limit: int = 2) -> list[tuple[dict, world_map.Route]]:
+    """The nearest known place for the next step of each open mission: (mission name, route). Only places
+    the character could go to from the map anyway, so it never gives a secret away."""
     prog = await quests.progress(session, char)
     routes = {r.to: r for r in world_map.destinations(char)}
     out: list[tuple[dict, world_map.Route]] = []
     for qkey, quest in quests.ordered_quests():
         p = prog.get(qkey)
-        if p is None or p.state != "active":
+        if p is None or p.state not in ("active", "available"):
             continue
-        spots: set[str] = {a.location for a in quest.actions.values() if a.location and p.stage in a.stages}
+        spots = _stage_spots(char, quest, p.stage)
         if p.stage == quest.objective_stage:
             nxt = next((o for o, n in quests.objective_progress(quest, p) if n < o.count), None)
             if nxt is not None:

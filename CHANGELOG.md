@@ -4,6 +4,33 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.8.2] - 2026-10-17
+
+Tutorial nuevo tras el speedrun con una maga: más corto, sin mazmorras y sin esperas en la beta.
+
+### Añadido
+- **Tutorial de 10 misiones**: hablar, la ciudad, el mercado (nueva: Mira y Tessa), cazar y desollar, recolectar, cocinar, minar, cazar en la mina, curarse y descansar, y el Viejo Colmillo como jefe final (lo da Bram). El relicario y la cripta pasan a ser la primera aventura después del tutorial.
+- **Objetivo `hunt`**: «caza N veces en X» cuenta cualquier victoria de 🏹 Cazar o 🐾 Rastrear allí, de día o de noche. Los jabalíes y la mina lo usan.
+- Poción de maná: con varios conjuros gastados, el inventario deja elegir cuál recupera.
+
+### Cambiado
+- **Beta** (marcado `# beta only` en el código):
+  - durante el tutorial, toda actividad con tiempo (recolectar, minar, rastrear, desollar) termina al momento;
+  - el descanso largo es instantáneo para todos;
+  - las pociones de vida y de maná cuestan 1 de oro.
+- «Colmillos en el prado» pide 2 de carne desollando (antes, una piel): ya no puedes quedarte sin carne para el guiso.
+- «Heridas de guerra» pide también un descanso largo y abre el Viejo Colmillo.
+- Viejo Colmillo: 24 → 18 PV, CA 12 → 11, ataque +4 → +3 y daño 2d6+1 → 1d8+1. En el simulador, el mago de nivel 4 gana el 89 %.
+- Mina del Paso Viejo: parejas de murciélagos y de ratas desde nivel 3. Camino del Viejo Rey: parejas de bandidos y de trasgos desde nivel 3, capitán bandido desde nivel 4 (el tutorial pasa por ahí a nivel 1–3).
+- Bosque de los Susurros: lobos desde nivel 3, parejas de lobos desde nivel 4 y la pareja trasgo + bandido desde nivel 3; a nivel 1–2 salen jabalíes y trasgos sueltos. En el Claro de la Raíz Roja, lobos desde nivel 3.
+
+### Arreglado
+- 📜 al objetivo:
+  - ya no manda de día al prado a cazar murciélagos que solo salen de noche: solo cuenta las criaturas que salen a esa hora y a tu nivel;
+  - funciona en el relicario (buscar en el bosque, entregarlo a Holt, el guardián).
+- Objetivos sin lugar fijo: «Haz un descanso largo» en vez de «Descansa en cualquier sitio», y el 📜 lleva a la posada más cercana.
+- El descanso del osario dice «gratis» en vez de «(0 🪙)».
+
 ## [0.8.1] - 2026-10-17
 
 ### Añadido

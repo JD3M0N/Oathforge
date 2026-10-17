@@ -60,13 +60,13 @@ async def active_encounter(session: AsyncSession, char: Character, lock: bool = 
 
 async def start_encounter(
     session: AsyncSession, char: Character, monster_keys: list[str], rng: random.Random,
-    fixed_flag: str | None = None,
+    fixed_flag: str | None = None, hunt: bool = False,
 ) -> tuple[Encounter, Outcome]:
     c = get_content()
     loc = c.locations[char.location]
     player = await characters.build_combatant(session, char)
     player.consumables = await inventory.combat_items(session, char)
-    state = EncounterState(location=char.location, combatants={"p1": player})
+    state = EncounterState(location=char.location, combatants={"p1": player}, hunt=hunt)
     for i, key in enumerate(monster_keys, start=1):
         state.combatants[f"m{i}"] = monster_combatant(key, f"m{i}")
     _letter_duplicates([state.combatants[f"m{i}"] for i in range(1, len(monster_keys) + 1)])
@@ -181,6 +181,8 @@ async def _sync_and_maybe_finish(session, char, enc, state: EncounterState, rng,
             char.flags = {**char.flags, enc.fixed_flag: True}
         for cb in defeated:
             out.extend(await quests.on_defeat(session, char, cb.ref, rng))
+        if state.hunt:
+            out.extend(await quests.advance(session, char, "hunt", enc.location, rng))
     elif state.status == "defeat":
         await characters.defeat_penalty(char, out)
     elif state.status == "fled":

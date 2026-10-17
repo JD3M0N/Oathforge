@@ -286,7 +286,8 @@ async def _dispatch(session, char, verb: str, arg: str, r, context) -> Outcome:
     if verb == "use":
         if char.state == "in_combat":
             return Outcome.refused("inv.err.in_combat_use")
-        return await inventory.use_item_outside_combat(session, char, arg, r)
+        key, _, ability = arg.partition(":")  # "<item>" or "<item>:<spell to restore>"
+        return await inventory.use_item_outside_combat(session, char, key, r, ability=ability or None)
     if verb in ("buy", "sell"):
         npc_key, _, what = arg.partition(":")
         if npc_key not in present:

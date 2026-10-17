@@ -12,9 +12,11 @@ exits:
   - {to: elderwood_grove, minutes: 20, danger: 1}
   - {to: redroot_clearing, minutes: 15, danger: 1}
 encounters:
-  - {monsters: [grey_wolf], weight: 3}
-  - {monsters: [grey_wolf, grey_wolf], weight: 2}
-  - {monsters: [goblin_scout, bandit], weight: 1}
+  - {monsters: [boar], weight: 2}  # the tutorial gathers bloodroot here at level 2-3: only weak prey before level 3
+  - {monsters: [goblin_scout], weight: 1}
+  - {monsters: [grey_wolf], weight: 3, min_level: 3}
+  - {monsters: [grey_wolf, grey_wolf], weight: 2, min_level: 4}
+  - {monsters: [goblin_scout, bandit], weight: 1, min_level: 3}
 gathering:
   - skill: herbalism
     tool: sickle

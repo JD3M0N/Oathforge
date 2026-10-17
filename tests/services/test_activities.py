@@ -438,16 +438,16 @@ async def test_no_tutorial_shortcut_for_another_resource_or_outside_the_tutorial
         assert (await activities.start(s, char, "stay", "mining")).ok and char.state == "busy"
 
 
-async def test_tutorial_skinning_guarantees_the_hide_once():
+async def test_tutorial_skinning_guarantees_the_meat_once():
     cid = await new_character(location="tusk_meadow", tools=("skinning_knife",))
     async with session_scope() as s:
         char = await get_char(s, cid)
-        await _activate(s, char, "tut_boars")  # 2 boars and 1 boar hide
-        hides = []
+        await _activate(s, char, "tut_boars")  # 2 hunts and 2 raw meat
+        meat = []
         for seed in range(6):
             got = await activities.skin(s, char, ["boar"], random.Random(seed), Outcome())
-            hides.append(got.get("boar_hide", 0))
-        assert hides[0] >= 1  # the first skinning, whatever the dice say
+            meat.append(got.get("raw_meat", 0))
+        assert meat[0] >= 2  # the first skinning, whatever the dice say
         assert char.flags["tutorial_boosts"] == ["tut_boars"]
 
 
@@ -489,3 +489,90 @@ async def test_skinning_waits_for_skin_and_is_lost_when_leaving(monkeypatch):
         await exploration.travel(s, char, "crownreach_plaza", random.Random(0))
         char.location = "tusk_meadow"
         assert (await activities.start(s, char, "skin", "skinning", now)).error == "activity.err.nothing_to_skin"
+
+
+# ---------------------------------------------------------------- beta shortcuts (beta only)
+
+async def test_beta_long_rest_is_instant(beta):
+    cid = await new_character(location="broken_crown_tavern", tools=())
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        char.hp, char.conditions = 1, {"injured": True}
+        out = await activities.start(s, char, "rest", "rest")
+        assert out.ok and char.state == "idle" and char.hp == char.max_hp and "injured" not in char.conditions
+        assert (await activity(s, cid)).status == "done"
+
+
+async def test_beta_tutorial_activities_end_at_once(beta):
+    cid = await new_character()  # the first tutorial mission is active
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        out = await activities.start(s, char, "gather", "mining")
+        assert out.ok and char.state == "idle" and any(e.key == "activity.tutorial_instant" for e in out.events)
+        assert (await activity(s, cid)).status == "done"
+
+
+async def test_beta_activities_keep_their_time_after_the_tutorial(beta):
+    from oathforge.services import quests
+    cid = await new_character()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        for p in (await quests.ensure_progress(s, char)).values():
+            p.state = "completed"
+        assert (await activities.start(s, char, "gather", "mining")).ok and char.state == "busy"
+
+
+async def test_a_hunt_victory_counts_for_hunt_missions_day_or_night(monkeypatch):
+    from oathforge.services import quests
+    for night in (False, True):
+        monkeypatch.setattr(exploration, "is_night", lambda now=None, night=night: night)
+        cid = await new_character(tg_id=10 + night, location="ironvein_mine", tools=())
+        async with session_scope() as s:
+            char = await get_char(s, cid)
+            await _activate(s, char, "tut_bats")
+            assert (await exploration.hunt(s, char, random.Random(1))).ok
+            await fight_to_the_end(s, char)
+            p = (await quests.progress(s, char))["tut_bats"]
+            assert char.state == "idle" and p.counters == {"0": 1}
+
+
+# ---------------------------------------------------------------- 📜 objective routes
+
+async def test_objective_respects_the_hour(monkeypatch):
+    """Bats show up in the meadow only at night: by day the 📜 never sends you there for them."""
+    char = Character(level=3, flags={}, location="crownreach_plaza")
+    monkeypatch.setattr(exploration, "is_night", lambda now=None: False)
+    assert "tusk_meadow" not in exploration._objective_spots(char, "kill", "cave_bat")
+    assert "ironvein_mine" in exploration._objective_spots(char, "kill", "cave_bat")
+    monkeypatch.setattr(exploration, "is_night", lambda now=None: True)
+    assert "tusk_meadow" in exploration._objective_spots(char, "kill", "cave_bat")
+
+
+async def test_objective_covers_missions_with_choices(monkeypatch):
+    """The reliquary has no counted objectives: its actions and its boss still give the 📜 a place."""
+    from oathforge.content import get_content
+    monkeypatch.setattr(exploration, "is_night", lambda now=None: False)
+    quest = get_content().quests["sealed_box"]
+    char = Character(level=3, flags={"crypt_unlocked": True}, location="crownreach_plaza")
+    assert exploration._stage_spots(char, quest, "not_started") == {"whispering_woods"}
+    assert exploration._stage_spots(char, quest, "has_box") >= {"crownreach_plaza"}  # Holt
+    assert exploration._stage_spots(char, quest, "returned_covenant") == {"crypt_sanctum"}
+    char.flags["cleared_crypt_sanctum"] = True
+    assert exploration._stage_spots(char, quest, "returned_covenant") == set()
+
+
+# ---------------------------------------------------------------- mana potion
+
+async def test_mana_potion_restores_the_chosen_spell():
+    cid = await new_character(cls="mage", tools=("mana_potion",))
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        char.level, char.resources = 3, {"sleep": 0, "fireball": 0}
+        from oathforge.content import get_content
+        assert set(inventory.spell_choices(char, get_content().items["mana_potion"])) == {"sleep", "fireball"}
+        out = await inventory.use_item_outside_combat(s, char, "mana_potion", random.Random(0), ability="fireball")
+        assert out.ok and char.resources == {"sleep": 0, "fireball": 1}
+
+
+def test_beta_potions_cost_one_gold():
+    assert inventory.buy_price("healing_potion", -100) == 1 and inventory.buy_price("mana_potion", 0) == 1

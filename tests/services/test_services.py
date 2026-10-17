@@ -604,16 +604,24 @@ async def test_mission_chain_talk_then_hunt():
         assert (await quests.progress(s, char))["tut_town"].state == "active"  # and the tavern
         await quests.on_visit(s, char, "broken_crown_tavern", rng)
         prog = await quests.progress(s, char)
-        assert prog["tut_town"].state == "completed" and prog["tut_boars"].state == "active"
+        assert prog["tut_town"].state == "completed" and prog["tut_market"].state == "active"
 
-        out = await quests.on_defeat(s, char, "boar", rng)
+        await quests.on_talk(s, char, "mira", rng)
+        await quests.on_talk(s, char, "tessa", rng)
+        prog = await quests.progress(s, char)
+        assert prog["tut_market"].state == "completed" and prog["tut_boars"].state == "active"
+
+        await quests.on_defeat(s, char, "boar", rng)  # a kill alone is not a hunt
+        assert (await quests.progress(s, char))["tut_boars"].counters == {}
+        out = await quests.advance(s, char, "hunt", "tusk_meadow", rng)
         assert any(e.key == "quest.progress" and e.params["n"] == 1 for e in out.events)
-        await quests.on_defeat(s, char, "boar", rng)
-        assert (await quests.progress(s, char))["tut_boars"].state == "active"  # the hide is missing
+        await quests.advance(s, char, "hunt", "ironvein_mine", rng)  # elsewhere does not count
+        await quests.advance(s, char, "hunt", "tusk_meadow", rng)
+        assert (await quests.progress(s, char))["tut_boars"].state == "active"  # the meat is missing
         await quests.on_items(s, char, "skin", {"boar_hide": 1, "raw_meat": 2}, rng)
         prog = await quests.progress(s, char)
         assert prog["tut_boars"].state == "completed" and prog["tut_herbs"].state == "active"
-        assert char.xp == 25 + 25 + 100 and char.level == 1  # boar XP comes from the fight, not from here
+        assert char.xp == 25 + 25 + 25 + 100  # the fights' XP comes from the fight, not from here
         assert await inventory.count(s, char, "sickle") == 1
         assert prog["sealed_box"].state == "locked"
 
@@ -637,35 +645,43 @@ async def test_whole_chain_reaches_level_five():
     _, cid = await new_character()
     rng = random.Random(5)
 
-    def fight(char, monster):
+    async def fight(char, monster, hunt_at=None):
         characters.grant_xp(char, get_content().monsters[monster].xp, Outcome())
-        return quests.on_defeat(s, char, monster, rng)
+        await quests.on_defeat(s, char, monster, rng)
+        if hunt_at:
+            await quests.advance(s, char, "hunt", hunt_at, rng)
 
     async with session_scope() as s:
         char = await get_char(s, cid)
-        # the tutorial: one activity per mission, from level 1 to 3
+        # the tutorial: talk, city, market, hunt and skin, gather, cook, mine, hunt, heal and rest, a boss
         await quests.on_talk(s, char, "vale", rng)
         await quests.on_read(s, char, "activities", rng)
         await quests.on_talk(s, char, "bram", rng)
         await quests.on_visit(s, char, "crownreach_workshops", rng)
         await quests.on_visit(s, char, "broken_crown_tavern", rng)
+        await quests.on_talk(s, char, "mira", rng)
+        await quests.on_talk(s, char, "tessa", rng)
         for _ in range(2):
-            await fight(char, "boar")
-        await quests.on_items(s, char, "skin", {"boar_hide": 1}, rng)
-        assert char.level == 2
+            await fight(char, "boar", "tusk_meadow")
+        await quests.on_items(s, char, "skin", {"raw_meat": 2}, rng)
         await quests.on_items(s, char, "gather", {"bloodroot": 3}, rng)
         await quests.on_items(s, char, "craft", {"hunter_stew": 1}, rng)
         assert await inventory.count(s, char, "pickaxe") == 1
         await quests.on_items(s, char, "gather", {"iron_ore": 2, "coal": 1}, rng)
         await quests.on_items(s, char, "gather", {"iron_ore": 1}, rng)
-        for _ in range(3):
-            await fight(char, "cave_bat")
+        for monster in ("cave_bat", "giant_rat", "cave_bat"):
+            await fight(char, monster, "ironvein_mine")
         await quests.on_talk(s, char, "ysolde", rng)
+        await quests.advance(s, char, "rest", "broken_crown_tavern", rng)
         await quests.on_talk(s, char, "vale", rng)
         prog = await quests.progress(s, char)
-        assert all(prog[k].state == "completed" for k in get_content().quests if k.startswith("tut_"))
-        assert prog["sealed_box"].stage == "not_started" and char.level == 3
-        # Holt's reliquary and the crypt
+        assert prog["old_tusk"].state == "active" and char.flags.get("old_tusk_hunt")
+        assert prog["sealed_box"].state == "locked"  # no crypt during the tutorial
+        await fight(char, "old_tusk")
+        prog = await quests.progress(s, char)
+        assert all(prog[k].state == "completed" for k, q in get_content().quests.items() if q.tutorial)
+        assert prog["sealed_box"].stage == "not_started" and char.level >= 3
+        # after the tutorial: Holt's reliquary and the crypt
         char.location = "whispering_woods"
         await quests.perform(s, char, "sealed_box.approach_guard", [], rng)
         char.location = "crownreach_plaza"
@@ -675,7 +691,7 @@ async def test_whole_chain_reaches_level_five():
             for _ in range(n):
                 await fight(char, monster)
         prog = await quests.progress(s, char)
-        assert prog["sealed_box"].state == "completed" and prog["old_tusk"].state == "active"
+        assert prog["sealed_box"].state == "completed" and prog["crypt_bones"].state == "completed"
         assert char.level == 5
 
 
@@ -713,7 +729,7 @@ async def test_veterans_of_the_old_chain_skip_the_tutorial():
         await quests.refresh(s, char, Outcome())
         prog = await quests.progress(s, char)
         assert all(prog[k].state == "completed" for k in prog if k.startswith("tut_"))
-        assert prog["sealed_box"].stage == "not_started" and char.xp == xp  # unlocked, and no rewards paid
+        assert prog["old_tusk"].state == "active" and char.xp == xp  # the last test opens, and no rewards paid
         assert await quests.location_texts(s, char) is not None  # the old row is ignored, not an error
 
 

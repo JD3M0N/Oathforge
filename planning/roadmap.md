@@ -50,6 +50,7 @@ Versionado `0.x.y`: sube **y** (parche) en arreglos y cambios pequeños; sube **
 - **0.7.x**:
   - balance del tutorial con datos de la beta (`oath tutorial-stats`);
   - economía: encargos, sumideros de oro y balance de oficios (ver `comercio.md`).
+- **0.8.2**: tutorial de 10 misiones sin mazmorras (hablar, ciudad, tiendas, caza, desuello, recolección, cocina, minería, curación y descanso, jefe); objetivo `hunt`; 📜 que respeta la hora y cubre el relicario; beta instantánea (tutorial y descanso) y pociones a 1 de oro.
 - **0.8.x**: expediciones: escenas de viaje con decisiones, estilos de viaje, atajos y favoritos (fase 2 del viaje, ver `mundo-y-misiones.md`).
 - **0.9.0**: grupos cooperativos y combate en grupo (fase 3, ver `multijugador.md`).
 - **0.10.0** (propuesta): audio: música de la taberna y voces de NPC (ver `audiovisual.md`).

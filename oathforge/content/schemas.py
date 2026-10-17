@@ -508,8 +508,9 @@ class QuestObjective(Strict):
 
     # kill: monster · talk: npc · visit: location · gather / skin / craft: item obtained (counts quantity)
     # rest / heal: location, or "any" (a long rest that ends / the chapel healer) · read: rulebook section
-    kind: Literal["kill", "talk", "visit", "gather", "skin", "craft", "rest", "heal", "read"]
-    target: str  # monster, npc, location, item or rulebook section key ("any" for rest / heal)
+    # hunt: location (or "any"): a fight won from 🏹 Hunt or 🐾 Track there, any creature, day or night
+    kind: Literal["kill", "hunt", "talk", "visit", "gather", "skin", "craft", "rest", "heal", "read"]
+    target: str  # monster, npc, location, item or rulebook section key ("any" for hunt / rest / heal)
     count: int = 1
 
 

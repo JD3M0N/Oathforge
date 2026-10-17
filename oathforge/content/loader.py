@@ -338,7 +338,7 @@ def validate_references(c: Content) -> None:
         if quest.objectives and (quest.objective_stage is None or quest.complete_stage is None):
             errors.append(f"{where}: objectives need objective_stage and complete_stage")
         items, places = ("item", c.items), ("location", {**c.locations, "any": None})
-        pools = {"kill": ("monster", c.monsters), "talk": ("npc", c.npcs), "visit": ("location", c.locations),
+        pools = {"kill": ("monster", c.monsters), "talk": ("npc", c.npcs), "visit": ("location", c.locations), "hunt": places,
                  "gather": items, "skin": items, "craft": items, "rest": places, "heal": places,
                  "read": ("rulebook section", c.rulebook)}
         for obj in quest.objectives:

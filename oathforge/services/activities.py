@@ -17,6 +17,7 @@ import time
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from oathforge.config import get_settings
 from oathforge.content import get_content
 from oathforge.content.schemas import Gathering, Location
 from oathforge.database.models import Character, WorldActivity
@@ -116,10 +117,15 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str,
     session.add(act)
     await session.flush()
     char.state = "busy"
+    settings = get_settings()
     if kind == "rest":  # paid on lying down; abandoning gives nothing back
         char.gold -= loc.rest_cost
+        if settings.beta_instant_rest:  # beta only: wake up at once
+            return await claim(session, char, act.ends_at)
         return Outcome().add("activity.started.rest" if loc.rest_cost else "activity.started.rest_free",
                              place=loc.name.model_dump(), cost=loc.rest_cost, minutes=seconds // 60)
+    if settings.beta_instant_tutorial and await quests.in_tutorial(session, char):  # beta only: done at once
+        return Outcome().add("activity.tutorial_instant").extend(await claim(session, char, act.ends_at))
     out = Outcome().add(f"activity.started.{kind}", skill=characters.mastery_name(skill),
                         place=loc.name.model_dump(), minutes=seconds // 60, seconds=seconds)
     if kind in ("track", "stay") and char.hp * 2 < char.max_hp:  # this may end in a fight
@@ -244,7 +250,8 @@ async def _claim_track(session, char, act, loc, rng, now) -> Outcome:
         act.status = "awaiting_combat"
         act.result = {"monsters": monsters}
         out = Outcome().add("activity.track_found", monster=get_content().monsters[monsters[0]].name.model_dump())
-        enc, enc_out = await combat_service.start_encounter(session, char, monsters, rng, fixed.flag if fixed else None)
+        enc, enc_out = await combat_service.start_encounter(session, char, monsters, rng, fixed.flag if fixed else None,
+                                                          hunt=True)
         act.encounter_id = enc.id
         return out.extend(enc_out)
     out = Outcome(activity_id=act.id).add("activity.track_tracks")
