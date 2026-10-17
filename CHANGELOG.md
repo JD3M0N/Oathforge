@@ -4,6 +4,11 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.8.6] - 2026-10-17
+
+### Cambiado
+- TODO: ideas nuevas de la partida de prueba en su sección (botón «Oficios» que reúna maestrías, oficios y aficiones; botón «Actividades» del lugar; emojis para los materiales; fabricar con herramientas portátiles en vez de estaciones fijas).
+
 ## [0.8.5] - 2026-10-17
 
 ### Cambiado

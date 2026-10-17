@@ -65,6 +65,9 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🟢 Expediciones: escenas de viaje con decisiones, estilos prudente/explorador/directo, atajos desbloqueables y favoritos ([mundus](planning/mundus.md)).
 - [ ] 🟡 Mensaje de estado que se edita en lugar de mandar muchos mensajes.
 - [ ] 🟢 Duelos PvP con consentimiento y sin pérdidas.
+- [ ] 🟡 **Botón «Oficios» que reúna maestrías, oficios y aficiones** en un solo sitio (hoy son `/masteries`, `/professions` y `/hobbies` por separado).
+- [ ] 🟡 **Botón «Actividades»** con lo que puedes hacer en el lugar donde estás: como «👥 Aquí», pero con menos datos.
+- [ ] 🟢 Emojis para menas, hierbas, maderas, pieles y demás materiales (en el inventario, el botín y las recetas).
 
 ## 🌍 Mundo, misiones y economía · [mundus](planning/mundus.md) · [mercatura](planning/mercatura.md)
 
@@ -76,6 +79,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🟡 Más misiones después del nivel 5 y misiones secundarias repetibles (encargos de caza diarios).
 - [ ] 🔴 **Entregar las misiones a quien las dio**: al cumplir los objetivos la misión queda «lista para entregar»; al hablar con ese PNJ cobras la recompensa y te da la siguiente.
 - [ ] 🔴 ◐ **Profesiones y recolección** · [opificia](planning/opificia.md). *Hecho (v0.6.0): actividades de campo, maestrías, mina, arboleda, claro y ribera, desuello y crónicas. Hecho (v0.6.1): oficios con 2 plazas, Barrio de Oficios, recetas y `/professions`. Hecho (v0.6.2): poción de maná y tónico del reposo. Hecho (v0.7.0): Escribanía y Artificiería (pergaminos y bombas para el combate), Cocina y Pesca como aficiones sin plaza y guía `/prof_<oficio>`. Hecho (v0.7.19–0.7.21): `/masteries`, `/hobbies`, Ingeniería, la Pesca como afición, actividades que terminan solas y `/skin`. Falta: probar el balance con la beta (sobre todo la bomba de fuego, que da a toda una fila).*
+- [ ] 🟢 **Fabricar sin estación fija**: que cada oficio tenga una herramienta portátil (un yunque portátil para la herrería, un alambique para la alquimia…) para fabricar en cualquier sitio. Decidir si sustituye a las estaciones o es una mejora que se consigue.
 - [ ] 🟢 Afinidades de maestría a rango 3, durabilidad de herramientas y vetas que se agotan (después de la beta).
 - [ ] 🟢 Aficiones nuevas: arqueología, cartografía, juegos de taberna y primeros auxilios (como la Pesca: `hobby: true` en `professions.yaml`).
 - [ ] 🟢 **Recetas por tier** (T1–T3) y, dentro de cada uno, básica, media y compleja (con mejores nombres): la básica usa materiales del propio oficio, la media añade algo de una afición y la compleja algo de otro oficio (un vial de hierro del herrero). Investigar si tiene sentido o hay algo mejor.
@@ -160,3 +164,4 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] Moverse por el mundo sin que sea tedioso: a cualquier lugar conocido en un toque (de la cripta despejada a la plaza), una tirada de emboscada por viaje, «▶️ Seguir» tras una emboscada y botón 📜 al objetivo de la misión (v0.8.0).
 - [x] Tutorial de 10 misiones sin mazmorras, objetivo `hunt` y beta instantánea (v0.8.2).
 - [x] Planning reorganizado: Possibilium como libro principal, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md` y laboratorio `content/officina/` (v0.8.3).
+- [x] README raíz simple y motivador; flujo, seguridad y `artifacts/` en `AGENTS.md` (v0.8.4–0.8.5).
