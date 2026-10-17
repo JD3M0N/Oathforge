@@ -48,13 +48,71 @@
 - Misiones de clase (el Sacerdote purifica la capilla, el Guerrero entrena a la milicia).
 - Diario con pistas que la IA resume a partir de los hechos, sin inventar.
 
-### Mapa y rutas (v0.7.6)
+### Mapa y rutas (v0.7.6; viaje directo en v0.8.0)
+
+Regla: **el jugador elige adónde ir; el motor hace el recorrido y solo lo interrumpe si pasa algo que merece una decisión.** La distancia no se convierte en número de pulsaciones.
 
 - **Grafo**: cada lugar es un nodo y cada `exit` una arista dirigida con peso en **minutos de juego**; la distancia sale del ritmo normal de D&D, 300 pies/min = **100 yd/min** (1 km ≈ 1094 yd; 1 yd = 0,9144 m). `yards:` en la salida cuando el terreno es lento. Las rutas van y vuelven igual (test).
-- **Ciudad**: movimiento libre por el camino más corto (Dijkstra sobre la zona). Solo se sale desde el `hub` (la plaza), que es el punto de partida de los viajes. El cargador exige un hub, calles sin peligro ni combates fijos y todo conectado.
-- **Tierras salvajes y mazmorras**: tramo a tramo; cada camino tira su emboscada y cada sala su combate fijo. El mapa enseña el resto de la zona salvaje con la ruta y los minutos, sin botón; en la mazmorra marca las salas despejadas.
-- `/map` y «🧭 Viajar» son la misma vista, con las actividades de cada lugar y quién está ahora.
+- **Planificador** (`world_map.destinations` / `route_to`, v0.8.0): Dijkstra global, entre zonas. Se puede ir a:
+  - cualquier lugar **conocido**: visitado (`stats.places`) o calle de una ciudad en la que ya has estado;
+  - cualquier lugar **adyacente** (así se explora lo nuevo, tramo a tramo);
+  - desde una ciudad, a las salidas de su `hub`.
+
+  El camino solo pasa por lugares conocidos y **sin combate fijo pendiente** (`blocks_passage`): a una sala con guardianes se puede entrar, pero no atravesarla. Solo se sale de la ciudad por el hub (lo garantiza el cargador).
+- **Una tirada de emboscada por viaje**:
+
+  ```
+  min(45 %, 15 % × peor ⚠️ + 5 % por cada tramo ⚠️ extra)
+  ```
+
+  Con un solo tramo da lo mismo que antes. Si sale, el viaje se para en un tramo peligroso con criaturas (pesado por su ⚠️), y `flags.trip = {to, rolled}` guarda el resto. «▶️ Seguir hacia…» en la escena lo termina sin otra tirada. La derrota (respawn) lo borra.
+- **Objetivo**: el mapa ofrece hasta dos botones 📜 al lugar conocido más cercano donde se cumple el siguiente paso de cada misión activa. Ese lugar sale del mundo (`exploration.objective_routes`):
+  - `visit`, `rest` y `heal`: su lugar;
+  - `talk`: dónde está el NPC ahora;
+  - `kill`: sus tablas de encuentros;
+  - `gather`: los recursos de cada lugar;
+  - `craft`: las estaciones;
+  - además, las acciones de misión con `location`.
+
+  Nunca revela un sitio que no se conozca.
+- **Interfaz**: `/map` y «🧭 Viajar» son la misma vista, en este orden:
+  1. dónde estás;
+  2. 📜 objetivo;
+  3. esta zona;
+  4. las demás zonas conocidas (más de 2 lugares → un botón que abre la zona, `trvz`);
+  5. 🌫️ sin explorar, solo texto.
+
+  Al llegar sin nada más (ni combate, ni misión), el mensaje del mapa se edita y se convierte en la escena.
 - **Pendiente**: el viaje es instantáneo (para probar); `/travel` con tiempo real, viajes entre ciudades desde su punto de partida, estados de descubrimiento y niebla de guerra.
+
+### Fase 2 del viaje: expediciones (pendiente)
+
+La comodidad (v0.8.0) cubre la rutina. La aventura del trayecto queda para cuando haya contenido que la merezca:
+
+- **Viajar ≠ Explorar.** Viajar: llegar a un lugar conocido. Explorar: una expedición a lo desconocido («🌲 Explorar Thornwood»), con pistas, recursos y problemas. Así quien solo quiere fabricar no acaba en una aventura de veinte minutos.
+- **Escenas de viaje con presupuesto** (cifras para probar):
+
+  | Tipo de viaje | Escenas |
+  |---|---|
+  | Trayecto cotidiano | 0 |
+  | Primera visita | 1 |
+  | Expedición corta | 1-2 |
+  | Viaje de misión | las suyas |
+
+  Las escenas son decisiones (el puente de Silverbrook dañado: cuerda, vado o desvío): gastar una herramienta, una prueba, elegir un encuentro o renunciar a una oportunidad. No siempre combate. Pertenecen al descubrimiento o a algo que cambió en el mundo, nunca a cada viaje rutinario.
+- **Estilos de expedición**:
+  - 🛡️ **Prudente**: evita oportunidades peligrosas.
+  - 🧭 **Explorador**: se para ante descubrimientos.
+  - ⚡ **Directo**: ignora desvíos.
+
+  Ninguno gasta consumibles ni acepta deudas solo.
+- **Rutas alternativas solo cuando sean distintas de verdad.** Por ejemplo: patrullada (más segura, más larga o con peaje), atajo (más rápido, más riesgo) o paso antiguo (requiere haberlo encontrado). La interfaz expresa el intercambio («más seguro», «requiere cuerda»), no una tabla de números.
+- **Atajos desbloqueables** con `requires_flag` (ya existe): Sendero de los Carboneros a la mina, un barquero, una puerta secundaria, un refugio, un carro a otra población.
+- **Favoritos** (3) en el menú de viaje cuando el mapa crezca.
+- **Cambios de ruta por eventos**: «el camino está cerrado por un derrumbe: [ayudar] [sendero del bosque]». La ruta se comprueba al partir y al continuar.
+- **Restricciones explicadas**: «estás siguiendo unas huellas: puedes abandonar y viajar, pero perderás la oportunidad».
+- **Grupos**: el líder propone el destino y todos ven la ruta. Se confirma al empezar una expedición peligrosa, no en cada calle.
+- **Cada tramo y decisión se resuelve una vez** (nonce de `audit`), también tras un doble clic o un reinicio.
 
 ### Geografía y exploración (GDD §3)
 

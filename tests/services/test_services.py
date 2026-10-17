@@ -10,7 +10,7 @@ from oathforge.database.session import session_scope
 from oathforge.engine.combat import Action, EncounterState
 from oathforge.services.events import Outcome
 from oathforge.services import (
-    audit, characters, combat_service, exploration, inventory, npcs, quests,
+    audit, characters, combat_service, exploration, inventory, npcs, quests, world_map,
 )
 
 pytestmark = pytest.mark.usefixtures("database")
@@ -158,6 +158,41 @@ async def test_travel_only_along_routes():
         assert not out.ok and char.location == "crownreach_plaza"
         out = await exploration.travel(s, char, "broken_crown_tavern", random.Random(0))
         assert out.ok and char.location == "broken_crown_tavern"
+
+
+class Ambush(random.Random):
+    """Every roll on the way says «ambush» and picks the first choice."""
+
+    def random(self):
+        return 0.0
+
+
+async def test_a_trip_rolls_one_ambush_and_carries_on():
+    _, cid = await new_character()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        for place in ("old_kings_road", "whispering_woods"):
+            characters.visited(char, place)
+        assert exploration.trip_chance(world_map.route_to(char, "old_kings_road")) == pytest.approx(0.15)
+        assert exploration.trip_chance(world_map.route_to(char, "whispering_woods")) == pytest.approx(0.35)
+        out = await exploration.travel(s, char, "whispering_woods", Ambush(1))
+        assert out.ok and char.location == "old_kings_road" and char.state == "in_combat"
+        assert out.events[0].key == "explore.trip_stopped"
+        assert char.flags["trip"] == {"to": "whispering_woods", "rolled": True}
+        char.state = "idle"  # the fight is over
+        assert exploration.trip(char) == "whispering_woods"
+        out = await exploration.travel(s, char, "whispering_woods", Ambush(1))  # no second roll
+        assert out.ok and char.location == "whispering_woods" and char.state == "idle"
+        assert "trip" not in char.flags
+
+
+async def test_defeat_ends_the_trip():
+    _, cid = await new_character()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        char.flags = {**char.flags, "trip": {"to": "whispering_woods", "rolled": True}}
+        await characters.defeat_penalty(char, Outcome())
+        assert "trip" not in char.flags
 
 
 async def test_locked_route_needs_flag():

@@ -263,6 +263,10 @@ async def scene(session: AsyncSession, char: Character, lang: str,
     if loc.hub and c.media.zone_images(loc.zone, night):
         buttons.append(btn(t(lang, "btn.view_city"), cb("city")))
     rows = grid(buttons)
+    trip_to = exploration.trip(char) if char.state == "idle" else None
+    if trip_to:  # an ambush stopped the trip halfway: carry on in one tap
+        rows.insert(0, [btn(t(lang, "btn.continue_trip", place=c.locations[trip_to].name.get(lang)),
+                            cb("go", trip_to, n))])
     for a in await quests.available_actions(session, char, present):
         if a.action.npc is None:
             rows.append([btn(a.action.label.get(lang), cb("qa", a.ref, n))])
@@ -573,8 +577,6 @@ def _route_lines(char: Character, route: world_map.Route, lang: str) -> list[str
     tags = [t(lang, "map.route", minutes=route.minutes, yards=route.yards)]
     if route.via:
         tags.append(t(lang, "map.via", places=escape(", ".join(c.locations[k].name.get(lang) for k in route.via))))
-    if loc.zone != c.locations[char.location].zone:
-        tags.append(escape(c.zones[loc.zone].name.get(lang)))
     if loc.hub and loc.zone == c.locations[char.location].zone:
         tags.append(t(lang, "map.gate"))
     if world_map.cleared(char, route.to):
@@ -587,44 +589,79 @@ def _route_lines(char: Character, route: world_map.Route, lang: str) -> list[str
     return lines
 
 
-def map_view(char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
-    """/map and «Travel»: where you are, where you can go and how long it takes, and what there is to do.
-    In a city you walk straight anywhere and leave from the hub; in the wilds and dungeons, one stretch at a time."""
+ZONE_ICON = {"city": "🏙️", "wilds": "🌲", "dungeon": "🕯️"}
+ZONE_INLINE = 2  # another zone with more known places than this gets one button that opens it
+
+
+def _go_button(route: world_map.Route, lang: str, n: str, icon: str = "🧭") -> list:
+    name = get_content().locations[route.to].name.get(lang)
+    return [btn(f"{icon} {name} · {route.yards} yd {'⚠️' * route.danger}".strip(), cb("go", route.to, n))]
+
+
+async def map_view(session: AsyncSession, char: Character, lang: str, zone: str | None = None) -> tuple[str, InlineKeyboardMarkup]:
+    """/map and «Travel»: where you are, what there is to do, and every place you can go in one tap (the engine
+    walks the way). First your missions, then this zone, then the other zones you know (``zone`` opens one)."""
     c = get_content()
     here = c.locations[char.location]
-    zone = c.zones[here.zone]
-    lines = [t(lang, "map.title", zone=escape(zone.name.get(lang)), kind=t(lang, f"map.kind.{zone.kind}")),
+    zone_here = c.zones[here.zone]
+    routes = world_map.destinations(char)
+    n = nonce()
+    if zone is not None and zone in c.zones:  # one zone's places, from the map's zone button
+        z = c.zones[zone]
+        lines = [t(lang, "map.zone_title", icon=ZONE_ICON[z.kind], zone=escape(z.name.get(lang))), RULE]
+        inside = [r for r in routes if c.locations[r.to].zone == zone]
+        for r in inside:
+            lines += _route_lines(char, r, lang)
+        rows = [] if char.state != "idle" else [_go_button(r, lang, n) for r in inside]
+        rows.append([btn(t(lang, "btn.back"), cb("trv"))])
+        return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
+
+    lines = [t(lang, "map.title", zone=escape(zone_here.name.get(lang)), kind=t(lang, f"map.kind.{zone_here.kind}")),
              t(lang, "map.here", place=escape(here.name.get(lang)))]
     todo = _place_activities(char.location, lang)
     lines.append(f"      {todo}" if todo else f"      <i>{t(lang, 'map.nothing')}</i>")
     lines.append(RULE)
-    routes = world_map.destinations(char)
-    if zone.kind == "city":
-        inside = [r for r in routes if c.locations[r.to].zone == here.zone]
-        lines.append(t(lang, "map.city"))
-        for r in inside:
+    rows: list[list] = []
+
+    goals = await exploration.objective_routes(session, char)
+    if goals:
+        lines.append(t(lang, "map.objective"))
+        for quest, r in goals:
+            lines.append(t(lang, "map.objective_line", quest=escape(quest.get(lang, quest.get("en"))),
+                           place=escape(c.locations[r.to].name.get(lang))))
+            rows.append(_go_button(r, lang, n, "📜"))
+        lines.append("")
+
+    near = [r for r in routes if c.locations[r.to].zone == here.zone]
+    others: dict[str, list[world_map.Route]] = {}
+    for r in routes:
+        if c.locations[r.to].zone != here.zone:
+            others.setdefault(c.locations[r.to].zone, []).append(r)
+    if near:
+        lines.append(t(lang, f"map.near.{zone_here.kind}"))
+        for r in near:
             lines += _route_lines(char, r, lang)
-        hub, roads = world_map.departures(char)
-        if roads:
-            lines += ["", t(lang, "map.exits_city", hub=escape(c.locations[hub].name.get(lang)))]
-            for r in roads:
+        rows += [_go_button(r, lang, n) for r in near]
+    for key, zroutes in others.items():
+        z = c.zones[key]
+        lines += ["", t(lang, "map.zone_title", icon=ZONE_ICON[z.kind], zone=escape(z.name.get(lang)))]
+        if len(zroutes) <= ZONE_INLINE:
+            for r in zroutes:
                 lines += _route_lines(char, r, lang)
-    else:
-        lines.append(t(lang, "map.rooms" if zone.kind == "dungeon" else "map.roads"))
-        for r in routes:
+            rows += [_go_button(r, lang, n) for r in zroutes]
+        else:
+            lines.append("      " + " · ".join(escape(c.locations[r.to].name.get(lang)) for r in zroutes))
+            rows.append([btn(t(lang, "btn.zone", icon=ZONE_ICON[z.kind], zone=z.name.get(lang), n=len(zroutes)),
+                             cb("trvz", key))])
+    far = world_map.beyond(char)
+    if far:
+        lines += ["", t(lang, "map.beyond")]
+        for r in far:
             lines += _route_lines(char, r, lang)
-        far = world_map.beyond(char)
-        if far:
-            lines += ["", t(lang, "map.beyond")]
-            for r in far:
-                lines += _route_lines(char, r, lang)
-    lines += ["", f"<i>{t(lang, f'map.hint.{zone.kind}')}</i>"]
-    n = nonce()
+    lines += ["", f"<i>{t(lang, f'map.hint.{zone_here.kind}')}</i>"]
     if char.state != "idle":  # busy with an activity: the map, but no roads to take
         lines += ["", t(lang, "map.busy")]
         return "\n".join(lines)[:MAX_MESSAGE], markup([[btn(t(lang, "btn.back"), cb("scene"))]])
-    rows = [[btn(f"🧭 {c.locations[r.to].name.get(lang)} · {r.yards} yd {'⚠️' * r.danger}".strip(),
-                 cb("go", r.to, n))] for r in routes]
     rows.append([btn(t(lang, "btn.back"), cb("scene"))])
     return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
 

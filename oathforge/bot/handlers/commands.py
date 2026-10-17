@@ -170,7 +170,7 @@ async def _map(session, char, lang):
     """The map; during a fight, the combat panel (no walking away from it)."""
     if char.state == "in_combat":
         return await current_view(session, char, lang)
-    return render.map_view(char, lang)
+    return await render.map_view(session, char, lang)
 
 
 async def _professions(session, char, lang):

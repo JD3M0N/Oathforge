@@ -178,12 +178,26 @@ async def test_map_walks_across_the_city(llm):
     p = Player(llm, tg_id=8)
     await create(p)
     await p.press(p.find("trv"))
-    assert "🗺️" in p.last[0] and "Salidas de la ciudad" in p.last[0]
+    assert "🗺️" in p.last[0] and "Por la ciudad" in p.last[0]
+    sent = len(p.chat.sent)
     await p.press(p.find("go", "crownreach_workshops"))  # plaza → market → workshops in one walk
     assert (await char_row()).location == "crownreach_workshops"
-    assert any("500 yd" in t_ for t_, _ in p.chat.sent[-3:])
+    assert len(p.chat.sent) == sent + 1  # a quiet arrival: the map turns into the place
+    assert "500 yd" in p.last[0] and "Barrio" in p.last[0]
     await p.press(p.find("trv"))
-    assert "old_kings_road" not in str(p.buttons())  # you leave the city from the plaza
+    assert "old_kings_road" in str(p.buttons())  # the road out, through the plaza, in one tap
+
+
+async def test_an_ambushed_trip_carries_on(llm):
+    p = Player(llm, tg_id=9)
+    await create(p)
+    async with session_scope() as s:
+        char = await s.scalar(select(Character).with_for_update())
+        char.flags = {**char.flags, "trip": {"to": "tusk_meadow", "rolled": True}}
+    await p.press("scene|-|-")
+    await p.press(p.find("go", "tusk_meadow"))  # «▶️ Seguir hacia...» on the scene
+    char = await char_row()
+    assert char.location == "tusk_meadow" and "trip" not in char.flags
 
 
 async def test_combat_through_buttons(llm):
