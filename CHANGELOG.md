@@ -4,6 +4,11 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.8.5] - 2026-10-17
+
+### Cambiado
+- `AGENTS.md` recupera lo que salió del README: el flujo de una acción libre, las salvaguardas ante la IA y qué guarda cada carpeta de `artifacts/`.
+
 ## [0.8.4] - 2026-10-17
 
 ### Cambiado

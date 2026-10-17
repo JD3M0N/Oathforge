@@ -14,6 +14,16 @@ Oathforge es un RPG narrativo para Telegram: **un motor d20 determinista decide 
 6. **Gemini** (`google-genai`, `ai/client.py`) es el único proveedor. No se cambia sin que Josue lo pida.
 7. Las excepciones de beta llevan la marca `# beta only` (sobre todo en `config.py`). No las extiendas sin marcarlas.
 
+Flujo de una acción libre: `leer contexto (tx corta) → Gemini interpreta → bloquear + validar + resolver (tx) → Gemini narra`.
+
+**Seguridad ante la IA**:
+- El texto del jugador va delimitado como datos (`<player_text>`), nunca dentro de las instrucciones.
+- Los ids que propone la IA deben existir en el contexto; si no, la acción pasa a `narrate_only`.
+- Las dificultades que sugiere se limitan a un rango permitido.
+- El presupuesto diario de IA, por usuario y global (`ai_usage`), se comprueba **antes** de cada llamada.
+- Si la IA falla o se agota el presupuesto, el juego sigue con textos de plantilla (`content/fallbacks/`).
+- Hay límite de frecuencia por usuario y registro auditable de cada acción (`action_logs`).
+
 ## Mapa del repo (dónde buscar)
 
 | Busco… | Está en |
@@ -40,7 +50,11 @@ Oathforge es un RPG narrativo para Telegram: **un motor d20 determinista decide 
 - **CHANGELOG**: lee solo las primeras entradas (las últimas versiones) para saber qué cambió hace poco.
 - **No leas** salvo que la tarea lo pida:
   - los anexos de Possibilium (§32, a partir de `<a id="s32">`: texto íntegro de los PDF retirados e instantáneas antiguas);
-  - `artifacts/` (registros locales de partidas). Si hace falta depurar, localiza el archivo concreto por fecha, `telegram_id` o id de combate y lee solo ese;
+  - `artifacts/` (registros locales de partidas, `oathforge/recorder.py`; se apaga con `ARTIFACTS_ENABLED=false`). Si hace falta depurar, abre solo el archivo concreto:
+    - `conversations/<día>/<telegram_id>.md`: chat jugador ↔ bot, con los cambios de estado como «⚙️ estado»;
+    - `battles/<día>/<id>-<lugar>.md`: un combate turno a turno;
+    - `ai/<día>/…json`: llamadas a Gemini (prompt, respuesta, tokens, latencia);
+    - `errors/<día>.log` y `logs/<día>.log`: errores y avisos; `events/<día>.jsonl`: todo en crudo;
   - `.venv/`, `migrations/versions/` antiguas y `content/officina/` (pruebas de imágenes de Josue).
 - **Orden de consulta**: el código y `content/` son la verdad → el resumen latino del tema en `planning/` → el capítulo de `Possibilium.md` que ese resumen enlaza.
 - No pidas a un subagente lo que resuelven uno o dos Grep.
