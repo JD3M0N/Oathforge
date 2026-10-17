@@ -72,6 +72,8 @@ Oathforge es un RPG narrativo para Telegram: **un motor d20 determinista decide 
 ```
 
 - Postgres si `TEST_DATABASE_URL` conecta; si no, SQLite. Las pruebas de concurrencia solo corren con Postgres.
+- `tgtest` usa una cuenta de prueba con Telethon: `TG_TEST_API_ID`, `TG_TEST_API_HASH` y `TG_TEST_BOT` en `.env`, login con `oath tgtest login <teléfono>` (ver `oathforge/tools/tgtest.py`).
+- Ronda de pruebas limpia: para el bot y `oath reset-players --yes`; un solo jugador, `oath delete-player <nombre|id> --yes`.
 - Tras una feature grande, repasa `tests/features.md` jugando con la cuenta de prueba y añade sus casillas.
 - Un cambio de texto no necesita tests nuevos; uno de economía, permisos o concurrencia sí.
 
@@ -80,3 +82,5 @@ Oathforge es un RPG narrativo para Telegram: **un motor d20 determinista decide 
 - La versión vive solo en `oathforge/__init__.py`. Cada commit con cambios la sube: **parche** para arreglos y cambios pequeños, **menor** para una feature grande; `1.0.0` reservado.
 - En el mismo commit: la entrada en `CHANGELOG.md` (Añadido / Cambiado / Arreglado / Eliminado) y, si cambia el plan, `planning/iter.md`.
 - Asunto `vX.Y.Z: resumen corto`; cuerpo con la misma lista que el CHANGELOG.
+- **`README.md` raíz**: es la presentación del juego, simple y sin estado de versión. No lo actualices con cada cambio: se rehace al final, cuando Josue lo pida.
+- Cada versión se anuncia en los canales [inglés](https://t.me/OathForge) y [español](https://t.me/OathForge_es) con el mismo formato (título `🛡 Oathforge vX.Y.Z: …`, bloques con emoji y viñetas); el de español es la traducción del inglés.

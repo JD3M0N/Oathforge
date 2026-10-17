@@ -4,6 +4,11 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.8.4] - 2026-10-17
+
+### Cambiado
+- `README.md` raíz más simple: qué es el juego, qué te espera, la regla de oro, los canales y la instalación mínima. Solo se actualiza al final; los detalles de trabajo (pruebas, `tgtest`, anuncios en los canales) pasan a `AGENTS.md`.
+
 ## [0.8.3] - 2026-10-17
 
 Planning reorganizado: un libro de ideas, resúmenes por tema en latín y una guía para trabajar gastando pocos tokens.

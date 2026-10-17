@@ -1065,7 +1065,7 @@ Opciones condicionadas: gremios cuando se repitan grupos; Mini App cuando invent
 | `planning/ars.md` | Dirección audiovisual completa |
 | `planning/README.md` | Índice breve y cómo usar los estados |
 | `AGENTS.md` / `CLAUDE.md` | Cómo trabajar en el repo (agentes y personas) |
-| README raíz | Instalación y foto actual del producto |
+| README raíz | Presentación del juego e instalación mínima; se rehace al final, no en cada versión |
 | CHANGELOG | Historia real de cambios |
 | TODO y TODO de testers | Tareas, bugs y observaciones |
 | Código y `content/` | Regla implementada y contenido efectivo |
