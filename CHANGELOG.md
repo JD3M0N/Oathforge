@@ -4,6 +4,28 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.7.28] - 2026-10-17
+
+Tutorial más fácil para todas las clases, tras jugar las 11 misiones con una pícara.
+
+### Cambiado
+- **Criaturas más blandas** (la XP y el botín no cambian):
+  - Jabalí, bandido y esqueleto de la cripta: 11 → 7 PV, −1 al ataque y daño 1d6+1 → 1d4+1.
+  - Murciélago de cueva: 6 → 5 PV, −1 al ataque y daño 1d4+1 → 1d4.
+  - Capitán bandido: 32 → 26 PV, −1 al ataque y daño 1d8+3 → 1d8+1.
+  - El Viejo Colmillo: 34 → 24 PV, −1 al ataque y daño 2d6+3 → 2d6+1.
+
+  Con el simulador, a nivel 1 la clase más floja (mago/druida) gana un 83–90 % de los 1 contra 1 (antes 52–85 %) y a nivel 2 más de un 96 %; la pícara pasa al 98–100 %.
+- **Nivel 1: un enemigo cada vez en el prado.** Las entradas de las tablas de encuentros tienen `min_level`: las parejas de jabalíes y de murciélagos del Prado de los Colmillos salen desde el nivel 2.
+- **Esconderse** llega a nivel 1 para el Pícaro (antes, nivel 2): sin él, el Ataque Furtivo del nivel 1 no se podía activar.
+- **La hermana Ysolde cura todos los PV** durante la beta (antes, 1d8+4); su saludo y la pista de «Heridas de guerra» dicen que no cobra por ahora.
+- «Colmillos en el prado» ya no dice «sin peligro»: aconseja ir con la vida llena y una poción.
+- Al terminar «Heridas de guerra», Vale manda al Bosque de los Susurros (donde empieza «El relicario sellado»), no directamente a Holt.
+
+### Arreglado
+- Cazar fuera del prado ya no dice «Rastreas el prado…»: el texto es genérico y cada lugar puede definir el suyo (`hunt_day` / `hunt_night` en `place.yaml`).
+- «Has perdido 0 de oro» y «Pagas 0 de oro» ya no salen cuando no cuesta nada.
+
 ## [0.7.27] - 2026-10-15
 
 ### Añadido

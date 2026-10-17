@@ -103,8 +103,8 @@ ysolde:
   faction: silver_covenant
   schedule: {day: crownreach_chapel, night: crownreach_chapel}
   greeting:
-    es: "«Que la luz te guarde. Si vienes herido, siéntate: por unas monedas para la capilla, te curo esas heridas.»"
-    en: "\"May the light keep you. If you're hurt, sit down: for a few coins for the chapel, I'll mend those wounds.\""
+    es: "«Que la luz te guarde. Si vienes herido, siéntate: te curo esas heridas. La capilla no cobra, por ahora.»"
+    en: "\"May the light keep you. If you're hurt, sit down: I'll mend those wounds. The chapel charges nothing, for now.\""
   persona: >-
     Sister Ysolde is a calm, tired priestess in her fifties who has bandaged half the adventurers of Crownreach.
     Gentle but no fool; scolds the reckless, never refuses the dying. Speaks softly, with dry humour.

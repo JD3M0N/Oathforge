@@ -18,13 +18,19 @@ night:
 exits:
   - {to: crownreach_plaza, minutes: 20}
   - {to: old_kings_road, minutes: 30, danger: 1}
+hunt_day:
+  es: 🏹 Rastreas el prado a plena luz y das con tu presa.
+  en: 🏹 You track the meadow in broad daylight and find your prey.
+hunt_night:
+  es: 🦇 Te adentras en la hierba oscura. Algo aletea sobre tu cabeza.
+  en: 🦇 You wade into the dark grass. Something flutters above your head.
 encounters:
   - {monsters: [boar], weight: 3}
-  - {monsters: [boar, boar], weight: 2}
+  - {monsters: [boar, boar], weight: 2, min_level: 2}
 night_encounters:  # also boars, so the tutorial ("Tusks in the Meadow") works at any hour
   - {monsters: [boar], weight: 4}
   - {monsters: [cave_bat], weight: 2}
-  - {monsters: [cave_bat, cave_bat], weight: 2}
+  - {monsters: [cave_bat, cave_bat], weight: 2, min_level: 2}
 fixed_encounters:
   - {monsters: [old_tusk], flag: cleared_old_tusk, if_flag: old_tusk_hunt}
 discoveries:

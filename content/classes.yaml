@@ -91,7 +91,7 @@ rogue:
       details:
         es: "Te fundes con las sombras sin perder el ritmo. Como acción adicional haces una tirada de Sigilo; si la superas, tu próximo ataque tiene ventaja, y con ventaja llega el Ataque Furtivo. No tiene usos: puedes hacerlo cada turno."
         en: "You melt into the shadows without losing your stride. As a bonus action you make a Stealth roll; if it succeeds, your next attack has advantage, and with advantage comes Sneak Attack. It has no uses: you can do it every turn."
-      level: 2
+      level: 1
       kind: hide
       action: bonus
     uncanny_dodge:

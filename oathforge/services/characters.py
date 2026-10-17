@@ -406,4 +406,4 @@ async def defeat_penalty(char: Character, out: Outcome) -> None:
     char.location = c.respawn_location
     char.state = "idle"
     char.conditions = {**char.conditions, "injured": True}
-    out.add("combat.defeat_penalty", gold=lost, place=c.locations[c.respawn_location].name.model_dump())
+    out.add("combat.defeat_penalty" if lost else "combat.defeat_penalty_free", gold=lost, place=c.locations[c.respawn_location].name.model_dump())

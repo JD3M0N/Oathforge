@@ -326,6 +326,7 @@ class Exit(Strict):
 class EncounterEntry(Strict):
     monsters: list[str]
     weight: int = 1
+    min_level: int = 1  # packs of two start later, so the first levels fight one creature at a time
 
 
 class FixedEncounter(Strict):
@@ -374,6 +375,8 @@ class Location(Strict):
     encounters: list[EncounterEntry] = []
     night_encounters: list[EncounterEntry] = []  # replaces `encounters` at night when not empty
     hunting: bool = False  # shows "Hunt" (a fight now) and "Track" (5 min, tracking XP and trophies)
+    hunt_day: Text | None = None  # the line before a hunt here; without it a generic one is used
+    hunt_night: Text | None = None
     gathering: list[Gathering] = []
     stations: list[Station] = []  # crafting stations here: "Craft" in the scene
     guild: bool = False  # professions are learned and swapped here

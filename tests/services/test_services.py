@@ -275,7 +275,7 @@ async def test_chapel_cures_wounds_for_free_and_closes_grave_ones():
         assert (await exploration.cure_wounds(s, char, random.Random(0))).error == "inv.err.full_hp"
         char.hp = 1
         out = await exploration.cure_wounds(s, char, random.Random(0))
-        assert out.ok and char.gold == 15 and 1 + 5 <= char.hp <= 1 + 12  # free during the beta
+        assert out.ok and char.gold == 15 and char.hp == char.max_hp  # free and complete during the beta
         # after a defeat: injured and broke, Ysolde still helps and closes the grave wounds
         char.hp, char.gold, char.conditions = 1, 0, {"injured": True}
         out = await exploration.cure_wounds(s, char, random.Random(0))
@@ -689,7 +689,7 @@ async def test_the_meadow_has_boars_day_and_night(monkeypatch, night):
     """«Tusks in the Meadow» does not depend on the hour either."""
     monkeypatch.setattr(exploration, "is_night", lambda now=None: night)
     loc = get_content().locations["tusk_meadow"]
-    assert any("boar" in e.monsters for e in exploration.encounter_table(loc))
+    assert any("boar" in e.monsters for e in exploration.encounter_table(loc, 1))
 
 
 async def test_a_single_objective_says_what_comes_next():
@@ -716,7 +716,7 @@ async def test_the_mine_has_bats_day_and_night(monkeypatch, night):
     """The tutorial's bat hunt («Alas al anochecer») does not depend on the hour."""
     monkeypatch.setattr(exploration, "is_night", lambda now=None: night)
     loc = get_content().locations["ironvein_mine"]
-    assert any("cave_bat" in e.monsters for e in exploration.encounter_table(loc))
+    assert any("cave_bat" in e.monsters for e in exploration.encounter_table(loc, 1))
 
 
 @pytest.mark.parametrize("night,expected", [(False, {"boar"}), (True, {"cave_bat"})])
@@ -790,3 +790,11 @@ async def test_tutorial_runs_time_each_mission():
         run = next(r for r in runs if r.name == "Aldric")
         assert list(run.minutes) == ["tut_muster"] and run.current == "tut_town" and not run.done
         assert 29 < run.waiting < 31  # stuck on the second mission for half an hour
+
+
+def test_packs_of_two_wait_for_level_two(monkeypatch):
+    """Level 1 fights one boar at a time (tutorial); pairs come from level 2."""
+    monkeypatch.setattr(exploration, "is_night", lambda now=None: False)
+    loc = get_content().locations["tusk_meadow"]
+    assert all(len(e.monsters) == 1 for e in exploration.encounter_table(loc, 1))
+    assert any(len(e.monsters) == 2 for e in exploration.encounter_table(loc, 2))

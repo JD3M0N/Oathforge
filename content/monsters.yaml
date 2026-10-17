@@ -3,11 +3,11 @@ bandit:
   indefinite: {es: un bandido, en: a bandit}
   icon: 🗡️
   description: {es: Un desertor con una espada mellada y pocas ganas de morir., en: A deserter with a notched sword and little wish to die.}
-  hp: 11
+  hp: 7
   ac: 12
   dex: 1
   attacks:
-    - {name: {es: Cimitarra, en: Scimitar}, to_hit: 3, damage: 1d6+1, damage_type: slashing}
+    - {name: {es: Cimitarra, en: Scimitar}, to_hit: 2, damage: 1d4+1, damage_type: slashing}
   xp: 25
   gold: 2d6
   loot:
@@ -23,12 +23,12 @@ bandit_captain:
   indefinite: {es: un capitán bandido, en: a bandit captain}
   icon: 🎖️
   description: {es: Lleva las cicatrices de cien emboscadas y las botas de un noble., en: Wears the scars of a hundred ambushes and a nobleman's boots.}
-  hp: 32
+  hp: 26
   ac: 14
   dex: 2
   wis: 0
   attacks:
-    - {name: {es: Sable, en: Saber}, to_hit: 5, damage: 1d8+3, damage_type: slashing, applies: {status: bleeding, turns: 2, chance: 0.3}}
+    - {name: {es: Sable, en: Saber}, to_hit: 4, damage: 1d8+1, damage_type: slashing, applies: {status: bleeding, turns: 2, chance: 0.3}}
   xp: 200
   gold: 4d10
   loot:
@@ -88,11 +88,11 @@ crypt_skeleton:
   indefinite: {es: un esqueleto de la cripta, en: a crypt skeleton}
   icon: 💀
   description: {es: Huesos unidos por una voluntad que no es la suya., en: Bones bound together by a will not their own.}
-  hp: 11
+  hp: 7
   ac: 13
   dex: 2
   attacks:
-    - {name: {es: Espada oxidada, en: Rusted sword}, to_hit: 3, damage: 1d6+1, damage_type: slashing}
+    - {name: {es: Espada oxidada, en: Rusted sword}, to_hit: 2, damage: 1d4+1, damage_type: slashing}
   xp: 50
   gold: 1d4
   immune: [poisoned, frightened, bleeding]
@@ -141,11 +141,11 @@ boar:
   indefinite: {es: un jabalí, en: a boar}
   icon: 🐗
   description: {es: Una bestia de cerdas negras y colmillos curvos que no retrocede., en: A black-bristled beast with curved tusks that never backs down.}
-  hp: 11
+  hp: 7
   ac: 11
   dex: 0
   attacks:
-    - {name: {es: Colmillo, en: Tusk}, to_hit: 3, damage: 1d6+1, damage_type: slashing}
+    - {name: {es: Colmillo, en: Tusk}, to_hit: 2, damage: 1d4+1, damage_type: slashing}
   xp: 25
   loot:
     - {item: boar_tusk, chance: 0.6}
@@ -165,12 +165,12 @@ cave_bat:
   indefinite: {es: un murciélago de cueva, en: a cave bat}
   icon: 🦇
   description: {es: Un murciélago del tamaño de un halcón que anida en las galerías y caza al anochecer., en: A hawk-sized bat that roosts in mine tunnels and hunts at dusk.}
-  hp: 6
+  hp: 5
   ac: 12
   dex: 2
   wis: 1
   attacks:
-    - {name: {es: Mordisco, en: Bite}, to_hit: 4, damage: 1d4+1, damage_type: piercing}
+    - {name: {es: Mordisco, en: Bite}, to_hit: 3, damage: 1d4, damage_type: piercing}
   xp: 15
   loot:
     - {item: bat_wing, chance: 0.5}
@@ -186,12 +186,12 @@ old_tusk:
   indefinite: {es: "ese viejo jabalí, el Viejo Colmillo", en: "that old boar, Old Tusk"}
   icon: 🦣
   description: {es: Un jabalí enorme cubierto de cicatrices y puntas de flecha rotas., en: A huge boar covered in scars and broken arrowheads.}
-  hp: 34
+  hp: 24
   ac: 12
   dex: 0
   wis: 1
   attacks:
-    - {name: {es: Embestida, en: Gore}, to_hit: 5, damage: 2d6+3, damage_type: slashing, applies: {status: bleeding, turns: 2, chance: 0.3}}
+    - {name: {es: Embestida, en: Gore}, to_hit: 4, damage: 2d6+1, damage_type: slashing, applies: {status: bleeding, turns: 2, chance: 0.3}}
   xp: 300
   gold: 3d10
   loot:

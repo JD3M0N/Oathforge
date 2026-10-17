@@ -439,7 +439,7 @@ async def _combat(update: Update, context, arg: str, n: str) -> None:
         finished = enc.status != "active"
         # rewards / quest updates appear after the panel; per-hit logs already live in the panel
         summary = Outcome(events=[e for e in out.events if not e.key.startswith("combat.")
-                                  or e.key == "combat.defeat_penalty"], activity_id=out.activity_id)
+                                  or e.key.startswith("combat.defeat_penalty")], activity_id=out.activity_id)
         error = out.error
         telegram_id = user.telegram_id
 

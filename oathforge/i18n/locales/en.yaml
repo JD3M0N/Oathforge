@@ -397,8 +397,8 @@ explore:
   found_nothing: "You find nothing out of the ordinary."
   already_tried: "You already searched this place today. Tomorrow, or once you have improved, you may spot something new."
   new_route: "You have discovered a new path."
-  hunt_day: "🏹 You track the meadow in broad daylight and find your prey."
-  hunt_night: "🦇 You wade into the dark grass. Something flutters above your head."
+  hunt_day: "🏹 You scout the area and find your prey."
+  hunt_night: "🦇 You step into the dark. Something moves nearby."
   hunt_boss: "🐗 The ground trembles. Something huge pushes through the grass."
   rested: "☀️ You get up rested after eight hours of sleep. You recover all your strength: {hp} HP and every use."
   healed: "🙏 Sister Ysolde murmurs a prayer and bandages you: you recover {amount} HP ({hp}/{max_hp})."
@@ -523,6 +523,7 @@ combat:
   interact: "🪝 {actor} uses the {object} ({skill}) · 🎲 {roll}{bonus} = {total} vs DC {dc} {result}"
   enemy_flees: "🏃 {actor} flees in terror."
   defeat_penalty: "You wake up in {place}, injured. You lost {gold} gold."
+  defeat_penalty_free: "You wake up in {place}, injured."
   end:
     victory: "🏆 Victory!"
     defeat: "💀 You have fallen..."
@@ -728,6 +729,7 @@ activity:
     stay: "You start a long {skill} expedition at {place} ({minutes} min). You'll bring back much more, but there may be an ambush at the end."
     track: "You crouch and start looking for tracks at {place} ({minutes} min)."
     rest: "You pay {cost} gold and lie down at {place}. Eight hours of sleep: you wake up in {minutes} min."
+    rest_free: "You lie down at {place}. Eight hours of sleep: you wake up in {minutes} min."
   done:
     gather: "✅ You finish your work at {place}."
     stay: "✅ Your expedition at {place} ends without trouble."

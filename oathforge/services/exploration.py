@@ -10,7 +10,6 @@ from oathforge.content import get_content
 from oathforge.content.schemas import EncounterEntry, Exit, Location
 from oathforge.database.models import Character
 from oathforge.engine.checks import check, dc_for
-from oathforge.engine.dice import roll
 from oathforge.services import characters, combat_service, inventory, quests, world_map
 from oathforge.services.events import Outcome
 
@@ -88,11 +87,13 @@ def exits(char: Character) -> list[Exit]:
     return world_map.open_exits(char, char.location)
 
 
-def encounter_table(loc: Location, now: float | None = None) -> list[EncounterEntry]:
-    """Night has its own creatures where the location defines them (bats instead of boars)."""
-    if loc.night_encounters and is_night(now):
-        return loc.night_encounters
-    return loc.encounters
+def encounter_table(loc: Location, level: int, now: float | None = None) -> list[EncounterEntry]:
+    """Night has its own creatures where the location defines them (bats instead of boars).
+
+    Entries with a ``min_level`` above the hero's level are left out.
+    """
+    table = loc.night_encounters if loc.night_encounters and is_night(now) else loc.encounters
+    return [e for e in table if e.min_level <= level]
 
 
 def pending_fixed_encounter(char: Character):
@@ -126,7 +127,7 @@ async def travel(session: AsyncSession, char: Character, dest: str, rng: random.
     if fixed:
         _, enc_out = await combat_service.start_encounter(session, char, list(fixed.monsters), rng, fixed.flag)
         return out.extend(enc_out)
-    table = encounter_table(c.locations[dest])
+    table = encounter_table(c.locations[dest], char.level)
     if route.danger and table and rng.random() < route.danger * ENCOUNTER_CHANCE_PER_DANGER:
         entry = rng.choices(table, weights=[e.weight for e in table])[0]
         out.add("explore.ambush")
@@ -146,12 +147,17 @@ async def hunt(session: AsyncSession, char: Character, rng: random.Random) -> Ou
     if fixed:
         _, enc_out = await combat_service.start_encounter(session, char, list(fixed.monsters), rng, fixed.flag)
         return Outcome().add("explore.hunt_boss").extend(enc_out)
-    table = encounter_table(loc)
+    table = encounter_table(loc, char.level)
     entry = rng.choices(table, weights=[e.weight for e in table])[0]
     out = Outcome()
     if char.hp * 2 < char.max_hp:
         out.add("explore.low_hp", hp=char.hp, max_hp=char.max_hp)
-    out.add("explore.hunt_night" if is_night() and loc.night_encounters else "explore.hunt_day")
+    night = is_night() and bool(loc.night_encounters)
+    own = loc.hunt_night if night else loc.hunt_day
+    if own is not None:
+        out.text(own)
+    else:
+        out.add("explore.hunt_night" if night else "explore.hunt_day")
     _, enc_out = await combat_service.start_encounter(session, char, list(entry.monsters), rng)
     return out.extend(enc_out)
 
@@ -236,12 +242,12 @@ async def cure_wounds(session: AsyncSession, char: Character, rng: random.Random
     injured = bool(char.conditions.get("injured"))
     if char.hp >= char.max_hp and not injured:
         return Outcome.refused("inv.err.full_hp")
-    # beta: Ysolde heals for free and closes grave wounds, so nobody gets stuck injured and broke after a
-    # defeat; revisit with the economy (healer.cost stays in place.yaml for then)
+    # beta: Ysolde heals everything for free and closes grave wounds, so nobody gets stuck injured and broke
+    # after a defeat; revisit with the economy (healer.cost and healer.heal stay in place.yaml for then)
     if injured:
         char.conditions = {k: v for k, v in char.conditions.items() if k != "injured"}
     before = char.hp
-    char.hp = min(char.max_hp, char.hp + roll(loc.healer.heal, rng).total)
+    char.hp = char.max_hp
     out = Outcome().add("explore.healed", amount=char.hp - before, hp=char.hp, max_hp=char.max_hp)
     if injured:
         out.add("explore.healed_injured")

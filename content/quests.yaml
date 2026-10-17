@@ -94,8 +94,8 @@ tut_boars:
     es: Los jabalíes destrozan los campos al sur de la ciudad. Vale quiere ver cómo peleas… y cómo aprovechas lo que cazas.
     en: Boars are wrecking the fields south of the city. Vale wants to see how you fight… and how you use what you hunt.
   hint:
-    es: El Prado de los Colmillos sale directo de la plaza (20 min, sin peligro). Pulsa «🏹 Cazar», a cualquier hora. Al ganar, pulsa «🔪 Desollar» o /skin para sacar el cuero (unos segundos).
-    en: Tusk Meadow leaves straight from the plaza (20 min, safe). Press "🏹 Hunt", at any hour. When you win, press "🔪 Skin" or /skin to take the hide (a few seconds).
+    es: El Prado de los Colmillos sale directo de la plaza. Ve con la vida llena y una poción a mano; pulsa «🏹 Cazar», a cualquier hora. Al ganar, pulsa «🔪 Desollar» o /skin para sacar el cuero (unos segundos).
+    en: Tusk Meadow leaves straight from the plaza. Go with full health and a potion at hand; press "🏹 Hunt", at any hour. When you win, press "🔪 Skin" or /skin to take the hide (a few seconds).
   start_stage: locked
   unlock_stage: active
   objective_stage: active
@@ -293,8 +293,8 @@ tut_chapel:
     es: «Nadie vuelve entero de ahí fuera», dice Vale. Antes de darte por listo, quiere que conozcas a la hermana Ysolde.
     en: "\"Nobody comes back whole from out there,\" says Vale. Before she calls you ready, she wants you to meet Sister Ysolde."
   hint:
-    es: Ve a la Capilla del Alba y habla con la hermana Ysolde («🙏 Curar heridas» por unas monedas). Para todo lo demás, descanso largo en la posada. Después, vuelve con Vale.
-    en: Go to the Chapel of the Dawn and talk to Sister Ysolde ("🙏 Heal wounds" for a few coins). For everything else, a long rest at the inn. Then report back to Vale.
+    es: Ve a la Capilla del Alba y habla con la hermana Ysolde («🙏 Curar heridas», gratis durante la beta). Para todo lo demás, descanso largo en la posada. Después, vuelve con Vale.
+    en: Go to the Chapel of the Dawn and talk to Sister Ysolde ("🙏 Heal wounds", free during the beta). For everything else, a long rest at the inn. Then report back to Vale.
   start_stage: locked
   unlock_stage: active
   objective_stage: active
@@ -316,8 +316,8 @@ tut_chapel:
     done:
       state: completed
       journal:
-        es: «Ya no eres un recluta», dijo Vale. «Dicen que el sargento Holt busca a alguien de confianza. Ve a verle».
-        en: "\"You're no recruit any more,\" Vale said. \"Word is Sergeant Holt is looking for someone he can trust. Go see him.\""
+        es: «Ya no eres un recluta», dijo Vale. «Dicen que en el Bosque de los Susurros desaparecen patrullas. Echa un vistazo y, si encuentras algo, llévaselo al sargento Holt».
+        en: "\"You're no recruit any more,\" Vale said. \"Word is patrols keep vanishing in the Whispering Woods. Take a look and, if you find anything, bring it to Sergeant Holt.\""
 
 crypt_bones:
   order: 10

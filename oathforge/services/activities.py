@@ -118,8 +118,8 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str,
     char.state = "busy"
     if kind == "rest":  # paid on lying down; abandoning gives nothing back
         char.gold -= loc.rest_cost
-        return Outcome().add("activity.started.rest", place=loc.name.model_dump(), cost=loc.rest_cost,
-                             minutes=seconds // 60)
+        return Outcome().add("activity.started.rest" if loc.rest_cost else "activity.started.rest_free",
+                             place=loc.name.model_dump(), cost=loc.rest_cost, minutes=seconds // 60)
     out = Outcome().add(f"activity.started.{kind}", skill=characters.mastery_name(skill),
                         place=loc.name.model_dump(), minutes=seconds // 60, seconds=seconds)
     if kind in ("track", "stay") and char.hp * 2 < char.max_hp:  # this may end in a fight
@@ -217,7 +217,7 @@ async def claim(session: AsyncSession, char: Character, now: float | None = None
     rank = gathering.rank_for(characters.mastery_xp(char, act.skill))
     roll = gathering.roll_gather(rng, g.resources if g else [], rank, act.kind)
     items = roll.total()
-    table = exploration.encounter_table(loc)
+    table = exploration.encounter_table(loc, char.level)
     if act.kind == "stay" and g and table and gathering.roll_ambush(rng, g.stay_ambush):
         entry = rng.choices(table, weights=[e.weight for e in table])[0]
         act.status = "awaiting_combat"
@@ -238,7 +238,7 @@ async def claim(session: AsyncSession, char: Character, now: float | None = None
 
 async def _claim_track(session, char, act, loc, rng, now) -> Outcome:
     fixed = exploration.pending_fixed_encounter(char)
-    table = exploration.encounter_table(loc)
+    table = exploration.encounter_table(loc, char.level)
     if fixed or (table and gathering.roll_prey(rng)):
         monsters = list(fixed.monsters) if fixed else list(rng.choices(table, weights=[e.weight for e in table])[0].monsters)
         act.status = "awaiting_combat"

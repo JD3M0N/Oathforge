@@ -38,7 +38,7 @@ ABILITY_ICON = {"strike": "⚔️", "spell": "🔮", "turn": "☀️", "buff": "
 
 def panel_only(key: str) -> bool:
     """Blow-by-blow combat logs: the combat panel (sent right after) already shows them."""
-    return key.startswith("combat.") and key not in ("combat.start", "combat.defeat_penalty") \
+    return key.startswith("combat.") and key not in ("combat.start", "combat.defeat_penalty", "combat.defeat_penalty_free") \
         and not key.startswith("combat.err.")
 
 
