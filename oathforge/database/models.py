@@ -133,6 +133,7 @@ class Encounter(Base):
     party_id: Mapped[int | None] = mapped_column(ForeignKey("parties.id"), nullable=True)
     location: Mapped[str] = mapped_column(String(64))
     status: Mapped[str] = mapped_column(String(16), default="active")
+    achievement_metrics: Mapped[dict | None] = mapped_column(Json, nullable=True)
     state: Mapped[dict] = mapped_column(Json)
     fixed_flag: Mapped[str | None] = mapped_column(String(64), nullable=True)
     panel_chat_id: Mapped[int | None] = mapped_column(BigInteger, nullable=True)
@@ -305,4 +306,56 @@ class MediaFile(Base):
     checksum: Mapped[str] = mapped_column(String(64))
     file_id: Mapped[str] = mapped_column(String(255))
     file_unique_id: Mapped[str] = mapped_column(String(64))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class AchievementProgress(Base):
+    __tablename__ = "achievement_progress"
+    __table_args__ = (UniqueConstraint("character_id", "achievement_key", "edition"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    character_id: Mapped[int] = mapped_column(ForeignKey("characters.id", ondelete="CASCADE"), index=True)
+    achievement_key: Mapped[str] = mapped_column(String(32))
+    edition: Mapped[str] = mapped_column(String(16))
+    state: Mapped[dict] = mapped_column(Json, default=dict)
+
+
+class AchievementUnlock(Base):
+    __tablename__ = "achievement_unlocks"
+    __table_args__ = (UniqueConstraint("character_id", "achievement_key", "edition"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    character_id: Mapped[int] = mapped_column(ForeignKey("characters.id", ondelete="CASCADE"), index=True)
+    achievement_key: Mapped[str] = mapped_column(String(32))
+    edition: Mapped[str] = mapped_column(String(16))
+    points: Mapped[int] = mapped_column(Integer)
+    unlocked_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    evidence: Mapped[dict] = mapped_column(Json)
+    retroactive: Mapped[bool] = mapped_column(Boolean, default=False)
+
+
+class AchievementEventReceipt(Base):
+    __tablename__ = "achievement_event_receipts"
+    __table_args__ = (UniqueConstraint("character_id", "event_id"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    character_id: Mapped[int] = mapped_column(ForeignKey("characters.id", ondelete="CASCADE"), index=True)
+    event_id: Mapped[str] = mapped_column(String(160))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class AchievementPreferences(Base):
+    __tablename__ = "achievement_preferences"
+    character_id: Mapped[int] = mapped_column(ForeignKey("characters.id", ondelete="CASCADE"), primary_key=True)
+    title: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    featured: Mapped[list] = mapped_column(Json, default=list)
+    tracked: Mapped[list] = mapped_column(Json, default=list)
+    revealed: Mapped[list] = mapped_column(Json, default=list)
+
+
+class AchievementNotification(Base):
+    __tablename__ = "achievement_notifications"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    character_id: Mapped[int] = mapped_column(ForeignKey("characters.id", ondelete="CASCADE"), index=True)
+    unlocks: Mapped[list] = mapped_column(Json, default=list)
+    status: Mapped[str] = mapped_column(String(16), default="pending", index=True)
+    lease_until: Mapped[float] = mapped_column(Float, default=0)
+    token: Mapped[str | None] = mapped_column(String(32), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)

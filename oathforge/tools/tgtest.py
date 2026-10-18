@@ -93,7 +93,7 @@ async def _collect(client, bot_entity, act, quiet: float, timeout: float) -> Non
         client.remove_event_handler(on_event, edit)
     outgoing = [(m, e) for m, e in seen if not m.out]
     if not outgoing:
-        print(f"(sin respuesta en {timeout:.0f} s: ¿está el bot arrancado?)")
+        print(f"(no reply in {timeout:.0f} s: is the bot running?)")
     for msg, edited in outgoing:
         print(render(msg, edited))
         print()
@@ -126,15 +126,15 @@ async def cmd_press(args) -> None:
         bot = await client.get_entity(_bot())
         found = await _find_button(client, bot, args.label, args.msg)
         if found is None:
-            sys.exit(f"No hay ningún botón «{args.label}» en los últimos mensajes del bot.")
+            sys.exit(f"No button '{args.label}' in the bot's latest messages.")
         msg, i, j = found
-        print(f"> pulso [{msg.buttons[i][j].text}] en #{msg.id}\n")
+        print(f"> pressing [{msg.buttons[i][j].text}] on #{msg.id}\n")
 
         async def click():
             try:
                 answer = await msg.click(i, j)
                 if answer is not None and getattr(answer, "message", None):
-                    print(f"(aviso: {answer.message})\n")
+                    print(f"(alert: {answer.message})\n")
             except Exception as exc:  # the bot may answer the callback late; its messages still arrive
                 print(f"(callback: {type(exc).__name__})\n")
 
@@ -158,23 +158,23 @@ async def cmd_login(args) -> None:
     try:
         if await client.is_user_authorized() and not args.code:
             me = await client.get_me()
-            print(f"Ya hay sesión: {me.first_name} (@{me.username}, id {me.id})")
+            print(f"Already logged in: {me.first_name} (@{me.username}, id {me.id})")
             return
         if not args.code:
             sent = await client.send_code_request(args.phone)
             PENDING_LOGIN.write_text(json.dumps({"phone": args.phone, "hash": sent.phone_code_hash}))
-            print("Código enviado a la cuenta de Telegram de ese teléfono. Repite con: login <teléfono> <código>")
+            print("Code sent to that phone's Telegram account. Repeat with: login <phone> <code>")
             return
         pending = json.loads(PENDING_LOGIN.read_text()) if PENDING_LOGIN.exists() else {}
         try:
             await client.sign_in(args.phone, args.code, phone_code_hash=pending.get("hash"))
         except SessionPasswordNeededError:
             if not args.password:
-                sys.exit("La cuenta tiene verificación en dos pasos: repite con --password.")
+                sys.exit("The account has two-step verification: repeat with --password.")
             await client.sign_in(password=args.password)
         PENDING_LOGIN.unlink(missing_ok=True)
         me = await client.get_me()
-        print(f"Sesión iniciada: {me.first_name} (@{me.username}, id {me.id})")
+        print(f"Logged in: {me.first_name} (@{me.username}, id {me.id})")
     finally:
         await client.disconnect()
 

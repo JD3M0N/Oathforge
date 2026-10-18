@@ -8,24 +8,25 @@ import textwrap
 # (group, [(command, arguments, one-line description)]); every command here must be handled in main().
 COMMANDS = [
     ("Bot", [
-        ("bot", "", "Arranca el bot (Ctrl+C para pararlo)."),
-        ("stop", "", "Para el bot que está en marcha."),
-        ("restart", "", "Reinicia el bot: lo para si está en marcha y lo arranca en segundo plano."),
+        ("bot", "", "Start the bot (Ctrl+C to stop it)."),
+        ("stop", "", "Stop the running bot."),
+        ("restart", "", "Restart the bot: stop it if running and start it in the background."),
     ]),
-    ("Jugadores", [
-        ("delete-player", "[id|nombre] [--yes]", "Borra un jugador; sin nombre, los lista."),
-        ("reset-players", "[--yes]", "Borra todos los jugadores (detén el bot)."),
+    ("Players", [
+        ("delete-player", "[id|name] [--yes]", "Delete one player; without a name, list them."),
+        ("reset-players", "[--yes]", "Delete every player (stop the bot first)."),
     ]),
-    ("Pruebas", [
-        ("tgtest", "send|press|show|login", "Juega con el bot desde la cuenta de prueba."),
-        ("simulate", "[--level 1-5]", "Simula combates para el balance (--help)."),
-        ("tutorial-stats", "", "Cuánto tarda cada jugador en cada misión del tutorial y dónde se atasca."),
+    ("Testing", [
+        ("tgtest", "send|press|show|login", "Play the bot from the Telegram test account."),
+        ("simulate", "[--level 1-5]", "Simulate fights for balance (--help)."),
+        ("achievements-backfill", "[--apply] [--character-id ID] [--after-id ID]", "Preview (default) or apply achievements earned before v0.9."),
+        ("tutorial-stats", "", "How long each player takes per tutorial mission and where they get stuck."),
     ]),
-    ("Ayuda", [
-        ("help", "", "Muestra esta ayuda."),
+    ("Help", [
+        ("help", "", "Show this help."),
     ]),
 ]
-FOOTER = "Los comandos que borran solo muestran qué borrarían hasta que añades --yes."
+FOOTER = "Commands that delete only show what they would delete until you add --yes."
 COLUMN = 36  # where descriptions start
 
 
@@ -38,7 +39,7 @@ def show_help() -> None:
 
     width = max(60, min(shutil.get_terminal_size().columns, 100))
     indent = " " * COLUMN
-    print(f"Oathforge v{__version__}  ·  Uso: oath <comando>")
+    print(f"Oathforge v{__version__}  ·  Usage: oath <command>")
     for group, cmds in COMMANDS:
         print(f"\n{group}")
         for name, args, text in cmds:
@@ -82,17 +83,17 @@ async def reset_players(confirm: bool) -> None:
                 count = (await conn.execute(text(f'SELECT count(*) FROM "{name}"'))).scalar()
                 print(f"  {name:24} {count}")
             if not confirm:
-                print("no se ha borrado nada; repite con --yes")
+                print("nothing deleted; repeat with --yes")
                 return
             for name in reversed(tables):  # children first
                 await conn.execute(text(f'DELETE FROM "{name}"'))
-            print("borrado")
+            print("deleted")
     finally:
         await engine.dispose()
 
 
 def _player_line(p) -> str:
-    who = f"{p.name} ({p.class_key}, nivel {p.level})" if p.name else "(sin personaje)"
+    who = f"{p.name} ({p.class_key}, level {p.level})" if p.name else "(no character)"
     return f"  telegram {p.telegram_id:<14} {who}"
 
 
@@ -107,18 +108,18 @@ async def delete_player(query: str | None, confirm: bool) -> None:
         async with AsyncSession(engine) as session:  # closing without commit rolls back
             if query is None:
                 players = await admin.list_players(session)
-                print(f"{len(players)} jugadores:" if players else "no hay jugadores")
+                print(f"{len(players)} players:" if players else "no players")
                 for p in players:
                     print(_player_line(p))
                 if players:
-                    print("borra uno con: oath delete-player <id|nombre> --yes")
+                    print("delete one with: oath delete-player <id|name> --yes")
                 return
             found = await admin.find_players(session, query)
             if not found:
-                print(f"ningún jugador con id o nombre «{query}»; oath delete-player los lista")
+                print(f"no player with id or name '{query}'; oath delete-player lists them")
                 return
             if len(found) > 1:
-                print(f"hay {len(found)} jugadores llamados «{query}»; usa su id de Telegram:")
+                print(f"{len(found)} players are called '{query}'; use their Telegram id:")
                 for p in found:
                     print(_player_line(p))
                 return
@@ -127,10 +128,10 @@ async def delete_player(query: str | None, confirm: bool) -> None:
             for name, n in counts.items():
                 print(f"  {name:24} {n}")
             if not confirm:
-                print("no se ha borrado nada; repite con --yes")
+                print("nothing deleted; repeat with --yes")
                 return
             await session.commit()
-            print("borrado; si el bot está en marcha, el jugador empieza de cero con /start")
+            print("deleted; if the bot is running, the player starts over with /start")
     finally:
         await engine.dispose()
 
@@ -152,22 +153,22 @@ async def tutorial_stats() -> None:
     finally:
         await engine.dispose()
     if not runs:
-        print("nadie ha empezado el tutorial")
+        print("nobody has started the tutorial")
         return
     tut = [k for k, q in sorted(quests.items(), key=lambda kv: kv[1].order) if q.tutorial]
-    print(f"{len(runs)} jugadores · {sum(r.done for r in runs)} han terminado el tutorial\n")
-    print("Mediana de minutos reales por misión (jugadores que la acabaron):")
+    print(f"{len(runs)} players · {sum(r.done for r in runs)} finished the tutorial\n")
+    print("Median real minutes per mission (players who finished it):")
     for k in tut:
         times = [r.minutes[k] for r in runs if k in r.minutes]
         stuck = sum(1 for r in runs if r.current == k)
         med = f"{median(times):6.1f} min" if times else "     —    "
-        print(f"  {quests[k].order}. {quests[k].name.es:28} {med}  ({len(times)} la acabaron, {stuck} están en ella)")
-    print("\nPor jugador:")
+        print(f"  {quests[k].order}. {quests[k].name.en:28} {med}  ({len(times)} finished, {stuck} on it now)")
+    print("\nPer player:")
     for r in runs:
         total = sum(r.minutes.values())
-        where = "terminado" if r.done else (f"en «{quests[r.current].name.es}» desde hace {r.waiting:.0f} min"
-                                            if r.current else "sin misión del tutorial activa")
-        print(f"  {r.name:20} nivel {r.level}  {len(r.minutes)}/{len(tut)} misiones en {total:.0f} min · {where}")
+        where = "finished" if r.done else (f"on '{quests[r.current].name.en}' for {r.waiting:.0f} min"
+                                            if r.current else "no active tutorial mission")
+        print(f"  {r.name:20} level {r.level}  {len(r.minutes)}/{len(tut)} missions in {total:.0f} min · {where}")
 
 
 def stop_bot() -> bool:
@@ -178,11 +179,11 @@ def stop_bot() -> bool:
     pids = [pid] if pid is not None and pidfile.alive(pid) else pidfile.find_running()
     pidfile.PATH.unlink(missing_ok=True)
     if not pids:
-        print("no hay ningún bot en marcha")
+        print("no bot is running")
         return False
     for p in pids:
         pidfile.kill(p)
-        print(f"bot parado (PID {p})")
+        print(f"bot stopped (PID {p})")
     return True
 
 
@@ -204,7 +205,7 @@ def restart_bot() -> None:
     with open(log, "ab") as out:
         proc = subprocess.Popen([sys.executable, "-m", "oathforge", "bot"], stdout=out, stderr=subprocess.STDOUT,
                                 stdin=subprocess.DEVNULL, **kwargs)
-    print(f"bot arrancado en segundo plano (PID {proc.pid}); salida en {log}")
+    print(f"bot started in the background (PID {proc.pid}); output in {log}")
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -229,6 +230,10 @@ def main(argv: list[str] | None = None) -> None:
         from oathforge.tools.simulate import main as simulate
 
         simulate(rest)
+    elif command == "achievements-backfill":
+        from oathforge.tools.achievements_backfill import main as backfill
+
+        backfill(rest)
     elif command == "tutorial-stats":
         asyncio.run(tutorial_stats())
     elif command == "reset-players":
@@ -237,6 +242,6 @@ def main(argv: list[str] | None = None) -> None:
         names = [a for a in rest if a != "--yes"]
         asyncio.run(delete_player(" ".join(names) or None, "--yes" in rest))
     else:
-        print(f"Comando desconocido: {command}\n")
+        print(f"Unknown command: {command}\n")
         show_help()
         sys.exit(2)

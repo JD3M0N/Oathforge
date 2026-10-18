@@ -24,6 +24,7 @@ from oathforge.database.models import Character, WorldActivity
 from oathforge.engine import gathering
 from oathforge.i18n import t
 from oathforge.services import characters, combat_service, exploration, inventory, quests
+from oathforge.services import achievements
 from oathforge.services.events import Outcome
 
 KINDS = ("gather", "stay", "track", "rest", "skin")
@@ -96,6 +97,7 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str,
             return Outcome.refused("activity.err.no_tool", tool=c.items[g.tool].name.model_dump())
     if await open_activity(session, char, lock=True):
         return Outcome.refused("activity.err.busy")
+    tool_checked = kind == "skin" or (kind in ("gather", "stay") and bool(g.tool))
     now = _now(now)
     characters.drop_pending_skin(char)  # skinning now, or something else: the carcasses are left behind
     if kind == "skin":
@@ -113,7 +115,7 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str,
     seconds = skin_seconds(beasts) if kind == "skin" else gathering.SECONDS[kind]
     act = WorldActivity(character_id=char.id, location=char.location, kind=kind, skill=skill, started_at=now,
                         ends_at=now + seconds, status="running", seed=secrets.randbits(48),
-                        result={"monsters": beasts} if kind == "skin" else {})
+                        result={"tool_checked": tool_checked, **({"monsters": beasts} if kind == "skin" else {})})
     session.add(act)
     await session.flush()
     char.state = "busy"
@@ -158,12 +160,16 @@ async def _tutorial_gather(session, char, kind: str, skill: str, loc: Location, 
     quests.use_tutorial_boost(char, qkey)
     items = {item: missing}
     xp = gathering.GATHER_XP
-    session.add(WorldActivity(character_id=char.id, location=char.location, kind=kind, skill=skill, started_at=now,
-                              ends_at=now, status="done", resolved_at=now, seed=0,
-                              result={"outcome": "tutorial", "items": items, "xp": xp}))
+    act = WorldActivity(character_id=char.id, location=char.location, kind=kind, skill=skill, started_at=now,
+                        ends_at=now, status="done", resolved_at=now, seed=0,
+                        result={"outcome": "tutorial", "items": items, "xp": xp,
+                                "tool_checked": bool(_gathering(loc, skill).tool)})
+    session.add(act)
+    await session.flush()
     out = Outcome().add("activity.tutorial", skill=characters.mastery_name(skill), place=loc.name.model_dump())
     await _give(session, char, items, out, random.Random())
     characters.grant_mastery(char, skill, xp, out)
+    await _achievement_activity(session, char, act, out)
     return out
 
 
@@ -227,7 +233,7 @@ async def claim(session: AsyncSession, char: Character, now: float | None = None
     if act.kind == "stay" and g and table and gathering.roll_ambush(rng, g.stay_ambush):
         entry = rng.choices(table, weights=[e.weight for e in table])[0]
         act.status = "awaiting_combat"
-        act.result = {"pending": items, "xp": roll.xp, "monsters": list(entry.monsters)}
+        act.result = {**(act.result or {}), "pending": items, "xp": roll.xp, "monsters": list(entry.monsters)}
         out = Outcome().add("activity.stay_ambush", loot=loot_text(items))
         enc, enc_out = await combat_service.start_encounter(session, char, list(entry.monsters), rng)
         act.encounter_id = enc.id
@@ -239,6 +245,7 @@ async def claim(session: AsyncSession, char: Character, now: float | None = None
         out.add("activity.bonus", loot=loot_text(roll.bonus))
     characters.grant_mastery(char, act.skill, roll.xp, out)
     _finish(act, "gather" if act.kind == "gather" else "stay_ok", items, roll.xp, now)
+    await _achievement_activity(session, char, act, out)
     return out
 
 
@@ -248,7 +255,7 @@ async def _claim_track(session, char, act, loc, rng, now) -> Outcome:
     if fixed or (table and gathering.roll_prey(rng)):
         monsters = list(fixed.monsters) if fixed else list(rng.choices(table, weights=[e.weight for e in table])[0].monsters)
         act.status = "awaiting_combat"
-        act.result = {"monsters": monsters}
+        act.result = {**(act.result or {}), "monsters": monsters}
         out = Outcome().add("activity.track_found", monster=get_content().monsters[monsters[0]].name.model_dump())
         enc, enc_out = await combat_service.start_encounter(session, char, monsters, rng, fixed.flag if fixed else None,
                                                           hunt=True)
@@ -257,6 +264,7 @@ async def _claim_track(session, char, act, loc, rng, now) -> Outcome:
     out = Outcome(activity_id=act.id).add("activity.track_tracks")
     characters.grant_mastery(char, "tracking", gathering.TRACK_XP_TRACKS, out)
     _finish(act, "track_tracks", {}, gathering.TRACK_XP_TRACKS, now)
+    await _achievement_activity(session, char, act, out)
     return out
 
 
@@ -289,6 +297,8 @@ async def skin(session: AsyncSession, char: Character, monster_keys: list[str], 
         out.extend(await quests.on_items(session, char, "skin", got, rng))
     if not trophy:
         characters.grant_mastery(char, "skinning", gathering.SKIN_XP * len(beasts), out)
+        await achievements.emit(session, char, out, "activity", {"skill": "skinning", "tool": True})
+        await achievements.mastery(session, char, out, "skinning")
     return got
 
 
@@ -327,6 +337,7 @@ async def on_encounter_end(session: AsyncSession, char: Character, status: str, 
             characters.grant_mastery(char, "tracking", xp, out)
         outcome = {"victory": "track_won", "fled": "track_fled"}.get(status, "track_lost")
     _finish(act, outcome, given, xp, now, monster=monster)
+    await _achievement_activity(session, char, act, out)
     out.activity_id = act.id
 
 
@@ -350,3 +361,10 @@ def describe(act: WorldActivity, lang: str) -> str:
     c = get_content()
     skill = "" if act.kind == "rest" else characters.mastery_name(act.skill)[lang]
     return t(lang, f"activity.kind.{act.kind}", skill=skill, place=c.locations[act.location].name.get(lang))
+
+
+async def _achievement_activity(session, char, act, out):
+    if act.kind != "rest":
+        await achievements.emit(session, char, out, "activity",
+            {"skill": act.skill, "tool": bool((act.result or {}).get("tool_checked"))}, f"activity:{act.id}:done")
+        await achievements.mastery(session, char, out, act.skill, f"activity:{act.id}:done")

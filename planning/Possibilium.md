@@ -791,6 +791,8 @@ Consejos, asambleas, embajadas, tratados secretos, espionaje doble, embargos, co
 
 **Logros y colecciones:** exploración, bestiario, artesanía, diplomacia, cooperación y decisiones. Secretos con pistas y visibles para orientar. Recompensas cosméticas o de acceso social; sin rachas que castiguen ausencias.
 
+**Estado 0.9.0:** implementados 30 logros y dos metalogros individuales, puntos de prestigio, cuatro títulos, destacados y seguimiento; conjuntos de contenido fijos y reconocimiento retroactivo verificable. Cooperación, escenas secretas nuevas y acceso social siguen pendientes. Ver [progressio](progressio.md) y [entrega 0.9.0](releases/0.9.0.md).
+
 <a id="s23"></a>
 ## 23. Mundo vivo, eventos y temporadas
 

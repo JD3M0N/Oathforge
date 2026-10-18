@@ -33,6 +33,7 @@ from oathforge.content.schemas import (
     Zone,
 )
 from oathforge.engine.gathering import GATHER_SKILLS
+from oathforge.content.achievement_schemas import Achievement, validate_catalog
 
 EFFECT_KINDS = {
     "give_item", "take_item", "gold", "reputation", "set_flag", "xp",
@@ -58,6 +59,7 @@ class Content:
     media: MediaCatalog
     start_location: str
     respawn_location: str
+    achievements: dict[str, Achievement] = field(default_factory=dict)
     chronicles: dict[str, list[Text]] = field(default_factory=dict)  # = fallbacks["chronicles"]
     # generic texts when Gemini is down or out of budget: content/fallbacks/<category>.yaml -> key -> texts
     fallbacks: dict[str, dict[str, list[Text]]] = field(default_factory=dict)
@@ -75,9 +77,26 @@ def _read(directory: Path, name: str) -> dict:
     return _read_file(directory / f"{name}.yaml")
 
 
+class UniqueLoader(yaml.SafeLoader):
+    pass
+
+
+def _unique_mapping(loader, node):
+    result = {}
+    for key_node, value_node in node.value:
+        key = loader.construct_object(key_node)
+        if key in result:
+            raise ValueError(f"duplicate YAML key: {key}")
+        result[key] = loader.construct_object(value_node)
+    return result
+
+
+UniqueLoader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, _unique_mapping)
+
+
 def _read_file(path: Path) -> dict:
     with open(path, encoding="utf-8") as fh:
-        return yaml.safe_load(fh) or {}
+        return yaml.load(fh, Loader=UniqueLoader) or {}
 
 
 @dataclass(frozen=True)
@@ -169,8 +188,10 @@ def load_content(directory: Path = CONTENT_DIR) -> Content:
         professions=_parse(Profession, _read(directory, "professions")),
         recipes=_parse(Recipe, _read(directory, "recipes")),
         rulebook=_parse(RuleSection, _read(directory, "rulebook")),
+        achievements=_parse(Achievement, _read(directory, "achievements")),
     )
     validate_references(content)
+    validate_catalog(content)
     return content
 
 

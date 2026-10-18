@@ -748,7 +748,10 @@ async def test_activities_end_by_themselves_even_offline(llm):
         act = await s.scalar(select(WorldActivity).with_for_update())
         act.ends_at -= 600
     await common.finish_due_activities(job)
-    assert "Terminas tu trabajo" in p.chat.sent[-2][0] and "Viajar" in str(p.last[1].inline_keyboard)
+    delivered = p.chat.sent[sent:]
+    assert any("Terminas tu trabajo" in text for text, _ in delivered)
+    assert any("Viajar" in str(getattr(kb, "inline_keyboard", ())) for _, kb in delivered)
+    assert "Logros conseguidos" in p.last[0] and "ach|" in str(p.last[1].inline_keyboard)
     sent = len(p.chat.sent)
     await common.finish_due_activities(job)  # paid once
     await p.press("actc|-|x1")  # an old Refresh button
@@ -897,3 +900,31 @@ async def test_network_errors_are_not_shown_to_the_player():
     update._effective_chat = Chat()  # noqa: SLF001
     await on_error(update, SimpleNamespace(error=TimedOut("Timed out"), user_data={}))
     assert sent == []
+
+
+def test_achievements_command_is_english_only_and_announced_after_every_update(monkeypatch):
+    from telegram.ext import TypeHandler
+    from oathforge import main
+    from oathforge.bot.handlers import achievements, commands
+
+    handled = {c for h in commands.handlers() for c in getattr(h, "commands", ())}
+    assert "achievements" in handled and "logros" not in handled
+    settings = main.get_settings().model_copy(update={"bot_token": "123:abc"})
+    monkeypatch.setattr(main, "get_settings", lambda: settings)
+    app = main.build_app()
+    assert any(isinstance(h, TypeHandler) and h.callback is achievements.deliver_update for h in app.handlers[1])
+
+
+async def test_achievement_delivery_ignores_groups(monkeypatch):
+    from types import SimpleNamespace
+    from oathforge.bot.handlers import achievements
+
+    calls = []
+    async def fake(bot, telegram_id, chat_id):
+        calls.append(chat_id)
+    monkeypatch.setattr(achievements, "deliver", fake)
+    user = SimpleNamespace(id=7)
+    for kind in ("group", "private"):
+        update = SimpleNamespace(effective_chat=SimpleNamespace(id=7, type=kind), effective_user=user)
+        await achievements.deliver_update(update, SimpleNamespace(bot=None))
+    assert calls == [7]

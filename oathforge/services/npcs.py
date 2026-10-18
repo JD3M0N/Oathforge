@@ -11,6 +11,7 @@ from oathforge.database.models import Character, FactionReputation, NpcMemory, N
 from oathforge.engine.checks import check
 from oathforge.engine.dice import roll
 from oathforge.services import characters
+from oathforge.services import achievements
 from oathforge.services.events import Outcome
 
 MEMORY_LIMIT = 5
@@ -84,6 +85,7 @@ async def adjust_reputation(session: AsyncSession, char: Character, faction: str
     row.value = _clamp(row.value + delta, REP_RANGE)
     out.add("rep.changed", faction=get_content().factions[faction].name.model_dump(),
             delta=f"{delta:+d}", value=row.value)
+    await achievements.emit(session, char, out, "reputation", {"faction": faction, "value": row.value})
 
 
 # ---------------------------------------------------------------- rumors

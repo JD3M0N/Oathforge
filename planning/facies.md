@@ -2,12 +2,14 @@
 
 Resumen de [Possibilium §4](Possibilium.md#s04). Cómo se ve el juego en el chat.
 
-## Estado actual (0.8.2)
+## Estado actual (0.9.0)
 
 - **Teclado fijo** (`ReplyKeyboardMarkup` persistente, `KEYBOARD_VERSION`): 📍 Lugar · 🧝 Héroe · 🗺 Mapa / 🎒 Inventario · 📖 Diario. Sus etiquetas nunca llegan a la IA como texto libre.
 - **Escena**: lugar, hora del juego y cuánto falta para el cambio («☀️ 14:30 · anochece en 55 min»), «👥 Aquí:» en lista, acciones con botones y texto libre que interpreta Gemini.
-- **Comandos** (menú y `/help`): `/start`, `/look`, `/hero` (resumen), `/sheet` (ficha completa con retrato), `/inventory`, `/journal`, `/quests`, `/map`, `/report`, `/professions`, `/classes`, `/rulebook` (alias `/rules`), `/settings`, `/language`, `/cancel`.
+- **Comandos** (menú y `/help`), siempre en inglés y sin alias en español: `/start`, `/look`, `/hero` (resumen), `/sheet` (ficha completa con retrato), `/inventory`, `/journal`, `/achievements`, `/quests`, `/map`, `/report`, `/professions`, `/classes`, `/rulebook` (alias `/rules`), `/settings`, `/language`, `/cancel`.
 - **Comandos de consulta** enlazados desde los mensajes: `/class_<clase>`, `/skill_<clave>`, `/prof_<clave>`, `/item_<clave>`, `/monster_<clave>`, `/masteries`, `/hobbies`, `/lineage` (alias `/race`), `/background`, `/skin`. Funcionan sin personaje cuando tienen sentido.
+- **Logros**: /achievements; acceso desde héroe y diario, seis entradas por página, detalle, categorías, pendientes, obtenidos y destacados. Las pistas pueden revelarse. Sin porcentaje global que penalice decisiones alternativas.
+- **Identidad y avisos**: un título y tres destacados en el héroe; tres objetivos en el diario. Anuncios privados agrupados tras el commit, recuperables tras reinicio.
 - **Diario**: misiones en curso con avance, 📚 Registro de terminadas, 🐉 Bestiario, 🗣️ Rumores y 📈 Estadísticas.
 - **`/rulebook`**: índice con botones y páginas ◀ ▶ desde `content/rulebook.yaml`, con `{marcadores}` rellenados por el motor (`render.rule_numbers`).
 - **`/settings`**: idioma y tiradas manuales (desactivadas por defecto; el dado de Telegram es un d6 decorativo y la tirada real es el d20 del motor; la tirada se lanza con «🎲 Tirar el dado»).

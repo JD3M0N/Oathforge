@@ -9,7 +9,7 @@ from telegram.ext import Application, ContextTypes, TypeHandler
 from oathforge import __version__, pidfile, recorder
 
 from oathforge.ai.client import build_llm
-from oathforge.bot.handlers import callbacks, commands, common, creation, text
+from oathforge.bot.handlers import achievements, callbacks, commands, common, creation, text
 from oathforge.config import get_settings
 from oathforge.content import get_content
 from oathforge.database.session import dispose_engine, init_engine
@@ -18,8 +18,8 @@ from oathforge.i18n import t
 log = logging.getLogger("oathforge")
 
 # Telegram's "/" menu; each needs a cmd.<name> description in every locale.
-MENU_COMMANDS = ("start", "look", "map", "hero", "sheet", "inventory", "journal", "quests", "classes", "report",
-                 "professions", "rulebook", "settings", "help")
+MENU_COMMANDS = ("start", "look", "map", "hero", "sheet", "inventory", "journal", "achievements", "quests", "classes",
+                 "report", "professions", "rulebook", "settings", "help")
 
 
 async def on_error(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -83,6 +83,8 @@ def build_app() -> Application:
         app.add_handler(h)
     app.add_handler(callbacks.handler())
     app.add_handler(text.handler())
+    # after every update, once its transactions have closed: announce the achievements it earned
+    app.add_handler(TypeHandler(Update, achievements.deliver_update), group=1)
     app.add_error_handler(on_error)
     # field activities end by themselves: the result reaches the player even offline
     app.job_queue.run_repeating(common.finish_due_activities, interval=10, first=5)

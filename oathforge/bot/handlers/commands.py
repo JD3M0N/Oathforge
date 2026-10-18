@@ -214,6 +214,7 @@ def handlers() -> list[BaseHandler]:
         CommandHandler("look", _view(current_view)),
         CommandHandler("map", _view(_map)),
         CommandHandler("hero", _view(render.hero)),
+        CommandHandler("achievements", _view(render.achievements_view)),
         CommandHandler("sheet", sheet),
         CommandHandler("inventory", _view(render.inventory_view)),
         CommandHandler("journal", _view(render.journal)),

@@ -4,6 +4,21 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.9.0] - 2026-10-17
+
+### Añadido
+- 30 logros y dos metalogros por personaje, con condiciones verificables, progreso, evidencia, fecha y puntos de prestigio; catálogo bilingüe y edición fija.
+- Cuatro títulos, tres logros destacados en el héroe y tres objetivos seguidos en el diario; comando /achievements, categorías, pistas revelables y páginas de seis entradas.
+- Eventos mecánicos idempotentes y métricas persistentes de combate para desafíos repetibles; concesiones y recompensas en la transacción de la acción.
+- Anuncios privados agrupados con recuperación tras fallos y reinicios; migración 0009 y comando achievements-backfill con simulación por defecto.
+- Pruebas de reglas, contenido, duplicados, rollback, concurrencia PostgreSQL, preferencias, desafíos y recuperación.
+
+### Cambiado
+- La versión 0.9 se dedica a logros; el cooperativo queda sin versión asignada y conserva sus requisitos CORE-01..03 y AI-01..02.
+- Los logros reconocen hechos del motor sin llamadas a Gemini ni ventajas económicas o de combate. Cada servicio emite su hecho (bestiario, maestría, viaje, combate…) y el estado guardado solo se recorre en el backfill.
+- Los comandos de Telegram van siempre en inglés, sin alias en español; los textos de consola (`oath help`, `tgtest` y los comandos de jugadores, tutorial y bot) pasan a inglés.
+- Los anuncios de logros salen de un único handler que corre después de cada update.
+
 ## [0.8.6] - 2026-10-17
 
 ### Cambiado

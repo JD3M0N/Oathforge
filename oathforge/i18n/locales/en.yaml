@@ -2,6 +2,7 @@
 # View templates (create, scene, sheet, help) may use Telegram HTML.
 
 cmd:
+  achievements: Achievements, titles and objectives
   start: "Start or return to the scene"
   look: "Look around"
   map: "Map: where you are and where to go"
@@ -870,3 +871,43 @@ station:
   hearth: "hearth"
   scribe_desk: "scribe's desk"
   workbench: "engineer's bench"
+
+achievements:
+  heading: 🏆 <b>Achievements</b>
+  summary: '{count} achievements earned · {points} feat points'
+  mystery: An undiscovered feat
+  progress: 'Progress: {current}/{target}'
+  reward: 'Reward: {points} feat points'
+  title_reward: 'Title: {title}'
+  date: Recognized on {date}
+  retroactive: Recognized from your earlier progress.
+  feature: Feature
+  unfeature: Remove feature
+  equip: Equip title
+  untitle: Remove title
+  track: Track objective
+  untrack: Stop tracking
+  reveal: Reveal condition
+  replace: 'You already have three. Choose one to replace:'
+  categories_title: Categories
+  empty: No achievements in this view yet.
+  latest: Your latest feat
+  near: Close to earning
+  earned: Earned
+  pending: Pending
+  featured: Featured
+  tracked: 🎯 Tracked objectives
+  invalid: This choice is unavailable for your character.
+  stale: This menu has changed. Open Achievements again.
+  full: You already have three. Choose one to replace.
+  saved: Achievement preferences saved.
+  announcement: "🏆 <b>Achievements earned: {count}</b>"
+  open: View feats
+  categories:
+    exploration: 🧭 Exploration
+    combat: ⚔️ Combat
+    crafting: 🔨 Crafting
+    field: 🌿 Field life
+    story: 📜 Story
+    knowledge: 📚 Knowledge
+    curiosity: 🎭 Curiosities

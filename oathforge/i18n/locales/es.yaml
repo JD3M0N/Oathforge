@@ -2,6 +2,7 @@
 # View templates (create, scene, sheet, help) may use Telegram HTML.
 
 cmd:
+  achievements: Logros, títulos y objetivos
   start: "Empezar o volver a la escena"
   look: "Mirar alrededor"
   map: "Mapa: dónde estás y a dónde ir"
@@ -870,3 +871,43 @@ station:
   hearth: "fogón"
   scribe_desk: "mesa de escriba"
   workbench: "banco de ingeniero"
+
+achievements:
+  heading: 🏆 <b>Logros</b>
+  summary: '{count} logros obtenidos · {points} puntos de hazaña'
+  mystery: Hazaña por descubrir
+  progress: 'Progreso: {current}/{target}'
+  reward: 'Recompensa: {points} puntos de hazaña'
+  title_reward: 'Título: {title}'
+  date: Reconocido el {date}
+  retroactive: Reconocido a partir de tu progreso anterior.
+  feature: Destacar
+  unfeature: Quitar destacado
+  equip: Equipar título
+  untitle: Quitar título
+  track: Seguir objetivo
+  untrack: Dejar de seguir
+  reveal: Revelar condición
+  replace: 'Ya tienes tres. Elige cuál sustituir:'
+  categories_title: Categorías
+  empty: Todavía no hay logros en esta vista.
+  latest: Tu última hazaña
+  near: Cerca de conseguir
+  earned: Obtenidos
+  pending: Pendientes
+  featured: Destacados
+  tracked: 🎯 Objetivos seguidos
+  invalid: Esta elección no está disponible para tu personaje.
+  stale: Este menú ya cambió. Vuelve a abrir Logros.
+  full: Ya tienes tres. Elige cuál sustituir.
+  saved: Preferencias de logros guardadas.
+  announcement: "🏆 <b>Logros conseguidos: {count}</b>"
+  open: Ver hazañas
+  categories:
+    exploration: 🧭 Exploración
+    combat: ⚔️ Combate
+    crafting: 🔨 Oficios
+    field: 🌿 Vida de campo
+    story: 📜 Historia
+    knowledge: 📚 Conocimiento
+    curiosity: 🎭 Curiosidades

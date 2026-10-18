@@ -12,6 +12,7 @@ from oathforge.content.schemas import Recipe
 from oathforge.database.models import Character
 from oathforge.i18n import t
 from oathforge.services import characters, inventory, professions, quests
+from oathforge.services import achievements
 from oathforge.services.events import Outcome
 
 LOW_RANK_GAP = 2  # a recipe this many ranks below yours gives half XP
@@ -65,6 +66,7 @@ async def craft(session: AsyncSession, char: Character, recipe_key: str, rng: ra
     xp = recipe.xp // 2 if rank - recipe.min_rank >= LOW_RANK_GAP else recipe.xp
     professions.grant_xp(char, recipe.profession, xp, out)
     out.extend(await quests.on_items(session, char, "craft", recipe.outputs, rng or random.Random()))
+    await achievements.emit(session, char, out, "craft", {"recipe": recipe_key})
     return out
 
 

@@ -14,6 +14,7 @@ from oathforge.engine.combat import Action, AttackProfile, Combatant, CombatErro
 from oathforge.engine.dice import roll
 from oathforge.i18n import t
 from oathforge.services import bestiary, characters, inventory, quests
+from oathforge.services import achievements
 from oathforge.services.events import Event, Outcome, render_event
 
 
@@ -79,6 +80,8 @@ async def start_encounter(
     logs = engine.start(state, rng)
     enc = Encounter(character_id=char.id, location=char.location, status="active",
                     state=state.model_dump(mode="json"), fixed_flag=fixed_flag)
+    from oathforge.services.exploration import is_night
+    enc.achievement_metrics = achievements.encounter_metrics(char, monster_keys, fixed_flag, hunt, is_night())
     session.add(enc)
     await session.flush()
     session.add(EncounterParticipant(encounter_id=enc.id, character_id=char.id, combatant_id="p1"))
@@ -89,6 +92,8 @@ async def start_encounter(
                              result=[entry.model_dump(mode="json") for entry in logs]))
     _count(char, logs)
     out = Outcome(encounter_id=enc.id)
+    for key in dict.fromkeys(monster_keys):
+        await achievements.emit(session, char, out, "seen", {"monster": key}, f"encounter:{enc.id}:seen:{key}")
     out.add("combat.start", enemies=_names_list([state.combatants[k] for k in state.combatants if k != "p1"]),
             links=" ".join(f"/monster_{k}" for k in dict.fromkeys(monster_keys)))
     out.events += [log_event(state, e) for e in logs]
@@ -125,7 +130,13 @@ async def act(
                              action=action.model_dump(mode="json"),
                              result=[entry.model_dump(mode="json") for entry in logs]))
     _count(char, logs)
+    if enc.achievement_metrics is not None and action.kind in ("heal_item", "item"):
+        enc.achievement_metrics = {**enc.achievement_metrics, "consumed": enc.achievement_metrics["consumed"] + 1}
     out = Outcome(encounter_id=enc.id)
+    for entry in logs:
+        if entry.key == "combat.interact" and entry.params.get("success"):
+            await achievements.emit(session, char, out, "scene", {"key": entry.params["object"]},
+                                    f"encounter:{enc.id}:scene:{entry.params['object']}")
     out.events += [log_event(state, e) for e in logs]
     await _sync_and_maybe_finish(session, char, enc, state, rng, out)
     _record(enc, char, state, action, logs)
@@ -158,7 +169,17 @@ async def _sync_and_maybe_finish(session, char, enc, state: EncounterState, rng,
     enc.state = state.model_dump(mode="json")
     if state.status == "active":
         return
+    if enc.status != "active":
+        return
     enc.status = state.status
+    metrics = enc.achievement_metrics or {}
+    if metrics:
+        enc.achievement_metrics = {**metrics, "final_hp": p.hp, "status": state.status}
+    await achievements.emit(session, char, out, "combat",
+        {"status": state.status, "eligible": metrics.get("eligible", False), "hp": p.hp,
+         "consumed": metrics.get("consumed", -1), "enemies": len(metrics.get("monsters", [])),
+         "location": enc.location, "period": metrics.get("period", "unknown"),
+         "hunt": metrics.get("hunt", False)}, f"encounter:{enc.id}:end")
     char.state = "idle"
     characters.bump_stats(char, **{f"battles_{state.status}": 1})
     c = get_content()
@@ -166,6 +187,11 @@ async def _sync_and_maybe_finish(session, char, enc, state: EncounterState, rng,
     if state.status == "victory":
         defeated = [cb for cb in state.combatants.values() if cb.side == "enemy" and cb.defeated]
         bestiary.kill(char, [cb.ref for cb in defeated])
+        for key in dict.fromkeys(cb.ref for cb in defeated):
+            await achievements.emit(session, char, out, "kill", {"monster": key}, f"encounter:{enc.id}:kill:{key}")
+            if char.bestiary[key]["killed"] >= bestiary.KILLS_FOR_SECRETS:
+                await achievements.emit(session, char, out, "secrets", {"monster": key},
+                                        f"encounter:{enc.id}:secrets:{key}")
         characters.grant_xp(char, sum(cb.xp for cb in defeated), out)
         gold = sum(roll(c.monsters[cb.ref].gold, rng).total for cb in defeated)
         if gold:

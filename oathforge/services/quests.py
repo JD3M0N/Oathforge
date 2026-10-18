@@ -19,6 +19,7 @@ from oathforge.database.models import Character, QuestProgress
 from oathforge.engine.checks import check, dc_for
 from oathforge.engine.dice import roll
 from oathforge.services import characters, inventory, npcs
+from oathforge.services import achievements
 from oathforge.services.events import Outcome
 
 
@@ -137,7 +138,7 @@ async def advance(session: AsyncSession, char: Character, kind: str, target: str
         if all(int(counters.get(str(i), 0)) >= o.count for i, o in enumerate(quest.objectives)):
             out.text(quest.stages[quest.complete_stage].journal)
             await apply_effects(session, char, quest.rewards, out, rng)
-            _set_stage(quest, p, quest.complete_stage, out)
+            await _set_stage(session, char, quest, p, quest.complete_stage, out)
         elif hit[0].count > 1 and hit[1] < hit[0].count:
             out.add("quest.progress", quest=quest.name.model_dump(), target=objective_target(hit[0]),
                     n=hit[1], count=hit[0].count)
@@ -273,7 +274,7 @@ async def perform(
             out.text(action.check.failure_text)
             await apply_effects(session, char, action.check.failure_effects, out, rng)
     await apply_effects(session, char, action.effects, out, rng)
-    _set_stage(quest, prog, action.to_stage, out)
+    await _set_stage(session, char, quest, prog, action.to_stage, out)
     await refresh(session, char, out)
     return out
 
@@ -287,16 +288,23 @@ async def on_defeat(session: AsyncSession, char: Character, monster_key: str, rn
             if trig.event == "defeat" and trig.target == monster_key and p.stage in trig.stages:
                 out.text(trig.text)
                 await apply_effects(session, char, trig.effects, out, rng)
-                _set_stage(quest, p, trig.to_stage, out)
+                await _set_stage(session, char, quest, p, trig.to_stage, out)
                 break
     return out.extend(await advance(session, char, "kill", monster_key, rng))
 
 
-def _set_stage(quest: Quest, p: QuestProgress, stage: str, out: Outcome) -> None:
+async def _set_stage(session, char, quest: Quest, p: QuestProgress, stage: str, out: Outcome) -> None:
     p.stage = stage
     p.state = quest.stages[stage].state
     key = {"completed": "quest.completed", "failed": "quest.failed"}.get(p.state, "quest.updated")
     out.add(key, quest=quest.name.model_dump())
+    if p.state == "completed":
+        await achievements.emit(session, char, out, "quest", {"quest": p.quest_key},
+                                f"quest:{p.quest_key}:completed")
+    decisions = {"returned_covenant": "covenant", "sold_syndicate": "syndicate", "opened_box": "opened"}
+    if p.quest_key == "sealed_box" and stage in decisions:
+        await achievements.emit(session, char, out, "decision", {"key": decisions[stage]},
+                                f"decision:sealed_box:{stage}")
 
 
 async def apply_effects(session: AsyncSession, char: Character, effects: list[dict], out: Outcome,
@@ -322,6 +330,8 @@ async def apply_effects(session: AsyncSession, char: Character, effects: list[di
                 await npcs.adjust_reputation(session, char, faction, int(delta), out)
         elif kind == "set_flag":
             char.flags = {**char.flags, str(arg): True}
+            if arg == "crypt_unlocked":
+                await achievements.emit(session, char, out, "flag", {"key": arg}, f"flag:{arg}")
         elif kind == "npc_memory":
             await npcs.remember(session, arg["npc"], char, arg["text"].format(name=char.name),
                                 int(arg.get("importance", 3)))

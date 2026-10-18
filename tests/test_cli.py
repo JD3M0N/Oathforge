@@ -22,7 +22,7 @@ def test_stop_and_restart(monkeypatch, tmp_path, capsys):
     from oathforge import cli, pidfile
     monkeypatch.setattr(pidfile, "PATH", tmp_path / "bot.pid")
     monkeypatch.setattr(pidfile, "find_running", lambda: [])
-    assert cli.stop_bot() is False and "no hay ningún bot" in capsys.readouterr().out
+    assert cli.stop_bot() is False and "no bot is running" in capsys.readouterr().out
     killed = []
     pidfile.PATH.write_text("4242")
     monkeypatch.setattr(pidfile, "alive", lambda pid: True)

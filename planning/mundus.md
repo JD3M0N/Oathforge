@@ -2,7 +2,13 @@
 
 Resumen de [Possibilium §13–14, §19, §21–23](Possibilium.md#s13).
 
-## Estado actual (0.8.2)
+## Estado actual (0.9.0)
+
+### Logros de mundo e historia
+
+- Los conjuntos de ciudad y exploración son listas fijas de lugares de la edición v0_9; cuentan visitas efectivas, no destinos conocidos automáticamente.
+- Los tres caminos del relicario son alternativas y el metalogro acepta cualquier final. Abrir el relicario requiere la acción explícita; completar la cripta en solitario no prueba su apertura.
+- Descubrimientos y caza diurna/nocturna se registran como hechos; las expansiones no cambian condiciones ya publicadas.
 
 ### Lugares
 

@@ -1,0 +1,764 @@
+beyond_gates:
+  edition: v0_9
+  category: exploration
+  form: milestone
+  visibility: public
+  name:
+    es: Más allá de las puertas
+    en: Beyond the Gates
+  description:
+    es: Viaja desde Crownreach a un lugar exterior.
+    en: Travel from Crownreach to a place outside the city.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Más allá de las puertas.'
+    en: 'Your story remembers this feat: Beyond the Gates.'
+  points: 10
+  condition:
+    kind: event
+    event: visit
+    match:
+      outside: true
+know_city:
+  edition: v0_9
+  category: exploration
+  form: milestone
+  visibility: public
+  name:
+    es: Conoce tu ciudad
+    en: Know Your City
+  description:
+    es: Visita la plaza, taberna, mercado, talleres y capilla de Crownreach.
+    en: Visit Crownreach's plaza, tavern, market, workshops and chapel.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Conoce tu ciudad.'
+    en: 'Your story remembers this feat: Know Your City.'
+  points: 40
+  condition:
+    kind: distinct
+    event: visit
+    field: location
+    target: 5
+    values:
+    - crownreach_plaza
+    - broken_crown_tavern
+    - crownreach_market
+    - crownreach_workshops
+    - crownreach_chapel
+whispers:
+  edition: v0_9
+  category: exploration
+  form: milestone
+  visibility: public
+  name:
+    es: Entre susurros
+    en: Into the Whispering Woods
+  description:
+    es: Visita el Bosque de los Susurros.
+    en: Visit Whispering Woods.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Entre susurros.'
+    en: 'Your story remembers this feat: Into the Whispering Woods.'
+  points: 10
+  condition:
+    kind: event
+    event: visit
+    match:
+      location: whispering_woods
+beneath_crown:
+  edition: v0_9
+  category: exploration
+  form: milestone
+  visibility: public
+  name:
+    es: Bajo la corona
+    en: Beneath the Crown
+  description:
+    es: Obtén acceso a la Cripta Hundida.
+    en: Gain access to the Sunken Crypt.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Bajo la corona.'
+    en: 'Your story remembers this feat: Beneath the Crown.'
+  points: 10
+  condition:
+    kind: event
+    event: flag
+    match:
+      key: crypt_unlocked
+no_stone:
+  edition: v0_9
+  category: exploration
+  form: milestone
+  visibility: public
+  name:
+    es: Ninguna piedra sin mover
+    en: No Stone Unturned
+  description:
+    es: Resuelve con éxito tres descubrimientos distintos.
+    en: Successfully resolve three distinct discoveries.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Ninguna piedra sin mover.'
+    en: 'Your story remembers this feat: No Stone Unturned.'
+  points: 20
+  condition:
+    kind: distinct
+    event: discovery
+    field: key
+    target: 3
+    values: []
+map_keeper:
+  edition: v0_9
+  category: exploration
+  form: milestone
+  visibility: public
+  name:
+    es: Un mapa que conservar
+    en: A Map Worth Keeping
+  description:
+    es: Visita los cinco lugares de Crownreach, el Camino del Viejo Rey, el Bosque de los Susurros, el
+      Prado de los Colmillos y la Mina del Paso Viejo.
+    en: Visit Crownreach's five places, Old King's Road, Whispering Woods, Tusk Meadow and Old Pass Mine.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Un mapa que conservar.'
+    en: 'Your story remembers this feat: A Map Worth Keeping.'
+  points: 40
+  condition:
+    kind: distinct
+    event: visit
+    field: location
+    target: 9
+    values:
+    - crownreach_plaza
+    - broken_crown_tavern
+    - crownreach_market
+    - crownreach_workshops
+    - crownreach_chapel
+    - old_kings_road
+    - whispering_woods
+    - tusk_meadow
+    - ironvein_mine
+first_victory:
+  edition: v0_9
+  category: combat
+  form: milestone
+  visibility: public
+  name:
+    es: Primera victoria
+    en: First Victory
+  description:
+    es: Gana tu primer combate.
+    en: Win your first battle.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Primera victoria.'
+    en: 'Your story remembers this feat: First Victory.'
+  points: 10
+  condition:
+    kind: event
+    event: combat
+    match:
+      status: victory
+cryptbreaker:
+  edition: v0_9
+  category: combat
+  form: milestone
+  visibility: public
+  name:
+    es: Rompecriptas
+    en: Cryptbreaker
+  description:
+    es: Derrota al Guardián de la Cripta.
+    en: Defeat the Crypt Warden.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Rompecriptas.'
+    en: 'Your story remembers this feat: Cryptbreaker.'
+  points: 40
+  condition:
+    kind: event
+    event: kill
+    match:
+      monster: crypt_warden
+  title:
+    es: Rompecriptas
+    en: Cryptbreaker
+last_breath:
+  edition: v0_9
+  category: combat
+  form: challenge
+  visibility: public
+  name:
+    es: El último aliento
+    en: The Last Breath
+  description:
+    es: Gana con exactamente 1 PV. Encuentro no fijo de dos lobos grises en el Bosque de los Susurros
+      o dos murciélagos en la Mina del Paso Viejo, iniciado a nivel 3–5.
+    en: Win with exactly 1 HP. Non-fixed encounter with two grey wolves in Whispering Woods or two cave
+      bats in Old Pass Mine, started at level 3–5.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: El último aliento.'
+    en: 'Your story remembers this feat: The Last Breath.'
+  points: 40
+  condition:
+    kind: event
+    event: combat
+    match:
+      status: victory
+      eligible: true
+      hp: 1
+against_many:
+  edition: v0_9
+  category: combat
+  form: challenge
+  visibility: public
+  name:
+    es: Contra varios
+    en: Against the Odds
+  description:
+    es: Gana contra ambos enemigos. Encuentro no fijo de dos lobos grises en el Bosque de los Susurros
+      o dos murciélagos en la Mina del Paso Viejo, iniciado a nivel 3–5.
+    en: Defeat both enemies. Non-fixed encounter with two grey wolves in Whispering Woods or two cave
+      bats in Old Pass Mine, started at level 3–5.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Contra varios.'
+    en: 'Your story remembers this feat: Against the Odds.'
+  points: 40
+  condition:
+    kind: event
+    event: combat
+    match:
+      status: victory
+      eligible: true
+      enemies: 2
+no_reserves:
+  edition: v0_9
+  category: combat
+  form: challenge
+  visibility: public
+  name:
+    es: Sin reservas
+    en: Without Reserves
+  description:
+    es: Gana sin consumir pociones, bombas, pergaminos ni otros objetos durante el combate. Los efectos
+      anteriores cuentan como permitidos. Encuentro no fijo de dos lobos grises en el Bosque de los Susurros
+      o dos murciélagos en la Mina del Paso Viejo, iniciado a nivel 3–5.
+    en: Win without consuming potions, bombs, scrolls or other items during combat. Effects applied beforehand
+      are allowed. Non-fixed encounter with two grey wolves in Whispering Woods or two cave bats in Old
+      Pass Mine, started at level 3–5.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Sin reservas.'
+    en: 'Your story remembers this feat: Without Reserves.'
+  points: 40
+  condition:
+    kind: event
+    event: combat
+    match:
+      status: victory
+      eligible: true
+      consumed: 0
+surroundings:
+  edition: v0_9
+  category: combat
+  form: milestone
+  visibility: public
+  name:
+    es: El escenario también lucha
+    en: Use Your Surroundings
+  description:
+    es: Usa con éxito un objeto del escenario en combate.
+    en: Successfully use a scene object in combat.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: El escenario también lucha.'
+    en: 'Your story remembers this feat: Use Your Surroundings.'
+  points: 20
+  condition:
+    kind: event
+    event: scene
+    match: {}
+handmade:
+  edition: v0_9
+  category: crafting
+  form: milestone
+  visibility: public
+  name:
+    es: Hecho con mis manos
+    en: Made by My Hands
+  description:
+    es: Completa una fabricación.
+    en: Complete a crafting recipe.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Hecho con mis manos.'
+    en: 'Your story remembers this feat: Made by My Hands.'
+  points: 10
+  condition:
+    kind: event
+    event: craft
+    match: {}
+trade_tools:
+  edition: v0_9
+  category: field
+  form: milestone
+  visibility: public
+  name:
+    es: Herramientas del oficio
+    en: Tools of the Trade
+  description:
+    es: Resuelve una actividad con la herramienta requerida validada al iniciarla.
+    en: Resolve an activity whose required tool was checked at its start.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Herramientas del oficio.'
+    en: 'Your story remembers this feat: Tools of the Trade.'
+  points: 10
+  condition:
+    kind: event
+    event: activity
+    match:
+      tool: true
+craft_repertoire:
+  edition: v0_9
+  category: crafting
+  form: milestone
+  visibility: public
+  name:
+    es: Repertorio artesanal
+    en: Crafting Repertoire
+  description:
+    es: Fabrica cinco recetas diferentes.
+    en: Craft five different recipes.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Repertorio artesanal.'
+    en: 'Your story remembers this feat: Crafting Repertoire.'
+  points: 20
+  condition:
+    kind: distinct
+    event: craft
+    field: recipe
+    target: 5
+    values: []
+road_food:
+  edition: v0_9
+  category: crafting
+  form: milestone
+  visibility: public
+  name:
+    es: Algo para el camino
+    en: Something for the Road
+  description:
+    es: Cocina estofado del cazador o ración del pescador.
+    en: Cook hunter stew or a fisher ration.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Algo para el camino.'
+    en: 'Your story remembers this feat: Something for the Road.'
+  points: 10
+  condition:
+    kind: event
+    event: craft
+    field: recipe
+    values:
+    - hunter_stew
+    - fisher_ration
+experienced:
+  edition: v0_9
+  category: field
+  form: milestone
+  visibility: public
+  name:
+    es: Manos experimentadas
+    en: Experienced Hands
+  description:
+    es: Alcanza rango 3 en una maestría de recolección.
+    en: Reach rank 3 in a gathering mastery.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Manos experimentadas.'
+    en: 'Your story remembers this feat: Experienced Hands.'
+  points: 20
+  condition:
+    kind: threshold
+    event: mastery
+    field: rank
+    target: 3
+field_life:
+  edition: v0_9
+  category: field
+  form: milestone
+  visibility: public
+  name:
+    es: Vida de campo
+    en: Life in the Wilds
+  description:
+    es: Completa actividades de tres habilidades de recolección distintas.
+    en: Complete activities using three different gathering skills.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Vida de campo.'
+    en: 'Your story remembers this feat: Life in the Wilds.'
+  points: 20
+  condition:
+    kind: distinct
+    event: activity
+    field: skill
+    target: 3
+    values:
+    - mining
+    - woodcutting
+    - herbalism
+    - skinning
+    - tracking
+    - fishing
+story_begins:
+  edition: v0_9
+  category: story
+  form: milestone
+  visibility: public
+  name:
+    es: Comienza una historia
+    en: A Story Begins
+  description:
+    es: Completa una misión.
+    en: Complete a quest.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Comienza una historia.'
+    en: 'Your story remembers this feat: A Story Begins.'
+  points: 10
+  condition:
+    kind: event
+    event: quest
+    match: {}
+long_road:
+  edition: v0_9
+  category: story
+  form: milestone
+  visibility: public
+  name:
+    es: El largo camino
+    en: The Long Road
+  description:
+    es: Completa las diez misiones del tutorial, incluido Viejo Colmillo.
+    en: Complete all ten tutorial quests, including Old Tusk.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: El largo camino.'
+    en: 'Your story remembers this feat: The Long Road.'
+  points: 40
+  condition:
+    kind: distinct
+    event: quest
+    field: quest
+    target: 10
+    values:
+    - tut_muster
+    - tut_town
+    - tut_market
+    - tut_boars
+    - tut_herbs
+    - tut_stew
+    - tut_mine
+    - tut_bats
+    - tut_chapel
+    - old_tusk
+silver_allegiance:
+  edition: v0_9
+  category: story
+  form: narrative
+  visibility: hint
+  name:
+    es: Lealtad de plata
+    en: Silver Allegiance
+  description:
+    es: Entrega el relicario al Pacto de Plata.
+    en: Deliver the locket to the Silver Covenant.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Lealtad de plata.'
+    en: 'Your story remembers this feat: Silver Allegiance.'
+  points: 20
+  condition:
+    kind: event
+    event: decision
+    match:
+      key: covenant
+  hint:
+    es: Un relicario, varios caminos. La decisión deja huella.
+    en: One locket, several paths. Your choice leaves a mark.
+crimson_bargain:
+  edition: v0_9
+  category: story
+  form: narrative
+  visibility: hint
+  name:
+    es: Trato carmesí
+    en: Crimson Bargain
+  description:
+    es: Vende el relicario al Sindicato Carmesí.
+    en: Sell the locket to the Crimson Syndicate.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Trato carmesí.'
+    en: 'Your story remembers this feat: Crimson Bargain.'
+  points: 20
+  condition:
+    kind: event
+    event: decision
+    match:
+      key: syndicate
+  hint:
+    es: Un relicario, varios caminos. La decisión deja huella.
+    en: One locket, several paths. Your choice leaves a mark.
+sealed_no_more:
+  edition: v0_9
+  category: story
+  form: narrative
+  visibility: hint
+  name:
+    es: Algunos sellos deben permanecer
+    en: Some Seals Should Hold
+  description:
+    es: Abre el relicario sellado.
+    en: Open the sealed locket.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Algunos sellos deben permanecer.'
+    en: 'Your story remembers this feat: Some Seals Should Hold.'
+  points: 20
+  condition:
+    kind: event
+    event: decision
+    match:
+      key: opened
+  hint:
+    es: Un relicario, varios caminos. La decisión deja huella.
+    en: One locket, several paths. Your choice leaves a mark.
+remembered:
+  edition: v0_9
+  category: story
+  form: milestone
+  visibility: public
+  name:
+    es: Un nombre recordado
+    en: A Name Remembered
+  description:
+    es: Alcanza 20 de reputación con una facción.
+    en: Reach 20 reputation with a faction.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Un nombre recordado.'
+    en: 'Your story remembers this feat: A Name Remembered.'
+  points: 20
+  condition:
+    kind: threshold
+    event: reputation
+    field: value
+    target: 20
+field_notes:
+  edition: v0_9
+  category: knowledge
+  form: milestone
+  visibility: public
+  name:
+    es: Notas de campo
+    en: Field Notes
+  description:
+    es: Registra tu primera criatura en el bestiario.
+    en: Record your first creature in the bestiary.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Notas de campo.'
+    en: 'Your story remembers this feat: Field Notes.'
+  points: 10
+  condition:
+    kind: event
+    event: seen
+    match: {}
+know_enemy:
+  edition: v0_9
+  category: knowledge
+  form: milestone
+  visibility: public
+  name:
+    es: Conoce a tu enemigo
+    en: Know Your Enemy
+  description:
+    es: Desbloquea los secretos de una criatura en el bestiario.
+    en: Unlock one creature's bestiary secrets.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Conoce a tu enemigo.'
+    en: 'Your story remembers this feat: Know Your Enemy.'
+  points: 10
+  condition:
+    kind: event
+    event: secrets
+    match: {}
+beast_scholar:
+  edition: v0_9
+  category: knowledge
+  form: milestone
+  visibility: public
+  name:
+    es: Estudioso de las bestias
+    en: A Scholar of Beasts
+  description:
+    es: Desbloquea los secretos del jabalí, murciélago, lobo gris, rata gigante y explorador goblin.
+    en: Unlock the secrets of boar, cave bat, grey wolf, giant rat and goblin scout.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Estudioso de las bestias.'
+    en: 'Your story remembers this feat: A Scholar of Beasts.'
+  points: 40
+  condition:
+    kind: distinct
+    event: secrets
+    field: monster
+    target: 5
+    values:
+    - boar
+    - cave_bat
+    - grey_wolf
+    - giant_rat
+    - goblin_scout
+  title:
+    es: Estudioso de las bestias
+    en: A Scholar of Beasts
+two_skies:
+  edition: v0_9
+  category: field
+  form: milestone
+  visibility: public
+  name:
+    es: Cazador de dos cielos
+    en: Hunter of Two Skies
+  description:
+    es: Gana una cacería diurna y otra nocturna en el Prado de los Colmillos.
+    en: Win a daytime hunt and a nighttime hunt in Tusk Meadow.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Cazador de dos cielos.'
+    en: 'Your story remembers this feat: Hunter of Two Skies.'
+  points: 20
+  condition:
+    kind: distinct
+    event: combat
+    field: period
+    target: 2
+    values:
+    - day
+    - night
+    match:
+      status: victory
+      location: tusk_meadow
+      hunt: true
+sensible_retreat:
+  edition: v0_9
+  category: curiosity
+  form: milestone
+  visibility: public
+  name:
+    es: Una retirada sensata
+    en: A Sensible Retreat
+  description:
+    es: Huye con éxito de un combate.
+    en: Successfully flee a battle.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Una retirada sensata.'
+    en: 'Your story remembers this feat: A Sensible Retreat.'
+  points: 10
+  condition:
+    kind: event
+    event: combat
+    match:
+      status: fled
+back_on_feet:
+  edition: v0_9
+  category: combat
+  form: milestone
+  visibility: public
+  name:
+    es: De nuevo en pie
+    en: Back on Your Feet
+  description:
+    es: Tras una derrota, gana un combate elegible. Encuentro no fijo de dos lobos grises en el Bosque
+      de los Susurros o dos murciélagos en la Mina del Paso Viejo, iniciado a nivel 3–5.
+    en: After a defeat, win an eligible battle. Non-fixed encounter with two grey wolves in Whispering
+      Woods or two cave bats in Old Pass Mine, started at level 3–5.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: De nuevo en pie.'
+    en: 'Your story remembers this feat: Back on Your Feet.'
+  points: 20
+  condition:
+    kind: sequence
+    children:
+    - kind: event
+      event: combat
+      match:
+        status: defeat
+    - kind: event
+      event: combat
+      match:
+        status: victory
+        eligible: true
+warden_crownreach:
+  edition: v0_9
+  category: story
+  form: meta
+  visibility: public
+  name:
+    es: Guardián de Crownreach
+    en: Warden of Crownreach
+  description:
+    es: Conoce la ciudad, completa el tutorial, derrota al Guardián y completa El relicario sellado por
+      cualquier final.
+    en: Know the city, complete the tutorial, defeat the Warden and finish The Sealed Locket with any
+      ending.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Guardián de Crownreach.'
+    en: 'Your story remembers this feat: Warden of Crownreach.'
+  points: 80
+  condition:
+    kind: all
+    children:
+    - kind: distinct
+      event: unlock
+      field: key
+      target: 3
+      values:
+      - know_city
+      - long_road
+      - cryptbreaker
+    - kind: event
+      event: quest
+      match:
+        quest: sealed_box
+  title:
+    es: Guardián de Crownreach
+    en: Warden of Crownreach
+child_wilds:
+  edition: v0_9
+  category: field
+  form: meta
+  visibility: public
+  name:
+    es: Hijo de las tierras salvajes
+    en: Child of the Wilds
+  description:
+    es: Consigue Vida de campo y Manos experimentadas, estudia tres de las cinco especies comunes y derrota
+      a Viejo Colmillo.
+    en: Earn Life in the Wilds and Experienced Hands, study three of the five common species and defeat
+      Old Tusk.
+  earned:
+    es: 'Tu historia recuerda esta hazaña: Hijo de las tierras salvajes.'
+    en: 'Your story remembers this feat: Child of the Wilds.'
+  points: 80
+  condition:
+    kind: all
+    children:
+    - kind: distinct
+      event: unlock
+      field: key
+      target: 2
+      values:
+      - field_life
+      - experienced
+    - kind: distinct
+      event: secrets
+      field: monster
+      target: 3
+      values:
+      - boar
+      - cave_bat
+      - grey_wolf
+      - giant_rat
+      - goblin_scout
+    - kind: event
+      event: kill
+      match:
+        monster: old_tusk
+  title:
+    es: Hijo de las tierras salvajes
+    en: Child of the Wilds

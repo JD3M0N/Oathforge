@@ -180,6 +180,8 @@ async def _finish_one(context: ContextTypes.DEFAULT_TYPE, char_id: int) -> None:
     await send_activity_result(chat, telegram_id, context.bot_data["llm"], out, lang)
     await chat.send_message(text, parse_mode=ParseMode.HTML, reply_markup=kb, disable_web_page_preview=True)
     recorder.outgoing(telegram_id, text, [b.text for row in kb.inline_keyboard for b in row] if kb else [], edited=False)
+    from oathforge.bot.handlers.achievements import deliver
+    await deliver(context.bot, user.telegram_id, user.telegram_id)
 
 
 async def edit_or_send(update: Update, text: str, kb: InlineKeyboardMarkup | None = None) -> None:

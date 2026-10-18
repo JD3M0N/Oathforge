@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from telegram import InlineKeyboardMarkup
 
 from oathforge.ai.client import usage_today
+from oathforge.bot import achievement_views
 from oathforge.bot.keyboards import btn, cb, grid, markup, nonce
 from oathforge.config import get_settings
 from oathforge.content import get_content
@@ -17,8 +18,8 @@ from oathforge.engine.combat import EncounterState, available_bonus_actions, val
 from oathforge.engine.progression import MAX_LEVEL, XP_THRESHOLDS, skill_rank
 from oathforge.i18n import t
 from oathforge.services import (
-    actions, activities, bestiary, characters, chronicles, combat_service, crafting, exploration, inventory, npcs, professions,
-    quests, world_map,
+    achievements, actions, activities, bestiary, characters, chronicles, combat_service, crafting, exploration, inventory, npcs,
+    professions, quests, world_map,
 )
 from oathforge.services.events import Outcome, render_event
 
@@ -915,15 +916,17 @@ def _uses(char: Character, key: str, a) -> str:
 
 async def hero(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
     """Summary: vitals, attributes, gear and unlocked abilities by name. /sheet has everything."""
+    ach = await achievements.snapshot(session, char)
     c = get_content()
     cls = c.classes[char.class_key]
     gear = await characters.equipped(session, char)
     lines = _sheet_top(c, cls, char, gear, lang) + _sheet_attributes(c, cls, char, lang) + _sheet_gear(gear, lang)
+    lines += achievement_views.identity(ach, lang)
     unlocked = [escape(a.name.get(lang)) + _uses(char, key, a)
                 for key, a in cls.abilities.items() if a.level <= char.level]
     if unlocked:
         lines += ["", f"<b>{t(lang, 'sheet.abilities')}</b>", "✨ " + " · ".join(unlocked)]
-    kb = markup([[btn(t(lang, "btn.full_sheet"), cb("sheet"))],
+    kb = markup([[btn(t(lang, "achievements.open"), cb("ach"))], [btn(t(lang, "btn.full_sheet"), cb("sheet"))],
                  [btn(t(lang, "btn.inventory"), cb("inv")), btn(t(lang, "btn.journal"), cb("jr"))],
                  [btn(t(lang, "btn.back"), cb("scene"))]])
     return "\n".join(lines)[:MAX_MESSAGE], kb
@@ -1058,6 +1061,7 @@ def _objective_line(obj, done: int, lang: str) -> str:
 
 async def journal(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
     """The journal hub: the current missions at a glance, then Missions / Bestiary / Rumors."""
+    ach = await achievements.snapshot(session, char)
     lines = [t(lang, "journal.title"), ""]
     current = [(k, q, p) for k, q, p in await quests.journal(session, char)
                if quests.stage_of(q, p)[1] in ("active", "available")]
@@ -1072,7 +1076,9 @@ async def journal(session: AsyncSession, char: Character, lang: str) -> tuple[st
     else:
         lines += [f"<i>{t(lang, 'journal.no_current')}</i>", ""]
     lines.append(f"<i>{t(lang, 'journal.hint')}</i>")
-    kb = markup([[btn(t(lang, "btn.missions"), cb("jrm")), btn(t(lang, "btn.quest_log"), cb("jrl"))],
+    lines += achievement_views.tracked(ach, lang)
+    kb = markup([[btn(t(lang, "achievements.open"), cb("ach"))],
+                 [btn(t(lang, "btn.missions"), cb("jrm")), btn(t(lang, "btn.quest_log"), cb("jrl"))],
                  [btn(t(lang, "btn.bestiary"), cb("jrb")), btn(t(lang, "btn.rumors"), cb("jrr"))],
                  [btn(t(lang, "btn.stats"), cb("jrs")), btn(t(lang, "btn.back"), cb("scene"))]])
     return "\n".join(lines)[:MAX_MESSAGE], kb
@@ -1603,3 +1609,7 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
     rows += grid(buttons)
     lines.append(f"<i>{t(lang, 'combat.hint')}</i>")
     return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
+
+
+async def achievements_view(session, char, lang, arg="-"):
+    return achievement_views.view(await achievements.snapshot(session, char), lang, arg)

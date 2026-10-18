@@ -25,6 +25,8 @@ class Outcome:
     error: str | None = None  # i18n key when the action was refused
     activity_id: int | None = None  # a field activity that just finished (its chronicle follows)
 
+    achievement_unlocks: list[str] = field(default_factory=list)
+
     def add(self, key: str, **params) -> "Outcome":
         self.events.append(Event(key, params))
         return self
@@ -37,6 +39,7 @@ class Outcome:
 
     def extend(self, other: "Outcome") -> "Outcome":
         self.events += other.events
+        self.achievement_unlocks = list(dict.fromkeys(self.achievement_unlocks + other.achievement_unlocks))
         if other.encounter_id:
             self.encounter_id = other.encounter_id
         if other.activity_id:

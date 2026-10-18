@@ -11,6 +11,7 @@ from oathforge.content.schemas import EncounterEntry, Exit, Location
 from oathforge.database.models import Character
 from oathforge.engine.checks import check, dc_for
 from oathforge.services import characters, combat_service, inventory, quests, world_map
+from oathforge.services import achievements
 from oathforge.services.events import Outcome
 
 GAME_DAY_SECONDS = 4 * 3600  # one in-game day every four real hours
@@ -159,9 +160,13 @@ async def travel(session: AsyncSession, char: Character, dest: str, rng: random.
     yards = sum(s.yards for s in walked) if walked else route.yards
     characters.bump_stats(char, yards=yards)
     out = Outcome()
+    origin_city = c.locations[char.location].zone == "crownreach"
     passed = [s.to for s in walked[:-1]]
+    await achievements.emit(session, char, out, "visit", {"location": char.location, "outside": False})
     for place in passed + [end]:
         characters.visited(char, place)
+        await achievements.emit(session, char, out, "visit",
+                                {"location": place, "outside": origin_city and c.locations[place].zone != "crownreach"})
     char.location = end
     if stop:
         out.add("explore.trip_stopped", place=c.locations[end].name.model_dump(),
@@ -240,6 +245,10 @@ async def investigate(session: AsyncSession, char: Character, rng: random.Random
         found = True
         out.text(disc.text)
         char.flags = {**char.flags, disc.sets_flag: True}
+        await achievements.emit(session, char, out, "discovery", {"key": f"{char.location}:{key}"},
+                                f"discovery:{char.location}:{key}")
+        if disc.sets_flag == "crypt_unlocked":
+            await achievements.emit(session, char, out, "flag", {"key": disc.sets_flag}, "flag:crypt_unlocked")
         for item, qty in disc.gives.items():
             await inventory.add_item(session, char, item, qty)
             out.add("loot.item", item=c.items[item].name.model_dump(), qty=qty, item_key=item)

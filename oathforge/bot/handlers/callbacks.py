@@ -9,6 +9,7 @@ from telegram.error import NetworkError
 from telegram.ext import CallbackQueryHandler, ContextTypes
 
 from oathforge.bot import render
+from oathforge.bot.handlers import achievements
 from oathforge.bot.handlers.common import (
     current_view, edit_or_send, load, offer_keyboard, rate_ok, rng, send, send_activity_result, send_chronicle, send_outcome,
     send_photos,
@@ -43,7 +44,9 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     except NetworkError as e:  # the spinner on the button is decoration: do the action anyway
         log.warning("could not answer a button press (%s); continuing", type(e).__name__)
     try:
-        if verb in VIEWS:
+        if verb in ("ach", "achm"):
+            await achievements.handle(update, context, arg, mutation=verb == "achm", nonce=n)
+        elif verb in VIEWS:
             await _view(update, context, verb, arg)
         elif verb == "cb":
             await _combat(update, context, arg, n)

@@ -2,14 +2,17 @@
 
 Resumen de [Possibilium §8–9](Possibilium.md#s08) (y equipo en [mercatura](mercatura.md)).
 
-## Estado actual (0.8.2)
+## Estado actual (0.9.0)
 
 - **Creación**: nombre, hombre o mujer, 4 linajes (humano, elfo, enano, orco), trasfondo (4 básicos como botón, 12 en total, o uno propio revisado por Gemini con 2 habilidades a elegir), clase y compra de 27 puntos (todo en 8; 14→15 cuesta 2; «⭐ Recomendado» carga el array de la clase). `/lineage`, `/background` y `/classes` ayudan a mitad de la creación.
 - **Niveles 1–5**: 0 / 200 / 500 / 1000 / 1800 XP (`engine/progression.py`). PV: dado completo a nivel 1, después media + 1 + CON. Nivel 4: +2 a la principal. Subida de nivel en un mensaje propio.
 - **Competencias** 0–3 que mejoran con el uso, con rendimientos decrecientes si se repite lo mismo en 24 h.
 - Una prueba de habilidad se intenta una vez por habilidad, lugar y día de juego (4 h reales); se desbloquea al día siguiente o al subir de nivel (`characters.checks_tried`).
 - El tutorial (10 misiones, unos 750 XP de misión) lleva a nivel 3–4; relicario y cripta llevan a 5.
-- Reputación con dos facciones; títulos, juramentos y logros no existen todavía.
+- Reputación con dos facciones; los juramentos siguen pendientes.
+- **Logros**: 30 individuales y dos metalogros, por personaje; puntos de prestigio sin poder ni uso económico. Edición fija v0_9 y concesiones atómicas con evidencia.
+- **Identidad**: cuatro títulos desbloqueables, uno equipado, tres logros destacados y tres objetivos seguidos. El progreso anterior se reconoce solo cuando hay evidencia persistida.
+- Los retos de 1 PV, combate contra varios y ausencia de consumibles usan parejas repetibles de lobos o murciélagos a nivel inicial 3–5; no dependen de repetir jefes únicos.
 
 ## Decidido
 
@@ -26,7 +29,7 @@ Resumen de [Possibilium §8–9](Possibilium.md#s08) (y equipo en [mercatura](me
 - **JUR-01** un juramento verificable (Guard the Witness o Return What Was Taken), por eventos, sin juicio moral de la IA (ticket OATH-01).
 - **REL-01..05** favores concretos, rivales, títulos y cicatrices, legado, vínculos de grupo.
 - **LIN-01..06** linajes nuevos (Ashborn, Tidekin…) tras revisar humano (+1 a todo) y enano (inmune a veneno).
-- Imagen de cada linaje en `/lineage` ([ars](ars.md)); sistema de logros ([mundus](mundus.md)).
+- Imagen de cada linaje en `/lineage` ([ars](ars.md)); ampliar logros cuando haya contenido que los justifique ([mundus](mundus.md)).
 
 ## Preguntas abiertas
 

@@ -20,6 +20,7 @@ Versionado `0.x.y`: **y** (parche) en arreglos y cambios pequeños; **x** (menor
 | 0.8.1 | `tests/features.md`: checklist de pruebas tras una feature grande |
 | 0.8.2 | Tutorial de 10 misiones sin mazmorras (Viejo Colmillo como jefe final), objetivo `hunt`, beta instantánea y pociones a 1 de oro |
 | 0.8.3 | Planning reorganizado: Possibilium, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md`, `content/officina/` |
+| 0.9.0 | Logros e identidad: 30 logros, dos metalogros, títulos, destacados, objetivos seguidos y reconocimiento retroactivo verificable |
 
 ## Próximo (candidatos, no compromisos)
 
@@ -27,8 +28,8 @@ Versionado `0.x.y`: **y** (parche) en arreglos y cambios pequeños; **x** (menor
   - balance del tutorial con datos de la beta (`oath tutorial-stats`, [mundus](mundus.md));
   - arreglos de diálogo de PNJ (Bram y el fogón, confianza al preguntar; [narratio](narratio.md));
   - lobo gris y camino del capitán ([bestiarium](bestiarium.md)).
-- **0.9.0**: cooperativo mínimo de dos jugadores en la cripta (PKG-01 núcleo confiable + PKG-02; [societas](societas.md)). Antes: idempotencia del texto libre, contexto versionado y reserva de IA (CORE-01..03, AI-01..02).
-- **0.9.x**: cooperativo de 2–4 con ritmo y ausencias (PKG-03).
+- **Cooperativo, sin versión asignada**: mínimo de dos jugadores en la cripta (PKG-01 núcleo confiable + PKG-02; [societas](societas.md)). Antes: idempotencia del texto libre, contexto versionado y reserva de IA (CORE-01..03, AI-01..02).
+- **Después del cooperativo mínimo, sin versión asignada**: grupos de 2–4 con ritmo y ausencias (PKG-03).
 - **0.10.0**: especializaciones a nivel 5, una por clase (PKG-04; [ordines](ordines.md)), y un juramento verificable ([progressio](progressio.md)).
 - **0.11.0**: encargos NPC y entre jugadores con custodia, sumideros de oro (PKG-05; [mercatura](mercatura.md), [opificia](opificia.md)).
 - **0.12.0**: un evento que cambia Crownreach: la crisis del hierro (PKG-08; [mundus](mundus.md)).

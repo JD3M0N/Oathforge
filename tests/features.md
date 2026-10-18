@@ -62,3 +62,19 @@ Cada pasada se hace con una clase distinta (la que menos se haya probado) y se a
 
 ## Herramientas
 - [ ] `oath tutorial-stats` refleja la partida
+
+## 0.9 — Logros e identidad
+
+Validación 2026-10-17: suite automatizada con PostgreSQL y recorrido real con la cuenta de prueba. «Automático» identifica los casos que no se han forzado en la partida real.
+
+- [x] /achievements: portada, pendientes y obtenidos en español e inglés (Telegram); categorías y paginación (automático).
+- [x] Condición y progreso (Telegram); revelar una pista sin conceder el logro (automático).
+- [x] Seguir tres objetivos y sustituir uno (automático); seguimiento en el diario (Telegram).
+- [x] Equipar/quitar título y límite de destacados (automático); destacado en /hero (Telegram).
+- [x] Actividad automática con un único anuncio agrupado (automático); anuncio retroactivo agrupado (Telegram).
+- [x] 1.000 repeticiones, concurrencia y rollback sin duplicados (automático, PostgreSQL).
+- [x] Reinicio conserva destacados (Telegram); recuperación de anuncio tras fallo y vencimiento de lease (automático).
+- [x] Backfill en simulación y aplicado en la base local; segunda ejecución sin nuevas concesiones.
+- [x] Personaje nuevo: fabricación, victoria y decisiones concedidas por el motor sin IA (automático).
+
+La cuenta de prueba conserva su idioma original y quedó sin los destacados ni objetivos temporales usados en el recorrido.
