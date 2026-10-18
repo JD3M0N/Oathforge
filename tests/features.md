@@ -10,9 +10,19 @@ Cada pasada se hace con una clase distinta (la que menos se haya probado) y se a
 - [ ] Todo el texto sale en el idioma elegido (sin claves de i18n crudas)
 
 ## Teclado fijo y escena
-- [ ] 📍 Lugar · 🧝 Héroe · 🗺 Mapa / 🎒 Inventario · 📖 Diario
+- [ ] 📍 Lugar · ⚒ Actividades · 🗺 Mapa / 🧝 Héroe · 🎒 Inventario · 📖 Diario (los jugadores viejos reciben el teclado nuevo)
 - [ ] `/start` y `/look` enseñan la escena; en combate, el combate
 - [ ] La escena no repite botones del teclado fijo
+- [ ] La escena solo tiene Viajar, Investigar, Hablar, Comerciar, ⚒ Actividades (n) y lo de la misión
+- [ ] ⚒ Actividades: cada actividad con duración y qué falta; sin pico, «🛒 Pico · ir a Mercado» lleva al mercado
+- [ ] ⚒ Actividades mientras trabajas: el panel de la actividad; en combate: el combate
+- [ ] 🛠️ Oficios desde Héroe y desde Actividades, con sus pestañas
+- [ ] Investigar, cazar o abandonar: un solo mensaje con el resultado y los botones; el panel viejo se queda sin botones
+- [ ] Un botón viejo o un doble toque: ventanita «Ese menú ya no vale» y el mensaje pasa a la vista actual, sin gastar nada
+- [ ] Un rechazo («Necesitas un pico», sin oro): ventanita, sin mensaje nuevo
+- [ ] Pulsar la misma vista dos veces no manda un mensaje repetido
+- [ ] Comprar, equipar, aprender o fabricar: el resultado encima del mismo menú
+- [ ] Una actividad que termina sola trae los botones del lugar en el mismo mensaje
 
 ## Mapa y viaje (0.8.0)
 - [ ] Mapa: dónde estás · 📜 objetivo · esta zona · otras zonas · 🌫️ Sin explorar

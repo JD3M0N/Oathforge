@@ -4,6 +4,28 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.0] - 2026-10-18
+
+Empieza la consolidación (0.10.x) con la interfaz (F01, 1.ª parte): menos mensajes, menos botones y siempre a mano lo que puedes hacer.
+
+### Añadido
+- **⚒ Actividades** en el teclado fijo, en la escena (con cuántas hay) y como `/activities`: cazar, recolectar, expedición larga, rastrear, desollar, descansar, fabricar y curar, cada una con su duración y lo que te falta. Sin herramienta no sale el botón: sale «🛒 Pico · ir a Mercado», que te lleva a quien la vende. La disponibilidad usa la misma regla que el servicio (`activities.check`), así que un botón nunca promete lo que luego se rechaza.
+- **🛠️ Oficios** desde Héroe y desde Actividades, con las pestañas de oficios, maestrías y aficiones. `/activities`, `/masteries` y `/hobbies` en el menú de comandos.
+- Pista «Escribe lo que haces…» en el campo de texto.
+
+### Cambiado
+- Teclado fijo de 3 + 3: 📍 Lugar · ⚒ Actividades · 🗺 Mapa / 🧝 Héroe · 🎒 Inventario · 📖 Diario (`KEYBOARD_VERSION = 3`: los jugadores existentes lo reciben solo).
+- La escena se queda con lo social: Viajar, Investigar, Hablar, Comerciar y ⚒ Actividades, más «Seguir viaje», las acciones de misión y «Ver ciudad».
+- **Un mensaje por acción**: investigar, cazar, abandonar o un texto libre dejan un solo mensaje con el resultado y la cabecera del lugar con sus botones, y el panel pulsado se queda sin botones. Subidas de nivel, crónicas y combates siguen en mensajes propios. Una actividad que termina sola trae los botones del lugar en el mismo mensaje.
+- Comprar, vender, equipar, usar, aprender un oficio y fabricar ponen el resultado encima del mismo menú, sin mensaje nuevo. Empezar una actividad convierte el mensaje en su panel; «🔄 Actualizar» lo refresca en el sitio.
+- **Rechazos en ventanita**: «Necesitas un pico», sin oro, un menú viejo, un doble toque o un error de combate salen como aviso emergente de Telegram, sin escribir en el chat, y el mensaje pulsado pasa a la vista actual. Nada se gasta dos veces.
+- Las pistas del tutorial y el `/rulebook` dicen dónde están ahora cazar, recolectar, minar, curar y descansar.
+- Hoja de ruta renumerada: la consolidación son parches **0.10.x** (la serie 0.9 terminó en 0.9.1), empieza por F01 y el hito A va justo después (`planning/roadmap.md`, `planning/iter.md`).
+
+### Arreglado
+- Pulsar dos veces la misma vista ya no manda un mensaje repetido («Message is not modified»).
+- Un conflicto de versión al pulsar un botón ya no deja «Aquí tienes el actual:» sin la vista detrás.
+
 ## [0.9.1] - 2026-10-18
 
 Preparación de la 0.10: el plan antes de tocar el juego.

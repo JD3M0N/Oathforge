@@ -22,12 +22,13 @@ Versionado `0.x.y`: **y** (parche) en arreglos y cambios pequeños; **x** (menor
 | 0.8.3 | Planning reorganizado: Possibilium, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md`, `content/officina/` |
 | 0.9.0 | Logros e identidad: 30 logros, dos metalogros, títulos, destacados, objetivos seguidos y reconocimiento retroactivo verificable |
 | 0.9.1 | Hoja de ruta de 0.10 (consolidación) y 0.11 (multijugador): `planning/roadmap.md` |
+| 0.10.0 | Interfaz (F01, 1.ª parte): teclado con ⚒ Actividades, escena social, un mensaje por acción, rechazos y menús viejos en ventanita, 🛠️ Oficios desde Héroe |
 
 ## Próximo
 
 El detalle de 0.10 y 0.11 (fichas por sistema, hitos, puerta de salida y trazabilidad del TODO) está en [roadmap.md](roadmap.md). Aquí solo el resumen.
 
-- **0.9.x → 0.10.0, consolidación**: revisión integral de los sistemas individuales antes del multijugador, en hitos A–H que se publican como parches 0.9.x; el número 0.10.0 se reserva para superar la puerta de salida. Incluye:
+- **0.10.x, consolidación**: revisión integral de los sistemas individuales antes del multijugador, en hitos A–H que se publican como parches 0.10.x (la serie 0.9 terminó en 0.9.1). Empieza por la interfaz (F01: 0.10.0–0.10.2); la puerta de salida la supera el último 0.10.x. Incluye:
   - seguridad y operación primero: idempotencia del texto libre, contexto versionado y reserva de IA (CORE-01..03, AI-01..02);
   - confianza de los PNJ determinista, servicios de Bram, botones «Oficios» y «Actividades» ([narratio](narratio.md), [facies](facies.md));
   - descanso corto, cofre personal, «Algo brilla», entrega de misiones al dador ([pugna](pugna.md), [mercatura](mercatura.md), [mundus](mundus.md));

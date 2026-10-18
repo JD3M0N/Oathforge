@@ -65,11 +65,17 @@ async def open_activity(session: AsyncSession, char: Character, lock: bool = Fal
     return await session.scalar(stmt)
 
 
-async def start(session: AsyncSession, char: Character, kind: str, skill: str,
-                now: float | None = None) -> Outcome:
-    refusal = characters.ensure_free(char)
-    if refusal:
-        return refusal
+def tool_for(char: Character, kind: str, skill: str) -> str | None:
+    """The item an activity needs where the character stands (a pickaxe to mine, a knife to skin)."""
+    if kind == "skin":
+        return SKINNING_KNIFE
+    g = _gathering(get_content().locations[char.location], skill) if kind in ("gather", "stay") else None
+    return g.tool if g else None
+
+
+async def check(session: AsyncSession, char: Character, kind: str, skill: str) -> Outcome | None:
+    """Why ``kind`` cannot start here (a refusal), or None. The rules of ``start``, shared with the
+    Activities view so a button never offers what the service would refuse."""
     c = get_content()
     loc = c.locations[char.location]
     if kind == "rest":
@@ -77,24 +83,48 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str,
             return Outcome.refused("explore.err.no_rest")
         if char.gold < loc.rest_cost:
             return Outcome.refused("shop.err.no_gold", price=loc.rest_cost)
-        skill = "rest"
     elif kind == "track":
         if not loc.hunting:
             return Outcome.refused("activity.err.unavailable")
+    elif kind == "skin":
+        if not characters.pending_skin(char):
+            return Outcome.refused("activity.err.nothing_to_skin")
+    elif kind not in ("gather", "stay") or _gathering(loc, skill) is None:
+        return Outcome.refused("activity.err.unavailable")
+    tool = tool_for(char, kind, skill)
+    if tool and await inventory.count(session, char, tool) == 0:
+        return Outcome.refused("activity.err.no_tool", tool=c.items[tool].name.model_dump())
+    return None
+
+
+async def availability(session: AsyncSession, char: Character) -> list[tuple[str, str, Outcome | None]]:
+    """Every timed activity of this place, (kind, mastery, refusal or None): gather, stay, track, skin, rest."""
+    loc = get_content().locations[char.location]
+    kinds = options(char)
+    if characters.pending_skin(char):
+        kinds.append(("skin", "skinning"))
+    if loc.rest_cost is not None:
+        kinds.append(("rest", "rest"))
+    return [(kind, skill, await check(session, char, kind, skill)) for kind, skill in kinds]
+
+
+async def start(session: AsyncSession, char: Character, kind: str, skill: str,
+                now: float | None = None) -> Outcome:
+    refusal = characters.ensure_free(char) or await check(session, char, kind, skill)
+    if refusal:
+        return refusal
+    c = get_content()
+    loc = c.locations[char.location]
+    g = None
+    if kind == "rest":
+        skill = "rest"
+    elif kind == "track":
         skill = "tracking"
     elif kind == "skin":
         beasts = characters.pending_skin(char)
-        if not beasts:
-            return Outcome.refused("activity.err.nothing_to_skin")
-        if await inventory.count(session, char, SKINNING_KNIFE) == 0:
-            return Outcome.refused("activity.err.no_tool", tool=c.items[SKINNING_KNIFE].name.model_dump())
         skill = "skinning"
     else:
         g = _gathering(loc, skill)
-        if kind not in ("gather", "stay") or g is None:
-            return Outcome.refused("activity.err.unavailable")
-        if g.tool and await inventory.count(session, char, g.tool) == 0:
-            return Outcome.refused("activity.err.no_tool", tool=c.items[g.tool].name.model_dump())
     if await open_activity(session, char, lock=True):
         return Outcome.refused("activity.err.busy")
     tool_checked = kind == "skin" or (kind in ("gather", "stay") and bool(g.tool))

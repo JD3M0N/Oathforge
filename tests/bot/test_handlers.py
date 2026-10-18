@@ -37,6 +37,8 @@ class Chat:
     def __init__(self):
         self.sent: list[tuple[str, object]] = []
         self.photos: list[object] = []  # what was sent: bytes (upload) or a cached file_id
+        self.popups: list[str] = []  # small popups answering a button press (refusals, stale menus)
+        self.dropped = 0
 
     async def send_message(self, text, parse_mode=None, reply_markup=None, **_):
         self.sent.append((text, reply_markup))
@@ -55,16 +57,25 @@ class Chat:
 
 
 class Query:
+    ids = 0
+
     def __init__(self, data, chat):
         self.data, self.chat, self.message = data, chat, object()
         self.answers = 0
+        Query.ids += 1
+        self.id = str(Query.ids)
 
-    async def answer(self, *_, **__):
+    async def answer(self, text=None, *_, **__):
         self.answers += 1
         assert self.answers == 1, "callback answered twice"
+        if text:
+            self.chat.popups.append(text)
 
     async def edit_message_text(self, text, parse_mode=None, reply_markup=None, **_):
         self.chat.sent.append((text, reply_markup))
+
+    async def edit_message_reply_markup(self, reply_markup=None, **_):
+        self.chat.dropped += 1  # the pressed message keeps its text and loses its buttons
 
 
 class Player:
@@ -142,10 +153,17 @@ async def test_full_flow(llm, monkeypatch):
     assert (await char_row()).location == "broken_crown_tavern"
     await p.press(go.replace("broken_crown_tavern", "crownreach_market"))  # same nonce, other button
     assert (await char_row()).location == "broken_crown_tavern"
-    assert any("ya no es válido" in t_ for t_, _ in p.chat.sent[-3:])
+    assert p.chat.popups[-1].startswith("Ese menú ya no vale")  # a popup, and the message is the current view
+    assert "Taberna" in p.last[0]
 
-    # investigate (idempotent per nonce); a long rest leaves you asleep, getting up early gives nothing
+    # investigate: one message with the result and the scene's buttons, the old one without them
+    sent, dropped = len(p.chat.sent), p.chat.dropped
     await p.press(p.find("look"))
+    assert len(p.chat.sent) == sent + 1 and p.chat.dropped == dropped + 1
+    assert "acts|-|-" in p.buttons()
+
+    # ⚒ Activities: a long rest leaves you asleep, getting up early gives nothing
+    await p.press("acts|-|-")
     await p.press(p.find("rest"))
     assert (await char_row()).state == "busy" and "80 min" in p.last[0]
     await p.press(p.find("actx"))
@@ -538,7 +556,7 @@ async def test_stale_combat_button_never_acts_twice(llm):
         char = await s.scalar(select(Character).with_for_update())
         char.location = "tusk_meadow"
         char.hp = char.max_hp = 400
-    await p.press("scene|-|-")
+    await p.press("acts|-|-")
     await p.press(p.find("hunt"))
     assert "Combat" in p.last[0]
     first = p.find("cb", "def")
@@ -697,10 +715,10 @@ async def test_mining_buttons_collect_and_chronicle(llm):
         char = await s.scalar(select(Character).with_for_update())
         char.location = "ironvein_mine"
         await inventory.add_item(s, char, "pickaxe")
-    await p.press("scene|-|-")
+    await p.press("acts|-|-")
     sent = len(p.chat.sent)
     await p.press(p.find("act", "gather:mining"))
-    assert len(p.chat.sent) == sent + 1  # one message: "you start working", not the scene again
+    assert len(p.chat.sent) == sent + 1  # the Activities message becomes "you start working"
     assert "Te pones a trabajar" in p.last[0] and "Minería" in p.last[0]
     assert "Termina en 5 min" in p.last[0] and "actx" in str(p.buttons()) and "Recoger" not in str(p.last[1])
     await p.press(p.find("actc"))  # 🔄 Refresh before the end: just the panel again, no error
@@ -713,7 +731,7 @@ async def test_mining_buttons_collect_and_chronicle(llm):
     await p.press("scene|-|-")
     llm.text_queue.append("Aldric arranca la mena de la roca con paciencia.")
     await p.press(p.find("actc"))
-    result = p.chat.sent[-2][0]  # chronicle and loot in a single message
+    result = p.last[0]  # chronicle, loot and the scene's buttons in a single message
     assert "⛏️" in result and "Terminas tu trabajo" in result and "Aldric arranca" in result
     assert ("Mena de hierro" in result or "Carbón" in result) and "XP de Minería" in result and "1/15" in result
     assert "Viajar" in str(p.last[1].inline_keyboard)  # back to the normal scene
@@ -738,7 +756,7 @@ async def test_activities_end_by_themselves_even_offline(llm):
         char = await s.scalar(select(Character).with_for_update())
         char.location = "ironvein_mine"
         await inventory.add_item(s, char, "pickaxe")
-    await p.press("scene|-|-")
+    await p.press("acts|-|-")
     await p.press(p.find("act", "gather:mining"))
     job = SimpleNamespace(bot=FakeBot(p.chat), bot_data={"llm": llm})
     sent = len(p.chat.sent)
@@ -768,16 +786,16 @@ async def test_learn_a_profession_and_craft(llm):
         char.location = "crownreach_workshops"
         await inventory.add_item(s, char, "bloodroot", 2)
         await inventory.add_item(s, char, "water_flask", 1)
-    await p.press("scene|-|-")
+    await p.press("acts|-|-")
     await p.press(p.find("prof"))
     assert "0/2" in p.last[0]
     await p.press(p.find("plearn", "alchemy"))
-    assert "Alquimia" in p.chat.sent[-2][0] and "1/2" in p.last[0]
-    await p.press("scene|-|-")
+    assert "Alquimia" in p.last[0] and "1/2" in p.last[0]  # the result on top of the same menu
+    await p.press("acts|-|-")
     await p.press(p.find("crf"))
     assert "✅" in p.last[0]
     await p.press(p.find("craft", "healing_potion"))
-    assert "Poción de curación" in p.chat.sent[-2][0]
+    assert "Poción de curación" in p.last[0]
     assert "❌" in p.last[0]  # no more bloodroot
 
 
@@ -823,9 +841,10 @@ async def test_fixed_keyboard_after_creation_and_its_buttons(llm):
     await create(p)
     fixed = [kb for _, kb in p.chat.sent if isinstance(kb, ReplyKeyboardMarkup)]
     assert len(fixed) == 1 and fixed[0].is_persistent
-    assert [b.text for row in fixed[0].keyboard for b in row] == ["📍 Lugar", "🧝 Héroe", "🗺 Mapa", "🎒 Inventario",
-                                                                   "📖 Diario"]
+    assert [b.text for row in fixed[0].keyboard for b in row] == ["📍 Lugar", "⚒ Actividades", "🗺 Mapa", "🧝 Héroe",
+                                                                   "🎒 Inventario", "📖 Diario"]
     for label, expect in (("🎒 Inventario", "Inventario"), ("📖 Diario", "Diario de aventuras"),
+                          ("⚒ Actividades", "Actividades"),
                           ("🗺 Mapa", "Mapa"), ("🧝 Héroe", "Aldric"), ("📍 Lugar", "Plaza de Crownreach")):
         await commands.fixed_button(p.update(message=label), p.ctx)
         assert expect in p.last[0]
@@ -833,7 +852,7 @@ async def test_fixed_keyboard_after_creation_and_its_buttons(llm):
     await p.press("setl|en|-")  # another language: the labels follow on the next view
     await p.press("inv|-|-")
     fixed = [kb for _, kb in p.chat.sent if isinstance(kb, ReplyKeyboardMarkup)]
-    assert len(fixed) == 2 and fixed[-1].keyboard[0][1].text == "🧝 Hero"
+    assert len(fixed) == 2 and fixed[-1].keyboard[1][0].text == "🧝 Hero"
     await commands.fixed_button(p.update(message="🎒 Inventario"), p.ctx)  # the old labels still work
     assert "Inventory" in p.last[0]
 
@@ -928,3 +947,55 @@ async def test_achievement_delivery_ignores_groups(monkeypatch):
         update = SimpleNamespace(effective_chat=SimpleNamespace(id=7, type=kind), effective_user=user)
         await achievements.deliver_update(update, SimpleNamespace(bot=None))
     assert calls == [7]
+
+
+async def test_activities_view_offers_only_what_can_start(llm):
+    """⚒ Activities: without a pickaxe, mining is not a button but the way to the shop that sells it."""
+    from oathforge.services import activities, inventory
+
+    p = Player(llm, tg_id=91)
+    await create(p)
+    async with session_scope() as s:
+        char = await s.scalar(select(Character).with_for_update())
+        char.location = "ironvein_mine"
+    await commands.fixed_button(p.update(message="⚒ Actividades"), p.ctx)
+    assert "Actividades" in p.last[0] and "Te falta: Pico" in p.last[0]
+    assert not any(b.startswith("act|gather:mining") for b in p.buttons())
+    assert any(b.startswith("go|crownreach_market") for b in p.buttons())  # 🛒 Pico · ir a Mercado
+    async with session_scope() as s:  # the view and the service agree
+        char = await s.scalar(select(Character))
+        refusal = dict(((k, sk), r) for k, sk, r in await activities.availability(s, char))[("gather", "mining")]
+        assert refusal.error == "activity.err.no_tool"
+        assert (await activities.start(s, char, "gather", "mining")).error == "activity.err.no_tool"
+        await inventory.add_item(s, char, "pickaxe")
+    await p.press("acts|-|-")
+    assert "act|gather:mining" in str(p.buttons()) and "Pico de minero ✅" in p.last[0]
+
+
+async def test_a_refusal_is_a_popup_and_the_view_stays(llm):
+    p = Player(llm, tg_id=92)
+    await create(p)
+    async with session_scope() as s:
+        char = await s.scalar(select(Character).with_for_update())
+        char.location = "ironvein_mine"
+    await p.press("acts|-|-")
+    sent = len(p.chat.sent)
+    await p.press("act|gather:mining|n1")  # an old button: no pickaxe now
+    assert "Pico" in p.chat.popups[-1]
+    assert len(p.chat.sent) == sent + 1 and "Actividades" in p.last[0]  # edited in place, nothing new
+
+
+async def test_the_same_view_twice_sends_nothing_new(llm):
+    from telegram.error import BadRequest
+
+    p = Player(llm, tg_id=93)
+    await create(p)
+
+    async def not_modified(*_, **__):
+        raise BadRequest("Message is not modified: specified new message content is the same")
+
+    update = p.update(data="hero|-|-")
+    update.callback_query.edit_message_text = not_modified
+    sent = len(p.chat.sent)
+    await callbacks.on_callback(update, p.ctx)
+    assert len(p.chat.sent) == sent

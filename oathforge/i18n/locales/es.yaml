@@ -2,6 +2,9 @@
 # View templates (create, scene, sheet, help) may use Telegram HTML.
 
 cmd:
+  activities: "Actividades: qué puedes hacer aquí"
+  masteries: "Maestrías de campo"
+  hobbies: "Aficiones: cocina y pesca"
   achievements: Logros, títulos y objetivos
   start: "Empezar o volver a la escena"
   look: "Mirar alrededor"
@@ -29,7 +32,7 @@ help:
     También puedes <b>escribir lo que quieras hacer</b>: «me escondo tras la barra y escucho», «intento robarle la bolsa al tabernero», «empujo el carro sobre el bandido».
     El Dungeon Master interpreta tu acción, el motor tira los dados y tú ves el resultado real.
 
-    Comandos: /look /map /hero /sheet /inventory /journal /quests /classes /report /professions /masteries /hobbies /rulebook /settings
+    Comandos: /look /activities /map /hero /sheet /inventory /journal /quests /classes /report /professions /masteries /hobbies /rulebook /settings
   version: "<i>Oathforge v{version}</i>"
 
 settings:
@@ -111,12 +114,17 @@ create:
 
 kb:
   place: "📍 Lugar"
+  activities: "⚒ Actividades"
   hero: "🧝 Héroe"
   map: "🗺 Mapa"
   inventory: "🎒 Inventario"
   journal: "📖 Diario"
-  ready: "⌨️ Debajo del chat tienes los atajos fijos: 📍 Lugar (dónde estás y qué puedes hacer), 🧝 Héroe, 🗺 Mapa, 🎒 Inventario y 📖 Diario."
+  ready: "⌨️ Debajo del chat tienes los atajos fijos: 📍 Lugar (dónde estás y con quién), ⚒ Actividades (qué puedes hacer aquí), 🗺 Mapa, 🧝 Héroe, 🎒 Inventario y 📖 Diario."
+  placeholder: "Escribe lo que haces…"
 btn:
+  activities: "⚒ Actividades ({n})"
+  buy_tool: "🛒 Comprar {tool}"
+  buy_tool_at: "🛒 {tool} · ir a {place}"
   rulebook: "📘 Reglamento"
   full_sheet: "📜 Ficha completa"
   report: "📜 Informe"
@@ -615,7 +623,7 @@ dmg:
 err:
   generic: "Algo salió mal. Inténtalo de nuevo."
   rate: "Más despacio, aventurero."
-  stale: "Ese menú ya no es válido. Aquí tienes el actual:"
+  stale_popup: "Ese menú ya no vale: te dejo el actual."
   unknown: "No entiendo esa acción."
 
 creature:
@@ -737,6 +745,20 @@ roll:
   changed: "🎲 Tiradas manuales {state}."
   stale: "Esa tirada ya no tiene sentido aquí: te has movido."
 
+acts:
+  title: "⚒ <b>Actividades</b> · {place}"
+  none: "Aquí no hay nada que hacer con las manos. Mira en el 🗺 Mapa: la mina, la arboleda o el prado sí lo tienen."
+  guild: "Aquí se aprenden y se cambian los oficios: 🛠️ Oficios."
+  missing: "❌ Te falta: {tool}"
+  desc:
+    hunt: "un combate ahora con lo que ronde por aquí"
+    gather: "seguro; lo obtenido llega solo al terminar"
+    stay: "mucho más botín, pero al final puede haber emboscada"
+    track: "experiencia de rastreo y trofeos; acaba en combate con la presa"
+    skin: "piel y carne de las piezas que acabas de cazar"
+    rest: "ocho horas de sueño ({minutes} min): vida y usos al máximo"
+    craft: "las recetas de tus oficios en las estaciones de aquí"
+    heal: "vida al máximo y heridas graves cerradas"
 activity:
   started:
     gather: "Te pones a trabajar: {skill} en {place}. En {minutes} min te llega lo obtenido."

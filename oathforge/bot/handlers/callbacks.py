@@ -5,14 +5,13 @@ import logging
 
 from sqlalchemy.orm.exc import StaleDataError
 from telegram import Update
-from telegram.error import NetworkError
 from telegram.ext import CallbackQueryHandler, ContextTypes
 
 from oathforge.bot import render
 from oathforge.bot.handlers import achievements
 from oathforge.bot.handlers.common import (
-    current_view, edit_or_send, load, offer_keyboard, rate_ok, rng, send, send_activity_result, send_chronicle, send_outcome,
-    send_photos,
+    answer, answered, current_view, drop_buttons, edit_or_send, load, offer_keyboard, rate_ok, rng, send, send_activity_result,
+    send_chronicle, send_outcome, send_photos, send_result,
 )
 from oathforge.bot.keyboards import btn, cb, markup, parse
 from oathforge.content import get_content
@@ -30,19 +29,18 @@ log = logging.getLogger(__name__)
 # verbs that only show something (no nonce, no state change)
 VIEWS = {"scene", "trv", "trvz", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jrl", "jrs", "jq", "jrb", "jb", "jbi", "jrr",
          "shopm", "shop", "shopg", "sellm", "cbp", "lang", "city", "cls", "clsl", "rep", "prof", "profsw", "profcf", "pg", "crf", "rb", "repf",
-         "mst", "hob"}
+         "mst", "hob", "acts"}
 
 
 async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     q = update.callback_query
     verb, arg, n = parse(q.data or "")
     if not rate_ok(context, update.effective_user.id):
-        await q.answer(t(context.user_data.get("lang", "es"), "err.rate"), show_alert=False)
+        await answer(update, t(context.user_data.get("lang", "es"), "err.rate"))
+        answered(update)
         return
-    try:
-        await q.answer()
-    except NetworkError as e:  # the spinner on the button is decoration: do the action anyway
-        log.warning("could not answer a button press (%s); continuing", type(e).__name__)
+    if verb != "cb" and verb not in ACTS:  # actions answer once they know (a refusal is a popup)
+        await answer(update)
     try:
         if verb in ("ach", "achm"):
             await achievements.handle(update, context, arg, mutation=verb == "achm", nonce=n)
@@ -58,8 +56,16 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
             await settings(update, context, arg if verb == "setl" else None)
         else:
             await _act(update, context, verb, arg, n)
-    except StaleDataError:
-        await send(update, t(context.user_data.get("lang", "es"), "err.stale"))
+    except StaleDataError:  # someone else changed the hero meanwhile: the popup, and the current view in place
+        lang = context.user_data.get("lang", "es")
+        await answer(update, t(lang, "err.stale_popup"))
+        async with session_scope() as session:
+            _, char = await load(session, update)
+            if char is not None:
+                await edit_or_send(update, *await current_view(session, char, lang))
+    finally:
+        await answer(update)
+        answered(update)
 
 
 async def _view(update: Update, context, verb: str, arg: str) -> None:
@@ -121,6 +127,8 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             text, kb = await render.conversation(session, char, arg, lang)
         elif verb in ("trv", "trvz") and not in_combat:
             text, kb = await render.map_view(session, char, lang, arg if verb == "trvz" else None)
+        elif verb == "acts" and not in_combat:
+            text, kb = await render.activities_view(session, char, lang)
         elif verb == "talkm" and not in_combat:
             text, kb = render.talk_menu(char, lang)
         elif verb == "inv":
@@ -223,31 +231,53 @@ async def _act(update: Update, context, verb: str, arg: str, n: str, rolled_at: 
                 out = await _dispatch(session, char, verb, arg, r, context)
                 text, kb = await _after(session, char, lang, verb, arg, context, out)
                 telegram_id = user.telegram_id
+                in_combat = char.state == "in_combat"
     if early is not None:
+        await answer(update)
         await send(update, *early)
         return
-    if stale:
-        await send(update, t(lang, "err.stale"))
-        await send(update, text, kb)
+    if stale:  # an old menu or a double tap: nothing is spent, and the message becomes the current view
+        await answer(update, t(lang, "err.stale_popup"))
+        await edit_or_send(update, text, kb)
         return
     if verb == "actc" and out.error in ("activity.err.not_ready", "activity.err.none"):
-        pass  # "🔄 Refresh" before the end (or after the bot delivered it): just the view again
-    elif verb == "actc" and out.ok:  # pressed right as it ended: the same message the bot would send
-        await send_activity_result(update.effective_chat, telegram_id, context.bot_data["llm"], out, lang)
-    elif _started(out):
-        pass  # the panel below says it all
+        await answer(update)  # "🔄 Refresh" before the end (or after the bot delivered it): the view, in place
+        await edit_or_send(update, text, kb)
+        return
+    if refused(out):  # nothing happened: a popup, and the panel stays (refreshed) where it was
+        await answer(update, render_event(out.events[0], lang) if out.events else t(lang, out.error))
+        await edit_or_send(update, text, kb)
+        return
+    await answer(update)
+    if verb == "actc" and out.ok:  # pressed right as it ended: the same message the bot would send
+        await drop_buttons(update)
+        await send_activity_result(update.effective_chat, telegram_id, context.bot_data["llm"], out, lang, (text, kb))
+    elif _started(out):  # the scene becomes the "you start working" panel
+        await edit_or_send(update, text, kb)
     elif verb == "go" and out.ok and out.events and all(e.key in ARRIVALS for e in out.events):
         await edit_or_send(update, f"{render.outcome_text(out, lang)}\n\n{text}", kb)  # the map turns into the place
-        return
-    else:
+    elif verb in IN_PLACE and not render.level_up_cards(out, lang):  # a menu: the result on top, same message
+        await edit_or_send(update, f"{render.outcome_text(out, lang)}\n\n{text}"[:render.MAX_MESSAGE], kb)
+    elif out.activity_id or in_combat:  # a chronicle or a fight follows: their own messages
+        await drop_buttons(update)
         if out.events:
             await send_outcome(update, out, lang)
         if out.activity_id:  # an ambushed stay or a tracked prey just ended: its chronicle
             await send_chronicle(update, context, out.activity_id, lang)
-    await send(update, text, kb)
+        await send(update, text, kb)
+    else:  # the result and the buttons to carry on, in one message
+        await send_result(update, out, lang, text, kb)
 
 
 ARRIVALS = {"explore.arrived", "explore.arrived_via"}  # a quiet arrival: nothing else happened on the way
+# buttons that change something (the rest only show a view): they answer the press once they know the result
+ACTS = {"go", "look", "hunt", "rest", "heal", "act", "actc", "actx", "plearn", "craft", "qa", "eq", "use", "buy", "sell"}
+IN_PLACE = {"buy", "sell", "eq", "use", "plearn", "craft"}  # menus: the result goes on top of the same menu
+
+
+def refused(out: Outcome) -> bool:
+    """The action did not happen at all (only the reason why): a popup is enough."""
+    return not out.ok and bool(out.error) and len(out.events) <= 1
 
 
 def _started(out: Outcome) -> str | None:
@@ -328,7 +358,13 @@ async def _after(session, char, lang: str, verb: str, arg: str, context, out: Ou
         return render.professions_view(char, lang)
     if verb == "craft":
         return await render.craft_menu(session, char, lang)
-    return await render.scene(session, char, lang)
+    if out is not None and refused(out):  # nothing happened: the same view, refreshed in place
+        if verb in ("act", "hunt", "rest", "heal"):
+            return await render.activities_view(session, char, lang)
+        return await render.scene(session, char, lang)
+    # the scene again; under a result only its heading (after travelling, the whole new place)
+    arrived = verb == "go" and out is not None and out.ok
+    return await render.scene(session, char, lang, compact=not arrived)
 
 
 # ---------------------------------------------------------------- manual rolls
@@ -457,8 +493,7 @@ async def _combat(update: Update, context, arg: str, n: str) -> None:
         error = out.error
         telegram_id = user.telegram_id
 
-    if error:  # the callback was already answered, so surface the refusal as a message
-        await send(update, "⚠️ " + t(lang, error))
+    await answer(update, "⚠️ " + t(lang, error) if error else None)  # a refusal is a popup
     await edit_or_send(update, text, kb)
     if finished and out.activity_id:  # an ambushed stay or a tracked prey: rewards and chronicle together
         await send_activity_result(update.effective_chat, telegram_id, context.bot_data["llm"], summary, lang)

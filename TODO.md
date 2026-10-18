@@ -63,10 +63,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🟢 ◐ Explicar las ⚠️ de los viajes (probabilidad de emboscada) y la leyenda ●/○/· de las competencias en `/sheet`. *Hecho: las ⚠️ en el mapa y en el `/rulebook` (v0.8.0). Falta: la leyenda de `/sheet`.*
 - [ ] 🟢 Gramática de los textos generados: «Llegas **al** Mercado», «Llegas **a la** Taberna…» (artículo por lugar) y «1 ronda» en singular en el informe.
 - [ ] 🟢 Expediciones: escenas de viaje con decisiones, estilos prudente/explorador/directo, atajos desbloqueables y favoritos ([mundus](planning/mundus.md)).
-- [ ] 🟡 Mensaje de estado que se edita en lugar de mandar muchos mensajes.
 - [ ] 🟢 Duelos PvP con consentimiento y sin pérdidas.
-- [ ] 🟡 **Botón «Oficios» que reúna maestrías, oficios y aficiones** en un solo sitio (hoy son `/masteries`, `/professions` y `/hobbies` por separado).
-- [ ] 🟡 **Botón «Actividades»** con lo que puedes hacer en el lugar donde estás: como «👥 Aquí», pero con menos datos.
 - [ ] 🟢 Emojis para menas, hierbas, maderas, pieles y demás materiales (en el inventario, el botín y las recetas).
 
 ## 🌍 Mundo, misiones y economía · [mundus](planning/mundus.md) · [mercatura](planning/mercatura.md)
@@ -165,3 +162,4 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] Tutorial de 10 misiones sin mazmorras, objetivo `hunt` y beta instantánea (v0.8.2).
 - [x] Planning reorganizado: Possibilium como libro principal, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md` y laboratorio `content/officina/` (v0.8.3).
 - [x] README raíz simple y motivador; flujo, seguridad y `artifacts/` en `AGENTS.md` (v0.8.4–0.8.5).
+- [x] **Interfaz más cómoda**: ⚒ Actividades en el teclado fijo y en la escena (con lo que falta y dónde comprarlo), 🛠️ Oficios que reúne oficios, maestrías y aficiones, un solo mensaje por acción y rechazos en ventanita (v0.10.0).

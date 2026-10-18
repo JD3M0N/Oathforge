@@ -223,20 +223,23 @@ def status_line(char: Character, lang: str) -> str:
 # ---------------------------------------------------------------- scene
 
 async def scene(session: AsyncSession, char: Character, lang: str,
-                started: str | None = None) -> tuple[str, InlineKeyboardMarkup]:
+                started: str | None = None, compact: bool = False) -> tuple[str, InlineKeyboardMarkup]:
+    """Where you are and who is around; what you can do with your hands lives in ⚒ Activities.
+    ``compact``: only the heading and the status line, under the result of an action."""
     c = get_content()
     loc = c.locations[char.location]
     night = exploration.is_night()
     present = exploration.npcs_present(char.location)
     lines = [f"📍 <b>{escape(loc.name.get(lang))}</b>", status_line(char, lang), ""]
-    desc = loc.night.get(lang) if night and loc.night else loc.description.get(lang)
-    lines.append(escape(desc))
-    for extra in await quests.location_texts(session, char):
-        lines += ["", f"<i>{escape(extra[lang])}</i>"]
-    if present:
-        lines += ["", t(lang, "scene.people")]
-        lines += [f"• {escape(c.npcs[k].name.get(lang))} <i>({escape(c.npcs[k].title.get(lang))})</i>" for k in present]
-    lines += ["", f"<i>{t(lang, 'scene.hint')}</i>"]
+    if not compact:
+        desc = loc.night.get(lang) if night and loc.night else loc.description.get(lang)
+        lines.append(escape(desc))
+        for extra in await quests.location_texts(session, char):
+            lines += ["", f"<i>{escape(extra[lang])}</i>"]
+        if present:
+            lines += ["", t(lang, "scene.people")]
+            lines += [f"• {escape(c.npcs[k].name.get(lang))} <i>({escape(c.npcs[k].title.get(lang))})</i>" for k in present]
+        lines += ["", f"<i>{t(lang, 'scene.hint')}</i>"]
 
     n = nonce()
     act = await activities.open_activity(session, char)
@@ -247,20 +250,9 @@ async def scene(session: AsyncSession, char: Character, lang: str,
         buttons.append(btn(t(lang, "btn.talk"), cb("talkm")))
     if any(c.npcs[k].shop for k in present):
         buttons.append(btn(t(lang, "btn.shop"), cb("shopm")))
-    if loc.hunting:
-        buttons.append(btn(t(lang, "btn.hunt_night" if night and loc.night_encounters else "btn.hunt"),
-                           cb("hunt", "-", n)))
-    for kind, skill in activities.options(char):
-        label = {"gather": f"btn.gather_{skill}", "stay": "btn.stay", "track": "btn.track"}[kind]
-        buttons.append(btn(t(lang, label, minutes=gathering.SECONDS[kind] // 60), cb("act", f"{kind}:{skill}", n)))
-    if loc.stations:
-        buttons.append(btn(t(lang, "btn.craft"), cb("crf")))
-    if loc.guild:
-        buttons.append(btn(t(lang, "btn.professions"), cb("prof")))
-    if loc.rest_cost is not None:
-        buttons.append(btn(t(lang, "btn.rest" if loc.rest_cost else "btn.rest_free", cost=loc.rest_cost), cb("rest", "-", n)))
-    if loc.healer is not None:
-        buttons.append(btn(t(lang, "btn.heal"), cb("heal", "-", n)))  # free during the beta
+    things = len(await activity_entries(session, char, lang))
+    if things:
+        buttons.append(btn(t(lang, "btn.activities", n=things), cb("acts")))
     if loc.hub and c.media.zone_images(loc.zone, night):
         buttons.append(btn(t(lang, "btn.view_city"), cb("city")))
     rows = grid(buttons)
@@ -271,7 +263,7 @@ async def scene(session: AsyncSession, char: Character, lang: str,
     for a in await quests.available_actions(session, char, present):
         if a.action.npc is None:
             rows.append([btn(a.action.label.get(lang), cb("qa", a.ref, n))])
-    return "\n".join(lines), markup(rows)  # inventory, hero and journal live in the fixed keyboard
+    return "\n".join(lines).rstrip(), markup(rows)  # inventory, hero and journal live in the fixed keyboard
 
 
 SKINNING_TOOL = activities.SKINNING_KNIFE
@@ -302,6 +294,76 @@ def activity_panel(char: Character, act, lines: list[str], n: str, lang: str,
     lines += ["", f"<i>{t(lang, 'activity.busy_hint_rest' if rest else 'activity.busy_hint')}</i>"]
     rows = [[btn(t(lang, "btn.refresh"), cb("actc", "-", n)), btn(t(lang, "btn.abandon"), cb("actx", "-", n))]]
     return "\n".join(lines), markup(rows)
+
+
+def seller_of(item_key: str) -> tuple[str, str] | None:
+    """(npc, location) of whoever sells an item by day: where to buy the pickaxe you lack."""
+    for key, npc in get_content().npcs.items():
+        if npc.shop and item_key in npc.shop.items and npc.schedule.get("day"):
+            return key, npc.schedule["day"]
+    return None
+
+
+async def activity_entries(session: AsyncSession, char: Character, lang: str,
+                           n: str = "-") -> list[tuple[str, object]]:
+    """⚒ Activities: (line, button) for everything the hands can do here. The button is None when there is
+    nothing to press (no gold for the inn); a missing tool offers the way to the shop that sells it."""
+    c = get_content()
+    loc = c.locations[char.location]
+    night = exploration.is_night()
+    out = []
+    if loc.hunting:
+        label = t(lang, "btn.hunt_night" if night and loc.night_encounters else "btn.hunt")
+        out.append((f"<b>{label}</b> · <i>{t(lang, 'acts.desc.hunt')}</i>", btn(label, cb("hunt", "-", n))))
+    labels = {"gather": "btn.gather_{}", "stay": "btn.stay", "track": "btn.track", "skin": "btn.skin",
+              "rest": "btn.rest" if loc.rest_cost else "btn.rest_free"}
+    for kind, skill, refusal in await activities.availability(session, char):
+        seconds = activities.skin_seconds(characters.pending_skin(char)) if kind == "skin" \
+            else gathering.SECONDS[kind]
+        label = t(lang, labels[kind].format(skill), minutes=seconds // 60, seconds=seconds, cost=loc.rest_cost)
+        desc = t(lang, f"acts.desc.{kind}", minutes=seconds // 60)
+        line = f"<b>{escape(label)}</b> · <i>{desc}</i>"
+        tool = activities.tool_for(char, kind, skill)
+        button = btn(label, cb("rest", "-", n) if kind == "rest" else cb("act", f"{kind}:{skill}", n))
+        if refusal is None:
+            if tool:
+                line += f"\n      🧰 {escape(c.items[tool].name.get(lang))} ✅"
+        elif refusal.error == "activity.err.no_tool":
+            name = c.items[tool].name.get(lang)
+            line += "\n      " + t(lang, "acts.missing", tool=escape(name))
+            seller = seller_of(tool)
+            button = None
+            if seller and seller[1] == char.location:
+                button = btn(t(lang, "btn.buy_tool", tool=name), cb("shop", seller[0]))
+            elif seller:
+                button = btn(t(lang, "btn.buy_tool_at", tool=name, place=c.locations[seller[1]].name.get(lang)),
+                             cb("go", seller[1], n))
+        else:
+            line += "\n      ❌ " + escape(render_event(refusal.events[0], lang))
+            button = None
+        out.append((line, button))
+    if loc.stations:
+        out.append((f"<b>{t(lang, 'btn.craft')}</b> · <i>{t(lang, 'acts.desc.craft')}</i>", btn(t(lang, "btn.craft"), cb("crf"))))
+    if loc.healer is not None:
+        out.append((f"<b>{t(lang, 'btn.heal')}</b> · <i>{t(lang, 'acts.desc.heal')}</i>",
+                    btn(t(lang, "btn.heal"), cb("heal", "-", n))))  # free during the beta
+    return out
+
+
+async def activities_view(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+    """⚒ Activities: what you can do here, how long it takes and what you lack; then 🛠️ Professions."""
+    if char.state == "busy":  # already working: its panel (the callers send a fight to the combat panel)
+        return await scene(session, char, lang)
+    loc = get_content().locations[char.location]
+    n = nonce()
+    entries = await activity_entries(session, char, lang, n)
+    head = t(lang, "acts.title", place=escape(loc.name.get(lang))) + "\n" + status_line(char, lang)
+    parts = [head, *(line for line, _ in entries)] if entries else [head, t(lang, "acts.none")]
+    if loc.guild:
+        parts.append(f"<i>{t(lang, 'acts.guild')}</i>")
+    rows = grid([b for _, b in entries if b is not None])
+    rows.append([btn(t(lang, "btn.professions"), cb("prof")), btn(t(lang, "btn.back"), cb("scene"))])
+    return "\n\n".join(parts)[:MAX_MESSAGE], markup(rows)
 
 
 FIELD_MASTERIES = gathering.MASTERIES
@@ -926,7 +988,8 @@ async def hero(session: AsyncSession, char: Character, lang: str) -> tuple[str, 
                 for key, a in cls.abilities.items() if a.level <= char.level]
     if unlocked:
         lines += ["", f"<b>{t(lang, 'sheet.abilities')}</b>", "✨ " + " · ".join(unlocked)]
-    kb = markup([[btn(t(lang, "achievements.open"), cb("ach"))], [btn(t(lang, "btn.full_sheet"), cb("sheet"))],
+    kb = markup([[btn(t(lang, "achievements.open"), cb("ach"))],
+                 [btn(t(lang, "btn.full_sheet"), cb("sheet")), btn(t(lang, "btn.professions"), cb("prof"))],
                  [btn(t(lang, "btn.inventory"), cb("inv")), btn(t(lang, "btn.journal"), cb("jr"))],
                  [btn(t(lang, "btn.back"), cb("scene"))]])
     return "\n".join(lines)[:MAX_MESSAGE], kb

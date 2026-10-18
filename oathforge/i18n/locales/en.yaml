@@ -2,6 +2,9 @@
 # View templates (create, scene, sheet, help) may use Telegram HTML.
 
 cmd:
+  activities: "Activities: what you can do here"
+  masteries: "Field masteries"
+  hobbies: "Hobbies: cooking and fishing"
   achievements: Achievements, titles and objectives
   start: "Start or return to the scene"
   look: "Look around"
@@ -29,7 +32,7 @@ help:
     You can also <b>type whatever you want to do</b>: "I hide behind the bar and listen", "I try to lift the keeper's purse", "I push the cart onto the bandit".
     The Dungeon Master interprets your action, the engine rolls the dice, and you see what really happened.
 
-    Commands: /look /map /hero /sheet /inventory /journal /quests /classes /report /professions /masteries /hobbies /rulebook /settings
+    Commands: /look /activities /map /hero /sheet /inventory /journal /quests /classes /report /professions /masteries /hobbies /rulebook /settings
   version: "<i>Oathforge v{version}</i>"
 
 settings:
@@ -111,12 +114,17 @@ create:
 
 kb:
   place: "📍 Here"
+  activities: "⚒ Activities"
   hero: "🧝 Hero"
   map: "🗺 Map"
   inventory: "🎒 Inventory"
   journal: "📖 Journal"
-  ready: "⌨️ Below the chat you have fixed shortcuts: 📍 Here (where you are and what you can do), 🧝 Hero, 🗺 Map, 🎒 Inventory and 📖 Journal."
+  ready: "⌨️ Below the chat you have fixed shortcuts: 📍 Here (where you are and who is around), ⚒ Activities (what you can do here), 🗺 Map, 🧝 Hero, 🎒 Inventory and 📖 Journal."
+  placeholder: "Type what you do…"
 btn:
+  activities: "⚒ Activities ({n})"
+  buy_tool: "🛒 Buy {tool}"
+  buy_tool_at: "🛒 {tool} · go to {place}"
   rulebook: "📘 Rulebook"
   full_sheet: "📜 Full sheet"
   report: "📜 Report"
@@ -615,7 +623,7 @@ dmg:
 err:
   generic: "Something went wrong. Please try again."
   rate: "Slow down, adventurer."
-  stale: "That menu is no longer valid. Here is the current one:"
+  stale_popup: "That menu is out of date: here is the current one."
   unknown: "I don't understand that action."
 
 creature:
@@ -737,6 +745,20 @@ roll:
   changed: "🎲 Manual rolls {state}."
   stale: "That roll makes no sense here anymore: you have moved."
 
+acts:
+  title: "⚒ <b>Activities</b> · {place}"
+  none: "Nothing to do with your hands here. Check the 🗺 Map: the mine, the grove or the meadow have plenty."
+  guild: "Professions are learned and swapped here: 🛠️ Professions."
+  missing: "❌ You lack: {tool}"
+  desc:
+    hunt: "a fight right now with whatever prowls around"
+    gather: "safe; the haul arrives by itself when you finish"
+    stay: "a much bigger haul, but it may end in an ambush"
+    track: "tracking XP and trophies; it ends in a fight with the prey"
+    skin: "hide and meat from what you just hunted"
+    rest: "eight hours of sleep ({minutes} min): full health and uses"
+    craft: "your professions' recipes at the stations here"
+    heal: "full health and grave wounds closed"
 activity:
   started:
     gather: "You get to work: {skill} at {place}. In {minutes} min what you get comes to you."

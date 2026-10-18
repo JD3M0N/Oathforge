@@ -134,8 +134,8 @@ tut_boars:
     es: Los jabalíes destrozan los campos al sur de la ciudad. Vale quiere ver cómo peleas… y cómo aprovechas lo que cazas.
     en: Boars are wrecking the fields south of the city. Vale wants to see how you fight… and how you use what you hunt.
   hint:
-    es: El Prado de los Colmillos sale directo de la plaza. Ve con la vida llena y una poción a mano y pulsa «🏹 Cazar» (cuenta cualquier presa, de día o de noche). Al ganar, pulsa «🔪 Desollar» o /skin para sacar la carne.
-    en: Tusk Meadow leaves straight from the plaza. Go with full health and a potion at hand and press "🏹 Hunt" (any prey counts, day or night). When you win, press "🔪 Skin" or /skin to take the meat.
+    es: El Prado de los Colmillos sale directo de la plaza. Ve con la vida llena y una poción a mano y en «⚒ Actividades» pulsa «🏹 Cazar» (cuenta cualquier presa, de día o de noche). Al ganar, «🔪 Desollar» (también en Actividades) o /skin saca la carne.
+    en: Tusk Meadow leaves straight from the plaza. Go with full health and a potion at hand and in "⚒ Activities" press "🏹 Hunt" (any prey counts, day or night). When you win, "🔪 Skin" (also in Activities) or /skin takes the meat.
   start_stage: locked
   unlock_stage: active
   objective_stage: active
@@ -175,8 +175,8 @@ tut_herbs:
     es: La capilla se queda sin raíz de sangre y la Guardia sin pociones. Vale te manda al bosque con la hoz.
     en: The chapel is running out of bloodroot and the Guard out of potions. Vale sends you to the woods with the sickle.
   hint:
-    es: Sal por la plaza al Camino del Viejo Rey y sigue hasta el Bosque de los Susurros (o el Claro de la Raíz Roja). Pulsa «🌿 Recolectar hierbas» (en el tutorial termina al momento). Los caminos con ⚠️ pueden traer emboscadas.
-    en: Leave through the plaza to the Old King's Road and on to the Whispering Woods (or Redroot Clearing). Press "🌿 Gather herbs" (in the tutorial it is done at once). Roads marked ⚠️ may bring ambushes.
+    es: Sal por la plaza al Camino del Viejo Rey y sigue hasta el Bosque de los Susurros (o el Claro de la Raíz Roja). En «⚒ Actividades», pulsa «🌿 Recolectar hierbas» (en el tutorial termina al momento). Los caminos con ⚠️ pueden traer emboscadas.
+    en: Leave through the plaza to the Old King's Road and on to the Whispering Woods (or Redroot Clearing). In "⚒ Activities", press "🌿 Gather herbs" (in the tutorial it is done at once). Roads marked ⚠️ may bring ambushes.
   start_stage: locked
   unlock_stage: active
   objective_stage: active
@@ -258,8 +258,8 @@ tut_mine:
     es: Los caminos del norte están cortados y la herrera Tessa no tiene hierro. Vale te manda a la mina con el pico.
     en: The northern roads are cut off and Tessa the smith has no iron. Vale sends you to the mine with the pickaxe.
   hint:
-    es: Por el Camino del Viejo Rey llegas a la Mina del Paso Viejo. Pulsa «⛏️ Minar» (en el tutorial termina al momento). Fuera del tutorial, la «🏕️ Expedición larga» saca más, pero puede haber emboscada.
-    en: The Old King's Road takes you to the Old Pass Mine. Press "⛏️ Mine" (in the tutorial it is done at once). Outside the tutorial, a "🏕️ Long expedition" yields more, but you may be ambushed.
+    es: Por el Camino del Viejo Rey llegas a la Mina del Paso Viejo. En «⚒ Actividades», pulsa «⛏️ Minar» (en el tutorial termina al momento). Fuera del tutorial, la «🏕️ Expedición larga» saca más, pero puede haber emboscada.
+    en: The Old King's Road takes you to the Old Pass Mine. In "⚒ Activities", press "⛏️ Mine" (in the tutorial it is done at once). Outside the tutorial, a "🏕️ Long expedition" yields more, but you may be ambushed.
   start_stage: locked
   unlock_stage: active
   objective_stage: active
@@ -298,8 +298,8 @@ tut_bats:
     es: Cada anochecer, una bandada de murciélagos sale de la Mina del Paso Viejo y ataca al ganado del prado. Vale quiere cortarla de raíz, en su nido.
     en: Every dusk, a swarm of bats pours out of Old Pass Mine and attacks the meadow's livestock. Vale wants it stopped at the root, in its nest.
   hint:
-    es: Ve a la Mina del Paso Viejo y pulsa «🏹 Cazar» tres veces. Cuenta cualquier presa de las galerías (murciélagos o ratas), de día o de noche.
-    en: Go to Old Pass Mine and press "🏹 Hunt" three times. Any prey in the tunnels counts (bats or rats), day or night.
+    es: Ve a la Mina del Paso Viejo y en «⚒ Actividades» pulsa «🏹 Cazar» tres veces. Cuenta cualquier presa de las galerías (murciélagos o ratas), de día o de noche.
+    en: Go to Old Pass Mine and in "⚒ Activities" press "🏹 Hunt" three times. Any prey in the tunnels counts (bats or rats), day or night.
   start_stage: locked
   unlock_stage: active
   objective_stage: active
@@ -333,8 +333,8 @@ tut_chapel:
     es: «Nadie vuelve entero de ahí fuera», dice Vale. Antes de darte por listo, quiere que conozcas a la hermana Ysolde.
     en: "\"Nobody comes back whole from out there,\" says Vale. Before she calls you ready, she wants you to meet Sister Ysolde."
   hint:
-    es: Ve a la Capilla del Alba y habla con la hermana Ysolde («🙏 Curar heridas», gratis durante la beta). Luego haz un «🛏️ Descanso largo» en la taberna, que devuelve la vida y los usos de tus habilidades (en la beta, al momento). Después, vuelve con Vale.
-    en: Go to the Chapel of the Dawn and talk to Sister Ysolde ("🙏 Heal wounds", free during the beta). Then take a "🛏️ Long rest" at the tavern, which restores your health and your abilities' uses (at once during the beta). Then report back to Vale.
+    es: Ve a la Capilla del Alba y habla con la hermana Ysolde («⚒ Actividades» → «🙏 Curar heridas», gratis durante la beta). Luego haz un «🛏️ Descanso largo» en las Actividades de la taberna, que devuelve la vida y los usos de tus habilidades (en la beta, al momento). Después, vuelve con Vale.
+    en: Go to the Chapel of the Dawn and talk to Sister Ysolde ("⚒ Activities" → "🙏 Cure wounds", free during the beta). Then take a "🛏️ Long rest" from the tavern's Activities, which restores your health and your abilities' uses (at once during the beta). Then report back to Vale.
   start_stage: locked
   unlock_stage: active
   objective_stage: active
@@ -405,8 +405,8 @@ old_tusk:
     es: Bram te cuenta la leyenda del jabalí que ningún cazador ha logrado abatir. Es la última prueba de Vale.
     en: Bram tells you the legend of the boar no hunter has ever brought down. It is Vale's last test.
   hint:
-    es: "Descansa antes (vida y habilidades llenas) y ve al Prado de los Colmillos. Pulsa «🏹 Cazar»: el Viejo Colmillo te estará esperando. Lleva pociones."
-    en: 'Rest first (full health and abilities) and go to Tusk Meadow. Press "🏹 Hunt": Old Tusk will be waiting for you. Bring potions.'
+    es: "Descansa antes (vida y habilidades llenas) y ve al Prado de los Colmillos. En «⚒ Actividades», pulsa «🏹 Cazar»: el Viejo Colmillo te estará esperando. Lleva pociones."
+    en: 'Rest first (full health and abilities) and go to Tusk Meadow. In "⚒ Activities", press "🏹 Hunt": Old Tusk will be waiting for you. Bring potions.'
   start_stage: locked
   unlock_stage: active
   objective_stage: active

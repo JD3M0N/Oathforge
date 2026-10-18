@@ -173,6 +173,13 @@ async def _map(session, char, lang):
     return await render.map_view(session, char, lang)
 
 
+async def _activities(session, char, lang):
+    """⚒ Activities; while fighting or working, that panel instead."""
+    if char.state != "idle":
+        return await current_view(session, char, lang)
+    return await render.activities_view(session, char, lang)
+
+
 async def _professions(session, char, lang):
     return render.professions_view(char, lang)
 
@@ -203,7 +210,7 @@ async def help_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def fixed_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """A press on the fixed keyboard: the same view as its command (never free text for the AI)."""
-    views = {"place": current_view, "hero": render.hero, "map": _map, "inventory": render.inventory_view,
+    views = {"place": current_view, "activities": _activities, "hero": render.hero, "map": _map, "inventory": render.inventory_view,
              "journal": render.journal}  # 📍: the scene, like /start or /look (the combat panel if fighting)
     await _view(views[fixed_key(update.message.text)])(update, context)
 
@@ -213,6 +220,7 @@ def handlers() -> list[BaseHandler]:
         MessageHandler(filters.Regex(fixed_pattern()), fixed_button),
         CommandHandler("look", _view(current_view)),
         CommandHandler("map", _view(_map)),
+        CommandHandler("activities", _view(_activities)),
         CommandHandler("hero", _view(render.hero)),
         CommandHandler("achievements", _view(render.achievements_view)),
         CommandHandler("sheet", sheet),

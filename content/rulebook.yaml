@@ -131,7 +131,7 @@ activities:
   title: {es: Actividades, en: Activities}
   body:
     es: |-
-      Fuera de la ciudad, cada lugar tiene sus actividades. Llevan tiempo real: mientras trabajas no puedes viajar ni hacer otra cosa. Al acabar, el bot te manda lo obtenido aunque hayas cerrado Telegram.
+      Fuera de la ciudad, cada lugar tiene sus actividades. Llevan tiempo real: mientras trabajas no puedes viajar ni hacer otra cosa. Al acabar, el bot te manda lo obtenido aunque hayas cerrado Telegram. Todas están en «⚒ Actividades» (teclado fijo o escena), con su duración y lo que te falta.
       • ⛏️ Minar (pico), 🪓 talar (hacha), 🌿 recolectar hierbas (hoz) y 🎣 pescar (caña): «Trabajar» dura {gather_min} min y da {gather_units} materiales. Sin peligro.
       • 🏕️ Expedición larga: {stay_min} min y {stay_units} materiales, más XP. Al final puede haber emboscada ({ambush} según el lugar): si ganas te lo llevas todo, si huyes la mitad y si caes lo pierdes.
       • 🐾 Rastrear: {track_min} min siguiendo huellas. El {prey_pct} % de las veces das con una presa y peleas; si la vences, te llevas trofeos además del desuello.
@@ -140,7 +140,7 @@ activities:
       • 🛏️ Descansar: en la taberna, 8 horas de juego ({rest_min} min) para recuperar PV y habilidades.
       Cada actividad sube su maestría, de 0 a {max_rank}: cada rango da un {bonus_pct} % más de probabilidad de botín extra (hasta {bonus_cap} %) y abre recursos más raros. Todas: /masteries
     en: |-
-      Outside the city, each place has its own activities. They take real time: while you work you cannot travel or do anything else. When it ends, the bot sends you what you got even if you closed Telegram.
+      Outside the city, each place has its own activities. They take real time: while you work you cannot travel or do anything else. When it ends, the bot sends you what you got even if you closed Telegram. They all live in "⚒ Activities" (fixed keyboard or scene), with how long they take and what you lack.
       • ⛏️ Mining (pickaxe), 🪓 woodcutting (axe), 🌿 herb gathering (sickle) and 🎣 fishing (rod): "Work" takes {gather_min} min and gives {gather_units} materials. No danger.
       • 🏕️ Long expedition: {stay_min} min and {stay_units} materials, more XP. At the end you may be ambushed ({ambush} depending on the place): win and you keep it all, flee and you keep half, fall and you lose it.
       • 🐾 Tracking: {track_min} min following tracks. {prey_pct} % of the time you find prey and fight it; beat it and you get trophies on top of skinning.

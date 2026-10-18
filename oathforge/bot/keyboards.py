@@ -11,8 +11,8 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton,
 
 from oathforge.i18n import t
 
-FIXED = ("place", "hero", "map", "inventory", "journal")  # the fixed keyboard under the chat
-KEYBOARD_VERSION = 2  # bump when FIXED changes, so everyone gets the new keyboard
+FIXED = ("place", "activities", "map", "hero", "inventory", "journal")  # the fixed keyboard under the chat
+KEYBOARD_VERSION = 3  # bump when FIXED changes, so everyone gets the new keyboard
 
 
 def nonce() -> str:
@@ -43,9 +43,10 @@ def markup(rows: list[list[InlineKeyboardButton]]) -> InlineKeyboardMarkup:
 
 
 def fixed_keyboard(lang: str) -> ReplyKeyboardMarkup:
-    """📍 Place · 🧝 Hero · 🗺 Map / 🎒 Inventory · 📖 Journal, always under the chat."""
+    """📍 Place · ⚒ Activities · 🗺 Map / 🧝 Hero · 🎒 Inventory · 📖 Journal, always under the chat."""
     labels = [KeyboardButton(t(lang, f"kb.{k}")) for k in FIXED]
-    return ReplyKeyboardMarkup([labels[:3], labels[3:]], resize_keyboard=True, is_persistent=True)
+    return ReplyKeyboardMarkup([labels[:3], labels[3:]], resize_keyboard=True, is_persistent=True,
+                               input_field_placeholder=t(lang, "kb.placeholder"))
 
 
 def fixed_key(text: str) -> str | None:

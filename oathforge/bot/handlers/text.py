@@ -7,7 +7,7 @@ from telegram.ext import ContextTypes, MessageHandler, filters
 
 from oathforge.bot import render
 from oathforge.bot.handlers import callbacks
-from oathforge.bot.handlers.common import current_view, keep_typing, load, rate_ok, rng, send, send_outcome
+from oathforge.bot.handlers.common import current_view, keep_typing, load, rate_ok, rng, send, send_outcome, send_result
 from oathforge.database.session import session_scope
 from oathforge.i18n import t
 from oathforge.services import actions
@@ -66,13 +66,18 @@ async def on_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 async def show_free_text(update: Update, context: ContextTypes.DEFAULT_TYPE, result: actions.FreeTextResult) -> None:
+    """What happened and the scene's buttons, in one message (a fight: its panel on its own)."""
     lang = context.user_data.get("lang", "es")
-    if result.outcome.events or result.narration:
-        await send_outcome(update, result.outcome, lang, result.narration)
     async with session_scope() as session:
         _, char = await load(session, update)
-        view, kb = await current_view(session, char, lang)
-    await send(update, view, kb)
+        fighting = char.state == "in_combat"
+        view, kb = await current_view(session, char, lang, compact=True)
+    if fighting:
+        if result.outcome.events or result.narration:
+            await send_outcome(update, result.outcome, lang, result.narration)
+        await send(update, view, kb)
+        return
+    await send_result(update, result.outcome, lang, view, kb, result.narration)
 
 
 def handler() -> MessageHandler:

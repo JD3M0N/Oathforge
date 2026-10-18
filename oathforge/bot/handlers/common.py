@@ -75,12 +75,13 @@ async def load(session: AsyncSession, update: Update, lock: bool = False) -> tup
     return user, char
 
 
-async def current_view(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
-    """The combat panel if fighting, otherwise the scene."""
+async def current_view(session: AsyncSession, char: Character, lang: str,
+                       compact: bool = False) -> tuple[str, InlineKeyboardMarkup]:
+    """The combat panel if fighting, otherwise the scene (``compact``: only its heading, under a result)."""
     enc = await combat_service.active_encounter(session, char)
     if enc is not None:
         return render.combat_panel(char, enc.state, lang, version=enc.version)
-    return await render.scene(session, char, lang)
+    return await render.scene(session, char, lang, compact=compact)
 
 
 async def offer_keyboard(update: Update, user: User, lang: str, force: bool = False) -> None:
@@ -105,6 +106,57 @@ async def send(update: Update, text: str, kb: InlineKeyboardMarkup | None = None
     await update.effective_chat.send_message(text, parse_mode=ParseMode.HTML, reply_markup=kb,
                                              disable_web_page_preview=True)
     _record(update, text, kb, edited=False)
+
+
+_answered: set[str] = set()  # button presses already answered: Telegram shows only the first popup
+
+
+async def answer(update: Update, text: str | None = None) -> None:
+    """Stop the spinner on the pressed button, once. ``text`` shows as a small popup that leaves nothing in the
+    chat (a refusal, a stale menu); without a button press (a command) it is sent as a message instead."""
+    q = update.callback_query
+    if q is None:
+        if text:
+            await send(update, escape(text))
+        return
+    if q.id in _answered:
+        return
+    _answered.add(q.id)
+    try:
+        await q.answer(text[:200] if text else None)
+    except (BadRequest, NetworkError) as e:  # the spinner is decoration: carry on
+        log.warning("could not answer a button press (%s)", type(e).__name__)
+
+
+def answered(update: Update) -> None:
+    """Forget the press once it is handled."""
+    if update.callback_query is not None:
+        _answered.discard(update.callback_query.id)
+
+
+async def drop_buttons(update: Update) -> None:
+    """The pressed message keeps its text but loses its buttons: the new message below carries them."""
+    q = update.callback_query
+    if q is not None and q.message is not None:
+        try:
+            await q.edit_message_reply_markup(reply_markup=None)
+        except (BadRequest, NetworkError):  # already without buttons, or too old to edit
+            pass
+
+
+async def send_result(update: Update, outcome: Outcome, lang: str, view: str, kb: InlineKeyboardMarkup | None,
+                      narration: str | None = None) -> None:
+    """What happened and the buttons to carry on, in one message: the result, each level gained as a card of
+    its own, and the view (usually the scene's heading) at the end of the last one."""
+    messages = [m for m in [render.outcome_text(outcome, lang, narration), *render.level_up_cards(outcome, lang)] if m]
+    if messages and len(messages[-1]) + len(view) + 2 <= render.MAX_MESSAGE:
+        messages[-1] += "\n\n" + view
+    else:
+        messages.append(view)
+    await drop_buttons(update)
+    for message in messages[:-1]:
+        await send(update, message)
+    await send(update, messages[-1], kb)
 
 
 async def send_outcome(update: Update, outcome: Outcome, lang: str, narration: str | None = None) -> None:
@@ -134,8 +186,10 @@ class BotChat:
         return await self.bot.send_message(self.id, text, **kwargs)
 
 
-async def send_activity_result(chat, telegram_id: int, llm, outcome: Outcome, lang: str) -> None:
-    """What a finished activity gave, with its chronicle, in one message; level-ups as their own cards."""
+async def send_activity_result(chat, telegram_id: int, llm, outcome: Outcome, lang: str,
+                               view: tuple[str, InlineKeyboardMarkup | None] | None = None) -> None:
+    """What a finished activity gave, with its chronicle, in one message; level-ups as their own cards.
+    ``view``: the buttons to carry on (the scene's heading), at the end of the last message."""
     if outcome.activity_id:
         async with session_scope() as session:
             act = await session.get(WorldActivity, outcome.activity_id)
@@ -147,10 +201,19 @@ async def send_activity_result(chat, telegram_id: int, llm, outcome: Outcome, la
                                       chronicles.footer(ch, lang) if ch else None, title)
     else:
         text = render.outcome_text(outcome, lang)
-    for message in [text, *render.level_up_cards(outcome, lang)]:
-        if message:
-            await chat.send_message(message, parse_mode=ParseMode.HTML, disable_web_page_preview=True)
-            recorder.outgoing(telegram_id, message, [], edited=False)
+    messages = [m for m in [text, *render.level_up_cards(outcome, lang)] if m]
+    kb = None
+    if view is not None:
+        kb = view[1]
+        if messages and len(messages[-1]) + len(view[0]) + 2 <= render.MAX_MESSAGE:
+            messages[-1] += "\n\n" + view[0]
+        else:
+            messages.append(view[0])
+    for i, message in enumerate(messages):
+        last = kb if i == len(messages) - 1 else None
+        await chat.send_message(message, parse_mode=ParseMode.HTML, reply_markup=last, disable_web_page_preview=True)
+        recorder.outgoing(telegram_id, message, [b.text for row in last.inline_keyboard for b in row] if last else [],
+                          edited=False)
 
 
 async def finish_due_activities(context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -175,11 +238,9 @@ async def _finish_one(context: ContextTypes.DEFAULT_TYPE, char_id: int) -> None:
         out = await activities.claim(session, char)  # locked and checked again: a button press can't pay twice
         if not out.ok:
             return
-        text, kb = await current_view(session, char, lang)
+        view = await current_view(session, char, lang, compact=True)
     chat = BotChat(context.bot, telegram_id)
-    await send_activity_result(chat, telegram_id, context.bot_data["llm"], out, lang)
-    await chat.send_message(text, parse_mode=ParseMode.HTML, reply_markup=kb, disable_web_page_preview=True)
-    recorder.outgoing(telegram_id, text, [b.text for row in kb.inline_keyboard for b in row] if kb else [], edited=False)
+    await send_activity_result(chat, telegram_id, context.bot_data["llm"], out, lang, view)
     from oathforge.bot.handlers.achievements import deliver
     await deliver(context.bot, user.telegram_id, user.telegram_id)
 
@@ -192,7 +253,10 @@ async def edit_or_send(update: Update, text: str, kb: InlineKeyboardMarkup | Non
                                       disable_web_page_preview=True)
             _record(update, text, kb, edited=True)
             return
-        except Exception:  # message too old / not modified: fall back to a new message
+        except BadRequest as e:
+            if "not modified" in str(e).lower():  # the same view pressed again: it is already on screen
+                return
+        except Exception:  # message too old or deleted: fall back to a new message
             pass
     await send(update, text, kb)
 

@@ -1,7 +1,7 @@
 # Oathforge — Roadmap 0.10: consolidación antes del multijugador
 
 **Base auditada:** `main`, versión **0.8.6**, commit `36e967b2be88dceed3e1fe2af23417fe5d0ae7a4`, revisión del 18 de octubre de 2026 UTC (17 de octubre en La Habana). Las referencias `TODO L…` y los enlaces a archivos apuntan a ese commit.
-**Base actual:** `main` en **0.9.0** (logros, títulos e identidad del héroe). Ver [Cambios desde la auditoría](#actualizacion).
+**Base actual:** `main` en **0.9.1** (logros, títulos e identidad del héroe; esta hoja de ruta). La consolidación se publica como **0.10.x** desde 0.10.0. Ver [Cambios desde la auditoría](#actualizacion).
 **Estado:** hoja de ruta adoptada como dirección de trabajo: **0.10 = consolidación** y **0.11 = multijugador**. Cifras, alcance concreto y alternativas siguen siendo propuesta hasta cerrar cada hito; nada marcado `[ ]` está implementado. La decisión del usuario es dedicar **0.10 a una gran revisión integral** y **0.11 al multijugador**. El alcance concreto, cifras y alternativas recomendadas aquí requieren aprobación; no se presentan como funciones ya implementadas.
 
 > Objetivo de 0.10: que crear un héroe, explorar Crownreach, combatir, conversar, realizar actividades, fabricar, completar misiones y especializarse forme una experiencia individual coherente y recuperable. La 0.11 debe añadir la interacción entre jugadores sobre esa base.
@@ -38,26 +38,26 @@ Donde las fichas digan «0.8.6» como punto de partida, léase «0.9.0»; donde 
 
 ### Cómo se trabaja: versión a versión
 
-Cada hito se publica como **un commit con su versión**, su entrada de CHANGELOG y su ficha cerrada (plantilla de la sección 9). Numeración, de acuerdo con `AGENTS.md`:
+La serie 0.9 ya está publicada: **0.9.0** trajo los logros y **0.9.1** este documento. La consolidación ya no se numera como parches 0.9.x: **toda la 0.10 es la consolidación**, y empieza por la interfaz (F01), que es lo que más notan los jugadores. Numeración, de acuerdo con `AGENTS.md`:
 
-- **0.9.1**: el commit que añade este documento. Solo documentación; no cambia el juego.
-- **0.9.x** (parches): un hito 0.10-A…G puede dividirse en varios parches, cada uno con una experiencia comprobable. Ninguna versión intermedia se llama 0.10.
-- **0.10.0**: se publica al superar la [puerta de salida](#salida) (hito 0.10-H). Es la única que lleva el número 0.10.
-- **0.10.x**: parches posteriores a la puerta (arreglos, balance, ampliaciones de la base).
+- **0.10.0**: abre la consolidación con la primera entrega grande de F01 (navegación y mensajes). Es una versión menor porque cambia cómo se juega en Telegram.
+- **0.10.x** (parches): cada hito A…H se publica en uno o varios parches, cada uno con una experiencia comprobable, su CHANGELOG y su ficha cerrada (plantilla de la sección 9).
+- **Puerta de salida**: la supera el último parche 0.10.x (hito H). No lleva un número especial; lo que cambia es que después empieza la 0.11.
 - **0.11.0** y siguientes: multijugador (sección 7).
 
 | Hito | Versión orientativa | Primer incremento sugerido |
 |---|---|---|
-| 0.10-A · Acordar y asegurar | 0.9.2 | Idempotencia del texto libre y reserva atómica de IA (CORE-01..03, AI-01..02); prueba de 1.000 repeticiones |
-| 0.10-B · Orientar al jugador | 0.9.3 | Confianza determinista y servicios de Bram; botones «Oficios» y «Actividades» |
-| 0.10-C · Bucles cotidianos | 0.9.4 – 0.9.5 | Descanso corto y `/rest`; cofre personal; «Algo brilla» |
-| 0.10-D · Dar propósito | 0.9.6 | Entrega de misiones al dador; juramento verificable; auditoría de logros |
-| 0.10-E · Reglas de combate | 0.9.7 | Contrato de acción, estados y jefe de dos fases; matriz de ocho clases |
-| 0.10-F · Profundizar progresión | 0.9.8 | Auditoría de recetas y economía; primeras ramas de especialización |
-| 0.10-G · Integrar | 0.9.9 | Tutorial completo ES/EN, arco de nivel 5, lote visual |
-| 0.10-H · Candidato | **0.10.0** | Puerta de salida, migración, restauración y documentación |
+| 0.10-B · Orientar al jugador (F01) | **0.10.0 – 0.10.2** | 0.10.0 navegación y mensajes (teclado con ⚒ Actividades, escena social, un mensaje por acción, rechazos en ventanita); 0.10.1 textos claros (tiradas, leyenda de `/sheet`, artículos, singular); 0.10.2 inventario por pestañas y emojis de materiales |
+| 0.10-A · Acordar y asegurar | 0.10.3 | Idempotencia del texto libre y reserva atómica de IA (CORE-01..03, AI-01..02); prueba de 1.000 repeticiones |
+| 0.10-B · Orientar al jugador (resto) | 0.10.4 | F03 (diario y reglamento) y la corrección crítica de F11: confianza determinista y servicios de Bram |
+| 0.10-C · Bucles cotidianos | 0.10.5 – 0.10.6 | Descanso corto y `/rest`; cofre personal; «Algo brilla» |
+| 0.10-D · Dar propósito | 0.10.7 | Entrega de misiones al dador; juramento verificable; auditoría de logros |
+| 0.10-E · Reglas de combate | 0.10.8 | Contrato de acción, estados y jefe de dos fases; matriz de ocho clases |
+| 0.10-F · Profundizar progresión | 0.10.9 | Auditoría de recetas y economía; primeras ramas de especialización |
+| 0.10-G · Integrar | 0.10.10 | Tutorial completo ES/EN, arco de nivel 5, lote visual |
+| 0.10-H · Candidato | 0.10.11 | Puerta de salida, migración, restauración y documentación |
 
-La numeración es orientativa: si un hito necesita más parches, se usan. Al cerrar cada versión: actualizar el **Estado actual** del resumen latino afectado, `tests/features.md` y `planning/iter.md`, y marcar aquí las casillas hechas con la versión (`[x] … (0.9.3)`).
+La numeración es orientativa: si un hito necesita más parches, se usan. El hito A va después de la primera entrega de F01 porque la interfaz no toca dinero ni IA y los testers la necesitan ya; A sigue siendo requisito antes de cualquier cambio de economía o de texto libre. Al cerrar cada versión: actualizar el **Estado actual** del resumen latino afectado, `tests/features.md` y `planning/iter.md`, y marcar aquí las casillas hechas con la versión (`[x] … (0.10.0)`).
 
 ### Anuncios
 
@@ -106,7 +106,7 @@ La revisión combina documentos, inventario YAML y lectura dirigida de los punto
 - **0.11:** grupos, combate y misiones cooperativas, botín por participante, ausencias, comercio entre jugadores; después gremios, duelos y eventos comunitarios dentro del ciclo 0.11.x.
 - **Posterior:** segunda región, sistemas políticos completos, temporadas, Mini App, todas las 32 ramas y expansión amplia de clases.
 
-Las cantidades sugeridas son límites iniciales de trabajo, no compromisos aprobados. No fijar fechas sin medir capacidad del equipo. Usar hitos `0.10-A…H` para planificar; publicar `0.10.0` al superar la aceptación y parches posteriores según necesidad. No subir `__version__` a 0.10.0 por haber redactado el roadmap.
+Las cantidades sugeridas son límites iniciales de trabajo, no compromisos aprobados. No fijar fechas sin medir capacidad del equipo. Usar hitos `0.10-A…H` para planificar y publicarlos como parches 0.10.x (sección 0); la puerta de salida la supera el último 0.10.x, y después empieza 0.11.
 
 ### Reglas que atraviesan todos los sistemas
 
@@ -158,10 +158,10 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 
 **Propuesta base 0.10:**
 
-- [ ] Añadir «Oficios / Trades» como acceso a maestrías, profesiones y aficiones, sin eliminar sus consultas directas.
-- [ ] Añadir «Actividades / Activities» contextual, con requisitos, duración y motivo de bloqueo.
+- [x] Añadir «Oficios / Trades» como acceso a maestrías, profesiones y aficiones, sin eliminar sus consultas directas (0.10.0: botón 🛠️ Oficios en Héroe y en Actividades, con sus pestañas).
+- [x] Añadir «Actividades / Activities» contextual, con requisitos, duración y motivo de bloqueo (0.10.0: en el teclado fijo y en la escena; sin herramienta, botón a la tienda que la vende).
 - [ ] Unificar volver/cancelar, tiradas traducidas, leyenda de competencias, singular/plural y artículos.
-- [ ] Editar paneles de estado; preservar hitos y recompensas como mensajes recuperables. Tratar mensajes eliminados y callbacks caducados.
+- [x] Editar paneles de estado; preservar hitos y recompensas como mensajes recuperables. Tratar mensajes eliminados y callbacks caducados (0.10.0: la navegación edita; cada acción deja un mensaje con su resultado y los botones, y el viejo pierde los suyos; rechazos y menús viejos en ventanita).
 
 **Flujo de jugador:** Lugar → Actividades → Minar → «Necesitas un pico / Pickaxe required» → tienda pertinente.
 

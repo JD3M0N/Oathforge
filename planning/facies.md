@@ -2,10 +2,13 @@
 
 Resumen de [Possibilium §4](Possibilium.md#s04). Cómo se ve el juego en el chat.
 
-## Estado actual (0.9.0)
+## Estado actual (0.10.0)
 
-- **Teclado fijo** (`ReplyKeyboardMarkup` persistente, `KEYBOARD_VERSION`): 📍 Lugar · 🧝 Héroe · 🗺 Mapa / 🎒 Inventario · 📖 Diario. Sus etiquetas nunca llegan a la IA como texto libre.
-- **Escena**: lugar, hora del juego y cuánto falta para el cambio («☀️ 14:30 · anochece en 55 min»), «👥 Aquí:» en lista, acciones con botones y texto libre que interpreta Gemini.
+- **Teclado fijo** (`ReplyKeyboardMarkup` persistente, `KEYBOARD_VERSION = 3`): 📍 Lugar · ⚒ Actividades · 🗺 Mapa / 🧝 Héroe · 🎒 Inventario · 📖 Diario, con la pista «Escribe lo que haces…» en el campo de texto. Sus etiquetas nunca llegan a la IA como texto libre.
+- **Escena** (lo social): lugar, hora del juego y cuánto falta para el cambio («☀️ 14:30 · anochece en 55 min»), «👥 Aquí:» en lista y los botones 🧭 Viajar · 🔎 Investigar · 💬 Hablar · 🛒 Comerciar · ⚒ Actividades (n), más «Seguir viaje», acciones de misión y «Ver ciudad». Texto libre que interpreta Gemini.
+- **⚒ Actividades** (lo que se hace con las manos, `render.activities_view`): cazar, recolectar, expedición, rastrear, desollar, descansar, fabricar y curar, cada una con duración y qué falta. La disponibilidad sale de `activities.check`, la misma regla que usa `start`: sin herramienta no hay botón, sino «🛒 Pico · ir a Mercado» hacia quien la vende. Desde ahí, 🛠️ Oficios (también desde Héroe).
+- **Mensajes**: la navegación (menús, pestañas, Volver, Actividades) edita el mismo mensaje. Cada acción deja **un** mensaje con el resultado y la cabecera del lugar con sus botones, y el panel pulsado pierde los suyos. Subidas de nivel, crónicas y combates siguen en mensajes propios. Las compras, equipar, aprender y fabricar ponen el resultado encima del mismo menú.
+- **Rechazos en ventanita** (`answerCallbackQuery`): «Necesitas un pico», un menú viejo o un doble toque no escriben en el chat; el mensaje pulsado pasa a la vista actual y nada se gasta dos veces.
 - **Comandos** (menú y `/help`), siempre en inglés y sin alias en español: `/start`, `/look`, `/hero` (resumen), `/sheet` (ficha completa con retrato), `/inventory`, `/journal`, `/achievements`, `/quests`, `/map`, `/report`, `/professions`, `/classes`, `/rulebook` (alias `/rules`), `/settings`, `/language`, `/cancel`.
 - **Comandos de consulta** enlazados desde los mensajes: `/class_<clase>`, `/skill_<clave>`, `/prof_<clave>`, `/item_<clave>`, `/monster_<clave>`, `/masteries`, `/hobbies`, `/lineage` (alias `/race`), `/background`, `/skin`. Funcionan sin personaje cuando tienen sentido.
 - **Logros**: /achievements; acceso desde héroe y diario, seis entradas por página, detalle, categorías, pendientes, obtenidos y destacados. Las pistas pueden revelarse. Sin porcentaje global que penalice decisiones alternativas.
@@ -17,19 +20,25 @@ Resumen de [Possibilium §4](Possibilium.md#s04). Cómo se ve el juego en el cha
 - Avisos: subida de nivel en mensaje propio, poca vida al cazar, «lo siguiente» de cada misión, resultado de actividades aunque estés desconectado.
 - Solo chat privado.
 
+## Referencias (partidas de prueba, 18-10-2026)
+
+- **Chat Wars** (`@chtwrsbot`): teclado fijo de 5 botones con emoji y 1–2 palabras, menús de 3 niveles como mucho y ⬅️ Volver siempre; las listas largas usan `/comandos` en el texto; las actividades con tiempo avisan al terminar con un mensaje corto con botín.
+- **AshWars** (`@AshWarsBot`, «Threnor»): cabeceras en MAYÚSCULAS con emoji y separador ━━━; barras ▰▱ para vida, maná y experiencia; atributos en dos columnas; línea «[ Estado: ⛺ Campamento ]»; pestañas inline con la activa marcada («·🎒Mochila·»); el mensaje pulsado se queda sin botones y el siguiente paso llega en uno nuevo; ventanita con el nombre del botón pulsado.
+
 ## Decidido
 
 - Interfaz progresiva: pocas opciones claras al principio.
 - Un mensaje que se edita para estado (combate, mapa) en lugar de diez mensajes por acción.
+- Navegación editada, hitos en mensaje nuevo; un mensaje por acción; rechazos en ventanita (0.10.0).
 - Los iconos acompañan palabras; todo audio tendrá texto.
 
 ## Próximo
 
 - **UX-04** estados explícitos de acción (pendiente, interpretando, requiere tirada, resuelta, rechazada).
 - **UX-05** `/resume`, `/unstuck`, `/party`, `/rest`.
-- Pruebas de habilidad más claras (hoy «🎲 Survival: 2 → 3 vs DC 13 ❌»), nombres traducidos y leyenda ●/○/· en `/sheet`.
-- Gramática: «Llegas al Mercado / a la Taberna» (artículo por lugar) y «1 ronda» en singular.
-- Inventario comparativo; mensajes de estado editables en más vistas.
+- 0.10.1: pruebas de habilidad más claras (hoy «🎲 Supervivencia: 2 → 3 contra CD 13 ❌»), leyenda ●/○/· en `/sheet`, «Llegas al Mercado / a la Taberna» (artículo por lugar) y «1 ronda» en singular.
+- 0.10.2: inventario con pestañas por categoría y emoji por objeto.
+- Inventario comparativo.
 - Modo silencioso cuando haya audio ([ars](ars.md)); Mini App más adelante.
 
 ## Preguntas abiertas
