@@ -94,7 +94,7 @@ def ability_tags(a, lang: str) -> str:
     if a.kind == "passive" or a.action == "none":
         return t(lang, "ability.passive")
     tags = [t(lang, f"ability.action.{a.action}")]
-    tags.append(t(lang, "ability.uses_one" if a.uses == 1 else "ability.uses", n=a.uses) if a.uses
+    tags.append(t(lang, "ability.uses", n=a.uses) if a.uses
                 else t(lang, "ability.unlimited"))
     return " · ".join(tags)
 
@@ -258,7 +258,7 @@ async def scene(session: AsyncSession, char: Character, lang: str,
     rows = grid(buttons)
     trip_to = exploration.trip(char) if char.state == "idle" else None
     if trip_to:  # an ambush stopped the trip halfway: carry on in one tap
-        rows.insert(0, [btn(t(lang, "btn.continue_trip", place=c.locations[trip_to].name.get(lang)),
+        rows.insert(0, [btn(t(lang, "btn.continue_trip", place=c.locations[trip_to].phrase()[lang]),
                             cb("go", trip_to, n))])
     for a in await quests.available_actions(session, char, present):
         if a.action.npc is None:
@@ -336,7 +336,7 @@ async def activity_entries(session: AsyncSession, char: Character, lang: str,
             if seller and seller[1] == char.location:
                 button = btn(t(lang, "btn.buy_tool", tool=name), cb("shop", seller[0]))
             elif seller:
-                button = btn(t(lang, "btn.buy_tool_at", tool=name, place=c.locations[seller[1]].name.get(lang)),
+                button = btn(t(lang, "btn.buy_tool_at", tool=name, place=c.locations[seller[1]].phrase()[lang]),
                              cb("go", seller[1], n))
         else:
             line += "\n      ❌ " + escape(render_event(refusal.events[0], lang))
@@ -639,7 +639,7 @@ def _route_lines(char: Character, route: world_map.Route, lang: str) -> list[str
     loc = c.locations[route.to]
     tags = [t(lang, "map.route", minutes=route.minutes, yards=route.yards)]
     if route.via:
-        tags.append(t(lang, "map.via", places=escape(", ".join(c.locations[k].name.get(lang) for k in route.via))))
+        tags.append(t(lang, "map.via", places=escape(", ".join(c.locations[k].phrase()[lang] for k in route.via))))
     if loc.hub and loc.zone == c.locations[char.location].zone:
         tags.append(t(lang, "map.gate"))
     if world_map.cleared(char, route.to):
@@ -680,7 +680,7 @@ async def map_view(session: AsyncSession, char: Character, lang: str, zone: str 
         return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
 
     lines = [t(lang, "map.title", zone=escape(zone_here.name.get(lang)), kind=t(lang, f"map.kind.{zone_here.kind}")),
-             t(lang, "map.here", place=escape(here.name.get(lang)))]
+             t(lang, "map.here", place=escape(here.phrase()[lang]))]
     todo = _place_activities(char.location, lang)
     lines.append(f"      {todo}" if todo else f"      <i>{t(lang, 'map.nothing')}</i>")
     lines.append(RULE)
@@ -1034,7 +1034,7 @@ async def sheet(session: AsyncSession, char: Character, lang: str) -> tuple[str,
     lines += _sheet_gear(gear, lang)
 
     # every skill: ● proficient, ○ practiced, · untrained
-    lines += ["", f"<b>{t(lang, 'sheet.skills')}</b>"]
+    lines += ["", f"<b>{t(lang, 'sheet.skills')}</b>", t(lang, "sheet.skills_legend")]
     for key, skill in c.skills.items():
         row = skills.get(key)
         mark = "●" if row and row.proficient else "○" if row and row.xp else "·"

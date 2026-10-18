@@ -1,4 +1,5 @@
 name: {es: Barrio de Oficios, en: Craftsmen's Row}
+article: {es: el, en: ""}
 kind: city
 guild: true  # aquí se aprenden y cambian los oficios
 stations: [anvil, alchemy_table, carpenter_bench, tannery, jeweler_bench, scribe_desk, workbench]

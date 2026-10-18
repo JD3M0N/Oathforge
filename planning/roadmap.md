@@ -160,7 +160,7 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 
 - [x] Añadir «Oficios / Trades» como acceso a maestrías, profesiones y aficiones, sin eliminar sus consultas directas (0.10.0: botón 🛠️ Oficios en Héroe y en Actividades, con sus pestañas).
 - [x] Añadir «Actividades / Activities» contextual, con requisitos, duración y motivo de bloqueo (0.10.0: en el teclado fijo y en la escena; sin herramienta, botón a la tienda que la vende).
-- [ ] Unificar volver/cancelar, tiradas traducidas, leyenda de competencias, singular/plural y artículos.
+- [x] Unificar volver/cancelar, tiradas traducidas, leyenda de competencias, singular/plural y artículos (0.10.0: Volver de cada vista a su madre; 0.10.1: tiradas con bono y veredicto, leyenda en `/sheet`, `_one` automático y artículo por lugar).
 - [x] Editar paneles de estado; preservar hitos y recompensas como mensajes recuperables. Tratar mensajes eliminados y callbacks caducados (0.10.0: la navegación edita; cada acción deja un mensaje con su resultado y los botones, y el viejo pierde los suyos; rechazos y menús viejos en ventanita).
 
 **Flujo de jugador:** Lugar → Actividades → Minar → «Necesitas un pico / Pickaxe required» → tienda pertinente.

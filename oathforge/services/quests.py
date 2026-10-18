@@ -104,6 +104,8 @@ def objective_target(obj: QuestObjective) -> dict:
         return c.rulebook[obj.target].title.model_dump()
     pool = {"kill": c.monsters, "hunt": c.locations, "talk": c.npcs, "visit": c.locations, "gather": c.items, "skin": c.items,
             "craft": c.items, "rest": c.locations, "heal": c.locations}[obj.kind]
+    if pool is c.locations:  # «Ve a la Capilla del Alba»
+        return pool[obj.target].phrase()
     return pool[obj.target].name.model_dump()
 
 
@@ -264,8 +266,7 @@ async def perform(
         skills = await characters.skills_of(session, char)
         dc = dc_for(action.check.tier)
         res = check(rng, action.check.skill, characters.skill_bonus(char, skills, action.check.skill), dc)
-        out.add("check.result", skill=get_content().skills[action.check.skill].name.model_dump(),
-                roll=res.kept, total=res.total, dc=dc, result="✅" if res.success else "❌")
+        characters.add_check(out, res)
         if res.success:
             out.text(action.check.success_text)
             await apply_effects(session, char, action.check.success_effects, out, rng)

@@ -1,4 +1,5 @@
 name: {es: Capilla del Alba, en: Chapel of the Dawn}
+article: {es: la, en: the}
 kind: city
 healer: {cost: 3, heal: 1d8+4}  # «Curar heridas»: unas monedas y la hermana Ysolde te cierra las heridas
 description:

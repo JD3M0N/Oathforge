@@ -137,7 +137,7 @@ def _ambush_stop(char: Character, route: world_map.Route, rng: random.Random):
 
 def _names(keys) -> dict:
     c = get_content()
-    return {lang: ", ".join(c.locations[k].name.get(lang) for k in keys) for lang in ("es", "en")}
+    return {lang: ", ".join(c.locations[k].phrase()[lang] for k in keys) for lang in ("es", "en")}
 
 
 async def travel(session: AsyncSession, char: Character, dest: str, rng: random.Random) -> Outcome:
@@ -169,13 +169,12 @@ async def travel(session: AsyncSession, char: Character, dest: str, rng: random.
                                 {"location": place, "outside": origin_city and c.locations[place].zone != "crownreach"})
     char.location = end
     if stop:
-        out.add("explore.trip_stopped", place=c.locations[end].name.model_dump(),
-                dest=c.locations[dest].name.model_dump(), yards=yards)
+        out.add("explore.trip_stopped", place=c.locations[end].phrase(), dest=c.locations[dest].phrase(), yards=yards)
         char.flags = {**char.flags, TRIP: {"to": dest, "rolled": True}}
     elif passed:
-        out.add("explore.arrived_via", place=c.locations[end].name.model_dump(), via=_names(passed), yards=yards)
+        out.add("explore.arrived_via", place=c.locations[end].phrase(), via=_names(passed), yards=yards)
     else:
-        out.add("explore.arrived", place=c.locations[end].name.model_dump(), yards=yards)
+        out.add("explore.arrived", place=c.locations[end].phrase(), yards=yards)
     for place in passed + [end]:
         out.extend(await quests.on_visit(session, char, place, rng))
 
@@ -238,8 +237,7 @@ async def investigate(session: AsyncSession, char: Character, rng: random.Random
         dc = dc_for(disc.tier)
         res = check(rng, disc.skill, characters.skill_bonus(char, skills, disc.skill), dc)
         mark_tried(char, f"discover:{key}")
-        out.add("check.result", skill=c.skills[disc.skill].name.model_dump(), roll=res.kept, total=res.total,
-                dc=dc, result="✅" if res.success else "❌")
+        characters.add_check(out, res)
         if not res.success:
             continue
         found = True
@@ -277,8 +275,7 @@ async def check_skill(session: AsyncSession, char: Character, skill: str, tier: 
     dc = dc_for(tier)
     res = check(rng, skill, characters.skill_bonus(char, skills, skill), dc)
     mark_tried(char, key)
-    out = Outcome().add("check.result", skill=c.skills[skill].name.model_dump(), roll=res.kept, total=res.total,
-                        dc=dc, result="✅" if res.success else "❌")
+    out = characters.add_check(Outcome(), res)
     if res.success:
         await characters.practice(session, char, skill, tier, key, out)
     return out, res.success

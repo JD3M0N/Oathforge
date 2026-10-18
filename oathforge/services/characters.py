@@ -35,6 +35,15 @@ async def get_character(session: AsyncSession, user_id: int, lock: bool = False)
     return await session.scalar(stmt)
 
 
+def add_check(out: Outcome, res) -> Outcome:
+    """"🎲 Supervivencia: 2 + 1 = 3 vs CD 13 · ❌ Fallo": the d20, the bonus, the total, the DC and the verdict."""
+    sign = "−" if res.bonus < 0 else "+"
+    verdict = "check.success" if res.success else "check.failure"
+    return out.add("check.result", skill=get_content().skills[res.skill].name.model_dump(), roll=res.kept,
+                   bonus=f"{sign} {abs(res.bonus)}", total=res.total, dc=res.dc, result="✅" if res.success else "❌",
+                   verdict={lang: t(lang, verdict) for lang in ("es", "en")})
+
+
 def ensure_free(char: Character) -> Outcome | None:
     """A refusal while fighting or busy with a field activity (mining, a long stay, tracking); None if free."""
     if char.state == "in_combat":
@@ -407,4 +416,4 @@ async def defeat_penalty(char: Character, out: Outcome) -> None:
     char.flags = {k: v for k, v in (char.flags or {}).items() if k != "trip"}  # exploration.TRIP: the trip ends here
     char.state = "idle"
     char.conditions = {**char.conditions, "injured": True}
-    out.add("combat.defeat_penalty" if lost else "combat.defeat_penalty_free", gold=lost, place=c.locations[c.respawn_location].name.model_dump())
+    out.add("combat.defeat_penalty" if lost else "combat.defeat_penalty_free", gold=lost, place=c.locations[c.respawn_location].phrase())

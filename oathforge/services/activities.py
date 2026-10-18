@@ -133,7 +133,7 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str,
     if kind == "skin":
         harvest = {h.item for k in beasts for h in c.monsters[k].harvest}
         if await quests.tutorial_boost(session, char, "skin", harvest):  # the tutorial's shortcut: at once
-            out = Outcome().add("activity.tutorial", skill=characters.mastery_name(skill), place=loc.name.model_dump())
+            out = Outcome().add("activity.tutorial", skill=characters.mastery_name(skill), place=loc.phrase())
             await skin(session, char, beasts, random.Random(), out)
             return out
     if kind in ("gather", "stay"):
@@ -155,11 +155,11 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str,
         if settings.beta_instant_rest:  # beta only: wake up at once
             return await claim(session, char, act.ends_at)
         return Outcome().add("activity.started.rest" if loc.rest_cost else "activity.started.rest_free",
-                             place=loc.name.model_dump(), cost=loc.rest_cost, minutes=seconds // 60)
+                             place=loc.phrase(), cost=loc.rest_cost, minutes=seconds // 60)
     if settings.beta_instant_tutorial and await quests.in_tutorial(session, char):  # beta only: done at once
         return Outcome().add("activity.tutorial_instant").extend(await claim(session, char, act.ends_at))
     out = Outcome().add(f"activity.started.{kind}", skill=characters.mastery_name(skill),
-                        place=loc.name.model_dump(), minutes=seconds // 60, seconds=seconds)
+                        place=loc.phrase(), minutes=seconds // 60, seconds=seconds)
     if kind in ("track", "stay") and char.hp * 2 < char.max_hp:  # this may end in a fight
         out.add("explore.low_hp", hp=char.hp, max_hp=char.max_hp)
     return out
@@ -196,7 +196,7 @@ async def _tutorial_gather(session, char, kind: str, skill: str, loc: Location, 
                                 "tool_checked": bool(_gathering(loc, skill).tool)})
     session.add(act)
     await session.flush()
-    out = Outcome().add("activity.tutorial", skill=characters.mastery_name(skill), place=loc.name.model_dump())
+    out = Outcome().add("activity.tutorial", skill=characters.mastery_name(skill), place=loc.phrase())
     await _give(session, char, items, out, random.Random())
     characters.grant_mastery(char, skill, xp, out)
     await _achievement_activity(session, char, act, out)
@@ -250,7 +250,7 @@ async def claim(session: AsyncSession, char: Character, now: float | None = None
         return await _claim_track(session, char, act, loc, rng, now)
     if act.kind == "skin":
         beasts = (act.result or {}).get("monsters", [])
-        out = Outcome().add("activity.done.skin", place=loc.name.model_dump())
+        out = Outcome().add("activity.done.skin", place=loc.phrase())
         got = await skin(session, char, beasts, rng, out)
         _finish(act, "skin", got, gathering.SKIN_XP * len(beasts), now)
         return out
@@ -269,7 +269,7 @@ async def claim(session: AsyncSession, char: Character, now: float | None = None
         act.encounter_id = enc.id
         return out.extend(enc_out)
 
-    out = Outcome(activity_id=act.id).add(f"activity.done.{act.kind}", place=loc.name.model_dump())
+    out = Outcome(activity_id=act.id).add(f"activity.done.{act.kind}", place=loc.phrase())
     await _give(session, char, items, out, rng)
     if roll.bonus:
         out.add("activity.bonus", loot=loot_text(roll.bonus))
@@ -390,7 +390,7 @@ def describe(act: WorldActivity, lang: str) -> str:
     """'Minería en Mina del Paso Viejo' for panels."""
     c = get_content()
     skill = "" if act.kind == "rest" else characters.mastery_name(act.skill)[lang]
-    return t(lang, f"activity.kind.{act.kind}", skill=skill, place=c.locations[act.location].name.get(lang))
+    return t(lang, f"activity.kind.{act.kind}", skill=skill, place=c.locations[act.location].phrase()[lang])
 
 
 async def _achievement_activity(session, char, act, out):

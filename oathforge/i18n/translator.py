@@ -1,5 +1,6 @@
 """Tiny YAML-backed translator: t(lang, "combat.hit", actor="Lyra")."""
 
+import re
 from functools import lru_cache
 from pathlib import Path
 
@@ -41,9 +42,22 @@ def normalize_lang(code: str | None) -> str:
     return base if base in settings.supported_languages else settings.default_language
 
 
+_CONTRACTION = re.compile(r"\b([Aa]|[Dd]e) el\b")  # «a el Mercado» → «al Mercado», «de el» → «del»
+
+
+COUNTS = ("n", "count", "turns", "left")  # one of these equal to 1 picks "<key>_one" when the locale has it
+
+
 def t(lang: str, key: str, **params) -> str:
+    if any(params.get(p) == 1 for p in COUNTS) and f"{key}_one" in flat(lang):
+        key = f"{key}_one"  # «1 ronda», not «1 rondas»
     template = flat(lang).get(key) or flat("en").get(key) or key
-    return template.format_map(_SafeDict(params)) if params else template
+    if not params:
+        return template
+    text = template.format_map(_SafeDict(params))
+    if lang == "es":
+        text = _CONTRACTION.sub(lambda m: m.group(1)[0] + ("l" if m.group(1).lower() == "a" else "el"), text)
+    return text
 
 
 def has(lang: str, key: str) -> bool:

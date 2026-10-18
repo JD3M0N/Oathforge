@@ -124,9 +124,7 @@ async def steal(session: AsyncSession, char: Character, npc_key: str, rng: rando
     bonus = characters.skill_bonus(char, skills, "sleight_of_hand")
     dc = npc.passive_perception
     res = check(rng, "sleight_of_hand", bonus, dc)
-    out = Outcome().add("check.result", skill=get_content().skills["sleight_of_hand"].name.model_dump(),
-                        roll=res.kept, total=res.total, dc=dc,
-                        result="✅" if res.success else "❌")
+    out = characters.add_check(Outcome(), res)
     name = npc.name.model_dump()
     if res.success:
         gold = roll(npc.steal_gold, rng).total

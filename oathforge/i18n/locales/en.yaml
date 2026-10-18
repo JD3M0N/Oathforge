@@ -78,6 +78,7 @@ create:
   lineage_bonus: " · lineage {bonus}"
   ability_hp: "❤️ HP at level 1: <b>{hp}</b>"
   points_left: "You still have {left} points to assign."
+  points_left_one: "You still have 1 point to assign."
   cannot_change: "You can't change that ability any further."
   summary: |-
     🦸 <b>{name}</b>
@@ -354,6 +355,7 @@ sheet:
   armor_ac: "base AC {ac}"
   shield_ac: "+{ac} AC"
   skills: "🎓 Skills"
+  skills_legend: "<i>● proficient · ○ practiced · · untrained · ★ practice rank</i>"
   abilities: "✨ Class abilities"
   locked: "Level {level}: {name}"
   reputation: "🏛️ Reputation"
@@ -380,6 +382,7 @@ stats:
   battles: "⚔️ Battles: {won} won · {lost} lost · {fled} fled"
   kills: "💀 Monsters defeated: {n}"
   dodges: "💨 Dodges: {n} enemy attacks missed"
+  dodges_one: "💨 Dodges: 1 enemy attack missed"
   crits: "💥 Critical hits: {n}"
   activities: "🧺 Activities finished: {n}"
   since: "Monsters count from the start; the rest, since v0.7.23."
@@ -392,6 +395,7 @@ journal:
   hint: "Tap \"Missions\" for objectives and rewards, or \"Bestiary\" for the creatures you know."
   missions_title: "📜 <b>Missions in progress</b> · {done}/{total} completed"
   log_title: "📚 <b>Mission log</b> · {n} finished"
+  log_title_one: "📚 <b>Mission log</b> · 1 finished"
   log_hint: "Tap a mission to recall how it ended."
   log_empty: "You have not finished any mission yet."
   missions_hint: "Tap a mission to see its progress."
@@ -403,7 +407,9 @@ journal:
   no_rumors: "No rumors are going around yet."
 
 check:
-  result: "🎲 {skill}: {roll} → {total} vs DC {dc} {result}"
+  result: "🎲 {skill}: {roll} {bonus} = {total} vs DC {dc} · {result} {verdict}"
+  success: "Success"
+  failure: "Failure"
   already_tried: "You already tried {skill} here today. Come back tomorrow, or once you have improved."
 
 explore:
@@ -523,6 +529,7 @@ combat:
   defeated: "💀 {target} falls."
   relentless: "😤 {target} refuses to fall and stays up with 1 HP."
   status: "🌀 {target} suffers {status} ({turns} turns)."
+  status_one: "🌀 {target} suffers {status} (1 turn)."
   immune: "🚫 {target} is immune to {status}."
   dot: "🔥 {target} suffers from {status}."
   asleep: "💤 {target} is asleep and loses their turn."
@@ -540,6 +547,7 @@ combat:
   heal: "💚 {actor} uses {ability} and recovers {amount} HP."
   turn: "☀️ {actor} uses {ability}: holy light sears the undead."
   buff: "🎶 {actor} uses {ability}: {status} for {turns} turns."
+  buff_one: "🎶 {actor} uses {ability}: {status} for 1 turn."
   surge: "💢 {actor} uses {ability} and gets their action back."
   hide: "🥷 {actor} tries to hide · 🎲 {roll}{bonus} = {total} vs DC {dc} {result}"
   flee: "🏃 {actor} tries to flee · 🎲 {roll}{bonus} = {total} vs DC {dc} {result}"
@@ -660,6 +668,7 @@ skill:
   plus_casting: " + your casting modifier"
   temp_hp: "🛡️ {dice} temporary HP"
   status: "🌀 Applies {status} ({turns} turns)"
+  status_one: "🌀 Applies {status} (1 turn)"
   ac: "🛡️ +{n} AC"
   ac_unarmored: "🛡️ +{n} AC without armor"
   immune: "🚫 Immune to: {list}"
@@ -706,6 +715,7 @@ report:
     defeat: "Defeat"
     fled: "Escaped"
   rounds: "{n} rounds"
+  rounds_one: "1 round"
   dealt: "🗡️ Damage dealt: <b>{dealt}</b> · 🎯 Hits {hits}/{attacks} · 💥 Crits {crits}"
   received: "🩸 Damage taken: <b>{received}</b> · They hit you {hits}/{attacks}"
   healed: "💚 Healing: {amount} HP"
@@ -897,6 +907,7 @@ station:
 achievements:
   heading: 🏆 <b>Achievements</b>
   summary: '{count} achievements earned · {points} feat points'
+  summary_one: '1 achievement earned · {points} feat points'
   mystery: An undiscovered feat
   progress: 'Progress: {current}/{target}'
   reward: 'Reward: {points} feat points'

@@ -68,6 +68,12 @@ class Text(Strict):
         return getattr(self, lang, None) or self.en
 
 
+class Article(Strict):
+    """The article before a place's name in a sentence; empty where the language uses none ("Crownreach Market")."""
+    es: str = ""
+    en: str = ""
+
+
 class Skill(Strict):
     ability: Literal["str", "dex", "con", "int", "wis", "cha"]
     name: Text
@@ -368,6 +374,7 @@ class Healer(Strict):
 
 class Location(Strict):
     name: Text
+    article: Article | None = None  # {es: el, en: the}: «Llegas al Mercado», "You reach the Old Pass Mine"
     description: Text
     night: Text | None = None
     kind: Literal["city", "wild", "dungeon"]
@@ -390,6 +397,12 @@ class Location(Strict):
     # filled by the loader from the folder: world/<continent>/<zone>/<location>/place.yaml
     zone: str = ""
     continent: str = ""
+
+    def phrase(self) -> dict:
+        """The name inside a sentence, with its article: {"es": "el Mercado de Crownreach", "en": "Crownreach Market"}.
+        The translator joins «a el» into «al» and «de el» into «del»."""
+        return {lang: f"{getattr(self.article, lang) if self.article else ''} {self.name.get(lang)}".strip()
+                for lang in ("es", "en")}
 
 
 class Profession(Strict):

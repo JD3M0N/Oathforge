@@ -4,6 +4,19 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.1] - 2026-10-18
+
+Interfaz (F01, 2.ª parte): textos claros.
+
+### Cambiado
+- **Pruebas de habilidad legibles**: «🎲 Supervivencia: 2 + 1 = 3 vs CD 13 · ❌ Fallo» (el d20, el bono, el total, la CD y el veredicto) en vez de «2 → 3 contra CD 13 ❌». Una sola función (`characters.add_check`) para investigar, acciones de misión, robar y texto libre.
+- **Artículos**: cada lugar lleva el suyo (`article` en `place.yaml`) y el texto dice «Llegas al Mercado», «a la Taberna», «por el Camino del Viejo Rey», «Rastreo en el Prado», «Ve a la Capilla del Alba». El traductor contrae «a el» y «de el». En inglés, «the Old Pass Mine»; la taberna se llama «Broken Crown Tavern».
+- **Singular**: «1 ronda», «1 turno», «1 terminada», «1 punto», «1 logro»… El traductor elige `<clave>_one` cuando la cuenta es 1.
+- La pista de la misión de cocina dice dónde está ahora «🔨 Fabricar».
+
+### Añadido
+- Leyenda de las competencias en `/sheet`: «● competente · ○ practicada · · sin entrenar · ★ rango de práctica».
+
 ## [0.10.0] - 2026-10-18
 
 Empieza la consolidación (0.10.x) con la interfaz (F01, 1.ª parte): menos mensajes, menos botones y siempre a mano lo que puedes hacer.

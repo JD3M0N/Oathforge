@@ -78,6 +78,7 @@ create:
   lineage_bonus: " · linaje {bonus}"
   ability_hp: "❤️ Vida a nivel 1: <b>{hp}</b>"
   points_left: "Aún te quedan {left} puntos por repartir."
+  points_left_one: "Aún te queda 1 punto por repartir."
   cannot_change: "No puedes cambiar más ese atributo."
   summary: |-
     🦸 <b>{name}</b>
@@ -354,6 +355,7 @@ sheet:
   armor_ac: "CA base {ac}"
   shield_ac: "+{ac} CA"
   skills: "🎓 Competencias"
+  skills_legend: "<i>● competente · ○ practicada · · sin entrenar · ★ rango de práctica</i>"
   abilities: "✨ Habilidades de clase"
   locked: "Nivel {level}: {name}"
   reputation: "🏛️ Reputación"
@@ -380,6 +382,7 @@ stats:
   battles: "⚔️ Combates: {won} ganados · {lost} perdidos · {fled} huidas"
   kills: "💀 Monstruos derrotados: {n}"
   dodges: "💨 Esquivas: {n} ataques enemigos fallados"
+  dodges_one: "💨 Esquivas: 1 ataque enemigo fallado"
   crits: "💥 Golpes críticos: {n}"
   activities: "🧺 Actividades terminadas: {n}"
   since: "Los monstruos cuentan desde siempre; lo demás, desde la v0.7.23."
@@ -392,6 +395,7 @@ journal:
   hint: "Toca «Misiones» para ver objetivos y recompensas, o «Bestiario» para las criaturas que conoces."
   missions_title: "📜 <b>Misiones en curso</b> · {done}/{total} completadas"
   log_title: "📚 <b>Registro de misiones</b> · {n} terminadas"
+  log_title_one: "📚 <b>Registro de misiones</b> · 1 terminada"
   log_hint: "Toca una misión para recordar cómo acabó."
   log_empty: "Aún no has terminado ninguna misión."
   missions_hint: "Toca una misión para ver su avance."
@@ -403,7 +407,9 @@ journal:
   no_rumors: "Aún no corre ningún rumor."
 
 check:
-  result: "🎲 {skill}: {roll} → {total} contra CD {dc} {result}"
+  result: "🎲 {skill}: {roll} {bonus} = {total} vs CD {dc} · {result} {verdict}"
+  success: "Éxito"
+  failure: "Fallo"
   already_tried: "Ya intentaste {skill} aquí hoy. Tendrás que volver mañana o cuando hayas mejorado."
 
 explore:
@@ -523,6 +529,7 @@ combat:
   defeated: "💀 {target} cae."
   relentless: "😤 {target} se niega a caer y queda en pie con 1 PV."
   status: "🌀 {target} sufre {status} ({turns} turnos)."
+  status_one: "🌀 {target} sufre {status} (1 turno)."
   immune: "🚫 {target} es inmune a {status}."
   dot: "🔥 {target} sufre por {status}."
   asleep: "💤 {target} está dormido y pierde su turno."
@@ -540,6 +547,7 @@ combat:
   heal: "💚 {actor} usa {ability} y recupera {amount} PV."
   turn: "☀️ {actor} usa {ability}: la luz sagrada abrasa a los no-muertos."
   buff: "🎶 {actor} usa {ability}: {status} durante {turns} turnos."
+  buff_one: "🎶 {actor} usa {ability}: {status} durante 1 turno."
   surge: "💢 {actor} usa {ability} y recupera su acción."
   hide: "🥷 {actor} intenta esconderse · 🎲 {roll}{bonus} = {total} vs CD {dc} {result}"
   flee: "🏃 {actor} intenta huir · 🎲 {roll}{bonus} = {total} vs CD {dc} {result}"
@@ -660,6 +668,7 @@ skill:
   plus_casting: " + tu modificador de conjuro"
   temp_hp: "🛡️ {dice} PV temporales"
   status: "🌀 Aplica {status} ({turns} turnos)"
+  status_one: "🌀 Aplica {status} (1 turno)"
   ac: "🛡️ +{n} a la CA"
   ac_unarmored: "🛡️ +{n} a la CA sin armadura"
   immune: "🚫 Inmune a: {list}"
@@ -706,6 +715,7 @@ report:
     defeat: "Derrota"
     fled: "Huida"
   rounds: "{n} rondas"
+  rounds_one: "1 ronda"
   dealt: "🗡️ Daño hecho: <b>{dealt}</b> · 🎯 Aciertos {hits}/{attacks} · 💥 Críticos {crits}"
   received: "🩸 Daño recibido: <b>{received}</b> · Te acertaron {hits}/{attacks}"
   healed: "💚 Curación: {amount} PV"
@@ -897,6 +907,7 @@ station:
 achievements:
   heading: 🏆 <b>Logros</b>
   summary: '{count} logros obtenidos · {points} puntos de hazaña'
+  summary_one: '1 logro obtenido · {points} puntos de hazaña'
   mystery: Hazaña por descubrir
   progress: 'Progreso: {current}/{target}'
   reward: 'Recompensa: {points} puntos de hazaña'

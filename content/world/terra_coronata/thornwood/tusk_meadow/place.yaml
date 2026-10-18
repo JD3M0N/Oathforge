@@ -1,4 +1,5 @@
 name: {es: Prado de los Colmillos, en: Tusk Meadow}
+article: {es: el, en: ""}
 kind: wild
 hunting: true  # botón «Cazar»: de día salen jabalíes y de noche murciélagos
 description:

@@ -1,4 +1,5 @@
 name: {es: "Cripta Hundida: entrada", en: "Sunken Crypt: entrance"}
+article: {es: la, en: the}
 kind: dungeon
 description:
   es: Escalones resbaladizos bajan hasta una puerta de bronce. El aire huele a tierra húmeda y a hierro viejo.

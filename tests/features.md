@@ -23,6 +23,10 @@ Cada pasada se hace con una clase distinta (la que menos se haya probado) y se a
 - [ ] Pulsar la misma vista dos veces no manda un mensaje repetido
 - [ ] Comprar, equipar, aprender o fabricar: el resultado encima del mismo menú
 - [ ] Una actividad que termina sola trae los botones del lugar en el mismo mensaje
+- [ ] Investigar: «🎲 Percepción: 12 + 2 = 14 vs CD 12 · ✅ Éxito»
+- [ ] «Llegas al Mercado», «a la Taberna», «por el Camino del Viejo Rey» (en inglés, «the Old Pass Mine»)
+- [ ] Informe de un combate de una ronda: «1 ronda»
+- [ ] `/sheet` explica ● ○ · y ★
 
 ## Mapa y viaje (0.8.0)
 - [ ] Mapa: dónde estás · 📜 objetivo · esta zona · otras zonas · 🌫️ Sin explorar

@@ -218,8 +218,8 @@ tut_stew:
     es: «Un soldado con hambre es un soldado muerto». Vale quiere que aprendas a cocinar lo que cazas.
     en: "\"A hungry soldier is a dead soldier.\" Vale wants you to learn to cook what you hunt."
   hint:
-    es: "En la taberna La Corona Rota está el fogón. Abre «🛠️ Oficios» y fabrica un estofado del cazador (2 de carne cruda + 1 raíz de sangre). La Cocina es una afición: no ocupa plaza de oficio."
-    en: "The hearth is at The Broken Crown Tavern. Open \"🛠️ Professions\" and craft a Hunter's stew (2 raw meat + 1 bloodroot). Cooking is a hobby: it takes no profession slot."
+    es: "En la taberna La Corona Rota está el fogón. En «⚒ Actividades», pulsa «🔨 Fabricar» y prepara un estofado del cazador (2 de carne cruda + 1 raíz de sangre). La Cocina es una afición: no ocupa plaza de oficio."
+    en: "The hearth is at the Broken Crown Tavern. In \"⚒ Activities\", press \"🔨 Craft\" and make a Hunter's stew (2 raw meat + 1 bloodroot). Cooking is a hobby: it takes no profession slot."
   start_stage: locked
   unlock_stage: active
   objective_stage: active

@@ -261,7 +261,7 @@ async def test_missed_discovery_and_known_city_do_not_count(monkeypatch):
         await a.backfill_character(s, char)
         assert not await s.scalar(select(AchievementUnlock.id).where(AchievementUnlock.achievement_key == "know_city"))
         char.location = "whispering_woods"
-        monkeypatch.setattr(exploration, "check", lambda *args: SimpleNamespace(kept=1,total=1,success=False))
+        monkeypatch.setattr(exploration, "check", lambda rng, skill, bonus, dc: SimpleNamespace(skill=skill, kept=1, bonus=0, dc=dc, total=1, success=False))
         await exploration.investigate(s, char, random.Random(0))
         assert not await s.scalar(select(AchievementProgress.id).where(AchievementProgress.achievement_key == "no_stone"))
 

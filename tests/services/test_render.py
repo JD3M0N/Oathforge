@@ -271,3 +271,29 @@ async def test_map_offers_the_mission_goal():
         text, kb = await render.map_view(s, char, "es")
         assert "Tu objetivo" in text
         assert any(b.text.startswith("📜") and b.callback_data.startswith("go|") for row in kb.inline_keyboard for b in row)
+
+
+def test_places_take_their_article_and_spanish_contracts_it():
+    c = get_content()
+    market, tavern = c.locations["crownreach_market"].phrase(), c.locations["broken_crown_tavern"].phrase()
+    assert t("es", "explore.arrived", place=market["es"], yards=10).startswith("Llegas al Mercado de Crownreach")
+    assert t("es", "explore.arrived", place=tavern["es"], yards=10).startswith("Llegas a la Taberna")
+    assert t("en", "explore.arrived", place=market["en"], yards=10).startswith("You reach Crownreach Market")
+    assert t("en", "explore.arrived", place=tavern["en"], yards=10).startswith("You reach the Broken Crown")
+    assert all(loc.article is not None and loc.article.es for loc in c.locations.values())
+
+
+def test_a_count_of_one_is_singular():
+    assert t("es", "report.rounds", n=1) == "1 ronda" and t("es", "report.rounds", n=2) == "2 rondas"
+    assert t("en", "report.rounds", n=1) == "1 round"
+
+
+def test_skill_check_line_shows_the_die_the_bonus_and_the_verdict():
+    from oathforge.engine.checks import CheckResult
+    from oathforge.services.events import Outcome, render_event
+
+    fail = characters.add_check(Outcome(), CheckResult("survival", (2,), 2, 1, 13)).events[0]
+    assert render_event(fail, "es") == "🎲 Supervivencia: 2 + 1 = 3 vs CD 13 · ❌ Fallo"
+    win = characters.add_check(Outcome(), CheckResult("perception", (18,), 18, -1, 12)).events[0]
+    assert render_event(win, "en") == "🎲 Perception: 18 − 1 = 17 vs DC 12 · ✅ Success"
+    assert fail.params["result"] == "❌"  # the fallback picker reads it

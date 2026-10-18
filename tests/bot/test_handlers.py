@@ -594,7 +594,7 @@ async def test_journal_missions_and_bestiary_views(llm, monkeypatch):
     await p.press("jq|tut_town|-")
     assert "Barrio de Oficios" in p.last[0] and "Bram" in p.last[0]
     await p.press("jrl|-|-")  # finished missions: the journal's log
-    assert "1 terminadas" in p.last[0] and "jq|tut_muster|-" in p.buttons()
+    assert "1 terminada" in p.last[0] and "jq|tut_muster|-" in p.buttons()
     await p.press("jq|tut_muster|-")
     assert "jrl|-|-" in p.buttons()  # back to the log
     await p.press("jrb|-|-")
@@ -637,7 +637,7 @@ async def test_manual_rolls_wait_for_the_die(llm, monkeypatch):
     await p.press("scene|-|-")
     await p.press(p.find("look"))
     assert "Lanza el dado" in p.last[0] and "pending_roll" in p.ctx.user_data
-    assert not any("contra CD" in t_ for t_, _ in p.chat.sent if t_)  # nothing rolled yet
+    assert not any("vs CD" in t_ for t_, _ in p.chat.sent if t_)  # nothing rolled yet
     await p.press(p.find("roll"))
     assert getattr(p.chat, "dice", 0) == 1
     assert any("🎲 Medicina" in t_ or "🎲 Percepción" in t_ for t_, _ in p.chat.sent[-3:] if t_)

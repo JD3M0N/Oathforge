@@ -1,4 +1,5 @@
 name: {es: Plaza de Crownreach, en: Crownreach Plaza}
+article: {es: la, en: ""}
 kind: city
 respawn: true
 hub: true  # aquí aparece «Ver ciudad» si la zona tiene imágenes

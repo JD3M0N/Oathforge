@@ -59,9 +59,6 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🔴 Grupos de expedición y combate en grupo (candidato a 0.9.0).
 - [ ] 🟢 **Gremios**: roles, banco, tablón, misiones comunitarias y sede ([societas](planning/societas.md)).
 - [ ] 🟡 ◐ Comandos nuevos: `/map`, `/quests`, `/rest`, `/party`. *Hecho: `/quests` (v0.5.0), `/settings` y `/prof_<oficio>` (v0.7.0), `/map` (v0.7.6), `/item_`, `/monster_`, `/masteries` y `/hobbies` (v0.7.19), `/skin` (v0.7.21).*
-- [ ] 🟡 Pruebas de habilidad más claras: hoy salen como «🎲 Survival: 2 → 3 vs DC 13 ❌».
-- [ ] 🟢 ◐ Explicar las ⚠️ de los viajes (probabilidad de emboscada) y la leyenda ●/○/· de las competencias en `/sheet`. *Hecho: las ⚠️ en el mapa y en el `/rulebook` (v0.8.0). Falta: la leyenda de `/sheet`.*
-- [ ] 🟢 Gramática de los textos generados: «Llegas **al** Mercado», «Llegas **a la** Taberna…» (artículo por lugar) y «1 ronda» en singular en el informe.
 - [ ] 🟢 Expediciones: escenas de viaje con decisiones, estilos prudente/explorador/directo, atajos desbloqueables y favoritos ([mundus](planning/mundus.md)).
 - [ ] 🟢 Duelos PvP con consentimiento y sin pérdidas.
 - [ ] 🟢 Emojis para menas, hierbas, maderas, pieles y demás materiales (en el inventario, el botín y las recetas).
@@ -163,3 +160,4 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] Planning reorganizado: Possibilium como libro principal, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md` y laboratorio `content/officina/` (v0.8.3).
 - [x] README raíz simple y motivador; flujo, seguridad y `artifacts/` en `AGENTS.md` (v0.8.4–0.8.5).
 - [x] **Interfaz más cómoda**: ⚒ Actividades en el teclado fijo y en la escena (con lo que falta y dónde comprarlo), 🛠️ Oficios que reúne oficios, maestrías y aficiones, un solo mensaje por acción y rechazos en ventanita (v0.10.0).
+- [x] **Textos claros**: tiradas «2 + 1 = 3 vs CD 13 · ❌ Fallo», leyenda ●/○/· en `/sheet`, «Llegas al Mercado / a la Taberna» y «1 ronda» en singular (v0.10.1).
