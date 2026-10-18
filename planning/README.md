@@ -5,7 +5,8 @@ Qué queremos construir y por qué. No es documentación del código (eso está 
 | Archivo | Tema |
 |---|---|
 | [Possibilium.md](Possibilium.md) | **Libro principal**: todas las ideas, alternativas y preguntas, con IDs (`CLA-01`, `MIN-01`…); archivo histórico de los PDF en los anexos |
-| [iter.md](iter.md) | Hoja de ruta: qué entra en cada versión |
+| [roadmap.md](roadmap.md) | **Plan de 0.10 y 0.11**: 20 fichas de sistema, hitos, puerta de salida y cobertura del TODO |
+| [iter.md](iter.md) | Hoja de ruta: qué entra en cada versión (resumen; el detalle de 0.10/0.11 está en roadmap) |
 | [ordines.md](ordines.md) | Clases y especializaciones |
 | [progressio.md](progressio.md) | Creación, niveles, competencias, juramentos y relaciones |
 | [pugna.md](pugna.md) | Combate, derrota y descanso |

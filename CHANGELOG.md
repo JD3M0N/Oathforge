@@ -4,6 +4,18 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.9.1] - 2026-10-18
+
+Preparación de la 0.10: el plan antes de tocar el juego.
+
+### Añadido
+- `planning/roadmap.md`: hoja de ruta de **0.10 (consolidación de todos los sistemas individuales)** y **0.11 (multijugador)**. Veinte fichas por sistema con lo implementado, lo que falta decidir, tareas y criterio de terminado; hitos 0.10-A…H, puerta de salida, frontera de 0.11 y cobertura de las 73 casillas del TODO.
+- Sección 0 del roadmap: qué cambió desde la auditoría (0.9.0 entregó los logros), reglas de numeración (parches 0.9.x por hito; 0.10.0 al superar la puerta) y tabla de versiones orientativas.
+- `planning/releases/0.9.1.md`: anuncio para los canales (borrador, no enviado).
+
+### Cambiado
+- `planning/iter.md`: «Próximo» reemplaza los candidatos 0.10–0.12 por 0.10 consolidación y 0.11 multijugador, con enlace al roadmap. `planning/README.md` lista el roadmap.
+
 ## [0.9.0] - 2026-10-17
 
 ### Añadido

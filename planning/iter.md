@@ -21,21 +21,24 @@ Versionado `0.x.y`: **y** (parche) en arreglos y cambios pequeños; **x** (menor
 | 0.8.2 | Tutorial de 10 misiones sin mazmorras (Viejo Colmillo como jefe final), objetivo `hunt`, beta instantánea y pociones a 1 de oro |
 | 0.8.3 | Planning reorganizado: Possibilium, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md`, `content/officina/` |
 | 0.9.0 | Logros e identidad: 30 logros, dos metalogros, títulos, destacados, objetivos seguidos y reconocimiento retroactivo verificable |
+| 0.9.1 | Hoja de ruta de 0.10 (consolidación) y 0.11 (multijugador): `planning/roadmap.md` |
 
-## Próximo (candidatos, no compromisos)
+## Próximo
 
-- **0.8.x**:
-  - balance del tutorial con datos de la beta (`oath tutorial-stats`, [mundus](mundus.md));
-  - arreglos de diálogo de PNJ (Bram y el fogón, confianza al preguntar; [narratio](narratio.md));
-  - lobo gris y camino del capitán ([bestiarium](bestiarium.md)).
-- **Cooperativo, sin versión asignada**: mínimo de dos jugadores en la cripta (PKG-01 núcleo confiable + PKG-02; [societas](societas.md)). Antes: idempotencia del texto libre, contexto versionado y reserva de IA (CORE-01..03, AI-01..02).
-- **Después del cooperativo mínimo, sin versión asignada**: grupos de 2–4 con ritmo y ausencias (PKG-03).
-- **0.10.0**: especializaciones a nivel 5, una por clase (PKG-04; [ordines](ordines.md)), y un juramento verificable ([progressio](progressio.md)).
-- **0.11.0**: encargos NPC y entre jugadores con custodia, sumideros de oro (PKG-05; [mercatura](mercatura.md), [opificia](opificia.md)).
-- **0.12.0**: un evento que cambia Crownreach: la crisis del hierro (PKG-08; [mundus](mundus.md)).
+El detalle de 0.10 y 0.11 (fichas por sistema, hitos, puerta de salida y trazabilidad del TODO) está en [roadmap.md](roadmap.md). Aquí solo el resumen.
+
+- **0.9.x → 0.10.0, consolidación**: revisión integral de los sistemas individuales antes del multijugador, en hitos A–H que se publican como parches 0.9.x; el número 0.10.0 se reserva para superar la puerta de salida. Incluye:
+  - seguridad y operación primero: idempotencia del texto libre, contexto versionado y reserva de IA (CORE-01..03, AI-01..02);
+  - confianza de los PNJ determinista, servicios de Bram, botones «Oficios» y «Actividades» ([narratio](narratio.md), [facies](facies.md));
+  - descanso corto, cofre personal, «Algo brilla», entrega de misiones al dador ([pugna](pugna.md), [mercatura](mercatura.md), [mundus](mundus.md));
+  - juramento verificable y auditoría de los logros de 0.9.0 ([progressio](progressio.md));
+  - contrato de combate, jefe de dos fases y matriz de ocho clases ([pugna](pugna.md), [ordines](ordines.md));
+  - recetas, economía y las primeras especializaciones a nivel 5, una por clase (PKG-04; [ordines](ordines.md));
+  - tutorial completo ES/EN y arco de nivel 5 ([mundus](mundus.md)).
+- **0.11, multijugador por incrementos** ([societas](societas.md)): grupo de 2 en la cripta (PKG-01 + PKG-02), grupos de 2–4 con ausencias (PKG-03), misiones y encargos con custodia (PKG-05), gremio mínimo y duelo consentido; después, eventos como la crisis del hierro (PKG-08).
 - **Producción audiovisual en paralelo** (no bloquea lo anterior): estilo, tres portadas de lugar, un retrato de NPC y una pista ([ars](ars.md) §16).
 - **Expediciones** (fase 2 del viaje: escenas, estilos, atajos, favoritos) cuando haya contenido que las merezca.
-- **Más adelante**: segunda región (Frosthold o Stormport), afinidades de maestría, más clases (Explorador), gremios, PvP con consentimiento, Mini App, TTS.
+- **Más adelante**: segunda región (Frosthold o Stormport), más clases (Explorador y Artificiero), Mini App, TTS.
 
 ## Antes de invitar a amigos (GDD §17.6)
 
