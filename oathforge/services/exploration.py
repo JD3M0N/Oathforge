@@ -249,7 +249,7 @@ async def investigate(session: AsyncSession, char: Character, rng: random.Random
             await achievements.emit(session, char, out, "flag", {"key": disc.sets_flag}, "flag:crypt_unlocked")
         for item, qty in disc.gives.items():
             await inventory.add_item(session, char, item, qty)
-            out.add("loot.item", item=c.items[item].name.model_dump(), qty=qty, item_key=item)
+            out.add("loot.item", item=c.items[item].labelled(), qty=qty, item_key=item)
         if disc.gold:
             char.gold += disc.gold
             out.add("loot.gold", gold=disc.gold)

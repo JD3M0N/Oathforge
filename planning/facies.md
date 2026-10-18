@@ -2,13 +2,14 @@
 
 Resumen de [Possibilium §4](Possibilium.md#s04). Cómo se ve el juego en el chat.
 
-## Estado actual (0.10.1)
+## Estado actual (0.10.2)
 
 - **Teclado fijo** (`ReplyKeyboardMarkup` persistente, `KEYBOARD_VERSION = 3`): 📍 Lugar · ⚒ Actividades · 🗺 Mapa / 🧝 Héroe · 🎒 Inventario · 📖 Diario, con la pista «Escribe lo que haces…» en el campo de texto. Sus etiquetas nunca llegan a la IA como texto libre.
 - **Escena** (lo social): lugar, hora del juego y cuánto falta para el cambio («☀️ 14:30 · anochece en 55 min»), «👥 Aquí:» en lista y los botones 🧭 Viajar · 🔎 Investigar · 💬 Hablar · 🛒 Comerciar · ⚒ Actividades (n), más «Seguir viaje», acciones de misión y «Ver ciudad». Texto libre que interpreta Gemini.
 - **⚒ Actividades** (lo que se hace con las manos, `render.activities_view`): cazar, recolectar, expedición, rastrear, desollar, descansar, fabricar y curar, cada una con duración y qué falta. La disponibilidad sale de `activities.check`, la misma regla que usa `start`: sin herramienta no hay botón, sino «🛒 Pico · ir a Mercado» hacia quien la vende. Desde ahí, 🛠️ Oficios (también desde Héroe).
 - **Mensajes**: la navegación (menús, pestañas, Volver, Actividades) edita el mismo mensaje. Cada acción deja **un** mensaje con el resultado y la cabecera del lugar con sus botones, y el panel pulsado pierde los suyos. Subidas de nivel, crónicas y combates siguen en mensajes propios. Las compras, equipar, aprender y fabricar ponen el resultado encima del mismo menú.
 - **Textos** (0.10.1): pruebas «🎲 Supervivencia: 2 + 1 = 3 vs CD 13 · ❌ Fallo»; leyenda ●/○/· en `/sheet`; cada lugar con su artículo (`article`, `Location.phrase()`), con «al»/«del» contraídos por el traductor; `<clave>_one` cuando una cuenta (`n`, `count`, `turns`, `left`) vale 1.
+- **Inventario** (0.10.2): resumen (puesto y cuántos de cada tipo) y pestañas ⚔️ Equipo · 🧪 Consumibles · 🧱 Materiales · 🧰 Herramientas, una línea por objeto con su icono y `/item_`. Cada objeto tiene `icon` (`Item.label`), visible en botín, recetas, tiendas y combate.
 - **Rechazos en ventanita** (`answerCallbackQuery`): «Necesitas un pico», un menú viejo o un doble toque no escriben en el chat; el mensaje pulsado pasa a la vista actual y nada se gasta dos veces.
 - **Comandos** (menú y `/help`), siempre en inglés y sin alias en español: `/start`, `/look`, `/hero` (resumen), `/sheet` (ficha completa con retrato), `/inventory`, `/journal`, `/achievements`, `/quests`, `/map`, `/report`, `/professions`, `/classes`, `/rulebook` (alias `/rules`), `/settings`, `/language`, `/cancel`.
 - **Comandos de consulta** enlazados desde los mensajes: `/class_<clase>`, `/skill_<clave>`, `/prof_<clave>`, `/item_<clave>`, `/monster_<clave>`, `/masteries`, `/hobbies`, `/lineage` (alias `/race`), `/background`, `/skin`. Funcionan sin personaje cuando tienen sentido.
@@ -37,7 +38,6 @@ Resumen de [Possibilium §4](Possibilium.md#s04). Cómo se ve el juego en el cha
 
 - **UX-04** estados explícitos de acción (pendiente, interpretando, requiere tirada, resuelta, rechazada).
 - **UX-05** `/resume`, `/unstuck`, `/party`, `/rest`.
-- 0.10.2: inventario con pestañas por categoría y emoji por objeto.
 - Inventario comparativo.
 - Modo silencioso cuando haya audio ([ars](ars.md)); Mini App más adelante.
 

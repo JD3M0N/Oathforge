@@ -13,7 +13,7 @@ from oathforge.bot.keyboards import btn, cb, fixed_key, fixed_pattern, markup, n
 from oathforge.content import get_content
 from oathforge.database.session import session_scope
 from oathforge.i18n import t
-from oathforge.services import combat_service
+from oathforge.services import combat_service, inventory
 
 
 def _view(builder):
@@ -100,10 +100,17 @@ ITEM_LINK = re.compile(r"^/item_([a-z0-9_]+?)(?:@\w+)?$")
 async def item(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """/item_<key>: what an item is and what it is for (tappable wherever an item is obtained)."""
     async with session_scope() as session:
-        user, _ = await load(session, update)
+        user, char = await load(session, update)
         lang = context.user_data["lang"] = user.language
-    m = ITEM_LINK.match((update.message.text or "").strip()) if update.message else None
-    await send(update, render.item_page(m.group(1) if m else "", lang))
+        m = ITEM_LINK.match((update.message.text or "").strip()) if update.message else None
+        key = m.group(1) if m else ""
+        rows = []
+        if char is not None and char.state == "idle" and key in get_content().items:  # yours: equip or use it here
+            n = nonce()
+            for inst in await inventory.items_of(session, char):
+                if inst.item_key == key:
+                    rows += render.item_buttons(char, inst, get_content().items[key], n, lang)
+    await send(update, render.item_page(key, lang), markup(rows) if rows else None)
 
 
 MONSTER_LINK = re.compile(r"^/monster_([a-z0-9_]+?)(?:@\w+)?$")

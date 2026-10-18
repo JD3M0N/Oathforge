@@ -61,7 +61,6 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🟡 ◐ Comandos nuevos: `/map`, `/quests`, `/rest`, `/party`. *Hecho: `/quests` (v0.5.0), `/settings` y `/prof_<oficio>` (v0.7.0), `/map` (v0.7.6), `/item_`, `/monster_`, `/masteries` y `/hobbies` (v0.7.19), `/skin` (v0.7.21).*
 - [ ] 🟢 Expediciones: escenas de viaje con decisiones, estilos prudente/explorador/directo, atajos desbloqueables y favoritos ([mundus](planning/mundus.md)).
 - [ ] 🟢 Duelos PvP con consentimiento y sin pérdidas.
-- [ ] 🟢 Emojis para menas, hierbas, maderas, pieles y demás materiales (en el inventario, el botín y las recetas).
 
 ## 🌍 Mundo, misiones y economía · [mundus](planning/mundus.md) · [mercatura](planning/mercatura.md)
 
@@ -161,3 +160,4 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [x] README raíz simple y motivador; flujo, seguridad y `artifacts/` en `AGENTS.md` (v0.8.4–0.8.5).
 - [x] **Interfaz más cómoda**: ⚒ Actividades en el teclado fijo y en la escena (con lo que falta y dónde comprarlo), 🛠️ Oficios que reúne oficios, maestrías y aficiones, un solo mensaje por acción y rechazos en ventanita (v0.10.0).
 - [x] **Textos claros**: tiradas «2 + 1 = 3 vs CD 13 · ❌ Fallo», leyenda ●/○/· en `/sheet`, «Llegas al Mercado / a la Taberna» y «1 ronda» en singular (v0.10.1).
+- [x] **Inventario por pestañas** (equipo, consumibles, materiales, herramientas) y un icono para cada objeto en el inventario, el botín, las recetas y las tiendas (v0.10.2).

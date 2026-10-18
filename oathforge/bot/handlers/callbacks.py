@@ -132,7 +132,7 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
         elif verb == "talkm" and not in_combat:
             text, kb = render.talk_menu(char, lang)
         elif verb == "inv":
-            text, kb = await render.inventory_view(session, char, lang)
+            text, kb = await render.inventory_view(session, char, lang, arg)
         elif verb == "hero":
             text, kb = await render.hero(session, char, lang)
         elif verb == "sheet":
@@ -352,8 +352,8 @@ async def _after(session, char, lang: str, verb: str, arg: str, context, out: Ou
             group = render._shop_group(get_content().items[what]) if what in get_content().items else None
             return await render.shop(session, char, npc_key, lang, group)
         return await render.sell_menu(session, char, npc_key, lang)
-    if verb in ("eq", "use"):
-        return await render.inventory_view(session, char, lang)
+    if verb in ("eq", "use"):  # back to the tab it was pressed in
+        return await render.inventory_view(session, char, lang, "gear" if verb == "eq" else "use")
     if verb == "plearn":
         return render.professions_view(char, lang)
     if verb == "craft":

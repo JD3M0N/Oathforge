@@ -201,7 +201,7 @@ async def _sync_and_maybe_finish(session, char, enc, state: EncounterState, rng,
             for loot in c.monsters[cb.ref].loot:
                 if rng.random() < loot.chance:
                     await inventory.add_item(session, char, loot.item, loot.qty)
-                    out.add("loot.item", item=c.items[loot.item].name.model_dump(), qty=loot.qty, item_key=loot.item)
+                    out.add("loot.item", item=c.items[loot.item].labelled(), qty=loot.qty, item_key=loot.item)
         await activities.offer_skinning(session, char, [cb.ref for cb in defeated], out)
         if enc.fixed_flag:
             char.flags = {**char.flags, enc.fixed_flag: True}

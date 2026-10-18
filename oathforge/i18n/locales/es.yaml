@@ -314,6 +314,15 @@ monster:
 
 inv:
   title: "🎒 <b>Inventario</b> · 🪙 {gold}"
+  worn: "🧍 Llevas puesto"
+  nothing_worn: "Nada."
+  pick_tab: "Toca una pestaña para ver cada objeto; /item_ te dice para qué sirve."
+  empty_tab: "Nada de esto en la mochila."
+  tab:
+    gear: "⚔️ Equipo"
+    use: "🧪 Consumibles"
+    mat: "🧱 Materiales"
+    tools: "🧰 Herramientas"
   equipped: "Te equipas: {item}."
   unequipped: "Te quitas: {item}."
   healed: "Usas {item} y recuperas {amount} PV ({hp}/{max_hp})."

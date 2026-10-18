@@ -232,7 +232,7 @@ async def buy(session: AsyncSession, char: Character, npc_key: str, item_key: st
         return Outcome.refused("shop.err.no_gold", price=price)
     char.gold -= price
     await add_item(session, char, item_key, 1)
-    return Outcome().add("shop.bought", item=get_content().items[item_key].name.model_dump(), price=price,
+    return Outcome().add("shop.bought", item=get_content().items[item_key].labelled(), price=price,
                          gold=char.gold)
 
 
@@ -252,4 +252,4 @@ async def sell(session: AsyncSession, char: Character, npc_key: str, instance_id
     else:
         await session.delete(inst)
     char.gold += price
-    return Outcome().add("shop.sold", item=item.name.model_dump(), price=price, gold=char.gold)
+    return Outcome().add("shop.sold", item=item.labelled(), price=price, gold=char.gold)

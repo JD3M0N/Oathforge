@@ -184,3 +184,10 @@ def test_city_graph_rules():
     road = tavern.exits[0].model_copy(update={"to": "old_kings_road"})
     side_gate = {**c.locations, "broken_crown_tavern": tavern.model_copy(update={"exits": [*tavern.exits, road]})}
     assert any("not its hub" in e for e in _city_graph_errors(dataclasses.replace(c, locations=side_gate)))
+
+
+def test_every_item_has_an_icon():
+    from oathforge.content import get_content
+
+    missing = [k for k, item in get_content().items.items() if not item.icon]
+    assert not missing, f"items without icon: {missing}"

@@ -62,7 +62,7 @@ async def craft(session: AsyncSession, char: Character, recipe_key: str, rng: ra
     out = Outcome()
     for item, qty in recipe.outputs.items():
         await inventory.add_item(session, char, item, qty, crafted_by=char.id)
-        out.add("craft.made", item=c.items[item].name.model_dump(), qty=qty)
+        out.add("craft.made", item=c.items[item].labelled(), qty=qty)
     xp = recipe.xp // 2 if rank - recipe.min_rank >= LOW_RANK_GAP else recipe.xp
     professions.grant_xp(char, recipe.profession, xp, out)
     out.extend(await quests.on_items(session, char, "craft", recipe.outputs, rng or random.Random()))

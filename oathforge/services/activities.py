@@ -52,7 +52,7 @@ def options(char: Character) -> list[tuple[str, str]]:
 def loot_text(items: dict[str, int]) -> dict:
     """{"es": "3 × Mena de hierro, 1 × Carbón", "en": ...}"""
     c = get_content()
-    return {lang: ", ".join(f"{q} × {c.items[k].name.get(lang)}" for k, q in items.items()) or "—"
+    return {lang: ", ".join(f"{q} × {c.items[k].label(lang)}" for k, q in items.items()) or "—"
             for lang in ("es", "en")}
 
 
@@ -226,7 +226,7 @@ async def _give(session: AsyncSession, char: Character, items: dict[str, int], o
     c = get_content()
     for key, qty in items.items():
         await inventory.add_item(session, char, key, qty)
-        out.add("loot.item", item=c.items[key].name.model_dump(), qty=qty, item_key=key)
+        out.add("loot.item", item=c.items[key].labelled(), qty=qty, item_key=key)
     out.extend(await quests.on_items(session, char, "gather", items, rng))
 
 

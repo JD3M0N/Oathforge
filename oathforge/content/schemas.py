@@ -229,8 +229,13 @@ class ItemCombat(Strict):
     targets_type: None = None
 
 
+TYPE_ICONS = {"weapon": "⚔️", "armor": "🛡️", "shield": "🛡️", "consumable": "🧪", "tool": "🧰", "quest": "📜",
+              "material": "🧱", "trinket": "💍"}  # an item without its own icon shows its type's
+
+
 class Item(Strict):
     name: Text
+    icon: str | None = None  # 🪨 ores, 🪵 logs, 🌿 herbs…: always next to the name, never instead of it
     description: Text
     # material: gathered or crafted ingredient · trinket: only worth selling (for now)
     type: Literal["weapon", "armor", "shield", "consumable", "tool", "quest", "material", "trinket"]
@@ -245,6 +250,13 @@ class Item(Strict):
     effects: list[ItemEffect] = []  # what "Use" does outside combat
     combat: ItemCombat | None = None  # usable from the combat panel's "Items"
     sellable: bool = True
+
+    def label(self, lang: str) -> str:
+        """"🪨 Mena de hierro": its icon (or its type's) and its name."""
+        return f"{self.icon or TYPE_ICONS[self.type]} {self.name.get(lang)}"
+
+    def labelled(self) -> dict:
+        return {lang: self.label(lang) for lang in ("es", "en")}
 
 
 class StatusApply(Strict):

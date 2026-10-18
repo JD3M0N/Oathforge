@@ -565,8 +565,8 @@ def profession_page(key: str, lang: str, char: Character | None = None) -> tuple
         lines += [RULE, f"<b>{t(lang, 'prof.recipes')}</b>"]
     for r in recipes:
         mark = ("✅ " if professions.rank(char, key) >= r.min_rank else "🔒 ") if char is not None else ""
-        outs = ", ".join(f"{c.items[i].name.get(lang)} ×{q}" for i, q in r.outputs.items())
-        ins = " + ".join(f"{q} {c.items[i].name.get(lang)}" for i, q in r.ingredients.items())
+        outs = ", ".join(f"{c.items[i].label(lang)} ×{q}" for i, q in r.outputs.items())
+        ins = " + ".join(f"{q} {c.items[i].label(lang)}" for i, q in r.ingredients.items())
         lines.append(f"{mark}<b>{t(lang, 'prof.rank_n', rank=r.min_rank)}</b> · {escape(outs)}")
         lines.append(f"      ← {escape(ins)}")
     rows = [[btn(t(lang, "btn.professions"), cb("prof"))]] if char is not None else []
@@ -593,12 +593,12 @@ async def craft_menu(session: AsyncSession, char: Character, lang: str) -> tuple
         mark = "🔒" if locked else "❌" if lacking else "✅"
         out_key, qty = next(iter(r.outputs.items()))
         rank = t(lang, "craft.locked", rank=r.min_rank) if locked else ""
-        lines.append(t(lang, "craft.recipe", mark=mark, item=escape(c.items[out_key].name.get(lang)), qty=qty,
+        lines.append(t(lang, "craft.recipe", mark=mark, item=escape(c.items[out_key].label(lang)), qty=qty,
                        prof=prof.icon, rank=rank).rstrip())
         parts = []
         for item, need in r.ingredients.items():
             have = need - lacking.get(item, 0)
-            parts.append(f"{have}/{need} {escape(c.items[item].name.get(lang))}")
+            parts.append(f"{have}/{need} {escape(c.items[item].label(lang))}")
         lines.append("      " + " + ".join(parts))
         if not locked and not lacking:
             ready.append(btn(t(lang, "btn.make", item=c.items[out_key].name.get(lang)), cb("craft", key, n)))
@@ -783,9 +783,9 @@ async def shop(session: AsyncSession, char: Character, npc_key: str, lang: str,
         for key in groups[group]:
             item, price = c.items[key], inventory.buy_price(key, rep)
             stats = item_stats(key, lang)
-            lines.append(f"• <b>{escape(item.name.get(lang))}</b>{' · ' + escape(stats) if stats else ''} · {price} 🪙"
+            lines.append(f"• <b>{escape(item.label(lang))}</b>{' · ' + escape(stats) if stats else ''} · {price} 🪙"
                          f" · /item_{key}")
-            rows.append([btn(f"{item.name.get(lang)} · {price} 🪙", cb("buy", f"{npc_key}:{key}", n))])
+            rows.append([btn(f"{item.label(lang)} · {price} 🪙", cb("buy", f"{npc_key}:{key}", n))])
         rows.append([btn(t(lang, "btn.back"), cb("shop", npc_key))])
         return "\n".join(lines), markup(rows)
     lines += ["", f"<i>{t(lang, 'shop.pick_group')}</i>"]
@@ -839,17 +839,13 @@ def item_stats(key: str, lang: str) -> str:
     return ""
 
 
-ITEM_ICON = {"weapon": "⚔️", "armor": "🛡️", "shield": "🛡️", "consumable": "🧪", "tool": "🧰", "quest": "📜",
-             "material": "🧱", "trinket": "💍"}
-
-
 def item_page(key: str, lang: str) -> str:
     """/item_<key>: what an item is, what it is for, where it comes from and what it is worth."""
     c = get_content()
     item = c.items.get(key)
     if item is None:
         return t(lang, "item.err.unknown")
-    lines = [f"{ITEM_ICON[item.type]} <b>{escape(item.name.get(lang))}</b>",
+    lines = [f"<b>{escape(item.label(lang))}</b>",
              f"<i>{t(lang, f'item.type.{item.type}')}</i>", RULE, escape(item.description.get(lang))]
     stats = item_stats(key, lang)
     if stats:
@@ -889,7 +885,7 @@ async def sell_menu(session: AsyncSession, char: Character, npc_key: str, lang: 
             continue
         price = inventory.sell_price(inst.item_key, rep)
         qty = f" ×{inst.qty}" if inst.qty > 1 else ""
-        rows.append([btn(f"{item.name.get(lang)}{qty} → {price} 🪙", cb("sell", f"{npc_key}:{inst.id}", n))])
+        rows.append([btn(f"{item.label(lang)}{qty} → {price} 🪙", cb("sell", f"{npc_key}:{inst.id}", n))])
     rows.append([btn(t(lang, "btn.back"), cb("shop", npc_key))])
     text = t(lang, "shop.sell_title") if len(rows) > 1 else t(lang, "shop.nothing_to_sell")
     return text, markup(rows)
@@ -1083,32 +1079,60 @@ async def sheet(session: AsyncSession, char: Character, lang: str) -> tuple[str,
     return "\n".join(lines)[:MAX_MESSAGE], kb
 
 
-async def inventory_view(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+# 🎒 tabs: equipment, consumables, materials (and trinkets to sell), tools (and quest items)
+INV_TABS = {"gear": ("weapon", "armor", "shield"), "use": ("consumable",), "mat": ("material", "trinket"),
+            "tools": ("tool", "quest")}
+
+
+def inv_tab(item) -> str:
+    return next(tab for tab, types in INV_TABS.items() if item.type in types)
+
+
+def item_buttons(char: Character, inst, item, n: str, lang: str) -> list[list]:
+    """Equip / take off, or use (a mana potion with several spells spent: pick which one comes back)."""
+    if item.slot:
+        label = t(lang, "btn.unequip" if inst.equipped_slot else "btn.equip", item=item.name.get(lang))
+        label = f"{SLOT_ICONS.get(inst.equipped_slot or item.slot, '')} {label}".strip()
+        return [[btn(label, cb("eq", str(inst.id), n))]]
+    if not inventory.effects_of(item):
+        return []
+    spells = inventory.spell_choices(char, item)
+    if len(spells) > 1:
+        cls = get_content().classes[char.class_key]
+        return [[btn(t(lang, "btn.use_on", item=item.name.get(lang), ability=cls.abilities[k].name.get(lang),
+                       uses=char.resources.get(k, 0), max=cls.abilities[k].uses), cb("use", f"{inst.item_key}:{k}", n))]
+                for k in spells]
+    return [[btn(t(lang, "btn.use", item=item.name.get(lang)), cb("use", inst.item_key, n))]]
+
+
+async def inventory_view(session: AsyncSession, char: Character, lang: str,
+                         tab: str = "-") -> tuple[str, InlineKeyboardMarkup]:
+    """🎒 The summary (gold, what you wear, how much of each kind), or one tab: a line per item with its icon,
+    ×quantity and /item_ link; equipment and consumables have their buttons there."""
     c = get_content()
     n = nonce()
+    owned = sorted(await inventory.items_of(session, char), key=lambda i: not i.equipped_slot)  # worn first
+    counts = {key: sum(1 for i in owned if inv_tab(c.items[i.item_key]) == key) for key in INV_TABS}
     lines = [t(lang, "inv.title", gold=char.gold), ""]
     rows = []
-    # what you wear first, so two copies of the same weapon are easy to tell apart
-    for inst in sorted(await inventory.items_of(session, char), key=lambda i: not i.equipped_slot):
-        item = c.items[inst.item_key]
-        qty = f" ×{inst.qty}" if inst.qty > 1 else ""
-        worn = " ✅" if inst.equipped_slot else ""
-        lines.append(f"• {escape(item.name.get(lang))}{qty}{worn}: <i>{escape(item.description.get(lang))}</i>"
-                     f" · /item_{inst.item_key}")
-        if item.slot:
-            label = t(lang, "btn.unequip" if inst.equipped_slot else "btn.equip", item=item.name.get(lang))
-            label = f"{SLOT_ICONS.get(inst.equipped_slot or item.slot, '')} {label}".strip()
-            rows.append([btn(label, cb("eq", str(inst.id), n))])
-        elif inventory.effects_of(item):
-            spells = inventory.spell_choices(char, item)
-            if len(spells) > 1:  # a mana potion with several spells spent: pick which one comes back
-                cls = c.classes[char.class_key]
-                rows.extend([btn(t(lang, "btn.use_on", item=item.name.get(lang), ability=cls.abilities[k].name.get(lang),
-                                   uses=char.resources.get(k, 0), max=cls.abilities[k].uses),
-                                 cb("use", f"{inst.item_key}:{k}", n))] for k in spells)
-            else:
-                rows.append([btn(t(lang, "btn.use", item=item.name.get(lang)), cb("use", inst.item_key, n))])
-    rows.append([btn(t(lang, "btn.back"), cb("scene"))])
+    if tab not in INV_TABS:
+        worn = [_gear_line(i, lang) for i in owned if i.equipped_slot]
+        lines += [f"<b>{t(lang, 'inv.worn')}</b>", *(worn or [t(lang, "inv.nothing_worn")]), ""]
+        lines.append(" · ".join(f"{t(lang, f'inv.tab.{key}')} {count}" for key, count in counts.items()))
+        lines += ["", f"<i>{t(lang, 'inv.pick_tab')}</i>"]
+    else:
+        lines.append(f"<b>{t(lang, f'inv.tab.{tab}')}</b>")
+        mine = [i for i in owned if inv_tab(c.items[i.item_key]) == tab]
+        for inst in mine:
+            item = c.items[inst.item_key]
+            qty = f" ×{inst.qty}" if inst.qty > 1 else ""
+            lines.append(f"{escape(item.label(lang))}{qty}{' ✅' if inst.equipped_slot else ''} · /item_{inst.item_key}")
+            rows += item_buttons(char, inst, item, n, lang)
+        if not mine:
+            lines.append(f"<i>{t(lang, 'inv.empty_tab')}</i>")
+    rows += grid([btn(("• " if key == tab else "") + t(lang, f"inv.tab.{key}") + (" •" if key == tab else ""),
+                      cb("inv", key)) for key in INV_TABS])
+    rows.append([btn(t(lang, "btn.back"), cb("inv" if tab in INV_TABS else "scene"))])
     return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
 
 
@@ -1623,7 +1647,7 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
         for key, qty in me.consumables.items():
             item = c.items.get(key)
             if qty > 0 and item is not None and item.combat is not None:
-                rows.append([btn(f"{item.name.get(lang)} ×{qty}", cb("cb", f"itm:{key}", n))])
+                rows.append([btn(f"{item.label(lang)} ×{qty}", cb("cb", f"itm:{key}", n))])
         rows.append([btn(t(lang, "btn.back"), cb("cbp"))])
         return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
 

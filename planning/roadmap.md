@@ -169,6 +169,8 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 
 **Se considera terminado cuando:** Un tester encuentra su siguiente acción sin memorizar comandos; ES/EN muestran las mismas opciones; un botón viejo no gasta nada.
 
+**Estado (0.10.2):** base entregada en 0.10.0–0.10.2 (Actividades, Oficios, un mensaje por acción, ventanitas, textos claros, inventario por pestañas e iconos). Falta validarla con los testers.
+
 **Archivos a revisar/actualizar:** [planning/facies.md](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/planning/facies.md), [oathforge/bot/keyboards.py](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/oathforge/bot/keyboards.py), [oathforge/bot/render.py](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/oathforge/bot/render.py), [oathforge/bot/handlers/callbacks.py](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/oathforge/bot/handlers/callbacks.py).
 
 **Ampliación o frontera 0.11:** Paneles de grupo y /party en 0.11. Mini App fuera de este alcance.
@@ -289,7 +291,7 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 
 **Propuesta base 0.10:**
 
-- [ ] Comparar equipo actual/nuevo e identificar material, consumible y objeto de misión.
+- [ ] Comparar equipo actual/nuevo e identificar material, consumible y objeto de misión. *(0.10.2: el inventario ya separa equipo, consumibles, materiales y herramientas, con un icono por objeto; falta comparar.)*
 - [ ] Añadir cofre personal en ciudad con depositar/retirar atómico, cantidades claras y sin copia de objetos.
 - [ ] Mostrar procedencia ya disponible; ampliar origen de botín solo cuando se registre realmente.
 - [ ] Decidir expansión gradual: primero cuello y anillos si hay objetos útiles; cabeza/manos/pies/capa después de presupuestar sus bonos.

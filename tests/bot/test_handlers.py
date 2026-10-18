@@ -869,8 +869,11 @@ async def test_item_and_monster_pages(llm):
     assert "No conozco ese objeto" in p.last[0]
     await commands.monster(p.update(message="/monster_cave_bat"), p.ctx)
     assert p.chat.photos and "Murciélago de cueva" in p.last[0]  # the picture and its name, nothing else
-    await p.press("inv|-|-")
-    assert "/item_skinning_knife" in p.last[0]
+    await p.press("inv|-|-")  # the summary: what you wear and how much of each kind
+    assert "Llevas puesto" in p.last[0] and "🧰 Herramientas 2" in p.last[0] and "inv|tools|-" in p.buttons()
+    await p.press("inv|tools|-")
+    assert "🔪 Cuchillo de desollar · /item_skinning_knife" in p.last[0]
+    assert "• 🧰 Herramientas •" in str(p.last[1].inline_keyboard) and "inv|-|-" in p.buttons()  # back: the summary
 
 
 async def test_masteries_and_hobbies_pages(llm):

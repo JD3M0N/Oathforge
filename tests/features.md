@@ -27,6 +27,9 @@ Cada pasada se hace con una clase distinta (la que menos se haya probado) y se a
 - [ ] «Llegas al Mercado», «a la Taberna», «por el Camino del Viejo Rey» (en inglés, «the Old Pass Mine»)
 - [ ] Informe de un combate de una ronda: «1 ronda»
 - [ ] `/sheet` explica ● ○ · y ★
+- [ ] 🎒 Inventario: resumen con lo puesto y cuántos de cada tipo; pestañas con una línea por objeto e icono
+- [ ] Equipar desde ⚔️ Equipo y usar desde 🧪 Consumibles vuelven a su pestaña; `/item_` de algo tuyo trae su botón
+- [ ] Botín, recetas y tiendas con el icono de cada objeto
 
 ## Mapa y viaje (0.8.0)
 - [ ] Mapa: dónde estás · 📜 objetivo · esta zona · otras zonas · 🌫️ Sin explorar

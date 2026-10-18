@@ -4,6 +4,17 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.2] - 2026-10-18
+
+Interfaz (F01, 3.ª parte): inventario ordenado y un icono para cada cosa.
+
+### Añadido
+- **Icono por objeto** (`icon` en `content/items.yaml`, los 62): 🪨 menas, 🪵 maderas, 🌺🍃🌿 hierbas, 🐗🐺 pieles, 🥩 carne, 🐟 pescado, ⛏️🪓🌾🔪🎣 herramientas… Siempre junto al nombre, nunca en su lugar (`Item.label`); sin icono propio, el de su tipo. Se ve en el inventario, el botín, las crónicas, las recetas, las tiendas, el combate y `/item_`. Una prueba de contenido exige que todos lo tengan.
+- `/item_<clave>` de algo que llevas trae su botón de equipar o usar.
+
+### Cambiado
+- **Inventario con pestañas**: el resumen dice qué llevas puesto y cuántos objetos hay de cada tipo; las pestañas ⚔️ Equipo · 🧪 Consumibles · 🧱 Materiales · 🧰 Herramientas listan cada objeto en una línea («🪨 Mena de hierro ×3 · /item_iron_ore»), sin la descripción entera, con la pestaña activa marcada «• … •». Equipar está en Equipo y usar en Consumibles; Volver lleva al resumen.
+
 ## [0.10.1] - 2026-10-18
 
 Interfaz (F01, 2.ª parte): textos claros.

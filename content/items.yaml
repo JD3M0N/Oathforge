@@ -1,5 +1,6 @@
 longsword:
   name: {es: Espada larga, en: Longsword}
+  icon: "⚔️"
   description: {es: Acero fiable de las forjas de Crownreach., en: Reliable steel from the forges of Crownreach.}
   type: weapon
   slot: main_hand
@@ -8,6 +9,7 @@ longsword:
 
 dagger:
   name: {es: Daga, en: Dagger}
+  icon: "🗡️"
   description: {es: Ligera y fácil de esconder., en: Light and easy to hide.}
   type: weapon
   slot: main_hand
@@ -16,6 +18,7 @@ dagger:
 
 warhammer:
   name: {es: Martillo de guerra, en: Warhammer}
+  icon: "🔨"
   description: {es: "Hierro macizo: no corta, aplasta. Los huesos lo temen.", en: "Solid iron: it doesn't cut, it crushes. Bones fear it."}
   type: weapon
   slot: main_hand
@@ -24,6 +27,7 @@ warhammer:
 
 mace:
   name: {es: Maza, en: Mace}
+  icon: "🏏"
   description: {es: Una maza sencilla con el símbolo de la fe grabado., en: A plain mace engraved with a holy symbol.}
   type: weapon
   slot: main_hand
@@ -32,6 +36,7 @@ mace:
 
 handaxe:
   name: {es: Hacha de mano, en: Handaxe}
+  icon: "🪓"
   description: {es: Ligera y equilibrada para lanzarla., en: Light and balanced for throwing.}
   type: weapon
   slot: ranged
@@ -40,6 +45,7 @@ handaxe:
 
 quarterstaff:
   name: {es: Bastón, en: Quarterstaff}
+  icon: "🦯"
   description: {es: "Una vara de roble endurecida al fuego; apoyo de magos y druidas.", en: "A fire-hardened oak staff; a mainstay of mages and druids."}
   type: weapon
   slot: main_hand
@@ -48,6 +54,7 @@ quarterstaff:
 
 rapier:
   name: {es: Estoque, en: Rapier}
+  icon: "🤺"
   description: {es: "Hoja fina y rápida, más de duelista que de soldado.", en: "A thin and quick blade, more a duelist's than a soldier's."}
   type: weapon
   slot: main_hand
@@ -56,6 +63,7 @@ rapier:
 
 shortbow:
   name: {es: Arco corto, en: Shortbow}
+  icon: "🏹"
   description: {es: Un arco de tejo para atacar desde la distancia., en: A yew bow for striking from a distance.}
   type: weapon
   slot: ranged
@@ -64,6 +72,7 @@ shortbow:
 
 chain_mail:
   name: {es: Cota de malla, en: Chain mail}
+  icon: "⛓️"
   description: {es: "Pesada y ruidosa, pero detiene casi cualquier hoja.", en: "Heavy and loud, but it stops almost any blade."}
   type: armor
   slot: body
@@ -73,6 +82,7 @@ chain_mail:
 
 scale_mail:
   name: {es: Cota de escamas, en: Scale mail}
+  icon: "🦺"
   description: {es: Escamas de acero cosidas sobre cuero., en: Steel scales sewn over leather.}
   type: armor
   slot: body
@@ -82,6 +92,7 @@ scale_mail:
 
 leather_armor:
   name: {es: Armadura de cuero, en: Leather armor}
+  icon: "🧥"
   description: {es: Cuero endurecido que no estorba al moverse., en: Hardened leather that does not hinder movement.}
   type: armor
   slot: body
@@ -91,6 +102,7 @@ leather_armor:
 
 shield:
   name: {es: Escudo, en: Shield}
+  icon: "🛡️"
   description: {es: Roble reforzado con hierro., en: Oak reinforced with iron.}
   type: shield
   slot: off_hand
@@ -99,6 +111,7 @@ shield:
 
 healing_potion:
   name: {es: Poción de curación, en: Healing potion}
+  icon: "🧪"
   description: {es: Un líquido rojo que cierra heridas. Recupera 2d4+2 PV., en: A red liquid that closes wounds. Restores 2d4+2 HP.}
   type: consumable
   value: 1  # beta only: real price 20
@@ -107,6 +120,7 @@ healing_potion:
 
 torch:
   name: {es: Antorcha, en: Torch}
+  icon: "🔥"
   description: {es: Ilumina lugares oscuros y asusta a las bestias., en: Lights dark places and scares beasts.}
   type: tool
   value: 1
@@ -114,6 +128,7 @@ torch:
 
 rope:
   name: {es: Cuerda de cáñamo, en: Hemp rope}
+  icon: "🪢"
   description: {es: Quince metros de cuerda resistente., en: Fifty feet of sturdy rope.}
   type: tool
   value: 1
@@ -121,6 +136,7 @@ rope:
 
 sealed_reliquary:
   name: {es: Relicario sellado, en: Sealed reliquary}
+  icon: "📿"
   description:
     es: Una pequeña caja de plata con el sello de la Guardia de Plata. Algo tintinea dentro.
     en: A small silver box bearing the seal of the Silver Guard. Something rattles inside.
@@ -130,6 +146,7 @@ sealed_reliquary:
 
 boar_tusk:
   name: {es: Colmillo de jabalí, en: Boar tusk}
+  icon: "🦷"
   description: {es: Un colmillo curvo y afilado. Los artesanos del mercado lo compran., en: A sharp curved tusk. Market crafters buy them.}
   type: tool
   value: 8
@@ -137,6 +154,7 @@ boar_tusk:
 
 bat_wing:
   name: {es: Ala de murciélago, en: Bat wing}
+  icon: "🦇"
   description: {es: Membrana correosa que usan los alquimistas para la poción de maná., en: A leathery membrane alchemists use for mana potions.}
   type: material
   value: 4
@@ -146,30 +164,35 @@ bat_wing:
 
 pickaxe:
   name: {es: Pico de minero, en: Miner's pickaxe}
+  icon: "⛏️"
   description: {es: "Hierro templado y mango de fresno. Sin él no se arranca mena de la roca.", en: "Tempered iron on an ash handle. You can't pry ore from rock without one."}
   type: tool
   value: 15
 
 woodaxe:
   name: {es: Hacha de leñador, en: Woodcutter's axe}
+  icon: "🪓"
   description: {es: "Hoja ancha y pesada, hecha para troncos y no para cráneos.", en: "A broad heavy blade made for logs, not skulls."}
   type: tool
   value: 15
 
 sickle:
   name: {es: Hoz de herborista, en: Herbalist's sickle}
+  icon: "🌾"
   description: {es: "Una hoja curva y pequeña para cortar raíces sin dañarlas.", en: "A small curved blade for cutting roots without bruising them."}
   type: tool
   value: 10
 
 skinning_knife:
   name: {es: Cuchillo de desollar, en: Skinning knife}
+  icon: "🔪"
   description: {es: "Hoja corta y fina. Con él aprovechas la piel y la carne de las bestias que abates.", en: "A short thin blade. With it you take the hide and meat of the beasts you bring down."}
   type: tool
   value: 8
 
 fishing_rod:
   name: {es: Caña de pescar, en: Fishing rod}
+  icon: "🎣"
   description: {es: "Caña de sauce, sedal de crin y un anzuelo de hueso.", en: "A willow rod, horsehair line and a bone hook."}
   type: tool
   value: 10
@@ -178,6 +201,7 @@ fishing_rod:
 
 iron_ore:
   name: {es: Mena de hierro, en: Iron ore}
+  icon: "🪨"
   description: {es: "Roca rojiza con vetas de hierro. La base de toda herrería.", en: "Reddish rock veined with iron. The base of all smithing."}
   type: material
   value: 4
@@ -185,6 +209,7 @@ iron_ore:
 
 coal:
   name: {es: Carbón, en: Coal}
+  icon: "⚫"
   description: {es: "Negro y ligero; arde caliente en la fragua.", en: "Black and light; it burns hot in the forge."}
   type: material
   value: 3
@@ -192,6 +217,7 @@ coal:
 
 copper_ore:
   name: {es: Mena de cobre, en: Copper ore}
+  icon: "🟠"
   description: {es: "Piedra verdosa que los joyeros funden para anillos y hebillas.", en: "Greenish stone jewelers smelt for rings and buckles."}
   type: material
   value: 6
@@ -199,6 +225,7 @@ copper_ore:
 
 rough_gem:
   name: {es: Gema en bruto, en: Rough gem}
+  icon: "💎"
   description: {es: "Un cristal turbio que, tallado, vale una pequeña fortuna.", en: "A cloudy crystal that, once cut, is worth a small fortune."}
   type: material
   value: 25
@@ -206,6 +233,7 @@ rough_gem:
 
 oak_log:
   name: {es: Tronco de roble, en: Oak log}
+  icon: "🪵"
   description: {es: "Madera dura y recta de los robles de Thornwood.", en: "Hard straight wood from the Thornwood oaks."}
   type: material
   value: 3
@@ -213,6 +241,7 @@ oak_log:
 
 ash_log:
   name: {es: Tronco de fresno, en: Ash log}
+  icon: "🪵"
   description: {es: "Madera flexible y noble, buscada por los arqueros.", en: "Supple fine wood, prized by bowyers."}
   type: material
   value: 7
@@ -220,6 +249,7 @@ ash_log:
 
 plant_fiber:
   name: {es: Fibra vegetal, en: Plant fiber}
+  icon: "🧵"
   description: {es: "Tallos secos y trenzables para cuerdas y ataduras.", en: "Dry stalks that braid into cords and bindings."}
   type: material
   value: 1
@@ -227,6 +257,7 @@ plant_fiber:
 
 bloodroot:
   name: {es: Raíz de sangre, en: Bloodroot}
+  icon: "🌺"
   description: {es: "Una raíz roja que, machacada, cierra heridas. La base de las pociones de curación.", en: "A red root that closes wounds when crushed. The base of healing potions."}
   type: material
   value: 4
@@ -234,6 +265,7 @@ bloodroot:
 
 moonleaf:
   name: {es: Hoja de luna, en: Moonleaf}
+  icon: "🍃"
   description: {es: "Hojas plateadas que brillan débilmente de noche. Los magos pagan bien por ellas.", en: "Silver leaves that glow faintly at night. Mages pay well for them."}
   type: material
   value: 7
@@ -241,6 +273,7 @@ moonleaf:
 
 restmoss:
   name: {es: Musgo del reposo, en: Restmoss}
+  icon: "🌿"
   description: {es: "Un musgo raro y tibio. Dicen que su olor devuelve las fuerzas.", en: "A rare, warm moss. They say its scent brings strength back."}
   type: material
   value: 10
@@ -248,6 +281,7 @@ restmoss:
 
 wolf_pelt:
   name: {es: Piel de lobo, en: Wolf pelt}
+  icon: "🐺"
   description: {es: "Pelaje gris y espeso. Los curtidores la convierten en cuero.", en: "Thick grey fur. Tanners turn it into leather."}
   type: material
   value: 10
@@ -255,6 +289,7 @@ wolf_pelt:
 
 boar_hide:
   name: {es: Cuero de jabalí, en: Boar hide}
+  icon: "🐗"
   description: {es: "Piel dura y de cerdas ásperas.", en: "Tough hide with coarse bristles."}
   type: material
   value: 7
@@ -262,6 +297,7 @@ boar_hide:
 
 raw_meat:
   name: {es: Carne cruda, en: Raw meat}
+  icon: "🥩"
   description: {es: "Carne fresca de caza. Hay que cocinarla pronto.", en: "Fresh game meat. Best cooked soon."}
   type: material
   value: 2
@@ -269,6 +305,7 @@ raw_meat:
 
 river_fish:
   name: {es: Pez de río, en: River fish}
+  icon: "🐟"
   description: {es: "Un pez plateado de las aguas frías de Silverbrook.", en: "A silvery fish from the cold waters of Silverbrook."}
   type: material
   value: 3
@@ -276,6 +313,7 @@ river_fish:
 
 silverscale_trout:
   name: {es: Trucha de escamas de plata, en: Silverscale trout}
+  icon: "🐠"
   description: {es: "Una trucha enorme y esquiva. Los cocineros de la ciudad se la disputan.", en: "A huge, elusive trout. The city's cooks fight over it."}
   type: material
   value: 20
@@ -283,6 +321,7 @@ silverscale_trout:
 
 water_flask:
   name: {es: Frasco de agua, en: Water flask}
+  icon: "💧"
   description: {es: "Un frasco de vidrio con agua limpia de pozo, listo para la alquimia.", en: "A glass flask of clean well water, ready for alchemy."}
   type: material
   value: 2
@@ -292,6 +331,7 @@ water_flask:
 
 iron_ingot:
   name: {es: Lingote de hierro, en: Iron ingot}
+  icon: "🔩"
   description: {es: "Hierro fundido y limpio, listo para el yunque.", en: "Clean smelted iron, ready for the anvil."}
   type: material
   value: 18
@@ -299,6 +339,7 @@ iron_ingot:
 
 oak_plank:
   name: {es: Tablón de roble, en: Oak plank}
+  icon: "🪚"
   description: {es: "Madera cepillada y recta para empuñaduras y mangos.", en: "Planed straight wood for grips and hafts."}
   type: material
   value: 5
@@ -306,6 +347,7 @@ oak_plank:
 
 treated_leather:
   name: {es: Cuero curtido, en: Treated leather}
+  icon: "🟫"
   description: {es: "Cuero flexible y resistente, listo para coser.", en: "Supple, tough leather, ready to stitch."}
   type: material
   value: 15
@@ -313,6 +355,7 @@ treated_leather:
 
 iron_sword:
   name: {es: Espada de hierro, en: Iron sword}
+  icon: "⚔️"
   description: {es: "Una espada recta forjada a mano. Igual de letal que una espada larga, y se vende mejor.", en: "A hand-forged straight sword. As deadly as a longsword, and it sells better."}
   type: weapon
   slot: main_hand
@@ -321,6 +364,7 @@ iron_sword:
 
 oak_staff:
   name: {es: Bastón de roble, en: Oak staff}
+  icon: "🪄"
   description: {es: "Un bastón tallado y equilibrado; los magos lo prefieren al del mercado.", en: "A carved, balanced staff; mages prefer it to the market ones."}
   type: weapon
   slot: main_hand
@@ -329,6 +373,7 @@ oak_staff:
 
 reinforced_leather:
   name: {es: Cuero reforzado, en: Reinforced leather}
+  icon: "🧥"
   description: {es: "Cuero curtido con remaches de hierro. Protege más que el cuero simple sin estorbar.", en: "Treated leather with iron rivets. Better protection than plain leather without the bulk."}
   type: armor
   slot: body
@@ -338,6 +383,7 @@ reinforced_leather:
 
 hunter_stew:
   name: {es: Estofado del cazador, en: Hunter's stew}
+  icon: "🍲"
   description: {es: "Carne guisada con raíz de sangre. Recupera 1d6+2 PV fuera de combate.", en: "Meat stewed with bloodroot. Restores 1d6+2 HP outside combat."}
   type: consumable
   value: 12
@@ -346,6 +392,7 @@ hunter_stew:
 
 fisher_ration:
   name: {es: Ración del pescador, en: Fisher's ration}
+  icon: "🍱"
   description: {es: "Pescado ahumado envuelto en hojas. Recupera 2d4+1 PV fuera de combate.", en: "Smoked fish wrapped in leaves. Restores 2d4+1 HP outside combat."}
   type: consumable
   value: 10
@@ -354,6 +401,7 @@ fisher_ration:
 
 mana_potion:
   name: {es: Poción de maná, en: Mana potion}
+  icon: "🔮"
   description: {es: "Un líquido azul que brilla como la hoja de luna. Devuelve un uso de un conjuro gastado (solo clases que lanzan conjuros, fuera de combate).", en: "A blue liquid that glows like moonleaf. Gives back one use of a spent spell (spellcasting classes only, outside combat)."}
   type: consumable
   value: 1  # beta only: real price 60
@@ -363,6 +411,7 @@ mana_potion:
 
 rest_draught:
   name: {es: Tónico del reposo, en: Resting draught}
+  icon: "🍵"
   description: {es: "Huele a musgo tibio. Un descanso corto en un trago: recupera el 20 % de tus PV y un uso de una habilidad gastada. Una vez cada 4 horas; no cura heridas graves.", en: "It smells of warm moss. A short rest in one sip: restores 20% of your HP and one use of a spent ability. Once every 4 hours; it does not heal grave wounds."}
   type: consumable
   value: 80
@@ -372,6 +421,7 @@ rest_draught:
 
 copper_ring:
   name: {es: Anillo de cobre, en: Copper ring}
+  icon: "💍"
   description: {es: "Un anillo sencillo y bien pulido. Los mercaderes lo compran.", en: "A simple, well-polished ring. Merchants buy them."}
   type: trinket
   value: 24
@@ -379,6 +429,7 @@ copper_ring:
 
 gem_ring:
   name: {es: Anillo con gema, en: Gem ring}
+  icon: "💍"
   description: {es: "Cobre trabajado con una gema tallada. Una pequeña fortuna en el mercado.", en: "Worked copper set with a cut gem. A small fortune at the market."}
   type: trinket
   value: 110
@@ -388,6 +439,7 @@ gem_ring:
 
 ink:
   name: {es: Tinta, en: Ink}
+  icon: "🖋️"
   description: {es: "Raíz de sangre machacada con hollín. Escribe rojo oscuro y no se borra.", en: "Bloodroot crushed with soot. It writes dark red and never fades."}
   type: material
   value: 4
@@ -395,6 +447,7 @@ ink:
 
 parchment:
   name: {es: Pergamino, en: Parchment}
+  icon: "📃"
   description: {es: "Piel de jabalí raspada y estirada hasta quedar fina como una hoja.", en: "Boar hide scraped and stretched until it is thin as a leaf."}
   type: material
   value: 5
@@ -402,6 +455,7 @@ parchment:
 
 black_powder:
   name: {es: Pólvora, en: Black powder}
+  icon: "🧂"
   description: {es: "Polvo gris que huele a azufre. Mejor lejos del fuego.", en: "Grey dust that smells of sulphur. Best kept far from fire."}
   type: material
   value: 5
@@ -409,6 +463,7 @@ black_powder:
 
 fuse:
   name: {es: Mecha, en: Fuse}
+  icon: "🧶"
   description: {es: "Fibra trenzada y encerada que arde despacio.", en: "Braided, waxed fibre that burns slowly."}
   type: material
   value: 1
@@ -416,6 +471,7 @@ fuse:
 
 scroll_firebolt:
   name: {es: Pergamino de dardo de fuego, en: Scroll of fire bolt}
+  icon: "📜"
   description: {es: "Al leerlo en combate, lanza un dardo de fuego: ataque +5, 2d6 de fuego.", en: "Read in combat, it hurls a fire bolt: +5 to hit, 2d6 fire."}
   type: consumable
   value: 14
@@ -424,6 +480,7 @@ scroll_firebolt:
 
 scroll_cure:
   name: {es: Pergamino de curar heridas, en: Scroll of cure wounds}
+  icon: "📜"
   description: {es: "Al leerlo en combate, recuperas 2d8+2 PV.", en: "Read in combat, you recover 2d8+2 HP."}
   type: consumable
   value: 22
@@ -432,6 +489,7 @@ scroll_cure:
 
 scroll_aegis:
   name: {es: Pergamino de égida, en: Scroll of aegis}
+  icon: "📜"
   description: {es: "Al leerlo en combate, una luz te envuelve: 2d6+3 PV temporales.", en: "Read in combat, a light wraps around you: 2d6+3 temporary HP."}
   type: consumable
   value: 20
@@ -440,6 +498,7 @@ scroll_aegis:
 
 scroll_sleep:
   name: {es: Pergamino de sueño, en: Scroll of sleep}
+  icon: "📜"
   description: {es: "Al leerlo en combate, un enemigo hace una salvación de SAB (CD 13); si falla, duerme 2 turnos.", en: "Read in combat, one enemy makes a WIS save (DC 13); on a failure it sleeps for 2 turns."}
   type: consumable
   value: 30
@@ -448,6 +507,7 @@ scroll_sleep:
 
 smoke_bomb:
   name: {es: Bomba de humo, en: Smoke bomb}
+  icon: "💨"
   description: {es: "Una nube gris y espesa: sales del combate sin tirada.", en: "A thick grey cloud: you leave the fight without a roll."}
   type: consumable
   value: 12
@@ -456,6 +516,7 @@ smoke_bomb:
 
 fire_bomb:
   name: {es: Bomba de fuego, en: Fire bomb}
+  icon: "💣"
   description: {es: "Toda la fila del objetivo hace una salvación de DES (CD 13): 2d6 de fuego (la mitad si la supera) y quien falla, arde.", en: "The target's whole row makes a DEX save (DC 13): 2d6 fire (half on a success), and whoever fails burns."}
   type: consumable
   value: 18
@@ -464,6 +525,7 @@ fire_bomb:
 
 flash_bomb:
   name: {es: Bomba cegadora, en: Flash bomb}
+  icon: "⚡"
   description: {es: "Un fogonazo blanco: un enemigo hace una salvación de DES (CD 13); si falla, queda aturdido 1 turno.", en: "A white flash: one enemy makes a DEX save (DC 13); on a failure it is stunned for 1 turn."}
   type: consumable
   value: 20

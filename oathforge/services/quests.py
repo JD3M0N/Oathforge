@@ -316,11 +316,11 @@ async def apply_effects(session: AsyncSession, char: Character, effects: list[di
         if kind == "give_item":
             for item, qty in arg.items():
                 await inventory.add_item(session, char, item, qty)
-                out.add("loot.item", item=c.items[item].name.model_dump(), qty=qty, item_key=item)
+                out.add("loot.item", item=c.items[item].labelled(), qty=qty, item_key=item)
         elif kind == "take_item":
             for item, qty in arg.items():
                 await inventory.remove_item(session, char, item, qty)
-                out.add("loot.lost_item", item=c.items[item].name.model_dump(), qty=qty)
+                out.add("loot.lost_item", item=c.items[item].labelled(), qty=qty)
         elif kind == "gold":
             char.gold += int(arg)
             out.add("loot.gold", gold=int(arg))
