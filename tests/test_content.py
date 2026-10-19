@@ -192,3 +192,20 @@ def test_every_item_has_an_icon():
 
     missing = [k for k, item in get_content().items.items() if not item.icon]
     assert not missing, f"items without icon: {missing}"
+
+
+def test_rulebook_placeholders_come_from_the_engine():
+    """A {placeholder} the engine does not fill would reach the player as literal text."""
+    from oathforge.bot.render import RULE_NUMBER, rule_numbers
+    from oathforge.content import get_content
+
+    c = get_content()
+    unknown = set()
+    for lang in ("es", "en"):
+        known = rule_numbers(lang)
+        for key, sec in c.rulebook.items():
+            unknown |= {f"{key}.{lang}:{m}" for m in RULE_NUMBER.findall(sec.body.get(lang)) if m not in known}
+        for key, prof in c.professions.items():
+            if prof.guide:
+                unknown |= {f"{key}.{lang}:{m}" for m in RULE_NUMBER.findall(prof.guide.get(lang)) if m not in known}
+    assert not unknown, f"placeholders with no engine value: {sorted(unknown)}"

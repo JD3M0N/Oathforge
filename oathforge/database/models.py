@@ -332,12 +332,25 @@ class AchievementUnlock(Base):
     retroactive: Mapped[bool] = mapped_column(Boolean, default=False)
 
 
-class AchievementEventReceipt(Base):
-    __tablename__ = "achievement_event_receipts"
-    __table_args__ = (UniqueConstraint("character_id", "event_id"),)
+class HeroFact(Base):
+    """One engine fact. Deduplicates achievement grants and feeds the chronicle and the stats."""
+
+    __tablename__ = "hero_facts"
+    __table_args__ = (
+        UniqueConstraint("character_id", "event_id"),
+        Index("ix_hero_facts_chronicle", "character_id", "notable", "id"),
+        Index("ix_hero_facts_tag", "character_id", "tag"),
+    )
     id: Mapped[int] = mapped_column(primary_key=True)
     character_id: Mapped[int] = mapped_column(ForeignKey("characters.id", ondelete="CASCADE"), index=True)
     event_id: Mapped[str] = mapped_column(String(160))
+    kind: Mapped[str] = mapped_column(String(24))
+    data: Mapped[dict] = mapped_column(Json, default=dict)
+    # What makes a first-time fact unique ("visit:crownreach_market"); null when the kind repeats freely.
+    tag: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    game_day: Mapped[int] = mapped_column(Integer, default=0)
+    notable: Mapped[bool] = mapped_column(Boolean, default=False)
+    retroactive: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
 

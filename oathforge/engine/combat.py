@@ -19,6 +19,8 @@ BLESS_BONUS = 2
 INSPIRATION_DIE = "1d6"
 HEX_DIE = "1d6"  # necrotic, on every hit against a hexed target
 SKIP_TURN = ("stunned", "asleep")
+FLEE_DC_BASE = 10  # fleeing: this plus FLEE_DC_PER_FOE for each enemy still standing
+FLEE_DC_PER_FOE = 2
 
 
 class CombatError(Exception):
@@ -425,7 +427,7 @@ def _cast(state, actor, ability, key, target_id, rng, to_hit: int, dc: int, dmg_
 
 def _flee(state, actor, rng) -> list[LogEntry]:
     foes = state.enemies_of(actor)
-    dc = 10 + 2 * len(foes)
+    dc = FLEE_DC_BASE + FLEE_DC_PER_FOE * len(foes)
     skill = max(("athletics", "acrobatics"), key=lambda s: actor.skill_bonus.get(s, 0))
     res = check(rng, skill, actor.skill_bonus.get(skill, 0), dc)
     if res.success:

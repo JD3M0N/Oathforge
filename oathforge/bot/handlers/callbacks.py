@@ -27,7 +27,7 @@ from oathforge.services.events import Outcome, render_event
 log = logging.getLogger(__name__)
 
 # verbs that only show something (no nonce, no state change)
-VIEWS = {"scene", "trv", "trvz", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jrl", "jrs", "jq", "jrb", "jb", "jbi", "jrr",
+VIEWS = {"scene", "trv", "trvz", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jrc", "jrl", "jrs", "jq", "jrb", "jb", "jbi", "jrr",
          "shopm", "shop", "shopg", "sellm", "cbp", "lang", "city", "place", "cls", "clsl", "rep", "prof", "profsw", "profcf", "pg", "crf", "rb", "repf",
          "mst", "hob", "acts"}
 
@@ -146,10 +146,10 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             text, kb = await render.journal(session, char, lang)
         elif verb == "jrm":
             text, kb = await render.missions(session, char, lang)
-        elif verb == "jrl":
-            text, kb = await render.quest_log(session, char, lang)
+        elif verb in ("jrc", "jrl"):  # jrl: the old log button still works, now on the chronicle
+            text, kb = await render.chronicle(session, char, lang, arg)
         elif verb == "jrs":
-            text, kb = render.stats_view(char, lang)
+            text, kb = await render.stats_view(session, char, lang)
         elif verb == "jq":
             text, kb = await render.mission(session, char, arg, lang)
         elif verb == "rep":  # "<encounter_id>:<page>", or "-" for the latest battle

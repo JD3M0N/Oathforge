@@ -192,7 +192,9 @@ async def _sync_and_maybe_finish(session, char, enc, state: EncounterState, rng,
             if char.bestiary[key]["killed"] >= bestiary.KILLS_FOR_SECRETS:
                 await achievements.emit(session, char, out, "secrets", {"monster": key},
                                         f"encounter:{enc.id}:secrets:{key}")
+        before_level = char.level
         characters.grant_xp(char, sum(cb.xp for cb in defeated), out)
+        await achievements.levels(session, char, out, before_level)
         gold = sum(roll(c.monsters[cb.ref].gold, rng).total for cb in defeated)
         if gold:
             char.gold += gold

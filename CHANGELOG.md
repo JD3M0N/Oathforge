@@ -4,6 +4,28 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.7] - 2026-10-19
+
+Diario y reglamento (F03): el Libro del Héroe.
+
+### Añadido
+- **Crónica de hechos** (`hero_facts`, migración 0010): el registro que ya deduplicaba los logros ahora guarda también el tipo de hecho, sus datos y el día de juego, y marca los que merecen una entrada. Sustituye a `achievement_event_receipts`, cuyas filas se conservan. Hechos nuevos: nivel alcanzado, rango de oficio y misión aceptada.
+- **🕯️ Crónica** en el diario: lo que has hecho, de lo más reciente a lo más antiguo, agrupado por día y de 8 en 8 con ◀ ▶. Siempre misión terminada, decisión, logro, nivel, derrota, secreto y descubrimiento; la primera vez que pisas un lugar, fabricas una receta, ves una criatura o subes un rango; nunca lo repetido. Lo reconocido del progreso anterior va bajo «Antes de este libro». No gasta IA.
+- **📖 Ahora**, la portada del diario: la actividad en marcha con lo que le queda, el viaje que dejaste a medias, el objetivo de cada misión en curso y los objetivos seguidos, cada uno con su botón para continuar. Sin misiones, un botón hacia quien las da: el diario ya no es un callejón sin salida.
+- **Estadísticas verificables**: misiones terminadas, fabricaciones y recetas distintas, secretos, criaturas conocidas y especies abatidas, niveles y logros, contados desde la crónica. Las antiguas siguen, y cada bloque dice desde cuándo cuenta.
+- Sección **🏆 Logros y títulos** en `/rulebook`: qué reconocen, que no dan poder y cómo se equipa un título.
+- Una prueba de contenido exige que cada `{marcador}` del reglamento y de las guías de oficio tenga valor en el motor, en español y en inglés.
+
+### Cambiado
+- **Diario por pestañas**: 📖 Ahora · 📜 Misiones · 🕯️ Crónica · 🏆 Logros · 🐉 Bestiario · 🗣️ Rumores · 📈 Estadísticas, en un solo mensaje que se edita, con la activa entre «• … •». Las misiones terminadas pasan de «📚 Registro» a la pestaña de Misiones; el botón «Registro» de menús viejos abre la Crónica.
+- **El reglamento lee el motor**: coste y duración del descanso, CD de huida, puntos de creación, nivel de la subida de atributo, nivel máximo, oro que cuesta una derrota, segundos de desuello y las CD por dificultad ya no están escritos a mano. Las frases de beta (descanso y tutorial instantáneos) aparecen según el flag.
+
+### Arreglado
+- El reglamento decía que un tramo ⚠️⚠️ tiene un 15 % de emboscada: son el 15 % por cada ⚠️ del peor tramo (30 %), más un 5 % por cada tramo peligroso de más, hasta un 45 %.
+- Prometía una especialización a nivel 5, que todavía no existe: ahora dice que llegará más adelante.
+- No mencionaba el descanso gratis en la Cripta Hundida, el crítico con 19 de algunas habilidades, que subir de nivel permite repetir una prueba, el enfriamiento del tónico del reposo ni que en el tutorial las actividades terminan al instante.
+- El backfill de logros daba por hecho que ningún lugar estaba fuera de la ciudad, así que «Más allá de las puertas» no se reconocía nunca. Ahora también reconoce los niveles alcanzados.
+
 ## [0.10.6] - 2026-10-19
 
 ### Cambiado

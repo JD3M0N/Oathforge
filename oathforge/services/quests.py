@@ -302,6 +302,9 @@ async def _set_stage(session, char, quest: Quest, p: QuestProgress, stage: str, 
     if p.state == "completed":
         await achievements.emit(session, char, out, "quest", {"quest": p.quest_key},
                                 f"quest:{p.quest_key}:completed")
+    elif p.state == "active":
+        await achievements.emit(session, char, out, "quest_start", {"quest": p.quest_key},
+                                f"quest:{p.quest_key}:started")
     decisions = {"returned_covenant": "covenant", "sold_syndicate": "syndicate", "opened_box": "opened"}
     if p.quest_key == "sealed_box" and stage in decisions:
         await achievements.emit(session, char, out, "decision", {"key": decisions[stage]},
@@ -325,7 +328,9 @@ async def apply_effects(session: AsyncSession, char: Character, effects: list[di
             char.gold += int(arg)
             out.add("loot.gold", gold=int(arg))
         elif kind == "xp":
+            before_level = char.level
             characters.grant_xp(char, int(arg), out)
+            await achievements.levels(session, char, out, before_level)
         elif kind == "reputation":
             for faction, delta in arg.items():
                 await npcs.adjust_reputation(session, char, faction, int(delta), out)

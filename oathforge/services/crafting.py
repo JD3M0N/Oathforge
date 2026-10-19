@@ -65,6 +65,7 @@ async def craft(session: AsyncSession, char: Character, recipe_key: str, rng: ra
         out.add("craft.made", item=c.items[item].labelled(), qty=qty)
     xp = recipe.xp // 2 if rank - recipe.min_rank >= LOW_RANK_GAP else recipe.xp
     professions.grant_xp(char, recipe.profession, xp, out)
+    await achievements.profession(session, char, out, recipe.profession)
     out.extend(await quests.on_items(session, char, "craft", recipe.outputs, rng or random.Random()))
     await achievements.emit(session, char, out, "craft", {"recipe": recipe_key})
     return out

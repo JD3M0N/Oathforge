@@ -49,7 +49,7 @@ La serie 0.9 ya está publicada: **0.9.0** trajo los logros y **0.9.1** este doc
 |---|---|---|
 | 0.10-B · Orientar al jugador (F01) | **0.10.0 – 0.10.2** | 0.10.0 navegación y mensajes (teclado con ⚒ Actividades, escena social, un mensaje por acción, rechazos en ventanita); 0.10.1 textos claros (tiradas, leyenda de `/sheet`, artículos, singular); 0.10.2 inventario por pestañas y emojis de materiales |
 | 0.10-A · Acordar y asegurar | 0.10.3 | Idempotencia del texto libre y reserva atómica de IA (CORE-01..03, AI-01..02); prueba de 1.000 repeticiones |
-| 0.10-B · Orientar al jugador (resto) | 0.10.4 | F03 (diario y reglamento) y la corrección crítica de F11: confianza determinista y servicios de Bram |
+| 0.10-B · Orientar al jugador (resto) | **0.10.7** (F03) y 0.10.8 | 0.10.7 F03: diario por pestañas, Crónica del héroe, estadísticas verificables y reglamento desde el motor; después la corrección crítica de F11: confianza determinista y servicios de Bram |
 | 0.10-C · Bucles cotidianos | 0.10.5 – 0.10.6 | Descanso corto y `/rest`; cofre personal; «Algo brilla» |
 | 0.10-D · Dar propósito | 0.10.7 | Entrega de misiones al dador; juramento verificable; auditoría de logros |
 | 0.10-E · Reglas de combate | 0.10.8 | Contrato de acción, estados y jefe de dos fases; matriz de ocho clases |
@@ -212,10 +212,10 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 
 **Propuesta base 0.10:**
 
-- [ ] Añadir acceso a logros y objetivos de especialización cuando existan.
-- [ ] Generar cifras de reglas desde los datos del motor; corregir menciones a maná cuando se trata de usos.
-- [ ] Definir estadísticas verificables por eventos: victorias, fabricación, descubrimientos y entregas.
-- [ ] Paginar el historial y permitir continuar la actividad o misión actual.
+- [x] Añadir acceso a logros y objetivos de especialización cuando existan (0.10.7: pestaña 🏆 Logros en el diario y objetivos seguidos en la portada; las especializaciones aún no existen).
+- [x] Generar cifras de reglas desde los datos del motor; corregir menciones a maná cuando se trata de usos (0.10.7: descanso, huida, creación, derrota, desuello, CD y emboscada desde el motor, frases de beta según el flag y una prueba que exige valor para cada marcador; el reglamento ya decía «usos»).
+- [x] Definir estadísticas verificables por eventos: victorias, fabricación, descubrimientos y entregas (0.10.7: contadas desde `hero_facts`; las entregas llegarán con F12).
+- [x] Paginar el historial y permitir continuar la actividad o misión actual (0.10.7: Crónica de 8 en 8 con ◀ ▶; la portada 📖 Ahora continúa actividad, viaje y objetivo de misión con un toque).
 
 **Flujo de jugador:** Diario → Misiones → «Lista para entregar» → Ir a Vale; Diario → Estadísticas → progreso comprobado.
 
@@ -224,6 +224,8 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 **Se considera terminado cuando:** Ficha, reglamento y combate no discrepan en costes o duración; abrir consultas no consume IA.
 
 **Archivos a revisar/actualizar:** [planning/facies.md](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/planning/facies.md), [planning/progressio.md](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/planning/progressio.md), [content/rulebook.yaml](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/content/rulebook.yaml), [oathforge/services/events.py](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/oathforge/services/events.py).
+
+**Estado (0.10.7):** entregada. El diario pasa a siete pestañas con la portada «Ahora» y la Crónica desde `hero_facts`; el reglamento lee el motor. Falta validarlo con los testers; el resumen narrado sigue siendo ampliación.
 
 **Ampliación o frontera 0.11:** Resumen narrativo del diario solo desde eventos y bajo cuota; no es obligatorio para consultar progreso.
 

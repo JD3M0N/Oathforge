@@ -15,6 +15,8 @@ from oathforge.i18n import normalize_lang, t
 from oathforge.services.events import Outcome
 
 NAME_MAX = 24
+DEFEAT_GOLD_PCT = 10  # a defeat costs this share of the gold you carry
+ASI_LEVEL = 4  # the level that raises the class's primary ability by 2
 
 
 # ---------------------------------------------------------------- users
@@ -285,7 +287,7 @@ def grant_xp(char: Character, amount: int, out: Outcome) -> None:
     new_level = progression.level_for_xp(char.xp)
     while char.level < new_level:
         char.level += 1
-        if char.level == 4:
+        if char.level == ASI_LEVEL:
             scores = dict(char.abilities)
             scores[cls.primary] = min(20, scores[cls.primary] + 2)
             char.abilities = scores
@@ -409,7 +411,7 @@ async def practice(session: AsyncSession, char: Character, skill: str, tier: str
 
 async def defeat_penalty(char: Character, out: Outcome) -> None:
     c = get_content()
-    lost = char.gold // 10
+    lost = char.gold * DEFEAT_GOLD_PCT // 100
     char.gold -= lost
     char.hp = max(1, char.max_hp // 2)
     char.location = c.respawn_location

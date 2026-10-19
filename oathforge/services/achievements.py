@@ -11,7 +11,7 @@ from oathforge.content import get_content
 from oathforge.content.achievement_schemas import EDITION
 from oathforge.database.models import (
     Character, QuestProgress, FactionReputation,
-    AchievementProgress, AchievementUnlock, AchievementEventReceipt,
+    AchievementProgress, AchievementUnlock, HeroFact,
     AchievementPreferences, AchievementNotification,
 )
 from oathforge.engine.achievements import advance, progress, event_types
@@ -22,6 +22,25 @@ from oathforge.services import audit
 # Challenge achievements (last_breath, against_many, no_reserves) only count these non-fixed encounters.
 CHALLENGE_ENCOUNTERS = {"whispering_woods": ["grey_wolf", "grey_wolf"], "ironvein_mine": ["cave_bat", "cave_bat"]}
 CHALLENGE_LEVELS = range(3, 6)
+
+# What the chronicle keeps. Everything else is recorded for the stats but never shown as an entry.
+NOTABLE_ALWAYS = {"quest", "decision", "unlock", "level", "discovery", "secrets"}
+# Worth one entry the first time each value happens: the field of the data that makes it unique.
+NOTABLE_FIRST = {"visit": ("location",), "craft": ("recipe",), "seen": ("monster",), "kill": ("monster",),
+                 "quest_start": ("quest",), "profession": ("key", "rank"), "mastery": ("skill", "rank")}
+
+
+def fact_marks(kind: str, data: dict) -> tuple[bool, str | None]:
+    """Deterministic: is this fact a chronicle entry, and what makes it unique the first time."""
+    if kind in NOTABLE_FIRST:
+        fields = NOTABLE_FIRST[kind]
+        if any(data.get(f) is None for f in fields):
+            return False, None
+        tag = ":".join([kind, *(str(data[f]) for f in fields)])[:64]
+        return data.get("rank", 1) > 0, tag  # rank 0 is where everyone starts: nothing happened
+    if kind == "combat":  # a victory shows up as its kill; a defeat is the entry
+        return data.get("status") == "defeat", None
+    return kind in NOTABLE_ALWAYS, None
 
 
 @dataclass(frozen=True)
@@ -65,13 +84,17 @@ async def apply_events(session, character, events):
         raise ValueError("gameplay event belongs to another character")
     catalog = get_content().achievements
     index = event_index()
-    events = [event for event in events if event.kind in index]
     if not events:
         return []
+    from oathforge.services.exploration import game_day  # exploration emits facts; the clock comes back deferred
+    today = game_day()
     # The character lock serializes writers, so one lookup covers the whole batch.
-    seen = set(await session.scalars(select(AchievementEventReceipt.event_id).where(
-        AchievementEventReceipt.character_id == character.id,
-        AchievementEventReceipt.event_id.in_([event.event_id for event in events]))))
+    seen = set(await session.scalars(select(HeroFact.event_id).where(
+        HeroFact.character_id == character.id,
+        HeroFact.event_id.in_([event.event_id for event in events]))))
+    tags = {tag for tag in (fact_marks(e.kind, e.data)[1] for e in events) if tag}
+    known_tags = set(await session.scalars(select(HeroFact.tag).where(
+        HeroFact.character_id == character.id, HeroFact.tag.in_(tags)))) if tags else set()
     rows = {r.achievement_key: r for r in (await session.scalars(
         select(AchievementProgress).where(AchievementProgress.character_id == character.id,
                                           AchievementProgress.edition == EDITION))).all()}
@@ -82,11 +105,17 @@ async def apply_events(session, character, events):
     queue = deque(events)
     while queue:
         event = queue.popleft()
-        if event.event_id in seen or event.kind not in index:
+        if event.event_id in seen:
             continue
         seen.add(event.event_id)
-        session.add(AchievementEventReceipt(character_id=character.id, event_id=event.event_id))
-        for key in index[event.kind]:
+        notable, tag = fact_marks(event.kind, event.data)
+        if tag:
+            notable = tag not in known_tags
+            known_tags.add(tag)
+        session.add(HeroFact(character_id=character.id, event_id=event.event_id, kind=event.kind,
+                             data=event.data, tag=tag, game_day=today, notable=notable,
+                             retroactive=event.retroactive))
+        for key in index.get(event.kind, ()):
             if key in unlocked:
                 continue
             definition = catalog[key]
@@ -138,6 +167,18 @@ async def emit(session, char, out, kind, data, source=None):
     out.achievement_unlocks = list(dict.fromkeys(out.achievement_unlocks + granted))
 
 
+async def levels(session, char, out, before: int):
+    """Every level the xp just granted reached; the source keeps each one unique."""
+    for level in range(before + 1, char.level + 1):
+        await emit(session, char, out, "level", {"level": level}, f"level:{level}")
+
+
+async def profession(session, char, out, key: str):
+    """The rank of a profession, after it grew."""
+    rank = gathering.rank_for(((char.professions or {}).get("xp", {})).get(key, 0))
+    await emit(session, char, out, "profession", {"key": key, "rank": rank}, f"prof:{key}:{rank}")
+
+
 async def mastery(session, char, out, skill, source=None):
     """The current rank of a field mastery, after it grew."""
     if skill in gathering.MASTERIES:
@@ -156,7 +197,10 @@ async def backfill_character(session, char):
                                    "saved_state", retroactive=True))
     for place in (char.flags or {}).get("stats", {}).get("places", []):
         if place in c.locations:
-            fact("visit", {"location": place, "outside": False})
+            # Having been there proves it: a place outside the city was reached from the city.
+            fact("visit", {"location": place, "outside": c.locations[place].zone != "crownreach"})
+    for level in range(2, char.level + 1):
+        fact("level", {"level": level})
     if (char.flags or {}).get("crypt_unlocked"):
         fact("flag", {"key": "crypt_unlocked"})
     # Discovery flags shared with quest rewards cannot prove that discovery was resolved.

@@ -11,15 +11,17 @@ from oathforge.bot import achievement_views
 from oathforge.bot.keyboards import btn, cb, grid, markup, nonce
 from oathforge.config import get_settings
 from oathforge.content import get_content
+from oathforge.content.schemas import DC_TIERS
 from oathforge.database.models import Character
 from oathforge.engine.checks import modifier, proficiency_bonus
 from oathforge.engine import gathering
+from oathforge.engine import combat, pointbuy, progression
 from oathforge.engine.combat import EncounterState, available_bonus_actions, valid_targets
 from oathforge.engine.progression import MAX_LEVEL, XP_THRESHOLDS, skill_rank
 from oathforge.i18n import t
 from oathforge.services import (
-    achievements, actions, activities, bestiary, characters, chronicles, combat_service, crafting, exploration, inventory, npcs,
-    professions, quests, world_map,
+    achievements, actions, activities, bestiary, characters, chronicle_log, chronicles, combat_service, crafting,
+    exploration, inventory, npcs, professions, quests, world_map,
 )
 from oathforge.services.events import Outcome, render_event
 
@@ -553,7 +555,7 @@ def profession_page(key: str, lang: str, char: Character | None = None) -> tuple
              + (f" · {t(lang, 'prof.hobby_tag')}" if prof.hobby else ""),
              f"<i>{escape(prof.description.get(lang))}</i>", RULE]
     if prof.guide:
-        guide = RULE_NUMBER.sub(lambda m: str(rule_numbers().get(m.group(1), m.group(0))), prof.guide.get(lang))
+        guide = RULE_NUMBER.sub(lambda m: str(rule_numbers(lang).get(m.group(1), m.group(0))), prof.guide.get(lang))
         lines += [escape(guide), ""]
     lines += _where(prof, lang)
     if char is not None and (prof.hobby or key in professions.active(char) or professions.xp(char, key)):
@@ -1152,36 +1154,78 @@ def _objective_line(obj, done: int, lang: str) -> str:
     return f"{mark} {escape(t(lang, quests.objective_key(obj), target=target))}{count}"
 
 
+JOURNAL_TABS = (("jr", "now"), ("jrm", "missions"), ("jrc", "chronicle"), ("ach", "achievements"),
+                ("jrb", "bestiary"), ("jrr", "rumors"), ("jrs", "stats"))
+
+
+def journal_tabs(active: str, lang: str) -> list[list]:
+    """The same bar on every tab, the current one between dots, as the inventory does."""
+    return grid([btn(("• " if verb == active else "") + t(lang, f"journal.tab.{key}") + (" •" if verb == active else ""),
+                     cb(verb)) for verb, key in JOURNAL_TABS]) + [[btn(t(lang, "btn.back"), cb("scene"))]]
+
+
 async def journal(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
-    """The journal hub: the current missions at a glance, then Missions / Bestiary / Rumors."""
+    """The journal's cover: what you are doing, what comes next, and the tap that takes you there."""
+    c = get_content()
+    n = nonce()
     ach = await achievements.snapshot(session, char)
-    lines = [t(lang, "journal.title"), ""]
+    lines = [t(lang, "journal.title"), RULE]
+    rows: list[list] = []
+    act = await activities.open_activity(session, char)
+    if act is not None:
+        lines.append(f"{ACTIVITY_ICON.get(act.skill, '⏳')} " + t(lang, "journal.now_activity",
+                     what=escape(activities.describe(act, lang)), minutes=activities.remaining_minutes(act)))
+        rows.append([btn(t(lang, "btn.see_activity"), cb("acts"))])
+    trip_to = exploration.trip(char) if char.state == "idle" else None
+    if trip_to:  # an ambush stopped the trip halfway: carry on from here too
+        lines.append(t(lang, "journal.now_trip", place=escape(c.locations[trip_to].phrase()[lang])))
+        rows.append([btn(t(lang, "btn.continue_trip", place=c.locations[trip_to].phrase()[lang]),
+                         cb("go", trip_to, n))])
     current = [(k, q, p) for k, q, p in await quests.journal(session, char)
                if quests.stage_of(q, p)[1] in ("active", "available")]
     if current:
+        lines.append("")
         lines.append(f"<b>{t(lang, 'journal.current')}</b>")
-        for _, quest, prog in current:
+        for key, quest, prog in current:
             stage, state = quests.stage_of(quest, prog)
             lines.append(f"{QUEST_ICONS[state]} <b>{escape(quest.name.get(lang))}</b>")
             lines.append(f"<i>{escape(quest.stages[stage].journal.get(lang))}</i>")
-            lines += [_objective_line(o, n, lang) for o, n in quests.objective_progress(quest, prog)]
-            lines.append("")
+            lines += [_objective_line(o, done, lang) for o, done in quests.objective_progress(quest, prog)]
+            rows.append([btn(f"{QUEST_ICONS[state]} {quest.name.get(lang)}", cb("jq", key))])
     else:
-        lines += [f"<i>{t(lang, 'journal.no_current')}</i>", ""]
-    lines.append(f"<i>{t(lang, 'journal.hint')}</i>")
+        lines += ["", f"<i>{t(lang, 'journal.no_current')}</i>"]
+    # Never a dead end: the objective of a mission, or whoever hands them out, is always one tap away.
+    goals = await exploration.objective_routes(session, char)
+    if goals:
+        lines += ["", t(lang, "map.objective")]
+        for quest, route in goals:
+            lines.append(t(lang, "map.objective_line", quest=escape(quest.get(lang, quest.get("en"))),
+                           place=escape(c.locations[route.to].name.get(lang))))
+            rows.append(_go_button(route, lang, n, "📜"))
+    elif not current:
+        rows += _giver_buttons(char, lang, n)
     lines += achievement_views.tracked(ach, lang)
-    kb = markup([[btn(t(lang, "achievements.open"), cb("ach"))],
-                 [btn(t(lang, "btn.missions"), cb("jrm")), btn(t(lang, "btn.quest_log"), cb("jrl"))],
-                 [btn(t(lang, "btn.bestiary"), cb("jrb")), btn(t(lang, "btn.rumors"), cb("jrr"))],
-                 [btn(t(lang, "btn.stats"), cb("jrs")), btn(t(lang, "btn.back"), cb("scene"))]])
-    return "\n".join(lines)[:MAX_MESSAGE], kb
+    return "\n".join(lines)[:MAX_MESSAGE], markup(rows + journal_tabs("jr", lang))
+
+
+def _giver_buttons(char: Character, lang: str, n: str) -> list[list]:
+    """With nothing in progress, point at the quest giver instead of saying there is nothing to do."""
+    c = get_content()
+    for quest in sorted(c.quests.values(), key=lambda q: q.order):
+        npc = c.npcs.get(quest.giver) if quest.giver else None
+        place = (npc.schedule or {}).get("day") if npc else None
+        if place and place != char.location:
+            route = world_map.route_to(char, place)
+            if route:
+                return [_go_button(route, lang, n, "🗣️")]
+    return []
 
 
 FINISHED = ("completed", "failed")
 
 
 async def missions(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
-    """/quests: only what is in progress or on offer; finished missions live in the journal's log."""
+    """/quests: what is in progress or on offer, and below it everything already finished."""
     entries = await quests.journal(session, char)
     done = sum(1 for _, q, p in entries if quests.stage_of(q, p)[1] == "completed")
     lines = [t(lang, "journal.missions_title", done=done, total=len(entries)), ""]
@@ -1191,8 +1235,12 @@ async def missions(session: AsyncSession, char: Character, lang: str) -> tuple[s
         if state in ("active", "available"):
             rows.append([btn(f"{QUEST_ICONS[state]} {quest.name.get(lang)}", cb("jq", key))])
     lines.append(f"<i>{t(lang, 'journal.missions_hint' if rows else 'journal.no_current')}</i>")
-    rows.append([btn(t(lang, "btn.quest_log"), cb("jrl")), btn(t(lang, "btn.back"), cb("jr"))])
-    return "\n".join(lines), markup(rows)
+    finished = [(k, q, p) for k, q, p in entries if quests.stage_of(q, p)[1] in FINISHED]
+    if finished:
+        lines += ["", f"<b>{t(lang, 'journal.log_title', n=len(finished))}</b>"]
+        rows += [[btn(f"{QUEST_ICONS[quests.stage_of(q, p)[1]]} {q.name.get(lang)}", cb("jq", k))]
+                 for k, q, p in finished]
+    return "\n".join(lines), markup(rows + journal_tabs("jrm", lang))
 
 
 def fmt_int(n: int, lang: str) -> str:
@@ -1200,8 +1248,8 @@ def fmt_int(n: int, lang: str) -> str:
     return f"{n:,}".replace(",", "." if lang == "es" else ",")
 
 
-def stats_view(char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
-    """The journal's statistics: how far you walked, where you have been, what you fought."""
+async def stats_view(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+    """The journal's statistics: how far you walked, where you have been, what you fought and what you made."""
     c = get_content()
     st = characters.stats(char)
     places = [p for p in st.get("places", []) if p in c.locations]
@@ -1218,17 +1266,87 @@ def stats_view(char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
         lines.append("      " + escape(", ".join(f"{c.monsters[k].name.get(lang)} ×{n}" for k, n in top if k in c.monsters)))
     lines += [t(lang, "stats.dodges", n=st.get("dodges", 0)), t(lang, "stats.crits", n=st.get("crits", 0)),
               t(lang, "stats.activities", n=st.get("activities", 0)), "", f"<i>{t(lang, 'stats.since')}</i>"]
-    return "\n".join(lines), markup([[btn(t(lang, "btn.back"), cb("jr"))]])
+    # Counted from the chronicle: every one of these is a fact the engine recorded.
+    counted = await chronicle_log.counts(session, char)
+    ach = await achievements.snapshot(session, char)
+    lines += ["", t(lang, "stats.chronicle_title"), RULE,
+              t(lang, "stats.quests", n=counted["quests"]),
+              t(lang, "stats.crafts", n=counted["crafts"], recipes=counted["recipes"]),
+              t(lang, "stats.discoveries", n=counted["discoveries"]),
+              t(lang, "stats.monsters_known", n=counted["monsters_known"], killed=counted["species_killed"]),
+              t(lang, "stats.levels", n=counted["levels"]),
+              t(lang, "stats.achievements", n=ach["count"], points=ach["points"]),
+              "", f"<i>{t(lang, 'stats.since_chronicle')}</i>"]
+    return "\n".join(lines)[:MAX_MESSAGE], markup(journal_tabs("jrs", lang))
 
 
-async def quest_log(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
-    """The journal's log: the missions already finished."""
-    entries = [(k, q, p) for k, q, p in await quests.journal(session, char) if quests.stage_of(q, p)[1] in FINISHED]
-    lines = [t(lang, "journal.log_title", n=len(entries)), ""]
-    rows = [[btn(f"{QUEST_ICONS[quests.stage_of(q, p)[1]]} {q.name.get(lang)}", cb("jq", k))] for k, q, p in entries]
-    lines.append(f"<i>{t(lang, 'journal.log_hint' if rows else 'journal.log_empty')}</i>")
-    rows.append([btn(t(lang, "btn.missions"), cb("jrm")), btn(t(lang, "btn.back"), cb("jr"))])
-    return "\n".join(lines), markup(rows)
+def _fact_line(fact, lang: str) -> str | None:
+    """One chronicle entry, named from the content. An unknown id leaves the entry out."""
+    c = get_content()
+    data = fact.data or {}
+    def named(pool, key):
+        entry = pool.get(data.get(key))
+        return escape(entry.name.get(lang)) if entry is not None else None
+    if fact.kind in ("seen", "kill", "secrets"):
+        what = named(c.monsters, "monster")
+    elif fact.kind in ("quest", "quest_start"):
+        what = named(c.quests, "quest")
+    elif fact.kind == "visit":
+        what = named(c.locations, "location")
+    elif fact.kind == "unlock":
+        what = named(c.achievements, "key")
+    elif fact.kind == "craft":
+        recipe = c.recipes.get(data.get("recipe"))
+        what = escape(c.items[next(iter(recipe.outputs))].name.get(lang)) if recipe else None
+    elif fact.kind == "discovery":
+        place = (data.get("key") or "").split(":")[0]  # the discovery id is "<place>:<secret>"
+        what = escape(c.locations[place].name.get(lang)) if place in c.locations else None
+    elif fact.kind == "level":
+        what = str(data.get("level", ""))
+    elif fact.kind == "profession":
+        what = named(c.professions, "key")
+    elif fact.kind == "mastery":
+        what = escape(characters.mastery_name(data["skill"])[lang]) if data.get("skill") else None
+    elif fact.kind == "decision":
+        what = t(lang, f"book.decision_text.{data.get('key')}")
+    elif fact.kind == "combat":
+        if data.get("location") not in c.locations:
+            return t(lang, "book.combat_nowhere")
+        what = escape(c.locations[data["location"]].name.get(lang))
+    else:
+        return None
+    if what is None:
+        return None
+    return t(lang, f"book.{fact.kind}", what=what, rank=data.get("rank", 0))
+
+
+async def chronicle(session: AsyncSession, char: Character, lang: str,
+                    page: str = "0") -> tuple[str, InlineKeyboardMarkup]:
+    """The journal's chronicle: the facts the engine recorded, newest first. No AI: every line is an event."""
+    number = int(page) if str(page).lstrip("-").isdigit() else 0
+    facts, more, first_day = await chronicle_log.page(session, char, number)
+    lines = [t(lang, "book.title"), RULE]
+    day = None
+    old = False
+    for fact in facts:
+        if fact.retroactive and not old:
+            lines.append(f"<i>{t(lang, 'book.before')}</i>")
+            old, day = True, None
+        text = _fact_line(fact, lang)
+        if text is None:
+            continue
+        if not fact.retroactive and fact.game_day != day:
+            day = fact.game_day
+            lines.append(f"<b>{t(lang, 'book.day', day=day - first_day + 1)}</b>")
+        lines.append(text)
+    if not facts:
+        lines.append(f"<i>{t(lang, 'book.empty')}</i>")
+    rows = []
+    nav = ([btn("◀", cb("jrc", str(number - 1)))] if number else []) + \
+          ([btn("▶", cb("jrc", str(number + 1)))] if more else [])
+    if nav:
+        rows.append(nav)
+    return "\n".join(lines)[:MAX_MESSAGE], markup(rows + journal_tabs("jrc", lang))
 
 
 async def mission(session: AsyncSession, char: Character, key: str, lang: str) -> tuple[str, InlineKeyboardMarkup]:
@@ -1239,8 +1357,6 @@ async def mission(session: AsyncSession, char: Character, key: str, lang: str) -
         return t(lang, "quest.err.unavailable"), back
     quest, prog = entry
     stage, state = quests.stage_of(quest, prog)
-    if state in FINISHED:  # opened from the log: back to it
-        back = markup([[btn(t(lang, "btn.back"), cb("jrl"))]])
     if state == "locked":
         lines = [f"🔒 <b>{t(lang, 'journal.locked_name')}</b>", "",
                  f"<i>{escape(quest.stages[stage].journal.get(lang))}</i>"]
@@ -1282,10 +1398,25 @@ def _rewards_line(effects: list[dict], lang: str) -> str:
 RULE_NUMBER = re.compile(r"\{(\w+)\}")
 
 
-def rule_numbers() -> dict:
+def rule_numbers(lang: str = "es") -> dict:
     """{placeholders} in content/rulebook.yaml, straight from the engine, so the rulebook never goes stale."""
-    ambush = [g.stay_ambush for loc in get_content().locations.values() for g in loc.gathering if g.stay_ambush]
+    c = get_content()
+    ambush = [g.stay_ambush for loc in c.locations.values() for g in loc.gathering if g.stay_ambush]
+    rest_costs = [loc.rest_cost for loc in c.locations.values() if loc.rest_cost]
+    skins = [m.skin_seconds for m in c.monsters.values() if m.skin_seconds]
+    settings = get_settings()
     return {
+        "dc_trivial": DC_TIERS["trivial"], "dc_easy": DC_TIERS["easy"], "dc_medium": DC_TIERS["medium"],
+        "dc_hard": DC_TIERS["hard"], "dc_very_hard": DC_TIERS["very_hard"],
+        "max_level": progression.MAX_LEVEL, "asi_level": characters.ASI_LEVEL,
+        "points": pointbuy.BUDGET, "flee_dc_base": combat.FLEE_DC_BASE, "flee_dc_step": combat.FLEE_DC_PER_FOE,
+        "defeat_gold_pct": characters.DEFEAT_GOLD_PCT, "rest_gold": min(rest_costs) if rest_costs else 0,
+        "skin_s": min(skins) if skins else 0, "skin_s_max": max(skins) if skins else 0,
+        "trip_base": round(exploration.ENCOUNTER_CHANCE_PER_DANGER * 100),
+        "trip_step": round(exploration.TRIP_EXTRA_PER_STRETCH * 100),
+        "trip_cap": round(exploration.TRIP_CHANCE_CAP * 100),
+        "beta_rest": t(lang, "rulebook.beta_rest_on" if settings.beta_instant_rest else "rulebook.beta_rest_off"),
+        "beta_tutorial": t(lang, "rulebook.beta_tutorial_on" if settings.beta_instant_tutorial else "rulebook.beta_tutorial_off"),
         "gather_min": gathering.GATHER_SECONDS // 60, "stay_min": gathering.STAY_SECONDS // 60,
         "track_min": gathering.TRACK_SECONDS // 60, "rest_min": gathering.REST_SECONDS // 60,
         "gather_units": "{}–{}".format(*gathering.GATHER_UNITS), "stay_units": "{}–{}".format(*gathering.STAY_UNITS),
@@ -1306,7 +1437,7 @@ def rulebook(lang: str, key: str | None = None) -> tuple[str, InlineKeyboardMark
         buttons = [btn(f"{sec.icon} {sec.title.get(lang)}", cb("rb", k)) for k, sec in c.rulebook.items()]
         return "\n".join(lines)[:MAX_MESSAGE], markup(grid(buttons))
     sec = c.rulebook[key]
-    body = RULE_NUMBER.sub(lambda m: str(rule_numbers().get(m.group(1), m.group(0))), sec.body.get(lang))
+    body = RULE_NUMBER.sub(lambda m: str(rule_numbers(lang).get(m.group(1), m.group(0))), sec.body.get(lang))
     lines = [f"{sec.icon} <b>{escape(sec.title.get(lang))}</b>", RULE, escape(body)]
     if key == "abilities":  # the six abilities and what each is for, straight from abilities.yaml
         lines.append("")
@@ -1430,8 +1561,7 @@ def bestiary_list(char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup
         rows.append([btn(f"{creature_icon(m)} {m.name.get(lang)} · ⚔️ {entry.get('killed', 0)}",
                          cb("jb", key))])
     lines.append(f"<i>{t(lang, 'bestiary.hint' if known else 'bestiary.empty')}</i>")
-    rows.append([btn(t(lang, "btn.back"), cb("jr"))])
-    return "\n".join(lines), markup(rows)
+    return "\n".join(lines), markup(rows + journal_tabs("jrb", lang))
 
 
 def bestiary_entry(char: Character, key: str, lang: str) -> tuple[str, InlineKeyboardMarkup]:
@@ -1489,7 +1619,7 @@ async def rumors(session: AsyncSession, lang: str) -> tuple[str, InlineKeyboardM
     lines = [f"<b>{t(lang, 'journal.rumors')}</b>", ""]
     found = await npcs.recent_rumors(session, limit=8)
     lines += [f"• <i>{escape(r.get(lang, r.get('en', '')))}</i>" for r in found] or [f"<i>{t(lang, 'journal.no_rumors')}</i>"]
-    return "\n".join(lines)[:MAX_MESSAGE], markup([[btn(t(lang, "btn.back"), cb("jr"))]])
+    return "\n".join(lines)[:MAX_MESSAGE], markup(journal_tabs("jrr", lang))
 
 
 # ---------------------------------------------------------------- combat

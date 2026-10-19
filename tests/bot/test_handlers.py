@@ -602,10 +602,12 @@ async def test_journal_missions_and_bestiary_views(llm, monkeypatch):
     assert "Actividades" in p.chat.sent[-2][0] and "Alistamiento" in p.last[0]
     await p.press("jq|tut_town|-")
     assert "Barrio de Oficios" in p.last[0] and "Bram" in p.last[0]
-    await p.press("jrl|-|-")  # finished missions: the journal's log
+    await p.press(p.find("jrm"))  # finished missions now live under the current ones
     assert "1 terminada" in p.last[0] and "jq|tut_muster|-" in p.buttons()
     await p.press("jq|tut_muster|-")
-    assert "jrl|-|-" in p.buttons()  # back to the log
+    assert "jrm|-|-" in p.buttons()  # back to the missions tab
+    await p.press("jrl|-|-")  # the old log button opens the chronicle
+    assert "Alistamiento" in p.last[0] and "Día 1" in p.last[0]
     await p.press("jrb|-|-")
     assert "0/10" in p.last[0]
     await p.press("jrr|-|-")

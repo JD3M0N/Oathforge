@@ -7,18 +7,18 @@ dice:
   body:
     es: |-
       Casi todo se decide con un d20, un dado de 20 caras: d20 + tu bonificador contra una dificultad (CD). Si igualas o superas la CD, lo consigues.
-      • CD 5 trivial · 10 fácil · 13 normal · 16 difícil · 19 muy difícil.
-      • Tu bonificador = el modificador del atributo + tu competencia si dominas esa habilidad (+2 a nivel 1, +3 a nivel 5).
+      • CD {dc_trivial} trivial · {dc_easy} fácil · {dc_medium} normal · {dc_hard} difícil · {dc_very_hard} muy difícil.
+      • Tu bonificador = el modificador del atributo + tu competencia si dominas esa habilidad (+2 a nivel 1, +3 a nivel {max_level}).
       • Con ventaja tiras dos d20 y te quedas el mayor; con desventaja, el menor.
-      • Un 20 natural en un ataque es un crítico (dobla los dados de daño); un 1 natural siempre falla.
-      Cada prueba de habilidad se intenta una vez al día en cada lugar. Las tiradas las hace siempre el motor del juego, nunca la IA.
+      • Un 20 natural en un ataque es un crítico (dobla los dados de daño); un 1 natural siempre falla. Alguna habilidad amplía ese rango y acierta crítico también con 19.
+      Cada prueba de habilidad se intenta una vez al día en cada lugar; al subir de nivel puedes volver a intentarla. Las tiradas las hace siempre el motor del juego, nunca la IA.
     en: |-
       Almost everything is decided with a d20, a twenty-sided die: d20 + your bonus against a difficulty class (DC). Meet or beat the DC and you succeed.
-      • DC 5 trivial · 10 easy · 13 normal · 16 hard · 19 very hard.
-      • Your bonus = the ability modifier + your proficiency if you are trained in that skill (+2 at level 1, +3 at level 5).
+      • DC {dc_trivial} trivial · {dc_easy} easy · {dc_medium} normal · {dc_hard} hard · {dc_very_hard} very hard.
+      • Your bonus = the ability modifier + your proficiency if you are trained in that skill (+2 at level 1, +3 at level {max_level}).
       • With advantage you roll two d20 and keep the higher; with disadvantage, the lower.
-      • A natural 20 on an attack is a critical hit (damage dice doubled); a natural 1 always misses.
-      Each skill check can be tried once a day in each place. Rolls are always made by the game engine, never by the AI.
+      • A natural 20 on an attack is a critical hit (damage dice doubled); a natural 1 always misses. A few abilities widen that range and also crit on a 19.
+      Each skill check can be tried once a day in each place; a level up lets you try again. Rolls are always made by the game engine, never by the AI.
 
 abilities:
   icon: "⚖️"
@@ -26,10 +26,10 @@ abilities:
   body:
     es: |-
       Seis atributos describen a tu héroe. Cada uno da un modificador: (atributo − 10) ÷ 2, redondeando hacia abajo. 10 da +0, 14 da +2, 16 da +3, 8 da −1.
-      Se reparten al crear el personaje con 27 puntos (como en D&D) más el bonificador de tu linaje. A nivel 4, tu atributo principal sube +2.
+      Se reparten al crear el personaje con {points} puntos (como en D&D) más el bonificador de tu linaje. A nivel {asi_level}, tu atributo principal sube +2.
     en: |-
       Six abilities describe your hero. Each gives a modifier: (score − 10) ÷ 2, rounded down. 10 gives +0, 14 gives +2, 16 gives +3, 8 gives −1.
-      You assign them at creation with 27 points (as in D&D) plus your lineage bonus. At level 4 your primary ability rises by +2.
+      You assign them at creation with {points} points (as in D&D) plus your lineage bonus. At level {asi_level} your primary ability rises by +2.
 
 armor:
   icon: "🛡️"
@@ -51,11 +51,11 @@ health:
   title: {es: Puntos de vida y dado de golpe, en: Hit points and hit die}
   body:
     es: |-
-      Los puntos de vida (PV) son el aguante de tu héroe. A 0 PV caes derrotado: despiertas en un lugar seguro con la mitad de la vida, herido (hasta un descanso largo) y con un 10 % menos de oro.
+      Los puntos de vida (PV) son el aguante de tu héroe. A 0 PV caes derrotado: despiertas en un lugar seguro con la mitad de la vida, herido (hasta un descanso largo) y con un {defeat_gold_pct} % menos de oro.
       El dado de golpe depende de la clase (d6 para el Mago, d10 para el Paladín…). A nivel 1 tienes el máximo del dado + tu modificador de CON; cada nivel suma la mitad del dado + 1 + CON.
       Por eso la Constitución importa a todas las clases.
     en: |-
-      Hit points (HP) are your hero's staying power. At 0 HP you are defeated: you wake up somewhere safe at half HP, injured (until a long rest) and with 10% less gold.
+      Hit points (HP) are your hero's staying power. At 0 HP you are defeated: you wake up somewhere safe at half HP, injured (until a long rest) and with {defeat_gold_pct}% less gold.
       The hit die depends on the class (d6 for the Mage, d10 for the Paladin…). At level 1 you get the die's maximum + your CON modifier; each level adds half the die + 1 + CON.
       That is why Constitution matters to every class.
 
@@ -67,13 +67,13 @@ combat:
       El combate es por turnos, en el orden de la iniciativa (d20 + DES). En tu turno tienes una acción (atacar, una habilidad de clase, usar un objeto) y a veces una acción adicional.
       • Las habilidades tienen usos por descanso; los ves en los botones.
       • «🎒 Objetos»: pociones, pergaminos y bombas.
-      • Huir es una prueba de Atletismo o Acrobacias contra CD 10 + 2 por enemigo; si falla, pierdes el turno.
+      • Huir es una prueba de Atletismo o Acrobacias contra CD {flee_dc_base} + {flee_dc_step} por enemigo; si falla, pierdes el turno.
       Al acabar, «📜 Informe» (o /report) cuenta la batalla tirada a tirada.
     en: |-
       Combat is turn-based, in initiative order (d20 + DEX). On your turn you get one action (attack, a class ability, use an item) and sometimes a bonus action.
       • Abilities have uses per rest; the buttons show them.
       • "🎒 Items": potions, scrolls and bombs.
-      • Fleeing is an Athletics or Acrobatics check against DC 10 + 2 per enemy; if it fails, you lose the turn.
+      • Fleeing is an Athletics or Acrobatics check against DC {flee_dc_base} + {flee_dc_step} per enemy; if it fails, you lose the turn.
       Afterwards, "📜 Report" (or /report) tells the battle roll by roll.
 
 rest:
@@ -81,14 +81,16 @@ rest:
   title: {es: Descanso y curación, en: Rest and healing}
   body:
     es: |-
-      • Descanso largo en la posada de La Corona Rota: 5 de oro y 8 horas de juego (80 minutos reales; durante la beta, al momento). Recuperas toda la vida y los usos de tus habilidades, y se curan las heridas graves.
+      • Descanso largo en la posada de La Corona Rota: {rest_gold} de oro y 8 horas de juego ({rest_min} minutos reales). {beta_rest} Recuperas toda la vida y los usos de tus habilidades, y se curan las heridas graves.
+      • En la Cripta Hundida, ya despejada, puedes descansar gratis: es el único sitio fuera de la posada donde se hace un descanso largo.
       • «Curar heridas» en la Capilla del Alba: gratis durante la beta y al momento. La hermana Ysolde cierra también las heridas graves que deja una derrota.
-      • Las pociones de curación y el tónico del reposo ayudan fuera de la ciudad.
+      • Las pociones de curación ayudan fuera de la ciudad; el tónico del reposo da un descanso corto y luego tarda un rato en poder usarse otra vez.
       En el juego también pasan el día y la noche: algunas criaturas cambian según la hora.
     en: |-
-      • Long rest at the Broken Crown inn: 5 gold and 8 game hours (80 real minutes; at once during the beta). You recover all your HP and ability uses, and grave wounds heal.
+      • Long rest at the Broken Crown inn: {rest_gold} gold and 8 game hours ({rest_min} real minutes). {beta_rest} You recover all your HP and ability uses, and grave wounds heal.
+      • In the Sunken Crypt, once cleared, you can rest for free: it is the only place outside the inn where a long rest happens.
       • "Cure wounds" at the Chapel of Dawn: free during the beta and right away. Sister Ysolde also closes the grave wounds a defeat leaves.
-      • Healing potions and the rest draught help outside the city.
+      • Healing potions help outside the city; the rest draught grants a short rest and then needs a while before it works again.
       The game also has day and night: some creatures change with the hour.
 
 lineages:
@@ -118,11 +120,11 @@ classes:
   title: {es: Clases, en: Classes}
   body:
     es: |-
-      La clase decide cómo luchas: tu dado de golpe, tu atributo principal, tus habilidades por nivel y, a nivel 5, una especialización.
+      La clase decide cómo luchas: tu dado de golpe, tu atributo principal, tus habilidades por nivel. Las especializaciones llegarán más adelante.
       Guerrero y Paladín aguantan en primera línea, el Pícaro golpea desde las sombras, Mago, Brujo y Druida lanzan conjuros, Sacerdote y Bardo cuidan del grupo.
       Todas las clases y sus habilidades: /classes
     en: |-
-      Your class decides how you fight: your hit die, your primary ability, your abilities by level and, at level 5, a specialization.
+      Your class decides how you fight: your hit die, your primary ability and your abilities by level. Specializations will come later.
       Warrior and Paladin hold the front line, the Rogue strikes from the shadows, Mage, Warlock and Druid cast spells, Priest and Bard look after the party.
       Every class and its abilities: /classes
 
@@ -131,21 +133,21 @@ activities:
   title: {es: Actividades, en: Activities}
   body:
     es: |-
-      Fuera de la ciudad, cada lugar tiene sus actividades. Llevan tiempo real: mientras trabajas no puedes viajar ni hacer otra cosa. Al acabar, el bot te manda lo obtenido aunque hayas cerrado Telegram. Todas están en «⚒ Actividades» (teclado fijo o escena), con su duración y lo que te falta.
+      Fuera de la ciudad, cada lugar tiene sus actividades. Llevan tiempo real: mientras trabajas no puedes viajar ni hacer otra cosa. {beta_tutorial} Al acabar, el bot te manda lo obtenido aunque hayas cerrado Telegram. Todas están en «⚒ Actividades» (teclado fijo o escena), con su duración y lo que te falta.
       • ⛏️ Minar (pico), 🪓 talar (hacha), 🌿 recolectar hierbas (hoz) y 🎣 pescar (caña): «Trabajar» dura {gather_min} min y da {gather_units} materiales. Sin peligro.
       • 🏕️ Expedición larga: {stay_min} min y {stay_units} materiales, más XP. Al final puede haber emboscada ({ambush} según el lugar): si ganas te lo llevas todo, si huyes la mitad y si caes lo pierdes.
       • 🐾 Rastrear: {track_min} min siguiendo huellas. El {prey_pct} % de las veces das con una presa y peleas; si la vences, te llevas trofeos además del desuello.
       • 🏹 Cazar: pelear al momento contra lo que vive en el lugar.
-      • 🔪 Desollar: tras vencer a una bestia, /skin con el cuchillo de desollar (10 s una presa pequeña, más las grandes) da pieles y carne. Si te vas o empiezas otra cosa, la pieza se pierde.
+      • 🔪 Desollar: tras vencer a una bestia, /skin con el cuchillo de desollar ({skin_s} s una presa pequeña, hasta {skin_s_max} s las grandes) da pieles y carne. Si te vas o empiezas otra cosa, la pieza se pierde.
       • 🛏️ Descansar: en la taberna, 8 horas de juego ({rest_min} min) para recuperar PV y habilidades.
       Cada actividad sube su maestría, de 0 a {max_rank}: cada rango da un {bonus_pct} % más de probabilidad de botín extra (hasta {bonus_cap} %) y abre recursos más raros. Todas: /masteries
     en: |-
-      Outside the city, each place has its own activities. They take real time: while you work you cannot travel or do anything else. When it ends, the bot sends you what you got even if you closed Telegram. They all live in "⚒ Activities" (fixed keyboard or scene), with how long they take and what you lack.
+      Outside the city, each place has its own activities. They take real time: while you work you cannot travel or do anything else. {beta_tutorial} When it ends, the bot sends you what you got even if you closed Telegram. They all live in "⚒ Activities" (fixed keyboard or scene), with how long they take and what you lack.
       • ⛏️ Mining (pickaxe), 🪓 woodcutting (axe), 🌿 herb gathering (sickle) and 🎣 fishing (rod): "Work" takes {gather_min} min and gives {gather_units} materials. No danger.
       • 🏕️ Long expedition: {stay_min} min and {stay_units} materials, more XP. At the end you may be ambushed ({ambush} depending on the place): win and you keep it all, flee and you keep half, fall and you lose it.
       • 🐾 Tracking: {track_min} min following tracks. {prey_pct} % of the time you find prey and fight it; beat it and you get trophies on top of skinning.
       • 🏹 Hunting: fight whatever lives in the place, right away.
-      • 🔪 Skinning: after beating a beast, /skin with a skinning knife (10 s for small prey, more for big ones) gives hides and meat. If you leave or start something else, the carcass is lost.
+      • 🔪 Skinning: after beating a beast, /skin with a skinning knife ({skin_s} s for small prey, up to {skin_s_max} s for the big ones) gives hides and meat. If you leave or start something else, the carcass is lost.
       • 🛏️ Resting: at the tavern, 8 game hours ({rest_min} min) to recover HP and abilities.
       Each activity raises its mastery, from 0 to {max_rank}: every rank adds {bonus_pct} % chance of bonus loot (up to {bonus_cap} %) and opens rarer resources. All of them: /masteries
 
@@ -172,13 +174,32 @@ travel:
   body:
     es: |-
       Eliges adónde ir y el juego pone el camino. A cualquier lugar que ya conozcas llegas en un toque, aunque esté lejos: de la cripta despejada a la plaza, o de la plaza a la mina. Lo que aún no conoces se explora camino a camino, y una sala de mazmorra con enemigos te detiene hasta que la limpies.
-      ⚠️ es el peligro del peor tramo del viaje. Cada viaje tira una sola vez por emboscada: un tramo ⚠️ tiene un 15 % y cada ⚠️ más lo sube, hasta un 45 % como mucho en rutas largas. Si te emboscan, el viaje se para ahí; al acabar, «▶️ Seguir» te lleva al destino sin otra tirada.
+      ⚠️ es el peligro del peor tramo del viaje. Cada viaje tira una sola vez por emboscada: un tramo ⚠️ tiene un {trip_base} % y cada ⚠️ más del peor tramo suma otro {trip_base} %; cada tramo peligroso de más añade {trip_step} %, hasta un {trip_cap} % como mucho. Si te emboscan, el viaje se para ahí; al acabar, «▶️ Seguir» te lleva al destino sin otra tirada.
       El mapa enseña dónde estás, tu objetivo (📜, si ya sabes llegar), a dónde puedes ir, a qué distancia (en yardas) y qué se puede hacer en cada lugar: /map
       En la beta viajar es instantáneo: la distancia es solo una referencia y no gasta tiempo. Lo que sí lleva tiempo real son las actividades.
       Los botones cubren lo habitual, pero también puedes escribir lo que quieras hacer («me escondo tras la barra y escucho»): la IA lo interpreta y el motor decide qué pasa.
     en: |-
       You choose where to go and the game finds the way. Any place you already know is one tap away, however far: from the cleared crypt to the plaza, or from the plaza to the mine. What you don't know yet is explored one road at a time, and a dungeon room with enemies stops you until you clear it.
-      ⚠️ is the danger of the worst stretch of the trip. Each trip rolls for an ambush only once: a ⚠️ road has a 15 % chance and every extra ⚠️ raises it, up to 45 % at most on long routes. If you are ambushed, the trip stops there; afterwards, «▶️ Carry on» takes you to the destination with no further roll.
+      ⚠️ is the danger of the worst stretch of the trip. Each trip rolls for an ambush only once: a ⚠️ road has a {trip_base} % chance and each further ⚠️ on the worst stretch adds another {trip_base} %; every extra dangerous stretch adds {trip_step} %, up to {trip_cap} % at most. If you are ambushed, the trip stops there; afterwards, «▶️ Carry on» takes you to the destination with no further roll.
       The map shows where you are, your objective (📜, if you already know the way), where you can go, how far it is (in yards) and what you can do in each place: /map
       In the beta, travelling is instant: the distance is only a reference and takes no time. What does take real time are the activities.
       Buttons cover the usual, but you can also type whatever you want to do ("I hide behind the bar and listen"): the AI interprets it and the engine decides what happens.
+
+achievements:
+  icon: "🏆"
+  title: {es: Logros y títulos, en: Achievements and titles}
+  body:
+    es: |-
+      Los logros reconocen lo que has hecho de verdad: el motor registra cada hecho y el logro se concede solo, una única vez. La IA no los da.
+      • No dan poder: ni vida, ni daño, ni oro. Solo puntos de logro, títulos y presumir.
+      • Algunos vienen con pista en vez de descripción; otros están ocultos hasta que los consigues. Nada se pierde por tardar y no hay rachas que castiguen ausencias.
+      • Unos pocos conceden un título. Puedes equipar uno y se ve junto a tu nombre: /achievements
+      • Hasta tres logros destacados en tu héroe y tres objetivos seguidos en el diario, para tener algo que perseguir.
+      Todo lo que el motor registra queda también en el Libro del Héroe, la crónica de tu partida: 📖 Diario → 🕯️ Crónica.
+    en: |-
+      Achievements recognise what you actually did: the engine records each fact and the achievement is granted on its own, exactly once. The AI never grants them.
+      • They give no power: no HP, no damage, no gold. Only achievement points, titles and bragging rights.
+      • Some come with a hint instead of a description; others stay hidden until you earn them. Nothing is lost by taking your time, and no streak punishes you for being away.
+      • A few grant a title. You can equip one and it shows next to your name: /achievements
+      • Up to three featured achievements on your hero and three tracked objectives in the journal, so there is always something to chase.
+      Everything the engine records also goes into the Hero's Book, the chronicle of your game: 📖 Journal → 🕯️ Chronicle.

@@ -95,3 +95,16 @@ Validación 2026-10-17: suite automatizada con PostgreSQL y recorrido real con l
 - [x] Personaje nuevo: fabricación, victoria y decisiones concedidas por el motor sin IA (automático).
 
 La cuenta de prueba conserva su idioma original y quedó sin los destacados ni objetivos temporales usados en el recorrido.
+
+## 0.10.7 — El Libro del Héroe (F03)
+- [x] 📖 Diario por pestañas: la activa entre «• … •» y el mismo mensaje se edita (Telegram, ES y EN).
+- [x] 📖 Ahora: objetivo de misión con botón de ruta; sin misiones, botón hacia quien las da (Telegram).
+- [ ] 📖 Ahora con una actividad en marcha y con un viaje interrumpido (Telegram).
+- [x] 🕯️ Crónica: entradas por día, «Antes de este libro» para lo retroactivo (Telegram, ES y EN); paginación de 8 (automático).
+- [x] Una visita o fabricación repetida no añade entrada pero sí cuenta (automático); rango 0 no es entrada (automático).
+- [x] 📜 Misiones incluye las terminadas; el botón «Registro» de un menú viejo abre la Crónica (automático).
+- [x] 📈 Estadísticas: contadores de la crónica junto a los antiguos, cada bloque con su «desde» (Telegram).
+- [x] Abrir el diario no genera llamadas a Gemini (`artifacts/ai/`).
+- [x] `/rulebook`: descanso y emboscada con las cifras del motor y la frase de beta (Telegram); cada marcador tiene valor (automático).
+- [x] Migración 0010 en una base de prueba: los recibos se conservan como `legacy`, y `downgrade` los devuelve.
+- [ ] Un logro nuevo durante la partida aparece en la Crónica como «🏆 Logro: …» (Telegram).

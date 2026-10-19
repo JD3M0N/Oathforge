@@ -9,7 +9,7 @@ from sqlalchemy import select, func
 from oathforge.content import get_content
 from oathforge.database.session import session_scope
 from oathforge.database.models import (Character, QuestProgress, AchievementUnlock, AchievementProgress,
-    AchievementEventReceipt, AchievementNotification, AchievementPreferences)
+    HeroFact, AchievementNotification, AchievementPreferences)
 from oathforge.services import achievements as a, characters, combat_service, quests, exploration, activities, inventory
 from oathforge.services.events import Outcome
 from oathforge.engine.combat import EncounterState
@@ -37,7 +37,7 @@ async def test_thousand_replays_and_rollback():
         assert await a.apply_events(s, char, [e] * 1000) == ["handmade"]
         data = await a.snapshot(s, char)
         assert data["points"] == 10
-        assert await s.scalar(select(func.count()).select_from(AchievementEventReceipt).where(AchievementEventReceipt.event_id == "craft:one")) == 1
+        assert await s.scalar(select(func.count()).select_from(HeroFact).where(HeroFact.event_id == "craft:one")) == 1
         assert await s.scalar(select(func.count()).select_from(AchievementNotification)) == 1
     with pytest.raises(RuntimeError):
         async with session_scope() as s:
@@ -48,8 +48,8 @@ async def test_thousand_replays_and_rollback():
         char = await load(s, cid)
         assert (await a.snapshot(s, char))["count"] == 1
         assert await a.apply_events(s, char, [e]) == []
-        assert await s.scalar(select(AchievementEventReceipt.id).where(
-            AchievementEventReceipt.event_id == "combat:rollback")) is None
+        assert await s.scalar(select(HeroFact.id).where(
+            HeroFact.event_id == "combat:rollback")) is None
 
 async def test_sequence_distinct_and_batching():
     cid = await hero()
@@ -82,9 +82,9 @@ async def test_backfill_proves_only_saved_facts():
         assert all(u.retroactive for u in (await s.scalars(select(AchievementUnlock))).all())
         assert await s.scalar(select(func.count()).select_from(AchievementNotification)) == 1
         # Read-only views never create missing progress or awards.
-        before = await s.scalar(select(func.count()).select_from(AchievementEventReceipt))
+        before = await s.scalar(select(func.count()).select_from(HeroFact))
         await a.snapshot(s, char)
-        assert await s.scalar(select(func.count()).select_from(AchievementEventReceipt)) == before
+        assert await s.scalar(select(func.count()).select_from(HeroFact)) == before
 
 async def test_preferences_limits_replacement_ownership_and_language():
     cid, other = await hero(), await hero(2)
@@ -288,7 +288,7 @@ async def test_delete_character_removes_achievements():
         await a.preference(s, char, "feature", "handmade", "feature")
         counts = await delete_player(s, char.user_id)
         assert counts["achievement_unlocks"] == 1
-        for model in (AchievementProgress, AchievementUnlock, AchievementEventReceipt,
+        for model in (AchievementProgress, AchievementUnlock, HeroFact,
                       AchievementNotification, AchievementPreferences):
             assert await s.scalar(select(func.count()).select_from(model)) == 0
 
@@ -305,3 +305,56 @@ async def test_facts_come_from_the_action_without_audit_rows():
         char.masteries = {**(char.masteries or {}), "mining": 10 ** 6}
         await a.mastery(s, char, out, "mining")
         assert "experienced" in out.achievement_unlocks
+
+
+async def test_chronicle_keeps_notable_facts_once_and_pages_them():
+    """The book is written from facts: a first time is an entry, a repeat only a number."""
+    from oathforge.services import chronicle_log
+    cid = await hero(tg_id=81)
+    async with session_scope() as s:
+        char = await load(s, cid)
+        out = Outcome()
+        await a.emit(s, char, out, "visit", {"location": "crownreach_market", "outside": False})
+        await a.emit(s, char, out, "visit", {"location": "crownreach_market", "outside": False})
+        await a.emit(s, char, out, "craft", {"recipe": "iron_ingot"})
+        await a.emit(s, char, out, "craft", {"recipe": "iron_ingot"})
+        await a.levels(s, char, out, 1)  # the hero is level 1: nothing to record
+        visits = (await s.scalars(select(HeroFact).where(HeroFact.kind == "visit"))).all()
+        assert [f.notable for f in visits] == [True, False]  # one entry, two facts
+        crafts = (await s.scalars(select(HeroFact).where(HeroFact.kind == "craft"))).all()
+        assert [f.notable for f in crafts] == [True, False]
+        counted = await chronicle_log.counts(s, char)
+        assert counted["crafts"] == 2 and counted["recipes"] == 1
+        # one page holds PAGE_SIZE entries and says whether another follows
+        for n in range(chronicle_log.PAGE_SIZE + 2):
+            await a.emit(s, char, out, "discovery", {"key": f"crownreach_market:secret{n}"})
+        first, more, day = await chronicle_log.page(s, char, 0)
+        assert len(first) == chronicle_log.PAGE_SIZE and more
+        rest, more_still, _ = await chronicle_log.page(s, char, 1)
+        assert rest and not more_still and day > 0
+        assert not ({f.id for f in first} & {f.id for f in rest})
+
+
+async def test_levels_and_professions_reach_the_chronicle_once():
+    cid = await hero(tg_id=82)
+    async with session_scope() as s:
+        char = await load(s, cid)
+        out = Outcome()
+        char.level = 3
+        await a.levels(s, char, out, 1)  # levels 2 and 3
+        await a.levels(s, char, out, 1)  # the same levels again: already recorded
+        levels = (await s.scalars(select(HeroFact).where(HeroFact.kind == "level"))).all()
+        assert sorted(f.data["level"] for f in levels) == [2, 3]
+        assert all(f.notable for f in levels)
+        char.professions = {"active": ["blacksmithing"], "xp": {"blacksmithing": 0}}
+        await a.profession(s, char, out, "blacksmithing")
+        await a.profession(s, char, out, "blacksmithing")
+        profs = (await s.scalars(select(HeroFact).where(HeroFact.kind == "profession"))).all()
+        assert len(profs) == 1 and profs[0].notable
+
+
+async def test_rank_zero_is_not_a_chronicle_entry():
+    """Everybody starts at rank 0: that is not something the book records."""
+    assert a.fact_marks("mastery", {"skill": "mining", "rank": 0})[0] is False
+    assert a.fact_marks("mastery", {"skill": "mining", "rank": 1})[0] is True
+    assert a.fact_marks("profession", {"key": "blacksmithing", "rank": 0})[0] is False
