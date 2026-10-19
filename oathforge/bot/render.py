@@ -253,8 +253,6 @@ async def scene(session: AsyncSession, char: Character, lang: str,
     things = len(await activity_entries(session, char, lang))
     if things:
         buttons.append(btn(t(lang, "btn.activities", n=things), cb("acts")))
-    if loc.hub and c.media.zone_images(loc.zone, night):
-        buttons.append(btn(t(lang, "btn.view_city"), cb("city")))
     buttons.append(btn(t(lang, "btn.view_place"), cb("place")))
     rows = grid(buttons)
     trip_to = exploration.trip(char) if char.state == "idle" else None

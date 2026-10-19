@@ -39,7 +39,7 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         await answer(update, t(context.user_data.get("lang", "es"), "err.rate"))
         answered(update)
         return
-    if verb not in ("cb", "place") and verb not in ACTS:  # these answer once they know (a refusal is a popup)
+    if verb not in ("cb", "place", "city") and verb not in ACTS:  # these answer once they know (a refusal is a popup)
         await answer(update)
     try:
         if verb in ("ach", "achm"):
@@ -99,21 +99,17 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
         await offer_keyboard(update, user, lang)
         in_combat = char.state != "idle"  # fighting or busy with a field activity: no menus to leave
         loc = get_content().locations[char.location]
-        if verb == "city" and not in_combat and loc.hub:
-            images = get_content().media.zone_images(loc.zone, exploration.is_night())
-            if images:
-                await send_photos(session, update, context, images, render.zone_caption(loc.zone, lang))
-            text, kb = await current_view(session, char, lang)
-            await send(update, text, kb)  # the scene again, so its buttons stay below the photo
-            return
-        if verb == "place" and not in_combat:
-            images = get_content().media.location_images(char.location, exploration.is_night())
+        if verb in ("place", "city") and not in_combat:  # city: the old "View city" button of earlier menus
+            media, night = get_content().media, exploration.is_night()
+            images, caption = media.location_images(char.location, night), render.place_caption(char.location, lang)
+            if not images and loc.hub:  # a city's plaza shows the city
+                images, caption = media.zone_images(loc.zone, night), render.zone_caption(loc.zone, lang)
             if not images:  # no art yet: a short popup, the scene stays as it is
                 await answer(update, t(lang, "scene.no_image", place=loc.phrase()[lang]))
                 return
-            await send_photos(session, update, context, images, render.place_caption(char.location, lang))
+            await send_photos(session, update, context, images, caption)
             text, kb = await current_view(session, char, lang)
-            await send(update, text, kb)
+            await send(update, text, kb)  # the scene again, so its buttons stay below the photo
             return
         if verb == "sheet":
             images = get_content().media.class_images(char.class_key, char.gender)

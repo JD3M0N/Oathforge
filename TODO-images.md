@@ -46,7 +46,7 @@ Prueba en `content/officina/` → Josue aprueba → `prepare_image.py` a la carp
 
 ## Zonas · `content/world/terra_coronata/<zona>/images/panorama.jpg`
 
-Se ven con «🏙️ Ver ciudad» (hoy solo en lugares `hub`).
+Se ven con «🖼️ Ver lugar» en la plaza de la ciudad (lugar `hub`) mientras la plaza no tenga imagen propia.
 
 - [x] **Crownreach** de día y de noche (`panorama.jpg`, `panorama.night.jpg`, 0.10.4).
 - [ ] **Thornwood** (`thornwood/`)

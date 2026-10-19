@@ -4,6 +4,14 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.6] - 2026-10-19
+
+### Cambiado
+- **Un solo botón, 🖼️ Ver lugar**: «🏙️ Ver ciudad» desaparece. En la plaza de una ciudad (lugar `hub`) sin imagen propia, «Ver lugar» enseña la panorámica de la ciudad; los botones «Ver ciudad» de menús viejos siguen funcionando igual.
+
+### Arreglado
+- En la Plaza de Crownreach salían «Ver ciudad» y «Ver lugar» a la vez, y «Ver lugar» decía que no había imagen.
+
 ## [0.10.5] - 2026-10-18
 
 Audiovisual (F02, 2.ª parte): «Ver lugar».

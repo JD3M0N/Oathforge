@@ -44,7 +44,7 @@ Este documento no aprueba automáticamente un estilo, proveedor, presupuesto, re
 
 | Recurso o función | Comprobación | Qué recibe el jugador |
 |---|---|---|
-| Panorámica de Crownreach | Dos JPEG de 1280 × 720 en `content/world/terra_coronata/crownreach/images/`: día y noche (`panorama.night.jpg`), en el estilo aprobado (0.10.4) | «🏙️ Ver ciudad» desde el hub, nocturna de noche |
+| Panorámica de Crownreach | Dos JPEG de 1280 × 720 en `content/world/terra_coronata/crownreach/images/`: día y noche (`panorama.night.jpg`), en el estilo aprobado (0.10.4) | «🖼️ Ver lugar» en el hub (si la plaza no tiene imagen propia), nocturna de noche |
 | Retratos de las ocho clases | 16 JPEG de 768 × 1024: hombre y mujer por clase | Retrato de clase y sexo en `/sheet`; no retrato personal de linaje o equipo |
 | Bestiario ilustrado | 10 JPEG de 768 × 1024 | «🖼️ Ver ilustración» en la ficha de una criatura vista |
 | Consulta de monstruos | `/monster_<clave>` (0.7.19) | Imagen consultable desde el enlace al comenzar un combate |
@@ -54,7 +54,7 @@ Este documento no aprueba automáticamente un estilo, proveedor, presupuesto, re
 | Álbumes | `send_photos`, máximo 10 | Una foto o álbum |
 | Preparación de imágenes | `tools/prepare_image.py` | Recorte central, escala, `--trim-bottom` y exportación JPEG |
 | Procedencia adjunta | `.prompt.md` y `media.yaml` junto a cada imagen; `tests/test_content.py` exige ambos | Metadatos de producción; varios prompts siguen incompletos |
-| «Ver lugar» | Botón 🖼️ en cada escena (0.10.5), lee `<lugar>/images/` | La imagen del lugar (de noche, la `.night` si existe); sin imagen, una ventanita «aún no hay pintor» |
+| «Ver lugar» | Botón 🖼️ en cada escena (0.10.5), lee `<lugar>/images/` | La imagen del lugar (de noche, la `.night` si existe); en el hub, la de la ciudad si el lugar no tiene; sin imagen, una ventanita «aún no hay pintor». Sustituye a «Ver ciudad» (0.10.6) |
 | Dado decorativo | Tiradas manuales (`/settings`) | Animación d6 de Telegram; el resultado real lo calcula el d20 del motor |
 | Laboratorio | `content/officina/` (0.8.3), fuera del catálogo y de git | Nada: solo para pruebas de Josue |
 
@@ -375,9 +375,9 @@ La API admite fotos de hasta 10 MB, con suma de ancho y alto ≤ 10.000 y relaci
 content/world/world.yaml                       # start y orden de continentes
 content/world/<continente>/continent.yaml      # images/map.jpg (futuro)
 content/world/<continente>/<zona>/zone.yaml
-content/world/<continente>/<zona>/images/panorama.jpg         # «Ver ciudad»
+content/world/<continente>/<zona>/images/panorama.jpg         # «Ver lugar» en el hub
 content/world/<continente>/<zona>/images/panorama.night.jpg   # variante nocturna
-content/world/<continente>/<zona>/<lugar>/place.yaml          # hub: true → «Ver ciudad»
+content/world/<continente>/<zona>/<lugar>/place.yaml          # hub: true → su «Ver lugar» enseña la zona
 content/world/<continente>/<zona>/<lugar>/images/cover.jpg    # (futuro) «Ver lugar»
 content/classes/<clase>/images/portrait.male.jpg | portrait.female.jpg
 content/monsters/<criatura>/images/portrait.jpg

@@ -357,29 +357,18 @@ async def test_free_text_combat_and_injection(llm):
     assert any("arte de magia" in t_ for t_, _ in p.chat.sent[-2:])
 
 
-async def test_view_city_sends_panorama_once_then_reuses_file_id(llm, monkeypatch):
-    from oathforge.content.media import MediaCatalog
-
+async def test_view_place_in_the_plaza_shows_the_city_once_then_reuses_file_id(llm):
     p = Player(llm, tg_id=11)
     await create(p)
-    city = p.find("city")
-    await p.press(city)
+    assert not any(parse(d)[0] == "city" for d in p.buttons())  # one button: View place
+    place = p.find("place")
+    await p.press(place)  # the plaza has no art of its own: the city panorama
     assert isinstance(p.chat.photos[-1], bytes)  # first time: upload the file
     assert "Crownreach" in p.chat.sent[-2][0]  # caption, then the scene again below it
-    assert "Plaza de Crownreach" in p.last[0] and p.find("city")
+    assert "Plaza de Crownreach" in p.last[0] and p.find("place")
 
-    await p.press(city)
+    await p.press(place)
     assert p.chat.photos[-1] == "FILE1"  # second time: cached file_id, no upload
-
-    # no images in the catalog -> no button
-    monkeypatch.setattr(MediaCatalog, "zone_images", lambda self, zone, night=False: [])
-    await p.press("scene|-|-")
-    assert not any(parse(d)[0] == "city" for d in p.buttons())
-    monkeypatch.undo()
-
-    await p.press(p.find("trv"))
-    await p.press(p.find("go", "broken_crown_tavern"))
-    assert not any(parse(d)[0] == "city" for d in p.buttons())  # the tavern is not a hub
 
 
 async def test_view_place_sends_its_image_or_a_popup_when_there_is_none(llm, monkeypatch):
@@ -388,16 +377,18 @@ async def test_view_place_sends_its_image_or_a_popup_when_there_is_none(llm, mon
 
     p = Player(llm, tg_id=12)
     await create(p)
+    await p.press(p.find("trv"))
+    await p.press(p.find("go", "broken_crown_tavern"))  # not a hub: no city to fall back on
     photos, sent = len(p.chat.photos), len(p.chat.sent)
     await p.press(p.find("place"))  # no place has art yet
-    assert "pintor" in p.chat.popups[-1] and "la Plaza de Crownreach" in p.chat.popups[-1]
+    assert "pintor" in p.chat.popups[-1] and "la Taberna La Corona Rota" in p.chat.popups[-1]
     assert len(p.chat.photos) == photos and len(p.chat.sent) == sent
 
     panorama = get_content().media.zone_images("crownreach")
     monkeypatch.setattr(MediaCatalog, "location_images", lambda self, loc, night=False: panorama)
     await p.press(p.find("place"))
     assert len(p.chat.photos) == photos + 1
-    assert "Plaza de Crownreach" in p.chat.sent[-2][0] and p.find("place")  # caption, then the scene again
+    assert "Corona Rota" in p.chat.sent[-2][0] and p.find("place")  # its own caption, then the scene again
 
 
 async def test_hero_summary_and_full_sheet_with_portrait(llm):
