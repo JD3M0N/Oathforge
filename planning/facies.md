@@ -27,6 +27,52 @@ Resumen de [Possibilium §4](Possibilium.md#s04). Cómo se ve el juego en el cha
 - **Chat Wars** (`@chtwrsbot`): teclado fijo de 5 botones con emoji y 1–2 palabras, menús de 3 niveles como mucho y ⬅️ Volver siempre; las listas largas usan `/comandos` en el texto; las actividades con tiempo avisan al terminar con un mensaje corto con botín.
 - **AshWars** (`@AshWarsBot`, «Threnor»): cabeceras en MAYÚSCULAS con emoji y separador ━━━; barras ▰▱ para vida, maná y experiencia; atributos en dos columnas; línea «[ Estado: ⛺ Campamento ]»; pestañas inline con la activa marcada («·🎒Mochila·»); el mensaje pulsado se queda sin botones y el siguiente paso llega en uno nuevo; ventanita con el nombre del botón pulsado.
 
+### Ideas aprovechables (Chat Wars y AshWars, 18-10-2026)
+
+**Chat Wars** (`@chtwrsbot`, castillo Moonlight)
+- Menú principal de 4 botones en una cuadrícula 2×2 (🏅 Yo · 🗺 Misiones · 🏰 Castillo · 💬 Chat). Todo lo demás cuelga de ahí con ⬅ Volver.
+- Cabecera del héroe en una línea por dato: nivel con %, ⚔️/🛡 emparejados, 🔥 exp, ❤️ vida, 🔋 aguante `7/7`, 💰 oro, **«Estado: 🛌 Descanso»** (qué estás haciendo ahora) y «Más: /hero». El perfil corto cabe en una pantalla.
+- El perfil largo es una lista de atajos `/ach`, `/class`, `/stock`, `/settings`: los comandos clicables sustituyen a botones.
+- Cada actividad con tiempo dice su duración en el propio botón («🌳 Bosque 3 min»).
+- Un aviso de evento global en el menú («Batalla de los siete castillos en 2 h 2 min», «la taberna abre por la tarde»): da un porqué para volver.
+- Contenedores en el inventario: 🎒 Mochila · 📦 Recursos · 🗃 Varios, con «0/15» de capacidad. Es lo que ahora hacen nuestras pestañas.
+- Pega mucho el «esto va de hablar con otros»: el primer mensaje manda al chat de jugadores.
+
+**AshWars** (`@AshWarsBot`, Threnor)
+- Un solo `Hero` con pestañas inline: 🔎 Detalles · 🏅 Títulos / 👤 Héroe · 🎒 Mochila · 🗡 Equipo; la activa va entre puntos y se edita el mismo mensaje.
+- **Crafteo** (⛺ Campamento → 🔨 Montaje / ⚒️ Forja / ⚗️ Alquimia / 🛠️ Reparar):
+  - Las **estaciones se montan** con materiales (tienda de campaña 5 madera + 15 fibra; forja 5 carbón + 20 piedra + 5 hierro; caldero; fogón; altar rúnico) y son móviles.
+  - Cada estación lista sus recetas con 🔒 hasta montarla, con el motivo («Monta el Forja para habilitar esta operación»).
+  - Antes de montar, cada requisito sale como `▫️ 🪵 Madera 0/5` y una línea ⚠️ «te falta 0/5 🪵 Madera · 0/15 🌾 Fibra».
+  - Selector de **fuente de recursos** (🎒 Mochila / 📦 Baúl) en la propia pantalla.
+  - Lo que se gasta (consumibles) y lo que se queda (estaciones) se dice en la cabecera de cada taller.
+  - Relaciona con el TODO «fabricar sin estación fija»: aquí la estación es un objeto que se construye una vez.
+- **Salidas** (🍁 Quest → Cazar / Recolectar / Party): cada bioma con su descripción literaria y «20 s de marcha»; luego «⚔️ Incursión rápida» o «⛺ Asentar campamento». La incursión avisa de antemano de la fauna en la ruta y de qué se pierde si caes o huyes («se perderá todo el botín»), y deja un botón «🔄 Ver la incursión».
+- Misiones en un tablón con pestañas 📖 Historia · ⚔️ Sendas · 🧭 Tablón, recompensa resumida arriba (🎖 XP · 🪙 oro · 🧠 aprendizaje) y objetivos con ✅/▫️.
+- Los textos de arranque usan cabeceras en mayúsculas con emoji, y una barra ━━━.
+
+- **Combate de AshWars** (emboscada en la incursión): una sola tarjeta que se edita por turno, con ambos bandos (❤️ barra, 🔵 maná, ⚔️/🛡) y debajo el registro del turno en 2–3 líneas; el enemigo desconocido se llama «❓ ???» y se revela al ganar («¡Nuevo espécimen registrado!»). Botones: 4 acciones en 2×2 más 🧪 Objeto y 🏃 Huir. Al ganar, el botín en líneas con emoji (🟤 Cuero ×2 · 🥩 Carne ×2 · 🪙 +5 · 🎖 XP · 🏹 XP de Caza) y el desgaste del equipo. «Retirarse» pide confirmación diciendo qué se pierde y qué se conserva.
+- Una incursión larga se resuelve **dentro de la misma tarjeta**: tras el combate sigue «La extracción continúa» sin mensajes nuevos.
+
+**Crafteo probado de verdad** (monté la Tienda de campaña: 3 incursiones de recolección, cada una con su emboscada, hasta juntar 5 madera + 15 fibra):
+- El botón de montar solo aparece cuando los materiales están completos; no hay «intentar y fallar», el panel pasa de «materiales incompletos» a mostrar «🔧 Montar X» directamente.
+- Al craftear, un mensaje propio de confirmación («✅ Tienda de campaña montada y operativa») además de refrescar el panel con la lista.
+- La estación da una mejora medible de inmediato, no solo desbloquea recetas: la Tienda subió la curación del campamento de 25 %/h a 80 %/h. Se nota el resultado de haber invertido el material.
+- El contador de pendientes en el menú («🔨 Montaje (5)» → «(4)») baja al completar una estación: progreso visible del campamento en conjunto, no solo de cada receta.
+- Una estación bloqueada (sin Forja) igual muestra el coste de su receta («Coste: 0/1 Mineral de Hierro · 1 🪙»), para saber qué conseguir antes de poder usarla.
+- El bestiario recuerda entre encuentros: la segunda vez que salió el Antílope Cantautor (ya identificado antes) apareció con su nombre, no «❓ ???».
+
+**Para Oathforge (candidatas)**
+- [ ] Enemigo desconocido como «❓ ???» hasta derrotarlo o descubrirlo (ya tenemos el bestiario por tiers; mostrarlo en el combate), coherente con que ya se nombre una vez identificado.
+- [ ] Confirmación al abandonar/huir que diga qué se conserva y qué se pierde.
+- [ ] El botón de fabricar un objeto solo aparece con los materiales completos, no deshabilitado: ya es así en `craft_menu`; revisar que el de `activities_view` (herramientas) siga la misma regla.
+- [ ] Mostrar el coste de una receta aunque la estación esté bloqueada por otra regla (p. ej. una especialización no desbloqueada).
+- [ ] Línea de **estado actual** en la cabecera («Estado: ⛏️ Minando, 3 min») ya la tenemos en el panel de actividad; llevarla también a `/hero`.
+- [ ] Avisar **antes** de empezar de lo que se arriesga (como AshWars en la incursión: emboscada, qué se pierde). Ya hay un aviso en la expedición larga; unificarlo en la vista de Actividades.
+- [ ] Mostrar los ingredientes de una receta con `have/need` y una línea de «te falta» (ya en `craft_menu`; revisar el formato con el de AshWars).
+- [ ] Capacidad de la mochila `8/15` (decide con el cofre personal, F06).
+- [ ] Un aviso de **evento del mundo** en la escena o en el teclado (llegada de caravana, cambio de hora) para dar motivo de volver.
+
 ## Decidido
 
 - Interfaz progresiva: pocas opciones claras al principio.

@@ -4,6 +4,13 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.3] - 2026-10-18
+
+Solo documentación: no cambia el juego.
+
+### Añadido
+- `planning/facies.md`: notas de jugar en vivo con la cuenta de prueba en Chat Wars (castillo Moonlight) y AshWars — menú principal, perfil corto con estado actual, contenedores de inventario, el crafteo por estaciones móviles (probado montando una Tienda de campaña: botón solo con materiales completos, mejora medible al instante, contador de pendientes, coste visible aunque esté bloqueada) y el combate de incursión (enemigo oculto hasta identificarlo, confirmación al huir). Candidatas para revisar en F01/F08/F15; nada implementado todavía.
+
 ## [0.10.2] - 2026-10-18
 
 Interfaz (F01, 3.ª parte): inventario ordenado y un icono para cada cosa.
