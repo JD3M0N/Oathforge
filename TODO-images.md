@@ -67,7 +67,7 @@ Se ven con «🏙️ Ver ciudad» (hoy solo en lugares `hub`).
 
 ## Lugares · `<lugar>/images/cover.jpg`
 
-Para un futuro «🖼️ Ver lugar» (aún no existe el botón; el catálogo ya lee `location_images`). Por prioridad. 🌙 = el lugar tiene texto de noche: hacer también `cover.night.jpg`.
+Se ven con «🖼️ Ver lugar» (0.10.5); mientras falten, el botón responde con una ventanita. Por prioridad. 🌙 = el lugar tiene texto de noche: hacer también `cover.night.jpg`.
 
 ### Primer lote
 

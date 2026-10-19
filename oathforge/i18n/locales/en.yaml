@@ -183,6 +183,7 @@ btn:
   recommended: "⭐ Recommended ({cls})"
   reset_points: "🔄 Reset"
   view_city: "🏙️ View city"
+  view_place: "🖼️ View place"
   back: "⬅️ Back"
   leave: "👋 Say goodbye"
   sell: "💰 Sell"
@@ -206,6 +207,7 @@ scene:
   night: "🌙 {clock} · dawn in {minutes} min"
   status: "{time} · ❤️ {hp}/{max_hp} · 🪙 {gold}"
   people: "👥 Here:"
+  no_image: "🎨 No painter has set up an easel in {place} yet. For now, you'll have to imagine it."
   hint: "Type any action or use the buttons."
 
 map:

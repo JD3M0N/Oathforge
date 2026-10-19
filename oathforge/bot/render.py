@@ -255,6 +255,7 @@ async def scene(session: AsyncSession, char: Character, lang: str,
         buttons.append(btn(t(lang, "btn.activities", n=things), cb("acts")))
     if loc.hub and c.media.zone_images(loc.zone, night):
         buttons.append(btn(t(lang, "btn.view_city"), cb("city")))
+    buttons.append(btn(t(lang, "btn.view_place"), cb("place")))
     rows = grid(buttons)
     trip_to = exploration.trip(char) if char.state == "idle" else None
     if trip_to:  # an ambush stopped the trip halfway: carry on in one tap
@@ -622,6 +623,13 @@ def zone_caption(zone_key: str, lang: str) -> str:
     zone = get_content().zones[zone_key]
     desc = zone.night if exploration.is_night() and zone.night else zone.description
     return f"🏙️ <b>{escape(zone.name.get(lang))}</b>\n\n{escape(desc.get(lang))}"
+
+
+def place_caption(loc_key: str, lang: str) -> str:
+    """Caption for the place's images ("View place"): name and day/night description."""
+    loc = get_content().locations[loc_key]
+    desc = loc.night if exploration.is_night() and loc.night else loc.description
+    return f"🖼️ <b>{escape(loc.name.get(lang))}</b>\n\n{escape(desc.get(lang))}"
 
 
 def _place_activities(loc_key: str, lang: str) -> str:

@@ -28,7 +28,7 @@ log = logging.getLogger(__name__)
 
 # verbs that only show something (no nonce, no state change)
 VIEWS = {"scene", "trv", "trvz", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jrl", "jrs", "jq", "jrb", "jb", "jbi", "jrr",
-         "shopm", "shop", "shopg", "sellm", "cbp", "lang", "city", "cls", "clsl", "rep", "prof", "profsw", "profcf", "pg", "crf", "rb", "repf",
+         "shopm", "shop", "shopg", "sellm", "cbp", "lang", "city", "place", "cls", "clsl", "rep", "prof", "profsw", "profcf", "pg", "crf", "rb", "repf",
          "mst", "hob", "acts"}
 
 
@@ -39,7 +39,7 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         await answer(update, t(context.user_data.get("lang", "es"), "err.rate"))
         answered(update)
         return
-    if verb != "cb" and verb not in ACTS:  # actions answer once they know (a refusal is a popup)
+    if verb not in ("cb", "place") and verb not in ACTS:  # these answer once they know (a refusal is a popup)
         await answer(update)
     try:
         if verb in ("ach", "achm"):
@@ -105,6 +105,15 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
                 await send_photos(session, update, context, images, render.zone_caption(loc.zone, lang))
             text, kb = await current_view(session, char, lang)
             await send(update, text, kb)  # the scene again, so its buttons stay below the photo
+            return
+        if verb == "place" and not in_combat:
+            images = get_content().media.location_images(char.location, exploration.is_night())
+            if not images:  # no art yet: a short popup, the scene stays as it is
+                await answer(update, t(lang, "scene.no_image", place=loc.phrase()[lang]))
+                return
+            await send_photos(session, update, context, images, render.place_caption(char.location, lang))
+            text, kb = await current_view(session, char, lang)
+            await send(update, text, kb)
             return
         if verb == "sheet":
             images = get_content().media.class_images(char.class_key, char.gender)

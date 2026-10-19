@@ -54,6 +54,7 @@ Este documento no aprueba automáticamente un estilo, proveedor, presupuesto, re
 | Álbumes | `send_photos`, máximo 10 | Una foto o álbum |
 | Preparación de imágenes | `tools/prepare_image.py` | Recorte central, escala, `--trim-bottom` y exportación JPEG |
 | Procedencia adjunta | `.prompt.md` y `media.yaml` junto a cada imagen; `tests/test_content.py` exige ambos | Metadatos de producción; varios prompts siguen incompletos |
+| «Ver lugar» | Botón 🖼️ en cada escena (0.10.5), lee `<lugar>/images/` | La imagen del lugar (de noche, la `.night` si existe); sin imagen, una ventanita «aún no hay pintor» |
 | Dado decorativo | Tiradas manuales (`/settings`) | Animación d6 de Telegram; el resultado real lo calcula el d20 del motor |
 | Laboratorio | `content/officina/` (0.8.3), fuera del catálogo y de git | Nada: solo para pruebas de Josue |
 
@@ -63,7 +64,7 @@ Las diez criaturas: bandido, capitán bandido, goblin explorador, lobo gris, esq
 
 ### PLANIFICADO, TODAVÍA NO IMPLEMENTADO
 
-- Imagen por lugar y botón «Ver lugar»; retratos de NPC e integración.
+- Imágenes de los lugares (el botón ya existe); retratos de NPC e integración.
 - Música de taberna y ambientes opcionales; banco de voces y TTS de momentos importantes.
 - Mapas ilustrados de continente, ciudad y mazmorra con posición y niebla individual.
 - Tarjeta compartible de personaje, marcos y pack de stickers.

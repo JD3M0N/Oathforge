@@ -382,6 +382,24 @@ async def test_view_city_sends_panorama_once_then_reuses_file_id(llm, monkeypatc
     assert not any(parse(d)[0] == "city" for d in p.buttons())  # the tavern is not a hub
 
 
+async def test_view_place_sends_its_image_or_a_popup_when_there_is_none(llm, monkeypatch):
+    from oathforge.content import get_content
+    from oathforge.content.media import MediaCatalog
+
+    p = Player(llm, tg_id=12)
+    await create(p)
+    photos, sent = len(p.chat.photos), len(p.chat.sent)
+    await p.press(p.find("place"))  # no place has art yet
+    assert "pintor" in p.chat.popups[-1] and "la Plaza de Crownreach" in p.chat.popups[-1]
+    assert len(p.chat.photos) == photos and len(p.chat.sent) == sent
+
+    panorama = get_content().media.zone_images("crownreach")
+    monkeypatch.setattr(MediaCatalog, "location_images", lambda self, loc, night=False: panorama)
+    await p.press(p.find("place"))
+    assert len(p.chat.photos) == photos + 1
+    assert "Plaza de Crownreach" in p.chat.sent[-2][0] and p.find("place")  # caption, then the scene again
+
+
 async def test_hero_summary_and_full_sheet_with_portrait(llm):
     from oathforge.bot.handlers import commands
 

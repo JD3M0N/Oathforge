@@ -4,6 +4,13 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.5] - 2026-10-18
+
+Audiovisual (F02, 2.ª parte): «Ver lugar».
+
+### Añadido
+- **🖼️ Ver lugar** en cada escena: envía la imagen del lugar (la nocturna de noche, si la hay) con su nombre y descripción, y la escena debajo. Si el lugar aún no tiene imagen, una ventanita: «🎨 Ningún pintor ha plantado aún su caballete en la Plaza de Crownreach. Por ahora, tendrás que imaginarlo.»
+
 ## [0.10.4] - 2026-10-18
 
 Audiovisual (F02, 1.ª parte): estilo visual y Crownreach de día y de noche.

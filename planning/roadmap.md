@@ -188,7 +188,7 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 
 - [x] Aprobar biblia visual breve antes de producir nuevos lotes (0.10.4: estilo gouache de libro de rol, prompt base y regla de noche en `TODO-images.md`; Crownreach de día y de noche).
 - [ ] Primera tanda propuesta: mapa de Crownreach y alrededores, tres lugares prioritarios y un PNJ; añadir linajes progresivamente.
-- [ ] Completar «Ver lugar» con activos existentes y respaldo cuando falte imagen.
+- [x] Completar «Ver lugar» con activos existentes y respaldo cuando falte imagen (0.10.5: botón 🖼️ Ver lugar en cada escena; sin imagen, una ventanita que lo dice).
 - [ ] Vincular cada activo con catálogo, prompt y procedencia; reutilizarlo sin generación por turno.
 
 **Flujo de jugador:** Mapa → Ver mapa ilustrado; Lugar → Ver lugar. La imagen no desbloquea caminos.
