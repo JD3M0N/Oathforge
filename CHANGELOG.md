@@ -4,6 +4,18 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.4] - 2026-10-18
+
+Audiovisual (F02, 1.ª parte): estilo visual y Crownreach de día y de noche.
+
+### Añadido
+- **Crownreach de noche** (`panorama.night.jpg`): «🏙️ Ver ciudad» la enseña cuando es de noche en el juego.
+- `TODO-images.md` en la raíz: las imágenes que faltan (zonas, mapa, los 17 lugares, PNJ, linajes, eventos, avatar y emblema) con su ruta y su prompt sugerido, más cómo hacer la versión de noche desde la de día.
+
+### Cambiado
+- **Estilo visual decidido**: ilustración de libro de rol en gouache, con un sufijo común para todos los prompts (`planning/ars.md` §5).
+- Nueva panorámica de Crownreach de día en ese estilo.
+
 ## [0.10.3] - 2026-10-18
 
 Solo documentación: no cambia el juego.

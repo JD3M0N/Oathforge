@@ -83,12 +83,13 @@ def test_world_hierarchy():
     assert c.locations["crypt_sanctum"].zone == "sunken_crypt"
 
 
-def test_media_catalog_finds_city_panorama_and_falls_back_at_night():
+def test_media_catalog_finds_city_panorama_by_time_of_day():
     c = load_content()
     day = c.media.zone_images("crownreach", night=False)
     assert [a.key for a in day] == ["terra_coronata/crownreach/images/panorama.jpg"]
     assert day[0].path.is_file() and len(day[0].checksum) == 64
-    assert c.media.zone_images("crownreach", night=True) == day  # no night variant yet
+    night = c.media.zone_images("crownreach", night=True)
+    assert [a.key for a in night] == ["terra_coronata/crownreach/images/panorama.night.jpg"]
     assert c.media.zone_images("thornwood") == []
 
 

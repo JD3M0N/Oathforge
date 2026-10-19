@@ -1,13 +1,15 @@
 # Prompt de `panorama.jpg`
 
-Prompt con el que se generó la imagen de al lado. Créditos y licencia en `media.yaml`.
+Prompt de la imagen de al lado. Créditos y licencia en `media.yaml`. Es el prompt base de estilo de Oathforge (ver `TODO-images.md`).
 
 - Herramienta: Leonardo AI
-- Fecha: 2026-10-11
-- Tamaño original: 1344x768
+- Fecha: 2026-10-18
+- Tamaño recibido: 1280x731 (16:9 en el generador)
 
 ## Prompt
 
 ```text
-Wide establishing shot of Crownreach, a prosperous medieval high fantasy capital built along a river, massive pale stone cathedral, fortified citadel on a hill, lively market square, teal and golden banners, warm late afternoon sunlight, detailed painterly fantasy RPG illustration, coherent medieval architecture, cinematic environment concept art, no text, no watermark, 16:9.
+Crownreach, a medieval fantasy capital beside a river, seen from a nearby hillside. Stone bridges, red tiled roofs, a pale stone cathedral by the central square, a fortified castle on the hill behind. Teal and gold banners, market stalls, small distant townspeople. Warm afternoon sunlight. Tabletop RPG book illustration in opaque gouache, fine details, earthy colors with jewel-toned accents, subtle painted texture. Full-bleed, no border, no text, no watermark.
 ```
+
+Versión reducida del prompt largo de Josue (gouache, «balanced composition», «sense of adventure»…): lo esencial, misma imagen.

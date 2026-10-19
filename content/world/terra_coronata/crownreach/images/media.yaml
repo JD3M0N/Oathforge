@@ -1,6 +1,11 @@
 # Créditos y licencia de cada archivo de esta carpeta (planning/ars.md §Licencias).
 panorama.jpg:
   author: Josue
-  source: generada con IA y aportada por Josue (2026-10-11)
+  source: Leonardo AI, aportada por Josue (2026-10-18)
   license: uso propio del proyecto
-  notes: original 1344x768; recorte central y escala a 1280x720 con tools/prepare_image.py
+  notes: nueva visión de Crownreach en el estilo gouache (sustituye a la de 2026-10-11); recibida a 1280x731, recorte central a 1280x720 con tools/prepare_image.py
+panorama.night.jpg:
+  author: Josue
+  source: Leonardo AI, aportada por Josue (2026-10-18)
+  license: uso propio del proyecto
+  notes: variante nocturna de panorama.jpg; original 1344x768, recorte central y escala a 1280x720 con tools/prepare_image.py

@@ -44,7 +44,7 @@ Este documento no aprueba automáticamente un estilo, proveedor, presupuesto, re
 
 | Recurso o función | Comprobación | Qué recibe el jugador |
 |---|---|---|
-| Panorámica de Crownreach | Un JPEG de 1280 × 720 en `content/world/terra_coronata/crownreach/images/` | «🏙️ Ver ciudad» desde el hub |
+| Panorámica de Crownreach | Dos JPEG de 1280 × 720 en `content/world/terra_coronata/crownreach/images/`: día y noche (`panorama.night.jpg`), en el estilo aprobado (0.10.4) | «🏙️ Ver ciudad» desde el hub, nocturna de noche |
 | Retratos de las ocho clases | 16 JPEG de 768 × 1024: hombre y mujer por clase | Retrato de clase y sexo en `/sheet`; no retrato personal de linaje o equipo |
 | Bestiario ilustrado | 10 JPEG de 768 × 1024 | «🖼️ Ver ilustración» en la ficha de una criatura vista |
 | Consulta de monstruos | `/monster_<clave>` (0.7.19) | Imagen consultable desde el enlace al comenzar un combate |
@@ -57,7 +57,7 @@ Este documento no aprueba automáticamente un estilo, proveedor, presupuesto, re
 | Dado decorativo | Tiradas manuales (`/settings`) | Animación d6 de Telegram; el resultado real lo calcula el d20 del motor |
 | Laboratorio | `content/officina/` (0.8.3), fuera del catálogo y de git | Nada: solo para pruebas de Josue |
 
-Inventario binario: **27 imágenes**, unos **3,21 MB** en total (16 de clase 1,916 MB; 10 de criaturas 1,064 MB; ciudad 0,232 MB).
+Inventario binario: **28 imágenes** (16 de clase 1,916 MB; 10 de criaturas 1,064 MB; ciudad de día y de noche 0,30 MB). Lo que falta, con su prompt, está en [`TODO-images.md`](../TODO-images.md).
 
 Las diez criaturas: bandido, capitán bandido, goblin explorador, lobo gris, esqueleto de la cripta, Guardián de la Cripta, jabalí, murciélago de cueva, Viejo Colmillo y rata gigante. El Guardián es **Ser Aldren**, un caballero muerto que custodia el relicario (canon del YAML). Su armadura, rostro y color de brillo necesitan referencia artística aprobada. El Viejo Colmillo es desde la 0.8.2 el jefe final del tutorial: candidato a ilustración de evento.
 
@@ -106,6 +106,14 @@ Los prompts de Paladín no especifican variaciones por sexo; otros archivos son 
 11. Las pruebas se hacen en `content/officina/`; solo se integra un activo aprobado.
 
 ## 5. Biblia visual propuesta
+
+**DECISIÓN (0.10.4): estilo de libro de rol en gouache.** Josue lo eligió con la nueva Crownreach de día y de noche. Sufijo común de todos los prompts:
+
+```text
+Tabletop RPG book illustration in opaque gouache, fine details, earthy colors with jewel-toned accents, subtle painted texture. Full-bleed, no border, no text, no watermark.
+```
+
+Orden del prompt: qué es y desde dónde se ve → detalles concretos → luz en una frase → estilo. Las versiones de noche salen de la imagen de día aprobada (Image to Image o edición), cambiando solo la frase de luz. Prompt base, regla de noche y lista de pendientes en [`TODO-images.md`](../TODO-images.md). Los estilos de §6 quedan como histórico de la exploración; las 26 imágenes anteriores se rehacen al nuevo estilo con baja prioridad.
 
 **PROPUESTA NUEVA: fantasía de juramentos, civilización y ruinas**, con lugares habitables y cálidos que contrasten con lo inquietante del exterior. No convertir Aetherfall en una sucesión de oscuridad y calaveras.
 
@@ -471,7 +479,7 @@ Hecho en la v0.8.3:
 
 ## 18. Preguntas abiertas
 
-- ¿A, B, C, D o E como estilo principal? Recomendación: comparar A y B primero.
+- ~~¿A, B, C, D o E como estilo principal?~~ Resuelto en 0.10.4: gouache de libro de rol (§5).
 - ¿Imagen siempre a petición o primera visita automática? Recomendación: a petición durante la beta.
 - ¿Quién aprueba calidad y procedencia? Propuesta: Josue o una persona delegada.
 - ¿Voz ES/EN desde el primer piloto? Recomendación: sí, para las pocas frases del piloto.

@@ -186,7 +186,7 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 
 **Propuesta base 0.10:**
 
-- [ ] Aprobar biblia visual breve antes de producir nuevos lotes.
+- [x] Aprobar biblia visual breve antes de producir nuevos lotes (0.10.4: estilo gouache de libro de rol, prompt base y regla de noche en `TODO-images.md`; Crownreach de día y de noche).
 - [ ] Primera tanda propuesta: mapa de Crownreach y alrededores, tres lugares prioritarios y un PNJ; añadir linajes progresivamente.
 - [ ] Completar «Ver lugar» con activos existentes y respaldo cuando falte imagen.
 - [ ] Vincular cada activo con catálogo, prompt y procedencia; reutilizarlo sin generación por turno.
