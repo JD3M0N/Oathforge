@@ -22,6 +22,7 @@ Versionado `0.x.y`: **y** (parche) en arreglos y cambios pequeños; **x** (menor
 | 0.8.3 | Planning reorganizado: Possibilium, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md`, `content/officina/` |
 | 0.9.0 | Logros e identidad: 30 logros, dos metalogros, títulos, destacados, objetivos seguidos y reconocimiento retroactivo verificable |
 | 0.9.1 | Hoja de ruta de 0.10 (consolidación) y 0.11 (multijugador): `planning/roadmap.md` |
+| 0.10.8 | Logros (F04): auditoría, un solo nombre «Logros», título visible en la ficha y para la IA, y cuatro logros nuevos con un título |
 | 0.10.7 | Diario y reglamento (F03): diario por pestañas con portada «Ahora», Crónica del héroe desde los hechos del motor, estadísticas verificables y reglamento con las cifras del motor |
 | 0.10.2 | Interfaz (F01, 3.ª parte): inventario por pestañas e icono para cada objeto |
 | 0.10.1 | Interfaz (F01, 2.ª parte): tiradas con bono y veredicto, leyenda de `/sheet`, artículos por lugar («al Mercado») y singular automático |

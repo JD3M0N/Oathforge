@@ -1012,7 +1012,10 @@ async def sheet(session: AsyncSession, char: Character, lang: str) -> tuple[str,
     gear = await characters.equipped(session, char)
     skills = await characters.skills_of(session, char)
     lines = _sheet_top(c, cls, char, gear, lang)
+    title = achievement_views.title_of(await achievements.snapshot(session, char), lang)
     extra = [f"<i>{escape(cls.description.get(lang))}</i>"]
+    if title:
+        extra.insert(0, f"🏅 <b>{escape(title)}</b>")
     if char.specialization in cls.specializations:
         extra.insert(0, t(lang, "sheet.specialization", name=escape(cls.specializations[char.specialization].get(lang))))
     lines[2:2] = extra
@@ -1325,7 +1328,10 @@ async def chronicle(session: AsyncSession, char: Character, lang: str,
     """The journal's chronicle: the facts the engine recorded, newest first. No AI: every line is an event."""
     number = int(page) if str(page).lstrip("-").isdigit() else 0
     facts, more, first_day = await chronicle_log.page(session, char, number)
+    title = achievement_views.title_of(await achievements.snapshot(session, char), lang)
     lines = [t(lang, "book.title"), RULE]
+    if title:
+        lines.insert(1, t(lang, "book.by", name=escape(char.name), title=escape(title)))
     day = None
     old = False
     for fact in facts:

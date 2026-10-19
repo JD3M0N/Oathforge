@@ -240,6 +240,20 @@ async def backfill_character(session, char):
     return await apply_events(session, char, events)
 
 
+async def equipped_title(session, char):
+    """The title the hero wears, as content Text, or None. Cheap: one row and a catalog lookup."""
+    prefs = await session.get(AchievementPreferences, char.id)
+    if prefs is None or not prefs.title:
+        return None
+    definition = get_content().achievements.get(prefs.title)
+    if definition is None or definition.title is None:
+        return None
+    unlocked = await session.scalar(select(AchievementUnlock.id).where(
+        AchievementUnlock.character_id == char.id, AchievementUnlock.achievement_key == prefs.title,
+        AchievementUnlock.edition == EDITION))
+    return definition.title if unlocked else None
+
+
 async def snapshot(session, character):
     catalog = get_content().achievements
     rows = {r.achievement_key: r for r in (await session.scalars(select(AchievementProgress).where(
@@ -274,6 +288,8 @@ async def preference(session, char, operation, key, nonce, replace=None):
     unlock = await session.scalar(select(AchievementUnlock.id).where(
         AchievementUnlock.character_id == char.id, AchievementUnlock.achievement_key == key,
         AchievementUnlock.edition == EDITION))
+    if key == "-" and operation != "title":  # "-" only means "take off the title"
+        return Outcome.refused("achievements.invalid")
     if key != "-" and (definition is None or (definition.visibility == "hidden" and unlock is None)):
         return Outcome.refused("achievements.invalid")
     if operation in ("title", "feature") and key != "-" and unlock is None:

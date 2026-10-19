@@ -108,3 +108,13 @@ La cuenta de prueba conserva su idioma original y quedó sin los destacados ni o
 - [x] `/rulebook`: descanso y emboscada con las cifras del motor y la frase de beta (Telegram); cada marcador tiene valor (automático).
 - [x] Migración 0010 en una base de prueba: los recibos se conservan como `legacy`, y `downgrade` los devuelve.
 - [ ] Un logro nuevo durante la partida aparece en la Crónica como «🏆 Logro: …» (Telegram).
+
+## 0.10.8 — Logros auditados (F04)
+- [x] Toda la interfaz dice «Logros» y «puntos de logro» (Telegram, ES).
+- [x] El título sale junto al nombre en `/sheet` y en la cabecera del Libro (render con un personaje con título).
+- [x] El título llega al narrador y a los PNJ como dato (automático).
+- [x] Una expedición o rastreo perdido no cuenta como actividad (automático).
+- [x] Destacar o seguir con la clave «-» se rechaza (automático).
+- [ ] «Héroe de Crownreach» al llegar a nivel 5, con su título (Telegram).
+- [ ] «Oficial del gremio» al alcanzar rango 2 en un oficio (Telegram).
+- [ ] Los dos ocultos no aparecen en Pendientes y sí al conseguirlos (Telegram).

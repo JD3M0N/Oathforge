@@ -109,13 +109,22 @@ def view(data, lang, arg="-"):
     ]
     return "\n".join(lines), markup(rows)
 
+def title_of(data, lang) -> str | None:
+    """The equipped title, if it is really unlocked: the sheet, the book and the narrator all show it."""
+    entries = {e["key"]: e for e in data["entries"]}
+    title = entries.get(data["preferences"]["title"])
+    if title and title["unlock"] and title["definition"].title:
+        return title["definition"].title.get(lang)
+    return None
+
+
 def identity(data, lang):
     prefs = data["preferences"]
     entries = {e["key"]: e for e in data["entries"]}
     lines = []
-    title = entries.get(prefs["title"])
-    if title and title["unlock"] and title["definition"].title:
-        lines.append(f'🏅 <b>{escape(title["definition"].title.get(lang))}</b>')
+    title = title_of(data, lang)
+    if title:
+        lines.append(f"🏅 <b>{escape(title)}</b>")
     featured = [label(entries[k], lang) for k in prefs["featured"] if k in entries and entries[k]["unlock"]]
     if featured:
         lines.append("🏆 " + " · ".join(featured))

@@ -51,7 +51,7 @@ La serie 0.9 ya está publicada: **0.9.0** trajo los logros y **0.9.1** este doc
 | 0.10-A · Acordar y asegurar | 0.10.3 | Idempotencia del texto libre y reserva atómica de IA (CORE-01..03, AI-01..02); prueba de 1.000 repeticiones |
 | 0.10-B · Orientar al jugador (resto) | **0.10.7** (F03) y 0.10.8 | 0.10.7 F03: diario por pestañas, Crónica del héroe, estadísticas verificables y reglamento desde el motor; después la corrección crítica de F11: confianza determinista y servicios de Bram |
 | 0.10-C · Bucles cotidianos | 0.10.5 – 0.10.6 | Descanso corto y `/rest`; cofre personal; «Algo brilla» |
-| 0.10-D · Dar propósito | 0.10.7 | Entrega de misiones al dador; juramento verificable; auditoría de logros |
+| 0.10-D · Dar propósito | **0.10.8** (logros) y 0.10.9 | 0.10.8 auditoría de logros, nombre único y título visible; después entrega de misiones al dador y juramento verificable |
 | 0.10-E · Reglas de combate | 0.10.8 | Contrato de acción, estados y jefe de dos fases; matriz de ocho clases |
 | 0.10-F · Profundizar progresión | 0.10.9 | Auditoría de recetas y economía; primeras ramas de especialización |
 | 0.10-G · Integrar | 0.10.10 | Tutorial completo ES/EN, arco de nivel 5, lote visual |
@@ -244,7 +244,7 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 - [x] Colección inicial (0.9.0 entregó 30, más que los 12 propuestos): exploración, combate, bestiario, fabricación, aficiones y misiones; evitar premiar spam de mensajes.
 - [x] Conceder cada logro una vez con unicidad por personaje y logro; separar desbloqueo de notificación (0.9.0).
 - [x] Reconstruir únicamente logros demostrables con datos existentes (0.9.0, `oath achievements-backfill`).
-- [ ] Añadir logros de lo que 0.10 estrene (entrega de misiones, juramento, especializaciones, cofre) sin romper la unicidad ni el backfill.
+- [x] Añadir logros de lo que 0.10 estrene (entrega de misiones, juramento, especializaciones, cofre) sin romper la unicidad ni el backfill (0.10.8: cuatro logros nuevos sobre lo que ya existe —nivel 5 con título, rango 2 de oficio y dos ocultos— en la misma edición `v0_9`, que es la única que el servicio consulta; los de entrega, juramento, cofre y especialización llegarán con F12/F17/F08/F19, y a sus servicios solo les falta emitir el hecho).
 
 **Flujo de jugador:** Derrotas al Viejo Colmillo → «Logro: Un colmillo menos / One Tusk Less» → ver título en Diario.
 
@@ -253,6 +253,8 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 **Se considera terminado cuando:** Replay de la victoria no duplica título ni premio; ES/EN cambian el texto, no el ID.
 
 **Archivos a revisar/actualizar:** [planning/progressio.md](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/planning/progressio.md), [oathforge/services/events.py](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/oathforge/services/events.py), [oathforge/services/characters.py](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/oathforge/services/characters.py), [oathforge/services/bestiary.py](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/oathforge/services/bestiary.py).
+
+**Estado (0.10.8):** auditada. Arreglado: las actividades perdidas no cuentan, el nivel real de cada desafío, la clave «-» y el `outside` del backfill (0.10.7). Un solo nombre, «Logros», y el título visible en `/sheet`, en el Libro del Héroe y como dato para la IA.
 
 **Ampliación o frontera 0.11:** Logros de grupo/gremio/PvP en 0.11; ningún logro individual exige amigos.
 

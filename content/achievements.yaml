@@ -10,7 +10,7 @@ beyond_gates:
     es: Viaja desde Crownreach a un lugar exterior.
     en: Travel from Crownreach to a place outside the city.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Más allá de las puertas.'
+    es: 'Tu historia recuerda este logro: Más allá de las puertas.'
     en: 'Your story remembers this feat: Beyond the Gates.'
   points: 10
   condition:
@@ -30,7 +30,7 @@ know_city:
     es: Visita la plaza, taberna, mercado, talleres y capilla de Crownreach.
     en: Visit Crownreach's plaza, tavern, market, workshops and chapel.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Conoce tu ciudad.'
+    es: 'Tu historia recuerda este logro: Conoce tu ciudad.'
     en: 'Your story remembers this feat: Know Your City.'
   points: 40
   condition:
@@ -56,7 +56,7 @@ whispers:
     es: Visita el Bosque de los Susurros.
     en: Visit Whispering Woods.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Entre susurros.'
+    es: 'Tu historia recuerda este logro: Entre susurros.'
     en: 'Your story remembers this feat: Into the Whispering Woods.'
   points: 10
   condition:
@@ -76,7 +76,7 @@ beneath_crown:
     es: Obtén acceso a la Cripta Hundida.
     en: Gain access to the Sunken Crypt.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Bajo la corona.'
+    es: 'Tu historia recuerda este logro: Bajo la corona.'
     en: 'Your story remembers this feat: Beneath the Crown.'
   points: 10
   condition:
@@ -96,7 +96,7 @@ no_stone:
     es: Resuelve con éxito tres descubrimientos distintos.
     en: Successfully resolve three distinct discoveries.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Ninguna piedra sin mover.'
+    es: 'Tu historia recuerda este logro: Ninguna piedra sin mover.'
     en: 'Your story remembers this feat: No Stone Unturned.'
   points: 20
   condition:
@@ -118,7 +118,7 @@ map_keeper:
       Prado de los Colmillos y la Mina del Paso Viejo.
     en: Visit Crownreach's five places, Old King's Road, Whispering Woods, Tusk Meadow and Old Pass Mine.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Un mapa que conservar.'
+    es: 'Tu historia recuerda este logro: Un mapa que conservar.'
     en: 'Your story remembers this feat: A Map Worth Keeping.'
   points: 40
   condition:
@@ -148,7 +148,7 @@ first_victory:
     es: Gana tu primer combate.
     en: Win your first battle.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Primera victoria.'
+    es: 'Tu historia recuerda este logro: Primera victoria.'
     en: 'Your story remembers this feat: First Victory.'
   points: 10
   condition:
@@ -168,7 +168,7 @@ cryptbreaker:
     es: Derrota al Guardián de la Cripta.
     en: Defeat the Crypt Warden.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Rompecriptas.'
+    es: 'Tu historia recuerda este logro: Rompecriptas.'
     en: 'Your story remembers this feat: Cryptbreaker.'
   points: 40
   condition:
@@ -188,12 +188,12 @@ last_breath:
     es: El último aliento
     en: The Last Breath
   description:
-    es: Gana con exactamente 1 PV. Encuentro no fijo de dos lobos grises en el Bosque de los Susurros
-      o dos murciélagos en la Mina del Paso Viejo, iniciado a nivel 3–5.
-    en: Win with exactly 1 HP. Non-fixed encounter with two grey wolves in Whispering Woods or two cave
-      bats in Old Pass Mine, started at level 3–5.
+    es: Gana con exactamente 1 PV. Encuentro no fijo de dos lobos grises en el Bosque de los Susurros (desde nivel 4)
+      o dos murciélagos en la Mina del Paso Viejo (desde nivel 3), iniciado a nivel 5 o antes.
+    en: Win with exactly 1 HP. Non-fixed encounter with two grey wolves in Whispering Woods (from level 4) or two cave
+      bats in Old Pass Mine (from level 3), started at level 5 or below.
   earned:
-    es: 'Tu historia recuerda esta hazaña: El último aliento.'
+    es: 'Tu historia recuerda este logro: El último aliento.'
     en: 'Your story remembers this feat: The Last Breath.'
   points: 40
   condition:
@@ -212,12 +212,12 @@ against_many:
     es: Contra varios
     en: Against the Odds
   description:
-    es: Gana contra ambos enemigos. Encuentro no fijo de dos lobos grises en el Bosque de los Susurros
-      o dos murciélagos en la Mina del Paso Viejo, iniciado a nivel 3–5.
-    en: Defeat both enemies. Non-fixed encounter with two grey wolves in Whispering Woods or two cave
-      bats in Old Pass Mine, started at level 3–5.
+    es: Gana contra ambos enemigos. Encuentro no fijo de dos lobos grises en el Bosque de los Susurros (desde nivel 4)
+      o dos murciélagos en la Mina del Paso Viejo (desde nivel 3), iniciado a nivel 5 o antes.
+    en: Defeat both enemies. Non-fixed encounter with two grey wolves in Whispering Woods (from level 4) or two cave
+      bats in Old Pass Mine (from level 3), started at level 5 or below.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Contra varios.'
+    es: 'Tu historia recuerda este logro: Contra varios.'
     en: 'Your story remembers this feat: Against the Odds.'
   points: 40
   condition:
@@ -237,13 +237,13 @@ no_reserves:
     en: Without Reserves
   description:
     es: Gana sin consumir pociones, bombas, pergaminos ni otros objetos durante el combate. Los efectos
-      anteriores cuentan como permitidos. Encuentro no fijo de dos lobos grises en el Bosque de los Susurros
-      o dos murciélagos en la Mina del Paso Viejo, iniciado a nivel 3–5.
+      anteriores cuentan como permitidos. Encuentro no fijo de dos lobos grises en el Bosque de los Susurros (desde nivel 4)
+      o dos murciélagos en la Mina del Paso Viejo (desde nivel 3), iniciado a nivel 5 o antes.
     en: Win without consuming potions, bombs, scrolls or other items during combat. Effects applied beforehand
-      are allowed. Non-fixed encounter with two grey wolves in Whispering Woods or two cave bats in Old
-      Pass Mine, started at level 3–5.
+      are allowed. Non-fixed encounter with two grey wolves in Whispering Woods (from level 4) or two cave bats in Old
+      Pass Mine (from level 3), started at level 5 or below.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Sin reservas.'
+    es: 'Tu historia recuerda este logro: Sin reservas.'
     en: 'Your story remembers this feat: Without Reserves.'
   points: 40
   condition:
@@ -265,7 +265,7 @@ surroundings:
     es: Usa con éxito un objeto del escenario en combate.
     en: Successfully use a scene object in combat.
   earned:
-    es: 'Tu historia recuerda esta hazaña: El escenario también lucha.'
+    es: 'Tu historia recuerda este logro: El escenario también lucha.'
     en: 'Your story remembers this feat: Use Your Surroundings.'
   points: 20
   condition:
@@ -284,7 +284,7 @@ handmade:
     es: Completa una fabricación.
     en: Complete a crafting recipe.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Hecho con mis manos.'
+    es: 'Tu historia recuerda este logro: Hecho con mis manos.'
     en: 'Your story remembers this feat: Made by My Hands.'
   points: 10
   condition:
@@ -303,7 +303,7 @@ trade_tools:
     es: Resuelve una actividad con la herramienta requerida validada al iniciarla.
     en: Resolve an activity whose required tool was checked at its start.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Herramientas del oficio.'
+    es: 'Tu historia recuerda este logro: Herramientas del oficio.'
     en: 'Your story remembers this feat: Tools of the Trade.'
   points: 10
   condition:
@@ -323,7 +323,7 @@ craft_repertoire:
     es: Fabrica cinco recetas diferentes.
     en: Craft five different recipes.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Repertorio artesanal.'
+    es: 'Tu historia recuerda este logro: Repertorio artesanal.'
     en: 'Your story remembers this feat: Crafting Repertoire.'
   points: 20
   condition:
@@ -344,7 +344,7 @@ road_food:
     es: Cocina estofado del cazador o ración del pescador.
     en: Cook hunter stew or a fisher ration.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Algo para el camino.'
+    es: 'Tu historia recuerda este logro: Algo para el camino.'
     en: 'Your story remembers this feat: Something for the Road.'
   points: 10
   condition:
@@ -366,7 +366,7 @@ experienced:
     es: Alcanza rango 3 en una maestría de recolección.
     en: Reach rank 3 in a gathering mastery.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Manos experimentadas.'
+    es: 'Tu historia recuerda este logro: Manos experimentadas.'
     en: 'Your story remembers this feat: Experienced Hands.'
   points: 20
   condition:
@@ -386,7 +386,7 @@ field_life:
     es: Completa actividades de tres habilidades de recolección distintas.
     en: Complete activities using three different gathering skills.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Vida de campo.'
+    es: 'Tu historia recuerda este logro: Vida de campo.'
     en: 'Your story remembers this feat: Life in the Wilds.'
   points: 20
   condition:
@@ -413,7 +413,7 @@ story_begins:
     es: Completa una misión.
     en: Complete a quest.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Comienza una historia.'
+    es: 'Tu historia recuerda este logro: Comienza una historia.'
     en: 'Your story remembers this feat: A Story Begins.'
   points: 10
   condition:
@@ -432,7 +432,7 @@ long_road:
     es: Completa las diez misiones del tutorial, incluido Viejo Colmillo.
     en: Complete all ten tutorial quests, including Old Tusk.
   earned:
-    es: 'Tu historia recuerda esta hazaña: El largo camino.'
+    es: 'Tu historia recuerda este logro: El largo camino.'
     en: 'Your story remembers this feat: The Long Road.'
   points: 40
   condition:
@@ -463,7 +463,7 @@ silver_allegiance:
     es: Entrega el relicario al Pacto de Plata.
     en: Deliver the locket to the Silver Covenant.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Lealtad de plata.'
+    es: 'Tu historia recuerda este logro: Lealtad de plata.'
     en: 'Your story remembers this feat: Silver Allegiance.'
   points: 20
   condition:
@@ -486,7 +486,7 @@ crimson_bargain:
     es: Vende el relicario al Sindicato Carmesí.
     en: Sell the locket to the Crimson Syndicate.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Trato carmesí.'
+    es: 'Tu historia recuerda este logro: Trato carmesí.'
     en: 'Your story remembers this feat: Crimson Bargain.'
   points: 20
   condition:
@@ -509,7 +509,7 @@ sealed_no_more:
     es: Abre el relicario sellado.
     en: Open the sealed locket.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Algunos sellos deben permanecer.'
+    es: 'Tu historia recuerda este logro: Algunos sellos deben permanecer.'
     en: 'Your story remembers this feat: Some Seals Should Hold.'
   points: 20
   condition:
@@ -532,7 +532,7 @@ remembered:
     es: Alcanza 20 de reputación con una facción.
     en: Reach 20 reputation with a faction.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Un nombre recordado.'
+    es: 'Tu historia recuerda este logro: Un nombre recordado.'
     en: 'Your story remembers this feat: A Name Remembered.'
   points: 20
   condition:
@@ -552,7 +552,7 @@ field_notes:
     es: Registra tu primera criatura en el bestiario.
     en: Record your first creature in the bestiary.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Notas de campo.'
+    es: 'Tu historia recuerda este logro: Notas de campo.'
     en: 'Your story remembers this feat: Field Notes.'
   points: 10
   condition:
@@ -571,7 +571,7 @@ know_enemy:
     es: Desbloquea los secretos de una criatura en el bestiario.
     en: Unlock one creature's bestiary secrets.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Conoce a tu enemigo.'
+    es: 'Tu historia recuerda este logro: Conoce a tu enemigo.'
     en: 'Your story remembers this feat: Know Your Enemy.'
   points: 10
   condition:
@@ -590,7 +590,7 @@ beast_scholar:
     es: Desbloquea los secretos del jabalí, murciélago, lobo gris, rata gigante y explorador goblin.
     en: Unlock the secrets of boar, cave bat, grey wolf, giant rat and goblin scout.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Estudioso de las bestias.'
+    es: 'Tu historia recuerda este logro: Estudioso de las bestias.'
     en: 'Your story remembers this feat: A Scholar of Beasts.'
   points: 40
   condition:
@@ -619,7 +619,7 @@ two_skies:
     es: Gana una cacería diurna y otra nocturna en el Prado de los Colmillos.
     en: Win a daytime hunt and a nighttime hunt in Tusk Meadow.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Cazador de dos cielos.'
+    es: 'Tu historia recuerda este logro: Cazador de dos cielos.'
     en: 'Your story remembers this feat: Hunter of Two Skies.'
   points: 20
   condition:
@@ -646,7 +646,7 @@ sensible_retreat:
     es: Huye con éxito de un combate.
     en: Successfully flee a battle.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Una retirada sensata.'
+    es: 'Tu historia recuerda este logro: Una retirada sensata.'
     en: 'Your story remembers this feat: A Sensible Retreat.'
   points: 10
   condition:
@@ -664,11 +664,11 @@ back_on_feet:
     en: Back on Your Feet
   description:
     es: Tras una derrota, gana un combate elegible. Encuentro no fijo de dos lobos grises en el Bosque
-      de los Susurros o dos murciélagos en la Mina del Paso Viejo, iniciado a nivel 3–5.
+      de los Susurros (desde nivel 4) o dos murciélagos en la Mina del Paso Viejo (desde nivel 3), iniciado a nivel 5 o antes.
     en: After a defeat, win an eligible battle. Non-fixed encounter with two grey wolves in Whispering
-      Woods or two cave bats in Old Pass Mine, started at level 3–5.
+      Woods (from level 4) or two cave bats in Old Pass Mine (from level 3), started at level 5 or below.
   earned:
-    es: 'Tu historia recuerda esta hazaña: De nuevo en pie.'
+    es: 'Tu historia recuerda este logro: De nuevo en pie.'
     en: 'Your story remembers this feat: Back on Your Feet.'
   points: 20
   condition:
@@ -697,7 +697,7 @@ warden_crownreach:
     en: Know the city, complete the tutorial, defeat the Warden and finish The Sealed Locket with any
       ending.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Guardián de Crownreach.'
+    es: 'Tu historia recuerda este logro: Guardián de Crownreach.'
     en: 'Your story remembers this feat: Warden of Crownreach.'
   points: 80
   condition:
@@ -732,7 +732,7 @@ child_wilds:
     en: Earn Life in the Wilds and Experienced Hands, study three of the five common species and defeat
       Old Tusk.
   earned:
-    es: 'Tu historia recuerda esta hazaña: Hijo de las tierras salvajes.'
+    es: 'Tu historia recuerda este logro: Hijo de las tierras salvajes.'
     en: 'Your story remembers this feat: Child of the Wilds.'
   points: 80
   condition:
@@ -762,3 +762,89 @@ child_wilds:
   title:
     es: Hijo de las tierras salvajes
     en: Child of the Wilds
+hero_of_crownreach:
+  edition: v0_9
+  category: story
+  form: milestone
+  visibility: public
+  name:
+    es: Héroe de Crownreach
+    en: Hero of Crownreach
+  description:
+    es: Alcanza el nivel 5, el techo de esta beta.
+    en: Reach level 5, the ceiling of this beta.
+  earned:
+    es: 'Tu historia recuerda este logro: Héroe de Crownreach.'
+    en: 'Your story remembers this feat: Hero of Crownreach.'
+  title:
+    es: de Crownreach
+    en: of Crownreach
+  points: 40
+  condition:
+    kind: threshold
+    event: level
+    field: level
+    target: 5
+journeyman:
+  edition: v0_9
+  category: crafting
+  form: milestone
+  visibility: public
+  name:
+    es: Oficial del gremio
+    en: Guild Journeyman
+  description:
+    es: Alcanza rango 2 en un oficio.
+    en: Reach rank 2 in a profession.
+  earned:
+    es: 'Tu historia recuerda este logro: Oficial del gremio.'
+    en: 'Your story remembers this feat: Guild Journeyman.'
+  points: 20
+  condition:
+    kind: threshold
+    event: profession
+    field: rank
+    target: 2
+came_back:
+  edition: v0_9
+  category: combat
+  form: secret
+  visibility: hidden
+  name:
+    es: Volví por ti
+    en: I Came Back for You
+  description:
+    es: Huye de un combate y, más tarde, acaba con el Guardián de la Cripta.
+    en: Flee a battle and, later, put down the Crypt Warden.
+  earned:
+    es: 'Tu historia recuerda este logro: Volví por ti.'
+    en: 'Your story remembers this feat: I Came Back for You.'
+  points: 20
+  condition:
+    kind: sequence
+    children:
+      - kind: event
+        event: combat
+        match: {status: fled}
+      - kind: event
+        event: kill
+        match: {monster: crypt_warden}
+night_victor:
+  edition: v0_9
+  category: curiosity
+  form: secret
+  visibility: hidden
+  name:
+    es: Lo que caza de noche
+    en: What Hunts by Night
+  description:
+    es: Gana un combate después del anochecer.
+    en: Win a battle after nightfall.
+  earned:
+    es: 'Tu historia recuerda este logro: Lo que caza de noche.'
+    en: 'Your story remembers this feat: What Hunts by Night.'
+  points: 20
+  condition:
+    kind: event
+    event: combat
+    match: {status: victory, period: night}

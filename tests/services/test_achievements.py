@@ -358,3 +358,41 @@ async def test_rank_zero_is_not_a_chronicle_entry():
     assert a.fact_marks("mastery", {"skill": "mining", "rank": 0})[0] is False
     assert a.fact_marks("mastery", {"skill": "mining", "rank": 1})[0] is True
     assert a.fact_marks("profession", {"key": "blacksmithing", "rank": 0})[0] is False
+
+
+async def test_lost_activity_does_not_count_as_finished():
+    """field_life and trade_tools say «completa actividades»: an ambush that wins is not one."""
+    cid = await hero(tg_id=83)
+    async with session_scope() as s:
+        char = await load(s, cid)
+        out = Outcome()
+        act = SimpleNamespace(kind="stay", skill="mining", id=1, result={"outcome": "stay_lost", "tool_checked": True})
+        await activities._achievement_activity(s, char, act, out)
+        assert await s.scalar(select(func.count()).select_from(HeroFact).where(HeroFact.kind == "activity")) == 0
+        act.result = {"outcome": "stay_ok", "tool_checked": True}
+        await activities._achievement_activity(s, char, act, out)
+        assert await s.scalar(select(func.count()).select_from(HeroFact).where(HeroFact.kind == "activity")) == 1
+
+
+async def test_only_the_title_can_be_taken_off():
+    """"-" means «no title»; it is not an achievement you can feature or track."""
+    cid = await hero(tg_id=84)
+    async with session_scope() as s:
+        char = await load(s, cid)
+        for operation in ("feature", "track"):
+            out = await a.preference(s, char, operation, "-", nonce=f"n{operation}")
+            assert out.error == "achievements.invalid"
+        prefs = await s.get(AchievementPreferences, char.id)
+        assert prefs is None or ("-" not in prefs.featured and "-" not in prefs.tracked)
+
+
+async def test_the_equipped_title_reaches_the_narrator():
+    from oathforge.services.actions import describe_character
+    cid = await hero(tg_id=85)
+    async with session_scope() as s:
+        char = await load(s, cid)
+        assert await a.equipped_title(s, char) is None
+        await a.apply_events(s, char, [event(cid, "kill:warden", "kill", monster="crypt_warden")])
+        assert (await a.preference(s, char, "title", "cryptbreaker", nonce="nt")).ok
+        title = await a.equipped_title(s, char)
+        assert title is not None and "known as" in describe_character(char, title=title)

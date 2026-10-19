@@ -2,7 +2,7 @@
 
 Resumen de [Possibilium §4](Possibilium.md#s04). Cómo se ve el juego en el chat.
 
-## Estado actual (0.10.7)
+## Estado actual (0.10.8)
 
 - **Teclado fijo** (`ReplyKeyboardMarkup` persistente, `KEYBOARD_VERSION = 3`): 📍 Lugar · ⚒ Actividades · 🗺 Mapa / 🧝 Héroe · 🎒 Inventario · 📖 Diario, con la pista «Escribe lo que haces…» en el campo de texto. Sus etiquetas nunca llegan a la IA como texto libre.
 - **Escena** (lo social): lugar, hora del juego y cuánto falta para el cambio («☀️ 14:30 · anochece en 55 min»), «👥 Aquí:» en lista y los botones 🧭 Viajar · 🔎 Investigar · 💬 Hablar · 🛒 Comerciar · ⚒ Actividades (n), más «Seguir viaje», acciones de misión y «🖼️ Ver lugar» (en la plaza, la ciudad). Texto libre que interpreta Gemini.
@@ -13,8 +13,8 @@ Resumen de [Possibilium §4](Possibilium.md#s04). Cómo se ve el juego en el cha
 - **Rechazos en ventanita** (`answerCallbackQuery`): «Necesitas un pico», un menú viejo o un doble toque no escriben en el chat; el mensaje pulsado pasa a la vista actual y nada se gasta dos veces.
 - **Comandos** (menú y `/help`), siempre en inglés y sin alias en español: `/start`, `/look`, `/hero` (resumen), `/sheet` (ficha completa con retrato), `/inventory`, `/journal`, `/achievements`, `/quests`, `/map`, `/report`, `/professions`, `/classes`, `/rulebook` (alias `/rules`), `/settings`, `/language`, `/cancel`.
 - **Comandos de consulta** enlazados desde los mensajes: `/class_<clase>`, `/skill_<clave>`, `/prof_<clave>`, `/item_<clave>`, `/monster_<clave>`, `/masteries`, `/hobbies`, `/lineage` (alias `/race`), `/background`, `/skin`. Funcionan sin personaje cuando tienen sentido.
-- **Logros**: /achievements; acceso desde héroe y diario, seis entradas por página, detalle, categorías, pendientes, obtenidos y destacados. Las pistas pueden revelarse. Sin porcentaje global que penalice decisiones alternativas.
-- **Identidad y avisos**: un título y tres destacados en el héroe; tres objetivos en el diario. Anuncios privados agrupados tras el commit, recuperables tras reinicio.
+- **Logros**: /achievements; acceso desde héroe y diario, seis entradas por página, detalle, categorías, pendientes, obtenidos y destacados. Las pistas pueden revelarse y los ocultos no aparecen hasta conseguirlos. En la interfaz siempre «Logros» y «puntos de logro». Sin porcentaje global que penalice decisiones alternativas.
+- **Identidad y avisos**: un título y tres destacados en el héroe, el título también en `/sheet` y en la cabecera del Libro del Héroe; tres objetivos en el diario. Anuncios privados agrupados tras el commit, recuperables tras reinicio.
 - **Diario (El Libro del Héroe)**: siete pestañas que editan un mensaje, la activa entre «• … •»: 📖 Ahora (actividad en marcha, viaje a medias, objetivo de misión y objetivos seguidos, siempre con botón para continuar), 📜 Misiones (en curso y terminadas), 🕯️ Crónica (los hechos del motor, 8 por página, agrupados por día; los antiguos bajo «Antes de este libro»), 🏆 Logros, 🐉 Bestiario, 🗣️ Rumores y 📈 Estadísticas (las de siempre más los contadores de la crónica). Abrir el diario no gasta IA.
 - **`/rulebook`**: índice con botones y páginas ◀ ▶ desde `content/rulebook.yaml`, con `{marcadores}` rellenados por el motor (`render.rule_numbers`): CD, nivel máximo, puntos de creación, CD de huida, coste y duración del descanso, pérdida de oro al caer, segundos de desuello, probabilidad de emboscada y las frases de beta. Una prueba de contenido exige que cada marcador tenga valor. Sección nueva 🏆 Logros y títulos.
 - **`/settings`**: idioma y tiradas manuales (desactivadas por defecto; el dado de Telegram es un d6 decorativo y la tirada real es el d20 del motor; la tirada se lanza con «🎲 Tirar el dado»).

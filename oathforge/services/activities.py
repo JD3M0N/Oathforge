@@ -393,8 +393,11 @@ def describe(act: WorldActivity, lang: str) -> str:
     return t(lang, f"activity.kind.{act.kind}", skill=skill, place=c.locations[act.location].phrase()[lang])
 
 
+LOST = ("stay_lost", "track_lost")  # the ambush won: the activity did not finish
+
+
 async def _achievement_activity(session, char, act, out):
-    if act.kind != "rest":
+    if act.kind != "rest" and (act.result or {}).get("outcome") not in LOST:
         await achievements.emit(session, char, out, "activity",
             {"skill": act.skill, "tool": bool((act.result or {}).get("tool_checked"))}, f"activity:{act.id}:done")
         await achievements.mastery(session, char, out, act.skill, f"activity:{act.id}:done")

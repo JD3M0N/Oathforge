@@ -48,8 +48,10 @@ def test_invalid_conditions_rejected(condition):
 
 def test_catalog_references_cycles_and_bilingual_text(tmp_path):
     content = get_content()
-    assert len(content.achievements) == 32
+    assert len(content.achievements) == 36
     assert sum(a.form == "meta" for a in content.achievements.values()) == 2
+    assert sum(a.visibility == "hidden" for a in content.achievements.values()) == 2
+    assert sum(a.title is not None for a in content.achievements.values()) == 5
     raw = content.achievements["handmade"].model_dump()
     raw["condition"] = {"kind": "event", "event": "craft", "match": {"recipe": "missing"}}
     bad = Achievement.model_validate(raw)

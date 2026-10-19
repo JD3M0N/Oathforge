@@ -440,6 +440,7 @@ journal:
 book:
   title: "🕯️ <b>The Hero's Book</b>"
   day: "Day {day}"
+  by: "of {name}, <b>{title}</b>"
   before: "Before this book"
   empty: "Your book is blank. Go out, fight, craft and explore: it writes itself."
   visit: "🥾 You first set foot in {what}."

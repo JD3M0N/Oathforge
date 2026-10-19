@@ -13,6 +13,7 @@ EVENT_FIELDS = {
     "activity": {"skill", "tool"}, "mastery": {"rank", "skill"}, "quest": {"quest"},
     "decision": {"key"}, "reputation": {"faction", "value"},
     "seen": {"monster"}, "secrets": {"monster"}, "unlock": {"key"},
+    "level": {"level"}, "profession": {"key", "rank"},
 }
 
 class AchievementCondition(Strict):
@@ -85,6 +86,7 @@ def validate_catalog(content):
     pools["activity", "skill"] = GATHER_SKILLS
     pools["mastery", "skill"] = MASTERIES
     pools["decision", "key"] = {"covenant", "syndicate", "opened"}
+    pools["profession", "key"] = content.professions
 
     def walk(key, condition):
         for field, value in condition.match.items():

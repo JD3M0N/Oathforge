@@ -4,6 +4,22 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.8] - 2026-10-19
+
+Logros (F04): auditoría, un solo nombre y el título donde se ve.
+
+### Añadido
+- **Cuatro logros** sobre lo que ya existe: «Héroe de Crownreach» (nivel 5, con el título *de Crownreach*), «Oficial del gremio» (rango 2 en un oficio) y dos **ocultos**, que no se ven hasta conseguirlos: «Volví por ti» (huir de un combate y luego acabar con el Guardián de la Cripta) y «Lo que caza de noche» (ganar después del anochecer). Son 36 logros y 5 títulos.
+- **El título se ve fuera de `/hero`**: junto al nombre en `/sheet`, en la cabecera del Libro del Héroe («de Morgana, *Rompecriptas*») y como dato en el contexto del narrador y de los PNJ, que pueden saludarte por él. La IA lo recibe; concederlo sigue siendo solo del motor.
+
+### Cambiado
+- **Un solo nombre, «Logros»**: desaparecen «Ver hazañas», «puntos de hazaña» y «Tu historia recuerda esta hazaña». Los ids, el comando `/achievements` y las tablas no cambian.
+
+### Arreglado
+- Una expedición o un rastreo que acaba en derrota ya no cuenta como actividad completada para «Vida de campo» ni «Herramientas del oficio».
+- Los desafíos decían «nivel 3–5»: la pareja de lobos pide nivel 4 y la de murciélagos nivel 3, y el límite es empezar a nivel 5 o antes.
+- Destacar o seguir un logro con la clave «-» (que solo significa «quitar el título») se rechaza en vez de añadir un hueco a la lista.
+
 ## [0.10.7] - 2026-10-19
 
 Diario y reglamento (F03): el Libro del Héroe.

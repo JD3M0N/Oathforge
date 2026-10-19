@@ -22,7 +22,8 @@ from oathforge.engine.checks import clamp_tier
 from oathforge.i18n import t
 from oathforge.engine.combat import Action, EncounterState
 from oathforge.services import (
-    activities, audit, characters, combat_service, exploration, inventory, npcs, quests, world_map,
+    achievements, activities, audit, characters, combat_service, exploration, inventory, npcs, quests,
+    world_map,
 )
 from oathforge.services.events import Outcome, facts
 
@@ -79,12 +80,15 @@ async def _load(session: AsyncSession, user_id: int, lock: bool = False) -> tupl
     return user, char
 
 
-def describe_character(char: Character, backstory: bool = False) -> str:
-    """For the AI; with backstory, the player-written background too (already reviewed, quoted as data)."""
+def describe_character(char: Character, backstory: bool = False, title=None) -> str:
+    """For the AI; with backstory, the player-written background too (already reviewed, quoted as data).
+    ``title``: the equipped title, so NPCs and the narrator may use it. It is data, never something they grant."""
     c = get_content()
     who = {"male": "man, ", "female": "woman, "}.get(char.gender or "", "")
     text = (f"{char.name}, {who}level {char.level} {c.lineages[char.lineage].name.en} "
             f"{c.classes[char.class_key].name.en}, HP {char.hp}/{char.max_hp}")
+    if title is not None:
+        text += f', known as "{title.en}"'
     if backstory and char.custom_background:
         custom = char.custom_background
         text += f'; background "{custom["title"]}": "{custom["story"]}"'
@@ -94,7 +98,8 @@ def describe_character(char: Character, backstory: bool = False) -> str:
 async def build_context(session: AsyncSession, char: Character, lang: str) -> ActionContext:
     c = get_content()
     loc = c.locations[char.location]
-    ctx = ActionContext(lang=lang, character=describe_character(char), location=loc.name.en,
+    title = await achievements.equipped_title(session, char)
+    ctx = ActionContext(lang=lang, character=describe_character(char, title=title), location=loc.name.en,
                         scene=loc.description.en, skills={k: s.name.en for k, s in c.skills.items()})
     for inst in await inventory.items_of(session, char):
         ctx.items[inst.item_key] = c.items[inst.item_key].name.en
@@ -162,7 +167,7 @@ async def execute_free_text(llm: LLM, user_id: int, text: str, intent: Intent, i
                         result={"ok": outcome.ok, "events": [e.key for e in outcome.events]})
         scene = get_content().locations[char.location].name.en
         place = get_content().locations[char.location].name.get(lang)
-        who = describe_character(char, backstory=True)
+        who = describe_character(char, backstory=True, title=await achievements.equipped_title(session, char))
         char_id, name = char.id, char.name
 
     narration = await narrator.narrate(llm, lang=lang, scene=scene, character=who, player_text=text,
@@ -282,7 +287,7 @@ async def talk(llm: LLM, user_id: int, npc_key: str, text: str) -> tuple[str, Ou
         memories = [m.text for m in await npcs.recall(session, npc_key, char)]
         rumors = [r.get("en", "") for r in await npcs.recent_rumors(session)]
         rep = await npcs.reputation_with(session, char, npc.faction) if npc.faction else None
-        who = describe_character(char)
+        who = describe_character(char, title=await achievements.equipped_title(session, char))
 
     reply = await npc_dialogue.reply(
         llm, npc=npc, lang=lang, player=who, player_text=text, trust=trust, reputation=rep,

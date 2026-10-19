@@ -2,7 +2,7 @@
 
 Resumen de [Possibilium §8–9](Possibilium.md#s08) (y equipo en [mercatura](mercatura.md)).
 
-## Estado actual (0.10.7)
+## Estado actual (0.10.8)
 
 - **Creación**: nombre, hombre o mujer, 4 linajes (humano, elfo, enano, orco), trasfondo (4 básicos como botón, 12 en total, o uno propio revisado por Gemini con 2 habilidades a elegir), clase y compra de 27 puntos (todo en 8; 14→15 cuesta 2; «⭐ Recomendado» carga el array de la clase). `/lineage`, `/background` y `/classes` ayudan a mitad de la creación.
 - **Niveles 1–5**: 0 / 200 / 500 / 1000 / 1800 XP (`engine/progression.py`). PV: dado completo a nivel 1, después media + 1 + CON. Nivel 4: +2 a la principal. Subida de nivel en un mensaje propio.
@@ -10,8 +10,8 @@ Resumen de [Possibilium §8–9](Possibilium.md#s08) (y equipo en [mercatura](me
 - Una prueba de habilidad se intenta una vez por habilidad, lugar y día de juego (4 h reales); se desbloquea al día siguiente o al subir de nivel (`characters.checks_tried`).
 - El tutorial (10 misiones, unos 750 XP de misión) lleva a nivel 3–4; relicario y cripta llevan a 5.
 - Reputación con dos facciones; los juramentos siguen pendientes.
-- **Logros**: 30 individuales y dos metalogros, por personaje; puntos de prestigio sin poder ni uso económico. Edición fija v0_9 y concesiones atómicas con evidencia.
-- **Identidad**: cuatro títulos desbloqueables, uno equipado, tres logros destacados y tres objetivos seguidos. El progreso anterior se reconoce solo cuando hay evidencia persistida.
+- **Logros**: 34 individuales y dos metalogros, por personaje (dos de ellos ocultos hasta conseguirlos); puntos de logro sin poder ni uso económico. Edición fija v0_9 y concesiones atómicas con evidencia. En la interfaz se llaman «Logros», nunca «hazañas».
+- **Identidad**: cinco títulos desbloqueables, uno equipado, tres logros destacados y tres objetivos seguidos. El título se ve en `/hero`, en `/sheet` y en la cabecera del Libro del Héroe, y va como dato al narrador y a los PNJ, que pueden saludarte por él; concederlo sigue siendo solo del motor. El progreso anterior se reconoce solo cuando hay evidencia persistida.
 - Los retos de 1 PV, combate contra varios y ausencia de consumibles usan parejas repetibles de lobos o murciélagos a nivel inicial 3–5; no dependen de repetir jefes únicos.
 - **Crónica de hechos** (`hero_facts`, 0.10.7): cada hecho que el motor registra se guarda una vez por personaje (el mismo registro que deduplica los logros, antes `achievement_event_receipts`) con su tipo, sus datos y el día de juego. Los que merecen entrada van marcados `notable`: siempre misión, decisión, logro, nivel, derrota, secreto y descubrimiento; solo la primera vez cada lugar, receta, criatura y rango; nunca lo repetido. De ahí salen el diario, las estadísticas verificables y, más adelante, el resumen narrado y el *Heraldo*. Hechos nuevos: nivel alcanzado, rango de oficio y misión aceptada.
 

@@ -440,6 +440,7 @@ journal:
 book:
   title: "🕯️ <b>El Libro del Héroe</b>"
   day: "Día {day}"
+  by: "de {name}, <b>{title}</b>"
   before: "Antes de este libro"
   empty: "Tu libro está en blanco. Sal, pelea, fabrica y descubre: se irá escribiendo solo."
   visit: "🥾 Pisaste {what} por primera vez."
@@ -966,11 +967,11 @@ station:
 
 achievements:
   heading: 🏆 <b>Logros</b>
-  summary: '{count} logros obtenidos · {points} puntos de hazaña'
-  summary_one: '1 logro obtenido · {points} puntos de hazaña'
+  summary: '{count} logros obtenidos · {points} puntos de logro'
+  summary_one: '1 logro obtenido · {points} puntos de logro'
   mystery: Hazaña por descubrir
   progress: 'Progreso: {current}/{target}'
-  reward: 'Recompensa: {points} puntos de hazaña'
+  reward: 'Recompensa: {points} puntos de logro'
   title_reward: 'Título: {title}'
   date: Reconocido el {date}
   retroactive: Reconocido a partir de tu progreso anterior.
@@ -984,7 +985,7 @@ achievements:
   replace: 'Ya tienes tres. Elige cuál sustituir:'
   categories_title: Categorías
   empty: Todavía no hay logros en esta vista.
-  latest: Tu última hazaña
+  latest: Tu último logro
   near: Cerca de conseguir
   earned: Obtenidos
   pending: Pendientes
@@ -995,7 +996,7 @@ achievements:
   full: Ya tienes tres. Elige cuál sustituir.
   saved: Preferencias de logros guardadas.
   announcement: "🏆 <b>Logros conseguidos: {count}</b>"
-  open: Ver hazañas
+  open: Ver logros
   categories:
     exploration: 🧭 Exploración
     combat: ⚔️ Combate
