@@ -275,6 +275,19 @@ MASTERY_ICON = {"mining": "⛏️", "woodcutting": "🪓", "herbalism": "🌿", 
 ACTIVITY_ICON = {**MASTERY_ICON, "rest": "🛏️"}
 
 
+def discipline_icon(key: str) -> str:
+    """The icon of a crafting discipline: a profession's own, or the icon of that field mastery."""
+    prof = get_content().professions.get(key)
+    return prof.icon if prof is not None else MASTERY_ICON.get(key, "🛠️")
+
+
+def discipline_label(key: str, lang: str) -> str:
+    """"⛏️ Minería" or "⚒️ Herrería": refining belongs to a mastery, crafting to a profession."""
+    prof = get_content().professions.get(key)
+    name = prof.name.get(lang) if prof is not None else t(lang, f"mastery.name.{key}")
+    return f"{discipline_icon(key)} {name}"
+
+
 def activity_panel(char: Character, act, lines: list[str], n: str, lang: str,
                    started: str | None = None) -> tuple[str, InlineKeyboardMarkup]:
     """The scene while a field activity runs: what, how long is left, Refresh / Abandon. It ends by itself
@@ -588,14 +601,13 @@ async def craft_menu(session: AsyncSession, char: Character, lang: str) -> tuple
             if prof.station is not None:
                 lines.append(f"{prof.icon} {escape(prof.name.get(lang))}: {_station_place(prof.station, lang)}")
     for key, r in recipes.items():
-        prof = c.professions[r.profession]
-        locked = professions.rank(char, r.profession) < r.min_rank
+        locked = crafting.rank_in(char, r.profession) < r.min_rank
         lacking = await crafting.missing(session, char, r)
         mark = "🔒" if locked else "❌" if lacking else "✅"
         out_key, qty = next(iter(r.outputs.items()))
         rank = t(lang, "craft.locked", rank=r.min_rank) if locked else ""
         lines.append(t(lang, "craft.recipe", mark=mark, item=escape(c.items[out_key].label(lang)), qty=qty,
-                       prof=prof.icon, rank=rank).rstrip())
+                       prof=discipline_icon(r.profession), rank=rank).rstrip())
         parts = []
         for item, need in r.ingredients.items():
             have = need - lacking.get(item, 0)
@@ -858,7 +870,7 @@ def item_page(key: str, lang: str) -> str:
     stats = item_stats(key, lang)
     if stats:
         lines += ["", t(lang, "item.use", what=escape(stats))]
-    used_in = sorted({c.items[next(iter(r.outputs))].name.get(lang) + f" ({c.professions[r.profession].icon})"
+    used_in = sorted({c.items[next(iter(r.outputs))].name.get(lang) + f" ({discipline_icon(r.profession)})"
                       for r in c.recipes.values() if key in r.ingredients})
     if used_in:
         lines.append(t(lang, "item.ingredient", list=escape(", ".join(used_in))))
@@ -867,8 +879,7 @@ def item_page(key: str, lang: str) -> str:
                 if any(r.item == key for g in loc.gathering for r in g.resources)]
     sources += [f"{creature_icon(m)} {m.name.get(lang)}" for m in c.monsters.values()
                 if any(x.item == key for x in [*m.loot, *m.harvest])]
-    sources += [f"{c.professions[r.profession].icon} {c.professions[r.profession].name.get(lang)}"
-                for r in c.recipes.values() if key in r.outputs]
+    sources += [discipline_label(r.profession, lang) for r in c.recipes.values() if key in r.outputs]
     sources += [f"🛒 {n.name.get(lang)}" for n in c.npcs.values() if n.shop and key in n.shop.items]
     sources += [f"📜 {q.name.get(lang)}" for q in c.quests.values()
                 if any(key in (eff.get("give_item") or {}) for eff in q.rewards)]

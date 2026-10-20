@@ -301,6 +301,7 @@ item:
     quest: "Quest item"
     material: "Material"
     trinket: "Trinket"
+    blueprint: "Blueprint"
   use: "⚙️ Used for: {what}"
   ingredient: "🔨 Ingredient of: {list}"
   sources: "📍 Found at: {list}"
@@ -335,6 +336,7 @@ inv:
   err:
     not_found: "You don't have that item."
     not_equippable: "That item can't be equipped."
+    level: "You must be level {level} to use that."
     not_usable: "That item can't be used that way."
     full_hp: "You are as healthy as you can be right now."
     in_combat: "You can't change gear in the middle of a fight."
@@ -954,6 +956,9 @@ craft:
     no_station: "There is no {station} here."
     rank: "You need {prof} at rank {rank}."
     missing: "You are missing: {items}."
+    qty: "You can craft at most {max} at a time."
+    blueprint: "You do not know that recipe: you need its blueprint."
+    quest_only: "That recipe belongs to a mission."
 
 station:
   anvil: "anvil"
@@ -964,6 +969,11 @@ station:
   hearth: "hearth"
   scribe_desk: "scribe's desk"
   workbench: "engineer's bench"
+  loom: "loom"
+  furnace: "smelting furnace"
+  sawmill: "sawing station"
+  curing_rack: "curing rack"
+  herb_table: "preparation table"
 
 achievements:
   heading: 🏆 <b>Achievements</b>

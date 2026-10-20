@@ -3,6 +3,7 @@
 import pytest
 from sqlalchemy import select
 
+from oathforge.content import get_content
 from oathforge.database.models import Character, ItemInstance
 from oathforge.database.session import session_scope
 from oathforge.services import characters, crafting, inventory, professions
@@ -127,3 +128,61 @@ async def test_scribing_and_engineering_recipes():
         assert await inventory.count(s, char, "scroll_firebolt") == 1
         assert await inventory.count(s, char, "smoke_bomb") == 1
         assert (await crafting.craft(s, char, "fire_bomb")).error == "craft.err.rank"
+
+
+async def test_batches_are_all_or_nothing_and_capped():
+    cid = await new_character()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        await professions.learn(s, char, "blacksmithing")
+        await inventory.add_item(s, char, "iron_ore", 6)
+        await inventory.add_item(s, char, "coal", 2)
+        out = await crafting.craft(s, char, "iron_ingot", qty=3)  # one batch short
+        assert out.error == "craft.err.missing"
+        assert await inventory.count(s, char, "iron_ore") == 6  # nothing spent
+        assert (await crafting.craft(s, char, "iron_ingot", qty=0)).error == "craft.err.qty"
+        assert (await crafting.craft(s, char, "iron_ingot", qty=99)).error == "craft.err.qty"
+        out = await crafting.craft(s, char, "iron_ingot", qty=2)
+        assert out.ok and await inventory.count(s, char, "iron_ingot") == 2
+        assert await inventory.count(s, char, "iron_ore") == 0 and await inventory.count(s, char, "coal") == 0
+        assert professions.xp(char, "blacksmithing") == 20  # ten per ingot
+
+
+async def test_a_recipe_can_bring_its_own_station():
+    """The station comes from the recipe when it has one, so a mastery can refine away from the smith."""
+    recipe = get_content().recipes["iron_ingot"]
+    assert crafting.station_of(recipe) == get_content().professions[recipe.profession].station
+    moved = recipe.model_copy(update={"station": "furnace"})
+    assert crafting.station_of(moved) == "furnace"
+    assert recipe.tier == 0 and recipe.model_copy(update={"min_rank": 3}).tier == 1
+
+
+async def test_refining_belongs_to_a_mastery_and_pays_its_xp(monkeypatch):
+    """A mastery recipe needs no profession slot, and its XP goes to the mastery, never to a trade."""
+    cid = await new_character(location="crownreach_plaza")
+    content = get_content()
+    refine = content.recipes["iron_ingot"].model_copy(update={"profession": "mining", "station": "anvil"})
+    monkeypatch.setitem(content.recipes, "test_refine", refine)
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        await inventory.add_item(s, char, "iron_ore", 3)
+        await inventory.add_item(s, char, "coal", 1)
+        assert (await crafting.craft(s, char, "test_refine")).error == "craft.err.no_station"
+        char.location = "crownreach_workshops"
+        assert "test_refine" in crafting.recipes_here(char)  # without learning blacksmithing
+        assert (await crafting.craft(s, char, "test_refine")).ok
+        assert characters.mastery_xp(char, "mining") == 10
+        assert professions.xp(char, "blacksmithing") == 0
+
+
+async def test_t1_gear_is_crafted_by_rank_and_worn_by_level(monkeypatch):
+    cid = await new_character()
+    content = get_content()
+    monkeypatch.setitem(content.items, "iron_sword", content.items["iron_sword"].model_copy(update={"min_level": 10}))
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        await inventory.add_item(s, char, "iron_sword", 1)
+        inst = await s.scalar(select(ItemInstance).where(ItemInstance.item_key == "iron_sword"))
+        assert (await inventory.equip(s, char, inst.id)).error == "inv.err.level"
+        char.level = 10
+        assert (await inventory.equip(s, char, inst.id)).ok

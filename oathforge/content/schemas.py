@@ -49,10 +49,13 @@ FALLBACK_KEYS = {
     "freetext": ("unavailable", "budget_exhausted"),
 }
 
-# crafting stations a location can have (Location.stations); each profession works at one
+# crafting stations a location can have (Location.stations); each profession works at one, and the
+# refining ones (furnace, sawmill, curing_rack, herb_table) belong to a field mastery, not to a profession
 Station = Literal[
     "anvil", "alchemy_table", "carpenter_bench", "tannery", "jeweler_bench", "hearth", "scribe_desk", "workbench",
+    "loom", "furnace", "sawmill", "curing_rack", "herb_table",
 ]
+T1_MIN_RANK = 3  # a recipe of rank 0-2 is T0; from this rank on it is T1 (see planning/roadmap-profesiones.md)
 Row = Literal["front", "back"]
 
 
@@ -230,7 +233,7 @@ class ItemCombat(Strict):
 
 
 TYPE_ICONS = {"weapon": "⚔️", "armor": "🛡️", "shield": "🛡️", "consumable": "🧪", "tool": "🧰", "quest": "📜",
-              "material": "🧱", "trinket": "💍"}  # an item without its own icon shows its type's
+              "material": "🧱", "trinket": "💍", "blueprint": "📘"}  # an item without its own icon shows its type's
 
 
 class Item(Strict):
@@ -238,8 +241,12 @@ class Item(Strict):
     icon: str | None = None  # 🪨 ores, 🪵 logs, 🌿 herbs…: always next to the name, never instead of it
     description: Text
     # material: gathered or crafted ingredient · trinket: only worth selling (for now)
-    type: Literal["weapon", "armor", "shield", "consumable", "tool", "quest", "material", "trinket"]
+    # blueprint: teaches one special recipe and is spent doing it
+    type: Literal["weapon", "armor", "shield", "consumable", "tool", "quest", "material", "trinket", "blueprint"]
     slot: Literal["main_hand", "ranged", "off_hand", "body"] | None = None
+    # T1 gear is crafted by rank and worn by level: a low-level artisan may forge it and not equip it yet
+    min_level: int = Field(1, ge=1)
+    teaches: str | None = None  # blueprint only: the special recipe it teaches
     value: int = 0
     stackable: bool = False
     weapon: WeaponStats | None = None
@@ -441,11 +448,33 @@ class RuleSection(Strict):
 
 
 class Recipe(Strict):
+    """A fixed design: exact ingredients, exact outputs. The tier comes from its rank (T1_MIN_RANK).
+
+    ``profession`` is the discipline that gates it and receives its XP: a crafting profession, a hobby,
+    or a field mastery when it is a refining recipe (ore -> ingot). ``station`` overrides the discipline's
+    own one, which is what lets a mastery refine at the furnace while the smith keeps the anvil.
+    """
+
     profession: str
+    station: Station | None = None  # default: the discipline's station
     min_rank: int = Field(0, ge=0, le=5)
     ingredients: dict[str, int]
     outputs: dict[str, int]
     xp: int
+    technique: str | None = None  # the group of common recipes it belongs to, unlocked by rank
+    special: bool = False  # learned from a blueprint, never by rank
+    quest: str | None = None  # a starter recipe: only while that mission is active, and it needs no profession
+
+    @property
+    def tier(self) -> int:
+        return 1 if self.min_rank >= T1_MIN_RANK else 0
+
+    @field_validator("quest")
+    @classmethod
+    def _quest_recipes_are_plain(cls, quest, info):
+        if quest is not None and (info.data.get("min_rank") or info.data.get("special")):
+            raise ValueError("a quest recipe needs no rank and cannot be special")
+        return quest
 
 
 class Zone(Strict):

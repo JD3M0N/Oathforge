@@ -30,6 +30,9 @@ class Settings(BaseSettings):
     ai_chronicle_timeout_seconds: float = 8.0
     ai_model_cooldown_seconds: float = 20.0  # after a timeout or overload; a daily quota (429) skips far longer
 
+    # crafting and refining: how many times a single recipe can be made in one batch
+    craft_batch_max: int = 10
+
     # testing only: moves the game clock forward for everyone (e.g. 12 turns night into day). 1 game hour = 10 min.
     game_clock_offset_hours: float = 0.0
 

@@ -4,6 +4,22 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.10] - 2026-10-20
+
+Profesiones (F15, 2.ª parte): el contrato de las recetas. Nada cambia todavía para el jugador; cambia lo que una receta puede decir de sí misma.
+
+### Añadido
+- **Estación por receta**: una receta puede traer su propia `station` en vez de heredar la de su oficio. Es lo que permitirá fundir en el horno sin ser herrero, y lo que hacía falta para separar el refinado del oficio.
+- **La disciplina de una receta puede ser una maestría** (minería, tala, herboristería, desuello): entonces no ocupa plaza, cualquiera la trabaja y su XP va a esa maestría, nunca a un oficio. El rango exigido también es el de la maestría.
+- **Cinco estaciones nuevas** con sus nombres ES/EN: telar, horno de fundición, puesto de aserrado, secadero y mesa de preparación.
+- **Fabricar por lotes**: `craft` acepta una cantidad (hasta `CRAFT_BATCH_MAX`, 10 por defecto). Comprueba todos los materiales antes de gastar uno y produce el lote entero o ninguno; la XP se multiplica por lo fabricado. El botón `craft` acepta `receta:cantidad`.
+- **Requisito de nivel para equipar y usar** (`min_level`): un objeto T1 se fabrica por rango y se lleva por nivel, así que un artesano de nivel bajo puede forjarlo y no equiparlo. Desequipar nunca se bloquea.
+- **Planos** (`type: blueprint`, campo `teaches`) y recetas `special`, `technique` y de misión (`quest`): el esquema ya las admite y el cargador las valida; el aprendizaje llega en su fase.
+- **Validaciones del cargador**: la disciplina existe como oficio o maestría, una receta de maestría trae su estación, la estación existe en algún lugar, las cantidades son positivas, la misión de una receta existe, un plano enseña una receta que de verdad es especial y una receta especial tiene quien la enseñe.
+
+### Cambiado
+- Las fichas `/item_` y el panel de fabricar hablan de «disciplina», no de «oficio»: el icono y el nombre salen del oficio o de la maestría, según cuál sea.
+
 ## [0.10.9] - 2026-10-20
 
 Profesiones, maestrías y aficiones (F15, 1.ª parte): el contrato. Solo documentación; el juego no cambia.

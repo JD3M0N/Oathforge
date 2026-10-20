@@ -301,6 +301,7 @@ item:
     quest: "Objeto de misión"
     material: "Material"
     trinket: "Baratija"
+    blueprint: "Plano"
   use: "⚙️ Sirve para: {what}"
   ingredient: "🔨 Ingrediente de: {list}"
   sources: "📍 Se consigue en: {list}"
@@ -335,6 +336,7 @@ inv:
   err:
     not_found: "No tienes ese objeto."
     not_equippable: "Ese objeto no se puede equipar."
+    level: "Necesitas ser de nivel {level} para usar eso."
     not_usable: "Ese objeto no se puede usar así."
     full_hp: "Ya estás tan sano como puedes estar ahora."
     in_combat: "No puedes cambiar de equipo en pleno combate."
@@ -954,6 +956,9 @@ craft:
     no_station: "Aquí no hay {station}."
     rank: "Necesitas {prof} de rango {rank}."
     missing: "Te falta: {items}."
+    qty: "De una vez puedes fabricar como máximo {max}."
+    blueprint: "No conoces esa receta: hace falta su plano."
+    quest_only: "Esa receta es de una misión."
 
 station:
   anvil: "yunque"
@@ -964,6 +969,11 @@ station:
   hearth: "fogón"
   scribe_desk: "mesa de escriba"
   workbench: "banco de ingeniero"
+  loom: "telar"
+  furnace: "horno de fundición"
+  sawmill: "puesto de aserrado"
+  curing_rack: "secadero"
+  herb_table: "mesa de preparación"
 
 achievements:
   heading: 🏆 <b>Logros</b>

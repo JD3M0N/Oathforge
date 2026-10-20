@@ -91,6 +91,8 @@ async def equip(session: AsyncSession, char: Character, instance_id: int) -> Out
     item = get_content().items[inst.item_key]
     if item.slot is None:
         return Outcome.refused("inv.err.not_equippable")
+    if char.level < item.min_level and not inst.equipped_slot:  # T1 gear is forged by rank and worn by level
+        return Outcome.refused("inv.err.level", level=item.min_level)
     if inst.equipped_slot:
         inst.equipped_slot = None
         return Outcome().add("inv.unequipped", item=item.name.model_dump())
@@ -176,6 +178,8 @@ async def use_item_outside_combat(session: AsyncSession, char: Character, key: s
     effects = effects_of(item) if item else []
     if not effects:
         return Outcome.refused("inv.err.not_usable")
+    if char.level < item.min_level:
+        return Outcome.refused("inv.err.level", level=item.min_level)
     now = time.time() if now is None else now
     useful = [e for e in effects if _refusal(char, e, now) is None]
     if not useful:

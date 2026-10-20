@@ -32,7 +32,7 @@ from oathforge.content.schemas import (
     Text,
     Zone,
 )
-from oathforge.engine.gathering import GATHER_SKILLS
+from oathforge.engine.gathering import GATHER_SKILLS, MASTERIES
 from oathforge.content.achievement_schemas import Achievement, validate_catalog
 
 EFFECT_KINDS = {
@@ -257,13 +257,38 @@ def validate_references(c: Content) -> None:
     for key, cls in c.classes.items():
         for a in cls.signature:
             need("ability", a, cls.abilities, f"class {key} signature")
+    stations = {s for loc in c.locations.values() for s in loc.stations}
     for key, recipe in c.recipes.items():
-        need("profession", recipe.profession, c.professions, f"recipe {key}")
+        if recipe.profession not in c.professions and recipe.profession not in MASTERIES:
+            errors.append(f"recipe {key}: '{recipe.profession}' is neither a profession nor a field mastery")
+        elif recipe.profession in MASTERIES and recipe.station is None:
+            errors.append(f"recipe {key}: a mastery recipe needs its own station")
+        station = recipe.station or (c.professions[recipe.profession].station
+                                     if recipe.profession in c.professions else None)
+        if station is None:
+            errors.append(f"recipe {key}: no station (neither its own nor its discipline's)")
+        elif station not in stations:
+            errors.append(f"recipe {key}: no location has a '{station}'")
         for i in [*recipe.ingredients, *recipe.outputs]:
             need("item", i, c.items, f"recipe {key}")
         if not recipe.ingredients or not recipe.outputs:
             errors.append(f"recipe {key}: needs ingredients and outputs")
-    stations = {s for loc in c.locations.values() for s in loc.stations}
+        if any(q <= 0 for q in [*recipe.ingredients.values(), *recipe.outputs.values()]):
+            errors.append(f"recipe {key}: quantities must be positive")
+        if recipe.quest is not None:
+            need("quest", recipe.quest, c.quests, f"recipe {key}")
+        if recipe.special and not any(i.teaches == key for i in c.items.values()):
+            errors.append(f"recipe {key}: special, but no blueprint teaches it")
+    for key, item in c.items.items():
+        if item.type == "blueprint" and item.teaches is None:
+            errors.append(f"item {key}: a blueprint must say which recipe it teaches")
+        if item.teaches is not None:
+            if item.type != "blueprint":
+                errors.append(f"item {key}: only a blueprint teaches a recipe")
+            elif item.teaches not in c.recipes:
+                errors.append(f"item {key}: teaches unknown recipe '{item.teaches}'")
+            elif not c.recipes[item.teaches].special:
+                errors.append(f"item {key}: recipe '{item.teaches}' is common, so it needs no blueprint")
     for key, prof in c.professions.items():
         if prof.station is None and prof.practice is None:
             errors.append(f"profession {key}: needs a station or a practice")
