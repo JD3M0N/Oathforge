@@ -196,6 +196,7 @@ old_tusk:
   gold: 3d10
   loot:
     - {item: boar_tusk, chance: 1.0, qty: 3}
+    - {item: blueprint_tusk_dagger, chance: 1.0, qty: 1}
   skin_seconds: 40
   harvest:
     - {item: boar_hide, chance: 1.0, qty: 2}

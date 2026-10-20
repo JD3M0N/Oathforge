@@ -110,7 +110,9 @@ async def item(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             for inst in await inventory.items_of(session, char):
                 if inst.item_key == key:
                     rows += render.item_buttons(char, inst, get_content().items[key], n, lang)
-    await send(update, render.item_page(key, lang), markup(rows) if rows else None)
+        text, kb = render.item_page(key, lang, char)
+    rows = ([*kb.inline_keyboard] if kb else []) + rows
+    await send(update, text, markup(rows) if rows else None)
 
 
 MONSTER_LINK = re.compile(r"^/monster_([a-z0-9_]+?)(?:@\w+)?$")

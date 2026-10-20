@@ -47,13 +47,43 @@ def disciplines(char: Character) -> set[str]:
     return set(professions.usable(char)) | set(gathering.MASTERIES)
 
 
+def known(char: Character) -> list[str]:
+    """The special recipes this character learned from a blueprint."""
+    return list((char.crafting or {}).get("known", []))
+
+
+def knows(char: Character, recipe_key: str) -> bool:
+    recipe = get_content().recipes[recipe_key]
+    return not recipe.special or recipe_key in known(char)
+
+
 def recipes_here(char: Character) -> dict[str, Recipe]:
     """Recipes you may work on where you stand: your disciplines and this place's stations."""
     c = get_content()
     stations = set(c.locations[char.location].stations)
     mine = disciplines(char)
     return {k: r for k, r in c.recipes.items()
-            if r.profession in mine and station_of(r) in stations and not r.special and r.quest is None}
+            if r.profession in mine and station_of(r) in stations and knows(char, k) and r.quest is None}
+
+
+async def learn_blueprint(session: AsyncSession, char: Character, item_key: str) -> Outcome:
+    """Read a blueprint: it teaches its recipe for good and is spent. Knowing it already, it is not spent."""
+    if refusal := characters.ensure_free(char):
+        return refusal
+    c = get_content()
+    item = c.items.get(item_key)
+    if item is None or item.type != "blueprint" or item.teaches is None:
+        return Outcome.refused("craft.err.not_blueprint")
+    recipe = c.recipes[item.teaches]
+    name = c.items[next(iter(recipe.outputs))].labelled()
+    if item.teaches in known(char):
+        return Outcome.refused("craft.err.known", item=name)
+    if not await inventory.remove_item(session, char, item_key, 1):
+        return Outcome.refused("inv.err.not_found")
+    char.crafting = {**(char.crafting or {}), "known": known(char) + [item.teaches]}
+    out = Outcome().add("craft.learned", item=name, prof=discipline_name(recipe.profession), rank=recipe.min_rank)
+    await achievements.emit(session, char, out, "blueprint", {"recipe": item.teaches}, f"blueprint:{item.teaches}")
+    return out
 
 
 async def missing(session: AsyncSession, char: Character, recipe: Recipe, qty: int = 1) -> dict[str, int]:
@@ -79,7 +109,7 @@ async def craft(session: AsyncSession, char: Character, recipe_key: str, rng: ra
     limit = get_settings().craft_batch_max
     if qty < 1 or qty > limit:
         return Outcome.refused("craft.err.qty", max=limit)
-    if recipe.special:  # a blueprint teaches it; the knowledge arrives with the planned phase
+    if not knows(char, recipe_key):
         return Outcome.refused("craft.err.blueprint")
     if recipe.quest is not None:
         return Outcome.refused("craft.err.quest_only")

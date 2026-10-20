@@ -27,3 +27,4 @@ exits:
   - {to: jeweler_stall, minutes: 1}
   - {to: scribe_stall, minutes: 1}
   - {to: engineer_stall, minutes: 1}
+  - {to: tailor_stall, minutes: 1}

@@ -144,6 +144,65 @@ async def test_scribing_and_engineering_recipes():
         assert (await crafting.craft(s, char, "fire_bomb")).error == "craft.err.rank"
 
 
+async def test_a_blueprint_is_read_once_and_never_forgotten():
+    """A special recipe comes from its blueprint: reading it spends the sheet and keeps the knowledge."""
+    cid = await new_character()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        await professions.learn(s, char, "blacksmithing")
+        professions.grant_xp(char, "blacksmithing", 80, Outcome())  # rank 1
+        await inventory.add_item(s, char, "iron_ingot", 1)
+        await inventory.add_item(s, char, "boar_tusk", 2)
+        await inventory.add_item(s, char, "treated_leather", 1)
+        assert "tusk_dagger" not in crafting.recipes_here(char)  # not yours yet
+        assert (await crafting.craft(s, char, "tusk_dagger")).error == "craft.err.blueprint"
+        assert (await crafting.learn_blueprint(s, char, "blueprint_tusk_dagger")).error == "inv.err.not_found"
+        await inventory.add_item(s, char, "blueprint_tusk_dagger", 2)
+        assert (await crafting.learn_blueprint(s, char, "blueprint_tusk_dagger")).ok
+        assert await inventory.count(s, char, "blueprint_tusk_dagger") == 1  # one sheet spent
+        again = await crafting.learn_blueprint(s, char, "blueprint_tusk_dagger")
+        assert again.error == "craft.err.known"
+        assert await inventory.count(s, char, "blueprint_tusk_dagger") == 1  # the spare is not eaten
+        assert "tusk_dagger" in crafting.recipes_here(char)
+        assert (await crafting.craft(s, char, "tusk_dagger")).ok
+        assert await inventory.count(s, char, "tusk_dagger") == 1
+        # changing trade never forgets what was learned
+        char.location = professions.stall_of("alchemy")
+        char.gold = 100
+        await professions.learn(s, char, "alchemy")
+        assert crafting.known(char) == ["tusk_dagger"]
+
+
+async def test_a_new_rank_announces_its_techniques():
+    cid = await new_character()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        await professions.learn(s, char, "blacksmithing")
+        out = Outcome()
+        professions.grant_xp(char, "blacksmithing", 80, out)  # rank 1: Weaponsmithing
+        keys = [e.key for e in out.events]
+        assert "prof.rank" in keys and "prof.technique" in keys
+        out2 = Outcome()
+        professions.grant_xp(char, "blacksmithing", 10, out2)  # no new rank, no technique
+        assert "prof.technique" not in [e.key for e in out2.events]
+
+
+async def test_tailoring_spins_fiber_into_cloth():
+    cid = await new_character(location="adventurers_guild")
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        await inventory.add_item(s, char, "plant_fiber", 9)
+        assert (await crafting.craft(s, char, "clean_fiber", qty=3)).ok  # Herbalism, at the guild
+        char.location = professions.stall_of("tailoring")
+        assert (await professions.learn(s, char, "tailoring")).ok
+        assert (await crafting.craft(s, char, "thread", qty=3)).ok
+        assert await inventory.count(s, char, "thread") == 6
+        assert (await crafting.craft(s, char, "cloth")).error == "craft.err.rank"  # rank 1
+        professions.grant_xp(char, "tailoring", 80, Outcome())
+        assert (await crafting.craft(s, char, "cloth", qty=2)).ok
+        assert await inventory.count(s, char, "cloth") == 2 and await inventory.count(s, char, "thread") == 0
+
+
 async def test_batches_are_all_or_nothing_and_capped():
     cid = await new_character(location="adventurers_guild")
     async with session_scope() as s:

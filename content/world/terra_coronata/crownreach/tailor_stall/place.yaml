@@ -1,0 +1,20 @@
+name: {es: Telar de Hedda, en: Hedda's Loom}
+article: {es: el, en: ""}
+kind: city
+teaches: tailoring  # su maestra enseña y cambia este oficio
+stations: [loom]
+description:
+  es: >-
+    El puesto más silencioso de la calle: solo el golpeteo del telar y la rueca. Madejas colgadas del techo por
+    colores, retales doblados en una estantería y un maniquí a medio vestir junto a la puerta.
+  en: >-
+    The quietest stall on the street: only the clack of the loom and the spinning wheel. Skeins hang from the
+    ceiling by colour, folded cloth is stacked on a shelf and a half-dressed dummy stands by the door.
+night:
+  es: >-
+    El telar calla. Hedda cose a mano junto a una vela, porque dice que de noche la mano ve mejor que el ojo.
+  en: >-
+    The loom falls quiet. Hedda sews by hand beside a candle, because she says at night the hand sees better
+    than the eye.
+exits:
+  - {to: crownreach_workshops, minutes: 1}

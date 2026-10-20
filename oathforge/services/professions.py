@@ -101,3 +101,19 @@ def grant_xp(char: Character, key: str, amount: int, out: Outcome) -> None:
     after = gathering.rank_for(before + amount)
     if after > gathering.rank_for(before):
         out.add("prof.rank", prof=name, rank=after)
+        announce_techniques(key, gathering.rank_for(before), after, out)
+
+
+def announce_techniques(key: str, before: int, after: int, out: Outcome) -> None:
+    """Every technique the new rank unlocks, each with the recipes it brings, in one line."""
+    c = get_content()
+    prof = c.professions.get(key)
+    if prof is None:
+        return
+    for tech_key, tech in prof.techniques.items():
+        if not before < tech.rank <= after:
+            continue
+        made = [c.items[next(iter(r.outputs))].name for r in c.recipes.values()
+                if r.technique == tech_key and r.profession == key]
+        out.add("prof.technique", technique=tech.name.model_dump(),
+                items={lang: ", ".join(m.get(lang) for m in made) for lang in ("es", "en")})

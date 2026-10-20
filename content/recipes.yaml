@@ -61,6 +61,7 @@ wolf_leather:  # el mismo cuero, de una piel de lobo
 
 iron_sword:
   profession: blacksmithing
+  technique: weapons
   min_rank: 1
   ingredients: {iron_ingot: 2, oak_plank: 1}
   outputs: {iron_sword: 1}
@@ -68,12 +69,14 @@ iron_sword:
 
 healing_potion:
   profession: alchemy
+  technique: potions
   ingredients: {bloodroot: 2, water_flask: 1}
   outputs: {healing_potion: 1}
   xp: 12
 
 mana_potion:
   profession: alchemy
+  technique: potions
   min_rank: 1
   ingredients: {moonleaf: 2, water_flask: 1}
   outputs: {mana_potion: 1}
@@ -81,6 +84,7 @@ mana_potion:
 
 mana_potion_bat:  # the same potion from what the bats drop
   profession: alchemy
+  technique: potions
   min_rank: 1
   ingredients: {bat_wing: 2, water_flask: 1}
   outputs: {mana_potion: 1}
@@ -88,6 +92,7 @@ mana_potion_bat:  # the same potion from what the bats drop
 
 rest_draught:
   profession: alchemy
+  technique: draughts
   min_rank: 3
   ingredients: {restmoss: 2, moonleaf: 1, water_flask: 1}
   outputs: {rest_draught: 1}
@@ -95,6 +100,7 @@ rest_draught:
 
 oak_staff:
   profession: carpentry
+  technique: woodwork
   min_rank: 1
   ingredients: {oak_plank: 2, clean_fiber: 1}
   outputs: {oak_staff: 1}
@@ -102,6 +108,7 @@ oak_staff:
 
 reinforced_leather:
   profession: leatherworking
+  technique: armour
   min_rank: 1
   ingredients: {treated_leather: 3, iron_ingot: 1}
   outputs: {reinforced_leather: 1}
@@ -109,12 +116,14 @@ reinforced_leather:
 
 hunter_stew:
   profession: cooking
+  technique: stews
   ingredients: {raw_meat: 2, bloodroot: 1}
   outputs: {hunter_stew: 1}
   xp: 8
 
 fisher_ration:
   profession: cooking
+  technique: rations
   min_rank: 1
   ingredients: {river_fish: 2, bloodroot: 1}
   outputs: {fisher_ration: 2}
@@ -122,12 +131,14 @@ fisher_ration:
 
 copper_ring:
   profession: jewelcrafting
+  technique: rings
   ingredients: {copper_ingot: 1}
   outputs: {copper_ring: 1}
   xp: 10
 
 gem_ring:
   profession: jewelcrafting
+  technique: gemwork
   min_rank: 2
   ingredients: {copper_ring: 1, rough_gem: 1}
   outputs: {gem_ring: 1}
@@ -135,24 +146,28 @@ gem_ring:
 
 ink:
   profession: scribing
+  technique: inks
   ingredients: {bloodroot: 1, coal: 1}
   outputs: {ink: 2}
   xp: 6
 
 parchment:
   profession: scribing
+  technique: inks
   ingredients: {boar_hide: 1}
   outputs: {parchment: 2}
   xp: 6
 
 scroll_firebolt:
   profession: scribing
+  technique: scrolls
   ingredients: {ink: 1, parchment: 1}
   outputs: {scroll_firebolt: 1}
   xp: 12
 
 scroll_cure:
   profession: scribing
+  technique: scrolls
   min_rank: 1
   ingredients: {ink: 1, parchment: 1, bloodroot: 1}
   outputs: {scroll_cure: 1}
@@ -160,6 +175,7 @@ scroll_cure:
 
 scroll_aegis:
   profession: scribing
+  technique: scrolls
   min_rank: 1
   ingredients: {ink: 1, parchment: 1, moonleaf: 1}
   outputs: {scroll_aegis: 1}
@@ -167,6 +183,7 @@ scroll_aegis:
 
 scroll_sleep:
   profession: scribing
+  technique: greater_scrolls
   min_rank: 2
   ingredients: {ink: 2, parchment: 1, moonleaf: 1}
   outputs: {scroll_sleep: 1}
@@ -174,24 +191,28 @@ scroll_sleep:
 
 black_powder:
   profession: engineering
+  technique: powder
   ingredients: {coal: 2, iron_ore: 1}
   outputs: {black_powder: 2}
   xp: 6
 
 fuse:
   profession: engineering
+  technique: powder
   ingredients: {plant_fiber: 2}
   outputs: {fuse: 2}
   xp: 4
 
 smoke_bomb:
   profession: engineering
+  technique: bombs
   ingredients: {black_powder: 1, fuse: 1, plant_fiber: 1}
   outputs: {smoke_bomb: 1}
   xp: 10
 
 fire_bomb:
   profession: engineering
+  technique: bombs
   min_rank: 1
   ingredients: {black_powder: 2, fuse: 1}
   outputs: {fire_bomb: 1}
@@ -199,7 +220,47 @@ fire_bomb:
 
 flash_bomb:
   profession: engineering
+  technique: devices
   min_rank: 2
   ingredients: {black_powder: 1, fuse: 1, copper_ore: 1}
   outputs: {flash_bomb: 1}
   xp: 30
+
+thread:
+  profession: tailoring
+  technique: spinning
+  ingredients: {clean_fiber: 2}
+  outputs: {thread: 2}
+  xp: 8
+
+cloth:
+  profession: tailoring
+  technique: spinning
+  min_rank: 1
+  ingredients: {thread: 3}
+  outputs: {cloth: 1}
+  xp: 16
+
+padded_jerkin:
+  profession: tailoring
+  technique: garments
+  min_rank: 1
+  ingredients: {cloth: 2, thread: 1}
+  outputs: {padded_jerkin: 1}
+  xp: 28
+
+fishing_line:
+  profession: tailoring
+  technique: cordage
+  min_rank: 2
+  ingredients: {thread: 2, clean_fiber: 1}
+  outputs: {fishing_line: 1}
+  xp: 24
+
+tusk_dagger:  # especial: se aprende de su plano, no por rango
+  profession: blacksmithing
+  special: true
+  min_rank: 1
+  ingredients: {iron_ingot: 1, boar_tusk: 2, treated_leather: 1}
+  outputs: {tusk_dagger: 1}
+  xp: 40

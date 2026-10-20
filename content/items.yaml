@@ -231,6 +231,39 @@ copper_ingot:
   value: 15
   stackable: true
 
+thread:
+  name: {es: Hilo, en: Thread}
+  icon: "🧶"
+  description: {es: "Hilo fino y resistente, hilado en el telar.", en: "Fine strong thread, spun at the loom."}
+  type: material
+  value: 6
+  stackable: true
+
+cloth:
+  name: {es: Tela, en: Cloth}
+  icon: "🧻"
+  description: {es: "Un retal de tela basta, tejida con hilo del telar.", en: "A bolt of plain cloth, woven from loom thread."}
+  type: material
+  value: 14
+  stackable: true
+
+fishing_line:
+  name: {es: Sedal, en: Fishing line}
+  icon: "🪢"
+  description: {es: "Hilo trenzado y encerado, el alma de una buena caña.", en: "Braided waxed line, the soul of a good rod."}
+  type: material
+  value: 20
+  stackable: true
+
+padded_jerkin:
+  name: {es: Jubón acolchado, en: Padded jerkin}
+  icon: "🛡️"
+  description: {es: "Capas de tela cosidas y rellenas: estorba poco y detiene algo.", en: "Layers of stitched, padded cloth: light to wear and it stops something."}
+  type: armor
+  slot: body
+  base_ac: 11
+  value: 30
+
 clean_fiber:
   name: {es: Fibra limpia, en: Clean fiber}
   icon: "🧵"
@@ -385,6 +418,24 @@ iron_sword:
   slot: main_hand
   value: 40
   weapon: {damage: 1d8, damage_type: slashing}
+
+tusk_dagger:
+  name: {es: Daga de colmillo, en: Tusk dagger}
+  icon: "🗡️"
+  description: {es: "Hoja de hierro con la empuñadura tallada en el colmillo del Viejo Colmillo. Entra como un susurro.", en: "An iron blade hilted in Old Tusk's own tusk. It goes in like a whisper."}
+  type: weapon
+  slot: main_hand
+  value: 45
+  weapon: {damage: 1d6, damage_type: piercing, finesse: true}
+
+blueprint_tusk_dagger:
+  name: {es: "Plano: daga de colmillo", en: "Blueprint: tusk dagger"}
+  icon: "📘"
+  description: {es: "Un pliego con el despiece de la daga, dibujado por quien la forjó la primera vez. Se consume al aprenderla.", en: "A sheet with the dagger's pattern, drawn by whoever forged the first one. Reading it uses it up."}
+  type: blueprint
+  teaches: tusk_dagger
+  value: 30
+  stackable: true
 
 oak_staff:
   name: {es: Bastón de roble, en: Oak staff}

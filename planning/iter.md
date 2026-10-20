@@ -22,6 +22,7 @@ Versionado `0.x.y`: **y** (parche) en arreglos y cambios pequeños; **x** (menor
 | 0.8.3 | Planning reorganizado: Possibilium, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md`, `content/officina/` |
 | 0.9.0 | Logros e identidad: 30 logros, dos metalogros, títulos, destacados, objetivos seguidos y reconocimiento retroactivo verificable |
 | 0.9.1 | Hoja de ruta de 0.10 (consolidación) y 0.11 (multijugador): `planning/roadmap.md` |
+| 0.10.13 | Profesiones (F15, 5.ª parte): Sastrería como octavo oficio con su telar, las técnicas que se aprenden enteras al subir de rango y los planos de las recetas especiales |
 | 0.10.12 | Profesiones (F15, 4.ª parte): el refinado como maestría (horno, aserradero, secadero y mesa), y las recetas con panel y comandos (`/recipes`, `/r_<receta>`, `/craft_<receta> n`) |
 | 0.10.11 | Profesiones (F15, 3.ª parte): el Gremio de Aventureros (refinado, Vale y el alistamiento) y el Barrio de Oficios convertido en una calle con un puesto y un maestro por oficio |
 | 0.10.10 | Profesiones (F15, 2.ª parte): el contrato de las recetas (estación por receta, disciplina de la XP, tiers por rango, lotes y requisito de nivel para equipar) |

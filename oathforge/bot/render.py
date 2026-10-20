@@ -991,17 +991,27 @@ def item_stats(key: str, lang: str) -> str:
     return ""
 
 
-def item_page(key: str, lang: str) -> str:
+def item_page(key: str, lang: str, char: Character | None = None) -> tuple[str, InlineKeyboardMarkup | None]:
     """/item_<key>: what an item is, what it is for, where it comes from and what it is worth."""
     c = get_content()
     item = c.items.get(key)
     if item is None:
-        return t(lang, "item.err.unknown")
+        return t(lang, "item.err.unknown"), None
     lines = [f"<b>{escape(item.label(lang))}</b>",
              f"<i>{t(lang, f'item.type.{item.type}')}</i>", RULE, escape(item.description.get(lang))]
     stats = item_stats(key, lang)
     if stats:
         lines += ["", t(lang, "item.use", what=escape(stats))]
+    rows = []
+    if item.type == "blueprint" and item.teaches in c.recipes:
+        taught = c.recipes[item.teaches]
+        made = c.items[next(iter(taught.outputs))].label(lang)
+        known = char is not None and item.teaches in crafting.known(char)
+        lines += ["", t(lang, "craft.teaches_known") if known else
+                  t(lang, "craft.teaches", item=escape(made),
+                    prof=escape(discipline_label(taught.profession, lang)), rank=taught.min_rank)]
+        if char is not None and not known:
+            rows = [[btn(t(lang, "btn.learn_recipe"), cb("bplearn", key, nonce()))]]
     used_in = sorted({c.items[next(iter(r.outputs))].name.get(lang) + f" ({discipline_icon(r.profession)})"
                       for r in c.recipes.values() if key in r.ingredients})
     if used_in:
@@ -1022,7 +1032,7 @@ def item_page(key: str, lang: str) -> str:
         lines.append(t(lang, "item.value", value=item.value, sell=inventory.sell_price(key, 0)))
     else:
         lines.append(t(lang, "item.no_value"))
-    return "\n".join(lines)[:MAX_MESSAGE]
+    return "\n".join(lines)[:MAX_MESSAGE], (markup(rows) if rows else None)
 
 
 async def sell_menu(session: AsyncSession, char: Character, npc_key: str, lang: str) -> tuple[str, InlineKeyboardMarkup]:

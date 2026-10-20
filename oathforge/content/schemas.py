@@ -424,6 +424,13 @@ class Location(Strict):
                 for lang in ("es", "en")}
 
 
+class Technique(Strict):
+    """A group of common recipes that a discipline unlocks on reaching ``rank``, all at once."""
+
+    name: Text
+    rank: int = Field(0, ge=0, le=5)
+
+
 class Profession(Strict):
     """A crafting profession; a character keeps two active (see planning/opificia.md).
 
@@ -438,6 +445,7 @@ class Profession(Strict):
     practice: str | None = None
     hobby: bool = False
     guide: Text | None = None  # how to play it, for /prof_<key>
+    techniques: dict[str, Technique] = {}  # unlocked by rank; a recipe says which one it belongs to
 
 
 class RuleSection(Strict):

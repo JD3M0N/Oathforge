@@ -7,6 +7,8 @@
 blacksmithing:
   name: {es: Herrería, en: Blacksmithing}
   icon: "⚒️"
+  techniques:
+    weapons: {name: {es: Forja de armas, en: Weaponsmithing}, rank: 1}
   station: anvil
   description:
     es: Forja armas, armaduras, herramientas y herrajes en el yunque, con los lingotes que salen del horno.
@@ -26,6 +28,9 @@ blacksmithing:
 alchemy:
   name: {es: Alquimia, en: Alchemy}
   icon: "⚗️"
+  techniques:
+    potions: {name: {es: Pociones, en: Potions}, rank: 0}
+    draughts: {name: {es: Tónicos, en: Draughts}, rank: 3}
   station: alchemy_table
   description:
     es: Destila hierbas en pociones. La raíz de sangre del bosque es su base.
@@ -41,6 +46,8 @@ alchemy:
 carpentry:
   name: {es: Carpintería, en: Carpentry}
   icon: "🪚"
+  techniques:
+    woodwork: {name: {es: Torneado, en: Woodturning}, rank: 1}
   station: carpenter_bench
   description:
     es: "Trabaja la madera ya aserrada: bastones, mangos, cañas y piezas para otros oficios."
@@ -58,6 +65,8 @@ carpentry:
 leatherworking:
   name: {es: Peletería, en: Leatherworking}
   icon: "🧵"
+  techniques:
+    armour: {name: {es: Armaduras ligeras, en: Light armour}, rank: 1}
   station: tannery
   description:
     es: Cose armaduras ligeras, correas y fundas con el cuero del secadero. Vive de lo que traen los cazadores.
@@ -75,6 +84,9 @@ leatherworking:
 jewelcrafting:
   name: {es: Joyería, en: Jewelcrafting}
   icon: "💍"
+  techniques:
+    rings: {name: {es: Anillería, en: Ringwork}, rank: 0}
+    gemwork: {name: {es: Engaste de gemas, en: Gem setting}, rank: 2}
   station: jeweler_bench
   description:
     es: Anillos de cobre y engastes de gemas que valen mucho en el mercado.
@@ -89,6 +101,10 @@ jewelcrafting:
 scribing:
   name: {es: Escribanía, en: Scribing}
   icon: "📜"
+  techniques:
+    inks: {name: {es: Tintas y pergaminos, en: Inks and parchment}, rank: 0}
+    scrolls: {name: {es: Pergaminos menores, en: Lesser scrolls}, rank: 0}
+    greater_scrolls: {name: {es: Pergaminos mayores, en: Greater scrolls}, rank: 2}
   station: scribe_desk
   description:
     es: Tinta de hierbas y pergamino de piel para escribir pergaminos de un solo uso que cualquiera puede leer en combate.
@@ -106,6 +122,10 @@ scribing:
 engineering:
   name: {es: Ingeniería, en: Engineering}
   icon: "💣"
+  techniques:
+    powder: {name: {es: Pólvora y mechas, en: Powder and fuses}, rank: 0}
+    bombs: {name: {es: Bombas, en: Bombs}, rank: 0}
+    devices: {name: {es: Artificios, en: Devices}, rank: 2}
   station: workbench
   description:
     es: Pólvora de carbón y hierro, mechas de fibra y bombas para lanzar en combate.
@@ -119,6 +139,27 @@ engineering:
       Powder comes from coal and iron ore (⛏️ Mining) and fuses from plant fibre (🌿 Herbalism, 🪓 Woodcutting).
       Smoke bomb from the start (escape without a roll), fire bomb at rank 1 (burns a whole row) and flash bomb at
       rank 2 (stuns). In combat, from "🎒 Items".
+
+tailoring:
+  name: {es: Sastrería, en: Tailoring}
+  icon: "🪡"
+  techniques:
+    spinning: {name: {es: Hilado y tejido, en: Spinning and weaving}, rank: 0}
+    garments: {name: {es: Prendas, en: Garments}, rank: 1}
+    cordage: {name: {es: Cordelería, en: Cordage}, rank: 2}
+  station: loom
+  description:
+    es: Hila y teje la fibra limpia en hilo, tela y prendas; también hace el sedal de las cañas.
+    en: Spins and weaves clean fiber into thread, cloth and garments; it also makes the line for fishing rods.
+  guide:
+    es: >-
+      Recoge fibra vegetal (🌿 Herboristería) y límpiala en la mesa del Gremio de Aventureros. En el telar hilas
+      la fibra limpia y tejes la tela; con ella haces a rango 1 un jubón acolchado y, a rango 2, el sedal que la
+      carpintería necesita para sus cañas. La tela también sirve para la cama de tu habitación.
+    en: >-
+      Gather plant fiber (🌿 Herbalism) and clean it at the Adventurers Guild table. At the loom you spin clean
+      fiber into thread and weave it into cloth; with it you make a padded jerkin at rank 1 and, at rank 2, the
+      line carpentry needs for its rods. Cloth is also what the bed in your room is made of.
 
 fishing:
   name: {es: Pesca, en: Fishing}
@@ -141,6 +182,9 @@ fishing:
 cooking:
   name: {es: Cocina, en: Cooking}
   icon: "🍲"
+  techniques:
+    stews: {name: {es: Guisos, en: Stews}, rank: 0}
+    rations: {name: {es: Raciones, en: Rations}, rank: 1}
   station: hearth
   hobby: true
   description:

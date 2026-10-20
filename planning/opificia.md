@@ -53,7 +53,7 @@ Cada actividad termina con una crónica personal de Gemini 3.1 Flash-Lite: 15 al
 
 El contrato completo de F15 está en [roadmap-profesiones.md](roadmap-profesiones.md) (decisiones D01–D25, fases y notas). En resumen:
 
-- Dos oficios activos; recolección libre; aficiones sin plaza. **Sastrería** entra como octavo oficio y sí ocupa plaza.
+- Dos oficios activos; recolección libre; aficiones sin plaza. **Sastrería** es ya el octavo oficio (telar de Hedda) y sí ocupa plaza.
 - El **refinado básico pertenece a la maestría**: menas → lingotes en el horno (XP de Minería), troncos → tablones en el aserradero (Tala), pieles → cuero en el secadero (Desuello), plantas → fibra limpia en la mesa de preparación (Herboristería). Las cuatro estaciones están en el Gremio y no hace falta oficio para usarlas.
 - **Dos ramas por maestría y por Pesca**, a rango 2, con una sola activa; cambiar cuesta oro en el Gremio y la rama anterior queda pausada, no borrada.
 - **T0 = recetas de rango 0–2, T1 = rango 3–5.** El equipo de combate T1 se fabrica y se vende, y pide nivel 10 para equiparse.

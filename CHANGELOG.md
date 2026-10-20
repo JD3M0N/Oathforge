@@ -4,6 +4,20 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.13] - 2026-10-20
+
+Profesiones (F15, 5.ª parte): Sastrería, las técnicas y los planos.
+
+### Añadido
+- **Sastrería**, el octavo oficio, con su puesto: el **Telar de Hedda**, maestra sastra. La cadena es fibra vegetal → fibra limpia (Herboristería, en el gremio) → **hilo** → **tela** → **jubón acolchado** (CA 11) y, a rango 2, el **sedal** que la carpintería necesitará para sus cañas.
+- **Técnicas**: cada rango nuevo enseña de golpe una técnica entera con todas sus recetas comunes, y lo dice en una línea («📘 Técnica aprendida: Forja de armas · Espada de hierro»). Dieciséis técnicas repartidas entre los ocho oficios y las dos aficiones.
+- **Planos** (`type: blueprint`): un pliego que enseña una receta especial. Leerlo gasta ese ejemplar y el conocimiento ya no se pierde, tampoco al cambiar de oficio; si ya la conoces, no se gasta y puedes vender el plano. La ficha `/item_` de un plano dice qué enseña y trae el botón «📘 Aprender la receta».
+- La primera receta especial: la **daga de colmillo** (1d6 perforante, sutil), que se forja con un lingote, dos colmillos y cuero. Su plano lo suelta **el Viejo Colmillo**, el jefe del tutorial.
+- Migración **0011**: `characters.crafting` guarda lo aprendido de los planos (y, más adelante, la rama y la herramienta elegidas de cada disciplina).
+
+### Cambiado
+- El reglamento cuenta los ocho oficios, las técnicas por rango y los planos.
+
 ## [0.10.12] - 2026-10-20
 
 Profesiones (F15, 4.ª parte): el refinado pertenece a las maestrías, y las recetas tienen panel y comandos.

@@ -158,16 +158,18 @@ professions:
     es: |-
       Hay tres cosas distintas:
       • ⛏️ Maestrías de campo (minería, tala, herboristería, desuello, rastreo): libres para todos, suben con las actividades. /masteries
-      • 🛠️ Oficios (herrería, alquimia, carpintería, peletería, joyería, escribanía, ingeniería): tienes {slots} plazas. Cada oficio se aprende gratis con su maestro, en su puesto del Barrio de Oficios, y allí mismo se fabrica; cambiarlo cuesta {swap_cost} de oro y no pierdes lo aprendido. /professions
+      • 🛠️ Oficios (herrería, alquimia, carpintería, peletería, joyería, escribanía, ingeniería y sastrería): tienes {slots} plazas. Cada oficio se aprende gratis con su maestro, en su puesto del Barrio de Oficios, y allí mismo se fabrica; cambiarlo cuesta {swap_cost} de oro y no pierdes lo aprendido. /professions
       • 🍲 Aficiones (cocina y pesca): opcionales y sin plaza. /hobbies
       • 🔨 Refinar es cosa de las maestrías, no de los oficios: en el Gremio de Aventureros, la mena se funde en lingotes en el horno (XP de Minería), los troncos se asierran en tablones (Tala), las pieles se curan en cuero (Desuello) y la fibra se limpia en la mesa de preparación (Herboristería). No hace falta oficio para refinar, y lo refinado es lo que piden los oficios.
+      Al subir de rango aprendes de golpe una técnica entera, con todas sus recetas comunes: no se compran una a una. Las recetas especiales no se aprenden por rango, sino leyendo su 📘 plano, que se gasta al hacerlo y no se olvida nunca (ni al cambiar de oficio); si ya la conoces, el plano no se gasta y puedes venderlo.
       Con lo refinado y lo del campo fabricas en el puesto de cada oficio: armas, armaduras, pociones, anillos, pergaminos o bombas. Fabricar es al momento si tienes los ingredientes y el rango, y puedes hacer varias de una vez (hasta {craft_batch}). Con /recipes ves todas tus recetas por pestañas, cada una con su /r_<receta>; desde ahí fabricas, o escribes /craft_<receta> 5.
     en: |-
       There are three different things:
       • ⛏️ Field masteries (mining, woodcutting, herbalism, skinning, tracking): free for everyone, they grow with activities. /masteries
-      • 🛠️ Professions (blacksmithing, alchemy, carpentry, leatherworking, jewelcrafting, scribing, engineering): you have {slots} slots. Each trade is learned for free from its master, at their stall on Craftsmen’s Row, and crafted there too; swapping one costs {swap_cost} gold and you keep what you learned. /professions
+      • 🛠️ Professions (blacksmithing, alchemy, carpentry, leatherworking, jewelcrafting, scribing, engineering and tailoring): you have {slots} slots. Each trade is learned for free from its master, at their stall on Craftsmen’s Row, and crafted there too; swapping one costs {swap_cost} gold and you keep what you learned. /professions
       • 🍲 Hobbies (cooking and fishing): optional and slot-free. /hobbies
       • 🔨 Refining belongs to the masteries, not to the trades: at the Adventurers' Guild, ore is smelted into ingots at the furnace (Mining XP), logs are sawn into planks (Woodcutting), hides are cured into leather (Skinning) and fiber is cleaned at the preparation table (Herbalism). No profession is needed to refine, and what you refine is what the trades ask for.
+      Each new rank teaches you a whole technique at once, with all its common recipes: you never buy them one by one. Special recipes are not learned by rank but by reading their 📘 blueprint, which is spent doing it and is never forgotten (not even when you change trade); if you already know it, the blueprint is not spent and you can sell it.
       With refined and field materials you craft at each trade's stall: weapons, armor, potions, rings, scrolls or bombs. Crafting is instant if you have the ingredients and the rank, and you can make several at once (up to {craft_batch}). /recipes shows all your recipes in tabs, each with its /r_<recipe>; you craft from there, or type /craft_<recipe> 5.
 
 travel:

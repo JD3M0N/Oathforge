@@ -378,6 +378,8 @@ def grant_mastery(char: Character, skill: str, amount: int, out: Outcome) -> Non
         rank = gathering.rank_for(before + amount)
         if rank > gathering.rank_for(before):
             out.add("prof.rank", prof=name, rank=rank)
+            from oathforge.services import professions  # its techniques, like any other discipline
+            professions.announce_techniques(hobby, gathering.rank_for(before), rank, out)
         return
     char.masteries = {**(char.masteries or {}), skill: before + amount}
     out.add("mastery.xp", skill=mastery_name(skill), amount=amount)

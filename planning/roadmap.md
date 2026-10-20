@@ -537,9 +537,9 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 
 - [x] Fase 0: contrato de F15 y fichas de planning (0.10.9).
 - [x] Fase 1: estación por receta, disciplina que recibe la XP, tier por rango, receta de misión, plano, requisito de nivel para equipar y lotes (0.10.10).
-- [x] Fase 2: Gremio de Aventureros, calle con un puesto y un maestro por oficio, Tessa en la Forja, Vale en el Gremio y tutorial adaptado (0.10.11; el octavo puesto, el telar, llega con Sastrería en la fase 4).
+- [x] Fase 2: Gremio de Aventureros, calle con un puesto y un maestro por oficio, Tessa en la Forja, Vale en el Gremio y tutorial adaptado (0.10.11).
 - [x] Fase 3: refinado con XP de maestría (horno, aserradero, secadero, mesa) y los comandos `/recipes`, `/r_<id>` y `/craft_<id>` (0.10.12).
-- [ ] Fase 4: Sastrería como octavo oficio, técnicas por rango, planos y catálogo T0 autónomo de los ocho oficios.
+- [x] Fase 4: Sastrería como octavo oficio, técnicas por rango y planos (0.10.13; los componentes cruzados de cada oficio llegan con las herramientas, en la fase 8).
 - [ ] Fase 5: habitación en el tutorial con cama, descanso gratis y cofre ampliable (cubre el cofre personal de [F06](#F06)).
 - [ ] Fase 6: instantánea de reglas al iniciar una actividad y hallazgo raro por actividad (cierra la casilla pendiente de [F08](#F08)).
 - [ ] Fase 7: dos ramas por maestría y Pesca a rango 2, cambio con oro y piloto de Rastreo.

@@ -277,6 +277,15 @@ def validate_references(c: Content) -> None:
             errors.append(f"recipe {key}: quantities must be positive")
         if recipe.quest is not None:
             need("quest", recipe.quest, c.quests, f"recipe {key}")
+        if recipe.technique is not None:
+            techniques = c.professions[recipe.profession].techniques if recipe.profession in c.professions else {}
+            if recipe.technique not in techniques:
+                errors.append(f"recipe {key}: unknown technique '{recipe.technique}' for {recipe.profession}")
+            elif techniques[recipe.technique].rank > recipe.min_rank:
+                errors.append(f"recipe {key}: its technique unlocks at rank {techniques[recipe.technique].rank}, "
+                              f"after the recipe's own {recipe.min_rank}")
+        if recipe.special and recipe.technique is not None:
+            errors.append(f"recipe {key}: a special recipe comes from a blueprint, not from a technique")
         if recipe.special and not any(i.teaches == key for i in c.items.values()):
             errors.append(f"recipe {key}: special, but no blueprint teaches it")
     for key, item in c.items.items():

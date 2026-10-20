@@ -13,7 +13,7 @@ EVENT_FIELDS = {
     "activity": {"skill", "tool"}, "mastery": {"rank", "skill"}, "quest": {"quest"},
     "decision": {"key"}, "reputation": {"faction", "value"},
     "seen": {"monster"}, "secrets": {"monster"}, "unlock": {"key"},
-    "level": {"level"}, "profession": {"key", "rank"},
+    "level": {"level"}, "profession": {"key", "rank"}, "blueprint": {"recipe"},
 }
 
 class AchievementCondition(Strict):

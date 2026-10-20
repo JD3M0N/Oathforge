@@ -229,3 +229,21 @@ dunn:
     Black powder needs coal and iron ore; fuses, plant fibre. Ore is smelted at the guild's furnace. He makes
     mechanisms, locks and bombs, and teaches engineering at his workshop.
   passive_perception: 12
+
+hedda:
+  name: {es: Hedda, en: Hedda}
+  title: {es: maestra sastra, en: master tailor}
+  schedule: {day: tailor_stall, night: broken_crown_tavern}
+  greeting:
+    es: "«Cierra la puerta, que el polvo se mete en la urdimbre. ¿Vienes por tela, por sedal o por aprender?»"
+    en: "\"Shut the door, the dust gets into the warp. Here for cloth, for line, or to learn?\""
+  persona: >-
+    Hedda is a calm, exacting tailor with thread wound round her wrist and pins in her collar. Speaks little and
+    notices everything; judges people by their seams and mends an adventurer's cloak while telling them off.
+  goals: Weave something nobody in Crownreach has seen; teach one apprentice who does not rush the warp.
+  secrets: She recognises the weave of the Hollow Choir's robes and has not told the Guard.
+  knowledge: >-
+    Plant fiber comes from the Whispering Woods and Redroot Clearing and is cleaned at the guild's herb table.
+    At the loom, clean fiber becomes thread, thread becomes cloth, and cloth becomes garments; waxed thread
+    becomes the fishing line carpenters need for their rods. She teaches tailoring at her loom.
+  passive_perception: 15

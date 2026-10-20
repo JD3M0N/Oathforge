@@ -130,6 +130,10 @@ Se ven con «🖼️ Ver lugar» (0.10.5); mientras falten, el botón responde c
   ```text
   A scribe's arcade on a medieval craft street, two slanted desks, inkwells in a row, parchments drying on a line, a stooped scribe with ink-stained cuffs copying a map. Cool even daylight. [ESTILO]
   ```
+- [ ] **Telar de Hedda** (`crownreach/tailor_stall/`)
+  ```text
+  A tailor's stall on a medieval craft street, a wooden loom and a spinning wheel, skeins of yarn hanging from the ceiling by colour, folded cloth stacked on a shelf, a half-dressed dummy by the door, a calm tailor at work. Soft diffuse daylight, quiet. [ESTILO]
+  ```
 - [ ] **Taller del Ingeniero** (`crownreach/engineer_stall/`)
   ```text
   An engineer's shed on a medieval craft street, reinforced door with soot marks on the lintel, coiled fuses, powder crates stacked away from the fire, half-assembled clockwork mechanisms on the bench. Cluttered, smoky, bright work light. [ESTILO]

@@ -320,6 +320,8 @@ async def _dispatch(session, char, verb: str, arg: str, r, context) -> Outcome:
     if verb == "plearn":  # "<profession>" or "<profession>:<the one it replaces>"
         key, _, old = arg.partition(":")
         return await professions.learn(session, char, key, old or None)
+    if verb == "bplearn":  # read a blueprint: it teaches its recipe and is spent
+        return await crafting.learn_blueprint(session, char, arg)
     if verb == "craft":  # "<recipe>" or "<recipe>:<how many>"
         key, _, qty = arg.partition(":")
         return await crafting.craft(session, char, key, r, qty=int(qty) if qty.isdigit() else 1)
