@@ -68,6 +68,7 @@ Pacto de Plata y Sindicato Carmesí con reputación −100..100 (precios ±25 %)
 ## Próximo
 
 - **Entregar misiones a quien las dio** (prioridad alta del TODO; **MIS-02**).
+- **Gremio de Aventureros y calle de los oficios** ([F15](roadmap.md#F15), [contrato](roadmap-profesiones.md)): un lugar nuevo junto a la plaza con Vale, el alistamiento, las estaciones de refinado, un fogón, las especializaciones y la habitación propia (cama y cofre); y el Barrio de Oficios, que conserva su id, convertido en una calle de la que cuelgan ocho puestos, cada uno un lugar con su estación y su maestro. El tutorial se adapta: la misión 1 empieza en el Gremio, la 2 visita Gremio y calle, la 3 lleva a Tessa a su Forja y entra una misión nueva de la habitación.
 - Más misiones tras nivel 5 y encargos repetibles de caza (**MIS-05**, plantillas validadas).
 - **AVE-01..09** banco de aventuras; puertas con varias soluciones (**AVE-08**, PKG-07).
 - **Fase 2 del viaje** (**VIA-01..10**): viajar ≠ explorar; escenas con presupuesto (0 rutina, 1 primera visita, 1–2 expedición corta); estilos 🛡️ Prudente / 🧭 Explorador / ⚡ Directo, sin gastar consumibles solos; rutas distintas de verdad; atajos con `requires_flag` (Sendero de los Carboneros, barquero); 3 favoritos; cambios de ruta por eventos revalidados al salir y al continuar; cada tramo resuelto una vez (nonce). Si el viaje vuelve a gastar tiempo, mover el reloj y avisarlo en el rulebook.

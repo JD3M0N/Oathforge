@@ -20,6 +20,7 @@ Resumen de [Possibilium §17–18](Possibilium.md#s17).
 
 ## Próximo
 
+- **Cofre, planos y maestros** ([F15](roadmap.md#F15), [contrato](roadmap-profesiones.md)): el cofre personal (**EQU-07**) vive en la habitación del Gremio, con depositar y retirar atómicos, capacidad por espacios y mejoras de Carpintería; cada maestro de oficio vende las herramientas de su oficio, los componentes de terceros que sus recetas piden y planos; los planos son objetos comerciables que enseñan una receta especial y se gastan una sola vez.
 - **ECO-01** pedido de fabricación con custodia (materiales + comisión, aceptación única, cancelación/caducidad que devuelve una vez); tickets CRAFT-01/02.
 - **ECO-05** pedidos PNJ con demanda limitada (herramienta, lote de pociones, comida de expedición).
 - **ECO-02..04** órdenes de compra, listados a precio fijo con comisión, intercambio seguro.

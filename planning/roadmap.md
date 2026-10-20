@@ -53,7 +53,7 @@ La serie 0.9 ya está publicada: **0.9.0** trajo los logros y **0.9.1** este doc
 | 0.10-C · Bucles cotidianos | 0.10.5 – 0.10.6 | Descanso corto y `/rest`; cofre personal; «Algo brilla» |
 | 0.10-D · Dar propósito | **0.10.8** (logros) y 0.10.9 | 0.10.8 auditoría de logros, nombre único y título visible; después entrega de misiones al dador y juramento verificable |
 | 0.10-E · Reglas de combate | 0.10.8 | Contrato de acción, estados y jefe de dos fases; matriz de ocho clases |
-| 0.10-F · Profundizar progresión | 0.10.9 | Auditoría de recetas y economía; primeras ramas de especialización |
+| 0.10-F · Profundizar progresión | **0.10.9 – 0.10.19** | F15 por fases ([contrato](roadmap-profesiones.md)): 0.10.9 el contrato; 0.10.10 recetas y tiers; 0.10.11 Gremio y calle con un puesto por oficio; 0.10.12 refinado; 0.10.13 Sastrería y planos; 0.10.14 habitación y cofre; 0.10.15 instantánea de actividad; 0.10.16 ramas; 0.10.17 herramientas; 0.10.18 catálogo T1; 0.10.19 cierre. F16 y F19 después |
 | 0.10-G · Integrar | 0.10.10 | Tutorial completo ES/EN, arco de nivel 5, lote visual |
 | 0.10-H · Candidato | 0.10.11 | Puerta de salida, migración, restauración y documentación |
 
@@ -296,7 +296,7 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 **Propuesta base 0.10:**
 
 - [ ] Comparar equipo actual/nuevo e identificar material, consumible y objeto de misión. *(0.10.2: el inventario ya separa equipo, consumibles, materiales y herramientas, con un icono por objeto; falta comparar.)*
-- [ ] Añadir cofre personal en ciudad con depositar/retirar atómico, cantidades claras y sin copia de objetos.
+- [ ] Añadir cofre personal en ciudad con depositar/retirar atómico, cantidades claras y sin copia de objetos. *(Lo entrega la fase 5 de [F15](#F15): el cofre vive en la habitación del Gremio de Aventureros y se amplía con Carpintería.)*
 - [ ] Mostrar procedencia ya disponible; ampliar origen de botín solo cuando se registre realmente.
 - [ ] Decidir expansión gradual: primero cuello y anillos si hay objetos útiles; cabeza/manos/pies/capa después de presupuestar sus bonos.
 
@@ -348,7 +348,7 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 **Propuesta base 0.10:**
 
 - [ ] Mostrar resultado esperado, herramienta, riesgo y tiempo antes de empezar.
-- [ ] Persistir versión o instantánea suficiente de tablas/reglas al iniciar; hoy claim lee el contenido vigente.
+- [ ] Persistir versión o instantánea suficiente de tablas/reglas al iniciar; hoy claim lee el contenido vigente. *(Lo entrega la fase 6 de [F15](#F15), junto con el hallazgo raro por actividad.)*
 - [ ] Asegurar cierre/pago único y recuperación de notificaciones tras reinicio.
 - [ ] Probar la relación actividad corta/larga y sus desenlaces; preservar aceleración tutorial de forma explícita.
 - [ ] Convertir «Algo brilla» en descubrimiento interactivo con recompensa limitada, sin promesa vacía de la narración.
@@ -531,24 +531,29 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 
 **Implementado:** 7 oficios/2 plazas, maestrías libres y Cocina/Pesca sin plaza; 26 recetas y XP conservada al cambiar oficio.
 
-**Diseño por cerrar:** Utilidad de cada oficio, interdependencia jugable en solitario, portabilidad, tiers y afinidades.
+**Diseño cerrado:** [roadmap-profesiones.md](roadmap-profesiones.md) es el contrato de esta ficha: decisiones D01–D25, ocho oficios, refinado de maestrías, ramas a rango 2, herramientas, T0/T1 por rango, Gremio de Aventureros, calle con un puesto por oficio y habitación propia. Las notas N01–N13 recogen lo que queda futuro.
 
-**Propuesta base 0.10:**
+**Propuesta base 0.10** (una fase por parche, ver §11 del contrato):
 
-- [ ] Auditar cada receta: origen de materiales, nivel/rango, estación, coste, utilidad y precio de venta.
-- [ ] Mantener dos plazas; unificar presentación sin mezclar XP de clase, maestría y oficio.
-- [ ] Organizar recetas por rango y función antes de imponer nueve combinaciones tier/complejidad.
-- [ ] Prototipo propuesto de afinidades: una maestría con dos enfoques comparables; extender solo si ambas decisiones aportan valor.
-- [ ] Prototipo de herramienta portátil para recetas básicas; estación mantiene función en avanzadas. Aprobación pendiente.
-- [ ] Garantizar materiales alternativos de PNJ/tienda para recetas que exijan un tercer oficio; nadie debe necesitar una segunda cuenta.
+- [x] Fase 0: contrato de F15 y fichas de planning (0.10.9).
+- [ ] Fase 1: estación por receta, disciplina que recibe la XP, tier por rango, receta de misión, plano, requisito de nivel para equipar y lotes.
+- [ ] Fase 2: Gremio de Aventureros, calle con ocho puestos y su maestro cada uno, Tessa en la Forja, Vale en el Gremio y tutorial adaptado.
+- [ ] Fase 3: refinado con XP de maestría (horno, aserradero, secadero, mesa) y los comandos `/recipes`, `/r_<id>` y `/craft_<id>`.
+- [ ] Fase 4: Sastrería como octavo oficio, técnicas por rango, planos y catálogo T0 autónomo de los ocho oficios.
+- [ ] Fase 5: habitación en el tutorial con cama, descanso gratis y cofre ampliable (cubre el cofre personal de [F06](#F06)).
+- [ ] Fase 6: instantánea de reglas al iniciar una actividad y hallazgo raro por actividad (cierra la casilla pendiente de [F08](#F08)).
+- [ ] Fase 7: dos ramas por maestría y Pesca a rango 2, cambio con oro y piloto de Rastreo.
+- [ ] Fase 8: herramientas especializadas con perfil tipado, una por disciplina.
+- [ ] Fase 9: catálogo T1 con materiales de rango 3–5 y equipo de combate con requisito de nivel.
+- [ ] Fase 10: cierre, partida ES/EN y simulación.
 
 **Flujo de jugador:** Oficios → Herrería → Espada → ver materiales/origen → fabricar → comparar; minería puede ofrecer enfoque hierro o gemas.
 
 **Dependencias y riesgos:** F08/F06/F16/F18. Bombas y pergaminos se balancean frente a habilidades, no solo frente a su precio.
 
-**Se considera terminado cuando:** Cada oficio tiene un resultado útil; la fabricación no duplica materiales; cambiar oficio no borra XP; Cocina/Pesca no consumen plazas.
+**Se considera terminado cuando:** Cada oficio tiene un resultado útil; la fabricación no duplica materiales; cambiar oficio no borra XP; Cocina/Pesca no consumen plazas. La puerta de salida completa está en §12.2 del contrato.
 
-**Archivos a revisar/actualizar:** [planning/opificia.md](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/planning/opificia.md), [content/professions.yaml](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/content/professions.yaml), [content/recipes.yaml](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/content/recipes.yaml), [oathforge/services/professions.py](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/oathforge/services/professions.py), [oathforge/services/crafting.py](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/oathforge/services/crafting.py).
+**Archivos a revisar/actualizar:** [planning/roadmap-profesiones.md](roadmap-profesiones.md), [planning/opificia.md](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/planning/opificia.md), [content/professions.yaml](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/content/professions.yaml), [content/recipes.yaml](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/content/recipes.yaml), [oathforge/services/professions.py](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/oathforge/services/professions.py), [oathforge/services/crafting.py](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/oathforge/services/crafting.py).
 
 **Ampliación o frontera 0.11:** Arqueología/cartografía/juegos/primeros auxilios son candidatos, no todos obligatorios. Vetas compartidas y servicios entre jugadores en 0.11.
 
@@ -704,7 +709,7 @@ Las fases son incrementos comprobables. Una fase no autoriza automáticamente to
 | 0.10-C · Cerrar bucles cotidianos | F06, F07, F08, F10 base; parámetros iniciales F16 | Explorar, reunir, guardar, fabricar y recuperarse sin bloqueo |
 | 0.10-D · Dar propósito | F12, F17 mínimo y auditoría de F04 (entregada en 0.9.0); borrador F13 | Completar, entregar, cobrar y reconocer un logro; juramento por hecho verificable |
 | 0.10-E · Resolver reglas de combate | F18 base, F14 y F09; ajustar F05 | Ocho clases y encuentros actuales coherentes con descansos y consumibles |
-| 0.10-F · Profundizar progresión | F15 y F16 definitivos; F19 tras E/D | Oficios útiles, economía auditada y ocho primeras ramas funcionales |
+| 0.10-F · Profundizar progresión | F15 por fases (su [contrato](roadmap-profesiones.md)), F16 definitiva; F19 tras E/D | Ocho oficios con bucle propio, refinado de maestrías, ramas, herramientas, habitación con cofre, economía auditada y ocho primeras ramas de clase |
 | 0.10-G · Integrar la experiencia | F13 completo, F02 prioritario y arco nivel 5 | Crear personaje → tutorial → cripta → especialización → actividad posnivel 5 |
 | 0.10-H · Candidato a versión | Migración, restauración, PostgreSQL, pruebas ES/EN y documentación | Puerta de salida completa; base preparada para iniciar 0.11 |
 

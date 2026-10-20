@@ -82,6 +82,7 @@ Resumen de [Possibilium §4](Possibilium.md#s04). Cómo se ve el juego en el cha
 
 ## Próximo
 
+- **Oficios** ([F15](roadmap.md#F15), [contrato](roadmap-profesiones.md)): fabricar con ×1 · ×5 · máx y el coste total, ingredientes con `tengo/necesito` y de dónde sale lo que falta, selector 🎒 Mochila / 📦 Cofre, y comandos nuevos `/recipes`, `/r_<id>`, `/craft_<id> [n]`, `/guild`, `/room` y `/stash`.
 - **UX-04** estados explícitos de acción (pendiente, interpretando, requiere tirada, resuelta, rechazada).
 - **UX-05** `/resume`, `/unstuck`, `/party`, `/rest`.
 - Inventario comparativo.

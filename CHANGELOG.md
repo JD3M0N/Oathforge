@@ -4,6 +4,20 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.9] - 2026-10-20
+
+Profesiones, maestrías y aficiones (F15, 1.ª parte): el contrato. Solo documentación; el juego no cambia.
+
+### Añadido
+- **`planning/roadmap-profesiones.md`**, el contrato de F15 auditado sobre 0.10.8: veinticinco decisiones (D01–D25), la cadena de refinado de cada maestría, las dos ramas por disciplina, las herramientas con sus porcentajes, los ocho oficios con Sastrería, las técnicas y los planos, el Gremio de Aventureros, la calle con un puesto por oficio, la habitación con cama y cofre, los contratos técnicos, la interfaz y once fases de entrega con su puerta de salida. Las trece notas de experimentos y balance (N01–N13) quedan al final, sin recortar.
+- Decisiones nuevas de esta revisión: **T0 son las recetas de rango 0–2 y T1 las de rango 3–5**, así que el tier no es un campo que mantener a mano; el catálogo T1 se publica entero y su equipo de combate pide nivel 10 para equiparse; el **Barrio de Oficios conserva su id** y pasa a ser una calle de la que cuelgan ocho puestos, cada uno un lugar con su estación y su **maestro**; **Tessa** se convierte en la maestra de Herrería en su Forja; el **Gremio de Aventureros** reúne a Vale, el refinado, un fogón, las especializaciones y la habitación; y la habitación entra **dentro del tutorial**.
+
+### Cambiado
+- **F15 en `planning/roadmap.md`** deja de ser una lista de auditorías y pasa a ser once fases con su versión (0.10.9–0.10.19), enlazadas al contrato. El hito 0.10-F abarca ese tramo.
+- El **cofre personal** de F06 y la **instantánea de reglas** que le falta a F08 se entregan dentro de F15 (fases 5 y 6); sus casillas lo dicen.
+- `planning/opificia.md` recoge lo decidido y lo que queda futuro, y advierte de dos trampas del código: las maestrías están fijas en `engine/gathering.py`, no en el contenido, y la estación de una receta sale de su oficio, no de la receta.
+- `planning/mundus.md`, `mercatura.md`, `facies.md`, `README.md` e `iter.md` apuntan al contrato con lo que les toca.
+
 ## [0.10.8] - 2026-10-19
 
 Logros (F04): auditoría, un solo nombre y el título donde se ve.
