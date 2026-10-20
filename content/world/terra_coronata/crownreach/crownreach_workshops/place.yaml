@@ -1,22 +1,29 @@
 name: {es: Barrio de Oficios, en: Craftsmen's Row}
 article: {es: el, en: ""}
 kind: city
-guild: true  # aquí se aprenden y cambian los oficios
-stations: [anvil, alchemy_table, carpenter_bench, tannery, jeweler_bench, scribe_desk, workbench]
+# La calle: cada oficio tiene su puesto propio, con su maestro y su estación. Aquí no se fabrica nada.
 description:
   es: >-
-    Una calle estrecha detrás del mercado donde nunca se apaga el ruido: el yunque de los herreros, el burbujeo
-    de los alambiques, el serrucho de los carpinteros. En la puerta del gremio, una pizarra anuncia que se
-    admiten aprendices.
+    Una calle estrecha detrás del mercado donde nunca se apaga el ruido: el yunque de Tessa en la boca,
+    el burbujeo de los alambiques, el serrucho del carpintero y el olor de la curtiduría al fondo. Cada
+    puesto tiene su maestro, y en todas las puertas hay una pizarra que anuncia que se admiten aprendices.
   en: >-
-    A narrow street behind the market where the noise never stops: the smiths' anvils, the bubbling stills,
-    the carpenters' saws. On the guild door, a slate announces that apprentices are welcome.
+    A narrow street behind the market where the noise never stops: Tessa's anvil at the mouth, the
+    bubbling of the stills, the carpenter's saw and the smell of the tannery at the far end. Each stall
+    has its master, and every door carries a slate announcing that apprentices are welcome.
 night:
   es: >-
-    Las fraguas se enfrían y solo un alquimista trasnochador mantiene la luz encendida. Los bancos de trabajo
-    siguen abiertos a quien quiera usarlos.
+    Las fraguas se enfrían y solo la botica del alquimista mantiene la luz encendida. Las puertas de los
+    puestos siguen abiertas a quien quiera usar su banco.
   en: >-
-    The forges cool and only a night-owl alchemist keeps a light on. The workbenches stay open to anyone who
-    wants them.
+    The forges cool and only the alchemist's shop keeps a light on. The stalls' doors stay open to
+    anyone who wants to use their bench.
 exits:
   - {to: crownreach_market, minutes: 2}
+  - {to: forge_stall, minutes: 1}
+  - {to: alchemist_stall, minutes: 1}
+  - {to: carpenter_stall, minutes: 1}
+  - {to: tannery_stall, minutes: 1}
+  - {to: jeweler_stall, minutes: 1}
+  - {to: scribe_stall, minutes: 1}
+  - {to: engineer_stall, minutes: 1}

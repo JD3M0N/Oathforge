@@ -405,7 +405,7 @@ class Location(Strict):
     hunt_night: Text | None = None
     gathering: list[Gathering] = []
     stations: list[Station] = []  # crafting stations here: "Craft" in the scene
-    guild: bool = False  # professions are learned and swapped here
+    teaches: str | None = None  # the profession learned and swapped here, with its master (one stall per trade)
     fixed_encounters: list[FixedEncounter] = []
     scene_objects: dict[str, SceneObject] = {}
     discoveries: dict[str, Discovery] = {}

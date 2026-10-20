@@ -1,0 +1,26 @@
+name: {es: Gremio de Aventureros, en: Adventurers' Guild}
+article: {es: el, en: ""}
+kind: city
+# Aquí se alista todo el mundo (Vale), se refina lo que se trae del campo y, más adelante, se eligen
+# las especializaciones de maestría y se monta la habitación propia.
+stations: [furnace, sawmill, curing_rack, herb_table, hearth]
+description:
+  es: >-
+    Un caserón de piedra con el escudo del gremio sobre la puerta y un tablón lleno de notas clavadas.
+    Dentro huele a carbón y a serrín: el horno de fundición al fondo, el puesto de aserrado junto a la
+    ventana, el secadero de pieles y una mesa larga donde se limpian las hierbas. Los reclutas entran y
+    salen con sacos a la espalda.
+  en: >-
+    A stone hall with the guild's crest above the door and a board thick with pinned notes. Inside it
+    smells of coal and sawdust: the smelting furnace at the back, the sawing station by the window, the
+    curing rack for hides and a long table where herbs are cleaned. Recruits come and go with sacks on
+    their backs.
+night:
+  es: >-
+    El horno guarda rescoldos y alguien ha dejado una lámpara encendida sobre el tablón. Los puestos
+    siguen abiertos para quien vuelve de noche con la mochila llena.
+  en: >-
+    The furnace keeps its embers and someone has left a lamp burning over the board. The stations stay
+    open for whoever comes back at night with a full pack.
+exits:
+  - {to: crownreach_plaza, minutes: 2}

@@ -757,7 +757,7 @@ async def test_a_quest_giver_repeats_the_hint_when_the_ai_is_down(llm):
     user_id, cid = await new_character()
     async with session_scope() as s:
         char = await get_char(s, cid)
-        char.location = "crownreach_plaza"
+        char.location = "adventurers_guild"  # Vale signs up recruits at the guild hall
     line, _ = await actions.talk(llm, user_id, "vale", "¿Y ahora qué?")  # the fake LLM answers nothing
     assert "te recuerda lo que toca" in line and "/rulebook" in line
 

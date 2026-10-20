@@ -1,0 +1,17 @@
+name: {es: Forja de Tessa, en: Tessa's Forge}
+article: {es: la, en: ""}
+kind: city
+teaches: blacksmithing  # su maestro enseña y cambia este oficio
+stations: [anvil]
+description:
+  es: >-
+    El yunque de Tessa está en la boca de la calle, bajo un tejadillo de chapa. Suena todo el día, y el calor de la fragua se nota desde el empedrado. Hay herramientas colgadas de un travesaño y una espada a medio terminar sujeta al banco.
+  en: >-
+    Tessa's anvil sits at the mouth of the street, under a tin awning. It rings all day, and the heat of the forge carries across the cobbles. Tools hang from a crossbeam and a half-finished sword is clamped to the bench.
+night:
+  es: >-
+    La fragua está tapada y el yunque, frío. El martillo descansa donde Tessa lo dejó: nadie en Crownreach se atrevería a llevárselo.
+  en: >-
+    The forge is banked and the anvil cold. The hammer rests where Tessa left it: nobody in Crownreach would dare take it.
+exits:
+  - {to: crownreach_workshops, minutes: 1}

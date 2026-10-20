@@ -1,0 +1,17 @@
+name: {es: Taller del Carpintero, en: Carpenter's Workshop}
+article: {es: el, en: ""}
+kind: city
+teaches: carpentry  # su maestro enseña y cambia este oficio
+stations: [carpenter_bench]
+description:
+  es: >-
+    El serrín llega hasta media pierna y huele a roble recién cortado. Hay bastones, mangos y cañas de pescar apoyados contra la pared, y un banco de carpintero con más mordazas que hueco libre.
+  en: >-
+    Sawdust reaches halfway up your shins and smells of freshly cut oak. Staves, handles and fishing rods lean against the wall, and the carpenter's bench has more clamps than free space.
+night:
+  es: >-
+    El taller queda a oscuras, con las herramientas ordenadas por tamaño y una última pieza en la mordaza.
+  en: >-
+    The workshop goes dark, tools lined up by size and one last piece still in the vice.
+exits:
+  - {to: crownreach_workshops, minutes: 1}

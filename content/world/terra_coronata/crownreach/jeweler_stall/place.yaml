@@ -1,0 +1,17 @@
+name: {es: Banco del Joyero, en: Jeweler's Bench}
+article: {es: el, en: ""}
+kind: city
+teaches: jewelcrafting  # su maestro enseña y cambia este oficio
+stations: [jeweler_bench]
+description:
+  es: >-
+    El puesto más pequeño de la calle y el único con reja. Pinzas finísimas, una lupa sobre un brazo articulado y anillos a medio engastar en una bandeja de fieltro.
+  en: >-
+    The smallest stall on the street and the only one with a grille. Fine tweezers, a magnifier on a jointed arm and half-set rings on a felt tray.
+night:
+  es: >-
+    La reja está echada, pero la lámpara de trabajo sigue encendida tras el cristal.
+  en: >-
+    The grille is down, but the work lamp still burns behind the glass.
+exits:
+  - {to: crownreach_workshops, minutes: 1}

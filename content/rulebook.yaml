@@ -158,13 +158,13 @@ professions:
     es: |-
       Hay tres cosas distintas:
       • ⛏️ Maestrías de campo (minería, tala, herboristería, desuello, rastreo): libres para todos, suben con las actividades. /masteries
-      • 🛠️ Oficios (herrería, alquimia, carpintería, peletería, joyería, escribanía, ingeniería): tienes {slots} plazas. Se aprenden gratis en el Barrio de Oficios; cambiar uno cuesta {swap_cost} de oro y no pierdes lo aprendido. /professions
+      • 🛠️ Oficios (herrería, alquimia, carpintería, peletería, joyería, escribanía, ingeniería): tienes {slots} plazas. Cada oficio se aprende gratis con su maestro, en su puesto del Barrio de Oficios, y allí mismo se fabrica; cambiarlo cuesta {swap_cost} de oro y no pierdes lo aprendido. /professions
       • 🍲 Aficiones (cocina y pesca): opcionales y sin plaza. /hobbies
       Con los materiales del campo fabricas en la estación de cada oficio: armas, armaduras, pociones, anillos, pergaminos o bombas. Fabricar es al momento si tienes los ingredientes y el rango.
     en: |-
       There are three different things:
       • ⛏️ Field masteries (mining, woodcutting, herbalism, skinning, tracking): free for everyone, they grow with activities. /masteries
-      • 🛠️ Professions (blacksmithing, alchemy, carpentry, leatherworking, jewelcrafting, scribing, engineering): you have {slots} slots. You learn them for free in Craftsmen’s Row; swapping one costs {swap_cost} gold and you keep what you learned. /professions
+      • 🛠️ Professions (blacksmithing, alchemy, carpentry, leatherworking, jewelcrafting, scribing, engineering): you have {slots} slots. Each trade is learned for free from its master, at their stall on Craftsmen’s Row, and crafted there too; swapping one costs {swap_cost} gold and you keep what you learned. /professions
       • 🍲 Hobbies (cooking and fishing): optional and slot-free. /hobbies
       With field materials you craft at each profession's station: weapons, armor, potions, rings, scrolls or bombs. Crafting is instant if you have the ingredients and the rank.
 

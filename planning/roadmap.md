@@ -536,8 +536,8 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 **Propuesta base 0.10** (una fase por parche, ver §11 del contrato):
 
 - [x] Fase 0: contrato de F15 y fichas de planning (0.10.9).
-- [ ] Fase 1: estación por receta, disciplina que recibe la XP, tier por rango, receta de misión, plano, requisito de nivel para equipar y lotes.
-- [ ] Fase 2: Gremio de Aventureros, calle con ocho puestos y su maestro cada uno, Tessa en la Forja, Vale en el Gremio y tutorial adaptado.
+- [x] Fase 1: estación por receta, disciplina que recibe la XP, tier por rango, receta de misión, plano, requisito de nivel para equipar y lotes (0.10.10).
+- [x] Fase 2: Gremio de Aventureros, calle con un puesto y un maestro por oficio, Tessa en la Forja, Vale en el Gremio y tutorial adaptado (0.10.11; el octavo puesto, el telar, llega con Sastrería en la fase 4).
 - [ ] Fase 3: refinado con XP de maestría (horno, aserradero, secadero, mesa) y los comandos `/recipes`, `/r_<id>` y `/craft_<id>`.
 - [ ] Fase 4: Sastrería como octavo oficio, técnicas por rango, planos y catálogo T0 autónomo de los ocho oficios.
 - [ ] Fase 5: habitación en el tutorial con cama, descanso gratis y cofre ampliable (cubre el cofre personal de [F06](#F06)).

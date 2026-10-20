@@ -174,3 +174,153 @@ vale:
   en: Vale spits to one side. "In my day recruits didn't ask so many questions."
 - es: «Come, duerme y afila el acero, {name}. Lo demás viene solo», dice Vale.
   en: '"Eat, sleep and sharpen your steel, {name}. The rest comes on its own," says Vale.'
+ilva:
+- es: Ilva no levanta la vista del alambique. «Ahora mismo no puedo pensar en eso.»
+  en: Ilva does not look up from the still. "I can't think about that right now."
+- es: «Pregúntame cuando esto no esté a punto de hervir», dice Ilva.
+  en: '"Ask me when this is not about to boil," Ilva says.'
+- es: Ilva se limpia los dedos en el mandil. «No tengo una respuesta limpia para darte.»
+  en: Ilva wipes her fingers on her apron. "I have no clean answer to give you."
+- es: «De eso no entiendo, {name}. De hierbas, sí», responde Ilva.
+  en: '"I know nothing of that, {name}. Of herbs, yes," Ilva replies.'
+- es: Ilva cuenta gotas en voz baja y niega con la cabeza sin dejar de contar.
+  en: Ilva counts drops under her breath and shakes her head without stopping.
+- es: «Eso tendría que consultarlo, y mis libros están en desorden», dice Ilva.
+  en: '"I would have to look that up, and my books are a mess," Ilva says.'
+- es: Ilva aparta un frasco antes de contestar. «Mejor no decir nada a medias.»
+  en: Ilva moves a flask aside before answering. "Better not to say something half-true."
+- es: «Un alquimista que improvisa acaba sin cejas», comenta Ilva.
+  en: '"An alchemist who improvises ends up without eyebrows," Ilva remarks.'
+- es: Ilva asiente despacio. «Lo pensaré mientras esto reposa.»
+  en: Ilva nods slowly. "I will think about it while this settles."
+- es: «No tengo nada que valga la tinta de contarte», dice Ilva.
+  en: '"I have nothing worth the ink of telling you," Ilva says.'
+- es: Ilva sopla sobre una cuchara caliente. «Dame menos prisa y más datos.»
+  en: Ilva blows on a hot spoon. "Give me less haste and more facts."
+- es: «Hoy no, {name}. Hoy el fuego manda», dice Ilva.
+  en: '"Not today, {name}. Today the fire decides," Ilva says.'
+garrick:
+- es: Garrick pasa la mano por una tabla. «No sabría decirte.»
+  en: Garrick runs a hand over a board. "I couldn't tell you."
+- es: «Mido dos veces antes de hablar, y aún no he medido», dice Garrick.
+  en: '"I measure twice before speaking, and I have not measured yet," Garrick says.'
+- es: Garrick se encoge de hombros sin soltar el formón.
+  en: Garrick shrugs without letting go of the chisel.
+- es: «De eso hablan otros mejor que yo, {name}», responde Garrick.
+  en: '"Others speak of that better than I do, {name}," Garrick replies.'
+- es: Garrick sopla el serrín del banco. «Déjame con la madera, que la entiendo.»
+  en: Garrick blows sawdust off the bench. "Leave me the wood, I understand that."
+- es: «Poca cosa puedo añadir», dice Garrick, y vuelve a la mordaza.
+  en: '"Little I can add," Garrick says, and goes back to the vice.'
+- es: Garrick tarda en contestar y, cuando lo hace, solo niega con la cabeza.
+  en: Garrick takes his time answering and, when he does, only shakes his head.
+- es: «Si no sé una cosa, no la relleno con palabras», dice Garrick.
+  en: '"If I do not know a thing, I do not pad it with words," Garrick says.'
+- es: Garrick golpea dos veces una pieza para comprobarla. «Otra vez será.»
+  en: Garrick taps a piece twice to test it. "Another time."
+- es: «Pregunta en el gremio, allí apuntan todo», sugiere Garrick.
+  en: '"Ask at the guild, they write everything down," Garrick suggests.'
+- es: Garrick señala la puerta con el mentón. «Vuelve cuando cierre el taller.»
+  en: Garrick nods toward the door. "Come back when I close the workshop."
+- es: «Hoy hablo poco, {name}. Tengo un encargo tarde», dice Garrick.
+  en: '"I am short of words today, {name}. I have a late order," Garrick says.'
+oda:
+- es: Oda se ríe. «Mira que venir a la curtiduría a hablar de eso.»
+  en: Oda laughs. "Imagine coming to a tannery to talk about that."
+- es: «Ni idea, y no voy a inventármelo», dice Oda.
+  en: '"No idea, and I am not going to invent one," Oda says.'
+- es: Oda hunde una piel en la cuba antes de contestar, y ya no contesta.
+  en: Oda sinks a hide into the vat before answering, and then does not answer.
+- es: «Tráeme algo con pellejo y hablamos, {name}», responde Oda.
+  en: '"Bring me something with a hide and we will talk, {name}," Oda replies.'
+- es: Oda se limpia las manos en un trapo que no mejora nada.
+  en: Oda wipes her hands on a rag that improves nothing.
+- es: «De eso hay quien sabe más y cobra menos», dice Oda.
+  en: '"There are people who know more about that and charge less," Oda says.'
+- es: Oda tensa una correa entre las manos. «Hoy no me da la cabeza.»
+  en: Oda pulls a strap taut between her hands. "My head is not up to it today."
+- es: «No te voy a marear con suposiciones», dice Oda.
+  en: '"I will not dizzy you with guesses," Oda says.'
+- es: Oda mira el bastidor, luego a ti. «Otra cosa será.»
+  en: Oda looks at the frame, then at you. "Some other matter, then."
+- es: «Pregúntale a Tessa, que esa habla por las dos», dice Oda.
+  en: '"Ask Tessa, she talks enough for both of us," Oda says.'
+- es: Oda resopla. «Respira por la boca y cambiemos de tema.»
+  en: Oda snorts. "Breathe through your mouth and let us change the subject."
+- es: «Poco que decir, mucho que curtir», zanja Oda.
+  en: '"Little to say, plenty to tan," Oda concludes.'
+pell:
+- es: Pell no aparta el ojo de la lupa. «Ahora no, por favor.»
+  en: Pell does not take his eye off the glass. "Not now, if you please."
+- es: «Prefiero no opinar sin mirarlo de cerca», dice Pell.
+  en: '"I would rather not opine without a closer look," Pell says.'
+- es: Pell deja las pinzas con un cuidado exagerado y guarda silencio.
+  en: Pell sets down the tweezers with exaggerated care and stays silent.
+- es: «No es mi campo, {name}, y finjo mal», responde Pell.
+  en: '"Not my field, {name}, and I feign badly," Pell replies.'
+- es: Pell sopla una mota invisible de la bandeja de fieltro.
+  en: Pell blows an invisible speck off the felt tray.
+- es: «Una respuesta apresurada se raya como una gema mal sujeta», dice Pell.
+  en: '"A hasty answer scratches like a badly held gem," Pell says.'
+- es: Pell asiente con cortesía y no añade nada.
+  en: Pell nods politely and adds nothing.
+- es: «Si vuelve usted mañana, quizá lo haya pensado», dice Pell.
+  en: '"If you come back tomorrow, perhaps I will have thought it over," Pell says.'
+- es: Pell gira una pieza hacia la luz. «Hoy la vista me pide calma.»
+  en: Pell turns a piece toward the light. "Today my eyes ask for quiet."
+- es: «Hay preguntas que no se engastan», comenta Pell.
+  en: '"Some questions cannot be set," Pell remarks.'
+- es: Pell señala la reja. «Hablamos con la tienda abierta, no antes.»
+  en: Pell points at the grille. "We talk with the shop open, not before."
+- es: «Nada que contarle, y no es descortesía», dice Pell.
+  en: '"Nothing to tell you, and it is not discourtesy," Pell says.'
+lorent:
+- es: Lorent levanta la pluma para que no gotee. «No tengo línea para eso.»
+  en: Lorent lifts the quill so it does not drip. "I have no line for that."
+- es: «Lo consultaría, pero el archivo está húmedo», dice Lorent.
+  en: '"I would check, but the archive is damp," Lorent says.'
+- es: Lorent sopla sobre la tinta fresca y no dice más.
+  en: Lorent blows on the fresh ink and says no more.
+- es: «Sin fuente no escribo, {name}, y sin fuente no hablo», responde Lorent.
+  en: '"Without a source I do not write, {name}, and without a source I do not speak," Lorent replies.'
+- es: Lorent alinea dos pergaminos que ya estaban alineados.
+  en: Lorent aligns two parchments that were already aligned.
+- es: «Una frase mal puesta cuesta un pergamino entero», dice Lorent.
+  en: '"A badly placed sentence costs a whole parchment," Lorent says.'
+- es: Lorent niega con la cabeza, muy pulcramente.
+  en: Lorent shakes his head, very neatly.
+- es: «Preferiría no dictar lo que no sé», dice Lorent.
+  en: '"I would rather not dictate what I do not know," Lorent says.'
+- es: Lorent mira la cuerda donde se secan los pergaminos. «Hoy voy tarde.»
+  en: Lorent glances at the line where the parchments dry. "I am behind today."
+- es: «Eso no está copiado en ninguna parte», dice Lorent.
+  en: '"That is not copied anywhere," Lorent says.'
+- es: Lorent cambia de pluma como quien cambia de tema.
+  en: Lorent changes quills the way other people change the subject.
+- es: «Con la prisa cobro más y sé lo mismo», dice Lorent.
+  en: '"In a hurry I charge more and know the same," Lorent says.'
+dunn:
+- es: Dunn levanta las manos. «Ni idea, y mejor así.»
+  en: Dunn raises his hands. "No idea, and just as well."
+- es: «Luego te lo cuento, que esto está armado», dice Dunn.
+  en: '"I will tell you later, this thing is primed," Dunn says.'
+- es: Dunn aparta un cajón de la izquierda y se olvida de contestar.
+  en: Dunn moves a crate on the left and forgets to answer.
+- es: «De eso no tengo plano, {name}», responde Dunn.
+  en: '"I have no blueprint for that, {name}," Dunn replies.'
+- es: Dunn da cuerda a algo que hace clic y escucha, encantado.
+  en: Dunn winds something that clicks and listens to it, delighted.
+- es: «Si no lo entiendo, lo abro; y esto no se puede abrir», dice Dunn.
+  en: '"If I do not understand a thing, I open it; and this cannot be opened," Dunn says.'
+- es: Dunn se toca la ceja que le falta a medias. «Prefiero no aventurar.»
+  en: Dunn touches his half-missing eyebrow. "I would rather not venture it."
+- es: «Pregunta en el gremio, que ellos lo apuntan todo», dice Dunn.
+  en: '"Ask at the guild, they note everything down," Dunn says.'
+- es: Dunn asiente deprisa, como si ya estuviera en otra cosa.
+  en: Dunn nods quickly, as if he were already on to something else.
+- es: «Hoy ando con una mecha que no quiere arder igual dos veces», dice Dunn.
+  en: '"Today I am fighting a fuse that will not burn the same twice," Dunn says.'
+- es: Dunn señala la puerta abierta. «Y no traigas farol.»
+  en: Dunn points at the open door. "And don't bring a lantern."
+- es: «Nada que decir y mucho que medir», dice Dunn.
+  en: '"Nothing to say and plenty to measure," Dunn says.'

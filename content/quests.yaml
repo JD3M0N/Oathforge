@@ -14,11 +14,11 @@ tut_muster:
   legacy_done: [night_wings]
   name: {es: Alistamiento, en: Mustering In}
   summary:
-    es: La sargenta Vale recibe a los recién llegados en la plaza. Dice que la ciudad necesita manos… y que las tuyas parecen servir.
-    en: Sergeant Vale greets newcomers in the plaza. She says the city needs hands… and yours look useful.
+    es: La sargenta Vale alista a los recién llegados en el Gremio de Aventureros, junto a la plaza. Dice que la ciudad necesita manos… y que las tuyas parecen servir.
+    en: Sergeant Vale signs newcomers up at the Adventurers' Guild, just off the plaza. She says the city needs hands… and yours look useful.
   hint:
-    es: Estás en la plaza. Pulsa «💬 Hablar» y elige a la sargenta Vale. Luego abre el /rulebook y lee «🧺 Actividades».
-    en: You are in the plaza. Press "💬 Talk" and pick Sergeant Vale. Then open the /rulebook and read "🧺 Activities".
+    es: Ve al Gremio de Aventureros (desde la plaza, con «🧭 Viajar»). Pulsa «💬 Hablar» y elige a la sargenta Vale. Luego abre el /rulebook y lee «🧺 Actividades».
+    en: Go to the Adventurers' Guild (from the plaza, with "🧭 Travel"). Press "💬 Talk" and pick Sergeant Vale. Then open the /rulebook and read "🧺 Activities".
   start_stage: active
   objective_stage: active
   complete_stage: done
@@ -31,12 +31,15 @@ tut_muster:
   stages:
     active:
       journal:
-        es: "Preséntate a la sargenta Vale en la plaza de Crownreach. «Antes de salir, lee el reglamento», te dice: el /rulebook explica cómo funciona todo, y «🧺 Actividades», qué es minar, talar, recolectar o desollar."
-        en: "Report to Sergeant Vale in Crownreach Plaza. \"Read the rulebook before you head out,\" she tells you: the /rulebook explains how everything works, and \"🧺 Activities\" what mining, woodcutting, gathering or skinning are."
+        es: "Preséntate a la sargenta Vale en el Gremio de Aventureros. «Antes de salir, lee el reglamento», te dice: el /rulebook explica cómo funciona todo, y «🧺 Actividades», qué es minar, talar, recolectar o desollar."
+        en: "Report to Sergeant Vale at the Adventurers' Guild. \"Read the rulebook before you head out,\" she tells you: the /rulebook explains how everything works, and \"🧺 Activities\" what mining, woodcutting, gathering or skinning are."
       location_text:
         crownreach_plaza:
-          es: "Una sargenta de la Guardia de Plata, con la voz de quien ha gritado a mil reclutas, llama a los recién llegados: «¡Eh, cara nueva! Ven aquí». 🗨️ Habla con ella para empezar."
-          en: "A Silver Guard sergeant, with the voice of someone who has shouted at a thousand recruits, calls to the newcomers: \"Hey, new face! Over here.\" 🗨️ Talk to her to begin."
+          es: "Al este de la plaza, sobre una puerta de piedra, cuelga el escudo del Gremio de Aventureros. Allí dentro alistan a los recién llegados: 🧭 ve al gremio y habla con la sargenta Vale."
+          en: "East of the plaza, above a stone door, hangs the crest of the Adventurers' Guild. That is where newcomers are signed up: 🧭 go to the guild and talk to Sergeant Vale."
+        adventurers_guild:
+          es: "Una sargenta de la Guardia de Plata, con la voz de quien ha gritado a mil reclutas, llama a los recién llegados desde el tablón: «¡Eh, cara nueva! Ven aquí». 🗨️ Habla con ella para empezar."
+          en: "A Silver Guard sergeant, with the voice of someone who has shouted at a thousand recruits, calls to the newcomers from the notice board: \"Hey, new face! Over here.\" 🗨️ Talk to her to begin."
     done:
       state: completed
       journal:
@@ -51,11 +54,11 @@ tut_town:
   legacy_done: [night_wings]
   name: {es: Calles de Crownreach, en: Streets of Crownreach}
   summary:
-    es: «Un recluta que se pierde en su propia ciudad no me sirve», dice Vale. Quiere que conozcas la taberna y el Barrio de Oficios.
-    en: "\"A recruit who gets lost in their own city is no use to me,\" says Vale. She wants you to know the tavern and Craftsmen's Row."
+    es: «Un recluta que se pierde en su propia ciudad no me sirve», dice Vale. Quiere que conozcas la taberna y el Barrio de Oficios, donde cada oficio tiene su puesto.
+    en: "\"A recruit who gets lost in their own city is no use to me,\" says Vale. She wants you to know the tavern and Craftsmen's Row, where every trade has its own stall."
   hint:
-    es: Abre /map (o «🧭 Viajar»). En la ciudad vas directo a cualquier lugar. Ve al Barrio de Oficios y luego a la taberna La Corona Rota, y habla allí con Bram.
-    en: Open /map (or "🧭 Travel"). In the city you go straight anywhere. Visit Craftsmen's Row, then the Broken Crown Tavern, and talk to Bram there.
+    es: Abre /map (o «🧭 Viajar»). En la ciudad vas directo a cualquier lugar. Ve al Barrio de Oficios (de él salen los puestos de cada oficio) y luego a la taberna La Corona Rota, y habla allí con Bram.
+    en: Open /map (or "🧭 Travel"). In the city you go straight anywhere. Visit Craftsmen's Row (the stalls of each trade hang off it), then the Broken Crown Tavern, and talk to Bram there.
   start_stage: locked
   unlock_stage: active
   objective_stage: active
@@ -73,12 +76,12 @@ tut_town:
       journal: {es: La sargenta Vale tiene algo que enseñarte., en: Sergeant Vale has something to show you.}
     active:
       journal:
-        es: Visita el Barrio de Oficios (talleres y gremio) y la taberna La Corona Rota, y habla allí con Bram, el tabernero.
-        en: Visit Craftsmen's Row (workshops and guild) and the Broken Crown Tavern, and talk to Bram, the tavern keeper, there.
+        es: Visita el Barrio de Oficios (un puesto por oficio) y la taberna La Corona Rota, y habla allí con Bram, el tabernero.
+        en: Visit Craftsmen's Row (one stall per trade) and the Broken Crown Tavern, and talk to Bram, the tavern keeper, there.
       location_text:
         crownreach_workshops:
-          es: Yunques, alambiques y tinteros. Aquí se aprende un oficio y se fabrica con lo que traes de fuera (🛠️ Oficios).
-          en: Anvils, stills and inkwells. Here you learn a trade and craft with what you bring back from outside (🛠️ Professions).
+          es: "Yunques, alambiques y tinteros, cada cosa en su puesto: la forja de Tessa, la botica, el carpintero, la curtiduría, el joyero, el escriba y el ingeniero. Cada maestro enseña su oficio (🛠️ Oficios)."
+          en: "Anvils, stills and inkwells, each in its own stall: Tessa's forge, the alchemist's shop, the carpenter, the tannery, the jeweler, the scribe and the engineer. Each master teaches their trade (🛠️ Professions)."
     done:
       state: completed
       journal:
@@ -96,8 +99,8 @@ tut_market:
     es: «Nadie sale de la ciudad sin pociones», dice Vale. Quiere que conozcas a quienes las venden.
     en: "\"Nobody leaves the city without potions,\" says Vale. She wants you to meet the people who sell them."
   hint:
-    es: Ve al Mercado de Crownreach y habla con Mira y con Tessa («💬 Hablar»). Con «🛒 Comerciar» ves sus tiendas; durante la beta las pociones cuestan 1 de oro.
-    en: Go to Crownreach Market and talk to Mira and Tessa ("💬 Talk"). "🛒 Trade" opens their shops; during the beta potions cost 1 gold.
+    es: Habla con Mira en el Mercado de Crownreach y con Tessa en su forja, el primer puesto del Barrio de Oficios («💬 Hablar»). Con «🛒 Comerciar» ves sus tiendas; durante la beta las pociones cuestan 1 de oro.
+    en: Talk to Mira at Crownreach Market and to Tessa at her forge, the first stall on Craftsmen's Row ("💬 Talk"). "🛒 Trade" opens their shops; during the beta potions cost 1 gold.
   start_stage: locked
   unlock_stage: active
   objective_stage: active
@@ -115,8 +118,8 @@ tut_market:
       journal: {es: Vale habla de pociones., en: Vale is talking about potions.}
     active:
       journal:
-        es: Habla con Mira y con Tessa en el Mercado de Crownreach. De día están en sus puestos; de noche, en la taberna.
-        en: Talk to Mira and Tessa at Crownreach Market. By day they are at their stalls; at night, in the tavern.
+        es: Habla con Mira, en el Mercado de Crownreach, y con Tessa, en su forja del Barrio de Oficios. De día están en sus puestos; de noche, en la taberna.
+        en: Talk to Mira, at Crownreach Market, and to Tessa, at her forge on Craftsmen's Row. By day they are at their stalls; at night, in the tavern.
     done:
       state: completed
       journal:

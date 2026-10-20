@@ -1,0 +1,17 @@
+name: {es: Curtiduría, en: Tannery}
+article: {es: la, en: ""}
+kind: city
+teaches: leatherworking  # su maestro enseña y cambia este oficio
+stations: [tannery]
+description:
+  es: >-
+    Se huele antes de verse. Pieles tendidas en bastidores, cubas de curtido y correas colgadas a secar. Pese al olor, aquí sale el cuero que lleva media Guardia.
+  en: >-
+    You smell it before you see it. Hides stretched on frames, tanning vats and straps hung up to dry. For all the stench, half the Guard's leather comes from here.
+night:
+  es: >-
+    Las cubas quedan tapadas y los bastidores, llenos. De noche el olor es casi soportable.
+  en: >-
+    The vats are covered and the frames full. At night the smell is almost bearable.
+exits:
+  - {to: crownreach_workshops, minutes: 1}

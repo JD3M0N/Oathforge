@@ -22,6 +22,8 @@ Versionado `0.x.y`: **y** (parche) en arreglos y cambios pequeños; **x** (menor
 | 0.8.3 | Planning reorganizado: Possibilium, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md`, `content/officina/` |
 | 0.9.0 | Logros e identidad: 30 logros, dos metalogros, títulos, destacados, objetivos seguidos y reconocimiento retroactivo verificable |
 | 0.9.1 | Hoja de ruta de 0.10 (consolidación) y 0.11 (multijugador): `planning/roadmap.md` |
+| 0.10.11 | Profesiones (F15, 3.ª parte): el Gremio de Aventureros (refinado, Vale y el alistamiento) y el Barrio de Oficios convertido en una calle con un puesto y un maestro por oficio |
+| 0.10.10 | Profesiones (F15, 2.ª parte): el contrato de las recetas (estación por receta, disciplina de la XP, tiers por rango, lotes y requisito de nivel para equipar) |
 | 0.10.9 | Profesiones (F15, 1.ª parte): el contrato de oficios, maestrías y aficiones en `planning/roadmap-profesiones.md` (solo documentación) |
 | 0.10.8 | Logros (F04): auditoría, un solo nombre «Logros», título visible en la ficha y para la IA, y cuatro logros nuevos con un título |
 | 0.10.7 | Diario y reglamento (F03): diario por pestañas con portada «Ahora», Crónica del héroe desde los hechos del motor, estadísticas verificables y reglamento con las cifras del motor |

@@ -140,6 +140,7 @@ btn:
   continue_trip: "▶️ Seguir hacia {place}"
   see_activity: "⏳ Ver la actividad"
   zone: "{icon} {zone} ({n}) ›"
+  stalls: "🛠️ Puestos ({n}) ›"
   travel: "🧭 Viajar"
   investigate: "🔎 Investigar"
   talk: "💬 Hablar"
@@ -224,6 +225,7 @@ map:
     dungeon: "🕯️ <b>En la mazmorra</b>"
   objective: "📜 <b>Tu objetivo</b>"
   objective_line: "• {quest} → <b>{place}</b>"
+  street_title: "🛠️ <b>{street}</b> · puestos"
   zone_title: "{icon} <b>{zone}</b>"
   busy: "⏳ Estás ocupado: espera a que termine tu tarea o abandónala para viajar."
   beyond: "🌫️ <b>Sin explorar</b> <i>(se llega camino a camino)</i>"
@@ -247,7 +249,7 @@ map:
     gather_fishing: "🎣 Pescar"
     hunt: "🏹 Cazar y rastrear"
     craft: "🔨 Fabricar"
-    guild: "📜 Gremio de oficios"
+    guild: "📜 Aprender {prof}"
     npc: "💬 {npc}"
 
 talk:
@@ -383,7 +385,7 @@ sheet:
   hobbies: "Aficiones (opcionales)"
   chronicles: "📜 Crónicas de hoy: {used}/{limit} · quedan {left}  {bar}"
   professions: "🛠️ Oficios {used}/{slots}: {list}"
-  no_professions: "ninguno (apréndelos en el Barrio de Oficios)"
+  no_professions: "ninguno (cada maestro enseña el suyo en el Barrio de Oficios)"
 
 ai:
   budget_exhausted: "🤖 El Dungeon Master ha agotado sus fuerzas por hoy. Sigue jugando con los botones; se recupera a medianoche."
@@ -821,7 +823,7 @@ roll:
 acts:
   title: "⚒ <b>Actividades</b> · {place}"
   none: "Aquí no hay nada que hacer con las manos. Mira en el 🗺 Mapa: la mina, la arboleda o el prado sí lo tienen."
-  guild: "Aquí se aprenden y se cambian los oficios: 🛠️ Oficios."
+  guild: "Aquí se aprende y se cambia {prof}, con su maestro: 🛠️ Oficios."
   missing: "❌ Te falta: {tool}"
   desc:
     hunt: "un combate ahora con lo que ronde por aquí"
@@ -927,9 +929,9 @@ prof:
   recipes: "Recetas"
   rank_n: "Rango {rank}"
   swap_confirm: "🔁 ¿Dejas <b>{old}</b> para aprender <b>{prof}</b>?\n\nCuesta {cost} de oro (tienes {gold}). Lo que sabías de {old} no se pierde: si vuelves a él, sigues donde lo dejaste."
-  none: "<i>Aún no tienes oficio. Aprende hasta {slots} en el Barrio de Oficios, junto al mercado.</i>"
-  guild_hint: "<i>Aprender es gratis mientras tengas plazas libres; cambiar un oficio cuesta {cost} de oro y no pierdes lo aprendido.</i>"
-  go_guild: "<i>Los oficios se aprenden y cambian en el Barrio de Oficios, junto al mercado.</i>"
+  none: "<i>Aún no tienes oficio. Puedes aprender hasta {slots}: cada uno, con su maestro, en su puesto del Barrio de Oficios.</i>"
+  guild_hint: "<i>Aquí se aprende este oficio: gratis mientras tengas plazas libres; cambiarlo cuesta {cost} de oro y no pierdes lo aprendido.</i>"
+  go_guild: "<i>Cada oficio se aprende con su maestro, en su puesto del Barrio de Oficios, junto al mercado.</i>"
   line: "{icon} <b>{name}</b> {stars} · {progress}"
   inactive: "<i>(sin practicar)</i>"
   swap_title: "🔁 ¿Qué oficio dejas para aprender <b>{prof}</b>? Cuesta {cost} de oro y no pierdes su experiencia."
@@ -938,7 +940,8 @@ prof:
   xp: "📈 +{amount} XP de {prof}."
   rank: "⭐ ¡{prof} sube a rango {rank}!"
   err:
-    not_guild: "Los oficios se aprenden en el Barrio de Oficios."
+    not_guild: "Aquí no se enseña ningún oficio. Cada uno tiene su puesto en el Barrio de Oficios."
+    elsewhere: "{prof} se aprende en {place}, con su maestro."
     unknown: "Ese oficio no existe."
     already: "Ya practicas {prof}."
     slots_full: "Ya tienes {slots} oficios. Elige cuál dejar."

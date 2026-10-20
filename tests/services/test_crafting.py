@@ -12,7 +12,7 @@ from oathforge.services.events import Outcome
 pytestmark = pytest.mark.usefixtures("database")
 
 
-async def new_character(location="crownreach_workshops") -> int:
+async def new_character(location="forge_stall") -> int:
     async with session_scope() as s:
         user = await characters.get_or_create_user(s, 1, "es")
         char = await characters.create_character(s, user, "Aldric", "human", "soldier", "paladin")
@@ -29,9 +29,12 @@ async def test_two_slots_and_swapping_keeps_xp():
     async with session_scope() as s:
         char = await get_char(s, cid)
         char.gold = 100
+        char.location = professions.stall_of("alchemy")
         assert (await professions.learn(s, char, "alchemy")).ok
         assert (await professions.learn(s, char, "alchemy")).error == "prof.err.already"
+        char.location = professions.stall_of("blacksmithing")
         assert (await professions.learn(s, char, "blacksmithing")).ok
+        char.location = professions.stall_of("scribing")
         assert (await professions.learn(s, char, "scribing")).error == "prof.err.slots_full"
         professions.grant_xp(char, "alchemy", 90, Outcome())
         out = await professions.learn(s, char, "scribing", replace="alchemy")
@@ -40,11 +43,15 @@ async def test_two_slots_and_swapping_keeps_xp():
         assert professions.xp(char, "alchemy") == 90 and professions.rank(char, "alchemy") == 1  # not forgotten
 
 
-async def test_learning_only_at_the_guild():
+async def test_each_trade_is_learned_at_its_own_stall():
     cid = await new_character(location="crownreach_plaza")
     async with session_scope() as s:
         char = await get_char(s, cid)
         assert (await professions.learn(s, char, "alchemy")).error == "prof.err.not_guild"
+        char.location = "forge_stall"  # Tessa teaches her trade, not Ilva's
+        assert (await professions.learn(s, char, "alchemy")).error == "prof.err.elsewhere"
+        assert (await professions.learn(s, char, "blacksmithing")).ok
+        assert professions.stall_of("alchemy") == "alchemist_stall"
 
 
 async def test_crafting_is_all_or_nothing():
@@ -71,14 +78,14 @@ async def test_station_rank_and_crafted_by():
         char = await get_char(s, cid)
         await inventory.add_item(s, char, "raw_meat", 2)
         await inventory.add_item(s, char, "bloodroot", 1)
-        assert (await crafting.craft(s, char, "hunter_stew")).error == "craft.err.no_station"  # the hearth is at the tavern
+        assert (await crafting.craft(s, char, "hunter_stew")).error == "craft.err.no_station"  # the hearth is elsewhere
         char.location = "broken_crown_tavern"
         assert "hunter_stew" in crafting.recipes_here(char)
         assert (await crafting.craft(s, char, "hunter_stew")).ok
-        await professions.learn(s, char, "blacksmithing")  # learned elsewhere: refused
+        assert (await professions.learn(s, char, "blacksmithing")).error == "prof.err.not_guild"
     async with session_scope() as s:
         char = await get_char(s, cid)
-        char.location = "crownreach_workshops"
+        char.location = "forge_stall"
         await professions.learn(s, char, "blacksmithing")
         professions.grant_xp(char, "blacksmithing", 240, Outcome())
         await inventory.add_item(s, char, "iron_ingot", 2)
@@ -92,6 +99,7 @@ async def test_low_rank_recipes_give_half_xp():
     cid = await new_character()
     async with session_scope() as s:
         char = await get_char(s, cid)
+        char.location = professions.stall_of("carpentry")
         await professions.learn(s, char, "carpentry")
         char.professions = {"active": ["carpentry"], "xp": {"carpentry": 240}}  # rank 2
         await inventory.add_item(s, char, "oak_log", 3)
@@ -108,6 +116,7 @@ async def test_cooking_is_a_hobby_without_a_slot():
         char.professions = {"active": ["cooking", "alchemy"], "xp": {"cooking": 30}}  # learned before v0.7.0
         assert professions.active(char) == ["alchemy"]  # the slot is free again
         assert "cooking" in professions.usable(char) and professions.xp(char, "cooking") == 30
+        char.location = professions.stall_of("engineering")
         assert (await professions.learn(s, char, "engineering")).ok
         assert professions.active(char) == ["alchemy", "engineering"]
 
@@ -116,17 +125,23 @@ async def test_scribing_and_engineering_recipes():
     cid = await new_character()
     async with session_scope() as s:
         char = await get_char(s, cid)
+        char.location = professions.stall_of("scribing")
         await professions.learn(s, char, "scribing")
+        char.location = professions.stall_of("engineering")
         await professions.learn(s, char, "engineering")
         await inventory.add_item(s, char, "bloodroot", 1)
         await inventory.add_item(s, char, "coal", 3)
         await inventory.add_item(s, char, "boar_hide", 1)
         await inventory.add_item(s, char, "iron_ore", 1)
         await inventory.add_item(s, char, "plant_fiber", 3)
-        for recipe in ("ink", "parchment", "scroll_firebolt", "black_powder", "fuse", "smoke_bomb"):
+        for recipe in ("black_powder", "fuse", "smoke_bomb"):  # at the engineer's bench
+            assert (await crafting.craft(s, char, recipe)).ok, recipe
+        char.location = professions.stall_of("scribing")  # each trade works at its own stall
+        for recipe in ("ink", "parchment", "scroll_firebolt"):
             assert (await crafting.craft(s, char, recipe)).ok, recipe
         assert await inventory.count(s, char, "scroll_firebolt") == 1
         assert await inventory.count(s, char, "smoke_bomb") == 1
+        char.location = professions.stall_of("engineering")
         assert (await crafting.craft(s, char, "fire_bomb")).error == "craft.err.rank"
 
 
@@ -168,7 +183,7 @@ async def test_refining_belongs_to_a_mastery_and_pays_its_xp(monkeypatch):
         await inventory.add_item(s, char, "iron_ore", 3)
         await inventory.add_item(s, char, "coal", 1)
         assert (await crafting.craft(s, char, "test_refine")).error == "craft.err.no_station"
-        char.location = "crownreach_workshops"
+        char.location = "forge_stall"
         assert "test_refine" in crafting.recipes_here(char)  # without learning blacksmithing
         assert (await crafting.craft(s, char, "test_refine")).ok
         assert characters.mastery_xp(char, "mining") == 10

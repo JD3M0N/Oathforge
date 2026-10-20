@@ -365,7 +365,7 @@ async def test_every_activity_counts_towards_missions(errands):
         counters = (await quests.progress(s, char))["errands"].counters
         assert int(counters.get("0", 0)) == ore and int(counters.get("1", 0)) == hides and ore + hides > 0
 
-        char.location, char.gold = "crownreach_workshops", 50
+        char.location, char.gold = "alchemist_stall", 50
         await professions.learn(s, char, "alchemy")
         await inventory.add_item(s, char, "bloodroot", 2)
         await inventory.add_item(s, char, "water_flask", 1)

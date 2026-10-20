@@ -1,4 +1,5 @@
-# Oficios: cada personaje tiene dos activos (se aprenden y cambian en el Barrio de Oficios).
+# Oficios: cada personaje tiene dos activos. Cada oficio se aprende y se cambia con su maestro, en su puesto
+# del Barrio de Oficios (Location.teaches); la estación de cada uno está en ese mismo puesto.
 # Una afición (hobby: true) no ocupa plaza: cualquiera la practica y la sube si quiere.
 # Cada uno trabaja en una estación (Location.stations). Diseño en planning/opificia.md.
 # guide: la mini guía de /prof_<clave>.

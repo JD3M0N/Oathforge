@@ -373,8 +373,8 @@ async def activities_view(session: AsyncSession, char: Character, lang: str) -> 
     entries = await activity_entries(session, char, lang, n)
     head = t(lang, "acts.title", place=escape(loc.name.get(lang))) + "\n" + status_line(char, lang)
     parts = [head, *(line for line, _ in entries)] if entries else [head, t(lang, "acts.none")]
-    if loc.guild:
-        parts.append(f"<i>{t(lang, 'acts.guild')}</i>")
+    if loc.teaches is not None:
+        parts.append(f"<i>{t(lang, 'acts.guild', prof=escape(get_content().professions[loc.teaches].name.get(lang)))}</i>")
     rows = grid([b for _, b in entries if b is not None])
     rows.append([btn(t(lang, "btn.professions"), cb("prof")), btn(t(lang, "btn.back"), cb("scene"))])
     return "\n\n".join(parts)[:MAX_MESSAGE], markup(rows)
@@ -440,14 +440,15 @@ def professions_view(char: Character, lang: str) -> tuple[str, InlineKeyboardMar
     lines += ["", t(lang, "prof.hobbies"), *hobby_lines(char, lang)]
     lines += ["", t(lang, "prof.masteries"), *mastery_lines(char, lang), ""]
     rows = []
-    if c.locations[char.location].guild:
+    here = c.locations[char.location].teaches
+    if here is not None:
         lines.append(t(lang, "prof.guild_hint", cost=professions.SWAP_COST))
         n = nonce()
         full = len(mine) >= professions.SLOTS
         learnable = [btn(t(lang, "btn.swap_for" if full else "btn.learn", prof=f"{p.icon} {p.name.get(lang)}",
                            cost=professions.SWAP_COST),
                          cb("profsw", k) if full else cb("plearn", k, n))
-                     for k, p in c.professions.items() if k not in mine and not p.hobby]
+                     for k, p in c.professions.items() if k == here and k not in mine and not p.hobby]
         rows += grid(learnable)
     else:
         lines.append(t(lang, "prof.go_guild"))
@@ -681,7 +682,14 @@ def _go_button(route: world_map.Route, lang: str, n: str, icon: str = "🧭") ->
     return [btn(f"{icon} {name} · {route.yards} yd {'⚠️' * route.danger}".strip(), cb("go", route.to, n))]
 
 
-async def map_view(session: AsyncSession, char: Character, lang: str, zone: str | None = None) -> tuple[str, InlineKeyboardMarkup]:
+def _street_of(place: str) -> str | None:
+    """The street a trade stall hangs off: its only way back."""
+    exits = get_content().locations[place].exits
+    return exits[0].to if len(exits) == 1 else None
+
+
+async def map_view(session: AsyncSession, char: Character, lang: str, zone: str | None = None,
+                   street: str | None = None) -> tuple[str, InlineKeyboardMarkup]:
     """/map and «Travel»: where you are, what there is to do, and every place you can go in one tap (the engine
     walks the way). First your missions, then this zone, then the other zones you know (``zone`` opens one)."""
     c = get_content()
@@ -689,6 +697,14 @@ async def map_view(session: AsyncSession, char: Character, lang: str, zone: str 
     zone_here = c.zones[here.zone]
     routes = world_map.destinations(char)
     n = nonce()
+    if street is not None and street in c.locations:  # one street's stalls, from the map's stalls button
+        inside = [r for r in routes if _street_of(r.to) == street and c.locations[r.to].teaches]
+        lines = [t(lang, "map.street_title", street=escape(c.locations[street].name.get(lang))), RULE]
+        for r in inside:
+            lines += _route_lines(char, r, lang)
+        rows = [] if char.state != "idle" else [_go_button(r, lang, n) for r in inside]
+        rows.append([btn(t(lang, "btn.back"), cb("trv"))])
+        return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
     if zone is not None and zone in c.zones:  # one zone's places, from the map's zone button
         z = c.zones[zone]
         lines = [t(lang, "map.zone_title", icon=ZONE_ICON[z.kind], zone=escape(z.name.get(lang))), RULE]
@@ -715,7 +731,8 @@ async def map_view(session: AsyncSession, char: Character, lang: str, zone: str 
             rows.append(_go_button(r, lang, n, "📜"))
         lines.append("")
 
-    near = [r for r in routes if c.locations[r.to].zone == here.zone]
+    near = [r for r in routes if c.locations[r.to].zone == here.zone and not c.locations[r.to].teaches]
+    stalls = [r for r in routes if c.locations[r.to].zone == here.zone and c.locations[r.to].teaches]
     others: dict[str, list[world_map.Route]] = {}
     for r in routes:
         if c.locations[r.to].zone != here.zone:
@@ -724,6 +741,10 @@ async def map_view(session: AsyncSession, char: Character, lang: str, zone: str 
         lines.append(t(lang, f"map.near.{zone_here.kind}"))
         for r in near:
             lines += _route_lines(char, r, lang)
+            for_street = [x for x in stalls if _street_of(x.to) == r.to]
+            if for_street:  # the trade stalls hang off their street, not off the city
+                lines.append("      " + " · ".join(escape(c.locations[x.to].name.get(lang)) for x in for_street))
+                rows.append([btn(t(lang, "btn.stalls", n=len(for_street)), cb("trvs", r.to))])
         rows += [_go_button(r, lang, n) for r in near]
     for key, zroutes in others.items():
         z = c.zones[key]

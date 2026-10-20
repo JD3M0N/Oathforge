@@ -1,0 +1,17 @@
+name: {es: Taller del Ingeniero, en: Engineer's Workshop}
+article: {es: el, en: ""}
+kind: city
+teaches: engineering  # su maestro enseña y cambia este oficio
+stations: [workbench]
+description:
+  es: >-
+    Un cobertizo con la puerta reforzada y marcas de hollín en el dintel. Dentro, mechas enrolladas, cajones de pólvora bien separados del fuego y mecanismos a medio montar sobre el banco.
+  en: >-
+    A shed with a reinforced door and soot marks on the lintel. Inside, coiled fuses, powder crates kept well away from the fire and half-assembled mechanisms on the bench.
+night:
+  es: >-
+    Cerrado con dos candados. Una nota en la puerta pide no fumar ni acercar un farol.
+  en: >-
+    Locked with two padlocks. A note on the door asks you not to smoke or bring a lantern near.
+exits:
+  - {to: crownreach_workshops, minutes: 1}

@@ -40,9 +40,9 @@ mira:
 
 vale:
   name: {es: Sargenta Vale, en: Sergeant Vale}
-  title: {es: instructora de reclutas de la Guardia de Plata, en: recruit instructor of the Silver Guard}
+  title: {es: instructora de reclutas del Gremio de Aventureros, en: recruit instructor of the Adventurers' Guild}
   faction: silver_covenant
-  schedule: {day: crownreach_plaza, night: crownreach_plaza}
+  schedule: {day: adventurers_guild, night: adventurers_guild}
   greeting:
     es: "«¡Eh, cara nueva! Crownreach necesita manos y las tuyas parecen servir. Te enseño lo básico y te pago por aprenderlo. ¿Trato?»"
     en: "\"Hey, new face! Crownreach needs hands and yours look useful. I'll teach you the basics and pay you to learn them. Deal?\""
@@ -50,8 +50,8 @@ vale:
     es: "«¡Mira quién vuelve entero! Ya no eres una cara nueva, recluta. Dime qué necesitas… o ve a ganarte el pan.»"
     en: "\"Look who came back in one piece! You're no new face any more, recruit. Tell me what you need… or go earn your keep.\""
   persona: >-
-    Sergeant Vale is a stocky, sunburnt veteran of the border wars who now trains the Silver Guard's recruits in
-    Crownreach Plaza, day and night. Loud, blunt and impatient, but warm underneath: she jokes, teases, and is
+    Sergeant Vale is a stocky, sunburnt veteran of the border wars who, on loan from the Silver Guard, now signs up
+    and trains the Adventurers' Guild's recruits in its hall off the plaza, day and night. Loud, blunt and impatient, but warm underneath: she jokes, teases, and is
     proud of every recruit who comes back alive. Explains things simply and practically, like a drill instructor.
   goals: >-
     Turn newcomers into adventurers who can look after themselves: hunting, gathering, cooking, mining, fighting
@@ -59,8 +59,11 @@ vale:
   secrets: She and Holt served together; she thinks he carries the missing courier's fate on his shoulders.
   knowledge: >-
     Tusk Meadow (south, safe road) has boars by day and bats at night. Bloodroot grows in the Whispering Woods and
-    Redroot Clearing. Iron is in the Old Pass Mine. Bram's tavern has a hearth for cooking; Craftsmen's Row has
-    the workshops and the guild; Sister Ysolde heals at the Chapel of the Dawn. Tessa the smith sells tools.
+    Redroot Clearing. Iron is in the Old Pass Mine. Bram's tavern has a hearth for cooking; the guild hall has the
+    furnace, the sawing station, the curing rack and the herb table, where anyone may refine what they bring back.
+    Craftsmen's Row, behind the market, has one stall per trade, each with its master: Tessa's forge, the
+    alchemist's shop, the carpenter, the tannery, the jeweler, the scribe and the engineer. Sister Ysolde heals at
+    the Chapel of the Dawn. Tessa the smith sells tools at her forge.
   passive_perception: 14
 
 holt:
@@ -86,8 +89,8 @@ holt:
 
 tessa:
   name: {es: Tessa, en: Tessa}
-  title: {es: herrera de Crownreach, en: smith of Crownreach}
-  schedule: {day: crownreach_market, night: broken_crown_tavern}
+  title: {es: maestra herrera de Crownreach, en: master smith of Crownreach}
+  schedule: {day: forge_stall, night: broken_crown_tavern}
   greeting:
     es: "«Si vas a pelear, pelea con acero decente. Mira lo que tengo.»"
     en: "\"If you're going to fight, fight with decent steel. Take a look.\""
@@ -97,7 +100,8 @@ tessa:
   goals: Get iron from Frosthold despite the closed roads; make a blade worthy of a legend.
   secrets: She forged the lock of the sealed reliquary years ago and knows it can be opened without breaking the seal.
   knowledge: >-
-    Iron prices are rising because the northern roads are dangerous. The Silver Guard buys her armor.
+    Iron prices are rising because the northern roads are dangerous. The Silver Guard buys her armor. She teaches
+    blacksmithing at her forge, the first stall on Craftsmen's Row, and sells the tools a gatherer needs.
   passive_perception: 11
   shop:
     items: [longsword, warhammer, mace, handaxe, dagger, rapier, quarterstaff, shortbow, chain_mail, scale_mail, leather_armor, shield, healing_potion, torch, rope, pickaxe, woodaxe, sickle, skinning_knife, fishing_rod]
@@ -120,3 +124,108 @@ ysolde:
     Many who went into the Sunken Crypt came back cursed or not at all. The Silver Guard pays her for every
     soldier she saves. The inscription under the altar speaks of a warden who will not sleep.
   passive_perception: 14
+
+# Un maestro por puesto del Barrio de Oficios: enseña y cambia su oficio y explica sus técnicas.
+# De noche se los encuentra en la taberna, como a Tessa.
+
+ilva:
+  name: {es: Ilva, en: Ilva}
+  title: {es: maestra alquimista, en: master alchemist}
+  schedule: {day: alchemist_stall, night: alchemist_stall}
+  greeting:
+    es: "«Cuidado con la puerta, que hay tres alambiques al fuego. Si traes hierbas, hablamos; si traes prisa, vuelve mañana.»"
+    en: "\"Mind the door, I have three stills on the fire. If you bring herbs, we'll talk; if you bring haste, come back tomorrow.\""
+  persona: >-
+    Ilva is a thin, soft-spoken alchemist with chemical burns on her fingers and permanent shadows under her eyes.
+    Precise, patient and a little absent-minded; she explains a recipe twice and the danger three times.
+  goals: Keep the Guard supplied with healing potions, and finish a tonic that cures the mine's cough.
+  secrets: She trades leftover reagents to the Crimson Syndicate because the Guard pays late.
+  knowledge: >-
+    Bloodroot and moonleaf grow in the Whispering Woods and Redroot Clearing; restmoss needs a practised herbalist.
+    Herbs are cleaned at the guild's herb table. She teaches alchemy at her shop on Craftsmen's Row.
+  passive_perception: 12
+
+garrick:
+  name: {es: Garrick, en: Garrick}
+  title: {es: maestro carpintero, en: master carpenter}
+  schedule: {day: carpenter_stall, night: broken_crown_tavern}
+  greeting:
+    es: "«Pisa donde quieras, el serrín se barre. ¿Buscas un mango, una caña o aprender a hacértelos tú?»"
+    en: "\"Step wherever you like, sawdust sweeps up. Looking for a handle, a rod, or to learn to make your own?\""
+  persona: >-
+    Garrick is a broad, slow-talking carpenter who measures twice and says half of what he thinks. Dry humour,
+    endless patience with apprentices, no patience at all with people who lean on his work.
+  goals: Furnish the guild's rooms, and find oak worth the name now that the north roads are closed.
+  secrets: He keeps a half-finished cradle under the bench; it has been there for eleven years.
+  knowledge: >-
+    Oak comes from Elderwood Grove; logs are sawn into planks at the guild's sawing station. He makes handles,
+    staves, fishing rods and the chests and beds the guild's rooms need. He teaches carpentry at his workshop.
+  passive_perception: 11
+
+oda:
+  name: {es: Oda, en: Oda}
+  title: {es: maestra curtidora, en: master tanner}
+  schedule: {day: tannery_stall, night: broken_crown_tavern}
+  greeting:
+    es: "«Respira por la boca, se acostumbra uno. Trae pieles y te enseño a sacarles provecho.»"
+    en: "\"Breathe through your mouth, you get used to it. Bring hides and I'll teach you to make them worth something.\""
+  persona: >-
+    Oda is a wiry, loud tanner with forearms stained to the elbow. Jokes about the smell before anyone else can,
+    and judges a hunter entirely by how they skin their kill.
+  goals: Buy the vat next door and stop renting it; train someone who skins properly.
+  secrets: She knows which Guard sergeant sells confiscated pelts, and says nothing.
+  knowledge: >-
+    Hides come from skinning what you hunt; they are cured at the guild's curing rack before anyone works them.
+    She makes straps, cases and light armour, and teaches leatherworking at the tannery.
+  passive_perception: 12
+
+pell:
+  name: {es: Pell, en: Pell}
+  title: {es: maestro joyero, en: master jeweler}
+  schedule: {day: jeweler_stall, night: broken_crown_tavern}
+  greeting:
+    es: "«Las manos quietas y acércate a la lupa. Si traes una gema, ya veremos qué esconde dentro.»"
+    en: "\"Hands still, and come closer to the glass. If you've brought a gem, we'll see what it's hiding inside.\""
+  persona: >-
+    Pell is an elderly, immaculate jeweler who speaks quietly and never looks up from his work for long. Courteous,
+    exacting, faintly amused by adventurers who think a rough gem is already a jewel.
+  goals: Set one stone worth remembering before his hands fail him.
+  secrets: He appraised the sealed reliquary's fittings years ago and recognised the metal.
+  knowledge: >-
+    Rough gems come from the deep seams of Old Pass Mine and need a practised miner. Ore is smelted into ingots at
+    the guild's furnace. He makes settings and rings, and teaches jewelcrafting at his bench.
+  passive_perception: 14
+
+lorent:
+  name: {es: Lorent, en: Lorent}
+  title: {es: maestro escriba, en: master scribe}
+  schedule: {day: scribe_stall, night: broken_crown_tavern}
+  greeting:
+    es: "«Un momento, que se corre la tinta. ¿Un contrato, un mapa… o uno de esos pergaminos que hacen algo más que leerse?»"
+    en: "\"One moment, the ink runs. A contract, a map… or one of those scrolls that does more than get read?\""
+  persona: >-
+    Lorent is a precise, mildly vain scribe with ink-stained cuffs and a copyist's stoop. Loves a well-turned
+    sentence, corrects people's grammar, and charges extra for haste.
+  goals: Copy the guild's whole archive before the damp gets it; sell a scroll to a real adventurer.
+  secrets: He has copied a page of the Hollow Choir's liturgy and has not burned it.
+  knowledge: >-
+    Ink is made from bloodroot and coal; parchment, from cured hide. A blueprint is a sheet that teaches one
+    special recipe and is spent doing it. He teaches scribing at his desk on Craftsmen's Row.
+  passive_perception: 13
+
+dunn:
+  name: {es: Dunn, en: Dunn}
+  title: {es: maestro ingeniero, en: master engineer}
+  schedule: {day: engineer_stall, night: broken_crown_tavern}
+  greeting:
+    es: "«No traigas farol. Deja la puerta abierta y no toques los cajones de la izquierda. Dicho esto: bienvenido.»"
+    en: "\"Don't bring a lantern. Leave the door open and don't touch the crates on the left. That said: welcome.\""
+  persona: >-
+    Dunn is a singed, fast-talking engineer missing half an eyebrow. Enthusiastic to the point of recklessness about
+    anything that clicks, winds or explodes, and oddly careful about everything else.
+  goals: Sell the Guard a lock nobody can pick; build a fuse that burns the same every time.
+  secrets: One of his smoke bombs failed in a Guard raid and he never reported it.
+  knowledge: >-
+    Black powder needs coal and iron ore; fuses, plant fibre. Ore is smelted at the guild's furnace. He makes
+    mechanisms, locks and bombs, and teaches engineering at his workshop.
+  passive_perception: 12

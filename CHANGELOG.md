@@ -4,6 +4,22 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.11] - 2026-10-20
+
+Profesiones (F15, 3.ª parte): el Gremio de Aventureros y una calle con un puesto por oficio.
+
+### Añadido
+- **Gremio de Aventureros** (`adventurers_guild`), un lugar nuevo al este de la plaza. Dentro están el **horno de fundición**, el **puesto de aserrado**, el **secadero** y la **mesa de preparación** —las estaciones del refinado de las maestrías, abiertas a cualquiera— y un fogón. Es también donde la sargenta **Vale** alista ahora a los reclutas: pasa de la plaza al gremio y deja de hablar en nombre de la Guardia para hacerlo en nombre del gremio.
+- **Siete puestos de oficio**, cada uno un lugar del mapa con su estación, su descripción de día y de noche y su maestro: la **Forja de Tessa** (herrería), la **Botica del Alquimista** de Ilva, el **Taller del Carpintero** de Garrick, la **Curtiduría** de Oda, el **Banco del Joyero** de Pell, el **Escritorio del Escriba** de Lorent y el **Taller del Ingeniero** de Dunn. Seis PNJ nuevos con su carácter, su horario y sus textos de respaldo; Tessa trabaja de día en su forja y sigue vendiendo lo que vendía. El telar de Sastrería llegará con su oficio.
+- **Cada oficio se aprende en su puesto** (`teaches` en el lugar): con el maestro que lo practica, no con un botón en cualquier parte. Quien lo intente donde no toca recibe el nombre del lugar al que ir.
+- **El mapa agrupa los puestos**: salen nombrados bajo su calle y un botón «🛠️ Puestos (7)» los abre, así que la ciudad sigue cabiendo en una pantalla aunque tenga trece lugares.
+- Los prompts del gremio y de los siete puestos, en `TODO-images.md`.
+
+### Cambiado
+- **El Barrio de Oficios conserva su id y se queda sin estaciones**: ahora es la calle de la que cuelgan los puestos. Las misiones, los logros y los textos que lo nombran siguen funcionando.
+- **El tutorial se adapta**: «Alistamiento» empieza en el gremio (la plaza enseña por dónde se va), «Calles de Crownreach» habla de los puestos y «El mercado» manda a Tessa a su forja. El botón «🛒 Pico · ir a…» lleva ahora a la forja.
+- El reglamento, las guías y la ficha del héroe dicen que cada oficio se aprende con su maestro, en su puesto.
+
 ## [0.10.10] - 2026-10-20
 
 Profesiones (F15, 2.ª parte): el contrato de las recetas. Nada cambia todavía para el jugador; cambia lo que una receta puede decir de sí misma.

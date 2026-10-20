@@ -27,7 +27,7 @@ from oathforge.services.events import Outcome, render_event
 log = logging.getLogger(__name__)
 
 # verbs that only show something (no nonce, no state change)
-VIEWS = {"scene", "trv", "trvz", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jrc", "jrl", "jrs", "jq", "jrb", "jb", "jbi", "jrr",
+VIEWS = {"scene", "trv", "trvz", "trvs", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jrc", "jrl", "jrs", "jq", "jrb", "jb", "jbi", "jrr",
          "shopm", "shop", "shopg", "sellm", "cbp", "lang", "city", "place", "cls", "clsl", "rep", "prof", "profsw", "profcf", "pg", "crf", "rb", "repf",
          "mst", "hob", "acts"}
 
@@ -130,8 +130,9 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             context.user_data["talk"] = arg
             talked = await quests.on_talk(session, char, arg, rng())  # "talk to Bram" objectives
             text, kb = await render.conversation(session, char, arg, lang)
-        elif verb in ("trv", "trvz") and not in_combat:
-            text, kb = await render.map_view(session, char, lang, arg if verb == "trvz" else None)
+        elif verb in ("trv", "trvz", "trvs") and not in_combat:
+            text, kb = await render.map_view(session, char, lang, arg if verb == "trvz" else None,
+                                             street=arg if verb == "trvs" else None)
         elif verb == "acts" and not in_combat:
             text, kb = await render.activities_view(session, char, lang)
         elif verb == "talkm" and not in_combat:

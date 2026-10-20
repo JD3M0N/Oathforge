@@ -1,0 +1,17 @@
+name: {es: Escritorio del Escriba, en: Scribe's Desk}
+article: {es: el, en: ""}
+kind: city
+teaches: scribing  # su maestro enseña y cambia este oficio
+stations: [scribe_desk]
+description:
+  es: >-
+    Un soportal con dos mesas inclinadas, tinteros alineados y pergaminos secándose en una cuerda. Aquí se copian contratos, mapas y, si se sabe pedirlo, un pergamino que hace algo más que informar.
+  en: >-
+    An arcade with two slanted desks, inkwells in a row and parchments drying on a line. Contracts and maps are copied here and, if you know how to ask, a scroll that does more than inform.
+night:
+  es: >-
+    Las velas se consumen sobre la mesa; copiar de noche cuesta la vista, pero nadie molesta.
+  en: >-
+    Candles burn down on the desk; copying at night ruins the eyes, but nobody interrupts.
+exits:
+  - {to: crownreach_workshops, minutes: 1}

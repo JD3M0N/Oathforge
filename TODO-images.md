@@ -100,7 +100,39 @@ Se ven con «🖼️ Ver lugar» (0.10.5); mientras falten, el botón responde c
   ```
 - [ ] **Barrio de Oficios** 🌙 (`crownreach/crownreach_workshops/`)
   ```text
-  Craftsmen's Row, a narrow medieval street of workshops behind the market. Smiths at their anvils, an alchemist's bubbling stills, carpenters sawing planks, a guild door with a blank slate board. Smoke and sparks, warm afternoon light. [ESTILO]
+  Craftsmen's Row, a narrow medieval street of workshops behind the market, one stall per trade down both sides. Smiths at their anvils, an alchemist's bubbling stills, carpenters sawing planks, a tannery at the far end, each door with a slate board for apprentices. Smoke and sparks, warm afternoon light. [ESTILO]
+  ```
+- [ ] **Gremio de Aventureros** 🌙 (`crownreach/adventurers_guild/`)
+  ```text
+  Interior of an adventurers' guild hall of grey stone, the crest above the door and a notice board thick with pinned parchments. A smelting furnace glowing at the back, a sawing station by the window, hides on a curing rack, a long table of herbs being cleaned, recruits coming and going with sacks. Warm firelight and dusty sunbeams. [ESTILO]
+  ```
+- [ ] **Forja de Tessa** (`crownreach/forge_stall/`)
+  ```text
+  A smith's stall at the mouth of a medieval craft street, under a tin awning. A cheerful soot-covered woman smith at her anvil, tools hanging from a crossbeam, a half-finished sword clamped to the bench, glowing coals. Sparks and heat haze, warm afternoon light. [ESTILO]
+  ```
+- [ ] **Botica del Alquimista** (`crownreach/alchemist_stall/`)
+  ```text
+  A narrow alchemist's shopfront on a medieval craft street, flasks of every colour in the window, three copper stills bubbling inside, walls lined with hand-labelled drawers. Green and amber light, faint vapour. [ESTILO]
+  ```
+- [ ] **Taller del Carpintero** (`crownreach/carpenter_stall/`)
+  ```text
+  A carpenter's workshop on a medieval craft street, sawdust ankle-deep, staves and fishing rods leaning against the wall, a workbench crowded with clamps, fresh oak boards. Warm dusty light through the open door. [ESTILO]
+  ```
+- [ ] **Curtiduría** (`crownreach/tannery_stall/`)
+  ```text
+  A tannery at the end of a medieval craft street, hides stretched on wooden frames, tanning vats, leather straps hung up to dry, a wiry stained-armed tanner at work. Grey-green light, steam off the vats. [ESTILO]
+  ```
+- [ ] **Banco del Joyero** (`crownreach/jeweler_stall/`)
+  ```text
+  A tiny jeweler's stall behind an iron grille on a medieval craft street, fine tweezers, a magnifier on a jointed arm, half-set rings on a felt tray, an elderly immaculate jeweler bent over his work. Focused lamplight in a dim interior. [ESTILO]
+  ```
+- [ ] **Escritorio del Escriba** (`crownreach/scribe_stall/`)
+  ```text
+  A scribe's arcade on a medieval craft street, two slanted desks, inkwells in a row, parchments drying on a line, a stooped scribe with ink-stained cuffs copying a map. Cool even daylight. [ESTILO]
+  ```
+- [ ] **Taller del Ingeniero** (`crownreach/engineer_stall/`)
+  ```text
+  An engineer's shed on a medieval craft street, reinforced door with soot marks on the lintel, coiled fuses, powder crates stacked away from the fire, half-assembled clockwork mechanisms on the bench. Cluttered, smoky, bright work light. [ESTILO]
   ```
 
 ### Thornwood

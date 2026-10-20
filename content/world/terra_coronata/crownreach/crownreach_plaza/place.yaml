@@ -6,14 +6,17 @@ hub: true  # «Ver lugar» enseña aquí la ciudad si el lugar no tiene imagen p
 description:
   es: >-
     La plaza mayor bulle de carros, pregoneros y soldados de la Guardia de Plata. Al norte se alza
-    la capilla, donde los sanadores atienden a los aventureros que vuelven a rastras.
+    la capilla, donde los sanadores atienden a los aventureros que vuelven a rastras; al este, el
+    caserón del Gremio de Aventureros, con su tablón de notas siempre lleno.
   en: >-
     The great plaza bustles with carts, criers and Silver Guard soldiers. To the north stands the
-    chapel, where healers tend to adventurers who come back crawling.
+    chapel, where healers tend to adventurers who come back crawling; to the east, the hall of the
+    Adventurers' Guild, its notice board always full.
 night:
   es: Las farolas tiemblan bajo la llovizna. Solo la capilla y la taberna mantienen la luz encendida.
   en: Streetlamps flicker in the drizzle. Only the chapel and the tavern keep their lights on.
 exits:
+  - {to: adventurers_guild, minutes: 2}
   - {to: crownreach_chapel, minutes: 2}
   - {to: broken_crown_tavern, minutes: 2}
   - {to: crownreach_market, minutes: 3}

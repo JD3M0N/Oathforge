@@ -296,8 +296,22 @@ def validate_references(c: Content) -> None:
             errors.append(f"profession {key}: no location has a '{prof.station}'")
         if prof.practice is not None and (prof.practice not in GATHER_SKILLS or not prof.hobby):
             errors.append(f"profession {key}: practice '{prof.practice}' must be a gathering skill of a hobby")
-    if c.professions and not any(loc.guild for loc in c.locations.values()):
-        errors.append("professions: no guild location to learn them")
+    taught: dict[str, list[str]] = {}
+    for key, loc in c.locations.items():
+        if loc.teaches is None:
+            continue
+        if loc.teaches not in c.professions:
+            errors.append(f"location {key}: teaches unknown profession '{loc.teaches}'")
+        elif c.professions[loc.teaches].hobby:
+            errors.append(f"location {key}: '{loc.teaches}' is a hobby, nobody needs to teach it")
+        else:
+            taught.setdefault(loc.teaches, []).append(key)
+    for key, places in taught.items():
+        if len(places) > 1:
+            errors.append(f"profession {key}: taught in more than one place ({', '.join(sorted(places))})")
+    for key, prof in c.professions.items():
+        if not prof.hobby and key not in taught:
+            errors.append(f"profession {key}: no stall teaches it")
     for outcome in CHRONICLE_KEYS:
         if not c.chronicles.get(outcome):
             errors.append(f"fallbacks/chronicles.yaml: no texts for '{outcome}'")

@@ -14,7 +14,7 @@ Resumen de [Possibilium §13–14, §19, §21–23](Possibilium.md#s13).
 
 Aetherfall → continente Terra Coronata → zonas (`content/world/<continente>/<zona>/<lugar>/place.yaml`):
 
-- **Crownreach** (ciudad): plaza (hub), taberna La Corona Rota (Bram, fogón, posada), mercado (Mira, Tessa), Barrio de Oficios (estaciones), Capilla del Alba (hermana Ysolde; cura gratis todos los PV y heridas graves en la beta).
+- **Crownreach** (ciudad, 13 lugares): plaza (hub), **Gremio de Aventureros** (Vale; horno, aserradero, secadero, mesa de preparación y fogón: el refinado de las maestrías está abierto a cualquiera), taberna La Corona Rota (Bram, fogón, posada), mercado (Mira), Capilla del Alba (hermana Ysolde; cura gratis todos los PV y heridas graves en la beta) y el **Barrio de Oficios**, una calle de la que cuelgan los siete puestos de oficio, cada uno con su estación y su maestro: la Forja de Tessa (herrería), la Botica de Ilva (alquimia), el Taller de Garrick (carpintería), la Curtiduría de Oda (peletería), el Banco de Pell (joyería), el Escritorio de Lorent (escribanía) y el Taller de Dunn (ingeniería). Cada oficio se aprende y se cambia solo en su puesto (`Location.teaches`). El mapa agrupa los puestos bajo la calle con un botón «🛠️ Puestos», para que la ciudad siga cabiendo en una pantalla. El telar de Sastrería llega con su oficio.
 - **Tierras salvajes**: Camino del Viejo Rey, Bosque de los Susurros, Prado de los Colmillos (caza de día y de noche), Mina del Paso Viejo, Arboleda Antigua, Claro de la Raíz Roja, Ribera de Silverbrook.
 - **Cripta Hundida** (mazmorra): salas con combates fijos, osario con descanso gratis y santuario de Ser Aldren.
 - Reloj día/noche: un día de juego = 4 h reales; los NPC tienen horario. `GAME_CLOCK_OFFSET_HOURS` lo adelanta para pruebas.
@@ -39,9 +39,9 @@ Objetivos: `kill`, `talk`, `visit`, `read` (sección del `/rulebook`), `hunt` (v
 
 | # | Misión | Objetivo | Enseña | XP | Recompensa |
 |---|---|---|---|---|---|
-| 1 | Alistamiento | Hablar con Vale + leer «🧺 Actividades» | PNJ, reglamento | 25 | cuchillo de desollar |
+| 1 | Alistamiento | Hablar con Vale en el Gremio + leer «🧺 Actividades» | PNJ, reglamento | 25 | cuchillo de desollar |
 | 2 | Calles de Crownreach | Barrio de Oficios, taberna y Bram | `/map`, ciudad | 25 | 5 de oro |
-| 3 | El mercado | Hablar con Mira y Tessa | tiendas | 25 | 5 de oro + poción |
+| 3 | El mercado | Mira en el mercado y Tessa en su forja | tiendas | 25 | 5 de oro + poción |
 | 4 | Colmillos en el prado | Cazar 2 veces en el prado + 2 de carne desollando | caza, combate, desuello | 100 | hoz |
 | 5 | Raíz de sangre | Recoger 3 raíces de sangre | salir, recolectar, emboscadas | 50 | 5 de oro |
 | 6 | Guiso del cazador | Fabricar un estofado del cazador | aficiones, fogón | 50 | pico |
@@ -68,7 +68,7 @@ Pacto de Plata y Sindicato Carmesí con reputación −100..100 (precios ±25 %)
 ## Próximo
 
 - **Entregar misiones a quien las dio** (prioridad alta del TODO; **MIS-02**).
-- **Gremio de Aventureros y calle de los oficios** ([F15](roadmap.md#F15), [contrato](roadmap-profesiones.md)): un lugar nuevo junto a la plaza con Vale, el alistamiento, las estaciones de refinado, un fogón, las especializaciones y la habitación propia (cama y cofre); y el Barrio de Oficios, que conserva su id, convertido en una calle de la que cuelgan ocho puestos, cada uno un lugar con su estación y su maestro. El tutorial se adapta: la misión 1 empieza en el Gremio, la 2 visita Gremio y calle, la 3 lleva a Tessa a su Forja y entra una misión nueva de la habitación.
+- **Lo que falta del Gremio** ([F15](roadmap.md#F15), [contrato](roadmap-profesiones.md)): las especializaciones de maestría (fase 7), la habitación con cama y cofre y su misión del tutorial (fase 5), y el octavo puesto, el telar de Sastrería (fase 4).
 - Más misiones tras nivel 5 y encargos repetibles de caza (**MIS-05**, plantillas validadas).
 - **AVE-01..09** banco de aventuras; puertas con varias soluciones (**AVE-08**, PKG-07).
 - **Fase 2 del viaje** (**VIA-01..10**): viajar ≠ explorar; escenas con presupuesto (0 rutina, 1 primera visita, 1–2 expedición corta); estilos 🛡️ Prudente / 🧭 Explorador / ⚡ Directo, sin gastar consumibles solos; rutas distintas de verdad; atajos con `requires_flag` (Sendero de los Carboneros, barquero); 3 favoritos; cambios de ruta por eventos revalidados al salir y al continuar; cada tramo resuelto una vez (nonce). Si el viaje vuelve a gastar tiempo, mover el reloj y avisarlo en el rulebook.

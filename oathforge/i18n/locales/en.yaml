@@ -140,6 +140,7 @@ btn:
   continue_trip: "▶️ Carry on to {place}"
   see_activity: "⏳ See the activity"
   zone: "{icon} {zone} ({n}) ›"
+  stalls: "🛠️ Stalls ({n}) ›"
   travel: "🧭 Travel"
   investigate: "🔎 Investigate"
   talk: "💬 Talk"
@@ -224,6 +225,7 @@ map:
     dungeon: "🕯️ <b>In the dungeon</b>"
   objective: "📜 <b>Your objective</b>"
   objective_line: "• {quest} → <b>{place}</b>"
+  street_title: "🛠️ <b>{street}</b> · stalls"
   zone_title: "{icon} <b>{zone}</b>"
   busy: "⏳ You are busy: wait for your task to end, or abandon it, to travel."
   beyond: "🌫️ <b>Unexplored</b> <i>(reached one road at a time)</i>"
@@ -247,7 +249,7 @@ map:
     gather_fishing: "🎣 Fish"
     hunt: "🏹 Hunt and track"
     craft: "🔨 Craft"
-    guild: "📜 Craft guild"
+    guild: "📜 Learn {prof}"
     npc: "💬 {npc}"
 
 talk:
@@ -383,7 +385,7 @@ sheet:
   hobbies: "Hobbies (optional)"
   chronicles: "📜 Chronicles today: {used}/{limit} · {left} left  {bar}"
   professions: "🛠️ Professions {used}/{slots}: {list}"
-  no_professions: "none (learn them at Craftsmen’s Row)"
+  no_professions: "none (each master teaches theirs on Craftsmen’s Row)"
 
 ai:
   budget_exhausted: "🤖 The Dungeon Master is spent for today. Keep playing with the buttons; it recovers at midnight."
@@ -821,7 +823,7 @@ roll:
 acts:
   title: "⚒ <b>Activities</b> · {place}"
   none: "Nothing to do with your hands here. Check the 🗺 Map: the mine, the grove or the meadow have plenty."
-  guild: "Professions are learned and swapped here: 🛠️ Professions."
+  guild: "{prof} is learned and swapped here, with its master: 🛠️ Professions."
   missing: "❌ You lack: {tool}"
   desc:
     hunt: "a fight right now with whatever prowls around"
@@ -927,9 +929,9 @@ prof:
   recipes: "Recipes"
   rank_n: "Rank {rank}"
   swap_confirm: "🔁 Drop <b>{old}</b> to learn <b>{prof}</b>?\n\nIt costs {cost} gold (you have {gold}). What you knew of {old} is kept: if you come back to it, you pick up where you left off."
-  none: "<i>You have no profession yet. Learn up to {slots} at Craftsmen’s Row, next to the market.</i>"
-  guild_hint: "<i>Learning is free while you have free slots; swapping a profession costs {cost} gold and you keep what you learned.</i>"
-  go_guild: "<i>Professions are learned and swapped at Craftsmen’s Row, next to the market.</i>"
+  none: "<i>You have no profession yet. You may learn up to {slots}: each one from its master, at their stall on Craftsmen’s Row.</i>"
+  guild_hint: "<i>This is where this trade is learned: free while you have free slots; swapping it costs {cost} gold and you keep what you learned.</i>"
+  go_guild: "<i>Each profession is learned from its master, at their stall on Craftsmen’s Row, next to the market.</i>"
   line: "{icon} <b>{name}</b> {stars} · {progress}"
   inactive: "<i>(not practised)</i>"
   swap_title: "🔁 Which profession do you drop to learn <b>{prof}</b>? It costs {cost} gold and you keep its experience."
@@ -938,7 +940,8 @@ prof:
   xp: "📈 +{amount} {prof} XP."
   rank: "⭐ {prof} rises to rank {rank}!"
   err:
-    not_guild: "Professions are learned at Craftsmen’s Row."
+    not_guild: "Nobody teaches a profession here. Each one has its stall on Craftsmen’s Row."
+    elsewhere: "{prof} is learned at {place}, from its master."
     unknown: "That profession does not exist."
     already: "You already practise {prof}."
     slots_full: "You already have {slots} professions. Choose one to drop."

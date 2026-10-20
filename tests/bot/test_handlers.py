@@ -583,10 +583,10 @@ async def test_stale_combat_button_never_acts_twice(llm):
 
 async def test_journal_missions_and_bestiary_views(llm, monkeypatch):
     monkeypatch.setattr(exploration, "npcs_present",
-                        lambda loc, now=None: {"crownreach_plaza": ["vale"]}.get(loc, []))
+                        lambda loc, now=None: {"adventurers_guild": ["vale"]}.get(loc, []))
     p = Player(llm, tg_id=62)
     await create(p)
-    assert any("Habla con ella para empezar" in t_ for t_, _ in p.chat.sent[-2:])  # the plaza calls you over
+    assert any("ve al gremio" in t_ for t_, _ in p.chat.sent[-2:])  # the plaza points at the guild hall
     await p.press("jr|-|-")
     assert "Alistamiento" in p.last[0]
     await p.press(p.find("jrm"))
@@ -597,6 +597,8 @@ async def test_journal_missions_and_bestiary_views(llm, monkeypatch):
     await p.press("jq|tut_town|-")
     assert "🔒" in p.last[0]
     # talking to the sergeant and reading the rulebook's Activities page complete the first mission
+    await p.press(p.find("trv"))
+    await p.press(p.find("go", "adventurers_guild"))  # she is at the guild hall, off the plaza
     await p.press("talk|vale|-")
     await p.press("rb|activities|-")
     assert "Actividades" in p.chat.sent[-2][0] and "Alistamiento" in p.last[0]
@@ -794,7 +796,7 @@ async def test_learn_a_profession_and_craft(llm):
     await create(p)
     async with session_scope() as s:
         char = await s.scalar(select(Character).with_for_update())
-        char.location = "crownreach_workshops"
+        char.location = "alchemist_stall"  # Ilva teaches alchemy and her table is here
         await inventory.add_item(s, char, "bloodroot", 2)
         await inventory.add_item(s, char, "water_flask", 1)
     await p.press("acts|-|-")
@@ -808,6 +810,23 @@ async def test_learn_a_profession_and_craft(llm):
     await p.press(p.find("craft", "healing_potion"))
     assert "Poción de curación" in p.last[0]
     assert "❌" in p.last[0]  # no more bloodroot
+
+
+async def test_the_craft_stalls_hang_off_their_street(llm):
+    """One stall per trade, grouped under Craftsmen's Row so the city map stays short."""
+    p = Player(llm, tg_id=93)
+    await create(p)
+    await p.press(p.find("trv"))
+    assert "Barrio de Oficios" in p.last[0] and "Forja de Tessa" in p.last[0]
+    assert not any(b.startswith("go|forge_stall") for b in p.buttons())  # not one button per stall
+    await p.press(p.find("trvs", "crownreach_workshops"))
+    assert "puestos" in p.last[0] and "Curtiduría" in p.last[0]
+    await p.press(p.find("go", "forge_stall"))
+    assert (await char_row()).location == "forge_stall"
+    await p.press("acts|-|-")
+    assert "Herrería" in p.last[0]  # Tessa teaches her trade here
+    await p.press(p.find("prof"))
+    assert "plearn|blacksmithing" in str(p.buttons()) and "plearn|alchemy" not in str(p.buttons())
 
 
 async def test_settings_command_changes_language_and_rolls(llm):
@@ -871,6 +890,8 @@ async def test_fixed_keyboard_after_creation_and_its_buttons(llm):
 async def test_item_and_monster_pages(llm):
     p = Player(llm, tg_id=72)
     await create(p)
+    await p.press(p.find("trv"))
+    await p.press(p.find("go", "adventurers_guild"))  # Vale signs recruits up at the guild hall
     await p.press("talk|vale|-")
     await p.press("rb|activities|-")  # Mustering In: the knife, with its link
     assert "/item_skinning_knife" in p.last[0]
@@ -975,7 +996,7 @@ async def test_activities_view_offers_only_what_can_start(llm):
     await commands.fixed_button(p.update(message="⚒ Actividades"), p.ctx)
     assert "Actividades" in p.last[0] and "Te falta: Pico" in p.last[0]
     assert not any(b.startswith("act|gather:mining") for b in p.buttons())
-    assert any(b.startswith("go|crownreach_market") for b in p.buttons())  # 🛒 Pico · ir a Mercado
+    assert any(b.startswith("go|forge_stall") for b in p.buttons())  # 🛒 Pico · ir a la Forja de Tessa
     async with session_scope() as s:  # the view and the service agree
         char = await s.scalar(select(Character))
         refusal = dict(((k, sk), r) for k, sk, r in await activities.availability(s, char))[("gather", "mining")]

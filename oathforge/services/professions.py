@@ -1,4 +1,4 @@
-"""Crafting professions: two active, learned and swapped at the guild (Craftsmen's Row).
+"""Crafting professions: two active, learned and swapped with the master of that trade, at their stall.
 
 Swapping keeps the XP of the profession you drop, so trying another one never wastes progress.
 Hobbies (cooking, fishing) take no slot: everyone can practise them. Fishing has no station: it levels by fishing.
@@ -52,12 +52,16 @@ async def learn(session: AsyncSession, char: Character, key: str, replace: str |
     if refusal := characters.ensure_free(char):
         return refusal
     c = get_content()
-    if not c.locations[char.location].guild:
-        return Outcome.refused("prof.err.not_guild")
     if key not in c.professions:
         return Outcome.refused("prof.err.unknown")
     if c.professions[key].hobby:
         return Outcome.refused("prof.err.hobby", prof=c.professions[key].name.model_dump())
+    here = c.locations[char.location].teaches
+    if here is None:
+        return Outcome.refused("prof.err.not_guild")
+    if here != key:
+        return Outcome.refused("prof.err.elsewhere", prof=c.professions[key].name.model_dump(),
+                               place=_stall_phrase(key))
     current = active(char)
     if key in current:
         return Outcome.refused("prof.err.already", prof=c.professions[key].name.model_dump())
@@ -73,6 +77,16 @@ async def learn(session: AsyncSession, char: Character, key: str, replace: str |
     char.gold -= SWAP_COST
     _set(char, [key if p == replace else p for p in current], xp_map)
     return Outcome().add("prof.swapped", prof=name, old=c.professions[replace].name.model_dump(), cost=SWAP_COST)
+
+
+def stall_of(key: str) -> str | None:
+    """The place whose master teaches this profession."""
+    return next((k for k, loc in get_content().locations.items() if loc.teaches == key), None)
+
+
+def _stall_phrase(key: str) -> dict:
+    place = stall_of(key)
+    return get_content().locations[place].phrase() if place else {"es": "?", "en": "?"}
 
 
 def grant_xp(char: Character, key: str, amount: int, out: Outcome) -> None:

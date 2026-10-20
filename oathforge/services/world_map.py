@@ -199,8 +199,8 @@ def activities(loc_key: str, present: list[str]) -> list[tuple[str, dict]]:
         out.append(("hunt", {}))
     if loc.stations:
         out.append(("craft", {}))
-    if loc.guild:
-        out.append(("guild", {}))
+    if loc.teaches is not None:
+        out.append(("guild", {"prof": c.professions[loc.teaches].name.model_dump()}))
     talk = [c.npcs[k].name.model_dump() for k in present if not c.npcs[k].shop]
     for name in talk:
         out.append(("npc", {"npc": name}))

@@ -1,0 +1,17 @@
+name: {es: Botica del Alquimista, en: Alchemist's Shop}
+article: {es: la, en: ""}
+kind: city
+teaches: alchemy  # su maestro enseña y cambia este oficio
+stations: [alchemy_table]
+description:
+  es: >-
+    Un portal estrecho con frascos de todos los colores en el escaparate. Dentro burbujean tres alambiques a la vez y el aire pica en la garganta. Las paredes están forradas de cajones con etiquetas escritas a mano.
+  en: >-
+    A narrow doorway with flasks of every colour in the window. Inside, three stills bubble at once and the air stings the throat. The walls are lined with drawers labelled by hand.
+night:
+  es: >-
+    Los alambiques siguen al fuego lento toda la noche, vigilados por quien no duerme nunca.
+  en: >-
+    The stills simmer all night, watched over by someone who never seems to sleep.
+exits:
+  - {to: crownreach_workshops, minutes: 1}
