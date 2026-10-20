@@ -1,11 +1,63 @@
-# Recetas: oficio, rango mínimo del oficio, ingredientes → productos y XP de oficio.
-# Se fabrican en la estación del oficio (content/professions.yaml). Fabricar es inmediato.
+# Recetas: disciplina (un oficio, una afición o una maestría), rango mínimo en ella, ingredientes →
+# productos y XP de esa disciplina. Sin `station`, se fabrica en la del oficio (content/professions.yaml).
+# El refinado (mena → lingote, tronco → tablón, piel → cuero, fibra → fibra limpia) pertenece a la maestría:
+# no ocupa plaza de oficio, da XP de maestría y se hace en las estaciones del Gremio de Aventureros.
+# Fabricar es inmediato, y se puede fabricar por lotes (CRAFT_BATCH_MAX).
+
+# --- Refinado de maestrías ---
 
 iron_ingot:
-  profession: blacksmithing
+  profession: mining
+  station: furnace
   ingredients: {iron_ore: 3, coal: 1}
   outputs: {iron_ingot: 1}
   xp: 10
+
+copper_ingot:
+  profession: mining
+  station: furnace
+  min_rank: 1
+  ingredients: {copper_ore: 2, coal: 1}
+  outputs: {copper_ingot: 1}
+  xp: 12
+
+oak_plank:
+  profession: woodcutting
+  station: sawmill
+  ingredients: {oak_log: 3}
+  outputs: {oak_plank: 2}
+  xp: 8
+
+ash_plank:
+  profession: woodcutting
+  station: sawmill
+  min_rank: 2
+  ingredients: {ash_log: 3}
+  outputs: {ash_plank: 2}
+  xp: 14
+
+clean_fiber:
+  profession: herbalism
+  station: herb_table
+  ingredients: {plant_fiber: 3}
+  outputs: {clean_fiber: 2}
+  xp: 6
+
+treated_leather:
+  profession: skinning
+  station: curing_rack
+  ingredients: {boar_hide: 2}
+  outputs: {treated_leather: 1}
+  xp: 10
+
+wolf_leather:  # el mismo cuero, de una piel de lobo
+  profession: skinning
+  station: curing_rack
+  ingredients: {wolf_pelt: 1}
+  outputs: {treated_leather: 1}
+  xp: 10
+
+# --- Oficios ---
 
 iron_sword:
   profession: blacksmithing
@@ -41,30 +93,12 @@ rest_draught:
   outputs: {rest_draught: 1}
   xp: 35
 
-oak_plank:
-  profession: carpentry
-  ingredients: {oak_log: 3}
-  outputs: {oak_plank: 2}
-  xp: 8
-
 oak_staff:
   profession: carpentry
   min_rank: 1
-  ingredients: {oak_plank: 2, plant_fiber: 1}
+  ingredients: {oak_plank: 2, clean_fiber: 1}
   outputs: {oak_staff: 1}
   xp: 20
-
-treated_leather:
-  profession: leatherworking
-  ingredients: {boar_hide: 2}
-  outputs: {treated_leather: 1}
-  xp: 10
-
-wolf_leather:
-  profession: leatherworking
-  ingredients: {wolf_pelt: 1}
-  outputs: {treated_leather: 1}
-  xp: 10
 
 reinforced_leather:
   profession: leatherworking
@@ -88,7 +122,7 @@ fisher_ration:
 
 copper_ring:
   profession: jewelcrafting
-  ingredients: {copper_ore: 2, coal: 1}
+  ingredients: {copper_ingot: 1}
   outputs: {copper_ring: 1}
   xp: 10
 

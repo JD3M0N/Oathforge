@@ -19,6 +19,7 @@ cmd:
   classes: "Clases y sus habilidades"
   report: "Informe de la última batalla"
   professions: "Oficios y maestrías"
+  recipes: "Recetas: lo que puedes fabricar"
   rulebook: "Reglamento: cómo funciona el juego"
   settings: "Ajustes: idioma y tiradas manuales"
   language: "Cambiar idioma"
@@ -32,7 +33,7 @@ help:
     También puedes <b>escribir lo que quieras hacer</b>: «me escondo tras la barra y escucho», «intento robarle la bolsa al tabernero», «empujo el carro sobre el bandido».
     El Dungeon Master interpreta tu acción, el motor tira los dados y tú ves el resultado real.
 
-    Comandos: /look /activities /map /hero /sheet /inventory /journal /quests /classes /report /professions /masteries /hobbies /rulebook /settings
+    Comandos: /look /activities /map /hero /sheet /inventory /journal /quests /classes /report /professions /recipes /masteries /hobbies /rulebook /settings
   version: "<i>Oathforge v{version}</i>"
 
 settings:
@@ -172,6 +173,8 @@ btn:
   swap_for: "🔁 Cambiar por {prof} ({cost} 🪙)"
   replace: "Dejar {prof}"
   make: "🔨 {item}"
+  make_n: "🔨 ×{n}"
+  recipes: "📜 Recetas"
   missions: "📜 Misiones"
   quest_log: "📚 Registro"
   stats: "📈 Estadísticas"
@@ -948,6 +951,25 @@ prof:
     hobby: "{prof} es una afición: no hace falta aprenderla, ya puedes practicarla."
 
 craft:
+  tier: "T{tier}"
+  list_title: "📜 <b>Recetas</b>"
+  list_empty: "<i>Nada por aquí. Prueba otra pestaña.</i>"
+  needs: "Necesitas:"
+  short_of: "<i>te falta: {items}</i>"
+  gives_xp: "🎖 Da {xp} XP de {prof}."
+  needs_level: "🧝 Para equiparlo o usarlo hace falta nivel {level}."
+  locked_why: "🔒 Pide {prof} de rango {rank}; tienes {yours}."
+  filter:
+    can: "✅ Puedo fabricar"
+    missing: "❌ Faltan materiales"
+    learn: "🔒 Por aprender"
+    t0: "T0"
+    t1: "T1"
+    can_on: "• ✅ Puedo fabricar ({n}) •"
+    missing_on: "• ❌ Faltan materiales ({n}) •"
+    learn_on: "• 🔒 Por aprender ({n}) •"
+    t0_on: "• T0 ({n}) •"
+    t1_on: "• T1 ({n}) •"
   title: "🔨 <b>Fabricar</b> · {place}"
   none: "<i>Aquí no hay estación para tus oficios ni aficiones. Dónde trabajar cada uno:</i>"
   recipe: "{mark} <b>{item}</b> ×{qty} · {prof} {rank}"

@@ -19,6 +19,7 @@ cmd:
   classes: "Classes and their abilities"
   report: "Report of the last battle"
   professions: "Professions and masteries"
+  recipes: "Recipes: what you can craft"
   rulebook: "Rulebook: how the game works"
   settings: "Settings: language and manual rolls"
   language: "Change language"
@@ -32,7 +33,7 @@ help:
     You can also <b>type whatever you want to do</b>: "I hide behind the bar and listen", "I try to lift the keeper's purse", "I push the cart onto the bandit".
     The Dungeon Master interprets your action, the engine rolls the dice, and you see what really happened.
 
-    Commands: /look /activities /map /hero /sheet /inventory /journal /quests /classes /report /professions /masteries /hobbies /rulebook /settings
+    Commands: /look /activities /map /hero /sheet /inventory /journal /quests /classes /report /professions /recipes /masteries /hobbies /rulebook /settings
   version: "<i>Oathforge v{version}</i>"
 
 settings:
@@ -172,6 +173,8 @@ btn:
   swap_for: "🔁 Swap for {prof} ({cost} 🪙)"
   replace: "Drop {prof}"
   make: "🔨 {item}"
+  make_n: "🔨 ×{n}"
+  recipes: "📜 Recipes"
   missions: "📜 Missions"
   quest_log: "📚 Log"
   stats: "📈 Statistics"
@@ -948,6 +951,25 @@ prof:
     hobby: "{prof} is a hobby: no need to learn it, you can already practise it."
 
 craft:
+  tier: "T{tier}"
+  list_title: "📜 <b>Recipes</b>"
+  list_empty: "<i>Nothing here. Try another tab.</i>"
+  needs: "You need:"
+  short_of: "<i>short of: {items}</i>"
+  gives_xp: "🎖 Gives {xp} XP of {prof}."
+  needs_level: "🧝 Equipping or using it needs level {level}."
+  locked_why: "🔒 Needs {prof} at rank {rank}; you are at {yours}."
+  filter:
+    can: "✅ Can craft"
+    missing: "❌ Missing materials"
+    learn: "🔒 To learn"
+    t0: "T0"
+    t1: "T1"
+    can_on: "• ✅ Can craft ({n}) •"
+    missing_on: "• ❌ Missing materials ({n}) •"
+    learn_on: "• 🔒 To learn ({n}) •"
+    t0_on: "• T0 ({n}) •"
+    t1_on: "• T1 ({n}) •"
   title: "🔨 <b>Craft</b> · {place}"
   none: "<i>There is no station for your professions or hobbies here. Where to work each one:</i>"
   recipe: "{mark} <b>{item}</b> ×{qty} · {prof} {rank}"

@@ -614,9 +614,120 @@ async def craft_menu(session: AsyncSession, char: Character, lang: str) -> tuple
             have = need - lacking.get(item, 0)
             parts.append(f"{have}/{need} {escape(c.items[item].label(lang))}")
         lines.append("      " + " + ".join(parts))
+        lines[-2] += f" · /r_{key}"
         if not locked and not lacking:
             ready.append(btn(t(lang, "btn.make", item=c.items[out_key].name.get(lang)), cb("craft", key, n)))
     rows = grid(ready)
+    rows.append([btn(t(lang, "btn.recipes"), cb("rcl")), btn(t(lang, "btn.professions"), cb("prof")),
+                 btn(t(lang, "btn.back"), cb("scene"))])
+    return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
+
+
+RECIPE_FILTERS = ("can", "missing", "learn", "t0", "t1")  # /recipes tabs
+RECIPES_PER_PAGE = 8
+
+
+def _origin(item_key: str, lang: str) -> str:
+    """Where a missing ingredient comes from: a place, a discipline that refines it, or who sells it."""
+    c = get_content()
+    out = [loc.name.get(lang) for loc in c.locations.values()
+           if any(r.item == item_key for g in loc.gathering for r in g.resources)]
+    out += [discipline_label(r.profession, lang) for r in c.recipes.values() if item_key in r.outputs]
+    out += [f"{creature_icon(m)} {m.name.get(lang)}" for m in c.monsters.values()
+            if any(x.item == item_key for x in [*m.loot, *m.harvest])]
+    out += [f"🛒 {n.name.get(lang)}" for n in c.npcs.values() if n.shop and item_key in n.shop.items]
+    return ", ".join(dict.fromkeys(out))
+
+
+def _recipe_title(key: str, lang: str) -> str:
+    c = get_content()
+    r = c.recipes[key]
+    out_key, qty = next(iter(r.outputs.items()))
+    return f"{c.items[out_key].label(lang)} ×{qty}" + (f" · {t(lang, 'craft.tier', tier=r.tier)}" if r.tier else "")
+
+
+async def recipe_card(session: AsyncSession, char: Character, key: str, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+    """/r_<recipe>: what it makes, from what, where, and the buttons to make one, five or as many as fit."""
+    c = get_content()
+    r = c.recipes.get(key)
+    if r is None:
+        return t(lang, "craft.err.unknown"), markup([[btn(t(lang, "btn.back"), cb("crf"))]])
+    station = crafting.station_of(r)
+    rank = crafting.rank_in(char, r.profession)
+    lines = [f"<b>{escape(_recipe_title(key, lang))}</b>",
+             f"<i>{escape(discipline_label(r.profession, lang))} · {t(lang, 'prof.rank_n', rank=r.min_rank)}</i>", RULE,
+             _station_place(station, lang)]
+    if rank < r.min_rank:
+        lines.append(t(lang, "craft.locked_why", prof=escape(discipline_label(r.profession, lang)),
+                       rank=r.min_rank, yours=rank))
+    lacking = await crafting.missing(session, char, r)
+    lines += ["", f"<b>{t(lang, 'craft.needs')}</b>"]
+    for item, need in r.ingredients.items():
+        have = need - lacking.get(item, 0)
+        mark = "▫️" if lacking.get(item) else "✅"
+        line = f"{mark} {have}/{need} {escape(c.items[item].label(lang))} · /item_{item}"
+        origin = _origin(item, lang) if lacking.get(item) else ""
+        lines.append(line + (f"\n      <i>{escape(origin)}</i>" if origin else ""))
+    lines += ["", t(lang, "craft.gives_xp", xp=r.xp, prof=escape(discipline_label(r.profession, lang)))]
+    out_key = next(iter(r.outputs))
+    stats = item_stats(out_key, lang)
+    if stats:
+        lines.append(t(lang, "item.use", what=escape(stats)))
+    if c.items[out_key].min_level > 1:
+        lines.append(t(lang, "craft.needs_level", level=c.items[out_key].min_level))
+    rows = []
+    if rank >= r.min_rank and not lacking:
+        fits = [await inventory.count(session, char, i) // q for i, q in r.ingredients.items()]
+        most = min(get_settings().craft_batch_max, *fits)
+        n = nonce()
+        rows = [[btn(t(lang, "btn.make_n", n=qty), cb("craft", f"{key}:{qty}", n))
+                 for qty in dict.fromkeys(x for x in (1, 5, most) if 1 <= x <= most)]]
+    rows.append([btn(t(lang, "btn.recipes"), cb("rcl")), btn(t(lang, "btn.back"), cb("crf"))])
+    return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
+
+
+async def recipes_list(session: AsyncSession, char: Character, lang: str,
+                       arg: str = "") -> tuple[str, InlineKeyboardMarkup]:
+    """/recipes: every recipe of your disciplines, by tab (can make, missing materials, to learn, T0, T1)."""
+    c = get_content()
+    filt, _, page_s = arg.partition(":")
+    filt = filt if filt in RECIPE_FILTERS else "can"
+    page = int(page_s) if page_s.isdigit() else 0
+    mine = crafting.disciplines(char)
+    rows_data = []
+    for key, r in c.recipes.items():
+        if r.quest is not None:
+            continue
+        locked = r.profession not in mine or crafting.rank_in(char, r.profession) < r.min_rank or r.special
+        lacking = {} if locked else await crafting.missing(session, char, r)
+        state = "learn" if locked else ("missing" if lacking else "can")
+        if filt in ("t0", "t1") and r.tier != int(filt[1]):
+            continue
+        if filt in ("can", "missing", "learn") and state != filt:
+            continue
+        rows_data.append((key, r, state, lacking))
+    pages = max(1, -(-len(rows_data) // RECIPES_PER_PAGE))
+    page = min(page, pages - 1)
+    chunk = rows_data[page * RECIPES_PER_PAGE:(page + 1) * RECIPES_PER_PAGE]
+    lines = [t(lang, "craft.list_title"), t(lang, f"craft.filter.{filt}_on", n=len(rows_data)), RULE]
+    if not chunk:
+        lines.append(t(lang, "craft.list_empty"))
+    for key, r, state, lacking in chunk:
+        mark = {"can": "✅", "missing": "❌", "learn": "🔒"}[state]
+        lines.append(f"{mark} <b>{escape(_recipe_title(key, lang))}</b> · {discipline_icon(r.profession)} · /r_{key}")
+        if state == "missing":
+            lines.append("      " + t(lang, "craft.short_of",
+                                      items=escape(", ".join(f"{q} {c.items[i].label(lang)}"
+                                                             for i, q in lacking.items()))))
+    tabs = [btn(t(lang, f"craft.filter.{f}"), cb("rcl", f)) for f in RECIPE_FILTERS if f != filt]
+    rows = grid(tabs)
+    if pages > 1:
+        nav = []
+        if page:
+            nav.append(btn("◀", cb("rcl", f"{filt}:{page - 1}")))
+        if page + 1 < pages:
+            nav.append(btn("▶", cb("rcl", f"{filt}:{page + 1}")))
+        rows.append(nav)
     rows.append([btn(t(lang, "btn.professions"), cb("prof")), btn(t(lang, "btn.back"), cb("scene"))])
     return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
 
@@ -1462,6 +1573,7 @@ def rule_numbers(lang: str = "es") -> dict:
         "prey_pct": round(gathering.TRACK_PREY_CHANCE * 100), "bonus_pct": round(gathering.BONUS_PER_RANK * 100),
         "bonus_cap": round(gathering.BONUS_CAP * 100), "max_rank": gathering.MAX_RANK,
         "slots": professions.SLOTS, "swap_cost": professions.SWAP_COST,
+        "craft_batch": settings.craft_batch_max,
     }
 
 

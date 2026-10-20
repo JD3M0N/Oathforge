@@ -55,20 +55,21 @@ async def test_each_trade_is_learned_at_its_own_stall():
 
 
 async def test_crafting_is_all_or_nothing():
-    cid = await new_character()
+    cid = await new_character(location="adventurers_guild")
     async with session_scope() as s:
         char = await get_char(s, cid)
-        assert (await crafting.craft(s, char, "iron_ingot")).error == "craft.err.not_your_profession"
-        await professions.learn(s, char, "blacksmithing")
         await inventory.add_item(s, char, "iron_ore", 3)  # but no coal
-        out = await crafting.craft(s, char, "iron_ingot")
+        out = await crafting.craft(s, char, "iron_ingot")  # smelting is Mining: no trade needed
         assert out.error == "craft.err.missing"
         assert await inventory.count(s, char, "iron_ore") == 3  # nothing spent
         await inventory.add_item(s, char, "coal", 1)
         out = await crafting.craft(s, char, "iron_ingot")
         assert out.ok and await inventory.count(s, char, "iron_ingot") == 1
         assert await inventory.count(s, char, "iron_ore") == 0 and await inventory.count(s, char, "coal") == 0
-        assert professions.xp(char, "blacksmithing") == 10
+        assert characters.mastery_xp(char, "mining") == 10
+        char.location = "forge_stall"
+        assert (await crafting.craft(s, char, "iron_sword")).error == "craft.err.not_your_profession"
+        await professions.learn(s, char, "blacksmithing")
         assert (await crafting.craft(s, char, "iron_sword")).error == "craft.err.rank"
 
 
@@ -96,15 +97,13 @@ async def test_station_rank_and_crafted_by():
 
 
 async def test_low_rank_recipes_give_half_xp():
-    cid = await new_character()
+    cid = await new_character(location="adventurers_guild")
     async with session_scope() as s:
         char = await get_char(s, cid)
-        char.location = professions.stall_of("carpentry")
-        await professions.learn(s, char, "carpentry")
-        char.professions = {"active": ["carpentry"], "xp": {"carpentry": 240}}  # rank 2
+        char.masteries = {"woodcutting": 240}  # rank 2, sawing planks is a rank 0 recipe
         await inventory.add_item(s, char, "oak_log", 3)
         await crafting.craft(s, char, "oak_plank")
-        assert professions.xp(char, "carpentry") == 240 + 8 // 2
+        assert characters.mastery_xp(char, "woodcutting") == 240 + 8 // 2
         assert await inventory.count(s, char, "oak_plank") == 2
 
 
@@ -146,10 +145,9 @@ async def test_scribing_and_engineering_recipes():
 
 
 async def test_batches_are_all_or_nothing_and_capped():
-    cid = await new_character()
+    cid = await new_character(location="adventurers_guild")
     async with session_scope() as s:
         char = await get_char(s, cid)
-        await professions.learn(s, char, "blacksmithing")
         await inventory.add_item(s, char, "iron_ore", 6)
         await inventory.add_item(s, char, "coal", 2)
         out = await crafting.craft(s, char, "iron_ingot", qty=3)  # one batch short
@@ -160,34 +158,31 @@ async def test_batches_are_all_or_nothing_and_capped():
         out = await crafting.craft(s, char, "iron_ingot", qty=2)
         assert out.ok and await inventory.count(s, char, "iron_ingot") == 2
         assert await inventory.count(s, char, "iron_ore") == 0 and await inventory.count(s, char, "coal") == 0
-        assert professions.xp(char, "blacksmithing") == 20  # ten per ingot
+        assert characters.mastery_xp(char, "mining") == 20  # ten per ingot
 
 
 async def test_a_recipe_can_bring_its_own_station():
     """The station comes from the recipe when it has one, so a mastery can refine away from the smith."""
-    recipe = get_content().recipes["iron_ingot"]
-    assert crafting.station_of(recipe) == get_content().professions[recipe.profession].station
-    moved = recipe.model_copy(update={"station": "furnace"})
-    assert crafting.station_of(moved) == "furnace"
+    recipe = get_content().recipes["iron_sword"]  # no station of its own: the smith's anvil
+    assert recipe.station is None and crafting.station_of(recipe) == "anvil"
+    assert crafting.station_of(get_content().recipes["iron_ingot"]) == "furnace"  # its own, at the guild
     assert recipe.tier == 0 and recipe.model_copy(update={"min_rank": 3}).tier == 1
 
 
-async def test_refining_belongs_to_a_mastery_and_pays_its_xp(monkeypatch):
-    """A mastery recipe needs no profession slot, and its XP goes to the mastery, never to a trade."""
-    cid = await new_character(location="crownreach_plaza")
-    content = get_content()
-    refine = content.recipes["iron_ingot"].model_copy(update={"profession": "mining", "station": "anvil"})
-    monkeypatch.setitem(content.recipes, "test_refine", refine)
+async def test_refining_belongs_to_a_mastery_and_pays_its_xp():
+    """Refining needs no profession slot, and its XP goes to the mastery, never to a trade."""
+    cid = await new_character(location="forge_stall")
     async with session_scope() as s:
         char = await get_char(s, cid)
-        await inventory.add_item(s, char, "iron_ore", 3)
-        await inventory.add_item(s, char, "coal", 1)
-        assert (await crafting.craft(s, char, "test_refine")).error == "craft.err.no_station"
-        char.location = "forge_stall"
-        assert "test_refine" in crafting.recipes_here(char)  # without learning blacksmithing
-        assert (await crafting.craft(s, char, "test_refine")).ok
-        assert characters.mastery_xp(char, "mining") == 10
-        assert professions.xp(char, "blacksmithing") == 0
+        await inventory.add_item(s, char, "plant_fiber", 3)
+        assert (await crafting.craft(s, char, "clean_fiber")).error == "craft.err.no_station"  # the herb table
+        char.location = "adventurers_guild"
+        here = crafting.recipes_here(char)  # without learning a single trade
+        assert {"iron_ingot", "oak_plank", "treated_leather", "clean_fiber"} <= set(here)
+        assert (await crafting.craft(s, char, "clean_fiber")).ok
+        assert characters.mastery_xp(char, "herbalism") == 6
+        assert professions.xp(char, "herbalism") == 0 and professions.active(char) == []
+        assert await inventory.count(s, char, "clean_fiber") == 2
 
 
 async def test_t1_gear_is_crafted_by_rank_and_worn_by_level(monkeypatch):

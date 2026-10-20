@@ -4,6 +4,24 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.12] - 2026-10-20
+
+Profesiones (F15, 4.ª parte): el refinado pertenece a las maestrías, y las recetas tienen panel y comandos.
+
+### Añadido
+- **Refinar es cosa de la maestría, no del oficio.** En el Gremio de Aventureros, cualquiera funde **lingotes de hierro** y **de cobre** en el horno (XP de Minería), asierra **tablones de roble** y **de fresno** (Tala), cura **cuero** en el secadero (Desuello) y limpia **fibra** en la mesa de preparación (Herboristería). Sin oficio, sin plaza y con el rango de esa maestría.
+- **Tres materiales nuevos**: lingote de cobre, tablón de fresno y fibra limpia.
+- **`/recipes`**: todas las recetas de tus disciplinas por pestañas —✅ Puedo fabricar · ❌ Faltan materiales · 🔒 Por aprender · T0 · T1—, de 8 en 8, cada una con su `/r_<receta>`.
+- **`/r_<receta>`**, la ficha: qué hace y cuánto da, su disciplina y su rango, dónde está su estación, los ingredientes con `tengo/necesito` y, de lo que falta, **de dónde sale** (el lugar donde se recoge, la maestría que lo refina, la criatura que lo suelta o quién lo vende), la XP que paga y el nivel que pide para equiparse. Abajo, botones **🔨 ×1 · ×5 · ×máx**, limitados por los materiales y por `CRAFT_BATCH_MAX`.
+- **`/craft_<receta> n`**: fabricar escribiendo, sin abrir un menú; sin número, abre la ficha. Repetir el mismo mensaje no fabrica dos veces.
+- El reglamento explica el refinado y los lotes, con la cifra del motor.
+
+### Cambiado
+- **Las recetas de refinado cambian de disciplina y de estación**, conservando sus ids: `iron_ingot` y `copper_ingot` a Minería, `oak_plank` y `ash_plank` a Tala, `treated_leather` y `wolf_leather` a Desuello y `clean_fiber` a Herboristería. Los objetos ya fabricados no se tocan.
+- El **anillo de cobre** se hace con un lingote de cobre (antes, con mena cruda) y el **bastón de roble**, con fibra limpia. El mismo material de partida, un paso más de oficio.
+- Las guías de **Herrería**, **Carpintería** y **Peletería** cuentan lo que hacen ahora: forjar, trabajar la madera y coser, con el refinado hecho en el gremio.
+- El panel de fabricar enlaza cada receta con su ficha y lleva un botón «📜 Recetas».
+
 ## [0.10.11] - 2026-10-20
 
 Profesiones (F15, 3.ª parte): el Gremio de Aventureros y una calle con un puesto por oficio.

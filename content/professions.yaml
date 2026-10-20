@@ -9,15 +9,19 @@ blacksmithing:
   icon: "⚒️"
   station: anvil
   description:
-    es: Funde mena en lingotes y forja armas en el yunque. Necesita hierro y carbón de la mina.
-    en: Smelts ore into ingots and forges weapons at the anvil. Needs iron and coal from the mine.
+    es: Forja armas, armaduras, herramientas y herrajes en el yunque, con los lingotes que salen del horno.
+    en: Forges weapons, armor, tools and fittings at the anvil, from the ingots that come out of the furnace.
   guide:
     es: >-
-      Mina hierro y carbón en la Mina del Paso Viejo (⛏️ Minería), funde lingotes en el yunque y, a rango 1,
-      forja espadas con un tablón de carpintería. Los lingotes también los piden la peletería y la ingeniería.
+      Mina hierro y carbón en la Mina del Paso Viejo (⛏️ Minería) y funde los lingotes en el horno del Gremio de
+      Aventureros: fundir es cosa de la Minería, da XP de Minería y no hace falta ser herrero. Con los lingotes, en
+      el yunque de la Forja de Tessa, forjas a rango 1 una espada (más un tablón). Tus lingotes también los piden
+      la peletería, la joyería y la ingeniería.
     en: >-
-      Mine iron and coal at Ironvein Mine (⛏️ Mining), smelt ingots at the anvil and, at rank 1, forge swords
-      with a carpentry plank. Leatherworking and engineering need ingots too.
+      Mine iron and coal at Ironvein Mine (⛏️ Mining) and smelt the ingots at the Adventurers Guild furnace:
+      smelting belongs to Mining, pays Mining XP and needs no smith. With the ingots, at the anvil of Tessas forge,
+      you forge a sword at rank 1 (plus a plank). Leatherworking, jewelcrafting and engineering want your ingots
+      too.
 
 alchemy:
   name: {es: Alquimia, en: Alchemy}
@@ -39,30 +43,34 @@ carpentry:
   icon: "🪚"
   station: carpenter_bench
   description:
-    es: Convierte troncos en tablones, bastones y piezas para otros oficios.
-    en: Turns logs into planks, staves and parts for other crafts.
+    es: "Trabaja la madera ya aserrada: bastones, mangos, cañas y piezas para otros oficios."
+    en: "Works wood already sawn: staves, handles, rods and parts for other crafts."
   guide:
     es: >-
-      Tala robles en la Arboleda Antigua (🪓 Tala) y sácales tablones; a rango 1, bastones para magos. Los tablones
-      los necesita la herrería para sus espadas.
+      Tala robles en la Arboleda Antigua (🪓 Tala) y asiérralos en el puesto de aserrado del Gremio de Aventureros:
+      aserrar es cosa de la Tala y da XP de Tala. Con los tablones, en tu banco, haces a rango 1 bastones para
+      magos. Los tablones los necesita también la herrería para sus espadas.
     en: >-
-      Fell oaks at the Elderwood Grove (🪓 Woodcutting) and saw them into planks; at rank 1, staves for mages.
-      Blacksmiths need planks for their swords.
+      Fell oaks at the Elderwood Grove (🪓 Woodcutting) and saw them at the Adventurers Guild sawing station:
+      sawing belongs to Woodcutting and pays Woodcutting XP. With the planks, at your bench, you make staves for
+      mages at rank 1. Blacksmiths need planks for their swords too.
 
 leatherworking:
   name: {es: Peletería, en: Leatherworking}
   icon: "🧵"
   station: tannery
   description:
-    es: Curte pieles y cose armaduras ligeras. Vive de lo que traen los cazadores.
-    en: Tans hides and stitches light armour. Lives on what hunters bring back.
+    es: Cose armaduras ligeras, correas y fundas con el cuero del secadero. Vive de lo que traen los cazadores.
+    en: Stitches light armour, straps and cases from the leather off the curing rack. Lives on what hunters bring.
   guide:
     es: >-
-      Caza jabalíes y lobos con un cuchillo de desollar (🔪 Desuello) y curte sus pieles. A rango 1, el cuero
-      reforzado da 1 punto más de CA que el de la tienda.
+      Caza jabalíes y lobos con un cuchillo de desollar (🔪 Desuello) y cura sus pieles en el secadero del Gremio
+      de Aventureros: curtir es cosa del Desuello y da XP de Desuello. Con el cuero, en la curtiduría, a rango 1 el
+      cuero reforzado (con un lingote) da 1 punto más de CA que el de la tienda.
     en: >-
-      Hunt boars and wolves with a skinning knife (🔪 Skinning) and tan their hides. At rank 1, reinforced
-      leather gives 1 more AC than the shop's.
+      Hunt boars and wolves with a skinning knife (🔪 Skinning) and cure their hides at the Adventurers Guild
+      curing rack: curing belongs to Skinning and pays Skinning XP. With the leather, at the tannery, reinforced
+      leather at rank 1 (plus an ingot) gives 1 more AC than the shops.
 
 jewelcrafting:
   name: {es: Joyería, en: Jewelcrafting}

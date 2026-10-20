@@ -147,6 +147,49 @@ async def profession_guide(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     await send(update, text, kb)
 
 
+RECIPE_LINK = re.compile(r"^/r_([a-z0-9_]+?)(?:@\w+)?$")
+CRAFT_LINK = re.compile(r"^/craft_([a-z0-9_]+?)(?:@\w+)?(?:\s+(\d+))?$")
+
+
+async def recipes(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/recipes: every recipe of your disciplines, by tab."""
+    async with session_scope() as session:
+        user, char = await load(session, update)
+        lang = context.user_data["lang"] = user.language
+        if char is None:
+            await send(update, t(lang, "start.need_character"))
+            return
+        text, kb = await render.recipes_list(session, char, lang)
+    await send(update, text, kb)
+
+
+async def recipe(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/r_<recipe>: one recipe: what it makes, from what, where, and the buttons to make it."""
+    async with session_scope() as session:
+        user, char = await load(session, update)
+        lang = context.user_data["lang"] = user.language
+        if char is None:
+            await send(update, t(lang, "start.need_character"))
+            return
+        m = RECIPE_LINK.match((update.message.text or "").strip()) if update.message else None
+        text, kb = await render.recipe_card(session, char, m.group(1) if m else "", lang)
+    await send(update, text, kb)
+
+
+async def craft(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/craft_<recipe> [n]: make it without opening a menu; without a number, its card."""
+    from oathforge.bot.handlers import callbacks  # callbacks imports the views from here
+    m = CRAFT_LINK.match((update.message.text or "").strip()) if update.message else None
+    if m is None:
+        return
+    if m.group(2) is None:
+        await recipe(update, context)
+        return
+    # one craft per message: pressing the same message again never makes a second batch
+    await callbacks._act(update, context, "craft", f"{m.group(1)}:{m.group(2)}",
+                         f"msg{update.message.message_id}")
+
+
 async def skin(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """/skin: skin the beasts you just killed (a few seconds), like the "🔪 Skin" button."""
     from oathforge.bot.handlers import callbacks  # callbacks imports the views from here
@@ -245,6 +288,9 @@ def handlers() -> list[BaseHandler]:
         CommandHandler("report", _view(_report)),
         CommandHandler("professions", _view(_professions)),
         MessageHandler(filters.Regex(PROF_LINK), profession_guide),
+        CommandHandler("recipes", recipes),
+        MessageHandler(filters.Regex(RECIPE_LINK), recipe),
+        MessageHandler(filters.Regex(CRAFT_LINK), craft),
         CommandHandler("masteries", masteries),
         CommandHandler("skin", skin),
         CommandHandler("hobbies", hobbies),

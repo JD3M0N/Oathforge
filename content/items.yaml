@@ -223,6 +223,30 @@ copper_ore:
   value: 6
   stackable: true
 
+copper_ingot:
+  name: {es: Lingote de cobre, en: Copper ingot}
+  icon: "🟠"
+  description: {es: "Cobre fundido en barra, listo para el banco del joyero.", en: "Copper smelted into a bar, ready for the jeweler's bench."}
+  type: material
+  value: 15
+  stackable: true
+
+clean_fiber:
+  name: {es: Fibra limpia, en: Clean fiber}
+  icon: "🧵"
+  description: {es: "Fibra peinada y sin brozas: ya se puede hilar o atar con ella.", en: "Fiber combed free of chaff: it can be spun or bound with now."}
+  type: material
+  value: 3
+  stackable: true
+
+ash_plank:
+  name: {es: Tablón de fresno, en: Ash plank}
+  icon: "🪵"
+  description: {es: "Tablón flexible de fresno, el que buscan los arqueros.", en: "A supple ash plank, the kind bowyers look for."}
+  type: material
+  value: 10
+  stackable: true
+
 rough_gem:
   name: {es: Gema en bruto, en: Rough gem}
   icon: "💎"

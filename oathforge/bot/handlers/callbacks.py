@@ -29,7 +29,7 @@ log = logging.getLogger(__name__)
 # verbs that only show something (no nonce, no state change)
 VIEWS = {"scene", "trv", "trvz", "trvs", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jrc", "jrl", "jrs", "jq", "jrb", "jb", "jbi", "jrr",
          "shopm", "shop", "shopg", "sellm", "cbp", "lang", "city", "place", "cls", "clsl", "rep", "prof", "profsw", "profcf", "pg", "crf", "rb", "repf",
-         "mst", "hob", "acts"}
+         "mst", "hob", "acts", "rcl", "rcp"}
 
 
 async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -174,6 +174,10 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             text, kb = render.profession_page(arg, lang, char)
         elif verb == "crf" and not in_combat:
             text, kb = await render.craft_menu(session, char, lang)
+        elif verb == "rcl":  # "<filter>:<page>"
+            text, kb = await render.recipes_list(session, char, lang, arg)
+        elif verb == "rcp":
+            text, kb = await render.recipe_card(session, char, arg, lang)
         elif verb == "jrb":
             text, kb = render.bestiary_list(char, lang)
         elif verb == "jb":

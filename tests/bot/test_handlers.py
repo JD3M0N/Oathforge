@@ -86,7 +86,7 @@ class Player:
 
     def update(self, data=None, message=None):
         q = Query(data, self.chat) if data else None
-        msg = SimpleNamespace(text=message) if message is not None else None
+        msg = SimpleNamespace(text=message, message_id=len(self.chat.sent) + 1) if message is not None else None
         return SimpleNamespace(effective_user=self.user, effective_chat=self.chat, callback_query=q, message=msg)
 
     @property
@@ -827,6 +827,33 @@ async def test_the_craft_stalls_hang_off_their_street(llm):
     assert "Herrería" in p.last[0]  # Tessa teaches her trade here
     await p.press(p.find("prof"))
     assert "plearn|blacksmithing" in str(p.buttons()) and "plearn|alchemy" not in str(p.buttons())
+
+
+async def test_recipes_list_card_and_craft_command(llm):
+    """/recipes by tabs, /r_<id> with where each ingredient comes from, and /craft_<id> n in one message."""
+    from oathforge.services import characters, inventory
+
+    p = Player(llm, tg_id=94)
+    await create(p)
+    async with session_scope() as s:
+        char = await s.scalar(select(Character).with_for_update())
+        char.location = "adventurers_guild"
+        await inventory.add_item(s, char, "iron_ore", 9)
+        await inventory.add_item(s, char, "coal", 3)
+    await commands.recipes(p.update(message="/recipes"), p.ctx)
+    assert "Recetas" in p.last[0] and "/r_iron_ingot" in p.last[0]
+    await p.press(p.find("rcl", "missing"))
+    assert "Faltan materiales" in p.last[0]
+    await commands.recipe(p.update(message="/r_iron_ingot"), p.ctx)
+    assert "Lingote de hierro" in p.last[0] and "horno de fundición" in p.last[0]
+    assert "3/3" in p.last[0] and "Minería" in p.last[0]
+    assert any(b.startswith("craft|iron_ingot:3") for b in p.buttons())  # x1, x5 capped by the materials
+    await commands.craft(p.update(message="/craft_iron_ingot 2"), p.ctx)
+    assert "Lingote de hierro" in p.last[0]
+    async with session_scope() as s:
+        char = await s.scalar(select(Character))
+        assert await inventory.count(s, char, "iron_ingot") == 2
+        assert characters.mastery_xp(char, "mining") == 20  # refining pays the mastery
 
 
 async def test_settings_command_changes_language_and_rolls(llm):
