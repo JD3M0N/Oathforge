@@ -22,6 +22,7 @@ Versionado `0.x.y`: **y** (parche) en arreglos y cambios pequeños; **x** (menor
 | 0.8.3 | Planning reorganizado: Possibilium, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md`, `content/officina/` |
 | 0.9.0 | Logros e identidad: 30 logros, dos metalogros, títulos, destacados, objetivos seguidos y reconocimiento retroactivo verificable |
 | 0.9.1 | Hoja de ruta de 0.10 (consolidación) y 0.11 (multijugador): `planning/roadmap.md` |
+| 0.10.19 | Profesiones (F15, cierre): `tests/features.md` con el recorrido completo y los resúmenes de planning al día; queda la partida de prueba en ES y EN |
 | 0.10.18 | Profesiones (F15, 10.ª parte): el catálogo T1 (materiales de rango 4, acero y ocho recetas con nivel 10 para equiparse) y los maestros que venden los componentes de su oficio |
 | 0.10.17 | Profesiones (F15, 9.ª parte): quince herramientas especializadas (rápida, selectiva y productiva por disciplina), una elegida por disciplina y fijada al empezar cada trabajo |
 | 0.10.16 | Profesiones (F15, 8.ª parte): doce ramas de maestría, elegidas a rango 2 en el Gremio, con la anterior pausada y no perdida, y el piloto de Rastreo |

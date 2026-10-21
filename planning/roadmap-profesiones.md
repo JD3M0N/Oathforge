@@ -405,7 +405,7 @@ Cada fase es un parche 0.10.x con una experiencia comprobable, su CHANGELOG, su 
 | 7 | 0.10.16 | Dos ramas por maestría y Pesca a rango 2, cambio con oro y piloto de Rastreo | ART-040..044 |
 | 8 | 0.10.17 | Herramientas especializadas con perfil tipado, una por disciplina, y la ayuda de porcentajes | ART-050..055 |
 | 9 | 0.10.18 | Catálogo T1: materiales de rango 3–5, equipo con requisito de nivel y precios revisados | ART-070..073 |
-| 10 | 0.10.19 | Cierre: `tests/features.md`, partida ES/EN con `tgtest`, simulación y estados de planning | ART-080..082 |
+| 10 | 0.10.19 | Cierre: `tests/features.md`, simulación y estados de planning. La partida ES/EN con `tgtest` queda por hacer con el bot en marcha | ART-080..082 |
 
 Lo que queda fuera y por qué: encargos con custodia y transferencia de planos entre jugadores son 0.11 (ART-083); la construcción de sedes de gremio, también (ART-084, N12). La artesanía individual no espera a que existan sedes compartidas.
 

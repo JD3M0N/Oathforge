@@ -4,6 +4,20 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.19] - 2026-10-20
+
+Profesiones (F15, cierre): la ficha queda cerrada salvo la partida de prueba.
+
+### Añadido
+- **`tests/features.md`** recoge el recorrido de F15: el mundo nuevo, refinar y fabricar, Sastrería, técnicas y planos, la habitación, ramas y herramientas, T1 y economía, y las tres carreras que hay que probar con PostgreSQL. Lo que la suite ya demuestra va marcado; lo que pide jugar, no.
+
+### Cambiado
+- **`planning/opificia.md`** describe el sistema tal y como quedó: ocho oficios con su maestro y su puesto, el refinado de las maestrías, las ramas, el conocimiento, la instantánea de cada actividad, el hallazgo raro, las herramientas, el cuarto y las 60 recetas con sus tiers.
+- `planning/facies.md` lista los comandos nuevos, y `planning/roadmap.md` cierra las diez fases de F15.
+
+### Pendiente
+- La **partida de punta a punta con `tgtest` en español y en inglés** y las pruebas de concurrencia con PostgreSQL: necesitan el bot en marcha y la base migrada (`alembic upgrade head` trae las migraciones 0011 y 0012).
+
 ## [0.10.18] - 2026-10-20
 
 Profesiones (F15, 10.ª parte): el catálogo T1.

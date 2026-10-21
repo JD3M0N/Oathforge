@@ -2,7 +2,7 @@
 
 Resumen de [Possibilium §4](Possibilium.md#s04). Cómo se ve el juego en el chat.
 
-## Estado actual (0.10.8)
+## Estado actual (0.10.19)
 
 - **Teclado fijo** (`ReplyKeyboardMarkup` persistente, `KEYBOARD_VERSION = 3`): 📍 Lugar · ⚒ Actividades · 🗺 Mapa / 🧝 Héroe · 🎒 Inventario · 📖 Diario, con la pista «Escribe lo que haces…» en el campo de texto. Sus etiquetas nunca llegan a la IA como texto libre.
 - **Escena** (lo social): lugar, hora del juego y cuánto falta para el cambio («☀️ 14:30 · anochece en 55 min»), «👥 Aquí:» en lista y los botones 🧭 Viajar · 🔎 Investigar · 💬 Hablar · 🛒 Comerciar · ⚒ Actividades (n), más «Seguir viaje», acciones de misión y «🖼️ Ver lugar» (en la plaza, la ciudad). Texto libre que interpreta Gemini.
@@ -11,7 +11,7 @@ Resumen de [Possibilium §4](Possibilium.md#s04). Cómo se ve el juego en el cha
 - **Textos** (0.10.1): pruebas «🎲 Supervivencia: 2 + 1 = 3 vs CD 13 · ❌ Fallo»; leyenda ●/○/· en `/sheet`; cada lugar con su artículo (`article`, `Location.phrase()`), con «al»/«del» contraídos por el traductor; `<clave>_one` cuando una cuenta (`n`, `count`, `turns`, `left`) vale 1.
 - **Inventario** (0.10.2): resumen (puesto y cuántos de cada tipo) y pestañas ⚔️ Equipo · 🧪 Consumibles · 🧱 Materiales · 🧰 Herramientas, una línea por objeto con su icono y `/item_`. Cada objeto tiene `icon` (`Item.label`), visible en botín, recetas, tiendas y combate.
 - **Rechazos en ventanita** (`answerCallbackQuery`): «Necesitas un pico», un menú viejo o un doble toque no escriben en el chat; el mensaje pulsado pasa a la vista actual y nada se gasta dos veces.
-- **Comandos** (menú y `/help`), siempre en inglés y sin alias en español: `/start`, `/look`, `/hero` (resumen), `/sheet` (ficha completa con retrato), `/inventory`, `/journal`, `/achievements`, `/quests`, `/map`, `/report`, `/professions`, `/classes`, `/rulebook` (alias `/rules`), `/settings`, `/language`, `/cancel`.
+- **Comandos** (menú y `/help`), siempre en inglés y sin alias en español: `/start`, `/look`, `/hero` (resumen), `/sheet` (ficha completa con retrato), `/inventory`, `/journal`, `/achievements`, `/quests`, `/map`, `/report`, `/professions`, `/recipes`, `/room` (alias `/stash`), `/classes`, `/rulebook` (alias `/rules`), `/settings`, `/language`, `/cancel`.
 - **Comandos de consulta** enlazados desde los mensajes: `/class_<clase>`, `/skill_<clave>`, `/prof_<clave>`, `/r_<receta>` (su ficha, con el origen de lo que falta), `/craft_<receta> n` (fabricar escribiendo), `/item_<clave>`, `/monster_<clave>`, `/masteries`, `/hobbies`, `/lineage` (alias `/race`), `/background`, `/skin`. Funcionan sin personaje cuando tienen sentido.
 - **Logros**: /achievements; acceso desde héroe y diario, seis entradas por página, detalle, categorías, pendientes, obtenidos y destacados. Las pistas pueden revelarse y los ocultos no aparecen hasta conseguirlos. En la interfaz siempre «Logros» y «puntos de logro». Sin porcentaje global que penalice decisiones alternativas.
 - **Identidad y avisos**: un título y tres destacados en el héroe, el título también en `/sheet` y en la cabecera del Libro del Héroe; tres objetivos en el diario. Anuncios privados agrupados tras el commit, recuperables tras reinicio.

@@ -118,3 +118,55 @@ La cuenta de prueba conserva su idioma original y quedó sin los destacados ni o
 - [ ] «Héroe de Crownreach» al llegar a nivel 5, con su título (Telegram).
 - [ ] «Oficial del gremio» al alcanzar rango 2 en un oficio (Telegram).
 - [ ] Los dos ocultos no aparecen en Pendientes y sí al conseguirlos (Telegram).
+
+## 0.10.9–0.10.18 — Oficios, maestrías y aficiones (F15)
+
+Recorrido completo, con la cuenta de prueba, en ES y EN. Lo marcado (automático) ya lo cubre la suite.
+
+### El mundo nuevo
+- [ ] La plaza enseña por dónde se va al Gremio de Aventureros, y Vale alista allí (Telegram).
+- [ ] El mapa de la ciudad cabe en una pantalla: los puestos salen bajo «Barrio de Oficios» con «🛠️ Puestos (8)» (Telegram).
+- [x] Cada oficio se aprende solo en su puesto; en otro, dice a cuál ir (automático).
+- [ ] Tessa está de día en su forja y de noche en la taberna, y sigue vendiendo herramientas (Telegram).
+- [ ] Los ocho maestros responden al hablarles, con y sin IA (Telegram, ES y EN).
+
+### Refinar y fabricar
+- [x] Fundir, aserrar, curtir y limpiar fibra en el Gremio sin tener oficio, con XP de la maestría (automático).
+- [x] El lote comprueba todos los materiales antes de gastar uno (automático).
+- [ ] 🔨 Fabricar: ingredientes con tengo/necesito y botón solo con todo completo (Telegram).
+- [ ] `/recipes` con sus cinco pestañas, `/r_<receta>` con el origen de lo que falta y `/craft_<receta> 5` (Telegram, ES y EN).
+- [ ] Reenviar el mismo `/craft_` dos veces no fabrica dos veces (Telegram).
+
+### Sastrería, técnicas y planos
+- [x] Fibra → fibra limpia → hilo → tela → jubón; el sedal a rango 2 (automático).
+- [ ] Al subir de rango sale «📘 Técnica aprendida: …» con sus recetas (Telegram).
+- [x] Un plano se gasta una vez, no se gasta si ya la conoces y no se olvida al cambiar de oficio (automático).
+- [ ] El plano del Viejo Colmillo cae al derrotarlo y su ficha trae «Aprender la receta» (Telegram).
+
+### La habitación
+- [ ] La misión «Un cuarto propio» de punta a punta: talar, aserrar, cofre, tela y cama (Telegram, ES y EN).
+- [x] Las recetas de iniciación solo existen durante la misión y no se hacen por lotes (automático).
+- [x] Dormir en tu cama no cuesta oro y mantiene las reglas del descanso largo (automático).
+- [x] El cofre mueve la misma fila: nada se duplica, nada se pierde, y lo guardado no se gasta ni se vende (automático).
+- [ ] `/room`, `/stash_<objeto> 5` y `/take_<objeto> 5` (Telegram).
+- [ ] Pedir la tela dos veces: el botón no está mientras la llevas o ya tienes la cama (Telegram).
+- [ ] Migración 0012 en una base de prueba, con su `downgrade`.
+
+### Ramas y herramientas
+- [x] Rango 1 rechazado, rango 2 permitido; la primera rama gratis y el cambio cobrado una vez (automático).
+- [x] La rama pausada no suma y no se pierde (automático).
+- [x] Rama y herramienta quedan fijadas al empezar; con un trabajo en marcha no se cambian (automático).
+- [ ] 🌿 Especializaciones y 🧰 Herramientas desde Oficios → Maestrías (Telegram, ES y EN).
+- [x] Una caña rápida convierte 300 s en 270 s; 10 % × 1,05 = 10,5 %; el extra se tira una vez (automático).
+- [ ] El reglamento explica el porcentaje relativo frente a los puntos (Telegram, ES y EN).
+
+### T1 y economía
+- [x] Ningún ingrediente sin origen y ninguna receta que pida lo que produce (automático).
+- [x] Comprar los componentes a un maestro y vender lo fabricado nunca da beneficio (automático).
+- [x] El equipo T1 se fabrica a nivel bajo y no se equipa ni se bebe sin nivel 10 (automático).
+- [ ] Un personaje de rango 4 encuentra hierro profundo, corazón de roble y fibra sedosa (Telegram o simulación).
+
+### Concurrencia (PostgreSQL, `TEST_DATABASE_URL`)
+- [ ] Doble toque en «Fabricar» con los materiales justos: una sola pieza.
+- [ ] Depositar y retirar a la vez el mismo objeto: ni duplicado ni perdido.
+- [ ] Dos lecturas del mismo plano: se gasta uno solo.

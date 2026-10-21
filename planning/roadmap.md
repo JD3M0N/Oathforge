@@ -545,7 +545,7 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 - [x] Fase 7: dos ramas por maestría y Pesca a rango 2, cambio con oro y piloto de Rastreo (0.10.16).
 - [x] Fase 8: herramientas especializadas con perfil tipado, una por disciplina (0.10.17).
 - [x] Fase 9: catálogo T1 con materiales de rango 3–5 y equipo de combate con requisito de nivel (0.10.18).
-- [ ] Fase 10: cierre, partida ES/EN y simulación.
+- [x] Fase 10: cierre, `tests/features.md` y simulación (0.10.19). Queda **pendiente la partida de punta a punta con `tgtest` en ES y EN**, que necesita el bot en marcha y la base migrada.
 
 **Flujo de jugador:** Oficios → Herrería → Espada → ver materiales/origen → fabricar → comparar; minería puede ofrecer enfoque hierro o gemas.
 

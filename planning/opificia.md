@@ -2,16 +2,18 @@
 
 Resumen de [Possibilium §15–16](Possibilium.md#s15). El bucle: **zona → actividad → esperar o arriesgarse → materiales → maestría → fabricar → usar, vender o llevarlo a una aventura.** Los números son hipótesis de balance.
 
-## Estado actual (0.10.8)
+## Estado actual (0.10.19)
 
 ### Tres capas de progresión
 
 - **Nivel del personaje**: combate, atributos y habilidades de clase.
-- **Maestrías de campo**: minería, tala, herboristería, desuello y rastreo. Libres, sin plaza, rango 0–5 (XP 0/80/240/500/900/1500). Cada rango: +4 % de unidad extra (tope 20 %, sin XP) y abre recursos con `min_rank` (cobre a 1, gemas y musgo del reposo a 3). No son habilidades d20.
-- **Oficios**: herrería, alquimia, carpintería, peletería, joyería, escribanía e ingeniería; **dos activos**. Se aprenden en el Barrio de Oficios (cualquier lugar con `guild: true`, con un botón: todavía no hay maestros); cambiar uno cuesta 25 de oro (pide confirmación) y su XP no se pierde.
+- **Maestrías de campo**: minería, tala, herboristería, desuello y rastreo. Libres, sin plaza, rango 0–5 (XP 0/80/240/500/900/1500). Cada rango: +4 % de unidad extra (tope 20 %, sin XP) y abre recursos con `min_rank` (cobre a 1; gemas, musgo y trucha a 3; hierro profundo, corazón de roble y fibra sedosa a 4). No son habilidades d20. Además, **refinan**: fundir, aserrar, curtir y limpiar fibra son suyos y pagan su XP.
+- **Oficios**: herrería, alquimia, carpintería, peletería, joyería, escribanía, ingeniería y **sastrería**; **dos activos**. Cada uno se aprende y se cambia **con su maestro, en su puesto** del Barrio de Oficios (`Location.teaches`); cambiar cuesta 25 de oro (pide confirmación) y su XP no se pierde.
 - **Aficiones**: cocina y pesca, sin plaza (`hobby: true` en `professions.yaml`; la pesca con `practice: fishing`, sin estación). Su XP vive con la de los oficios.
+- **Ramas**: doce en `content/specializations.yaml`, dos por maestría y dos para la Pesca. Se eligen a rango 2 en el Gremio; la primera es gratis y cambiar cuesta 50 de oro, con la anterior pausada y no borrada.
+- **Conocimiento** (`characters.crafting`): las técnicas llegan con el rango, las recetas especiales con su plano, y la rama y la herramienta elegidas de cada disciplina viven ahí.
 
-Dos cosas que conviene saber antes de tocar nada: las maestrías no están en el contenido, sino fijas en `engine/gathering.py` (con los iconos en `render.py` y la lista de crónicas en `schemas.py`), y la estación de una receta sale de su **oficio**, no de la receta.
+Dos cosas que conviene saber antes de tocar nada: las maestrías no están en el contenido, sino fijas en `engine/gathering.py` (con los iconos en `render.py` y la lista de crónicas en `schemas.py`), y la estación sale de la receta cuando la trae y, si no, de su oficio.
 
 ### Actividades de campo
 
@@ -25,8 +27,10 @@ Dos cosas que conviene saber antes de tocar nada: las maestrías no están en el
 - El temporizador vive en BD (`world_activities.ends_at`). Una tarea de `JobQueue` cada 10 s cierra las vencidas y manda el resultado aunque el jugador esté desconectado. Si hay emboscada, llega el panel de combate.
 - Ocupado (`state = busy`): no viaja, caza, investiga, descansa ni hace acciones de misión; sí inventario y pociones. «Abandonar» cancela sin premio.
 - El resultado se tira con la semilla de la actividad y se paga una vez (bloqueo + índice único parcial).
+- **Instantánea al empezar**: la actividad guarda su tabla, su rango y sus modificadores (rama + herramienta), y se cobra con eso. Un cambio de catálogo o un reinicio no alteran un premio en marcha.
+- **Hallazgo raro**: los recursos de rango 3+ se tiran **una vez por actividad** y sustituyen una unidad común. Los bonos de raro son relativos (10 % × 1,05 = 10,5 %) y la unidad extra tiene una sola oportunidad por trabajo, sin XP.
 - **Tutorial** (`tutorial: true`): la actividad que encaja con el objetivo termina al momento y da lo que falta. **En la beta, siempre durante el tutorial**; fuera de la beta, una vez por misión (`char.flags.tutorial_boosts`).
-- Herramientas (Tessa): pico, hacha, hoz, cuchillo de desollar, caña.
+- Herramientas: las básicas (pico, hacha, hoz, cuchillo, caña) las vende Tessa; además hay **quince especializadas** (rápida, selectiva y productiva por disciplina), y se elige **una por disciplina**: tener tres no suma.
 
 | Lugar | Desde | Maestría | Emboscada |
 |---|---|---|---|
@@ -38,12 +42,17 @@ Dos cosas que conviene saber antes de tocar nada: las maestrías no están en el
 
 ### Fabricación
 
-- Estaciones: yunque, mesa alquímica, banco de carpintero, curtiembre, banco de joyero, mesa de escriba y banco de ingeniero en el Barrio de Oficios; fogón en La Corona Rota.
-- Fabricar es inmediato y atómico: o se gasta todo o nada. Lo no apilable guarda `crafted_by`. Una receta 2+ rangos por debajo da la mitad de XP.
-- Guía de cada oficio y afición en `/prof_<clave>` (campo `guide`); `/professions`, `/masteries`, `/hobbies`.
-- 26 recetas en `content/recipes.yaml`. Ejemplos: lingote y espada de hierro; poción de curación, poción de maná (también con ala de murciélago) y tónico del reposo; tablones y bastón; cuero curtido y reforzado (CA 12); anillos; tinta, pergamino y pergaminos de dardo de fuego, curar heridas, égida y sueño; pólvora, mecha y bombas de humo, fuego y cegadora; estofado del cazador y ración del pescador.
+- **Estaciones**: una por puesto del Barrio de Oficios (yunque, mesa alquímica, banco de carpintero, curtiembre, banco de joyero, mesa de escriba, banco de ingeniero y telar); **horno, aserradero, secadero y mesa de preparación** en el Gremio de Aventureros, abiertos a cualquiera; fogón en La Corona Rota y en el gremio.
+- Fabricar es inmediato y atómico: o se gasta todo o nada, también **por lotes** (hasta `CRAFT_BATCH_MAX`, 10). Lo no apilable guarda `crafted_by`. Una receta 2+ rangos por debajo da la mitad de XP.
+- Guía de cada oficio y afición en `/prof_<clave>` (campo `guide`); `/professions`, `/masteries`, `/hobbies`, `/recipes`, `/r_<receta>`, `/craft_<receta> n`.
+- **60 recetas** en `content/recipes.yaml`: el refinado de las cuatro maestrías, los productos de los ocho oficios y las dos aficiones, las quince herramientas especializadas, las dos de iniciación de la habitación, la mejora del cofre y el catálogo T1 (acero, coraza, cuero endurecido, bastón de corazón, curación mayor, anillo guardado y tela de seda).
+- **T0 son las recetas de rango 0–2 y T1 las de 3–5.** El equipo de combate T1 lleva `min_level: 10`: se fabrica y se vende desde ya, y se equipa cuando el mundo llegue a ese nivel.
 - Pergaminos y bombas: misma resolución que los conjuros (`engine/combat._cast`), ataque +5, CD 13; cualquier clase los usa.
 - Consumibles con `effects` tipados: `restore_hp`, `restore_spell_charge` (elige qué conjuro si hay varios), `short_rest` (20 % PV + 1 uso, enfriamiento 4 h, no quita «herido»).
+
+### Tu cuarto
+
+El Gremio de Aventureros da cuarto a sus socios y la misión 8 del tutorial lo amuebla: cofre con tablones propios y cama con la tela del gremio, dos recetas de iniciación que solo existen mientras esa misión dura. Dormir en la cama es el descanso largo de siempre, sin oro. El cofre guarda 20 huecos (`CHEST_SLOTS`) moviendo la misma fila del inventario, así que nada se duplica ni pierde su procedencia, y la Carpintería fabrica la mejora que añade 10 huecos más.
 
 ### Crónicas
 
