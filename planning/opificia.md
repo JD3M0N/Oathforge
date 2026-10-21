@@ -55,7 +55,7 @@ El contrato completo de F15 está en [roadmap-profesiones.md](roadmap-profesione
 
 - Dos oficios activos; recolección libre; aficiones sin plaza. **Sastrería** es ya el octavo oficio (telar de Hedda) y sí ocupa plaza.
 - El **refinado básico pertenece a la maestría**: menas → lingotes en el horno (XP de Minería), troncos → tablones en el aserradero (Tala), pieles → cuero en el secadero (Desuello), plantas → fibra limpia en la mesa de preparación (Herboristería). Las cuatro estaciones están en el Gremio y no hace falta oficio para usarlas.
-- **Dos ramas por maestría y por Pesca**, a rango 2, con una sola activa; cambiar cuesta oro en el Gremio y la rama anterior queda pausada, no borrada.
+- **Dos ramas por maestría y por Pesca**, a rango 2, con una sola activa: están en `content/specializations.yaml`, se eligen en el Gremio (la primera gratis, cambiar cuesta 50 de oro) y la anterior queda pausada, no borrada.
 - **T0 = recetas de rango 0–2, T1 = rango 3–5.** El equipo de combate T1 se fabrica y se vende, y pide nivel 10 para equiparse.
 - **Herramientas especializadas** con tres diseños (rápido, selectivo, productivo), una seleccionada por disciplina y sin desgaste. Los bonos de raro son relativos (10 % → 10,5 %) y la unidad extra se tira una vez por actividad.
 - **Técnicas** comunes automáticas al subir de rango; **planos** individuales para las recetas especiales, que se gastan una sola vez.

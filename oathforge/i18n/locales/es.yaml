@@ -177,6 +177,7 @@ btn:
   make_n: "🔨 ×{n}"
   recipes: "📜 Recetas"
   room: "🏠 Tu cuarto"
+  specializations: "🌿 Especializaciones"
   stash: "📦 Guardar en el cofre"
   learn_recipe: "📘 Aprender la receta"
   missions: "📜 Misiones"
@@ -979,6 +980,26 @@ home:
     full: "El cofre está lleno ({capacity} huecos)."
     not_enough: "No llevas tanto {item}."
     not_stored: "No tienes tanto {item} en el cofre."
+
+spec:
+  title: "🌿 <b>Especializaciones</b>"
+  intro: "<i>Cada maestría tiene dos ramas. A rango {rank} eliges una; la otra queda pausada, con lo aprendido, y volver a ella cuesta {cost} de oro. Solo la activa cuenta.</i>"
+  locked: "{icon} <b>{skill}</b> · <i>rango {rank} para elegir (vas por {yours})</i>"
+  open: "{icon} <b>{skill}</b> · rango {yours}"
+  branch_on: "   • <b>{spec}</b> ✅ {effect}"
+  branch_off: "   • {spec} {effect} <i>{state}</i>"
+  paused_tag: "(pausada)"
+  effect_rare: "raro ×{factor}"
+  effect_extra: "{pct} % de una unidad extra por actividad"
+  effect_time: "−{pct} % de tiempo"
+  confirm: "¿Cambias a <b>{spec}</b> ({skill})? Cuesta {cost} de oro; tienes {gold}. {old} queda pausada, sin perderse."
+  chosen: "🌿 Tu {skill} sigue ahora {spec}. ({cost} de oro)"
+  paused: "⏸️ {spec} queda pausada; puedes volver cuando quieras."
+  err:
+    unknown: "Esa rama no existe."
+    not_guild: "Las ramas se eligen en el Gremio de Aventureros."
+    rank: "Necesitas {skill} de rango {rank}."
+    already: "Ya sigues {spec}."
 
 craft:
   tier: "T{tier}"

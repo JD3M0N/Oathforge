@@ -21,7 +21,7 @@ from oathforge.engine.progression import MAX_LEVEL, XP_THRESHOLDS, skill_rank
 from oathforge.i18n import t
 from oathforge.services import (
     achievements, actions, activities, bestiary, characters, chronicle_log, chronicles, combat_service, crafting,
-    exploration, home, inventory, npcs, professions, quests, world_map,
+    exploration, home, inventory, npcs, professions, quests, specializations, world_map,
 )
 from oathforge.services.events import Outcome, render_event
 
@@ -378,6 +378,8 @@ async def activities_view(session: AsyncSession, char: Character, lang: str) -> 
         parts.append(f"<i>{t(lang, 'acts.guild', prof=escape(get_content().professions[loc.teaches].name.get(lang)))}</i>")
     rows = grid([b for _, b in entries if b is not None])
     last = [btn(t(lang, "btn.professions"), cb("prof"))]
+    if loc.home:
+        last.insert(0, btn(t(lang, "btn.specializations"), cb("spec")))
     if home.at_home(char):
         last.insert(0, btn(t(lang, "btn.room"), cb("room")))
     rows.append([*last, btn(t(lang, "btn.back"), cb("scene"))])
@@ -735,6 +737,61 @@ async def recipes_list(session: AsyncSession, char: Character, lang: str,
         rows.append(nav)
     rows.append([btn(t(lang, "btn.professions"), cb("prof")), btn(t(lang, "btn.back"), cb("scene"))])
     return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
+
+
+def _spec_effect(spec, lang: str) -> str:
+    """"raro ×1,25" or "20 % de una unidad extra": the branch's promise, in the player's words."""
+    e = spec.effects
+    if e.rare_rel:
+        return t(lang, "spec.effect_rare", factor=f"{1 + e.rare_rel:.2f}".rstrip("0").rstrip("."))
+    if e.extra_chance:
+        return t(lang, "spec.effect_extra", pct=round(e.extra_chance * 100))
+    return t(lang, "spec.effect_time", pct=round(e.time_pct * 100))
+
+
+def specializations_view(char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+    """🌿 The two branches of each mastery: the one in force, the paused one, and what each is worth."""
+    settings = get_settings()
+    lines = [t(lang, "spec.title"),
+             t(lang, "spec.intro", rank=specializations.MIN_RANK, cost=settings.spec_switch_cost), RULE]
+    rows, n = [], nonce()
+    for skill in gathering.GATHER_SKILLS:
+        yours = gathering.rank_for(characters.mastery_xp(char, skill))
+        name = escape(characters.mastery_name(skill)[lang])
+        icon = MASTERY_ICON.get(skill, "🛠️")
+        ready = yours >= specializations.MIN_RANK
+        lines.append(t(lang, "spec.open" if ready else "spec.locked", icon=icon, skill=name,
+                       rank=specializations.MIN_RANK, yours=yours))
+        for key, spec in specializations.branches(skill).items():
+            effect = _spec_effect(spec, lang)
+            if specializations.active(char, skill) == key:
+                lines.append(t(lang, "spec.branch_on", spec=escape(spec.name.get(lang)), effect=effect))
+                continue
+            state = t(lang, "spec.paused_tag") if key in specializations.learned(char) else ""
+            lines.append(t(lang, "spec.branch_off", spec=escape(spec.name.get(lang)), effect=effect,
+                           state=state).rstrip())
+            if ready:
+                rows.append(btn(f"{icon} {spec.name.get(lang)}", cb("specc", key, n)))
+    kb = grid(rows)
+    kb.append([btn(t(lang, "btn.professions"), cb("prof")), btn(t(lang, "btn.back"), cb("scene"))])
+    return "\n".join(lines)[:MAX_MESSAGE], markup(kb)
+
+
+def spec_confirm(char: Character, key: str, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+    """What the change costs and what gets paused, before a coin changes hands."""
+    c = get_content()
+    spec = c.specializations.get(key)
+    if spec is None:
+        return specializations_view(char, lang)
+    old = specializations.active(char, spec.skill)
+    cost = specializations.price(char, key)
+    if not cost:  # the first branch of a discipline is free: no confirmation to collect
+        return specializations_view(char, lang)
+    text = t(lang, "spec.confirm", spec=escape(spec.name.get(lang)),
+             skill=escape(characters.mastery_name(spec.skill)[lang]), cost=cost, gold=char.gold,
+             old=escape(c.specializations[old].name.get(lang)))
+    rows = [[btn(t(lang, "btn.confirm"), cb("specc", key, nonce())), btn(t(lang, "btn.back"), cb("spec"))]]
+    return text, markup(rows)
 
 
 async def room_view(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
@@ -1617,6 +1674,7 @@ def rule_numbers(lang: str = "es") -> dict:
         "bonus_cap": round(gathering.BONUS_CAP * 100), "max_rank": gathering.MAX_RANK,
         "slots": professions.SLOTS, "swap_cost": professions.SWAP_COST,
         "chest_slots": settings.chest_slots, "chest_upgrade": settings.chest_slots_per_upgrade,
+        "spec_rank": specializations.MIN_RANK, "spec_cost": settings.spec_switch_cost,
         "craft_batch": settings.craft_batch_max,
     }
 

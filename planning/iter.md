@@ -22,6 +22,7 @@ Versionado `0.x.y`: **y** (parche) en arreglos y cambios pequeños; **x** (menor
 | 0.8.3 | Planning reorganizado: Possibilium, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md`, `content/officina/` |
 | 0.9.0 | Logros e identidad: 30 logros, dos metalogros, títulos, destacados, objetivos seguidos y reconocimiento retroactivo verificable |
 | 0.9.1 | Hoja de ruta de 0.10 (consolidación) y 0.11 (multijugador): `planning/roadmap.md` |
+| 0.10.16 | Profesiones (F15, 8.ª parte): doce ramas de maestría, elegidas a rango 2 en el Gremio, con la anterior pausada y no perdida, y el piloto de Rastreo |
 | 0.10.15 | Profesiones (F15, 7.ª parte): la instantánea de reglas al empezar una actividad y el hallazgo raro de una sola tirada por actividad |
 | 0.10.14 | Profesiones (F15, 6.ª parte): tu cuarto en el Gremio de Aventureros, con la misión del tutorial que lo amuebla, el descanso gratis en tu cama y el cofre personal con `/room` y `/stash` |
 | 0.10.13 | Profesiones (F15, 5.ª parte): Sastrería como octavo oficio con su telar, las técnicas que se aprenden enteras al subir de rango y los planos de las recetas especiales |

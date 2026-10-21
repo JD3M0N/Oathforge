@@ -20,7 +20,7 @@ from oathforge.engine.combat import Action, EncounterState, valid_targets
 from oathforge.i18n import t
 from oathforge.ai.intent_parser import Intent
 from oathforge.services import (
-    actions, activities, audit, bestiary, characters, combat_service, crafting, exploration, home, inventory, npcs, professions, quests,
+    actions, activities, audit, bestiary, characters, combat_service, crafting, exploration, home, inventory, npcs, professions, quests, specializations,
 )
 from oathforge.services.events import Outcome, render_event
 
@@ -29,7 +29,7 @@ log = logging.getLogger(__name__)
 # verbs that only show something (no nonce, no state change)
 VIEWS = {"scene", "trv", "trvz", "trvs", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jrc", "jrl", "jrs", "jq", "jrb", "jb", "jbi", "jrr",
          "shopm", "shop", "shopg", "sellm", "cbp", "lang", "city", "place", "cls", "clsl", "rep", "prof", "profsw", "profcf", "pg", "crf", "rb", "repf",
-         "mst", "hob", "acts", "rcl", "rcp", "room"}
+         "mst", "hob", "acts", "rcl", "rcp", "room", "spec", "specf"}
 
 
 async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -174,6 +174,10 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             text, kb = render.profession_page(arg, lang, char)
         elif verb == "crf" and not in_combat:
             text, kb = await render.craft_menu(session, char, lang)
+        elif verb == "spec":
+            text, kb = render.specializations_view(char, lang)
+        elif verb == "specf":  # the confirmation, with its price
+            text, kb = render.spec_confirm(char, arg, lang)
         elif verb == "room":
             text, kb = await render.room_view(session, char, lang)
         elif verb == "rcl":  # "<filter>:<page>"
@@ -322,6 +326,8 @@ async def _dispatch(session, char, verb: str, arg: str, r, context) -> Outcome:
     if verb == "plearn":  # "<profession>" or "<profession>:<the one it replaces>"
         key, _, old = arg.partition(":")
         return await professions.learn(session, char, key, old or None)
+    if verb == "specc":  # take a branch, or come back to a paused one
+        return await specializations.choose(session, char, arg)
     if verb in ("stash", "take"):  # "<item>:<how many>": move it between the backpack and the chest
         key, _, qty = arg.partition(":")
         n = int(qty) if qty.isdigit() else 1

@@ -29,6 +29,7 @@ from oathforge.content.schemas import (
     Recipe,
     RuleSection,
     Skill,
+    Specialization,
     Text,
     Zone,
 )
@@ -65,6 +66,7 @@ class Content:
     fallbacks: dict[str, dict[str, list[Text]]] = field(default_factory=dict)
     professions: dict[str, Profession] = field(default_factory=dict)
     recipes: dict[str, Recipe] = field(default_factory=dict)
+    specializations: dict[str, Specialization] = field(default_factory=dict)  # two branches per mastery
     rulebook: dict[str, RuleSection] = field(default_factory=dict)  # /rulebook pages, in order  # outcome -> generic texts when the AI chronicler is not used
 
 
@@ -187,6 +189,7 @@ def load_content(directory: Path = CONTENT_DIR) -> Content:
         fallbacks=fallbacks,
         professions=_parse(Profession, _read(directory, "professions")),
         recipes=_parse(Recipe, _read(directory, "recipes")),
+        specializations=_parse(Specialization, _read(directory, "specializations")),
         rulebook=_parse(RuleSection, _read(directory, "rulebook")),
         achievements=_parse(Achievement, _read(directory, "achievements")),
     )
@@ -307,6 +310,17 @@ def validate_references(c: Content) -> None:
             errors.append(f"profession {key}: practice '{prof.practice}' must be a gathering skill of a hobby")
     if not any(loc.home for loc in c.locations.values()) and any(r.installs for r in c.recipes.values()):
         errors.append("recipes install furniture, but no location grants rooms (home: true)")
+    branches: dict[str, list[str]] = {}
+    for key, spec in c.specializations.items():
+        if spec.skill not in GATHER_SKILLS:
+            errors.append(f"specialization {key}: '{spec.skill}' is not a field discipline")
+        branches.setdefault(spec.skill, []).append(key)
+    for skill, keys in branches.items():
+        if len(keys) != 2:
+            errors.append(f"specialization {skill}: it must have exactly two branches, not {len(keys)}")
+    for skill in GATHER_SKILLS:
+        if c.specializations and skill not in branches:
+            errors.append(f"specialization {skill}: this discipline has no branches")
     taught: dict[str, list[str]] = {}
     for key, loc in c.locations.items():
         if loc.teaches is None:

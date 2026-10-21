@@ -1,0 +1,101 @@
+# Ramas de maestría (y de Pesca): dos por disciplina, se eligen a rango 2 en el Gremio de Aventureros.
+# Solo una está activa por disciplina; la otra queda pausada, con lo aprendido, y volver a ella cuesta oro.
+# Efectos: rare_rel es un multiplicador relativo del hallazgo raro (10 % × 1,05 = 10,5 %), extra_chance es
+# una sola oportunidad de unidad extra por actividad completa y time_pct acorta la espera.
+# Los números son de arranque, para medirlos; ver planning/roadmap-profesiones.md (N11).
+
+mining_extraction:
+  skill: mining
+  name: {es: Extracción, en: Extraction}
+  description:
+    es: Sacas más mena común de cada veta; las gemas te interesan menos.
+    en: You pull more common ore from each seam; gems interest you less.
+  effects: {extra_chance: 0.20}
+
+mining_prospecting:
+  skill: mining
+  name: {es: Prospección, en: Prospecting}
+  description:
+    es: Lees la roca y encuentras más a menudo lo que casi nadie encuentra.
+    en: You read the rock and more often find what almost nobody finds.
+  effects: {rare_rel: 0.25}
+
+woodcutting_production:
+  skill: woodcutting
+  name: {es: Producción, en: Production}
+  description:
+    es: "Talas rápido y limpio: más madera común por jornada."
+    en: "You fell fast and clean: more common wood per day's work."
+  effects: {extra_chance: 0.20}
+
+woodcutting_selection:
+  skill: woodcutting
+  name: {es: Selección forestal, en: Forest selection}
+  description:
+    es: Eliges el árbol antes de levantar el hacha, y sale mejor madera.
+    en: You pick the tree before you raise the axe, and better wood comes out.
+  effects: {rare_rel: 0.25}
+
+herbalism_harvest:
+  skill: herbalism
+  name: {es: Cosecha abundante, en: Abundant harvest}
+  description:
+    es: "Vacías un claro sin estropear nada: vuelves con el morral más lleno."
+    en: "You clear a glade without spoiling it: you come back with a fuller pack."
+  effects: {extra_chance: 0.20}
+
+herbalism_botany:
+  skill: herbalism
+  name: {es: Botánica selectiva, en: Selective botany}
+  description:
+    es: Reconoces la planta rara por el envés de la hoja.
+    en: You know the rare plant by the underside of its leaf.
+  effects: {rare_rel: 0.25}
+
+skinning_yield:
+  skill: skinning
+  name: {es: Aprovechamiento, en: Full yield}
+  description:
+    es: "No desperdicias nada de la pieza: más cuero y más carne."
+    en: "You waste nothing of the kill: more leather and more meat."
+  effects: {extra_chance: 0.20}
+
+skinning_careful:
+  skill: skinning
+  name: {es: Extracción cuidadosa, en: Careful extraction}
+  description:
+    es: Trabajas despacio y salvas las partes que casi siempre se rompen.
+    en: You work slowly and save the parts that almost always tear.
+  effects: {rare_rel: 0.25}
+
+tracking_sure:
+  skill: tracking
+  name: {es: Rastro seguro, en: Sure trail}
+  description:
+    es: "Pierdes menos tiempo: la presa común aparece antes."
+    en: "You waste less time: common prey turns up sooner."
+  effects: {time_pct: 0.15}
+
+tracking_selective:
+  skill: tracking
+  name: {es: Rastro selectivo, en: Selective trail}
+  description:
+    es: Sigues el rastro que te interesa y dejas pasar el resto.
+    en: You follow the trail you want and let the rest go by.
+  effects: {rare_rel: 0.25}
+
+fishing_abundant:
+  skill: fishing
+  name: {es: Pesca abundante, en: Abundant fishing}
+  description:
+    es: Cebas bien y sacas más pescado de ribera.
+    en: You bait well and pull more river fish out.
+  effects: {extra_chance: 0.20}
+
+fishing_selective:
+  skill: fishing
+  name: {es: Pesca selectiva, en: Selective fishing}
+  description:
+    es: Esperas la pieza buena aunque el cesto tarde en llenarse.
+    en: You wait for the good catch even if the basket fills slowly.
+  effects: {rare_rel: 0.25}

@@ -177,6 +177,7 @@ btn:
   make_n: "🔨 ×{n}"
   recipes: "📜 Recipes"
   room: "🏠 Your room"
+  specializations: "🌿 Specializations"
   stash: "📦 Store in the chest"
   learn_recipe: "📘 Learn the recipe"
   missions: "📜 Missions"
@@ -979,6 +980,26 @@ home:
     full: "The chest is full ({capacity} slots)."
     not_enough: "You are not carrying that much {item}."
     not_stored: "You do not have that much {item} in the chest."
+
+spec:
+  title: "🌿 <b>Specializations</b>"
+  intro: "<i>Each mastery has two branches. At rank {rank} you pick one; the other is paused, not forgotten, and coming back to it costs {cost} gold. Only the active one counts.</i>"
+  locked: "{icon} <b>{skill}</b> · <i>rank {rank} to choose (you are at {yours})</i>"
+  open: "{icon} <b>{skill}</b> · rank {yours}"
+  branch_on: "   • <b>{spec}</b> ✅ {effect}"
+  branch_off: "   • {spec} {effect} <i>{state}</i>"
+  paused_tag: "(paused)"
+  effect_rare: "rare ×{factor}"
+  effect_extra: "{pct} % chance of one extra unit per activity"
+  effect_time: "−{pct} % time"
+  confirm: "Switch to <b>{spec}</b> ({skill})? It costs {cost} gold; you have {gold}. {old} is paused, not lost."
+  chosen: "🌿 Your {skill} now follows {spec}. ({cost} gold)"
+  paused: "⏸️ {spec} is paused; you can come back whenever you like."
+  err:
+    unknown: "That branch does not exist."
+    not_guild: "Branches are chosen at the Adventurers' Guild."
+    rank: "You need {skill} at rank {rank}."
+    already: "You already follow {spec}."
 
 craft:
   tier: "T{tier}"

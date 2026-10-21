@@ -172,6 +172,23 @@ professions:
       Each new rank teaches you a whole technique at once, with all its common recipes: you never buy them one by one. Special recipes are not learned by rank but by reading their 📘 blueprint, which is spent doing it and is never forgotten (not even when you change trade); if you already know it, the blueprint is not spent and you can sell it.
       With refined and field materials you craft at each trade's stall: weapons, armor, potions, rings, scrolls or bombs. Crafting is instant if you have the ingredients and the rank, and you can make several at once (up to {craft_batch}). /recipes shows all your recipes in tabs, each with its /r_<recipe>; you craft from there, or type /craft_<recipe> 5.
 
+specializations:
+  icon: "🌿"
+  title: {es: Ramas de maestría, en: Mastery branches}
+  body:
+    es: |-
+      Cada maestría de campo (y la Pesca) tiene dos ramas. Al llegar a rango {spec_rank} eliges una en el Gremio de Aventureros; la otra queda pausada, con lo aprendido, y volver a ella cuesta {spec_cost} de oro. Solo la activa cuenta: las pausadas no suman nada.
+      • Una rama de volumen da una oportunidad de **unidad extra por actividad completa** (no por cada cosa que sacas, y esa unidad no da XP).
+      • Una rama selectiva mejora el **hallazgo raro**, que también se tira una vez por actividad y sustituye una unidad común.
+      • Los bonos de raro son **relativos**, no puntos: con un 10 % de base, un +5 % lo deja en 10,5 %, no en 15 %. Y por muchos que se junten, nunca llega a ser seguro.
+      • La rama que cuenta es la que tenías al **empezar** la actividad: cambiarla a mitad no cambia el premio, y con un trabajo en marcha no se puede cambiar.
+    en: |-
+      Every field mastery (and Fishing) has two branches. On reaching rank {spec_rank} you choose one at the Adventurers' Guild; the other is paused, with what it learned, and coming back to it costs {spec_cost} gold. Only the active one counts: paused ones add nothing.
+      • A volume branch gives a chance of **one extra unit per completed activity** (not per item you pull out, and that unit pays no XP).
+      • A selective branch improves the **rare find**, which is also rolled once per activity and replaces a common unit.
+      • Rare bonuses are **relative**, not points: on a 10 % base, +5 % makes it 10.5 %, not 15 %. And however many pile up, it never becomes certain.
+      • The branch that counts is the one you had when the activity **started**: switching halfway changes no prize, and with work under way you cannot switch at all.
+
 home:
   icon: "🏠"
   title: {es: Tu cuarto y el cofre, en: Your room and the chest}

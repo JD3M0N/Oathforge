@@ -24,7 +24,7 @@ from oathforge.content.schemas import Gathering, Location
 from oathforge.database.models import Character, WorldActivity
 from oathforge.engine import gathering
 from oathforge.i18n import t
-from oathforge.services import characters, combat_service, exploration, inventory, quests
+from oathforge.services import characters, combat_service, exploration, inventory, quests, specializations
 from oathforge.services import achievements
 from oathforge.services.events import Outcome
 
@@ -135,8 +135,12 @@ def rules_snapshot(char: Character, gatherable, skill: str, kind: str) -> dict:
 
 
 def modifiers(char: Character, skill: str) -> gathering.Mods:
-    """What the character's tool and branch change about this discipline. Both arrive in their own phase."""
-    return gathering.Mods()
+    """What the character's branch (and, later, their tool) change about this discipline.
+
+    DESIGN-N02: Start with two switchable branches. Evaluate a skill tree later; inactive branches must
+    retain their learned state and any future progress.
+    """
+    return specializations.effects(char, skill)
 
 
 def _snapshot_resources(rules: dict):
@@ -182,6 +186,8 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str,
     seconds = skin_seconds(beasts) if kind == "skin" else gathering.SECONDS[kind]
     if rules is not None:
         seconds = gathering.Mods(**rules["mods"]).seconds(seconds)
+    elif kind == "track":
+        seconds = modifiers(char, "tracking").seconds(seconds)
     act = WorldActivity(character_id=char.id, location=char.location, kind=kind, skill=skill, started_at=now,
                         ends_at=now + seconds, status="running", seed=secrets.randbits(48),
                         result={"tool_checked": tool_checked, **({"rules": rules} if rules else {}),
@@ -325,11 +331,26 @@ async def claim(session: AsyncSession, char: Character, now: float | None = None
     return out
 
 
+def _prey_weights(char: Character, table) -> list[float]:
+    """Which prey the trail leads to. A selective tracker leans towards the scarce one, never beyond it.
+
+    DESIGN-N01: Tracking is an experimental mastery. Evaluate keeping it, moving it to hobbies, or merging
+    it into hunting. Preserve progress on migration.
+    DESIGN-N05: Rare bonuses are relative multipliers, not percentage points.
+    """
+    lean = modifiers(char, "tracking").rare_rel
+    if not lean:
+        return [e.weight for e in table]
+    rarest = min(e.weight for e in table)
+    return [e.weight * (1 + lean) if e.weight == rarest else e.weight for e in table]
+
+
 async def _claim_track(session, char, act, loc, rng, now) -> Outcome:
-    fixed = exploration.pending_fixed_encounter(char)
+    fixed = exploration.pending_fixed_encounter(char)  # a mission's boss is never replaced by a branch
     table = exploration.encounter_table(loc, char.level)
     if fixed or (table and gathering.roll_prey(rng)):
-        monsters = list(fixed.monsters) if fixed else list(rng.choices(table, weights=[e.weight for e in table])[0].monsters)
+        monsters = (list(fixed.monsters) if fixed else
+                    list(rng.choices(table, weights=_prey_weights(char, table))[0].monsters))
         act.status = "awaiting_combat"
         act.result = {**(act.result or {}), "monsters": monsters}
         out = Outcome().add("activity.track_found", monster=get_content().monsters[monsters[0]].name.model_dump())

@@ -542,7 +542,7 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 - [x] Fase 4: Sastrería como octavo oficio, técnicas por rango y planos (0.10.13; los componentes cruzados de cada oficio llegan con las herramientas, en la fase 8).
 - [x] Fase 5: habitación en el tutorial con cama, descanso gratis y cofre ampliable (0.10.14; cubre el cofre personal de [F06](#F06)).
 - [x] Fase 6: instantánea de reglas al iniciar una actividad y hallazgo raro por actividad (0.10.15; cierra la casilla pendiente de [F08](#F08)).
-- [ ] Fase 7: dos ramas por maestría y Pesca a rango 2, cambio con oro y piloto de Rastreo.
+- [x] Fase 7: dos ramas por maestría y Pesca a rango 2, cambio con oro y piloto de Rastreo (0.10.16).
 - [ ] Fase 8: herramientas especializadas con perfil tipado, una por disciplina.
 - [ ] Fase 9: catálogo T1 con materiales de rango 3–5 y equipo de combate con requisito de nivel.
 - [ ] Fase 10: cierre, partida ES/EN y simulación.

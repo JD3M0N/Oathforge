@@ -33,6 +33,9 @@ class Settings(BaseSettings):
     # crafting and refining: how many times a single recipe can be made in one batch
     craft_batch_max: int = 10
 
+    # gold the guild charges for switching the active branch of a mastery (the first one is free)
+    spec_switch_cost: int = 50
+
     # the chest in your room: slots it holds, and how many each carpentry upgrade adds
     chest_slots: int = 20
     chest_slots_per_upgrade: int = 10

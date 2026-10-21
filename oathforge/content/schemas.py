@@ -425,6 +425,23 @@ class Location(Strict):
                 for lang in ("es", "en")}
 
 
+class SpecEffects(Strict):
+    """What a branch changes about its discipline's activities, with the same meaning as a tool's."""
+
+    time_pct: float = Field(0.0, ge=0, le=0.5)
+    rare_rel: float = Field(0.0, ge=0, le=2)
+    extra_chance: float = Field(0.0, ge=0, le=1)
+
+
+class Specialization(Strict):
+    """One of the two branches of a field mastery (or of Fishing), chosen at rank 2."""
+
+    skill: str
+    name: Text
+    description: Text
+    effects: SpecEffects = SpecEffects()
+
+
 class Technique(Strict):
     """A group of common recipes that a discipline unlocks on reaching ``rank``, all at once."""
 

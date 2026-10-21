@@ -4,6 +4,18 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.16] - 2026-10-20
+
+Profesiones (F15, 8.ª parte): las ramas de cada maestría.
+
+### Añadido
+- **Doce ramas**, dos por cada maestría y dos para la Pesca (`content/specializations.yaml`): Extracción o Prospección en Minería, Producción o Selección forestal en Tala, Cosecha abundante o Botánica selectiva en Herboristería, Aprovechamiento o Extracción cuidadosa en Desuello, Rastro seguro o Rastro selectivo en Rastreo, y Pesca abundante o selectiva.
+- **🌿 Especializaciones** en el Gremio de Aventureros: a **rango 2** eliges una rama por disciplina. La primera es gratis; cambiarla cuesta **50 de oro** (`SPEC_SWITCH_COST`), con una confirmación que dice el precio y qué queda pausado. La rama que dejas **no se borra**: queda aprendida y pausada, y volver a ella cuesta lo mismo.
+- **Las disciplinas no comparten plaza**: puedes llevar Minería y Tala especializadas a la vez, y solo la rama activa de cada una cuenta.
+- **La rama queda fijada al empezar la actividad**, dentro de su instantánea: cambiarla a mitad no cambia el premio, y con un trabajo en marcha el cambio se rechaza.
+- **Piloto de Rastreo**: «Rastro seguro» acorta la espera un 15 % y «Rastro selectivo» inclina el rastro hacia la presa más escasa del lugar, sin tocar nunca al jefe de una misión. Lleva sus comentarios `DESIGN-N01` y `DESIGN-N02` para decidir más adelante si Rastreo sigue siendo maestría.
+- Sección **🌿 Ramas de maestría** en `/rulebook`, con el rango, el precio y el ejemplo de 10 % → 10,5 %.
+
 ## [0.10.15] - 2026-10-20
 
 Profesiones (F15, 7.ª parte): cada actividad se paga con las reglas con las que empezó, y el hallazgo raro se tira una vez.
