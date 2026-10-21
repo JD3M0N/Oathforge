@@ -544,7 +544,7 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 - [x] Fase 6: instantánea de reglas al iniciar una actividad y hallazgo raro por actividad (0.10.15; cierra la casilla pendiente de [F08](#F08)).
 - [x] Fase 7: dos ramas por maestría y Pesca a rango 2, cambio con oro y piloto de Rastreo (0.10.16).
 - [x] Fase 8: herramientas especializadas con perfil tipado, una por disciplina (0.10.17).
-- [ ] Fase 9: catálogo T1 con materiales de rango 3–5 y equipo de combate con requisito de nivel.
+- [x] Fase 9: catálogo T1 con materiales de rango 3–5 y equipo de combate con requisito de nivel (0.10.18).
 - [ ] Fase 10: cierre, partida ES/EN y simulación.
 
 **Flujo de jugador:** Oficios → Herrería → Espada → ver materiales/origen → fabricar → comparar; minería puede ofrecer enfoque hierro o gemas.

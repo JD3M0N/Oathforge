@@ -160,6 +160,67 @@ bat_wing:
   value: 4
   stackable: true
 
+# --- Equipo T1: se fabrica por rango y se lleva por nivel (min_level). Mientras el techo sea el 5,
+# se puede forjar, vender y guardar, pero no equipar: lo dice su ficha y lo rechaza el servicio.
+
+steel_sword:
+  name: {es: Espada de acero, en: Steel sword}
+  icon: "⚔️"
+  description: {es: "Acero del hierro profundo, con el filo que aguanta una campaña entera.", en: "Steel from deep iron, with an edge that lasts a whole campaign."}
+  type: weapon
+  slot: main_hand
+  min_level: 10
+  value: 180
+  weapon: {damage: 1d10, damage_type: slashing}
+
+steel_breastplate:
+  name: {es: Coraza de acero, en: Steel breastplate}
+  icon: "🛡️"
+  description: {es: "Peto articulado sobre correas de cuero. Pesa, y se nota cuando algo te golpea.", en: "An articulated plate over leather straps. It weighs, and you notice when something hits you."}
+  type: armor
+  slot: body
+  min_level: 10
+  base_ac: 15
+  value: 300
+
+hardened_leather:
+  name: {es: Cuero endurecido, en: Hardened leather}
+  icon: "🥋"
+  description: {es: "Cuero hervido y moldeado: ligero como el de siempre y bastante más duro.", en: "Boiled and moulded leather: as light as ever and a good deal harder."}
+  type: armor
+  slot: body
+  min_level: 10
+  base_ac: 13
+  dex_cap: 2
+  value: 120
+
+heartwood_staff:
+  name: {es: Bastón de corazón de roble, en: Heartwood staff}
+  icon: "🪄"
+  description: {es: "Madera densa y veteada que sostiene bien lo que se canaliza por ella.", en: "Dense grained wood that holds what is channelled through it."}
+  type: weapon
+  slot: main_hand
+  min_level: 10
+  value: 150
+  weapon: {damage: 1d8, damage_type: bludgeoning}
+
+greater_healing_potion:
+  name: {es: Poción de curación mayor, en: Greater healing potion}
+  icon: "🧪"
+  description: {es: "Doble de raíz y la mitad de agua: cierra heridas que la corriente no cerraría.", en: "Twice the root and half the water: it closes wounds the common one would not."}
+  type: consumable
+  min_level: 10
+  value: 90
+  heal: 4d4+4
+
+warded_ring:
+  name: {es: Anillo guardado, en: Warded ring}
+  icon: "💍"
+  description: {es: "Una gema engastada en acero, fría al tacto incluso al sol.", en: "A gem set in steel, cold to the touch even in the sun."}
+  type: trinket
+  min_level: 10
+  value: 220
+
 # ---------------------------------------------------------------- gathering tools (Tessa sells them)
 
 pickaxe:
@@ -324,6 +385,40 @@ stout_rod:
 
 # ---------------------------------------------------------------- materials
 
+deep_iron_ore:
+  name: {es: Mena de hierro profundo, en: Deep iron ore}
+  icon: "🪨"
+  description: {es: "Mena oscura de la veta honda, mucho más densa que la de la boca de la mina.", en: "Dark ore from the deep seam, far denser than what the mine mouth gives."}
+  type: material
+  value: 18
+  stackable: true
+
+steel_ingot:
+  name: {es: Lingote de acero, en: Steel ingot}
+  icon: "⬜"
+  description: {es: "Hierro profundo y carbón, fundidos juntos hasta que cantan al golpearlos.", en: "Deep iron and coal, smelted together until they ring when struck."}
+  type: material
+  value: 45
+  stackable: true
+
+heartwood_log:
+  name: {es: Tronco de corazón, en: Heartwood log}
+  icon: "🪵"
+  description: {es: "El corazón de un roble viejo: pesa el doble y no se astilla.", en: "The heart of an old oak: twice the weight and it will not splinter."}
+  type: material
+  value: 20
+  stackable: true
+
+silk_fiber:
+  name: {es: Fibra sedosa, en: Silk fiber}
+  icon: "🧵"
+  description: {es: "Fibra larga y brillante que casi se hila sola.", en: "Long bright fiber that almost spins itself."}
+  type: material
+  value: 16
+  stackable: true
+
+
+
 iron_ore:
   name: {es: Mena de hierro, en: Iron ore}
   icon: "🪨"
@@ -386,7 +481,7 @@ fishing_line:
   icon: "🪢"
   description: {es: "Hilo trenzado y encerado, el alma de una buena caña.", en: "Braided waxed line, the soul of a good rod."}
   type: material
-  value: 20
+  value: 45
   stackable: true
 
 padded_jerkin:

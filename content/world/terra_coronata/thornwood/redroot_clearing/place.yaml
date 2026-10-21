@@ -28,3 +28,4 @@ gathering:
       - {item: plant_fiber, weight: 25}
       - {item: moonleaf, weight: 20, min_rank: 1}
       - {item: restmoss, weight: 8, min_rank: 3}
+      - {item: silk_fiber, weight: 5, min_rank: 4}  # fibra fina, la que pide la sastrería de T1

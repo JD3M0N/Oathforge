@@ -161,6 +161,9 @@ garrick:
     Oak comes from Elderwood Grove; logs are sawn into planks at the guild's sawing station. He makes handles,
     staves, fishing rods and the chests and beds the guild's rooms need. He teaches carpentry at his workshop.
   passive_perception: 11
+  shop:
+    items: [oak_plank, ash_plank]
+    buys: true
 
 oda:
   name: {es: Oda, en: Oda}
@@ -178,6 +181,9 @@ oda:
     Hides come from skinning what you hunt; they are cured at the guild's curing rack before anyone works them.
     She makes straps, cases and light armour, and teaches leatherworking at the tannery.
   passive_perception: 12
+  shop:
+    items: [treated_leather]
+    buys: true
 
 pell:
   name: {es: Pell, en: Pell}
@@ -247,3 +253,6 @@ hedda:
     At the loom, clean fiber becomes thread, thread becomes cloth, and cloth becomes garments; waxed thread
     becomes the fishing line carpenters need for their rods. She teaches tailoring at her loom.
   passive_perception: 15
+  shop:
+    items: [thread, cloth, fishing_line]
+    buys: true

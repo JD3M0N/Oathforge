@@ -28,3 +28,4 @@ gathering:
       - {item: oak_log, weight: 70}
       - {item: plant_fiber, weight: 20}
       - {item: ash_log, weight: 15, min_rank: 2}
+      - {item: heartwood_log, weight: 5, min_rank: 4}  # el corazón del roble viejo

@@ -4,6 +4,17 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.18] - 2026-10-20
+
+Profesiones (F15, 10.ª parte): el catálogo T1.
+
+### Añadido
+- **Tres materiales T1 en los lugares de siempre**, detrás del rango 4: **mena de hierro profundo** en la Mina del Paso Viejo, **tronco de corazón** en la Arboleda Antigua y **fibra sedosa** en el Claro de la Raíz Roja. El rango de la maestría es lo que abre la veta buena, no un mapa nuevo.
+- **El acero**: hierro profundo + carbón → **lingote de acero** en el horno (Minería, rango 4).
+- **Ocho recetas T1** (rango 3–5), una por oficio donde tenía sentido: espada y coraza de acero, cuero endurecido, bastón de corazón de roble, poción de curación mayor, anillo guardado y tela de seda. El **equipo de combate pide nivel 10** para equiparse o beberse: se forja, se vende y se guarda desde ya, y la ficha lo dice.
+- **Los maestros venden los componentes de su oficio**: Hedda hilo, tela y sedal; Garrick tablones de roble y de fresno; Oda cuero curtido. Nadie se queda esperando a otro jugador.
+- **Una prueba recorre todo el catálogo** y exige que ningún ingrediente carezca de origen, que ninguna receta pida lo que produce, que una receta T0 no dependa de otro oficio sin salida y que **comprar los ingredientes y vender el resultado nunca dé beneficio**. Ese examen ajustó el precio del sedal y del cuero endurecido.
+
 ## [0.10.17] - 2026-10-20
 
 Profesiones (F15, 9.ª parte): las herramientas especializadas.

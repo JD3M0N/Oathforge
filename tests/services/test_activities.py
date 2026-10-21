@@ -364,7 +364,7 @@ async def test_an_activity_is_paid_by_the_rules_it_started_under():
         act = await activities.open_activity(s, char)
         rules = act.result["rules"]
         assert rules["rank"] == 5
-        assert {r["item"] for r in rules["resources"]} == {"iron_ore", "coal", "copper_ore", "rough_gem"}
+        assert {"iron_ore", "coal", "copper_ore", "rough_gem"} <= {r["item"] for r in rules["resources"]}
         content = get_content()  # the mine is rewritten while the character is down there
         thin = SimpleNamespace(skill="mining", tool="pickaxe", stay_ambush=0.0,
                                resources=[SimpleNamespace(item="coal", weight=1, min_rank=0)])

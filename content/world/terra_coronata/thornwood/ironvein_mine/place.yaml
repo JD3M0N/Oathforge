@@ -25,3 +25,4 @@ gathering:
       - {item: coal, weight: 30}
       - {item: copper_ore, weight: 15, min_rank: 1}
       - {item: rough_gem, weight: 4, min_rank: 3}
+      - {item: deep_iron_ore, weight: 6, min_rank: 4}  # la veta profunda: el hierro de T1

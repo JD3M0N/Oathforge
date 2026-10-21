@@ -433,3 +433,77 @@ stout_rod:
   ingredients: {oak_plank: 2, fishing_line: 1}
   outputs: {stout_rod: 1}
   xp: 45
+
+# --- Catálogo T1 (rango 3-5). El equipo de combate pide nivel 10 para llevarse: se fabrica ya, se equipa
+# cuando el mundo llegue ahí. Lo demás (refinado, herramientas, muebles) se usa por rango.
+
+steel_ingot:
+  profession: mining
+  station: furnace
+  min_rank: 4
+  ingredients: {deep_iron_ore: 2, coal: 2}
+  outputs: {steel_ingot: 1}
+  xp: 30
+
+steel_sword:
+  profession: blacksmithing
+  technique: weapons
+  min_rank: 4
+  station: anvil
+  ingredients: {steel_ingot: 3, treated_leather: 1}
+  outputs: {steel_sword: 1}
+  xp: 90
+
+steel_breastplate:
+  profession: blacksmithing
+  technique: weapons
+  min_rank: 5
+  station: anvil
+  ingredients: {steel_ingot: 5, treated_leather: 2}
+  outputs: {steel_breastplate: 1}
+  xp: 120
+
+hardened_leather:
+  profession: leatherworking
+  technique: armour
+  min_rank: 3
+  station: tannery
+  ingredients: {treated_leather: 4, thread: 2}
+  outputs: {hardened_leather: 1}
+  xp: 70
+
+heartwood_staff:
+  profession: carpentry
+  technique: woodwork
+  min_rank: 4
+  station: carpenter_bench
+  ingredients: {heartwood_log: 2, clean_fiber: 2}
+  outputs: {heartwood_staff: 1}
+  xp: 80
+
+greater_healing_potion:
+  profession: alchemy
+  technique: draughts
+  min_rank: 4
+  station: alchemy_table
+  ingredients: {bloodroot: 4, restmoss: 1, water_flask: 1}
+  outputs: {greater_healing_potion: 1}
+  xp: 60
+
+warded_ring:
+  profession: jewelcrafting
+  technique: gemwork
+  min_rank: 4
+  station: jeweler_bench
+  ingredients: {steel_ingot: 1, rough_gem: 2}
+  outputs: {warded_ring: 1}
+  xp: 85
+
+silk_cloth:
+  profession: tailoring
+  technique: spinning
+  min_rank: 3
+  station: loom
+  ingredients: {silk_fiber: 3, thread: 2}
+  outputs: {cloth: 3}
+  xp: 45
