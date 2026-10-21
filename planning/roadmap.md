@@ -549,6 +549,8 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 
 **Flujo de jugador:** Oficios → Herrería → Espada → ver materiales/origen → fabricar → comparar; minería puede ofrecer enfoque hierro o gemas.
 
+**Estado (0.10.19):** las diez fases entregadas. Ocho oficios con su maestro y su puesto, el Gremio de Aventureros con el refinado de las maestrías, Sastrería, técnicas y planos, el cuarto con cama y cofre dentro del tutorial, doce ramas a rango 2, quince herramientas especializadas, la instantánea de reglas de cada actividad y el catálogo T0/T1 con sus precios auditados. Falta la partida de punta a punta con `tgtest` en ES y EN y las carreras con PostgreSQL (`tests/features.md`).
+
 **Dependencias y riesgos:** F08/F06/F16/F18. Bombas y pergaminos se balancean frente a habilidades, no solo frente a su precio.
 
 **Se considera terminado cuando:** Cada oficio tiene un resultado útil; la fabricación no duplica materiales; cambiar oficio no borra XP; Cocina/Pesca no consumen plazas. La puerta de salida completa está en §12.2 del contrato.
@@ -739,7 +741,7 @@ Usar S/M/L/XL durante el diseño; dividir todo XL en entregas que tengan una exp
 - [ ] Una partida completa en ES y otra en EN llegan hasta contenido posterior al tutorial; no hay claves crudas ni diferencias mecánicas por idioma.
 - [ ] Todas las misiones con entrega usan el flujo aprobado, y las excepciones de cierre automático están declaradas.
 - [ ] Las ocho primeras especializaciones funcionan en combate, ficha, descanso y reentrenamiento, si se aprueba ese alcance mínimo.
-- [ ] Los siete oficios y las dos aficiones tienen utilidad y acceso suficiente a materiales en solitario.
+- [x] Los **ocho** oficios y las dos aficiones tienen utilidad y acceso suficiente a materiales en solitario (0.10.9–0.10.18: cada oficio con receta autónoma, y el maestro de cada uno vende lo que los demás necesitan).
 - [ ] Mapa, inventario, almacén, logros y diario no obligan a memorizar comandos.
 - [ ] No existe bloqueo permanente por morir, quedarse sin oro o perder materiales tutoriales.
 - [ ] Hay un bucle de nivel 5 con aventura/encargos/maestrías, aunque todavía no exista nivel 6.
@@ -864,12 +866,12 @@ Cada pendiente del TODO auditado aparece una vez en esta tabla. La referencia ex
 | [TODO L78](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L78) | «Algo brilla» al fondo de la mina: hoy es solo ambiente; convertirlo en un descubrimiento con recompensa | Base 0.10: descubrimiento real | [F08](#F08) |
 | [TODO L79](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L79) | Más misiones después del nivel 5 y misiones secundarias repetibles (encargos de caza diarios) | Base: contenido a nivel 5; niveles superiores pendientes | [F12](#F12) |
 | [TODO L80](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L80) | **Entregar las misiones a quien las dio**: al cumplir los objetivos la misión queda «lista para entregar»; al hablar… | Base 0.10 prioritaria | [F12](#F12) |
-| [TODO L81](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L81) | **Profesiones y recolección** · opificia | Base: balance, utilidad y consumibles; sistema ya existe | [F15](#F15) |
+| [TODO L81](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L81) | **Profesiones y recolección** · opificia | **Entregado 0.10.9–0.10.19**; queda el balance con la beta | [F15](#F15) |
 | [TODO L82](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L82) | **Fabricar sin estación fija**: que cada oficio tenga una herramienta portátil (un yunque portátil para la herrería,… | Prototipo ampliación 0.10, no sustituir estaciones sin aprobar | [F15](#F15) |
-| [TODO L83](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L83) | Afinidades de maestría a rango 3, durabilidad de herramientas y vetas que se agotan (después de la beta) | Afinidad piloto ampliación; durabilidad/vetas tras validación | [F15](#F15) |
+| [TODO L83](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L83) | Afinidades de maestría a rango 3, durabilidad de herramientas y vetas que se agotan (después de la beta) | **Ramas entregadas en 0.10.16**, a rango 2; durabilidad y vetas siguen futuras (N06) | [F15](#F15) |
 | [TODO L84](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L84) | Aficiones nuevas: arqueología, cartografía, juegos de taberna y primeros auxilios (como la Pesca: `hobby: true` en… | Elegir una ampliación; no cuatro aficiones obligatorias | [F15](#F15) |
-| [TODO L85](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L85) | **Recetas por tier** (T1–T3) y, dentro de cada uno, básica, media y compleja (con mejores nombres): la básica usa… | Base: organizar/auditar; T1–T3 completo ampliación | [F15](#F15) |
-| [TODO L86](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L86) | **Inventario y almacenamiento**: cofre o almacén para guardar objetos fuera de la mochila | Base 0.10: cofre personal | [F06](#F06) |
+| [TODO L85](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L85) | **Recetas por tier** (T1–T3) y, dentro de cada uno, básica, media y compleja (con mejores nombres): la básica usa… | **Resuelto en 0.10.10–0.10.18**: T0 = rango 0–2 y T1 = rango 3–5, sin un campo que mantener | [F15](#F15) |
+| [TODO L86](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L86) | **Inventario y almacenamiento**: cofre o almacén para guardar objetos fuera de la mochila | **Entregado en 0.10.14**: el cofre de tu cuarto en el Gremio, ampliable con Carpintería | [F06](#F06) |
 | [TODO L87](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L87) | Sumideros de oro: reparaciones, tasas, viajes | Base 0.10: sumideros útiles, costes concretos por aprobar | [F16](#F16) |
 | [TODO L88](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L88) | `world_facts` y eventos encadenados (por ejemplo, la crisis del hierro) | Base: hechos individuales; crisis global 0.11 | [F17](#F17) |
 | [TODO L89](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L89) | Rumores con veracidad (verdadero, falso, incompleto) que se puedan investigar | Base: rumor investigable limitado | [F17](#F17) |

@@ -4,6 +4,14 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.20] - 2026-10-20
+
+Marcado lo que F15 deja hecho. Solo documentación.
+
+### Cambiado
+- **`TODO.md`**: «Profesiones y recolección» recoge lo entregado en 0.10.9–0.10.19 y deja a la vista lo que falta (la partida de prueba y el balance con la beta). Las «afinidades de maestría» quedan a medias —las ramas sí, la durabilidad y las vetas no— y se marcan hechas las **«recetas por tier»**, resueltas como T0 = rango 0–2 y T1 = rango 3–5, y el **«cofre o almacén»**, que es el de tu cuarto.
+- **`planning/roadmap.md`**: F15 estrena su «Estado (0.10.19)», la puerta de salida ya habla de **ocho** oficios y la tabla de trazabilidad dice en qué versión se resolvió cada pendiente del TODO.
+
 ## [0.10.19] - 2026-10-20
 
 Profesiones (F15, cierre): la ficha queda cerrada salvo la partida de prueba.
