@@ -149,6 +149,34 @@ async def profession_guide(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     await send(update, text, kb)
 
 
+STASH_LINK = re.compile(r"^/stash_([a-z0-9_]+?)(?:@\w+)?(?:\s+(\d+))?$")
+TAKE_LINK = re.compile(r"^/take_([a-z0-9_]+?)(?:@\w+)?(?:\s+(\d+))?$")
+
+
+async def room(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/room (and /stash): your room at the guild, its bed and its chest."""
+    async with session_scope() as session:
+        user, char = await load(session, update)
+        lang = context.user_data["lang"] = user.language
+        if char is None:
+            await send(update, t(lang, "start.need_character"))
+            return
+        text, kb = await render.room_view(session, char, lang)
+    await send(update, text, kb)
+
+
+async def stash(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/stash_<item> [n] and /take_<item> [n]: move things between the backpack and the chest."""
+    from oathforge.bot.handlers import callbacks  # callbacks imports the views from here
+    text = (update.message.text or "").strip() if update.message else ""
+    m = STASH_LINK.match(text) or TAKE_LINK.match(text)
+    if m is None:
+        return
+    verb = "stash" if text.startswith("/stash_") else "take"
+    await callbacks._act(update, context, verb, f"{m.group(1)}:{m.group(2) or 1}",
+                         f"msg{update.message.message_id}")
+
+
 RECIPE_LINK = re.compile(r"^/r_([a-z0-9_]+?)(?:@\w+)?$")
 CRAFT_LINK = re.compile(r"^/craft_([a-z0-9_]+?)(?:@\w+)?(?:\s+(\d+))?$")
 
@@ -291,6 +319,9 @@ def handlers() -> list[BaseHandler]:
         CommandHandler("professions", _view(_professions)),
         MessageHandler(filters.Regex(PROF_LINK), profession_guide),
         CommandHandler("recipes", recipes),
+        CommandHandler(["room", "stash"], room),
+        MessageHandler(filters.Regex(STASH_LINK), stash),
+        MessageHandler(filters.Regex(TAKE_LINK), stash),
         MessageHandler(filters.Regex(RECIPE_LINK), recipe),
         MessageHandler(filters.Regex(CRAFT_LINK), craft),
         CommandHandler("masteries", masteries),

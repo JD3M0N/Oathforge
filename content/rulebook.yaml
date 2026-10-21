@@ -172,6 +172,23 @@ professions:
       Each new rank teaches you a whole technique at once, with all its common recipes: you never buy them one by one. Special recipes are not learned by rank but by reading their 📘 blueprint, which is spent doing it and is never forgotten (not even when you change trade); if you already know it, the blueprint is not spent and you can sell it.
       With refined and field materials you craft at each trade's stall: weapons, armor, potions, rings, scrolls or bombs. Crafting is instant if you have the ingredients and the rank, and you can make several at once (up to {craft_batch}). /recipes shows all your recipes in tabs, each with its /r_<recipe>; you craft from there, or type /craft_<recipe> 5.
 
+home:
+  icon: "🏠"
+  title: {es: Tu cuarto y el cofre, en: Your room and the chest}
+  body:
+    es: |-
+      El Gremio de Aventureros da un cuarto a sus socios, y la misión «Un cuarto propio» te lo amuebla: con tablones montas el 📦 cofre y, con tablones y la tela del gremio, la 🛏️ cama. No hace falta ser carpintero ni sastre: son dos recetas de iniciación que solo existen mientras esa misión dura.
+      • 🛏️ Dormir en tu cama es un descanso largo normal, con lo que recupera y lo que tarda, pero no cuesta oro.
+      • 📦 El cofre guarda {chest_slots} huecos. Lo que está dentro no se lleva encima: no se vende, no se gasta y no se fabrica con ello hasta que lo saques. Cada cosa conserva quién la hizo.
+      • Con /room ves el cuarto, y con /stash_<objeto> 5 y /take_<objeto> 5 mueves lo que quieras.
+      • Un carpintero puede fabricar la mejora del cofre, que añade {chest_upgrade} huecos sin tocar lo guardado; quien no lo sea, se la compra.
+    en: |-
+      The Adventurers' Guild gives its members a room, and the mission "A Room of Your Own" furnishes it: planks build the 📦 chest and, with planks and the guild's cloth, the 🛏️ bed. You need be neither carpenter nor tailor: they are two starter recipes that exist only while that mission runs.
+      • 🛏️ Sleeping in your bed is an ordinary long rest, with the same recovery and the same wait, but it costs no gold.
+      • 📦 The chest holds {chest_slots} slots. What is inside is not carried: it cannot be sold, spent or crafted with until you take it out. Each piece keeps who made it.
+      • /room opens the room, and /stash_<item> 5 and /take_<item> 5 move things either way.
+      • A carpenter can make the chest upgrade, which adds {chest_upgrade} slots without touching what is stored; everyone else buys it.
+
 travel:
   icon: "🧭"
   title: {es: Viajar y explorar, en: Travel and explore}

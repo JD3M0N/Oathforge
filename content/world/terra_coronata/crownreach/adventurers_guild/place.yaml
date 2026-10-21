@@ -4,6 +4,7 @@ kind: city
 # Aquí se alista todo el mundo (Vale), se refina lo que se trae del campo y, más adelante, se eligen
 # las especializaciones de maestría y se monta la habitación propia.
 stations: [furnace, sawmill, curing_rack, herb_table, hearth]
+home: true  # arriba están los cuartos de los socios: tu cama y tu cofre
 description:
   es: >-
     Un caserón de piedra con el escudo del gremio sobre la puerta y un tablón lleno de notas clavadas.

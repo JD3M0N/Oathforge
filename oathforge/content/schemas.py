@@ -406,6 +406,7 @@ class Location(Strict):
     gathering: list[Gathering] = []
     stations: list[Station] = []  # crafting stations here: "Craft" in the scene
     teaches: str | None = None  # the profession learned and swapped here, with its master (one stall per trade)
+    home: bool = False  # it grants rooms: your bed and your chest are here
     fixed_encounters: list[FixedEncounter] = []
     scene_objects: dict[str, SceneObject] = {}
     discoveries: dict[str, Discovery] = {}
@@ -472,6 +473,7 @@ class Recipe(Strict):
     technique: str | None = None  # the group of common recipes it belongs to, unlocked by rank
     special: bool = False  # learned from a blueprint, never by rank
     quest: str | None = None  # a starter recipe: only while that mission is active, and it needs no profession
+    installs: Literal["bed", "chest"] | None = None  # furniture: it is set up in your room instead of carried
 
     @property
     def tier(self) -> int:
@@ -544,6 +546,9 @@ class QuestAction(Strict):
     npc: str | None = None
     stages: list[str]
     requires_item: str | None = None
+    # a replacement handed out only while you have neither the material nor what it was for
+    unless_item: str | None = None
+    unless_furniture: Literal["bed", "chest"] | None = None
     check: QuestCheck | None = None
     effects: list[Effect] = []
     to_stage: str

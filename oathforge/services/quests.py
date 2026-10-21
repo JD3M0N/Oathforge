@@ -34,6 +34,12 @@ class AvailableAction:
         return f"{self.quest_key}.{self.action_key}"
 
 
+async def is_active(session: AsyncSession, char: Character, quest_key: str) -> bool:
+    """Is that mission running for this character right now?"""
+    prog = await progress(session, char)
+    return quest_key in prog and prog[quest_key].state == "active"
+
+
 async def progress(session: AsyncSession, char: Character, lock: bool = False) -> dict[str, QuestProgress]:
     stmt = select(QuestProgress).where(QuestProgress.character_id == char.id)
     if lock:
@@ -102,6 +108,8 @@ def objective_target(obj: QuestObjective) -> dict:
         return dict(ANYWHERE)
     if obj.kind == "read":
         return c.rulebook[obj.target].title.model_dump()
+    if obj.target.startswith("furniture:"):  # the bed and the chest of your room, which a starter recipe installs
+        return {lang: t(lang, f"home.furniture.{obj.target.split(':')[1]}") for lang in ("es", "en")}
     pool = {"kill": c.monsters, "hunt": c.locations, "talk": c.npcs, "visit": c.locations, "gather": c.items, "skin": c.items,
             "craft": c.items, "rest": c.locations, "heal": c.locations}[obj.kind]
     if pool is c.locations:  # «Ve a la Capilla del Alba»
@@ -244,8 +252,17 @@ async def available_actions(
                 continue
             if action.requires_item and await inventory.count(session, char, action.requires_item) < 1:
                 continue
+            if await _already_served(session, char, action):
+                continue
             out.append(AvailableAction(qkey, akey, action))
     return out
+
+
+async def _already_served(session: AsyncSession, char: Character, action) -> bool:
+    """A replacement is handed out once: not while you still carry it, nor once you used it."""
+    if action.unless_item and await inventory.count(session, char, action.unless_item) > 0:
+        return True
+    return bool(action.unless_furniture) and bool((char.home or {}).get(action.unless_furniture))
 
 
 async def perform(

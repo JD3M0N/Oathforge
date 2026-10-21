@@ -20,6 +20,7 @@ cmd:
   report: "Report of the last battle"
   professions: "Professions and masteries"
   recipes: "Recipes: what you can craft"
+  room: "Your room: bed and chest"
   rulebook: "Rulebook: how the game works"
   settings: "Settings: language and manual rolls"
   language: "Change language"
@@ -33,7 +34,7 @@ help:
     You can also <b>type whatever you want to do</b>: "I hide behind the bar and listen", "I try to lift the keeper's purse", "I push the cart onto the bandit".
     The Dungeon Master interprets your action, the engine rolls the dice, and you see what really happened.
 
-    Commands: /look /activities /map /hero /sheet /inventory /journal /quests /classes /report /professions /recipes /masteries /hobbies /rulebook /settings
+    Commands: /look /activities /map /hero /sheet /inventory /journal /quests /classes /report /professions /recipes /room /masteries /hobbies /rulebook /settings
   version: "<i>Oathforge v{version}</i>"
 
 settings:
@@ -175,6 +176,8 @@ btn:
   make: "🔨 {item}"
   make_n: "🔨 ×{n}"
   recipes: "📜 Recipes"
+  room: "🏠 Your room"
+  stash: "📦 Store in the chest"
   learn_recipe: "📘 Learn the recipe"
   missions: "📜 Missions"
   quest_log: "📚 Log"
@@ -951,6 +954,31 @@ prof:
     already: "You already practise {prof}."
     slots_full: "You already have {slots} professions. Choose one to drop."
     hobby: "{prof} is a hobby: no need to learn it, you can already practise it."
+
+home:
+  title: "🏠 <b>Your room</b> · {place}"
+  none: "<i>You have no room yet. The Adventurers' Guild gives one to its members.</i>"
+  no_bed: "🛏️ The bed is missing."
+  bed: "🛏️ Your bed: sleeping here costs no gold."
+  no_chest: "📦 The chest is missing."
+  chest: "📦 Chest: {used}/{capacity} slots."
+  chest_empty: "<i>The chest is empty.</i>"
+  line: "{item} ×{qty} · /take_{key}"
+  bag_line: "{item} ×{qty} · /stash_{key}"
+  bag_title: "<b>In your backpack</b>"
+  furniture:
+    bed: "the bed"
+    chest: "the chest"
+  installed_bed: "🛏️ You set up the bed. Sleeping here costs no gold now."
+  installed_chest: "📦 You build the chest: {capacity} slots."
+  deposited: "📦 You store {item} ×{qty}. Chest: {used}/{capacity}."
+  withdrew: "🎒 You take out {item} ×{qty}. Chest: {used}/{capacity}."
+  err:
+    no_chest: "You have no chest to keep it in."
+    away: "Your chest is in your room, not here."
+    full: "The chest is full ({capacity} slots)."
+    not_enough: "You are not carrying that much {item}."
+    not_stored: "You do not have that much {item} in the chest."
 
 craft:
   tier: "T{tier}"

@@ -15,7 +15,7 @@ from oathforge.content.schemas import Recipe, Station
 from oathforge.database.models import Character
 from oathforge.engine import gathering
 from oathforge.i18n import t
-from oathforge.services import characters, inventory, professions, quests
+from oathforge.services import characters, home, inventory, professions, quests
 from oathforge.services import achievements
 from oathforge.services.events import Outcome
 
@@ -57,13 +57,18 @@ def knows(char: Character, recipe_key: str) -> bool:
     return not recipe.special or recipe_key in known(char)
 
 
-def recipes_here(char: Character) -> dict[str, Recipe]:
-    """Recipes you may work on where you stand: your disciplines and this place's stations."""
+def recipes_here(char: Character, open_quests: set[str] = frozenset()) -> dict[str, Recipe]:
+    """Recipes you may work on where you stand: your disciplines and this place's stations.
+
+    A starter recipe (``quest``) joins them only while that mission is running: it asks for no trade, so it
+    must not outlive the mission that justifies it.
+    """
     c = get_content()
     stations = set(c.locations[char.location].stations)
     mine = disciplines(char)
     return {k: r for k, r in c.recipes.items()
-            if r.profession in mine and station_of(r) in stations and knows(char, k) and r.quest is None}
+            if station_of(r) in stations and knows(char, k)
+            and (r.quest in open_quests if r.quest is not None else r.profession in mine)}
 
 
 async def learn_blueprint(session: AsyncSession, char: Character, item_key: str) -> Outcome:
@@ -111,10 +116,13 @@ async def craft(session: AsyncSession, char: Character, recipe_key: str, rng: ra
         return Outcome.refused("craft.err.qty", max=limit)
     if not knows(char, recipe_key):
         return Outcome.refused("craft.err.blueprint")
-    if recipe.quest is not None:
-        return Outcome.refused("craft.err.quest_only")
     name = discipline_name(recipe.profession)
-    if recipe.profession not in disciplines(char):
+    if recipe.quest is not None:  # a starter recipe: the mission, not a trade, is what opens it
+        if qty != 1:
+            return Outcome.refused("craft.err.qty", max=1)
+        if not await quests.is_active(session, char, recipe.quest):
+            return Outcome.refused("craft.err.quest_only")
+    elif recipe.profession not in disciplines(char):
         return Outcome.refused("craft.err.not_your_profession", prof=name)
     station = station_of(recipe)
     if station not in c.locations[char.location].stations:
@@ -130,12 +138,16 @@ async def craft(session: AsyncSession, char: Character, recipe_key: str, rng: ra
         if not await inventory.remove_item(session, char, item, per_unit * qty):
             raise RuntimeError(f"ingredient {item} vanished while crafting")  # rolls the transaction back
     out = Outcome()
+    if recipe.installs is not None:  # furniture stays in the room instead of going into the bag
+        home.install(char, recipe.installs, out)
     for item, per_unit in recipe.outputs.items():
         await inventory.add_item(session, char, item, per_unit * qty, crafted_by=char.id)
         out.add("craft.made", item=c.items[item].labelled(), qty=per_unit * qty)
     xp = (recipe.xp // 2 if rank - recipe.min_rank >= LOW_RANK_GAP else recipe.xp) * qty
     await grant_discipline_xp(session, char, recipe.profession, xp, out)
     made = {item: per_unit * qty for item, per_unit in recipe.outputs.items()}
+    if recipe.installs is not None:
+        made = {**made, f"furniture:{recipe.installs}": 1}
     out.extend(await quests.on_items(session, char, "craft", made, rng or random.Random()))
     await achievements.emit(session, char, out, "craft", {"recipe": recipe_key})
     return out

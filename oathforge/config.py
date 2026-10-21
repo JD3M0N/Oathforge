@@ -33,6 +33,10 @@ class Settings(BaseSettings):
     # crafting and refining: how many times a single recipe can be made in one batch
     craft_batch_max: int = 10
 
+    # the chest in your room: slots it holds, and how many each carpentry upgrade adds
+    chest_slots: int = 20
+    chest_slots_per_upgrade: int = 10
+
     # testing only: moves the game clock forward for everyone (e.g. 12 turns night into day). 1 game hour = 10 min.
     game_clock_offset_hours: float = 0.0
 

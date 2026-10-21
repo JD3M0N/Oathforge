@@ -4,6 +4,20 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.14] - 2026-10-20
+
+Profesiones (F15, 6.ª parte): tu cuarto en el gremio, con cama y cofre.
+
+### Añadido
+- **Un cuarto propio**, misión nueva del tutorial (la 8, tras «Hierro para la Guardia», que ahora paga con un **hacha** en vez de con oro): talas robles, asierras los troncos en el gremio, montas el **cofre** con cuatro tablones y, con la **tela** que te da Vale y dos tablones más, la **cama**. Las dos son **recetas de iniciación**: no piden oficio ni plaza y solo existen mientras esa misión dura.
+- **Dormir en tu cama** es el descanso largo de siempre —lo mismo que recupera, lo mismo que tarda— pero **no cuesta oro**.
+- **El cofre**, con 20 huecos (`CHEST_SLOTS`). Lo guardado **no se lleva encima**: no se vende, no se gasta ni se fabrica con ello hasta sacarlo, y cada pieza conserva su identidad y quién la hizo, porque se mueve la fila, no una copia. Depositar y retirar son atómicos y bloquean las filas.
+- **`/room`** (alias `/stash`) abre el cuarto: la cama, el cofre con lo que hay dentro y lo que llevas en la mochila. Con **`/stash_<objeto> 5`** y **`/take_<objeto> 5`** se mueve cualquier cosa sin abrir menús; repetir el mismo mensaje no lo mueve dos veces.
+- **Mejora del cofre**, una receta de Carpintería (rango 1): seis tablones y un lingote por 10 huecos más, sin tocar lo guardado. El carpintero se la hace; los demás se la comprarán.
+- La tela del gremio es **material de misión, no vendible**, y Vale la repone mientras no tengas la cama montada ni la tela encima: ni se pierde la misión ni se puede pedir una y otra vez.
+- Sección **🏠 Tu cuarto y el cofre** en `/rulebook`, con las cifras del motor.
+- Migración **0012**: `item_instances.container` (la mochila o el cofre) y `characters.home`.
+
 ## [0.10.13] - 2026-10-20
 
 Profesiones (F15, 5.ª parte): Sastrería, las técnicas y los planos.

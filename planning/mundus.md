@@ -45,9 +45,10 @@ Objetivos: `kill`, `talk`, `visit`, `read` (sección del `/rulebook`), `hunt` (v
 | 4 | Colmillos en el prado | Cazar 2 veces en el prado + 2 de carne desollando | caza, combate, desuello | 100 | hoz |
 | 5 | Raíz de sangre | Recoger 3 raíces de sangre | salir, recolectar, emboscadas | 50 | 5 de oro |
 | 6 | Guiso del cazador | Fabricar un estofado del cazador | aficiones, fogón | 50 | pico |
-| 7 | Hierro para la Guardia | Sacar 3 menas de hierro | minería | 60 | 10 de oro |
-| 8 | Alas al anochecer | Cazar 3 veces en la mina | grupos de enemigos | 75 | — |
-| 9 | Heridas de guerra | Ysolde + descanso largo + volver con Vale | curación y descanso | 40 | poción |
+| 7 | Hierro para la Guardia | Sacar 3 menas de hierro | minería | 60 | hacha |
+| 8 | Un cuarto propio | Tablones del gremio: montar cofre y cama | refinado, habitación | 60 | cuarto con cama y cofre |
+| 9 | Alas al anochecer | Cazar 3 veces en la mina | grupos de enemigos | 75 | — |
+| 10 | Heridas de guerra | Ysolde + descanso largo + volver con Vale | curación y descanso | 40 | poción |
 | 10 | El Viejo Colmillo | El jabalí jefe del prado (lo da Bram) | jefe | 300 | 80 de oro |
 
 - Beta (`config.py`, `# beta only`): mientras hay una misión del tutorial activa, toda actividad con tiempo termina al momento y da lo que falta; el descanso largo es instantáneo; pociones a 1 de oro.
@@ -68,7 +69,7 @@ Pacto de Plata y Sindicato Carmesí con reputación −100..100 (precios ±25 %)
 ## Próximo
 
 - **Entregar misiones a quien las dio** (prioridad alta del TODO; **MIS-02**).
-- **Lo que falta del Gremio** ([F15](roadmap.md#F15), [contrato](roadmap-profesiones.md)): las especializaciones de maestría (fase 7) y la habitación con cama y cofre, con su misión del tutorial (fase 5).
+- **Lo que falta del Gremio** ([F15](roadmap.md#F15), [contrato](roadmap-profesiones.md)): las especializaciones de maestría (fase 7).
 - Más misiones tras nivel 5 y encargos repetibles de caza (**MIS-05**, plantillas validadas).
 - **AVE-01..09** banco de aventuras; puertas con varias soluciones (**AVE-08**, PKG-07).
 - **Fase 2 del viaje** (**VIA-01..10**): viajar ≠ explorar; escenas con presupuesto (0 rutina, 1 primera visita, 1–2 expedición corta); estilos 🛡️ Prudente / 🧭 Explorador / ⚡ Directo, sin gastar consumibles solos; rutas distintas de verdad; atajos con `requires_flag` (Sendero de los Carboneros, barquero); 3 favoritos; cambios de ruta por eventos revalidados al salir y al continuar; cada tramo resuelto una vez (nonce). Si el viaje vuelve a gastar tiempo, mover el reloj y avisarlo en el rulebook.

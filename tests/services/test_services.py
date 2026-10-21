@@ -669,6 +669,9 @@ async def test_whole_chain_reaches_level_five():
         assert await inventory.count(s, char, "pickaxe") == 1
         await quests.on_items(s, char, "gather", {"iron_ore": 2, "coal": 1}, rng)
         await quests.on_items(s, char, "gather", {"iron_ore": 1}, rng)
+        assert await inventory.count(s, char, "woodaxe") == 1  # the room mission needs wood
+        await quests.on_items(s, char, "craft", {"furniture:chest": 1}, rng)
+        await quests.on_items(s, char, "craft", {"furniture:bed": 1}, rng)
         for monster in ("cave_bat", "giant_rat", "cave_bat"):
             await fight(char, monster, "ironvein_mine")
         await quests.on_talk(s, char, "ysolde", rng)

@@ -271,8 +271,8 @@ def validate_references(c: Content) -> None:
             errors.append(f"recipe {key}: no location has a '{station}'")
         for i in [*recipe.ingredients, *recipe.outputs]:
             need("item", i, c.items, f"recipe {key}")
-        if not recipe.ingredients or not recipe.outputs:
-            errors.append(f"recipe {key}: needs ingredients and outputs")
+        if not recipe.ingredients or not (recipe.outputs or recipe.installs):
+            errors.append(f"recipe {key}: needs ingredients, and outputs or installs")
         if any(q <= 0 for q in [*recipe.ingredients.values(), *recipe.outputs.values()]):
             errors.append(f"recipe {key}: quantities must be positive")
         if recipe.quest is not None:
@@ -305,6 +305,8 @@ def validate_references(c: Content) -> None:
             errors.append(f"profession {key}: no location has a '{prof.station}'")
         if prof.practice is not None and (prof.practice not in GATHER_SKILLS or not prof.hobby):
             errors.append(f"profession {key}: practice '{prof.practice}' must be a gathering skill of a hobby")
+    if not any(loc.home for loc in c.locations.values()) and any(r.installs for r in c.recipes.values()):
+        errors.append("recipes install furniture, but no location grants rooms (home: true)")
     taught: dict[str, list[str]] = {}
     for key, loc in c.locations.items():
         if loc.teaches is None:
@@ -406,9 +408,12 @@ def validate_references(c: Content) -> None:
             errors.append(f"{where}: locked missions need an unlock_stage")
         if quest.objectives and (quest.objective_stage is None or quest.complete_stage is None):
             errors.append(f"{where}: objectives need objective_stage and complete_stage")
+        # a craft objective may also name furniture a starter recipe installs ("furniture:bed")
+        furniture = {f"furniture:{r.installs}": None for r in c.recipes.values() if r.installs}
         items, places = ("item", c.items), ("location", {**c.locations, "any": None})
         pools = {"kill": ("monster", c.monsters), "talk": ("npc", c.npcs), "visit": ("location", c.locations), "hunt": places,
-                 "gather": items, "skin": items, "craft": items, "rest": places, "heal": places,
+                 "gather": items, "skin": items, "craft": ("item", {**c.items, **furniture}),
+                 "rest": places, "heal": places,
                  "read": ("rulebook section", c.rulebook)}
         for obj in quest.objectives:
             need(*pools[obj.kind][:1], obj.target, pools[obj.kind][1], f"{where} objective")

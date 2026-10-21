@@ -20,7 +20,7 @@ from oathforge.engine.combat import Action, EncounterState, valid_targets
 from oathforge.i18n import t
 from oathforge.ai.intent_parser import Intent
 from oathforge.services import (
-    actions, activities, audit, bestiary, characters, combat_service, crafting, exploration, inventory, npcs, professions, quests,
+    actions, activities, audit, bestiary, characters, combat_service, crafting, exploration, home, inventory, npcs, professions, quests,
 )
 from oathforge.services.events import Outcome, render_event
 
@@ -29,7 +29,7 @@ log = logging.getLogger(__name__)
 # verbs that only show something (no nonce, no state change)
 VIEWS = {"scene", "trv", "trvz", "trvs", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jrc", "jrl", "jrs", "jq", "jrb", "jb", "jbi", "jrr",
          "shopm", "shop", "shopg", "sellm", "cbp", "lang", "city", "place", "cls", "clsl", "rep", "prof", "profsw", "profcf", "pg", "crf", "rb", "repf",
-         "mst", "hob", "acts", "rcl", "rcp"}
+         "mst", "hob", "acts", "rcl", "rcp", "room"}
 
 
 async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -174,6 +174,8 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             text, kb = render.profession_page(arg, lang, char)
         elif verb == "crf" and not in_combat:
             text, kb = await render.craft_menu(session, char, lang)
+        elif verb == "room":
+            text, kb = await render.room_view(session, char, lang)
         elif verb == "rcl":  # "<filter>:<page>"
             text, kb = await render.recipes_list(session, char, lang, arg)
         elif verb == "rcp":
@@ -320,6 +322,10 @@ async def _dispatch(session, char, verb: str, arg: str, r, context) -> Outcome:
     if verb == "plearn":  # "<profession>" or "<profession>:<the one it replaces>"
         key, _, old = arg.partition(":")
         return await professions.learn(session, char, key, old or None)
+    if verb in ("stash", "take"):  # "<item>:<how many>": move it between the backpack and the chest
+        key, _, qty = arg.partition(":")
+        n = int(qty) if qty.isdigit() else 1
+        return await (home.deposit if verb == "stash" else home.withdraw)(session, char, key, n)
     if verb == "bplearn":  # read a blueprint: it teaches its recipe and is spent
         return await crafting.learn_blueprint(session, char, arg)
     if verb == "craft":  # "<recipe>" or "<recipe>:<how many>"

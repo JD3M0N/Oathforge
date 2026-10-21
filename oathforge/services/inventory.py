@@ -23,15 +23,24 @@ def hp_cap(char: Character) -> int:
     return char.max_hp // 2 if char.conditions.get("injured") else char.max_hp
 
 
-async def items_of(session: AsyncSession, char: Character, lock: bool = False) -> list[ItemInstance]:
-    stmt = select(ItemInstance).where(ItemInstance.owner_character_id == char.id).order_by(ItemInstance.id)
+BACKPACK = None  # ItemInstance.container: what you carry · "chest": what waits in your room
+CHEST = "chest"
+
+
+async def items_of(session: AsyncSession, char: Character, lock: bool = False,
+                   container: str | None = BACKPACK) -> list[ItemInstance]:
+    """What the character has in one container: the backpack by default, or the room's chest."""
+    stmt = (select(ItemInstance)
+            .where(ItemInstance.owner_character_id == char.id, ItemInstance.container.is_(None)
+                   if container is None else ItemInstance.container == container)
+            .order_by(ItemInstance.id))
     if lock:
         stmt = stmt.with_for_update()
     return list(await session.scalars(stmt))
 
 
-async def count(session: AsyncSession, char: Character, key: str) -> int:
-    return sum(i.qty for i in await items_of(session, char) if i.item_key == key)
+async def count(session: AsyncSession, char: Character, key: str, container: str | None = BACKPACK) -> int:
+    return sum(i.qty for i in await items_of(session, char, container=container) if i.item_key == key)
 
 
 async def add_item(session: AsyncSession, char: Character, key: str, qty: int = 1,
@@ -39,7 +48,8 @@ async def add_item(session: AsyncSession, char: Character, key: str, qty: int = 
     item = get_content().items[key]
     if item.stackable:
         stmt = (select(ItemInstance)
-                .where(ItemInstance.owner_character_id == char.id, ItemInstance.item_key == key)
+                .where(ItemInstance.owner_character_id == char.id, ItemInstance.item_key == key,
+                       ItemInstance.container.is_(None))
                 .with_for_update())
         existing = await session.scalar(stmt)
         if existing:
@@ -56,7 +66,8 @@ async def add_item(session: AsyncSession, char: Character, key: str, qty: int = 
 async def remove_item(session: AsyncSession, char: Character, key: str, qty: int = 1) -> bool:
     """Remove ``qty`` of ``key``. All-or-nothing; returns False if not enough."""
     stmt = (select(ItemInstance)
-            .where(ItemInstance.owner_character_id == char.id, ItemInstance.item_key == key)
+            .where(ItemInstance.owner_character_id == char.id, ItemInstance.item_key == key,
+                   ItemInstance.container.is_(None))
             .order_by(ItemInstance.equipped_slot.is_not(None), ItemInstance.id)
             .with_for_update())
     rows = list(await session.scalars(stmt))
@@ -77,7 +88,8 @@ async def remove_item(session: AsyncSession, char: Character, key: str, qty: int
 async def _own_instance(session: AsyncSession, char: Character, instance_id: int) -> ItemInstance | None:
     return await session.scalar(
         select(ItemInstance)
-        .where(ItemInstance.id == instance_id, ItemInstance.owner_character_id == char.id)
+        .where(ItemInstance.id == instance_id, ItemInstance.owner_character_id == char.id,
+               ItemInstance.container.is_(None))
         .with_for_update()
     )
 

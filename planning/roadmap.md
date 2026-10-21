@@ -296,7 +296,7 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 **Propuesta base 0.10:**
 
 - [ ] Comparar equipo actual/nuevo e identificar material, consumible y objeto de misión. *(0.10.2: el inventario ya separa equipo, consumibles, materiales y herramientas, con un icono por objeto; falta comparar.)*
-- [ ] Añadir cofre personal en ciudad con depositar/retirar atómico, cantidades claras y sin copia de objetos. *(Lo entrega la fase 5 de [F15](#F15): el cofre vive en la habitación del Gremio de Aventureros y se amplía con Carpintería.)*
+- [x] Añadir cofre personal en ciudad con depositar/retirar atómico, cantidades claras y sin copia de objetos *(0.10.14, fase 5 de [F15](#F15): vive en la habitación del Gremio de Aventureros y se amplía con Carpintería)*.
 - [ ] Mostrar procedencia ya disponible; ampliar origen de botín solo cuando se registre realmente.
 - [ ] Decidir expansión gradual: primero cuello y anillos si hay objetos útiles; cabeza/manos/pies/capa después de presupuestar sus bonos.
 
@@ -540,7 +540,7 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 - [x] Fase 2: Gremio de Aventureros, calle con un puesto y un maestro por oficio, Tessa en la Forja, Vale en el Gremio y tutorial adaptado (0.10.11).
 - [x] Fase 3: refinado con XP de maestría (horno, aserradero, secadero, mesa) y los comandos `/recipes`, `/r_<id>` y `/craft_<id>` (0.10.12).
 - [x] Fase 4: Sastrería como octavo oficio, técnicas por rango y planos (0.10.13; los componentes cruzados de cada oficio llegan con las herramientas, en la fase 8).
-- [ ] Fase 5: habitación en el tutorial con cama, descanso gratis y cofre ampliable (cubre el cofre personal de [F06](#F06)).
+- [x] Fase 5: habitación en el tutorial con cama, descanso gratis y cofre ampliable (0.10.14; cubre el cofre personal de [F06](#F06)).
 - [ ] Fase 6: instantánea de reglas al iniciar una actividad y hallazgo raro por actividad (cierra la casilla pendiente de [F08](#F08)).
 - [ ] Fase 7: dos ramas por maestría y Pesca a rango 2, cambio con oro y piloto de Rastreo.
 - [ ] Fase 8: herramientas especializadas con perfil tipado, una por disciplina.

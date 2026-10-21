@@ -20,6 +20,7 @@ cmd:
   report: "Informe de la última batalla"
   professions: "Oficios y maestrías"
   recipes: "Recetas: lo que puedes fabricar"
+  room: "Tu cuarto: cama y cofre"
   rulebook: "Reglamento: cómo funciona el juego"
   settings: "Ajustes: idioma y tiradas manuales"
   language: "Cambiar idioma"
@@ -33,7 +34,7 @@ help:
     También puedes <b>escribir lo que quieras hacer</b>: «me escondo tras la barra y escucho», «intento robarle la bolsa al tabernero», «empujo el carro sobre el bandido».
     El Dungeon Master interpreta tu acción, el motor tira los dados y tú ves el resultado real.
 
-    Comandos: /look /activities /map /hero /sheet /inventory /journal /quests /classes /report /professions /recipes /masteries /hobbies /rulebook /settings
+    Comandos: /look /activities /map /hero /sheet /inventory /journal /quests /classes /report /professions /recipes /room /masteries /hobbies /rulebook /settings
   version: "<i>Oathforge v{version}</i>"
 
 settings:
@@ -175,6 +176,8 @@ btn:
   make: "🔨 {item}"
   make_n: "🔨 ×{n}"
   recipes: "📜 Recetas"
+  room: "🏠 Tu cuarto"
+  stash: "📦 Guardar en el cofre"
   learn_recipe: "📘 Aprender la receta"
   missions: "📜 Misiones"
   quest_log: "📚 Registro"
@@ -951,6 +954,31 @@ prof:
     already: "Ya practicas {prof}."
     slots_full: "Ya tienes {slots} oficios. Elige cuál dejar."
     hobby: "{prof} es una afición: no hace falta aprenderla, ya puedes practicarla."
+
+home:
+  title: "🏠 <b>Tu cuarto</b> · {place}"
+  none: "<i>Todavía no tienes cuarto. El Gremio de Aventureros da uno a sus socios.</i>"
+  no_bed: "🛏️ Falta la cama."
+  bed: "🛏️ Tu cama: dormir aquí no cuesta oro."
+  no_chest: "📦 Falta el cofre."
+  chest: "📦 Cofre: {used}/{capacity} huecos."
+  chest_empty: "<i>El cofre está vacío.</i>"
+  line: "{item} ×{qty} · /take_{key}"
+  bag_line: "{item} ×{qty} · /stash_{key}"
+  bag_title: "<b>En la mochila</b>"
+  furniture:
+    bed: "la cama"
+    chest: "el cofre"
+  installed_bed: "🛏️ Montas la cama. Dormir aquí ya no cuesta oro."
+  installed_chest: "📦 Montas el cofre: {capacity} huecos."
+  deposited: "📦 Guardas {item} ×{qty}. Cofre: {used}/{capacity}."
+  withdrew: "🎒 Sacas {item} ×{qty}. Cofre: {used}/{capacity}."
+  err:
+    no_chest: "No tienes cofre donde guardarlo."
+    away: "Tu cofre está en tu cuarto, no aquí."
+    full: "El cofre está lleno ({capacity} huecos)."
+    not_enough: "No llevas tanto {item}."
+    not_stored: "No tienes tanto {item} en el cofre."
 
 craft:
   tier: "T{tier}"

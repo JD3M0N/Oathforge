@@ -21,7 +21,7 @@ from oathforge.engine.progression import MAX_LEVEL, XP_THRESHOLDS, skill_rank
 from oathforge.i18n import t
 from oathforge.services import (
     achievements, actions, activities, bestiary, characters, chronicle_log, chronicles, combat_service, crafting,
-    exploration, inventory, npcs, professions, quests, world_map,
+    exploration, home, inventory, npcs, professions, quests, world_map,
 )
 from oathforge.services.events import Outcome, render_event
 
@@ -330,11 +330,12 @@ async def activity_entries(session: AsyncSession, char: Character, lang: str,
         label = t(lang, "btn.hunt_night" if night and loc.night_encounters else "btn.hunt")
         out.append((f"<b>{label}</b> · <i>{t(lang, 'acts.desc.hunt')}</i>", btn(label, cb("hunt", "-", n))))
     labels = {"gather": "btn.gather_{}", "stay": "btn.stay", "track": "btn.track", "skin": "btn.skin",
-              "rest": "btn.rest" if loc.rest_cost else "btn.rest_free"}
+              "rest": "btn.rest" if activities.rest_cost(char) else "btn.rest_free"}
     for kind, skill, refusal in await activities.availability(session, char):
         seconds = activities.skin_seconds(characters.pending_skin(char)) if kind == "skin" \
             else gathering.SECONDS[kind]
-        label = t(lang, labels[kind].format(skill), minutes=seconds // 60, seconds=seconds, cost=loc.rest_cost)
+        label = t(lang, labels[kind].format(skill), minutes=seconds // 60, seconds=seconds,
+                  cost=activities.rest_cost(char) or 0)
         desc = t(lang, f"acts.desc.{kind}", minutes=seconds // 60)
         line = f"<b>{escape(label)}</b> · <i>{desc}</i>"
         tool = activities.tool_for(char, kind, skill)
@@ -376,7 +377,10 @@ async def activities_view(session: AsyncSession, char: Character, lang: str) -> 
     if loc.teaches is not None:
         parts.append(f"<i>{t(lang, 'acts.guild', prof=escape(get_content().professions[loc.teaches].name.get(lang)))}</i>")
     rows = grid([b for _, b in entries if b is not None])
-    rows.append([btn(t(lang, "btn.professions"), cb("prof")), btn(t(lang, "btn.back"), cb("scene"))])
+    last = [btn(t(lang, "btn.professions"), cb("prof"))]
+    if home.at_home(char):
+        last.insert(0, btn(t(lang, "btn.room"), cb("room")))
+    rows.append([*last, btn(t(lang, "btn.back"), cb("scene"))])
     return "\n\n".join(parts)[:MAX_MESSAGE], markup(rows)
 
 
@@ -592,7 +596,8 @@ async def craft_menu(session: AsyncSession, char: Character, lang: str) -> tuple
     """Recipes of your professions at this station: what you have, what is missing, and a button when ready."""
     c = get_content()
     lines = [t(lang, "craft.title", place=escape(c.locations[char.location].name.get(lang))), ""]
-    recipes = crafting.recipes_here(char)
+    prog = await quests.progress(session, char)
+    recipes = crafting.recipes_here(char, {k for k, p in prog.items() if p.state == "active"})
     n = nonce()
     ready = []
     if not recipes:
@@ -730,6 +735,34 @@ async def recipes_list(session: AsyncSession, char: Character, lang: str,
         rows.append(nav)
     rows.append([btn(t(lang, "btn.professions"), cb("prof")), btn(t(lang, "btn.back"), cb("scene"))])
     return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
+
+
+async def room_view(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+    """🏠 Your room at the guild: the bed and the chest, with what waits in it and what you could store."""
+    c = get_content()
+    lines = [t(lang, "home.title", place=escape(c.locations[char.location].name.get(lang))), RULE]
+    if not char.home:
+        lines.append(t(lang, "home.none"))
+        return "\n".join(lines), markup([[btn(t(lang, "btn.back"), cb("scene"))]])
+    lines.append(t(lang, "home.bed") if home.has_bed(char) else t(lang, "home.no_bed"))
+    if not home.chest_level(char):
+        lines.append(t(lang, "home.no_chest"))
+        return "\n".join(lines), markup([[btn(t(lang, "btn.back"), cb("scene"))]])
+    stored = await home.stored(session, char)
+    lines.append(t(lang, "home.chest", used=len(stored), capacity=home.capacity(char)))
+    lines.append("")
+    if stored:
+        lines += [t(lang, "home.line", item=escape(c.items[i.item_key].label(lang)), qty=i.qty, key=i.item_key)
+                  for i in stored]
+    else:
+        lines.append(t(lang, "home.chest_empty"))
+    if home.at_home(char):
+        bag = [i for i in await inventory.items_of(session, char) if not i.equipped_slot]
+        if bag:
+            lines += ["", t(lang, "home.bag_title")]
+            lines += [t(lang, "home.bag_line", item=escape(c.items[i.item_key].label(lang)), qty=i.qty,
+                         key=i.item_key) for i in bag]
+    return "\n".join(lines)[:MAX_MESSAGE], markup([[btn(t(lang, "btn.back"), cb("scene"))]])
 
 
 def settings_view(user, lang: str) -> tuple[str, InlineKeyboardMarkup]:
@@ -1583,6 +1616,7 @@ def rule_numbers(lang: str = "es") -> dict:
         "prey_pct": round(gathering.TRACK_PREY_CHANCE * 100), "bonus_pct": round(gathering.BONUS_PER_RANK * 100),
         "bonus_cap": round(gathering.BONUS_CAP * 100), "max_rank": gathering.MAX_RANK,
         "slots": professions.SLOTS, "swap_cost": professions.SWAP_COST,
+        "chest_slots": settings.chest_slots, "chest_upgrade": settings.chest_slots_per_upgrade,
         "craft_batch": settings.craft_batch_max,
     }
 

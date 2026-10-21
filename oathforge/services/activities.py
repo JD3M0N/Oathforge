@@ -73,16 +73,25 @@ def tool_for(char: Character, kind: str, skill: str) -> str | None:
     return g.tool if g else None
 
 
+def rest_cost(char: Character) -> int | None:
+    """What a long rest costs here: the inn's price, 0 in your own bed, or None where you cannot sleep."""
+    loc = get_content().locations[char.location]
+    if loc.home and (char.home or {}).get("bed"):
+        return 0
+    return loc.rest_cost
+
+
 async def check(session: AsyncSession, char: Character, kind: str, skill: str) -> Outcome | None:
     """Why ``kind`` cannot start here (a refusal), or None. The rules of ``start``, shared with the
     Activities view so a button never offers what the service would refuse."""
     c = get_content()
     loc = c.locations[char.location]
     if kind == "rest":
-        if loc.rest_cost is None:
+        cost = rest_cost(char)
+        if cost is None:
             return Outcome.refused("explore.err.no_rest")
-        if char.gold < loc.rest_cost:
-            return Outcome.refused("shop.err.no_gold", price=loc.rest_cost)
+        if char.gold < cost:
+            return Outcome.refused("shop.err.no_gold", price=cost)
     elif kind == "track":
         if not loc.hunting:
             return Outcome.refused("activity.err.unavailable")
@@ -103,7 +112,7 @@ async def availability(session: AsyncSession, char: Character) -> list[tuple[str
     kinds = options(char)
     if characters.pending_skin(char):
         kinds.append(("skin", "skinning"))
-    if loc.rest_cost is not None:
+    if rest_cost(char) is not None:
         kinds.append(("rest", "rest"))
     return [(kind, skill, await check(session, char, kind, skill)) for kind, skill in kinds]
 
@@ -151,11 +160,12 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str,
     char.state = "busy"
     settings = get_settings()
     if kind == "rest":  # paid on lying down; abandoning gives nothing back
-        char.gold -= loc.rest_cost
+        cost = rest_cost(char) or 0
+        char.gold -= cost
         if settings.beta_instant_rest:  # beta only: wake up at once
             return await claim(session, char, act.ends_at)
-        return Outcome().add("activity.started.rest" if loc.rest_cost else "activity.started.rest_free",
-                             place=loc.phrase(), cost=loc.rest_cost, minutes=seconds // 60)
+        return Outcome().add("activity.started.rest" if cost else "activity.started.rest_free",
+                             place=loc.phrase(), cost=cost, minutes=seconds // 60)
     if settings.beta_instant_tutorial and await quests.in_tutorial(session, char):  # beta only: done at once
         return Outcome().add("activity.tutorial_instant").extend(await claim(session, char, act.ends_at))
     out = Outcome().add(f"activity.started.{kind}", skill=characters.mastery_name(skill),
