@@ -182,12 +182,16 @@ specializations:
       • Una rama selectiva mejora el **hallazgo raro**, que también se tira una vez por actividad y sustituye una unidad común.
       • Los bonos de raro son **relativos**, no puntos: con un 10 % de base, un +5 % lo deja en 10,5 %, no en 15 %. Y por muchos que se junten, nunca llega a ser seguro.
       • La rama que cuenta es la que tenías al **empezar** la actividad: cambiarla a mitad no cambia el premio, y con un trabajo en marcha no se puede cambiar.
+      🧰 **Herramientas especializadas**: cada disciplina tiene tres diseños —rápido (−10 % de tiempo), selectivo (raro ×1,05) y productivo (5 % de una unidad extra por actividad)—. Eliges **una por disciplina** en 🛠️ Oficios → Maestrías → 🧰 Herramientas; llevar tres no suma. La rama y la herramienta se suman una sola vez, y la herramienta también queda fijada al empezar. Las herramientas no se desgastan.
+      Un ejemplo con las dos formas de contar: si la base de encontrar algo raro es del 10 %, un bono **relativo** del +5 % la deja en 10,5 % (10 × 1,05); si fueran **puntos**, la dejaría en 15 %. Aquí siempre es lo primero.
     en: |-
       Every field mastery (and Fishing) has two branches. On reaching rank {spec_rank} you choose one at the Adventurers' Guild; the other is paused, with what it learned, and coming back to it costs {spec_cost} gold. Only the active one counts: paused ones add nothing.
       • A volume branch gives a chance of **one extra unit per completed activity** (not per item you pull out, and that unit pays no XP).
       • A selective branch improves the **rare find**, which is also rolled once per activity and replaces a common unit.
       • Rare bonuses are **relative**, not points: on a 10 % base, +5 % makes it 10.5 %, not 15 %. And however many pile up, it never becomes certain.
       • The branch that counts is the one you had when the activity **started**: switching halfway changes no prize, and with work under way you cannot switch at all.
+      🧰 **Specialized tools**: each discipline has three designs — quick (−10 % time), selective (rare ×1.05) and productive (5 % chance of one extra unit per activity). You choose **one per discipline** in 🛠️ Professions → Masteries → 🧰 Tools; carrying three adds nothing. Branch and tool are added once, and the tool is frozen at the start too. Tools do not wear out.
+      An example of the two ways of counting: if the base chance of a rare find is 10 %, a **relative** +5 % makes it 10.5 % (10 × 1.05); as **points** it would make it 15 %. Here it is always the first.
 
 home:
   icon: "🏠"

@@ -295,3 +295,141 @@ chest_upgrade:  # amplía el cofre de tu cuarto; el carpintero se la hace, los d
   installs: chest
   outputs: {}
   xp: 30
+
+# --- Herramientas especializadas: la herrería las forja; las cañas, la carpintería.
+# Las mejoradas piden una pieza de otro oficio (mango, empuñadura o sedal): se compran a su maestro.
+
+quick_pickaxe:
+  profession: blacksmithing
+  technique: tools
+  min_rank: 2
+  station: anvil
+  ingredients: {iron_ingot: 2, oak_plank: 1}
+  outputs: {quick_pickaxe: 1}
+  xp: 40
+
+prospectors_pickaxe:
+  profession: blacksmithing
+  technique: tools
+  min_rank: 3
+  station: anvil
+  ingredients: {iron_ingot: 3, oak_plank: 1, rough_gem: 1}
+  outputs: {prospectors_pickaxe: 1}
+  xp: 60
+
+heavy_pickaxe:
+  profession: blacksmithing
+  technique: tools
+  min_rank: 2
+  station: anvil
+  ingredients: {iron_ingot: 3, oak_plank: 1}
+  outputs: {heavy_pickaxe: 1}
+  xp: 45
+
+felling_axe:
+  profession: blacksmithing
+  technique: tools
+  min_rank: 2
+  station: anvil
+  ingredients: {iron_ingot: 2, oak_plank: 1}
+  outputs: {felling_axe: 1}
+  xp: 40
+
+forester_axe:
+  profession: blacksmithing
+  technique: tools
+  min_rank: 3
+  station: anvil
+  ingredients: {iron_ingot: 2, ash_plank: 1, treated_leather: 1}
+  outputs: {forester_axe: 1}
+  xp: 60
+
+broad_axe:
+  profession: blacksmithing
+  technique: tools
+  min_rank: 2
+  station: anvil
+  ingredients: {iron_ingot: 3, oak_plank: 1}
+  outputs: {broad_axe: 1}
+  xp: 45
+
+curved_sickle:
+  profession: blacksmithing
+  technique: tools
+  min_rank: 2
+  station: anvil
+  ingredients: {iron_ingot: 1, oak_plank: 1}
+  outputs: {curved_sickle: 1}
+  xp: 35
+
+botanists_sickle:
+  profession: blacksmithing
+  technique: tools
+  min_rank: 3
+  station: anvil
+  ingredients: {iron_ingot: 2, ash_plank: 1, cloth: 1}
+  outputs: {botanists_sickle: 1}
+  xp: 55
+
+harvest_sickle:
+  profession: blacksmithing
+  technique: tools
+  min_rank: 2
+  station: anvil
+  ingredients: {iron_ingot: 2, oak_plank: 1}
+  outputs: {harvest_sickle: 1}
+  xp: 40
+
+keen_skinning_knife:
+  profession: blacksmithing
+  technique: tools
+  min_rank: 2
+  station: anvil
+  ingredients: {iron_ingot: 1, treated_leather: 1}
+  outputs: {keen_skinning_knife: 1}
+  xp: 35
+
+fine_skinning_knife:
+  profession: blacksmithing
+  technique: tools
+  min_rank: 3
+  station: anvil
+  ingredients: {iron_ingot: 2, treated_leather: 1, thread: 2}
+  outputs: {fine_skinning_knife: 1}
+  xp: 55
+
+broad_skinning_knife:
+  profession: blacksmithing
+  technique: tools
+  min_rank: 2
+  station: anvil
+  ingredients: {iron_ingot: 2, treated_leather: 1}
+  outputs: {broad_skinning_knife: 1}
+  xp: 40
+
+quick_rod:
+  profession: carpentry
+  technique: rods
+  min_rank: 2
+  station: carpenter_bench
+  ingredients: {ash_plank: 1, fishing_line: 1}
+  outputs: {quick_rod: 1}
+  xp: 40
+
+deep_rod:
+  profession: carpentry
+  technique: rods
+  min_rank: 3
+  station: carpenter_bench
+  ingredients: {ash_plank: 2, fishing_line: 1, iron_ingot: 1}
+  outputs: {deep_rod: 1}
+  xp: 60
+
+stout_rod:
+  profession: carpentry
+  technique: rods
+  min_rank: 2
+  station: carpenter_bench
+  ingredients: {oak_plank: 2, fishing_line: 1}
+  outputs: {stout_rod: 1}
+  xp: 45

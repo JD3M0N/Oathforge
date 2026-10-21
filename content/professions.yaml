@@ -9,6 +9,7 @@ blacksmithing:
   icon: "⚒️"
   techniques:
     weapons: {name: {es: Forja de armas, en: Weaponsmithing}, rank: 1}
+    tools: {name: {es: Herramientas especializadas, en: Specialized tools}, rank: 2}
   station: anvil
   description:
     es: Forja armas, armaduras, herramientas y herrajes en el yunque, con los lingotes que salen del horno.
@@ -48,6 +49,7 @@ carpentry:
   icon: "🪚"
   techniques:
     woodwork: {name: {es: Torneado, en: Woodturning}, rank: 1}
+    rods: {name: {es: Cañas de pescar, en: Fishing rods}, rank: 2}
   station: carpenter_bench
   description:
     es: "Trabaja la madera ya aserrada: bastones, mangos, cañas y piezas para otros oficios."

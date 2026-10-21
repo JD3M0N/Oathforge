@@ -501,6 +501,8 @@ def masteries_view(char: Character | None, lang: str) -> tuple[str, InlineKeyboa
     for skill in FIELD_MASTERIES:
         lines += [*mastery_entry(skill, lang, char), ""]
     rows = [crafts_tabs(lang, "mst")] if char is not None else [[btn(t(lang, "btn.tab_hobbies"), cb("hob"))]]
+    if char is not None:  # the branch of each mastery and the tool it works with
+        rows.append([btn(t(lang, "btn.specializations"), cb("spec")), btn(t(lang, "btn.tools"), cb("tools"))])
     return "\n".join(lines).rstrip()[:MAX_MESSAGE], markup(rows)
 
 
@@ -747,6 +749,47 @@ def _spec_effect(spec, lang: str) -> str:
     if e.extra_chance:
         return t(lang, "spec.effect_extra", pct=round(e.extra_chance * 100))
     return t(lang, "spec.effect_time", pct=round(e.time_pct * 100))
+
+
+async def tools_view(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+    """🧰 The specialized tool in use for each discipline, and the ones you could switch to."""
+    c = get_content()
+    lines = [t(lang, "tool.title"), t(lang, "tool.intro"), RULE]
+    rows, n = [], nonce()
+    for skill in gathering.GATHER_SKILLS:
+        rank = gathering.rank_for(characters.mastery_xp(char, skill))
+        lines.append(t(lang, "tool.skill", icon=MASTERY_ICON.get(skill, "🛠️"),
+                       skill=escape(characters.mastery_name(skill)[lang]), rank=rank))
+        chosen = activities.chosen_tool(char, skill)
+        designs = activities.tools_for(skill)
+        if not chosen:
+            base = next((p.base for p in designs.values() if p.base), None)
+            if base:
+                lines.append(t(lang, "tool.line_base", item=escape(c.items[base].label(lang))))
+        for key, profile in designs.items():
+            effect = _tool_effect(profile, lang)
+            if key == chosen:
+                lines.append(t(lang, "tool.line_on", item=escape(c.items[key].label(lang)), effect=effect))
+                continue
+            owned = await inventory.count(session, char, key) > 0
+            state = ("" if owned and rank >= profile.min_rank else
+                     t(lang, "tool.locked", rank=profile.min_rank) if rank < profile.min_rank
+                     else t(lang, "tool.not_owned"))
+            lines.append(t(lang, "tool.line_off", item=escape(c.items[key].label(lang)), effect=effect,
+                           state=state).rstrip())
+            if owned and rank >= profile.min_rank:
+                rows.append(btn(c.items[key].label(lang), cb("toolc", key, n)))
+    kb = grid(rows)
+    kb.append([btn(t(lang, "btn.professions"), cb("prof")), btn(t(lang, "btn.back"), cb("scene"))])
+    return "\n".join(lines)[:MAX_MESSAGE], markup(kb)
+
+
+def _tool_effect(profile, lang: str) -> str:
+    if profile.rare_rel:
+        return t(lang, "spec.effect_rare", factor=f"{1 + profile.rare_rel:.2f}".rstrip("0").rstrip("."))
+    if profile.extra_chance:
+        return t(lang, "spec.effect_extra", pct=round(profile.extra_chance * 100))
+    return t(lang, "spec.effect_time", pct=round(profile.time_pct * 100))
 
 
 def specializations_view(char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:

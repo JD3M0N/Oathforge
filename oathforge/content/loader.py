@@ -292,6 +292,15 @@ def validate_references(c: Content) -> None:
         if recipe.special and not any(i.teaches == key for i in c.items.values()):
             errors.append(f"recipe {key}: special, but no blueprint teaches it")
     for key, item in c.items.items():
+        if item.tool is not None:
+            if item.type != "tool":
+                errors.append(f"item {key}: only a tool can have a tool profile")
+            if item.tool.skill not in GATHER_SKILLS:
+                errors.append(f"item {key}: '{item.tool.skill}' is not a field discipline")
+            if item.tool.base is not None and item.tool.base not in c.items:
+                errors.append(f"item {key}: it replaces an unknown tool '{item.tool.base}'")
+            if not (item.tool.time_pct or item.tool.rare_rel or item.tool.extra_chance):
+                errors.append(f"item {key}: a specialized tool must do something")
         if item.type == "blueprint" and item.teaches is None:
             errors.append(f"item {key}: a blueprint must say which recipe it teaches")
         if item.teaches is not None:

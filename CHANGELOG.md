@@ -4,6 +4,18 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.17] - 2026-10-20
+
+Profesiones (F15, 9.ª parte): las herramientas especializadas.
+
+### Añadido
+- **Quince herramientas**, tres diseños por disciplina: **rápido** (−10 % de tiempo), **selectivo** (raro ×1,05) y **productivo** (5 % de una unidad extra por actividad completa). Pico, hacha, hoz y cuchillo los forja la **Herrería** (técnica nueva «Herramientas especializadas», rango 2) y las cañas las hace la **Carpintería** (técnica «Cañas de pescar»). Las mejores piden una pieza de otro oficio: tela, hilo, cuero o un tablón de fresno.
+- **Una herramienta por disciplina**: se elige en 🛠️ Oficios → Maestrías → 🧰 Herramientas, pide tenerla y el rango que marque, y **llevar tres no suma**. La elegida sustituye a la de siempre: con ella puestas, minar sigue pidiendo un pico, pero cuenta el tuyo.
+- **La rama y la herramienta se suman una sola vez** y quedan **fijadas al empezar** el trabajo, dentro de su instantánea: ponerse otra a mitad no cambia el premio, y con un trabajo en marcha el cambio se rechaza.
+- El desuello también se acorta con el cuchillo que corresponde, sin bajar nunca del suelo de 30 segundos.
+- El reglamento explica los tres diseños y, con un ejemplo, la diferencia entre un **+5 % relativo** (10 % → 10,5 %) y **+5 puntos** (10 % → 15 %): aquí siempre es lo primero.
+- Comentarios `DESIGN-N04` y `DESIGN-N06` donde se leen las herramientas: diseños fijos, sin desgaste ni piedra de afilar.
+
 ## [0.10.16] - 2026-10-20
 
 Profesiones (F15, 8.ª parte): las ramas de cada maestría.

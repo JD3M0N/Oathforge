@@ -64,7 +64,10 @@ class Mods:
     extra_chance: float = 0.0  # chance of one extra unit, once for the whole activity
 
     def seconds(self, base: int) -> int:
-        return max(MIN_SECONDS, round(base * (1 - self.time_pct)))
+        """The shortened wait. The floor only applies to what a tool shortens, never to a short base."""
+        if not self.time_pct:
+            return base
+        return min(base, max(MIN_SECONDS, round(base * (1 - self.time_pct))))
 
 
 @dataclass

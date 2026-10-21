@@ -178,6 +178,7 @@ btn:
   recipes: "📜 Recetas"
   room: "🏠 Tu cuarto"
   specializations: "🌿 Especializaciones"
+  tools: "🧰 Herramientas"
   stash: "📦 Guardar en el cofre"
   learn_recipe: "📘 Aprender la receta"
   missions: "📜 Misiones"
@@ -1000,6 +1001,21 @@ spec:
     not_guild: "Las ramas se eligen en el Gremio de Aventureros."
     rank: "Necesitas {skill} de rango {rank}."
     already: "Ya sigues {spec}."
+
+tool:
+  title: "🧰 <b>Herramientas</b>"
+  intro: "<i>Una por disciplina: tener tres no suma. La elegida queda fijada al empezar cada trabajo.</i>"
+  line_on: "   • <b>{item}</b> ✅ {effect}"
+  line_off: "   • {item} {effect} <i>{state}</i>"
+  line_base: "   • {item} <i>(la de siempre)</i>"
+  not_owned: "(no la tienes)"
+  locked: "(rango {rank})"
+  chosen: "🧰 Usarás {item} para {skill}."
+  skill: "{icon} <b>{skill}</b> · rango {rank}"
+  err:
+    unknown: "Esa herramienta no existe."
+    not_owned: "No llevas {item}."
+    rank: "Necesitas {skill} de rango {rank}."
 
 craft:
   tier: "T{tier}"

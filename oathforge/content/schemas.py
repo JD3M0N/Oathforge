@@ -236,6 +236,21 @@ TYPE_ICONS = {"weapon": "⚔️", "armor": "🛡️", "shield": "🛡️", "cons
               "material": "🧱", "trinket": "💍", "blueprint": "📘"}  # an item without its own icon shows its type's
 
 
+class ToolProfile(Strict):
+    """What a specialized tool does for its discipline: one main advantage, never all three.
+
+    The meaning is the branches': ``rare_rel`` multiplies the chance of a rare find and ``extra_chance``
+    is rolled once per completed activity. Only the tool you select counts; owning three adds nothing.
+    """
+
+    skill: str  # the field discipline it works for
+    base: str | None = None  # the plain tool it replaces (a pickaxe for every miner's pick)
+    min_rank: int = Field(0, ge=0, le=5)
+    time_pct: float = Field(0.0, ge=0, le=0.5)
+    rare_rel: float = Field(0.0, ge=0, le=2)
+    extra_chance: float = Field(0.0, ge=0, le=1)
+
+
 class Item(Strict):
     name: Text
     icon: str | None = None  # 🪨 ores, 🪵 logs, 🌿 herbs…: always next to the name, never instead of it
@@ -247,6 +262,7 @@ class Item(Strict):
     # T1 gear is crafted by rank and worn by level: a low-level artisan may forge it and not equip it yet
     min_level: int = Field(1, ge=1)
     teaches: str | None = None  # blueprint only: the special recipe it teaches
+    tool: ToolProfile | None = None  # a specialized gathering tool: what it changes about its activities
     value: int = 0
     stackable: bool = False
     weapon: WeaponStats | None = None

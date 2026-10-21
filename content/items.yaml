@@ -197,6 +197,131 @@ fishing_rod:
   type: tool
   value: 10
 
+# --- Herramientas especializadas (T1): tres diseños por disciplina, cada uno con una ventaja.
+# Se elige una por disciplina (🧰 Herramientas, en Oficios); tener tres no suma sus efectos.
+# DESIGN-N04: diseños fijos; una herramienta acumulativa solo se valoraría si no anula estas elecciones.
+# DESIGN-N06: sin desgaste ni piedra de afilar; ver planning/roadmap-profesiones.md.
+
+quick_pickaxe:
+  name: {es: Pico ligero, en: Light pickaxe}
+  icon: "⛏️"
+  description: {es: "Cabeza estrecha y mango corto: cansa menos y se avanza antes.", en: "Narrow head, short haft: less tiring, and you get on faster."}
+  type: tool
+  value: 90
+  tool: {skill: mining, base: pickaxe, min_rank: 2, time_pct: 0.10}
+
+prospectors_pickaxe:
+  name: {es: Pico de prospector, en: Prospector's pickaxe}
+  icon: "⛏️"
+  description: {es: "Punta afilada y templada para seguir la veta buena sin romperla.", en: "A hardened point for following the good seam without shattering it."}
+  type: tool
+  value: 120
+  tool: {skill: mining, base: pickaxe, min_rank: 3, rare_rel: 0.05}
+
+heavy_pickaxe:
+  name: {es: Pico pesado, en: Heavy pickaxe}
+  icon: "⛏️"
+  description: {es: "Más hierro del necesario. Cada golpe arranca más roca.", en: "More iron than strictly needed. Every swing brings down more rock."}
+  type: tool
+  value: 110
+  tool: {skill: mining, base: pickaxe, min_rank: 2, extra_chance: 0.05}
+
+felling_axe:
+  name: {es: Hacha de tala rápida, en: Felling axe}
+  icon: "🪓"
+  description: {es: "Hoja fina y bien equilibrada: el roble cae en menos golpes.", en: "A thin, well-balanced blade: the oak falls in fewer strokes."}
+  type: tool
+  value: 90
+  tool: {skill: woodcutting, base: woodaxe, min_rank: 2, time_pct: 0.10}
+
+forester_axe:
+  name: {es: Hacha de monte, en: Forester's axe}
+  icon: "🪓"
+  description: {es: "Para desramar y elegir la pieza antes de tumbar el árbol.", en: "For limbing and picking the piece before the tree comes down."}
+  type: tool
+  value: 120
+  tool: {skill: woodcutting, base: woodaxe, min_rank: 3, rare_rel: 0.05}
+
+broad_axe:
+  name: {es: Hacha ancha, en: Broad axe}
+  icon: "🪓"
+  description: {es: "Pesada y sin remilgos: de cada tronco sale algo más.", en: "Heavy and unfussy: every log gives a little more."}
+  type: tool
+  value: 110
+  tool: {skill: woodcutting, base: woodaxe, min_rank: 2, extra_chance: 0.05}
+
+curved_sickle:
+  name: {es: Hoz afilada, en: Keen sickle}
+  icon: "🌾"
+  description: {es: "Corte limpio al primer pase: se recoge en menos tiempo.", en: "A clean cut first time: gathering takes less of the day."}
+  type: tool
+  value: 80
+  tool: {skill: herbalism, base: sickle, min_rank: 2, time_pct: 0.10}
+
+botanists_sickle:
+  name: {es: Hoz de botánico, en: Botanist's sickle}
+  icon: "🌾"
+  description: {es: "Hoja fina para separar la planta rara sin estropearla.", en: "A fine blade for lifting the rare plant without spoiling it."}
+  type: tool
+  value: 110
+  tool: {skill: herbalism, base: sickle, min_rank: 3, rare_rel: 0.05}
+
+harvest_sickle:
+  name: {es: Hoz de siega, en: Harvest sickle}
+  icon: "🌾"
+  description: {es: "Mango largo y hoja ancha: se barre el claro entero.", en: "Long handle, wide blade: it sweeps the whole glade."}
+  type: tool
+  value: 100
+  tool: {skill: herbalism, base: sickle, min_rank: 2, extra_chance: 0.05}
+
+keen_skinning_knife:
+  name: {es: Cuchillo de desollador, en: Skinner's knife}
+  icon: "🔪"
+  description: {es: "Filo que no se va: la pieza se abre en la mitad de tiempo.", en: "An edge that holds: the carcass opens in half the time."}
+  type: tool
+  value: 70
+  tool: {skill: skinning, base: skinning_knife, min_rank: 2, time_pct: 0.10}
+
+fine_skinning_knife:
+  name: {es: Cuchillo fino, en: Fine knife}
+  icon: "🔪"
+  description: {es: "Punta delgada para sacar entera la parte que siempre se rompe.", en: "A slender point for saving the part that always tears."}
+  type: tool
+  value: 110
+  tool: {skill: skinning, base: skinning_knife, min_rank: 3, rare_rel: 0.05}
+
+broad_skinning_knife:
+  name: {es: Cuchillo ancho, en: Broad knife}
+  icon: "🔪"
+  description: {es: "Hoja ancha para aprovechar hasta el último trozo.", en: "A wide blade for using up every last piece."}
+  type: tool
+  value: 100
+  tool: {skill: skinning, base: skinning_knife, min_rank: 2, extra_chance: 0.05}
+
+quick_rod:
+  name: {es: Caña ligera, en: Light rod}
+  icon: "🎣"
+  description: {es: "Fresno flexible y sedal corto: se lanza y se recoge rápido.", en: "Supple ash and a short line: quick to cast and quicker to reel."}
+  type: tool
+  value: 80
+  tool: {skill: fishing, base: fishing_rod, min_rank: 2, time_pct: 0.10}
+
+deep_rod:
+  name: {es: Caña de fondo, en: Deep rod}
+  icon: "🎣"
+  description: {es: "Sedal largo y plomada: llega donde están las piezas buenas.", en: "Long line and a sinker: it reaches where the good fish are."}
+  type: tool
+  value: 120
+  tool: {skill: fishing, base: fishing_rod, min_rank: 3, rare_rel: 0.05}
+
+stout_rod:
+  name: {es: Caña reforzada, en: Stout rod}
+  icon: "🎣"
+  description: {es: "Aguanta el cesto lleno y algún tirón de más.", en: "It takes a full basket and the odd extra tug."}
+  type: tool
+  value: 100
+  tool: {skill: fishing, base: fishing_rod, min_rank: 2, extra_chance: 0.05}
+
 # ---------------------------------------------------------------- materials
 
 iron_ore:

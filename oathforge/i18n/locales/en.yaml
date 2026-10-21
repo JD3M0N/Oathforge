@@ -178,6 +178,7 @@ btn:
   recipes: "📜 Recipes"
   room: "🏠 Your room"
   specializations: "🌿 Specializations"
+  tools: "🧰 Tools"
   stash: "📦 Store in the chest"
   learn_recipe: "📘 Learn the recipe"
   missions: "📜 Missions"
@@ -1000,6 +1001,21 @@ spec:
     not_guild: "Branches are chosen at the Adventurers' Guild."
     rank: "You need {skill} at rank {rank}."
     already: "You already follow {spec}."
+
+tool:
+  title: "🧰 <b>Tools</b>"
+  intro: "<i>One per discipline: owning three adds nothing. The chosen one is fixed when each job starts.</i>"
+  line_on: "   • <b>{item}</b> ✅ {effect}"
+  line_off: "   • {item} {effect} <i>{state}</i>"
+  line_base: "   • {item} <i>(the plain one)</i>"
+  not_owned: "(not owned)"
+  locked: "(rank {rank})"
+  chosen: "🧰 You will use {item} for {skill}."
+  skill: "{icon} <b>{skill}</b> · rank {rank}"
+  err:
+    unknown: "That tool does not exist."
+    not_owned: "You are not carrying {item}."
+    rank: "You need {skill} at rank {rank}."
 
 craft:
   tier: "T{tier}"

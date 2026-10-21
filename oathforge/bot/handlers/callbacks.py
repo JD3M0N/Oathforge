@@ -29,7 +29,7 @@ log = logging.getLogger(__name__)
 # verbs that only show something (no nonce, no state change)
 VIEWS = {"scene", "trv", "trvz", "trvs", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jrc", "jrl", "jrs", "jq", "jrb", "jb", "jbi", "jrr",
          "shopm", "shop", "shopg", "sellm", "cbp", "lang", "city", "place", "cls", "clsl", "rep", "prof", "profsw", "profcf", "pg", "crf", "rb", "repf",
-         "mst", "hob", "acts", "rcl", "rcp", "room", "spec", "specf"}
+         "mst", "hob", "acts", "rcl", "rcp", "room", "spec", "specf", "tools"}
 
 
 async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -174,6 +174,8 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             text, kb = render.profession_page(arg, lang, char)
         elif verb == "crf" and not in_combat:
             text, kb = await render.craft_menu(session, char, lang)
+        elif verb == "tools":
+            text, kb = await render.tools_view(session, char, lang)
         elif verb == "spec":
             text, kb = render.specializations_view(char, lang)
         elif verb == "specf":  # the confirmation, with its price
@@ -326,6 +328,8 @@ async def _dispatch(session, char, verb: str, arg: str, r, context) -> Outcome:
     if verb == "plearn":  # "<profession>" or "<profession>:<the one it replaces>"
         key, _, old = arg.partition(":")
         return await professions.learn(session, char, key, old or None)
+    if verb == "toolc":  # which specialized tool this discipline uses
+        return await activities.select_tool(session, char, arg)
     if verb == "specc":  # take a branch, or come back to a paused one
         return await specializations.choose(session, char, arg)
     if verb in ("stash", "take"):  # "<item>:<how many>": move it between the backpack and the chest

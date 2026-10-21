@@ -67,11 +67,62 @@ async def open_activity(session: AsyncSession, char: Character, lock: bool = Fal
 
 
 def tool_for(char: Character, kind: str, skill: str) -> str | None:
-    """The item an activity needs where the character stands (a pickaxe to mine, a knife to skin)."""
+    """The item an activity needs here: the specialized tool you chose, or the plain one it replaces."""
+    base = base_tool(char, kind, skill)
+    chosen = chosen_tool(char, skill)
+    if base is None or chosen is None:
+        return base
+    profile = get_content().items[chosen].tool
+    return chosen if profile and profile.base == base else base
+
+
+def base_tool(char: Character, kind: str, skill: str) -> str | None:
+    """The plain tool the place asks for (a pickaxe to mine, a knife to skin)."""
     if kind == "skin":
         return SKINNING_KNIFE
     g = _gathering(get_content().locations[char.location], skill) if kind in ("gather", "stay") else None
     return g.tool if g else None
+
+
+def chosen_tool(char: Character, skill: str) -> str | None:
+    """The specialized tool selected for this discipline, if it is still owned and still allowed."""
+    key = (char.crafting or {}).get("tools", {}).get(skill)
+    item = get_content().items.get(key) if key else None
+    if item is None or item.tool is None or item.tool.skill != skill:
+        return None
+    if gathering.rank_for(characters.mastery_xp(char, skill)) < item.tool.min_rank:
+        return None
+    return key
+
+
+def tools_for(skill: str) -> dict[str, "object"]:
+    """Every specialized tool of a discipline, by item key."""
+    return {k: i.tool for k, i in get_content().items.items() if i.tool and i.tool.skill == skill}
+
+
+async def select_tool(session: AsyncSession, char: Character, key: str) -> Outcome:
+    """Pick which tool this discipline uses. Only one counts: owning three adds nothing.
+
+    DESIGN-N04: Tools use fixed specialized designs. Consider cumulative bonuses later only if they do
+    not invalidate same-tier choices.
+    """
+    if refusal := characters.ensure_free(char):  # not in the middle of a job
+        return refusal
+    c = get_content()
+    item = c.items.get(key)
+    if item is None or item.tool is None:
+        return Outcome.refused("tool.err.unknown")
+    if await inventory.count(session, char, key) == 0:
+        return Outcome.refused("tool.err.not_owned", item=item.labelled())
+    rank = gathering.rank_for(characters.mastery_xp(char, item.tool.skill))
+    if rank < item.tool.min_rank:
+        return Outcome.refused("tool.err.rank", skill=characters.mastery_name(item.tool.skill),
+                               rank=item.tool.min_rank)
+    crafting = dict(char.crafting or {})
+    crafting["tools"] = {**crafting.get("tools", {}), item.tool.skill: key}
+    char.crafting = crafting
+    return Outcome().add("tool.chosen", item=item.labelled(),
+                         skill=characters.mastery_name(item.tool.skill))
 
 
 def rest_cost(char: Character) -> int | None:
@@ -135,12 +186,20 @@ def rules_snapshot(char: Character, gatherable, skill: str, kind: str) -> dict:
 
 
 def modifiers(char: Character, skill: str) -> gathering.Mods:
-    """What the character's branch (and, later, their tool) change about this discipline.
+    """What the character's branch and chosen tool change about this discipline, added once.
 
     DESIGN-N02: Start with two switchable branches. Evaluate a skill tree later; inactive branches must
     retain their learned state and any future progress.
     """
-    return specializations.effects(char, skill)
+    mods = specializations.effects(char, skill)
+    chosen = chosen_tool(char, skill)
+    if chosen is None:
+        return mods
+    tool = get_content().items[chosen].tool
+    # relative improvements of the same kind add up once, and the engine caps what they can reach
+    return gathering.Mods(time_pct=min(0.5, mods.time_pct + tool.time_pct),
+                          rare_rel=mods.rare_rel + tool.rare_rel,
+                          extra_chance=min(1.0, mods.extra_chance + tool.extra_chance))
 
 
 def _snapshot_resources(rules: dict):
@@ -184,6 +243,8 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str,
             return await _tutorial_gather(session, char, kind, skill, loc, boost, now)
     rules = rules_snapshot(char, g, skill, kind) if kind in ("gather", "stay") else None
     seconds = skin_seconds(beasts) if kind == "skin" else gathering.SECONDS[kind]
+    if kind == "skin":
+        seconds = modifiers(char, "skinning").seconds(seconds)
     if rules is not None:
         seconds = gathering.Mods(**rules["mods"]).seconds(seconds)
     elif kind == "track":
