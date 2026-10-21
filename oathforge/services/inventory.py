@@ -145,7 +145,7 @@ def effects_of(item) -> list:
 
 def spent_abilities(char: Character, spells_only: bool) -> list[tuple[str, int]]:
     """(ability, uses missing) for limited abilities below their maximum, most spent first.
-    Spells are the limited abilities of a class that casts (priest, mage, druid, bard, warlock)."""
+    Spells are the limited abilities of a class that casts (cleric, sorcerer, druid, bard, warlock)."""
     cls = get_content().classes[char.class_key]
     if spells_only and not cls.casting:
         return []

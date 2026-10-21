@@ -4,6 +4,14 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.23] - 2026-10-21
+
+0.10-I: Sacerdote pasa a **Clérigo** y Mago a **Hechicero**, id incluido.
+
+### Cambiado
+- **Los ids de clase se renombran**: `priest` → `cleric` y `mage` → `sorcerer`, en el contenido, el código, las pruebas y las carpetas de retratos. El contrato recomendaba conservarlos para no romper nada; como se arranca de cero y no hay partidas que proteger, no vale la pena cargar con dos nombres para lo mismo.
+- Los nombres visibles pasan a **Clérigo / Cleric** y **Hechicero / Sorcerer**, y con ellos las descripciones de clase, las de SAB e INT en `abilities.yaml` y las dos menciones del reglamento. El conjuro «Armadura de Mago» conserva su nombre: es el nombre del hechizo, no el de la clase.
+
 ## [0.10.22] - 2026-10-21
 
 0.10-I (B01): los contratos de las ramas de clase, la progresión y los recursos. Todavía no cambia el juego.

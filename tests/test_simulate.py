@@ -24,7 +24,7 @@ def test_every_class_fights_every_monster_to_the_end():
 
 
 def test_same_seed_same_numbers():
-    run = lambda seed: sim.simulate(["mage"], ["bandit_captain"], [2], n=20, seed=seed, lineage="elf",
+    run = lambda seed: sim.simulate(["sorcerer"], ["bandit_captain"], [2], n=20, seed=seed, lineage="elf",
                                     background="criminal")
     assert run(7) == run(7)
     assert run(7) != run(8)
@@ -40,9 +40,9 @@ def test_abilities_matter():
 async def test_simulated_hero_matches_a_real_one():
     async with session_scope() as s:
         user = await characters.get_or_create_user(s, 1, "es")
-        char = await characters.create_character(s, user, "Sim", "dwarf", "acolyte", "priest")
+        char = await characters.create_character(s, user, "Sim", "dwarf", "acolyte", "cleric")
         real = await characters.build_combatant(s, char)
-    fake, _ = sim.hero("priest", 1, "dwarf", "acolyte")
+    fake, _ = sim.hero("cleric", 1, "dwarf", "acolyte")
     ignore = {"ref", "name"}
     assert fake.model_dump(exclude=ignore) == real.model_dump(exclude=ignore)
 

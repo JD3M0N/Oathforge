@@ -164,7 +164,7 @@ Ambos grupos pasan con los valores por defecto. Corresponde **neutralizar esos d
 
 | Qué | Dónde aparece |
 |---|---|
-| Ids de clase `priest` y `mage` (se conservan; cambian los nombres visibles a Clérigo y Hechicero) | `content/classes.yaml`, `content/npcs.yaml`, `bot/render.py`, `services/inventory.py`, `tools/simulate.py`, `content/classes/priest/images/`, seis archivos de prueba |
+| ~~Ids de clase `priest` y `mage`~~ **Renombrados a `cleric` y `sorcerer` en 0.10.23**, con sus carpetas de retratos y los textos visibles | `content/classes.yaml`, `content/abilities.yaml`, `content/rulebook.yaml`, `class_specializations.yaml`, `bot/render.py`, `services/inventory.py`, `tools/simulate.py`, `content/classes/{cleric,sorcerer}/`, seis archivos de prueba |
 | Rama anunciada al nivel 5 | `services/characters.py:308` (`progress.specialization_soon`), `bot/render.py:37,190,1989`, `i18n/locales/{es,en}.yaml:548` |
 | Techo de nivel 5 | `engine/progression.py` (`XP_THRESHOLDS`, `MAX_LEVEL`), `bot/render.py:1225,1703` |
 | ASI del nivel 4 (lo sustituyen los entrenamientos 5/12/18) | `services/characters.py:19,290` |
@@ -1029,7 +1029,7 @@ No quitar equipo equipado ni destruir compañero permanente. Reponer medios mín
 
 ### 13.1 Selección directa de clase y rama
 
-Creación: familias/filtros visuales para 14 clases, con descripción corta, recurso, dificultad orientativa y ramas. No ocultar clase tras un examen. Clérigo y Hechicero reemplazan nombres visibles antiguos; recomendación técnica: conservar inicialmente ids `priest` y `mage` si reduce roturas, sin crear dos entradas de Hechicero.
+Creación: familias/filtros visuales para 14 clases, con descripción corta, recurso, dificultad orientativa y ramas. No ocultar clase tras un examen. Clérigo y Hechicero reemplazan nombres visibles antiguos. **Decidido en 0.10.23 (Josue):** se renombran también los ids, `priest` → `cleric` y `mage` → `sorcerer`, en lugar de conservarlos. Se parte de cero y no hay partidas que proteger, así que no vale la pena cargar con dos nombres para lo mismo.
 
 Nivel 10: aviso → gremio → ramas de tu clase → ficha comparativa → confirmación definitiva. La confirmación evita error de botón; no es prueba ni misión. Mostrar claramente que no hay cambio libre y que cambios sustanciales de balance permiten reelección excepcional.
 
@@ -1148,7 +1148,7 @@ El simulador y pruebas se amplían junto a cada fase, no solo en B12. No hacen f
 ### B06 · Rediseñar 14 clases base y nivel 1–9
 
 **Objetivo:** todas juegan bien antes de especializarse.
-- [ ] Hechicero fusionado, Clérigo renombrado, seis clases nuevas.
+- [ ] Hechicero fusionado y seis clases nuevas. *El renombrado de ids y nombres visibles de Clérigo y Hechicero ya está hecho (0.10.23).*
 - [ ] Kit de inicio y curva por clase.
 - [ ] Equipo recomendado, atributos y recurso descritos.
 - [ ] No anticipar toda la especialización: conservar identidad base.

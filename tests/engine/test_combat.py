@@ -212,7 +212,7 @@ def test_state_roundtrips_through_json():
     assert again == st
 
 
-# ---------------------------------------------------------------- v0.2.0: damage types, warrior, priest
+# ---------------------------------------------------------------- v0.2.0: damage types, warrior, cleric
 
 class FixedRng(random.Random):
     """Every die shows ``value`` (capped at the die size)."""
@@ -281,9 +281,9 @@ def test_second_wind_heals_dice_plus_level():
 
 
 def test_sacred_flame_uses_spell_bonus_and_reaches_back_row():
-    priest = player(row="back", attacks=[], spell_to_hit=4, abilities={"sacred_flame": None})
+    cleric = player(row="back", attacks=[], spell_to_hit=4, abilities={"sacred_flame": None})
     archer = monster(row="back", hp=100, max_hp=100, ac=14)
-    st = started(priest, monster("m2"), archer)
+    st = started(cleric, monster("m2"), archer)
     logs = cb.player_act(st, "p1", Action(kind="ability", ability="sacred_flame", target="m1"), FixedRng(10), ABILITIES)
     hit = next(e for e in logs if e.key == "combat.hit")
     assert hit.params["total"] == 14 and hit.params["target"] == "m1"
@@ -323,7 +323,7 @@ def test_divine_strike_once_per_turn():
     assert len(radiant) == 1
 
 
-# ---------------------------------------------------------------- v0.4.0: mage, druid, bard
+# ---------------------------------------------------------------- v0.4.0: sorcerer, druid, bard
 
 def test_save_fails_below_dc_and_succeeds_at_dc():
     for value, slept in ((12, True), (13, False)):

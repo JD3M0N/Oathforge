@@ -594,7 +594,7 @@ async def test_objective_covers_missions_with_choices(monkeypatch):
 # ---------------------------------------------------------------- mana potion
 
 async def test_mana_potion_restores_the_chosen_spell():
-    cid = await new_character(cls="mage", tools=("mana_potion",))
+    cid = await new_character(cls="sorcerer", tools=("mana_potion",))
     async with session_scope() as s:
         char = await get_char(s, cid)
         char.level, char.resources = 3, {"sleep": 0, "fireball": 0}

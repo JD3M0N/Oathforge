@@ -13,7 +13,7 @@ from oathforge.services import characters, inventory
 pytestmark = pytest.mark.usefixtures("database")
 
 
-async def new_character(cls="mage", level=3, items=()) -> int:
+async def new_character(cls="sorcerer", level=3, items=()) -> int:
     async with session_scope() as s:
         user = await characters.get_or_create_user(s, 1, "es")
         char = await characters.create_character(s, user, "Aldric", "human", "scholar", cls)

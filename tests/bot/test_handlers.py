@@ -264,7 +264,7 @@ async def test_combat_through_buttons(llm):
 
 async def test_priest_sacred_flame_burns_skeletons(llm):
     p = Player(llm, tg_id=8, lang="en")
-    await create(p, cls="priest")
+    await create(p, cls="cleric")
     async with session_scope() as s:
         char = await s.scalar(select(Character).with_for_update())
         char.location, char.flags = "whispering_woods", {"crypt_unlocked": True}
@@ -293,12 +293,12 @@ async def test_mage_fireball_asks_for_a_target_and_rolls_saves(llm):
     from oathforge.services import characters
 
     p = Player(llm, tg_id=12, lang="en")
-    await create(p, cls="mage")
+    await create(p, cls="sorcerer")
     async with session_scope() as s:
         char = await s.scalar(select(Character).with_for_update())
         char.location, char.flags = "whispering_woods", {"crypt_unlocked": True}
         char.hp = char.max_hp = 400
-        char.level, char.resources = 3, characters.full_resources("mage", 3)
+        char.level, char.resources = 3, characters.full_resources("sorcerer", 3)
     await p.press("scene|-|-")
     await p.press(p.find("trv"))
     await p.press(p.find("go", "crypt_entrance"))
@@ -417,7 +417,7 @@ async def test_full_sheet_without_portrait_shows_spellcasting(llm, monkeypatch):
 
     monkeypatch.setattr(MediaCatalog, "class_images", lambda self, cls, gender=None: [])  # a class with no art yet
     p = Player(llm, tg_id=13)
-    await create(p, cls="mage")
+    await create(p, cls="sorcerer")
     await p.press("sheet|-|-")
     assert not p.chat.photos
     assert "Conjuros" in p.last[0] and "CD" in p.last[0]
@@ -689,7 +689,7 @@ async def test_class_pages_from_commands_and_buttons(llm):
     p = Player(llm, tg_id=63)
     await commands.classes(p.update(message="/classes"), p.ctx)  # no character yet: still works
     assert "/class_paladin" in p.last[0]
-    await p.press(p.find("cls", "mage"))
+    await p.press(p.find("cls", "sorcerer"))
     assert "Bola de Fuego" in p.last[0] or "Fireball" in p.last[0]
     await create(p)
     await commands.classes(p.update(message="/class_paladin"), p.ctx)

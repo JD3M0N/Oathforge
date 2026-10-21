@@ -67,7 +67,7 @@ async def test_create_warrior():
 
 
 async def test_create_priest():
-    _, cid = await new_character(cls="priest", bg="acolyte")
+    _, cid = await new_character(cls="cleric", bg="acolyte")
     async with session_scope() as s:
         char = await get_char(s, cid)
         gear = await characters.equipped(s, char)
@@ -84,7 +84,7 @@ async def test_create_priest():
 
 
 async def test_create_mage_druid_bard():
-    _, cid = await new_character(cls="mage")  # human: every ability +1
+    _, cid = await new_character(cls="sorcerer")  # human: every ability +1
     async with session_scope() as s:
         char = await get_char(s, cid)
         gear = await characters.equipped(s, char)

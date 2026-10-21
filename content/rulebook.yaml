@@ -52,11 +52,11 @@ health:
   body:
     es: |-
       Los puntos de vida (PV) son el aguante de tu héroe. A 0 PV caes derrotado: despiertas en un lugar seguro con la mitad de la vida, herido (hasta un descanso largo) y con un {defeat_gold_pct} % menos de oro.
-      El dado de golpe depende de la clase (d6 para el Mago, d10 para el Paladín…). A nivel 1 tienes el máximo del dado + tu modificador de CON; cada nivel suma la mitad del dado + 1 + CON.
+      El dado de golpe depende de la clase (d6 para el Hechicero, d10 para el Paladín…). A nivel 1 tienes el máximo del dado + tu modificador de CON; cada nivel suma la mitad del dado + 1 + CON.
       Por eso la Constitución importa a todas las clases.
     en: |-
       Hit points (HP) are your hero's staying power. At 0 HP you are defeated: you wake up somewhere safe at half HP, injured (until a long rest) and with {defeat_gold_pct}% less gold.
-      The hit die depends on the class (d6 for the Mage, d10 for the Paladin…). At level 1 you get the die's maximum + your CON modifier; each level adds half the die + 1 + CON.
+      The hit die depends on the class (d6 for the Sorcerer, d10 for the Paladin…). At level 1 you get the die's maximum + your CON modifier; each level adds half the die + 1 + CON.
       That is why Constitution matters to every class.
 
 combat:
@@ -121,11 +121,11 @@ classes:
   body:
     es: |-
       La clase decide cómo luchas: tu dado de golpe, tu atributo principal, tus habilidades por nivel. Las especializaciones llegarán más adelante.
-      Guerrero y Paladín aguantan en primera línea, el Pícaro golpea desde las sombras, Mago, Brujo y Druida lanzan conjuros, Sacerdote y Bardo cuidan del grupo.
+      Guerrero y Paladín aguantan en primera línea, el Pícaro golpea desde las sombras, Hechicero, Brujo y Druida lanzan conjuros, Clérigo y Bardo cuidan del grupo.
       Todas las clases y sus habilidades: /classes
     en: |-
       Your class decides how you fight: your hit die, your primary ability and your abilities by level. Specializations will come later.
-      Warrior and Paladin hold the front line, the Rogue strikes from the shadows, Mage, Warlock and Druid cast spells, Priest and Bard look after the party.
+      Warrior and Paladin hold the front line, the Rogue strikes from the shadows, Sorcerer, Warlock and Druid cast spells, Cleric and Bard look after the party.
       Every class and its abilities: /classes
 
 activities:

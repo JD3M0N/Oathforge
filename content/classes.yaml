@@ -181,8 +181,8 @@ warrior:
     guardian: {es: Guardián, en: Guardian}
     berserker: {es: Berserker, en: Berserker}
 
-priest:
-  name: {es: Sacerdote, en: Priest}
+cleric:
+  name: {es: Clérigo, en: Cleric}
   description:
     es: Canaliza la luz de su fe para sanar a los suyos y abrasar a los no-muertos.
     en: Channels the light of their faith to heal allies and sear the undead.
@@ -259,11 +259,11 @@ priest:
     war: {es: Dominio de la Guerra, en: War Domain}
     grave: {es: Dominio de la Tumba, en: Grave Domain}
 
-mage:
-  name: {es: Mago, en: Mage}
+sorcerer:
+  name: {es: Hechicero, en: Sorcerer}
   description:
-    es: Erudito de lo arcano; frágil de cerca, devastador a distancia con fuego y hechizos de control.
-    en: A scholar of the arcane; frail up close, devastating from afar with fire and control spells.
+    es: Moldea la magia a voluntad; frágil de cerca, devastador a distancia con fuego y hechizos de control.
+    en: Shapes magic at will; frail up close, devastating from afar with fire and control spells.
   hit_die: 6
   primary: int
   casting: int

@@ -1,7 +1,7 @@
 """Battle simulator for balance: hundreds of fights class x enemy, no database, no AI.
 
     python -m oathforge.tools.simulate --n 200 --level 1-3
-    python -m oathforge.tools.simulate --classes mage,warrior --monsters bandit,goblin_scout+goblin_scout
+    python -m oathforge.tools.simulate --classes sorcerer,warrior --monsters bandit,goblin_scout+goblin_scout
 
 Each fight uses ``random.Random(seed + i)``, so the same arguments always give the same numbers.
 The player follows a simple fixed policy (see ``play_turn``); results go to the console and to

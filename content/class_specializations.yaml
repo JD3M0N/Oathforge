@@ -109,7 +109,7 @@ saboteur:
 # ----------------------------------------------------------------- Clérigo (3)
 
 life_domain:
-  class_key: priest
+  class_key: cleric
   name: {es: Dominio de la Vida, en: Life Domain}
   description:
     es: Mantienes bendiciones y eliges entre recuperación inmediata o sostenida. Tus ataques devocionales preparan la siguiente curación.
@@ -117,7 +117,7 @@ life_domain:
   roles: [heal, deff]
 
 light_domain:
-  class_key: priest
+  class_key: cleric
   name: {es: Dominio de la Luz, en: Light Domain}
   description:
     es: Acumulas fulgor para quemar, revelar o desorientar, y alternas entre concentrarlo en uno y repartirlo.
@@ -125,7 +125,7 @@ light_domain:
   roles: [dmg, control]
 
 war_domain:
-  class_key: priest
+  class_key: cleric
   name: {es: Dominio de la Guerra, en: War Domain}
   description:
     es: Arma y plegaria se preparan la una a la otra. Combate ritual, distinto de la Convicción del Paladín.
@@ -135,7 +135,7 @@ war_domain:
 # --------------------------------------------------------------- Hechicero (6)
 
 pyromancer:
-  class_key: mage
+  class_key: sorcerer
   name: {es: Piromante, en: Pyromancer}
   description:
     es: Aplicas quemaduras y decides entre mantenerlas ardiendo o consumirlas para detonar. Puedes preparar varios blancos a la vez.
@@ -143,7 +143,7 @@ pyromancer:
   roles: [dmg]
 
 cryomancer:
-  class_key: mage
+  class_key: sorcerer
   name: {es: Criomante, en: Cryomancer}
   description:
     es: Acumulas frío para limitar, congelar o volver frágil al rival, y consumes esa preparación al quebrarlo.
@@ -151,7 +151,7 @@ cryomancer:
   roles: [control, dmg]
 
 arcanist:
-  class_key: mage
+  class_key: sorcerer
   name: {es: Arcanista, en: Arcanist}
   description:
     es: Las cargas arcanas suben tu potencia y la presión sobre tu Maná. Puedes descargarlas o invertirlas en una barrera.
@@ -159,7 +159,7 @@ arcanist:
   roles: [dmg, deff]
 
 stormcaller:
-  class_key: mage
+  class_key: sorcerer
   name: {es: Tempestario, en: Stormcaller}
   description:
     es: Marcas conductividad y encadenas descargas. Contra un solo rival concentras la tormenta en vez de perder tu identidad.
@@ -167,7 +167,7 @@ stormcaller:
   roles: [dmg, control]
 
 summoner:
-  class_key: mage
+  class_key: sorcerer
   name: {es: Invocador, en: Summoner}
   description:
     es: Dos entidades de un repertorio mixto actúan solas sobre la presa marcada; una orden conjunta te cuesta la acción. Nunca hay una tercera.
@@ -175,7 +175,7 @@ summoner:
   roles: [dmg, control]
 
 chronomancer:
-  class_key: mage
+  class_key: sorcerer
   name: {es: Cronomante, en: Chronomancer}
   description:
     es: Retrasas una amenaza que viene y alteras, dentro de un límite, cuándo vuelve a estar lista una técnica. Anticipar vale más que pegar fuerte.

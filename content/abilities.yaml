@@ -25,15 +25,15 @@ abilities:
     name: {es: Inteligencia, en: Intelligence}
     short: {es: INT, en: INT}
     effect:
-      es: Conjuros del Mago. Arcanos, Historia, Investigación y Religión.
-      en: Mage spells. Arcana, History, Investigation and Religion.
+      es: Conjuros del Hechicero. Arcanos, Historia, Investigación y Religión.
+      en: Sorcerer spells. Arcana, History, Investigation and Religion.
   wis:
     icon: "🦉"
     name: {es: Sabiduría, en: Wisdom}
     short: {es: SAB, en: WIS}
     effect:
-      es: Conjuros y curación de Sacerdote y Druida. Percepción, Medicina, Perspicacia, Supervivencia y salvaciones de SAB.
-      en: Priest and Druid spells and healing. Perception, Medicine, Insight, Survival and WIS saves.
+      es: Conjuros y curación de Clérigo y Druida. Percepción, Medicina, Perspicacia, Supervivencia y salvaciones de SAB.
+      en: Cleric and Druid spells and healing. Perception, Medicine, Insight, Survival and WIS saves.
   cha:
     icon: "🎭"
     name: {es: Carisma, en: Charisma}

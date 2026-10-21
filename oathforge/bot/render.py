@@ -1786,7 +1786,7 @@ def backgrounds_list(lang: str) -> str:
 
 # ---------------------------------------------------------------- classes
 
-CLASS_ICONS = {"paladin": "🛡️", "rogue": "🗡️", "warrior": "⚔️", "priest": "✝️", "mage": "🔮", "druid": "🌿",
+CLASS_ICONS = {"paladin": "🛡️", "rogue": "🗡️", "warrior": "⚔️", "cleric": "✝️", "sorcerer": "🔮", "druid": "🌿",
                "bard": "🎻", "warlock": "🕯️"}
 
 
