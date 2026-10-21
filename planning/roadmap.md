@@ -348,7 +348,7 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 **Propuesta base 0.10:**
 
 - [ ] Mostrar resultado esperado, herramienta, riesgo y tiempo antes de empezar.
-- [ ] Persistir versión o instantánea suficiente de tablas/reglas al iniciar; hoy claim lee el contenido vigente. *(Lo entrega la fase 6 de [F15](#F15), junto con el hallazgo raro por actividad.)*
+- [x] Persistir versión o instantánea suficiente de tablas/reglas al iniciar *(0.10.15, fase 6 de [F15](#F15), junto con el hallazgo raro por actividad)*.
 - [ ] Asegurar cierre/pago único y recuperación de notificaciones tras reinicio.
 - [ ] Probar la relación actividad corta/larga y sus desenlaces; preservar aceleración tutorial de forma explícita.
 - [ ] Convertir «Algo brilla» en descubrimiento interactivo con recompensa limitada, sin promesa vacía de la narración.
@@ -541,7 +541,7 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 - [x] Fase 3: refinado con XP de maestría (horno, aserradero, secadero, mesa) y los comandos `/recipes`, `/r_<id>` y `/craft_<id>` (0.10.12).
 - [x] Fase 4: Sastrería como octavo oficio, técnicas por rango y planos (0.10.13; los componentes cruzados de cada oficio llegan con las herramientas, en la fase 8).
 - [x] Fase 5: habitación en el tutorial con cama, descanso gratis y cofre ampliable (0.10.14; cubre el cofre personal de [F06](#F06)).
-- [ ] Fase 6: instantánea de reglas al iniciar una actividad y hallazgo raro por actividad (cierra la casilla pendiente de [F08](#F08)).
+- [x] Fase 6: instantánea de reglas al iniciar una actividad y hallazgo raro por actividad (0.10.15; cierra la casilla pendiente de [F08](#F08)).
 - [ ] Fase 7: dos ramas por maestría y Pesca a rango 2, cambio con oro y piloto de Rastreo.
 - [ ] Fase 8: herramientas especializadas con perfil tipado, una por disciplina.
 - [ ] Fase 9: catálogo T1 con materiales de rango 3–5 y equipo de combate con requisito de nivel.

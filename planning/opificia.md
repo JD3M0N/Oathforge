@@ -65,7 +65,6 @@ El contrato completo de F15 está en [roadmap-profesiones.md](roadmap-profesione
 ## Próximo
 
 - Las **fases 1–10 de F15** (§11 del contrato), una por parche 0.10.x.
-- Persistir la instantánea de reglas al iniciar una actividad (hoy `claim` lee el contenido vigente): fase 6.
 - Balance de la bomba de fuego (da a toda una fila) con datos de la beta.
 - Lo que sigue futuro: afinidades como árbol, durabilidad, cebos, antifarmeo, variantes y reciclaje de recetas, aficiones nuevas (arqueología, cartografía, juegos de taberna, primeros auxilios), encantamiento, vetas finitas, clima y fauna. Está en las notas N01–N13 del contrato.
 

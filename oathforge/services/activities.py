@@ -13,6 +13,7 @@ import math
 import random
 import secrets
 import time
+from types import SimpleNamespace
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -117,6 +118,32 @@ async def availability(session: AsyncSession, char: Character) -> list[tuple[str
     return [(kind, skill, await check(session, char, kind, skill)) for kind, skill in kinds]
 
 
+def rules_snapshot(char: Character, gatherable, skill: str, kind: str) -> dict:
+    """The rules this activity will be resolved with, frozen now: table, rank and modifiers.
+
+    ``claim`` reads this and not the live catalogue, so a restart or a content update never changes a
+    prize that was started under other rules.
+    """
+    mods = modifiers(char, skill)
+    return {
+        "v": 1,
+        "resources": [{"item": r.item, "weight": r.weight, "min_rank": r.min_rank}
+                      for r in (gatherable.resources if gatherable else [])],
+        "rank": gathering.rank_for(characters.mastery_xp(char, skill)),
+        "mods": {"time_pct": mods.time_pct, "rare_rel": mods.rare_rel, "extra_chance": mods.extra_chance},
+    }
+
+
+def modifiers(char: Character, skill: str) -> gathering.Mods:
+    """What the character's tool and branch change about this discipline. Both arrive in their own phase."""
+    return gathering.Mods()
+
+
+def _snapshot_resources(rules: dict):
+    """The frozen table, as the engine reads resources (item, weight, min_rank)."""
+    return [SimpleNamespace(**r) for r in rules.get("resources", [])]
+
+
 async def start(session: AsyncSession, char: Character, kind: str, skill: str,
                 now: float | None = None) -> Outcome:
     refusal = characters.ensure_free(char) or await check(session, char, kind, skill)
@@ -151,10 +178,14 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str,
         boost = await quests.tutorial_boost(session, char, "gather", here)
         if boost:
             return await _tutorial_gather(session, char, kind, skill, loc, boost, now)
+    rules = rules_snapshot(char, g, skill, kind) if kind in ("gather", "stay") else None
     seconds = skin_seconds(beasts) if kind == "skin" else gathering.SECONDS[kind]
+    if rules is not None:
+        seconds = gathering.Mods(**rules["mods"]).seconds(seconds)
     act = WorldActivity(character_id=char.id, location=char.location, kind=kind, skill=skill, started_at=now,
                         ends_at=now + seconds, status="running", seed=secrets.randbits(48),
-                        result={"tool_checked": tool_checked, **({"monsters": beasts} if kind == "skin" else {})})
+                        result={"tool_checked": tool_checked, **({"rules": rules} if rules else {}),
+                                **({"monsters": beasts} if kind == "skin" else {})})
     session.add(act)
     await session.flush()
     char.state = "busy"
@@ -266,8 +297,13 @@ async def claim(session: AsyncSession, char: Character, now: float | None = None
         return out
 
     g = _gathering(loc, act.skill)
-    rank = gathering.rank_for(characters.mastery_xp(char, act.skill))
-    roll = gathering.roll_gather(rng, g.resources if g else [], rank, act.kind)
+    rules = (act.result or {}).get("rules")
+    if rules:  # resolved with the rules it started under, not with today's
+        roll = gathering.roll_gather(rng, _snapshot_resources(rules), rules["rank"], act.kind,
+                                     gathering.Mods(**rules["mods"]))
+    else:  # an activity from before the snapshot: the old behaviour, with the live table
+        rank = gathering.rank_for(characters.mastery_xp(char, act.skill))
+        roll = gathering.roll_gather(rng, g.resources if g else [], rank, act.kind)
     items = roll.total()
     table = exploration.encounter_table(loc, char.level)
     if act.kind == "stay" and g and table and gathering.roll_ambush(rng, g.stay_ambush):

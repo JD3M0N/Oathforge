@@ -349,6 +349,36 @@ def errands(monkeypatch):
     return quest
 
 
+async def test_an_activity_is_paid_by_the_rules_it_started_under():
+    """A content update between starting and claiming must not change the prize."""
+    from types import SimpleNamespace
+
+    from oathforge.content import get_content
+
+    cid = await new_character(tg_id=77)
+    now = 1000.0
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        char.masteries = {"mining": 1500}  # rank 5: the deep seam is within reach
+        assert (await activities.start(s, char, "gather", "mining", now)).ok
+        act = await activities.open_activity(s, char)
+        rules = act.result["rules"]
+        assert rules["rank"] == 5
+        assert {r["item"] for r in rules["resources"]} == {"iron_ore", "coal", "copper_ore", "rough_gem"}
+        content = get_content()  # the mine is rewritten while the character is down there
+        thin = SimpleNamespace(skill="mining", tool="pickaxe", stay_ambush=0.0,
+                               resources=[SimpleNamespace(item="coal", weight=1, min_rank=0)])
+        old = content.locations["ironvein_mine"].gathering
+        object.__setattr__(content.locations["ironvein_mine"], "gathering", [thin])
+        try:
+            out = await activities.claim(s, char, now + LATER)
+        finally:
+            object.__setattr__(content.locations["ironvein_mine"], "gathering", old)
+        assert out.ok
+        # it was paid from the frozen table, which still had iron and copper in it
+        assert await inventory.count(s, char, "iron_ore") or await inventory.count(s, char, "copper_ore")
+
+
 async def test_every_activity_counts_towards_missions(errands):
     from oathforge.services import crafting, professions, quests
 

@@ -4,6 +4,16 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.15] - 2026-10-20
+
+Profesiones (F15, 7.ª parte): cada actividad se paga con las reglas con las que empezó, y el hallazgo raro se tira una vez.
+
+### Añadido
+- **Instantánea de reglas al empezar** (la casilla pendiente de F08): una recolección o una expedición guardan su tabla de recursos, su rango y sus modificadores, y al cobrarla se resuelven con eso, no con el contenido de ese momento. Reiniciar el bot o publicar un cambio de catálogo ya no puede alterar un premio en marcha. Las actividades anteriores a la instantánea se siguen pagando como antes.
+- **El hallazgo raro es de la actividad, no de cada unidad**: los recursos de rango 3 o más salen de una sola tirada por trabajo, con la probabilidad que el catálogo tenía de dar al menos uno, y sustituyen una unidad común en vez de añadirse. Así la cantidad no cambia y el porcentaje que se anuncia es el que se cumple.
+- **`Mods`**, el perfil de lo que una herramienta o una rama cambian: tiempo (`300 s` con −10 % son 270 s, con un suelo de 30 s), raro **relativo** (10 % × 1,05 = 10,5 %, nunca 15 %) y una unidad extra con **una sola oportunidad por actividad completa**, sin XP. Las dos cosas que lo rellenarán —rama y herramienta— llegan en sus fases.
+- Pruebas de distribución con semilla que comparan la economía nueva con la vieja: las mismas unidades por trabajo y las gemas en el mismo orden de magnitud.
+
 ## [0.10.14] - 2026-10-20
 
 Profesiones (F15, 6.ª parte): tu cuarto en el gremio, con cama y cofre.
