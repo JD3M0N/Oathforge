@@ -470,6 +470,7 @@ old_tusk:
   start_stage: locked
   unlock_stage: active
   objective_stage: active
+  turn_in_stage: told          # abatirlo no paga: hay que volver a contárselo a Bram
   complete_stage: done
   objectives:
     - {kind: kill, target: old_tusk}
@@ -488,6 +489,11 @@ old_tusk:
         tusk_meadow:
           es: La tierra tiembla. Unas huellas enormes cruzan el prado, más profundas que las de cualquier jabalí.
           en: The ground trembles. Huge tracks cross the meadow, deeper than any boar's.
+    told:
+      state: ready
+      journal:
+        es: "El Viejo Colmillo ha caído. Vuelve a La Corona Rota y cuéntaselo a Bram: te debe una recompensa."
+        en: "Old Tusk is down. Go back to the Broken Crown and tell Bram: he owes you a reward."
     done:
       state: completed
       journal:

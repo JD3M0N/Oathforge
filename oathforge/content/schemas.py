@@ -671,7 +671,8 @@ class QuestTrigger(Strict):
 
 class QuestStage(Strict):
     journal: Text
-    state: Literal["locked", "available", "active", "completed", "failed"] = "active"
+    # ready: every objective is met and the giver is owed the mission; nothing is paid until then
+    state: Literal["locked", "available", "active", "ready", "completed", "failed"] = "active"
     location_text: dict[str, Text] = {}
 
 
@@ -706,8 +707,11 @@ class Quest(Strict):
     after: str | None = None
     unlock_flag: str | None = None
     unlock_stage: str | None = None
-    # all objectives met on `objective_stage` -> rewards, then `complete_stage`
+    # all objectives met on `objective_stage` -> rewards, then `complete_stage`.
+    # With `turn_in_stage` the mission stops there instead, waiting for `giver` to be paid in person:
+    # handing it in pays the rewards and moves it to `complete_stage`, all at once (roadmap_balance §8.1).
     objectives: list[QuestObjective] = []
     objective_stage: str | None = None
+    turn_in_stage: str | None = None
     complete_stage: str | None = None
     rewards: list[Effect] = []

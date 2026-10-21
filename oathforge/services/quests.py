@@ -146,9 +146,13 @@ async def advance(session: AsyncSession, char: Character, kind: str, target: str
             continue
         p.counters = counters
         if all(int(counters.get(str(i), 0)) >= o.count for i, o in enumerate(quest.objectives)):
-            out.text(quest.stages[quest.complete_stage].journal)
-            await apply_effects(session, char, quest.rewards, out, rng)
-            await _set_stage(session, char, quest, p, quest.complete_stage, out)
+            if quest.turn_in_stage:  # it is owed to its giver: nothing is paid until you hand it in
+                out.text(quest.stages[quest.turn_in_stage].journal)
+                await _set_stage(session, char, quest, p, quest.turn_in_stage, out)
+            else:
+                out.text(quest.stages[quest.complete_stage].journal)
+                await apply_effects(session, char, quest.rewards, out, rng)
+                await _set_stage(session, char, quest, p, quest.complete_stage, out)
         elif hit[0].count > 1 and hit[1] < hit[0].count:
             out.add("quest.progress", quest=quest.name.model_dump(), target=objective_target(hit[0]),
                     n=hit[1], count=hit[0].count)
@@ -157,6 +161,46 @@ async def advance(session: AsyncSession, char: Character, kind: str, target: str
             out.add("quest.next", quest=quest.name.model_dump(),
                     step={lang: t(lang, objective_key(nxt), target=objective_target(nxt)[lang])
                           for lang in ("es", "en")})
+    await refresh(session, char, out)
+    return out
+
+
+async def ready_to_turn_in(session: AsyncSession, char: Character, present_npcs: list[str],
+                           npc: str | None = None) -> list[tuple[str, Quest]]:
+    """Missions whose objectives are met and that are waiting to be handed to their giver here."""
+    prog = await progress(session, char)
+    out = []
+    for qkey, quest in ordered_quests():
+        p = prog.get(qkey)
+        if p is None or quest.turn_in_stage is None or p.stage != quest.turn_in_stage:
+            continue
+        if quest.giver is None or (npc is not None and quest.giver != npc):
+            continue
+        if quest.giver not in present_npcs:
+            continue
+        out.append((qkey, quest))
+    return out
+
+
+async def turn_in(session: AsyncSession, char: Character, quest_key: str, present_npcs: list[str],
+                  rng: random.Random) -> Outcome:
+    """Hand a finished mission to the one who gave it: rewards, milestone and the next mission, all in
+    the same transaction. Pressing twice or using an old menu never pays again (roadmap_balance §8.1)."""
+    if refusal := characters.ensure_free(char):
+        return refusal
+    quest = get_content().quests.get(quest_key)
+    if quest is None or quest.turn_in_stage is None or quest.complete_stage is None:
+        return Outcome.refused("quest.err.unavailable")
+    p = (await progress(session, char, lock=True)).get(quest_key)
+    if p is None or p.stage != quest.turn_in_stage:  # already paid, or not finished yet
+        return Outcome.refused("quest.err.not_ready")
+    if quest.giver is None or quest.giver not in present_npcs:
+        return Outcome.refused("quest.err.giver_away")
+    out = Outcome().text(quest.stages[quest.complete_stage].journal)
+    out.add("quest.turned_in", quest=quest.name.model_dump(),
+            npc=get_content().npcs[quest.giver].name.model_dump())
+    await apply_effects(session, char, quest.rewards, out, rng)
+    await _set_stage(session, char, quest, p, quest.complete_stage, out)
     await refresh(session, char, out)
     return out
 
@@ -344,6 +388,8 @@ async def apply_effects(session: AsyncSession, char: Character, effects: list[di
         elif kind == "gold":
             char.gold += int(arg)
             out.add("loot.gold", gold=int(arg))
+        elif kind == "milestone":  # a narrative gate: it opens levels the XP has already paid for
+            characters.grant_milestone(char, arg, out)
         elif kind == "xp":
             before_level = char.level
             characters.grant_xp(char, int(arg), out)

@@ -39,7 +39,7 @@ from oathforge.engine.gathering import GATHER_SKILLS, MASTERIES
 from oathforge.content.achievement_schemas import Achievement, validate_catalog
 
 EFFECT_KINDS = {
-    "give_item", "take_item", "gold", "reputation", "set_flag", "xp",
+    "give_item", "take_item", "gold", "reputation", "set_flag", "xp", "milestone",
     "npc_memory", "trust", "damage", "world_rumor",
 }
 
@@ -432,12 +432,20 @@ def validate_references(c: Content) -> None:
         where = f"quest {key}"
         need("npc", quest.giver, c.npcs, where)
         need("quest", quest.after, c.quests, where)
-        for field in ("unlock_stage", "objective_stage", "complete_stage"):
+        for field in ("unlock_stage", "objective_stage", "turn_in_stage", "complete_stage"):
             need("stage", getattr(quest, field), quest.stages, f"{where} {field}")
         if (quest.after or quest.unlock_flag) and quest.unlock_stage is None:
             errors.append(f"{where}: locked missions need an unlock_stage")
         if quest.objectives and (quest.objective_stage is None or quest.complete_stage is None):
             errors.append(f"{where}: objectives need objective_stage and complete_stage")
+        if quest.turn_in_stage is not None:
+            if quest.giver is None:
+                errors.append(f"{where}: a mission you hand in needs a giver to hand it to")
+            if quest.stages[quest.turn_in_stage].state != "ready":
+                errors.append(f"{where}: stage '{quest.turn_in_stage}' pays on turn-in, so its state must be 'ready'")
+        for skey, stage in quest.stages.items():
+            if stage.state == "ready" and quest.turn_in_stage != skey:
+                errors.append(f"{where} stage {skey}: 'ready' is only for the mission's turn_in_stage")
         # a craft objective may also name furniture a starter recipe installs ("furniture:bed")
         furniture = {f"furniture:{r.installs}": None for r in c.recipes.values() if r.installs}
         items, places = ("item", c.items), ("location", {**c.locations, "any": None})
@@ -545,6 +553,9 @@ def _validate_effect(c: Content, eff: dict, where: str, errors: list[str]) -> No
         for item in arg:
             if item not in c.items:
                 errors.append(f"{where}: unknown item '{item}'")
+    elif kind == "milestone":
+        if c.progression is None or arg not in c.progression.milestones:
+            errors.append(f"{where}: unknown milestone '{arg}'")
     elif kind == "reputation":
         for fac in arg:
             if fac not in c.factions:

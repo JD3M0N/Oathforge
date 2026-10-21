@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from oathforge.content import get_content
 from oathforge.content.schemas import ABILITIES
 from oathforge.database.models import Character, CharacterSkill, FactionReputation, ItemInstance, QuestProgress, User
-from oathforge.engine import gathering, pointbuy, progression
+from oathforge.engine import class_build, gathering, pointbuy, progression
 from oathforge.engine.checks import modifier, proficiency_bonus
 from oathforge.engine.combat import AttackProfile, Combatant
 from oathforge.i18n import normalize_lang, t
@@ -277,15 +277,54 @@ def combatant_from(char: Character, gear: dict[str, ItemInstance], skills: dict[
 
 # ---------------------------------------------------------------- progression
 
+BUILD_VERSION = 1
+MILESTONES = "milestones"  # char.build: the narrative gates already crossed
+
+
+def build_of(char: Character) -> dict:
+    return char.build or {"v": BUILD_VERSION}
+
+
+def milestones_of(char: Character) -> list[str]:
+    return list(build_of(char).get(MILESTONES, []))
+
+
+def eligible_level(char: Character) -> int:
+    """XP proves experience and a milestone opens a border: the level needs both (roadmap_balance §4.1)."""
+    return class_build.eligible_level(char.xp, milestones_of(char), get_content().progression)
+
+
+def level_gate(char: Character) -> str | None:
+    """The milestone holding the hero back from the level their XP already earned, if any."""
+    return class_build.blocked_by(char.xp, milestones_of(char), get_content().progression)
+
+
 def grant_xp(char: Character, amount: int, out: Outcome) -> None:
+    """Experience always counts, even against a closed gate: it is kept and applied when it opens."""
     if amount <= 0:
         return
-    c = get_content()
-    cls = c.classes[char.class_key]
     char.xp += amount
     out.add("progress.xp", amount=amount)
-    new_level = progression.level_for_xp(char.xp)
-    while char.level < new_level:
+    apply_levels(char, out)
+
+
+def grant_milestone(char: Character, key: str, out: Outcome) -> bool:
+    """Cross a narrative border. Granted once; the levels its XP already paid for arrive with it."""
+    done = milestones_of(char)
+    if key in done or key not in get_content().progression.milestones:
+        return False
+    char.build = {**build_of(char), "v": BUILD_VERSION, MILESTONES: [*done, key]}
+    out.add("progress.milestone", milestone=get_content().progression.milestones[key].name.model_dump())
+    apply_levels(char, out)
+    return True
+
+
+def apply_levels(char: Character, out: Outcome) -> None:
+    """Raise the hero to the level they are entitled to. Called after XP and after a milestone."""
+    c = get_content()
+    cls = c.classes[char.class_key]
+    target = eligible_level(char)
+    while char.level < target:
         char.level += 1
         if char.level == ASI_LEVEL:
             scores = dict(char.abilities)

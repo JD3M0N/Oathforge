@@ -170,3 +170,24 @@ Recorrido completo, con la cuenta de prueba, en ES y EN. Lo marcado (automático
 - [ ] Doble toque en «Fabricar» con los materiales justos: una sola pieza.
 - [ ] Depositar y retirar a la vez el mismo objeto: ni duplicado ni perdido.
 - [ ] Dos lecturas del mismo plano: se gasta uno solo.
+
+## 0.10-I · Progresión híbrida y entrega al PNJ (B02, v0.10.24)
+
+### Nivel por XP e hito
+- [x] Con la XP del nivel 12 y sin el hito del Recaudador, el héroe se queda en 9 y conserva toda su XP (automático).
+- [x] El hito solo no da niveles; al llegar la XP sube sin repetir al jefe (automático).
+- [x] Un hito se concede una vez y uno inventado no se concede nunca (automático).
+- [x] La segunda puerta deja en 10 hasta el Ciervo (automático).
+- [x] La puerta sobrevive a una transacción nueva (automático).
+- [x] La ficha dice qué falta: ✨ la barra llena y 🔒 el hito que cierra el paso (Telegram, ES y EN).
+
+### Entregar la misión a quien la dio
+- [x] Abatir al Viejo Colmillo no paga: la misión queda «lista» y Bram debe la recompensa (automático).
+- [x] Sin el dador delante no se entrega (automático).
+- [x] Entregar dos veces paga una (automático y Telegram: el botón desaparece).
+- [x] Una misión sin terminar no se entrega (automático).
+- [x] Premio, hito y nivel en la misma transacción (automático).
+- [x] «📜 Entregar: …» en la escena y en el panel del PNJ (Telegram, ES y EN).
+- [x] El diario y `/quests` la muestran ✅ con el PNJ al que se le debe (Telegram).
+- [ ] Doble toque simultáneo sobre «Entregar» con PostgreSQL: un solo pago.
+- [ ] Migración 0013 en una base de prueba, con su `downgrade`.

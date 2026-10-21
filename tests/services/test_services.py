@@ -641,7 +641,9 @@ async def test_mission_unlocks_by_flag_and_counts_only_when_active():
         assert (await quests.progress(s, char))["crypt_bones"].state == "completed"
 
 
-async def test_whole_chain_reaches_level_five():
+async def test_the_whole_chain_from_the_muster_to_the_crypt():
+    """With the table of twenty levels the old chain goes a little past five; no gate stops it,
+    because the gates of roadmap_balance only start at nine."""
     _, cid = await new_character()
     rng = random.Random(5)
 
@@ -682,6 +684,16 @@ async def test_whole_chain_reaches_level_five():
         assert prog["sealed_box"].state == "locked"  # no crypt during the tutorial
         await fight(char, "old_tusk")
         prog = await quests.progress(s, char)
+        assert prog["old_tusk"].state == "ready"  # beating it is not getting paid: Bram owes you
+        gold, xp = char.gold, char.xp
+        assert not (await quests.turn_in(s, char, "old_tusk", [], rng)).ok  # Bram is not here
+        assert (char.gold, char.xp) == (gold, xp)
+        char.location = "broken_crown_tavern"
+        assert (await quests.turn_in(s, char, "old_tusk", ["bram"], rng)).ok
+        assert (char.gold, char.xp) == (gold + 80, xp + 300)
+        again = await quests.turn_in(s, char, "old_tusk", ["bram"], rng)  # the service pays once
+        assert not again.ok and (char.gold, char.xp) == (gold + 80, xp + 300)
+        prog = await quests.progress(s, char)
         assert all(prog[k].state == "completed" for k, q in get_content().quests.items() if q.tutorial)
         assert prog["sealed_box"].stage == "not_started" and char.level >= 3
         # after the tutorial: Holt's reliquary and the crypt
@@ -695,7 +707,7 @@ async def test_whole_chain_reaches_level_five():
                 await fight(char, monster)
         prog = await quests.progress(s, char)
         assert prog["sealed_box"].state == "completed" and prog["crypt_bones"].state == "completed"
-        assert char.level == 5
+        assert char.level == 6 and characters.eligible_level(char) == 6  # nothing gates it below nine
 
 
 async def test_ensure_progress_adds_missions_to_old_characters():

@@ -69,12 +69,16 @@ def test_check_success_uses_total_vs_dc():
 
 
 def test_levels_and_hp():
-    assert progression.level_for_xp(0) == 1
-    assert progression.level_for_xp(199) == 1
-    assert progression.level_for_xp(200) == 2
-    assert progression.level_for_xp(1800) == 5
-    assert progression.xp_to_next(150) == 50
-    assert progression.xp_to_next(1800) is None
+    from oathforge.content import get_content
+    from oathforge.engine import class_build
+
+    p = get_content().progression  # the XP table lives in the content now, and goes up to 20
+    assert class_build.level_for_xp(0, p) == 1
+    assert class_build.level_for_xp(199, p) == 1
+    assert class_build.level_for_xp(200, p) == 2
+    assert class_build.level_for_xp(1800, p) == 5
+    assert class_build.xp_to_next(150, p) == 50
+    assert class_build.xp_to_next(1800, p) == p.xp[5] - 1800
     assert progression.max_hp(10, 2, 1) == 12
     assert progression.max_hp(10, 2, 3) == 12 + 2 * 8
 

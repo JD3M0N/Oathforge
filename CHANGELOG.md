@@ -4,6 +4,21 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.24] - 2026-10-21
+
+0.10-I (B02): la XP ya no basta para subir de nivel, y las misiones se cobran en persona.
+
+### Añadido
+- **Entregar la misión a quien la dio**: al cumplir los objetivos, una misión con `turn_in_stage` queda **lista para entregar** y no paga nada. Vuelves a su dador, pulsas «📜 Entregar: …» —en la escena y en el panel del PNJ— y entonces cobras: recompensa, hito y la misión siguiente, todo en la misma transacción. Pulsar dos veces, o desde un menú viejo, nunca paga dos veces. El diario y `/quests` la muestran ✅ con el nombre de quien te la debe, y la ruta del objetivo te lleva hasta él.
+- **El nivel necesita XP y un hito narrativo.** La XP demuestra experiencia; el hito abre una frontera. Con la XP del nivel 12 y sin el hito del Recaudador el héroe se queda en 9, **sin perder un punto**: en cuanto el hito llega, sube solo. La ficha lo dice: la barra de XP se llena y debajo aparece «🔒 Tienes la XP del siguiente nivel; te falta: …».
+- Efecto de contenido **`milestone`**, para que la recompensa de una misión conceda su puerta, y `characters.grant_milestone`, que la concede una sola vez.
+- `El Viejo Colmillo` se entrega a Bram: la primera misión del juego que se cobra en persona, y el molde de lo que hará el Recaudador.
+
+### Cambiado
+- **El techo deja de ser el nivel 5**: la tabla de XP de veinte niveles de `content/progression.yaml` es ya la que manda. `engine/progression.py` se queda con los PV y las competencias; los niveles los calcula `engine/class_build.py`.
+- `characters.grant_xp` solo suma experiencia; aplicar niveles es `apply_levels`, que se vuelve a ejecutar también al cumplir un hito.
+- La barra de XP de la ficha no se pasa de su propio total mientras esperas en una puerta.
+
 ## [0.10.23] - 2026-10-21
 
 0.10-I: Sacerdote pasa a **Clérigo** y Mago a **Hechicero**, id incluido.

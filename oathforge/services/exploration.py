@@ -369,10 +369,12 @@ async def objective_routes(session: AsyncSession, char: Character, limit: int = 
     out: list[tuple[dict, world_map.Route]] = []
     for qkey, quest in quests.ordered_quests():
         p = prog.get(qkey)
-        if p is None or p.state not in ("active", "available"):
+        if p is None or p.state not in ("active", "available", "ready"):
             continue
         spots = _stage_spots(char, quest, p.stage)
-        if p.stage == quest.objective_stage:
+        if p.state == "ready" and quest.giver:  # done: the route points at whoever is owed it
+            spots |= _objective_spots(char, "talk", quest.giver)
+        elif p.stage == quest.objective_stage:
             nxt = next((o for o, n in quests.objective_progress(quest, p) if n < o.count), None)
             if nxt is not None:
                 spots |= _objective_spots(char, nxt.kind, nxt.target)

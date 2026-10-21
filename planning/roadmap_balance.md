@@ -52,7 +52,7 @@ Hito **0.10-I** del [roadmap general](roadmap.md). Se avanza **fase a fase**: ca
 |---|---|---|
 | B00 · Base y auditoría | ✅ Hecha | 0.10.21 |
 | B01 · Contratos de contenido y estado | ✅ Hecha | 0.10.22 |
-| B02 · XP híbrida y entrega al PNJ | Pendiente | — |
+| B02 · XP híbrida y entrega al PNJ | ✅ Hecha | 0.10.24 |
 | B03 · Motor de recursos y efectos | Pendiente | — |
 | B04 · Catálogo efectivo, selección y elecciones | Pendiente | — |
 | B05 · Compañeros, formas y dispositivos | Pendiente | — |
@@ -1099,14 +1099,14 @@ El simulador y pruebas se amplían junto a cada fase, no solo en B12. No hacen f
 ### B02 · XP híbrida y entrega al PNJ
 
 **Objetivo:** implementar la regla central antes de diseñar recompensas definitivas.
-- [ ] Separar grant_xp de aplicación de niveles.
-- [ ] Añadir cap por hitos y recalcular tras premio/hito.
-- [ ] Estado ready_to_turn_in, validación de dador y pago atómico.
-- [ ] Mostrar por separado XP faltante e hito faltante.
-- [ ] Integrar diario, logs y logros de nivel.
+- [x] Separar grant_xp de aplicación de niveles. (0.10.24, `characters.apply_levels`)
+- [x] Añadir cap por hitos y recalcular tras premio/hito. (0.10.24, efecto `milestone`)
+- [x] Estado ready_to_turn_in, validación de dador y pago atómico. (0.10.24, estado `ready` y `quests.turn_in`)
+- [x] Mostrar por separado XP faltante e hito faltante. (0.10.24, `sheet.level_gate`)
+- [x] Integrar diario, logs y logros de nivel. (0.10.24; el diario y `/quests` muestran la misión lista y su dador)
 **Archivos:** engine/progression.py, services/characters.py, services/quests.py, schemas, callbacks, render, locales, rulebook.
 **Pruebas:** casos §4.2; entrega doble; falta de XP; XP acumulada; reinicio después del commit.
-**Terminado:** misión de prueba permite nivel 10 solo con ambas condiciones y sin duplicar pago.
+**Terminado:** misión de prueba permite nivel 10 solo con ambas condiciones y sin duplicar pago. **Hecho en 0.10.24**, probado con `tgtest` en ES y EN sobre El Viejo Colmillo, que ya se entrega a Bram. Los dos hitos existen y funcionan; las misiones que los conceden las escribe B09. Pendiente: la carrera de dos entregas simultáneas con PostgreSQL.
 
 ### B03 · Motor de recursos y efectos
 

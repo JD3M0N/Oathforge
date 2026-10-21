@@ -289,7 +289,8 @@ async def _act(update: Update, context, verb: str, arg: str, n: str, rolled_at: 
 
 ARRIVALS = {"explore.arrived", "explore.arrived_via"}  # a quiet arrival: nothing else happened on the way
 # buttons that change something (the rest only show a view): they answer the press once they know the result
-ACTS = {"go", "look", "hunt", "rest", "heal", "act", "actc", "actx", "plearn", "craft", "qa", "eq", "use", "buy", "sell"}
+ACTS = {"go", "look", "hunt", "rest", "heal", "act", "actc", "actx", "plearn", "craft", "qa", "qturn",
+        "eq", "use", "buy", "sell"}
 IN_PLACE = {"buy", "sell", "eq", "use", "plearn", "craft"}  # menus: the result goes on top of the same menu
 
 
@@ -343,6 +344,8 @@ async def _dispatch(session, char, verb: str, arg: str, r, context) -> Outcome:
         return await crafting.craft(session, char, key, r, qty=int(qty) if qty.isdigit() else 1)
     if verb == "qa":
         return await quests.perform(session, char, arg, present, r)
+    if verb == "qturn":  # hand a finished mission to the one who gave it, and get paid
+        return await quests.turn_in(session, char, arg, present, r)
     if verb == "eq":
         return await inventory.equip(session, char, int(arg)) if arg.isdigit() else Outcome.refused("inv.err.not_found")
     if verb == "use":

@@ -1,24 +1,13 @@
-"""Character levels and use-based skill improvement."""
+"""Hit points and use-based skill improvement.
 
-XP_THRESHOLDS = (0, 200, 500, 1000, 1800)  # compressed: the 6-quest chain reaches level 5
-MAX_LEVEL = len(XP_THRESHOLDS)
+The XP table, the milestone gates and the effective catalogue live in ``engine/class_build.py``
+and ``content/progression.yaml``: the hero's level needs both experience and a narrative gate.
+"""
+
 SKILL_XP_PER_RANK = 100
 MAX_SKILL_RANK = 3
 SKILL_GAIN = {"easy": 10, "medium": 15, "hard": 20, "very_hard": 30}
 RECENT_WINDOW_SECONDS = 24 * 3600
-
-
-def level_for_xp(xp: int) -> int:
-    level = 1
-    for lvl, threshold in enumerate(XP_THRESHOLDS, start=1):
-        if xp >= threshold:
-            level = lvl
-    return level
-
-
-def xp_to_next(xp: int) -> int | None:
-    level = level_for_xp(xp)
-    return None if level >= MAX_LEVEL else XP_THRESHOLDS[level] - xp
 
 
 def max_hp(hit_die: int, con_mod: int, level: int) -> int:

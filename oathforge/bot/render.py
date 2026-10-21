@@ -17,7 +17,7 @@ from oathforge.engine.checks import modifier, proficiency_bonus
 from oathforge.engine import gathering
 from oathforge.engine import combat, pointbuy, progression
 from oathforge.engine.combat import EncounterState, available_bonus_actions, valid_targets
-from oathforge.engine.progression import MAX_LEVEL, XP_THRESHOLDS, skill_rank
+from oathforge.engine.progression import skill_rank
 from oathforge.i18n import t
 from oathforge.services import (
     achievements, actions, activities, bestiary, characters, chronicle_log, chronicles, combat_service, crafting,
@@ -261,6 +261,8 @@ async def scene(session: AsyncSession, char: Character, lang: str,
     if trip_to:  # an ambush stopped the trip halfway: carry on in one tap
         rows.insert(0, [btn(t(lang, "btn.continue_trip", place=c.locations[trip_to].phrase()[lang]),
                             cb("go", trip_to, n))])
+    for qkey, quest in await quests.ready_to_turn_in(session, char, present):
+        rows.append([btn(t(lang, "btn.turn_in", quest=quest.name.get(lang)), cb("qturn", qkey, n))])
     for a in await quests.available_actions(session, char, present):
         if a.action.npc is None:
             rows.append([btn(a.action.label.get(lang), cb("qa", a.ref, n))])
@@ -1033,8 +1035,10 @@ async def conversation(session: AsyncSession, char: Character, npc_key: str, lan
     text += ["", f"<i>{t(lang, 'talk.hint', npc=escape(npc.name.get(lang)))}</i>"]
     n = nonce()
     present = exploration.npcs_present(char.location)
-    rows = [[btn(a.action.label.get(lang), cb("qa", a.ref, n))]
-            for a in await quests.available_actions(session, char, present, npc=npc_key)]
+    rows = [[btn(t(lang, "btn.turn_in", quest=q.name.get(lang)), cb("qturn", qkey, n))]
+            for qkey, q in await quests.ready_to_turn_in(session, char, present, npc=npc_key)]
+    rows += [[btn(a.action.label.get(lang), cb("qa", a.ref, n))]
+             for a in await quests.available_actions(session, char, present, npc=npc_key)]
     if npc.shop:
         rows.append([btn(t(lang, "btn.shop"), cb("shop", npc_key))])
     rows.append([btn(t(lang, "btn.leave"), cb("bye"))])
@@ -1222,12 +1226,17 @@ def _sheet_top(c, cls, char: Character, gear: dict, lang: str) -> list[str]:
         RULE,
         t(lang, "sheet.hp", hp=char.hp, max_hp=char.max_hp, bar=hp_bar(char.hp, char.max_hp)),
     ]
-    if char.level < MAX_LEVEL:
-        lo, hi = XP_THRESHOLDS[char.level - 1], XP_THRESHOLDS[char.level]
-        lines.append(t(lang, "sheet.xp", cur=char.xp - lo, need=hi - lo, level=char.level + 1, xp=char.xp,
-                       bar=hp_bar(char.xp - lo, hi - lo)))
+    table = c.progression.xp
+    if char.level < len(table):
+        lo, hi = table[char.level - 1], table[char.level]
+        cur = min(char.xp - lo, hi - lo)  # waiting at a gate the bar is full, never over its own total
+        lines.append(t(lang, "sheet.xp", cur=cur, need=hi - lo, level=char.level + 1, xp=char.xp,
+                       bar=hp_bar(cur, hi - lo)))
     else:
         lines.append(t(lang, "sheet.xp_max", xp=char.xp))
+    if gate := characters.level_gate(char):  # the XP is there; a mission is not (roadmap_balance §4.2)
+        lines.append(t(lang, "sheet.level_gate",
+                       milestone=escape(c.progression.milestones[gate].name.get(lang))))
     lines.append(t(lang, "sheet.vitals", ac=characters.armor_class(char, gear), pb=proficiency_bonus(char.level),
                    gold=char.gold))
     if char.conditions.get("injured"):
@@ -1433,7 +1442,8 @@ async def inventory_view(session: AsyncSession, char: Character, lang: str,
     return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
 
 
-QUEST_ICONS = {"locked": "🔒", "available": "❔", "active": "📜", "completed": "✅", "failed": "❌"}
+QUEST_ICONS = {"locked": "🔒", "available": "❔", "active": "📜", "ready": "✅",
+               "completed": "✅", "failed": "❌"}
 
 
 def _objective_line(obj, done: int, lang: str) -> str:
@@ -1471,7 +1481,7 @@ async def journal(session: AsyncSession, char: Character, lang: str) -> tuple[st
         rows.append([btn(t(lang, "btn.continue_trip", place=c.locations[trip_to].phrase()[lang]),
                          cb("go", trip_to, n))])
     current = [(k, q, p) for k, q, p in await quests.journal(session, char)
-               if quests.stage_of(q, p)[1] in ("active", "available")]
+               if quests.stage_of(q, p)[1] in ("active", "available", "ready")]
     if current:
         lines.append("")
         lines.append(f"<b>{t(lang, 'journal.current')}</b>")
@@ -1480,6 +1490,9 @@ async def journal(session: AsyncSession, char: Character, lang: str) -> tuple[st
             lines.append(f"{QUEST_ICONS[state]} <b>{escape(quest.name.get(lang))}</b>")
             lines.append(f"<i>{escape(quest.stages[stage].journal.get(lang))}</i>")
             lines += [_objective_line(o, done, lang) for o, done in quests.objective_progress(quest, prog)]
+            if state == "ready" and quest.giver:  # it is done; somebody is owed the news
+                lines.append(t(lang, "quest.ready", quest=escape(quest.name.get(lang)),
+                               npc=escape(c.npcs[quest.giver].name.get(lang))))
             rows.append([btn(f"{QUEST_ICONS[state]} {quest.name.get(lang)}", cb("jq", key))])
     else:
         lines += ["", f"<i>{t(lang, 'journal.no_current')}</i>"]
@@ -1521,7 +1534,7 @@ async def missions(session: AsyncSession, char: Character, lang: str) -> tuple[s
     rows = []
     for key, quest, prog in entries:
         _, state = quests.stage_of(quest, prog)
-        if state in ("active", "available"):
+        if state in ("active", "available", "ready"):
             rows.append([btn(f"{QUEST_ICONS[state]} {quest.name.get(lang)}", cb("jq", key))])
     lines.append(f"<i>{t(lang, 'journal.missions_hint' if rows else 'journal.no_current')}</i>")
     finished = [(k, q, p) for k, q, p in entries if quests.stage_of(q, p)[1] in FINISHED]
@@ -1700,7 +1713,7 @@ def rule_numbers(lang: str = "es") -> dict:
     return {
         "dc_trivial": DC_TIERS["trivial"], "dc_easy": DC_TIERS["easy"], "dc_medium": DC_TIERS["medium"],
         "dc_hard": DC_TIERS["hard"], "dc_very_hard": DC_TIERS["very_hard"],
-        "max_level": progression.MAX_LEVEL, "asi_level": characters.ASI_LEVEL,
+        "max_level": len(c.progression.xp), "asi_level": characters.ASI_LEVEL,
         "points": pointbuy.BUDGET, "flee_dc_base": combat.FLEE_DC_BASE, "flee_dc_step": combat.FLEE_DC_PER_FOE,
         "defeat_gold_pct": characters.DEFEAT_GOLD_PCT, "rest_gold": min(rest_costs) if rest_costs else 0,
         "skin_s": min(skins) if skins else 0, "skin_s_max": max(skins) if skins else 0,

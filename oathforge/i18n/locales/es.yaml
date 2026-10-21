@@ -146,6 +146,7 @@ btn:
   travel: "🧭 Viajar"
   investigate: "🔎 Investigar"
   talk: "💬 Hablar"
+  turn_in: "📜 Entregar: {quest}"
   shop: "🛒 Comerciar"
   rest: "🛏️ Descanso largo ({cost} 🪙)"
   rest_free: "🛏️ Descanso largo (gratis)"
@@ -371,6 +372,7 @@ sheet:
   hp: "❤️ PV {hp}/{max_hp}  {bar}"
   xp: "✨ XP {cur}/{need} hacia el nivel {level} ({xp} en total)  {bar}"
   xp_max: "✨ XP {xp} · nivel máximo"
+  level_gate: "🔒 Tienes la XP del siguiente nivel; te falta: {milestone}."
   vitals: "🛡️ CA {ac} · 🎯 Competencia +{pb} · 🪙 {gold}"
   injured: "🩹 Herido (descansa en una posada)"
   attributes: "⚖️ Atributos"
@@ -513,6 +515,8 @@ quest:
   new: "📜 Nueva misión: {quest}. Mírala en /quests."
   progress: "{quest}: {target} {n}/{count}."
   next: "📜 {quest}: ahora, {step}."
+  ready: "✅ {quest}: ya está. Entrégasela a {npc}."
+  turned_in: "📜 Entregas <b>{quest}</b> a {npc}."
   objective:
     kill: "Derrota: {target}"
     hunt: "Caza en {target}"
@@ -529,6 +533,8 @@ quest:
     read: "Consulta en el /rulebook: {target}"
   err:
     unavailable: "Eso ya no es posible."
+    not_ready: "Esa misión ya no está pendiente de entrega."
+    giver_away: "Quien te dio la misión no está aquí."
 
 loot:
   gold: "🪙 +{gold} de oro."
@@ -546,6 +552,7 @@ progress:
   asi: "Tu {ability} aumenta en 2."
   skill_rank: "Tu dominio de {skill} mejora (rango {rank})."
   specialization_soon: "Has alcanzado el nivel 5. Pronto podrás elegir una especialización."
+  milestone: "🏅 Un paso que no se olvida: {milestone}."
 
 level_card:
   title: "🎉 <b>¡NIVEL {level}!</b>"
