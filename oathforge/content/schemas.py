@@ -159,6 +159,7 @@ class GameClass(Strict):
     # featured combat button: the first of these the hero has and can use (the rest go to "✨ Actions")
     signature: list[str] = []
     casting: Literal["int", "wis", "cha"] | None = None  # spell attacks and healing use this modifier
+    resource: str | None = None  # its own bar in content/progression.yaml (Conviction, Focus, Mana…)
     array: dict[str, int]
     skills: list[str]
     items: dict[str, int]
@@ -456,6 +457,78 @@ class Specialization(Strict):
     name: Text
     description: Text
     effects: SpecEffects = SpecEffects()
+
+
+MAX_CHARACTER_LEVEL = 20  # T2 and levels 21-30 are a future expansion (roadmap_balance N08)
+Role = Literal["dmg", "deff", "heal", "control"]  # the first one in a branch's list is its main role
+
+
+class ResourceDef(Strict):
+    """A class's own bar (Conviction, Focus, Mana…): what it is called and how it comes back.
+
+    ``base`` + ``per_level`` give the maximum; ``per_turn`` is what a combat turn restores and
+    ``on_victory`` the share recovered after a won fight. A rest always refills it (see B03).
+    """
+
+    name: Text
+    description: Text
+    base: int = Field(0, ge=0)
+    per_level: int = Field(0, ge=0)
+    per_turn: int = Field(0, ge=0)
+    on_victory: float = Field(0.0, ge=0, le=1)
+    starts_empty: bool = False  # Fury and the like begin a fight at zero and are built up
+
+
+class ClassSpecialization(Strict):
+    """One of the 41 class branches, chosen at level 10 and kept (see planning/roadmap_balance.md §6).
+
+    It is a different thing from ``Specialization``, which is a branch of a field mastery.
+    ``ready`` stays false until the branch has its whole 10-20 path, so it cannot be picked yet.
+    """
+
+    class_key: str
+    name: Text
+    description: Text  # its loop: what decision the branch gives the player
+    roles: list[Role] = Field(min_length=1, max_length=2)
+    ready: bool = False
+
+
+class Milestone(Strict):
+    """A narrative gate: until it is done, no amount of XP takes the hero past ``level_cap``."""
+
+    name: Text
+    description: Text
+    level_cap: int = Field(ge=1, le=MAX_CHARACTER_LEVEL)
+    quest: str | None = None  # the mission whose turn-in grants it
+
+
+class Progression(Strict):
+    """content/progression.yaml: the XP table, the milestone gates and the class resources.
+
+    The hero's level is the lowest of what XP allows, what milestones permit and ``max_level``.
+    """
+
+    xp: list[int] = Field(min_length=2)
+    training_levels: list[int] = []  # levels that ask the player to pick a training package
+    modifier_levels: list[int] = []  # levels that ask for one of the branch's two modifiers
+    specialization_level: int = Field(10, ge=1, le=MAX_CHARACTER_LEVEL)
+    base_cap: int = Field(MAX_CHARACTER_LEVEL, ge=1, le=MAX_CHARACTER_LEVEL)  # the cap with no milestone done
+    milestones: dict[str, Milestone] = {}
+    resources: dict[str, ResourceDef] = {}
+    # classes approved in roadmap_balance §6 that B06 has not written yet: their branches load and
+    # validate, but none of them may be ready, so nobody can pick one.
+    future_classes: list[str] = []
+
+    @field_validator("xp")
+    @classmethod
+    def _rising_from_zero(cls, v: list[int]) -> list[int]:
+        if v[0] != 0:
+            raise ValueError("the first XP threshold must be 0 (level 1)")
+        if any(b <= a for a, b in zip(v, v[1:])):
+            raise ValueError("XP thresholds must rise")
+        if len(v) > MAX_CHARACTER_LEVEL:
+            raise ValueError(f"no more than {MAX_CHARACTER_LEVEL} levels")
+        return v
 
 
 class Technique(Strict):

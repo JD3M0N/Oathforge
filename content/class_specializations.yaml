@@ -1,0 +1,367 @@
+# Las 41 ramas de clase, aprobadas en planning/roadmap_balance.md §6.
+#
+# No confundir con content/specializations.yaml, que son las ramas de maestría de campo y de Pesca.
+# Esto es la rama de CLASE: una por personaje, elegida al nivel 10 en el Gremio y sin cambio libre.
+#
+# roles: dmg (daño), deff (defensa), heal (recuperación), control (alterar lo que puede hacer el rival).
+# El primero es el principal; el segundo no obliga a dar todas las herramientas de ese rol.
+#
+# ready: false mientras la rama no tenga su recorrido entero de 10 a 20 (pasiva y técnica al 10,
+# desarrollo fijo, los dos modificadores del 13 y el 17, y la culminación del 20). Una rama que no
+# está lista no aparece como elegible: se completan por lotes en la fase B07.
+
+# ----------------------------------------------------------------- Paladín (4)
+
+avenger:
+  class_key: paladin
+  name: {es: Vengador, en: Avenger}
+  description:
+    es: Marcas una presa y acumulas presión sobre ella. Los castigos gastan Convicción; cambiar de blanco te obliga a reconstruir parte de la ventaja.
+    en: You mark one quarry and pile pressure on it. Punishments spend Conviction; switching targets makes you rebuild part of your advantage.
+  roles: [dmg, control]
+
+sacred_warden:
+  class_key: paladin
+  name: {es: Custodio Sagrado, en: Sacred Warden}
+  description:
+    es: Mantienes una guardia sagrada y conviertes los golpes que mitigas en respuesta. Protegerte es, en sí mismo, tu forma de atacar.
+    en: You hold a holy guard and turn the blows you blunt into an answer. Protecting yourself is, in itself, how you attack.
+  roles: [deff, dmg]
+
+redeemer:
+  class_key: paladin
+  name: {es: Redentor, en: Redeemer}
+  description:
+    es: Alternas ataques que preparan una curación y curaciones de daño real que preparan el siguiente ataque. Sanar es parte del cuerpo a cuerpo.
+    en: You alternate attacks that set up a healing and healings of real damage that set up the next attack. Mending is part of the melee.
+  roles: [heal, deff]
+
+inquisitor:
+  class_key: paladin
+  name: {es: Inquisidor, en: Inquisitor}
+  description:
+    es: Impones sellos que castigan lo que el rival anuncia, debilitan su defensa o preparan una interrupción. Eliges qué sello y cuándo.
+    en: You lay seals that punish what the enemy telegraphs, weaken its defence or set up an interruption. You choose which seal, and when.
+  roles: [control, dmg]
+
+# ---------------------------------------------------------------- Guerrero (2)
+
+battle_master:
+  class_key: warrior
+  name: {es: Maestro de Batalla, en: Battle Master}
+  description:
+    es: Un repertorio corto de maniobras para abrir una defensa, interrumpir o preparar el remate. La respuesta correcta al patrón del rival, no un árbol de combos.
+    en: A short set of manoeuvres to open a defence, interrupt or set up the finisher. The right answer to the enemy's pattern, not a combo tree.
+  roles: [dmg, control]
+
+bulwark:
+  class_key: warrior
+  name: {es: Baluarte, en: Bulwark}
+  description:
+    es: Escudo, aplomo y golpes que desequilibran. Bloquear prepara una intervención física; no dependes de magia ni de curarte.
+    en: Shield, footing and blows that unbalance. Blocking sets up a physical intervention; you lean on no magic and no healing.
+  roles: [deff, control]
+
+# ----------------------------------------------------------------- Bárbaro (2)
+
+berserker:
+  class_key: barbarian
+  name: {es: Berserker, en: Berserker}
+  description:
+    es: Sostienes el frenesí atacando. Gastas Furia en un remate o la guardas para seguir presionando; exponerte es una decisión, no un castigo.
+    en: You keep the frenzy alive by attacking. Spend Fury on a finisher or hold it to keep pressing; exposing yourself is a choice, not a penalty.
+  roles: [dmg]
+
+colossus:
+  class_key: barbarian
+  name: {es: Coloso, en: Colossus}
+  description:
+    es: Aguantas, cargas los impactos y desestabilizas. Conviertes la Furia en resistencia o en un solo golpe pesado.
+    en: You endure, soak the hits and unbalance. You turn Fury into toughness or into one heavy blow.
+  roles: [deff, control]
+
+# ------------------------------------------------------------------ Pícaro (3)
+
+assassin:
+  class_key: rogue
+  name: {es: Asesino, en: Assassin}
+  description:
+    es: Preparas un objetivo y descargas el daño en una ventana. En un combate largo puedes abrir ventanas nuevas, no dependes del primer turno.
+    en: You prepare a target and dump damage in one window. In a long fight you can open fresh windows; you do not live off the first turn.
+  roles: [dmg]
+
+duelist:
+  class_key: rogue
+  name: {es: Duelista, en: Duelist}
+  description:
+    es: Fintas, paradas y réplicas contra un solo rival. Atacar y defender preparan oportunidades distintas, y siempre tienes una a mano.
+    en: Feints, parries and ripostes against one rival. Attacking and defending set up different openings, and one is always within reach.
+  roles: [dmg, deff]
+
+saboteur:
+  class_key: rogue
+  name: {es: Saboteador, en: Saboteur}
+  description:
+    es: Trampas, humo y venenos propios. Preparas una ventaja y decides si la activas tú o dejas que el rival la desencadene.
+    en: Traps, smoke and poisons of your own. You set an advantage and decide whether to trigger it or let the enemy walk into it.
+  roles: [control, dmg]
+
+# ----------------------------------------------------------------- Clérigo (3)
+
+life_domain:
+  class_key: priest
+  name: {es: Dominio de la Vida, en: Life Domain}
+  description:
+    es: Mantienes bendiciones y eliges entre recuperación inmediata o sostenida. Tus ataques devocionales preparan la siguiente curación.
+    en: You keep blessings up and choose between immediate or sustained recovery. Your devotional attacks set up the next healing.
+  roles: [heal, deff]
+
+light_domain:
+  class_key: priest
+  name: {es: Dominio de la Luz, en: Light Domain}
+  description:
+    es: Acumulas fulgor para quemar, revelar o desorientar, y alternas entre concentrarlo en uno y repartirlo.
+    en: You gather radiance to burn, reveal or dazzle, alternating between concentrating it on one and spreading it.
+  roles: [dmg, control]
+
+war_domain:
+  class_key: priest
+  name: {es: Dominio de la Guerra, en: War Domain}
+  description:
+    es: Arma y plegaria se preparan la una a la otra. Combate ritual, distinto de la Convicción del Paladín.
+    en: Weapon and prayer set each other up. Ritual warfare, a different thing from the Paladin's Conviction.
+  roles: [dmg, deff]
+
+# --------------------------------------------------------------- Hechicero (6)
+
+pyromancer:
+  class_key: mage
+  name: {es: Piromante, en: Pyromancer}
+  description:
+    es: Aplicas quemaduras y decides entre mantenerlas ardiendo o consumirlas para detonar. Puedes preparar varios blancos a la vez.
+    en: You lay burns and choose between letting them burn or spending them to detonate. You can prime several targets at once.
+  roles: [dmg]
+
+cryomancer:
+  class_key: mage
+  name: {es: Criomante, en: Cryomancer}
+  description:
+    es: Acumulas frío para limitar, congelar o volver frágil al rival, y consumes esa preparación al quebrarlo.
+    en: You stack cold to limit, freeze or make the enemy brittle, then spend that build-up to shatter it.
+  roles: [control, dmg]
+
+arcanist:
+  class_key: mage
+  name: {es: Arcanista, en: Arcanist}
+  description:
+    es: Las cargas arcanas suben tu potencia y la presión sobre tu Maná. Puedes descargarlas o invertirlas en una barrera.
+    en: Arcane charges raise both your power and the pressure on your Mana. Discharge them, or spend them on a barrier.
+  roles: [dmg, deff]
+
+stormcaller:
+  class_key: mage
+  name: {es: Tempestario, en: Stormcaller}
+  description:
+    es: Marcas conductividad y encadenas descargas. Contra un solo rival concentras la tormenta en vez de perder tu identidad.
+    en: You mark conductivity and chain discharges. Against a lone rival you focus the storm instead of losing your identity.
+  roles: [dmg, control]
+
+summoner:
+  class_key: mage
+  name: {es: Invocador, en: Summoner}
+  description:
+    es: Dos entidades de un repertorio mixto actúan solas sobre la presa marcada; una orden conjunta te cuesta la acción. Nunca hay una tercera.
+    en: Two entities from a mixed roster act on their own against the marked quarry; a joint order costs you your action. There is never a third.
+  roles: [dmg, control]
+
+chronomancer:
+  class_key: mage
+  name: {es: Cronomante, en: Chronomancer}
+  description:
+    es: Retrasas una amenaza que viene y alteras, dentro de un límite, cuándo vuelve a estar lista una técnica. Anticipar vale más que pegar fuerte.
+    en: You delay an oncoming threat and shift, within limits, when a technique comes back. Anticipating beats hitting hard.
+  roles: [control, deff]
+
+# ------------------------------------------------------------------ Druida (3)
+
+shapeshifter:
+  class_key: druid
+  name: {es: Cambiaformas, en: Shapeshifter}
+  description:
+    es: Peleas casi siempre transformado. Una forma resistente y otra ofensiva sustituyen tus acciones principales, y cambiar cuesta.
+    en: You fight mostly transformed. A tough form and an aggressive one replace your main actions, and switching costs you.
+  roles: [dmg, deff]
+
+grove_warden:
+  class_key: druid
+  name: {es: Guardián del Bosque, en: Grove Warden}
+  description:
+    es: Corteza, raíces y regeneración te mantienen en pie, y puedes consumir parte de esa protección para atacar.
+    en: Bark, roots and regrowth keep you standing, and you can spend part of that protection to strike.
+  roles: [deff, heal]
+
+circle_of_spores:
+  class_key: druid
+  name: {es: Círculo de Esporas, en: Circle of Spores}
+  description:
+    es: Siembras esporas y eliges propagarlas, mantenerlas o hacerlas florecer. Un desgaste que se acelera con una decisión.
+    en: You sow spores and choose to spread them, keep them or make them bloom. Attrition that one decision can hasten.
+  roles: [dmg, control]
+
+# ------------------------------------------------------------------- Bardo (2)
+
+war_chanter:
+  class_key: bard
+  name: {es: Cantor de Guerra, en: War Chanter}
+  description:
+    es: Mantienes una melodía ofensiva o restauradora mientras construyes Resonancia para un estribillo. Cambiar de melodía no te cuesta un turno perdido.
+    en: You hold an aggressive or a restoring melody while building Resonance for a refrain. Switching melodies costs you no wasted turn.
+  roles: [dmg, heal]
+
+illusionist:
+  class_key: bard
+  name: {es: Ilusionista, en: Illusionist}
+  description:
+    es: Señuelos, distracción y réplicas. Decides entre bajar la amenaza que tienes encima o preparar el castigo.
+    en: Decoys, distraction and doubles. You choose between lowering the threat on you and setting up the punishment.
+  roles: [control, deff]
+
+# ------------------------------------------------------------------- Brujo (3)
+
+demonologist:
+  class_key: warlock
+  name: {es: Demonólogo, en: Demonologist}
+  description:
+    es: "Un servidor poderoso con nombre propio que es siempre el mismo: alimentas el vínculo, le ordenas una técnica y te proteges tras él. Evoluciona, no se reemplaza."
+    en: "One powerful servant with a name of its own, always the same: you feed the bond, order a technique and shelter behind it. It evolves; it is never swapped."
+  roles: [dmg, deff]
+
+hexblade:
+  class_key: warlock
+  name: {es: Filo Maldito, en: Hexblade}
+  description:
+    es: Maldices y peleas de cerca. Tus golpes desarrollan la maldición y consumirla sirve para dañar o para debilitar.
+    en: You curse and fight up close. Your blows grow the curse, and spending it either hurts or weakens.
+  roles: [dmg, control]
+
+necromancer:
+  class_key: warlock
+  name: {es: Nigromante, en: Necromancer}
+  description:
+    es: Tus técnicas generan vestigios y los gastas en poder funerario o en un sirviente temporal. No necesitas un cadáver ajeno.
+    en: Your techniques leave remnants, spent either on funerary power or on a temporary servant. You need nobody else's corpse.
+  roles: [dmg, control]
+
+# -------------------------------------------------------------- Explorador (2)
+
+sharpshooter:
+  class_key: ranger
+  name: {es: Tirador, en: Sharpshooter}
+  description:
+    es: Disparos rápidos frente a tiros preparados. Marcas un punto débil o interrumpes una amenaza que ya se ve venir.
+    en: Quick shots against prepared ones. You mark a weak point or interrupt a threat you can already see coming.
+  roles: [dmg, control]
+
+beastmaster:
+  class_key: ranger
+  name: {es: Señor de Bestias, en: Beastmaster}
+  description:
+    es: Una bestia compañera estable y ataques coordinados. Le ordenas atacar o ayudarte a resistir; no se compra ni se repone.
+    en: One steady animal companion and coordinated attacks. You order it to strike or to help you hold; it is never bought nor replaced.
+  roles: [dmg, deff]
+
+# ------------------------------------------------------------------- Monje (2)
+
+iron_fist:
+  class_key: monk
+  name: {es: Puño de Hierro, en: Iron Fist}
+  description:
+    es: Una técnica abre un remate que golpea, desequilibra o interrumpe. El panel te enseña la oportunidad mientras dura.
+    en: One technique opens a finisher that hits, unbalances or interrupts. The panel shows you the opening while it lasts.
+  roles: [dmg, control]
+
+shadow_dancer:
+  class_key: monk
+  name: {es: Danzante de Sombras, en: Shadow Dancer}
+  description:
+    es: Evasión y desplazamiento preparan tus contraataques, y tienes una técnica alterna para crear la oportunidad sin depender de esquivar.
+    en: Evasion and movement set up your counters, and a second technique creates the opening without relying on a dodge.
+  roles: [deff, dmg]
+
+# ----------------------------------------------------------------- Artífice (4)
+
+runic_armorer:
+  class_key: artificer
+  name: {es: Armero Rúnico, en: Runic Armorer}
+  description:
+    es: Una armadura con modo defensivo y modo ofensivo. Repartes la Carga entre protegerte y golpear.
+    en: Armour with a defensive mode and an offensive one. You split your Charge between shielding and striking.
+  roles: [deff, dmg]
+
+artillerist:
+  class_key: artificer
+  name: {es: Artillero, en: Artillerist}
+  description:
+    es: Un arma desplegada dispara sola. Tú administras munición abstracta, recargas o aprovechas el blanco que deja abierto.
+    en: A deployed weapon fires on its own. You manage abstract ammunition, reload, or exploit the target it leaves open.
+  roles: [dmg, control]
+
+catalyst:
+  class_key: artificer
+  name: {es: Catalizador, en: Catalyst}
+  description:
+    es: Un aparato aplica reactivos —corrosivo, espuma protectora, pulso restaurador— y cataliza los residuos. Usa Carga, no pociones ni oficio de Alquimia.
+    en: A device applies reagents — corrosive, protective foam, restoring pulse — and catalyses the residue. It runs on Charge, not on potions or the Alchemy trade.
+  roles: [heal, dmg]
+
+construct_master:
+  class_key: artificer
+  name: {es: Maestro de Constructos, en: Construct Master}
+  description:
+    es: Un autómata que configuras antes del combate protege e interviene. Hace algo distinto de un cañón quieto.
+    en: An automaton you configure before the fight protects and intervenes. It does a different job from a stationary gun.
+  roles: [deff, control]
+
+# ------------------------------------------------------------------ Chamán (3)
+
+elementalist:
+  class_key: shaman
+  name: {es: Elementalista, en: Elementalist}
+  description:
+    es: Preparas con un elemento y activas la combinación con otro. Tu identidad es alternar, no especializarte en fuego ni en hielo.
+    en: You prime with one element and set it off with another. Your identity is alternating, not specialising in fire or ice.
+  roles: [dmg, control]
+
+ancestral_guardian:
+  class_key: shaman
+  name: {es: Guardián Ancestral, en: Ancestral Guardian}
+  description:
+    es: Un tótem y una presencia ancestral te protegen y responden a las agresiones. La decisión es mantener el vínculo o consumirlo.
+    en: A totem and an ancestral presence shield you and answer aggression. The choice is to keep the bond or spend it.
+  roles: [deff, control]
+
+tideweaver:
+  class_key: shaman
+  name: {es: Tejedor de Mareas, en: Tideweaver}
+  description:
+    es: El flujo favorece restaurar y el reflujo descargar poder, y puedes adaptar el ciclo sin depender de nadie más.
+    en: The flow favours restoring and the ebb favours unleashing, and you can bend the cycle without leaning on anyone.
+  roles: [heal, dmg]
+
+# ------------------------------------------------- Caballero de la Muerte (2)
+
+blood:
+  class_key: death_knight
+  name: {es: Sangre, en: Blood}
+  description:
+    es: Absorbes vitalidad y respondes al daño reciente con protección o con recuperación propia. No curas a nadie más.
+    en: You drain vitality and answer recent damage with protection or with your own recovery. You mend nobody else.
+  roles: [deff, dmg]
+
+frost:
+  class_key: death_knight
+  name: {es: Escarcha, en: Frost}
+  description:
+    es: Tus ataques cercanos acumulan marcas rúnicas y los golpes de escarcha las rompen para presionar y debilitar.
+    en: Your close attacks stack runic marks and frost blows break them to press and weaken.
+  roles: [dmg, control]

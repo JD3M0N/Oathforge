@@ -44,7 +44,8 @@ class OpenBudget:
 
 def make_llm(*outcomes) -> tuple[GeminiLLM, ScriptedClient]:
     client = ScriptedClient(*outcomes)
-    llm = GeminiLLM(Settings(gemini_model_fast=FAST, gemini_model_narrative=NARRATIVE), client=client)
+    llm = GeminiLLM(Settings(gemini_model_fast=FAST, gemini_model_narrative=NARRATIVE, gemini_model_fallback=""),
+                    client=client)
     llm.budget = OpenBudget()
     return llm, client
 
@@ -112,7 +113,8 @@ async def test_the_backup_model_is_used_last_for_every_tier():
 
 async def test_one_model_for_everything_goes_generic_while_it_cools_down():
     client = ScriptedClient(TimeoutError(), "never used")
-    llm = GeminiLLM(Settings(gemini_model_fast=FAST, gemini_model_narrative=FAST, gemini_model_chronicle=FAST),
+    llm = GeminiLLM(Settings(gemini_model_fast=FAST, gemini_model_narrative=FAST, gemini_model_chronicle=FAST,
+                             gemini_model_fallback=""),
                     client=client)
     llm.budget = OpenBudget()
     assert await llm.text(tier="narrative", system="s", prompt="p", user_id=None) is None

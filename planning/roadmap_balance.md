@@ -51,7 +51,7 @@ Hito **0.10-I** del [roadmap general](roadmap.md). Se avanza **fase a fase**: ca
 | Fase | Estado | Versión |
 |---|---|---|
 | B00 · Base y auditoría | ✅ Hecha | 0.10.21 |
-| B01 · Contratos de contenido y estado | Pendiente | — |
+| B01 · Contratos de contenido y estado | ✅ Hecha | 0.10.22 |
 | B02 · XP híbrida y entrega al PNJ | Pendiente | — |
 | B03 · Motor de recursos y efectos | Pendiente | — |
 | B04 · Catálogo efectivo, selección y elecciones | Pendiente | — |
@@ -1078,23 +1078,23 @@ El simulador y pruebas se amplían junto a cada fase, no solo en B12. No hacen f
 ### B00 · Fijar base y reconocer lo ya entregado
 
 **Objetivo:** partir de la rama actual sin rehacer F15.
-- [ ] Leer versión, rama y diff desde este SHA; actualizar tabla de auditoría si se movió.
-- [ ] Ejecutar validaciones de F15 que quedaron pendientes con bot y PostgreSQL disponibles.
-- [ ] Inventariar referencias a clase, nivel 5, cripta, usos por descanso y tutorial acelerado.
-- [ ] Registrar fuentes y separar defectos anteriores de cambios nuevos.
+- [x] Leer versión, rama y diff desde este SHA; actualizar tabla de auditoría si se movió. (0.10.21, §2.3)
+- [ ] Ejecutar validaciones de F15 que quedaron pendientes con bot y PostgreSQL disponibles. *La partida ES/EN con `tgtest` sigue pendiente; se hace con contenido nuevo que probar.*
+- [x] Inventariar referencias a clase, nivel 5, cripta, usos por descanso y tutorial acelerado. (0.10.21, §2.3)
+- [x] Registrar fuentes y separar defectos anteriores de cambios nuevos. (0.10.21; los 5 fallos de la línea base eran del `.env` y se arreglaron en 0.10.22)
 **Archivos:** AGENTS, CHANGELOG, tests/features, planning/opificia, config, loader.
 **Terminado:** baseline reproducible, fallos conocidos escritos, sin afirmar concurrencia validada con SQLite.
 
 ### B01 · Contratos de contenido y estado
 
 **Objetivo:** separar clase, rama artesanal, recursos y elecciones.
-- [ ] Añadir esquemas de rama de clase, modificadores, recursos e hitos.
-- [ ] Diseñar catálogo efectivo único; mantener contratos pequeños.
-- [ ] Elegir persistencia versionada y migraciones.
-- [ ] Validar ids únicos, referencias ES/EN, niveles 1–20 y opciones por clase.
+- [x] Añadir esquemas de rama de clase, modificadores, recursos e hitos. (0.10.22)
+- [x] Diseñar catálogo efectivo único; mantener contratos pequeños. (0.10.22, `engine/class_build.py`)
+- [x] Elegir persistencia versionada y migraciones. (0.10.22, `characters.build` y migración 0013)
+- [x] Validar ids únicos, referencias ES/EN, niveles 1–20 y opciones por clase. (0.10.22)
 **Archivos:** content/schemas.py, loader.py, database/models.py; nuevos class_specializations/progression y class_build propuestos.
 **Pruebas:** contenido inválido, rama ajena, duplicado de habilidad, coste negativo, requisito circular.
-**Terminado:** una ficha de prueba puede cargarse, calcularse y serializarse sin alterar maestrías.
+**Terminado:** una ficha de prueba puede cargarse, calcularse y serializarse sin alterar maestrías. **Hecho en 0.10.22.** Los modificadores existen como elección encolada (`Choice`), pero su contenido concreto —las dos opciones de cada rama— es de B07. Las 41 ramas están declaradas y validadas, ninguna elegible.
 
 ### B02 · XP híbrida y entrega al PNJ
 

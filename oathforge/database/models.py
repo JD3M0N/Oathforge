@@ -70,6 +70,8 @@ class Character(Base):
     # {"known": [special recipes learned from a blueprint], "spec": {discipline: branch}, "tools": {discipline: item}}
     crafting: Mapped[dict] = mapped_column(Json, default=dict)
     home: Mapped[dict] = mapped_column(Json, default=dict)  # {"bed": true, "chest": level} once installed
+    # progression choices, versioned: {"v": 1, "milestones": [...], "choices": {"training:5": …}, …}
+    build: Mapped[dict] = mapped_column(Json, default=dict)
     cooldowns: Mapped[dict] = mapped_column(Json, default=dict)  # key -> unix time when it is ready again
     # background "custom": {"title", "story", "skills"} written by the player and reviewed by the AI
     custom_background: Mapped[dict | None] = mapped_column(Json, nullable=True)

@@ -4,6 +4,9 @@ Resumen de [Possibilium §5–7](Possibilium.md#s05).
 
 ## Estado actual (0.8.2)
 
+> **En revisión (0.10-I, desde 0.10.22).** El [contrato de clases y progresión](roadmap_balance.md) sustituye lo que sigue: pasan a ser **14 clases** (Mago y Hechicero se fusionan en Hechicero, Sacerdote pasa a Clérigo y entran Bárbaro, Explorador, Monje, Artífice, Chamán y Caballero de la Muerte), cada una con **su propia barra** en vez de usos por descanso, y **41 ramas que se eligen al nivel 10**, no al 5. El catálogo ya está en `content/class_specializations.yaml` y los recursos en `content/progression.yaml`; ninguna rama es elegible todavía (`ready: false`) hasta que B07 le escriba su recorrido de 10 a 20. La tabla de abajo describe las ocho clases tal y como están hoy.
+
+
 Cada clase vive en `content/classes.yaml`: dado de golpe, atributo principal, reparto recomendado, competencias, equipo inicial, habilidades por nivel (1–5), `signature` (habilidad destacada 🌟 en combate) y `details` (texto largo de `/skill_<clave>`).
 
 | Clase | Rol | Dado | Principal | Fila | Identidad |

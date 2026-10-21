@@ -34,6 +34,9 @@ def artifacts_dir(tmp_path_factory):
     settings = get_settings()
     settings.artifacts_dir = tmp_path_factory.mktemp("artifacts")
     settings.game_clock_offset_hours = 0  # a GAME_CLOCK_OFFSET_HOURS in .env (for playtesting) never moves tests
+    # the rest of .env must not move the tests either: the suite assumes the defaults
+    settings.default_language = "es"
+    settings.gemini_model_fallback = ""  # an extra model in the chain changes what the AI client tries
     # beta only: tests check the real timed activities; the beta shortcuts have their own tests (beta fixture)
     settings.beta_instant_rest = False
     settings.beta_instant_tutorial = False

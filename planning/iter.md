@@ -22,6 +22,7 @@ Versionado `0.x.y`: **y** (parche) en arreglos y cambios pequeños; **x** (menor
 | 0.8.3 | Planning reorganizado: Possibilium, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md`, `content/officina/` |
 | 0.9.0 | Logros e identidad: 30 logros, dos metalogros, títulos, destacados, objetivos seguidos y reconocimiento retroactivo verificable |
 | 0.9.1 | Hoja de ruta de 0.10 (consolidación) y 0.11 (multijugador): `planning/roadmap.md` |
+| 0.10.22 | 0.10-I (B01): los contratos de las 41 ramas de clase, la tabla de XP de 20 niveles con sus dos puertas y las nueve barras de clase; `engine/class_build.py` y la migración 0013 |
 | 0.10.21 | 0.10-I (B00): el contrato de la revisión de clases, progresión 1–20 y campaña en `planning/roadmap_balance.md`, y la auditoría de la base (solo documentación) |
 | 0.10.20 | Marcado en `TODO.md` y `planning/roadmap.md` lo que F15 deja hecho (solo documentación) |
 | 0.10.19 | Profesiones (F15, cierre): `tests/features.md` con el recorrido completo y los resúmenes de planning al día; queda la partida de prueba en ES y EN |

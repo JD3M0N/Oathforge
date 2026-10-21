@@ -4,6 +4,20 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.22] - 2026-10-21
+
+0.10-I (B01): los contratos de las ramas de clase, la progresión y los recursos. Todavía no cambia el juego.
+
+### Añadido
+- **`content/class_specializations.yaml`**: el catálogo de las **41 ramas de clase** de las catorce clases, con su nombre ES/EN, su bucle y sus roles (daño, defensa, recuperación y control). Ninguna es elegible aún: van marcadas `ready: false` hasta que tengan su recorrido entero de 10 a 20. No se confunde con `content/specializations.yaml`, que son las ramas de maestría de campo.
+- **`content/progression.yaml`**: la tabla de XP de los **veinte niveles**, las dos puertas narrativas (el Recaudador abre el 10, el Ciervo abre el resto), los niveles de entrenamiento (5, 12 y 18) y de modificador (13 y 17), y las **nueve barras de clase** —Convicción, Foco, Furia, Energía, Maná, Resonancia, Esencia, Carga y Poder rúnico— con cómo se recuperan. Son cifras semilla, para medirlas.
+- **`oathforge/engine/class_build.py`**: el catálogo efectivo y la progresión híbrida, puros y sin leer contenido por su cuenta. El nivel es el menor de tres: el que da la XP, el que permiten los hitos y el tope. La XP no se pierde esperando en una puerta, y las elecciones pendientes se encolan, así que saltar de golpe del 4 al 13 no pierde el entrenamiento del 5.
+- **Validación cruzada** en el loader: una rama tiene que ser de una clase real o de una que el contrato todavía debe (y entonces no puede estar lista), ninguna clase se queda sin rama, un id no puede estar en las dos familias y un recurso de clase tiene que existir. Con sus pruebas, más las del motor para los casos de §4.2 que no necesitan base de datos.
+- **Migración 0013**: `characters.build`, un bloque JSON versionado con los hitos cumplidos y las elecciones de entrenamiento y modificador.
+
+### Arreglado
+- La suite ya no depende del `.env` de cada máquina: `tests/conftest.py` fija el idioma por defecto y las pruebas del cliente de Gemini fijan su cadena de modelos. Eran los cinco fallos de la línea base de 0.10.21.
+
 ## [0.10.21] - 2026-10-21
 
 0.10-I (B00): el contrato de la revisión más grande del proyecto y la auditoría de la base. Solo documentación.

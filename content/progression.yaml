@@ -1,0 +1,115 @@
+# Progresión del héroe: la tabla de XP, las puertas narrativas y los recursos de clase.
+# Contrato en planning/roadmap_balance.md §4 y §5.
+#
+# El nivel efectivo es el menor de tres cosas: el que da la XP, el que permiten los hitos y el tope 20.
+# La XP nunca se pierde al chocar con una puerta: se guarda y se aplica en cuanto el hito se cumple.
+#
+# Las cifras son SEMILLAS para medir (N11 y N16), no un equilibrio demostrado. Los niveles 1 a 5
+# conservan los umbrales de hoy para no romper el tutorial actual; de 6 a 20 son nuevos.
+
+xp: [0, 200, 500, 1000, 1800, 2800, 4100, 5700, 7600, 9800,
+     12400, 15400, 18800, 22600, 26900, 31700, 37000, 42900, 49400, 56500]
+
+specialization_level: 10
+training_levels: [5, 12, 18]   # el jugador elige un paquete de entrenamiento
+modifier_levels: [13, 17]      # el jugador elige uno de los dos modificadores de su rama
+
+# Sin ningún hito cumplido no se pasa del 9: hay que entregar al Recaudador para cruzar al 10.
+base_cap: 9
+
+milestones:
+  ash_collector:
+    name: {es: El Recaudador de Ceniza, en: The Ash Collector}
+    description:
+      es: Venciste al Recaudador y entregaste la prueba de las órdenes falsas. El Gremio te reconoce como algo más que un recluta.
+      en: You beat the Collector and handed in the proof of the forged orders. The Guild sees you as more than a recruit.
+    level_cap: 10
+  iron_stag:
+    name: {es: El Ciervo de Hierro, en: The Iron Stag}
+    description:
+      es: Estrenaste tu camino contra el Ciervo y te graduaste. El valle queda abierto.
+      en: You blooded your path against the Stag and graduated. The vale lies open.
+    level_cap: 20
+
+# Una barra principal por clase. Como mucho un contador de apoyo por rama, y ese no vive aquí:
+# es un estado del encuentro (roadmap_balance §5.1 y N15).
+resources:
+  conviction:
+    name: {es: Convicción, en: Conviction}
+    description:
+      es: Se acumula cumpliendo tu juramento en el combate y se gasta en castigo y protección sagrada.
+      en: It builds as you keep your oath in battle and pays for holy punishment and protection.
+    base: 0
+    per_level: 2
+    per_turn: 1
+    starts_empty: true
+  focus:
+    name: {es: Foco, en: Focus}
+    description:
+      es: Atención sostenida. Vuelve un poco cada turno y la gastan las maniobras y las técnicas preparadas.
+      en: Sustained attention. A little returns each turn; manoeuvres and prepared techniques spend it.
+    base: 3
+    per_level: 1
+    per_turn: 2
+  fury:
+    name: {es: Furia, en: Fury}
+    description:
+      es: Se enciende atacando y presionando, no solo encajando golpes, y se apaga fuera del combate.
+      en: It kindles by attacking and pressing, not only by taking hits, and dies down out of combat.
+    base: 0
+    per_level: 3
+    starts_empty: true
+  energy:
+    name: {es: Energía, en: Energy}
+    description:
+      es: Vigor para moverte y golpear donde duele. Se repone sola cada turno.
+      en: Vigour to move and strike where it hurts. It comes back on its own each turn.
+    base: 4
+    per_level: 1
+    per_turn: 3
+  mana:
+    name: {es: Maná, en: Mana}
+    description:
+      es: Presupuesto mágico de la jornada. Se recupera en parte al ganar y del todo descansando.
+      en: The day's magical budget. Part of it returns on a win, all of it with a rest.
+    base: 4
+    per_level: 2
+    on_victory: 0.25
+  resonance:
+    name: {es: Resonancia, en: Resonance}
+    description:
+      es: La tensión que deja una interpretación sostenida; el estribillo la consume de golpe.
+      en: The tension a sustained performance leaves behind; the refrain spends it all at once.
+    base: 0
+    per_level: 2
+    per_turn: 1
+    starts_empty: true
+  essence:
+    name: {es: Esencia, en: Essence}
+    description:
+      es: Lo que tu pacto te presta. Alimenta al servidor, la maldición o los vestigios.
+      en: What your pact lends you. It feeds the servant, the curse or the remnants.
+    base: 3
+    per_level: 2
+    on_victory: 0.25
+  charge:
+    name: {es: Carga, en: Charge}
+    description:
+      es: "La reserva del aparato. No son pociones: no entra ni sale del inventario."
+      en: "The device's reserve. These are not potions: nothing enters or leaves the backpack."
+    base: 4
+    per_level: 2
+    per_turn: 1
+    on_victory: 0.25
+  runic_power:
+    name: {es: Poder rúnico, en: Runic Power}
+    description:
+      es: Las runas se cargan con cada golpe que das o recibes y se descargan en técnicas.
+      en: The runes charge with every blow you land or take and discharge into techniques.
+    base: 0
+    per_level: 2
+    starts_empty: true
+
+# Las seis clases nuevas que aprueba roadmap_balance §6 y que todavía no existen en classes.yaml.
+# Sus ramas cargan y se validan, pero ninguna puede estar lista hasta que B06 escriba la clase.
+future_classes: [barbarian, ranger, monk, artificer, shaman, death_knight]

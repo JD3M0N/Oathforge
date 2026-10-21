@@ -16,6 +16,7 @@ from oathforge.content.schemas import (
     FALLBACK_PLACEHOLDERS,
     AbilityInfo,
     Background,
+    ClassSpecialization,
     Continent,
     Faction,
     GameClass,
@@ -25,6 +26,7 @@ from oathforge.content.schemas import (
     Monster,
     Npc,
     Profession,
+    Progression,
     Quest,
     Recipe,
     RuleSection,
@@ -67,6 +69,8 @@ class Content:
     professions: dict[str, Profession] = field(default_factory=dict)
     recipes: dict[str, Recipe] = field(default_factory=dict)
     specializations: dict[str, Specialization] = field(default_factory=dict)  # two branches per mastery
+    class_specializations: dict[str, ClassSpecialization] = field(default_factory=dict)  # the 41 class branches
+    progression: Progression | None = None  # XP table, milestone gates and class resources
     rulebook: dict[str, RuleSection] = field(default_factory=dict)  # /rulebook pages, in order  # outcome -> generic texts when the AI chronicler is not used
 
 
@@ -190,6 +194,8 @@ def load_content(directory: Path = CONTENT_DIR) -> Content:
         professions=_parse(Profession, _read(directory, "professions")),
         recipes=_parse(Recipe, _read(directory, "recipes")),
         specializations=_parse(Specialization, _read(directory, "specializations")),
+        class_specializations=_parse(ClassSpecialization, _read(directory, "class_specializations")),
+        progression=Progression.model_validate(_read(directory, "progression")),
         rulebook=_parse(RuleSection, _read(directory, "rulebook")),
         achievements=_parse(Achievement, _read(directory, "achievements")),
     )
@@ -330,6 +336,7 @@ def validate_references(c: Content) -> None:
     for skill in GATHER_SKILLS:
         if c.specializations and skill not in branches:
             errors.append(f"specialization {skill}: this discipline has no branches")
+    errors += _class_progression_errors(c)
     taught: dict[str, list[str]] = {}
     for key, loc in c.locations.items():
         if loc.teaches is None:
@@ -450,6 +457,47 @@ def validate_references(c: Content) -> None:
 
     if errors:
         raise ValueError("Content validation failed:\n  " + "\n  ".join(errors))
+
+
+def _class_progression_errors(c: Content) -> list[str]:
+    """The two families of branches must not get mixed up: ``specializations`` are field masteries
+    and ``class_specializations`` are the 41 class branches of planning/roadmap_balance.md §6."""
+    errors: list[str] = []
+    prog = c.progression
+    if prog is None:
+        return ["progression.yaml: missing"]
+    for lvl in [*prog.training_levels, *prog.modifier_levels, prog.specialization_level]:
+        if not 1 <= lvl <= len(prog.xp):
+            errors.append(f"progression: level {lvl} is outside the 1-{len(prog.xp)} table")
+    if set(prog.training_levels) & set(prog.modifier_levels):
+        errors.append("progression: a level cannot ask for a training and a modifier at once")
+    if any(lvl < prog.specialization_level for lvl in prog.modifier_levels):
+        errors.append(f"progression: a modifier is picked before the branch (level {prog.specialization_level})")
+    for key, milestone in prog.milestones.items():
+        if milestone.quest is not None and milestone.quest not in c.quests:
+            errors.append(f"milestone {key}: unknown quest '{milestone.quest}'")
+        if milestone.level_cap <= prog.base_cap:
+            errors.append(f"milestone {key}: its cap {milestone.level_cap} opens nothing over the base {prog.base_cap}")
+    future = set(prog.future_classes)
+    if future & set(c.classes):
+        errors.append(f"progression: {sorted(future & set(c.classes))} already exist, they are not future classes")
+    for key, cls in c.classes.items():
+        if cls.resource is not None and cls.resource not in prog.resources:
+            errors.append(f"class {key}: unknown resource '{cls.resource}'")
+    clash = set(c.class_specializations) & set(c.specializations)
+    if clash:
+        errors.append(f"class branch and mastery branch share an id: {sorted(clash)}")
+    branches: dict[str, list[str]] = {}
+    for key, branch in c.class_specializations.items():
+        if branch.class_key not in c.classes and branch.class_key not in future:
+            errors.append(f"class branch {key}: unknown class '{branch.class_key}'")
+        elif branch.class_key in future and branch.ready:
+            errors.append(f"class branch {key}: its class '{branch.class_key}' does not exist yet, it cannot be ready")
+        branches.setdefault(branch.class_key, []).append(key)
+    for key in c.classes:
+        if c.class_specializations and key not in branches:
+            errors.append(f"class {key}: it has no branch to choose at level {prog.specialization_level}")
+    return errors
 
 
 def _city_graph_errors(c: Content) -> list[str]:

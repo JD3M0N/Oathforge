@@ -209,3 +209,59 @@ def test_rulebook_placeholders_come_from_the_engine():
             if prof.guide:
                 unknown |= {f"{key}.{lang}:{m}" for m in RULE_NUMBER.findall(prof.guide.get(lang)) if m not in known}
     assert not unknown, f"placeholders with no engine value: {sorted(unknown)}"
+
+
+def test_the_catalogue_of_class_branches():
+    """41 branches, each one of a real class or of one the roadmap still owes (roadmap_balance §6)."""
+    c = load_content()
+    assert len(c.class_specializations) == 41
+    per_class = {}
+    for branch in c.class_specializations.values():
+        per_class.setdefault(branch.class_key, []).append(branch)
+    assert len(per_class) == 14  # the eight of today plus the six that B06 will write
+    assert set(per_class) - set(c.classes) == set(c.progression.future_classes)
+    for key, branch in c.class_specializations.items():
+        assert not branch.ready, f"{key}: no branch is playable before B07 finishes its 10-20 path"
+    assert not set(c.class_specializations) & set(c.specializations)  # class branch vs mastery branch
+
+
+def test_progression_gates_and_resources():
+    c = load_content()
+    p = c.progression
+    assert p.base_cap == 9 and p.specialization_level == 10
+    assert [m.level_cap for m in p.milestones.values()] == [10, 20]
+    assert p.training_levels == [5, 12, 18] and p.modifier_levels == [13, 17]
+    assert all(cls.resource is None or cls.resource in p.resources for cls in c.classes.values())
+
+
+def test_broken_progression_is_rejected():
+    import pytest
+
+    from oathforge.content.schemas import Progression
+
+    with pytest.raises(ValueError, match="must be 0"):
+        Progression(xp=[100, 200])
+    with pytest.raises(ValueError, match="must rise"):
+        Progression(xp=[0, 200, 200])
+    with pytest.raises(ValueError, match="no more than 20"):
+        Progression(xp=list(range(0, 2100, 100)))
+
+
+def test_a_class_branch_pointing_nowhere_is_caught():
+    import pytest
+
+    from oathforge.content.loader import _class_progression_errors
+    from oathforge.content.schemas import ClassSpecialization
+
+    c = load_content()
+    text = {"es": "x", "en": "x"}
+    stray = ClassSpecialization(class_key="nobody", name=text, description=text, roles=["dmg"])
+    early = c.class_specializations["blood"].model_copy(update={"ready": True})  # its class does not exist yet
+    broken = dataclasses.replace(c, class_specializations={**c.class_specializations,
+                                                           "stray": stray, "blood": early})
+    errors = _class_progression_errors(broken)
+    assert any("unknown class 'nobody'" in e for e in errors)
+    assert any("it cannot be ready" in e for e in errors)
+    with pytest.raises(ValueError, match="Content validation failed"):
+        from oathforge.content.loader import validate_references
+        validate_references(broken)

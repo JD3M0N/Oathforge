@@ -4,6 +4,9 @@ Resumen de [Possibilium §8–9](Possibilium.md#s08) (y equipo en [mercatura](me
 
 ## Estado actual (0.10.8)
 
+> **En revisión (0.10-I, desde 0.10.22).** El [contrato de clases y progresión](roadmap_balance.md) lleva el techo de nivel 5 a **20** y hace la subida **híbrida**: la XP demuestra experiencia y un hito narrativo abre la frontera, y hacen falta las dos cosas. La tabla de 20 umbrales, las dos puertas (el Recaudador al 10 y el Ciervo para el resto) y los recursos de clase viven ya en `content/progression.yaml`; el cálculo puro, en `engine/class_build.py`. La mejora de atributo del nivel 4 la sustituyen tres entrenamientos en 5, 12 y 18, y los modificadores de rama van al 13 y al 17. Nada de esto está conectado todavía al juego: lo hace B02. Lo que sigue describe la progresión vigente.
+
+
 - **Creación**: nombre, hombre o mujer, 4 linajes (humano, elfo, enano, orco), trasfondo (4 básicos como botón, 12 en total, o uno propio revisado por Gemini con 2 habilidades a elegir), clase y compra de 27 puntos (todo en 8; 14→15 cuesta 2; «⭐ Recomendado» carga el array de la clase). `/lineage`, `/background` y `/classes` ayudan a mitad de la creación.
 - **Niveles 1–5**: 0 / 200 / 500 / 1000 / 1800 XP (`engine/progression.py`). PV: dado completo a nivel 1, después media + 1 + CON. Nivel 4: +2 a la principal. Subida de nivel en un mensaje propio.
 - **Competencias** 0–3 que mejoran con el uso, con rendimientos decrecientes si se repite lo mismo en 24 h.
