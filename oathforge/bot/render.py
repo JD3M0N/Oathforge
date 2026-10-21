@@ -16,7 +16,7 @@ from oathforge.database.models import Character
 from oathforge.engine.checks import modifier, proficiency_bonus
 from oathforge.engine import gathering
 from oathforge.engine import combat, pointbuy, progression
-from oathforge.engine.combat import EncounterState, available_bonus_actions, valid_targets
+from oathforge.engine.combat import EncounterState, affordable, available_bonus_actions, valid_targets
 from oathforge.engine.progression import skill_rank
 from oathforge.i18n import t
 from oathforge.services import (
@@ -1237,6 +1237,10 @@ def _sheet_top(c, cls, char: Character, gear: dict, lang: str) -> list[str]:
     if gate := characters.level_gate(char):  # the XP is there; a mission is not (roadmap_balance §4.2)
         lines.append(t(lang, "sheet.level_gate",
                        milestone=escape(c.progression.milestones[gate].name.get(lang))))
+    if res := characters.resource_def(char):
+        lines.append(t(lang, "sheet.resource", resource=escape(res.name.get(lang)),
+                       cur=characters.pool_of(char), max=characters.resource_max(char),
+                       bar=hp_bar(characters.pool_of(char), characters.resource_max(char))))
     lines.append(t(lang, "sheet.vitals", ac=characters.armor_class(char, gear), pb=proficiency_bonus(char.level),
                    gold=char.gold))
     if char.conditions.get("injured"):
@@ -1940,11 +1944,19 @@ def combat_powers(state: EncounterState, me, defs: dict, lang: str) -> list[tupl
             a = defs.get(key)
             if a is None or a.action != "action" or (uses is not None and uses <= 0):
                 continue
-            out.append((key, f"✨ {a.name.get(lang)}" + (f" ({uses})" if uses is not None else "")))
+            if not affordable(me, key, a):  # it is there, it just cannot be paid for yet
+                continue
+            out.append((key, f"✨ {a.name.get(lang)}{_cost_tag(me, uses, a)}"))
     for key in available_bonus_actions(state, me, defs):
-        uses = me.abilities.get(key)
-        out.append((key, f"⚡ {defs[key].name.get(lang)}" + (f" ({uses})" if uses is not None else "")))
+        out.append((key, f"⚡ {defs[key].name.get(lang)}{_cost_tag(me, me.abilities.get(key), defs[key])}"))
     return out
+
+
+def _cost_tag(me, uses: int | None, ability) -> str:
+    """What the button says after the name: the uses left, or what the bar will pay."""
+    if me.resource_max and ability.cost:
+        return f" ({ability.cost})"
+    return f" ({uses})" if uses is not None else ""
 
 
 def combat_token(version: int | None, turn_index: int) -> str:
@@ -2066,6 +2078,10 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
         temp = f" (+{cb_.temp_hp})" if cb_.temp_hp else ""
         lines.append(f"{icon} <b>{escape(cb_.name[lang])}</b> ❤️ {cb_.hp}/{cb_.max_hp}{temp} "
                      f"{hp_bar(cb_.hp, cb_.max_hp)} 🛡️ {cb_.ac} · {row} {st}".rstrip())
+        if cb_.resource_max:  # one main bar, and nothing else in the header (roadmap_balance N15)
+            res = c.progression.resources[cb_.resource_key]
+            lines.append(f"   🔹 {escape(res.name.get(lang))} {cb_.resource}/{cb_.resource_max} "
+                         f"{hp_bar(cb_.resource, cb_.resource_max)}")
     blocks = combat_blocks(state, state.log, lang, with_end=False)[-PANEL_BLOCKS:]
     if blocks:
         lines += [RULE, *(line for block in blocks for line in block)]

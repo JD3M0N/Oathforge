@@ -85,9 +85,11 @@ def _target(state: EncounterState, me: Combatant, ranged: bool) -> str | None:
     return min(foes, key=lambda f: (f.hp, f.id)).id if foes else None
 
 
-def _usable(me: Combatant, key: str) -> bool:
+def _usable(me: Combatant, key: str, defs: dict) -> bool:
     uses = me.abilities.get(key)
-    return key in me.abilities and (uses is None or uses > 0)
+    if key not in me.abilities or (uses is not None and uses <= 0):
+        return False
+    return combat.affordable(me, key, defs[key])
 
 
 def _bonus(state: EncounterState, me: Combatant, rng: random.Random, defs: dict) -> None:
@@ -116,8 +118,8 @@ def _weapon(me: Combatant):
 
 
 def _worth_it(me: Combatant, key: str, a, weapon) -> bool:
-    """Limited abilities are always worth it; an at-will one only if it hits as hard as the weapon."""
-    if me.abilities.get(key) is not None or a.kind in ("strike", "turn"):
+    """What costs something is worth it; a free one only if it hits as hard as the weapon."""
+    if me.abilities.get(key) is not None or a.cost or a.kind in ("strike", "turn"):
         return True
     if not a.damage:
         return False
@@ -127,9 +129,12 @@ def _worth_it(me: Combatant, key: str, a, weapon) -> bool:
 def _main(state: EncounterState, me: Combatant, rng: random.Random, defs: dict, use_abilities: bool) -> None:
     weapon = _weapon(me)
     if use_abilities:
-        options = [k for k, a in defs.items() if a.action == "action" and _usable(me, k) and a.kind in ACTION_PRIORITY
+        options = [k for k, a in defs.items()
+                   if a.action == "action" and _usable(me, k, defs) and a.kind in ACTION_PRIORITY
                    and _worth_it(me, k, a, weapon)]
-        options.sort(key=lambda k: (ACTION_PRIORITY.index(defs[k].kind), me.abilities[k] is None))
+        # the dearest first: what the bar pays for, then what has limited uses, then the free ones
+        options.sort(key=lambda k: (ACTION_PRIORITY.index(defs[k].kind), -defs[k].cost,
+                                    me.abilities[k] is None))
         for key in options:
             a = defs[key]
             if a.kind == "buff" and a.status in me.statuses:

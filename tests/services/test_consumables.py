@@ -1,4 +1,5 @@
-"""Typed consumable effects: healing, mana (a spent spell use) and the resting draught (short rest)."""
+"""Typed consumable effects: healing, magic back (a spent use or part of the class's bar) and the
+resting draught (a short rest in a bottle)."""
 
 import random
 import time
@@ -32,36 +33,41 @@ async def use(s, char, key, now=None):
     return await inventory.use_item_outside_combat(s, char, key, random.Random(0), now)
 
 
-async def test_mana_potion_needs_a_spent_spell_and_is_kept_otherwise():
-    cid = await new_character(items=("mana_potion",))
+async def test_mana_potion_fills_the_bar_of_a_class_that_has_one():
+    cid = await new_character(items=("mana_potion", "mana_potion"))  # sorcerer: Mana
     async with session_scope() as s:
         char = await get_char(s, cid)
+        top = characters.resource_max(char)
+        assert characters.pool_of(char) == top  # a full bar needs nothing
         assert (await use(s, char, "mana_potion")).error == "inv.err.no_spent_spell"
-        assert await inventory.count(s, char, "mana_potion") == 1  # not spent
-        char.resources = {**char.resources, "fireball": 0, "sleep": 2}
+        assert await inventory.count(s, char, "mana_potion") == 2  # not spent
+        characters.set_pool(char, 1)
         out = await use(s, char, "mana_potion")
-        assert out.ok and char.resources["fireball"] == 1 and char.resources["sleep"] == 2
-        assert await inventory.count(s, char, "mana_potion") == 0
+        assert out.ok and characters.pool_of(char) == 1 + 4
+        assert [e.key for e in out.events if e.key == "inv.pool_restored"]
+        characters.set_pool(char, top - 1)  # it never goes over the top
+        assert (await use(s, char, "mana_potion")).ok and characters.pool_of(char) == top
 
 
 async def test_mana_potion_does_nothing_for_classes_without_spells():
-    cid = await new_character(cls="warrior", level=2, items=("mana_potion",))
+    cid = await new_character(cls="paladin", level=2, items=("mana_potion",))  # no casting, no bar
     async with session_scope() as s:
         char = await get_char(s, cid)
-        char.resources = {**char.resources, "second_wind": 0}
+        char.resources = {**char.resources, "lay_on_hands": 0}
         assert (await use(s, char, "mana_potion")).error == "inv.err.no_spent_spell"
 
 
-async def test_resting_draught_heals_a_fifth_restores_a_use_and_has_a_cooldown():
-    cid = await new_character(cls="warrior", level=2, items=("rest_draught", "rest_draught"))
+async def test_resting_draught_heals_a_fifth_gives_magic_back_and_has_a_cooldown():
+    cid = await new_character(cls="warrior", level=2, items=("rest_draught", "rest_draught"))  # Focus
     now = time.time()
     async with session_scope() as s:
         char = await get_char(s, cid)
         assert (await use(s, char, "rest_draught", now)).error == "inv.err.no_need"  # rested: kept
         char.hp = 1
-        char.resources = {**char.resources, "second_wind": 0}
+        characters.set_pool(char, 0)
         out = await use(s, char, "rest_draught", now)
-        assert out.ok and char.hp == 1 + max(1, round(char.max_hp * 0.2)) and char.resources["second_wind"] == 1
+        assert out.ok and char.hp == 1 + max(1, round(char.max_hp * 0.2))
+        assert characters.pool_of(char) == 3  # part of the bar, not a use per rest
         out = await use(s, char, "rest_draught", now + 60)
         assert out.error == "inv.err.cooldown" and await inventory.count(s, char, "rest_draught") == 1
         char.hp = 1

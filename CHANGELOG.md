@@ -4,6 +4,23 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.25] - 2026-10-21
+
+0.10-I (B03): las clases estrenan su propia barra, en vez de usos por descanso.
+
+### Añadido
+- **La barra de clase en el motor**: generación, coste, recuperación por turno y **enfriamientos contados en turnos de combate**, nunca en segundos reales. El **ataque básico es gratis y siempre útil**, y en las clases que lo construyen atacando alimenta la barra —una vez por acción, no por golpe, así que un Ataque Extra no la llena el doble—. Nada pasa del máximo ni baja de cero.
+- **Guerrero (Foco) y Hechicero (Maná) como pilotos**: Segundo Aliento y Oleada de Acción se pagan con Foco; Dormir, Bola de Fuego y Proyectil Mágico, con Maná. El Rayo de Fuego sigue siendo gratis, que es el sentido de la acción básica. Las otras doce clases llegan en B06.
+- **Los jefes no se encadenan**: el control duro les dura un turno y lo que sobra los deja **vulnerables**, dicho en el registro. Nunca una inmunidad callada que anule una rama entera. El Viejo Colmillo y el Guardián de la Cripta ya son jefes.
+- La poción de maná y el tónico del reposo devuelven **barra** a quien tiene barra y **usos** a quien tiene usos; lo decide la clase de quien bebe, no el objeto. Ganar un combate devuelve su parte del Maná: huir no recarga nada.
+- 🔹 La barra en la cabecera del panel de combate y en `/sheet`, y el coste en el propio botón del poder («🌟 Segundo Aliento (4)»). Un poder que no puedes pagar no se ofrece, y el registro dice «−4 Foco (0 restante)».
+- El simulador gasta la barra y prioriza lo que cuesta; con eso mide a los dos pilotos.
+
+### Cambiado
+- Un estado **se refresca y no se acumula**: al repetirlo gana la duración más larga. Estaba así, ahora está escrito y probado.
+- `content/classes.yaml` acepta `cost`, `generates` y `cooldown` por habilidad, y `resource` y `resource_on_attack` por clase; el loader rechaza una pasiva que cueste, un coste que no quepa en la barra del nivel y una clase que mezcle usos con barra.
+- **Migración 0014**: `characters.pools`, la barra entre sesiones. Vacío significa barra llena: nadie pierde lo que no gastó.
+
 ## [0.10.24] - 2026-10-21
 
 0.10-I (B02): la XP ya no basta para subir de nivel, y las misiones se cobran en persona.

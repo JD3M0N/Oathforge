@@ -593,15 +593,24 @@ async def test_objective_covers_missions_with_choices(monkeypatch):
 
 # ---------------------------------------------------------------- mana potion
 
-async def test_mana_potion_restores_the_chosen_spell():
+async def test_mana_potion_restores_a_spent_spell_of_a_class_that_has_uses():
+    cid = await new_character(cls="cleric", tools=("mana_potion",))  # still on uses per rest until B06
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        char.level, char.resources = 3, {"healing_word": 0, "turn_undead": 0}
+        from oathforge.content import get_content
+        assert set(inventory.spell_choices(char, get_content().items["mana_potion"])) == {"healing_word", "turn_undead"}
+        out = await inventory.use_item_outside_combat(s, char, "mana_potion", random.Random(0),
+                                                     ability="turn_undead")
+        assert out.ok and char.resources == {"healing_word": 0, "turn_undead": 1}
+
+
+async def test_the_bar_of_a_class_that_has_one_has_no_spell_to_choose():
     cid = await new_character(cls="sorcerer", tools=("mana_potion",))
     async with session_scope() as s:
         char = await get_char(s, cid)
-        char.level, char.resources = 3, {"sleep": 0, "fireball": 0}
         from oathforge.content import get_content
-        assert set(inventory.spell_choices(char, get_content().items["mana_potion"])) == {"sleep", "fireball"}
-        out = await inventory.use_item_outside_combat(s, char, "mana_potion", random.Random(0), ability="fireball")
-        assert out.ok and char.resources == {"sleep": 0, "fireball": 1}
+        assert inventory.spell_choices(char, get_content().items["mana_potion"]) == []
 
 
 def test_beta_potions_cost_one_gold():

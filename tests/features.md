@@ -191,3 +191,28 @@ Recorrido completo, con la cuenta de prueba, en ES y EN. Lo marcado (automático
 - [x] El diario y `/quests` la muestran ✅ con el PNJ al que se le debe (Telegram).
 - [ ] Doble toque simultáneo sobre «Entregar» con PostgreSQL: un solo pago.
 - [ ] Migración 0013 en una base de prueba, con su `downgrade`.
+
+## 0.10-I · La barra de clase (B03, v0.10.25)
+
+### Pagar y recuperar
+- [x] Un poder cuesta una vez, y sin barra suficiente se rechaza sin gastar nada ni el turno (automático).
+- [x] El ataque básico es gratis y alimenta la barra; un Ataque Extra no la alimenta dos veces (automático).
+- [x] La barra nunca pasa de su máximo ni baja de cero (automático).
+- [x] Una clase que sigue con usos por descanso no cambia de comportamiento (automático).
+- [x] La barra se rellena un poco al empezar tu turno y sobrevive a guardar y recargar el encuentro (automático).
+- [x] Ganar devuelve su parte (solo el Maná de hoy); huir o entrar y salir no recarga nada (automático).
+- [x] El descanso largo la llena; la poción de maná y el tónico del reposo devuelven su parte (automático).
+- [x] Cuatro combates seguidos sin curación completa con Guerrero (Foco) y Hechicero (Maná) (automático).
+
+### Enfriamientos y control
+- [x] Un enfriamiento se cuenta en turnos de combate, bloquea mientras dura y se agota en tu propio turno (automático).
+- [x] Un poder que no puedes pagar no se ofrece (automático).
+- [x] El control duro no encadena a un jefe: dura un turno y el resto lo deja vulnerable, dicho en el registro (automático).
+- [x] Un estado se refresca y nunca se acumula; un jefe sí sufre los estados blandos enteros (automático).
+
+### Interfaz
+- [x] 🔹 La barra en la cabecera del panel de combate y en `/sheet` (Telegram, ES y EN).
+- [x] El botón del poder lleva su coste: «🌟 Second Wind (4)» (Telegram).
+- [x] El registro dice «−4 Foco (0 restante)» con el nombre traducido, no la clave (Telegram, ES y EN).
+- [ ] Un combate completo con Hechicero gastando Maná hasta quedarse en el Rayo de Fuego (Telegram).
+- [ ] Migración 0014 en una base de prueba, con su `downgrade`.

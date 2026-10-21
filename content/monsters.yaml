@@ -118,6 +118,7 @@ crypt_warden:
   attacks:
     - {name: {es: Espadón espectral, en: Spectral greatsword}, to_hit: 4, damage: 1d8+2, damage_type: necrotic, applies: {status: frightened, turns: 1, chance: 0.25}}
     - {name: {es: Lamento helado, en: Freezing wail}, to_hit: 4, damage: 2d4, damage_type: cold, ranged: true}
+  boss: true   # el control duro no lo encadena: dura un turno y el resto pasa a vulnerable
   xp: 700
   gold: 6d10
   loot:
@@ -192,6 +193,7 @@ old_tusk:
   wis: 1
   attacks:
     - {name: {es: Embestida, en: Gore}, to_hit: 3, damage: 1d8+1, damage_type: slashing, applies: {status: bleeding, turns: 2, chance: 0.3}}
+  boss: true   # el control duro no lo encadena: dura un turno y el resto pasa a vulnerable
   xp: 300
   gold: 3d10
   loot:

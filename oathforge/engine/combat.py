@@ -14,6 +14,10 @@ from oathforge.engine.checks import check, dc_for
 from oathforge.engine.dice import d20, roll
 
 NEGATIVE_STATUSES = {"bleeding", "burning", "poisoned", "frightened", "stunned", "vulnerable", "asleep", "restrained", "hexed"}
+# A status refreshes, it never stacks: applying it again keeps the longer of the two durations, and the
+# duration goes down once per turn of whoever carries it (_tick_statuses).
+HARD_CONTROL = ("stunned", "asleep", "restrained", "frightened")
+BOSS_CONTROL_TURNS = 1  # on a boss, hard control lasts this long and the rest becomes `vulnerable`
 DOT = {"bleeding": "1d4", "burning": "1d6"}
 BLESS_BONUS = 2
 INSPIRATION_DIE = "1d6"
@@ -66,6 +70,13 @@ class Combatant(BaseModel):
     level: int = 1
     skill_bonus: dict[str, int] = {}
     abilities: dict[str, int | None] = {}  # ability key -> uses left (None = unlimited)
+    # the class's own bar (Conviction, Focus, Mana…). resource_max 0 means the class still runs on uses.
+    resource: int = 0
+    resource_max: int = 0
+    resource_key: str = ""
+    resource_per_turn: int = 0  # put back at the start of its own turn
+    resource_on_attack: int = 0  # put back by a basic attack action, once per action
+    cooldowns: dict[str, int] = {}  # ability key -> turns of combat left before it can be used again
     sneak_dice: int = 0
     extra_attack: bool = False
     halve_first_hit: bool = False
@@ -80,6 +91,7 @@ class Combatant(BaseModel):
     bonus_damage_type: str = "radiant"
     consumables: dict[str, int] = {}  # combat items carried (potions, scrolls, bombs): key -> count
     # monster-only
+    boss: bool = False
     cowardly: bool = False
     xp: int = 0
     # turn state
@@ -190,13 +202,27 @@ def available_bonus_actions(state: EncounterState, c: Combatant, ability_defs: d
     out = []
     for key, uses in c.abilities.items():
         a = ability_defs.get(key)
-        if a and a.action == "bonus" and (uses is None or uses > 0):
+        if a and a.action == "bonus" and (uses is None or uses > 0) and affordable(c, key, a):
             if a.kind == "heal" and c.hp >= c.max_hp:
                 continue
             if a.kind == "surge" and not c.action_used:
                 continue
             out.append(key)
     return out
+
+
+def affordable(c: Combatant, key: str, ability) -> bool:
+    """Can this combatant pay for the ability right now (bar and cooldown)?"""
+    return not (c.cooldowns.get(key, 0) > 0 or (c.resource_max and getattr(ability, "cost", 0) > c.resource))
+
+
+def gain_resource(c: Combatant, amount: int) -> int:
+    """Put `amount` back into the bar, never past its maximum. Returns what went in."""
+    if not c.resource_max or amount <= 0:
+        return 0
+    before = c.resource
+    c.resource = min(c.resource_max, c.resource + amount)
+    return c.resource - before
 
 
 # ---------------------------------------------------------------- player turn
@@ -292,6 +318,10 @@ def _player_attack(state, actor, weapon_key, target_id, rng, extra) -> list[LogE
         if followups:
             nxt = target if target.active else followups[0]
             logs += _attack(state, actor, nxt, profile, rng, None)
+    if gain_resource(actor, actor.resource_on_attack):  # once per action, not per swing
+        logs.append(LogEntry(key="combat.resource_gained", params={
+            "actor": actor.id, "resource": actor.resource_key, "amount": actor.resource_on_attack,
+            "left": actor.resource}))
     return logs
 
 
@@ -301,6 +331,10 @@ def _use_ability(state, actor, action, ability, rng) -> list[LogEntry]:
     uses = actor.abilities[action.ability]
     if uses is not None and uses <= 0:
         raise CombatError("combat.err.no_uses")
+    if actor.cooldowns.get(action.ability, 0) > 0:
+        raise CombatError("combat.err.cooldown")
+    if actor.resource_max and ability.cost > actor.resource:
+        raise CombatError("combat.err.no_resource")
     logs: list[LogEntry] = []
     if ability.kind == "strike":
         profile = next((a for a in actor.attacks if not a.ranged), None)
@@ -353,6 +387,15 @@ def _use_ability(state, actor, action, ability, rng) -> list[LogEntry]:
         raise CombatError("combat.err.passive")
     if uses is not None:
         actor.abilities[action.ability] = uses - 1
+    if actor.resource_max:  # paid once, whatever the ability did
+        spent = min(ability.cost, actor.resource)
+        actor.resource -= spent
+        if spent:
+            logs.append(LogEntry(key="combat.resource_spent", params={
+                "actor": actor.id, "resource": actor.resource_key, "amount": spent, "left": actor.resource}))
+        gain_resource(actor, ability.generates)
+    if ability.cooldown:
+        actor.cooldowns = {**actor.cooldowns, action.ability: ability.cooldown}
     return logs
 
 
@@ -590,10 +633,20 @@ def _apply_damage(state, target: Combatant, amount: int, damage_type: str) -> li
 
 
 def _apply_status(target: Combatant, status: str, turns: int) -> list[LogEntry]:
+    """Apply a status. It refreshes instead of stacking: the longer of the two durations wins.
+
+    A boss is never chained: hard control lasts BOSS_CONTROL_TURNS on it and what is left over turns
+    into `vulnerable`, which the log says out loud. A whole branch is never silently useless."""
     if status in target.immune:
         return [LogEntry(key="combat.immune", params={"target": target.id, "status": status})]
+    logs = []
+    if target.boss and status in HARD_CONTROL and turns > BOSS_CONTROL_TURNS:
+        spill, turns = turns - BOSS_CONTROL_TURNS, BOSS_CONTROL_TURNS
+        logs.append(LogEntry(key="combat.boss_resists", params={
+            "target": target.id, "status": status, "turns": turns, "spill": spill}))
+        target.statuses["vulnerable"] = max(spill, target.statuses.get("vulnerable", 0))
     target.statuses[status] = max(turns, target.statuses.get(status, 0))
-    return [LogEntry(key="combat.status", params={"target": target.id, "status": status, "turns": turns})]
+    return logs + [LogEntry(key="combat.status", params={"target": target.id, "status": status, "turns": turns})]
 
 
 def _heal(c: Combatant, amount: int) -> int:
@@ -612,6 +665,12 @@ def _begin_turn(state: EncounterState, rng) -> list[LogEntry]:
         c.action_used = c.bonus_used = c.moved = c.sneak_used = c.bonus_damage_used = False
         c.statuses.pop("defending", None)
         if c.active:
+            if c.cooldowns:  # cooldowns are counted in turns of combat, never in real seconds
+                c.cooldowns = {k: v - 1 for k, v in c.cooldowns.items() if v > 1}
+            if gain_resource(c, c.resource_per_turn):
+                logs.append(LogEntry(key="combat.resource_gained", params={
+                    "actor": c.id, "resource": c.resource_key, "amount": c.resource_per_turn,
+                    "left": c.resource}))
             for status, expr in DOT.items():
                 if status in c.statuses and c.active:
                     dmg = roll(expr, rng).total

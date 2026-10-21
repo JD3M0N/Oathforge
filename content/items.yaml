@@ -711,7 +711,7 @@ mana_potion:
   value: 1  # beta only: real price 60
   stackable: true
   effects:
-    - {type: restore_spell_charge, amount: 1}
+    - {type: restore_spell_charge, amount: 1, pool: 4}  # un uso, o 4 de la barra si la clase tiene una
 
 rest_draught:
   name: {es: Tónico del reposo, en: Resting draught}
@@ -721,7 +721,7 @@ rest_draught:
   value: 80
   stackable: true
   effects:
-    - {type: short_rest, hp_percent: 0.20, charges: 1, cooldown_seconds: 14400}
+    - {type: short_rest, hp_percent: 0.20, charges: 1, pool: 3, cooldown_seconds: 14400}  # un uso, o 3 de la barra
 
 copper_ring:
   name: {es: Anillo de cobre, en: Copper ring}

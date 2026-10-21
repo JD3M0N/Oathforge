@@ -285,6 +285,7 @@ def wake_rested(char: Character) -> Outcome:
     """The end of a long rest (activities.claim): full HP and uses, and grave wounds healed."""
     char.hp = char.max_hp
     char.resources = characters.full_resources(char.class_key, char.level)
+    characters.refill_pool(char)
     char.conditions = {k: v for k, v in char.conditions.items() if k != "injured"}
     return Outcome().add("explore.rested", hp=char.hp)
 

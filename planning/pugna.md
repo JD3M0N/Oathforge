@@ -4,12 +4,15 @@ Resumen de [Possibilium §10–11](Possibilium.md#s10).
 
 ## Estado actual (0.8.2)
 
+> **En revisión (0.10-I, desde 0.10.25).** El [contrato](roadmap_balance.md) sustituye los usos por descanso por **una barra propia de cada clase**, con generación, coste y enfriamientos contados en turnos de combate (nunca en segundos reales). Ya en el motor: **Guerrero con Foco** y **Hechicero con Maná** son los pilotos; las otras doce clases siguen con usos hasta B06 y las dos formas conviven. El **ataque básico es gratis y siempre útil**, un estado **se refresca y no se acumula**, y el **control duro no encadena a un jefe**: le dura un turno y el resto lo deja vulnerable, dicho en el registro. Lo que falta de la ficha: los tiempos de descanso y la derrota calibrados (B08) y los contadores de apoyo por rama (B07).
+
+
 Motor puro en `oathforge/engine/combat.py`, persistido como JSON en `encounters.state`.
 
 - **Ronda 0** con iniciativa (d20 + DES); cada turno: acción, acción adicional y movimiento.
 - **Filas**: vanguardia y retaguardia. El cuerpo a cuerpo alcanza la retaguardia solo si la vanguardia está vacía; disparar desde la vanguardia con enemigos delante da desventaja.
 - Críticos (20; 19–20 con Crítico Mejorado), ventaja/desventaja con los dos d20 visibles, ataque furtivo, salvaciones DES/SAB, PV temporales.
-- **Estados**: sangrado, quemadura, envenenado, asustado, aturdido, vulnerable, oculto, defendiendo, bendecido, dormido, apresado, inspirado, maldito, forma salvaje.
+- **Estados**: sangrado, quemadura, envenenado, asustado, aturdido, vulnerable, oculto, defendiendo, bendecido, dormido, apresado, inspirado, maldito, forma salvaje. Se refrescan, no se acumulan: al repetir uno gana la duración más larga (0.10.25).
 - **Tipos de daño y criatura**: resistencias (½), vulnerabilidades (×2) e inmunidades; el daño extra de otro tipo se aplica aparte. El panel avisa «¡débil!» o «resiste».
 - Objetos del escenario con prueba; pergaminos y bombas desde «🎒 Objetos»; poción si quedan.
 - Huir: Atletismo o Acrobacias contra 10 + 2 por enemigo.

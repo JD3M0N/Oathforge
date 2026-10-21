@@ -56,7 +56,8 @@ async def test_create_warrior():
         gear = await characters.equipped(s, char)
         assert set(gear) == {"main_hand", "ranged", "body", "off_hand"}
         assert characters.armor_class(char, gear) == 16 + 2 + 1  # chain mail, shield, Defense style
-        assert char.resources == {"second_wind": 1}
+        assert char.resources == {"second_wind": None}  # the warrior pays with Focus, not with uses
+        assert characters.pool_of(char) == characters.resource_max(char) == 4  # base 3 + 1 per level
         cb = await characters.build_combatant(s, char)
         assert cb.row == "front" and cb.crit_range == 20
         assert [(a.key, a.damage_type) for a in cb.attacks] == [("main", "bludgeoning"), ("ranged", "slashing")]

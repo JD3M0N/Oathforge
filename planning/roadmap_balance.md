@@ -53,7 +53,7 @@ Hito **0.10-I** del [roadmap general](roadmap.md). Se avanza **fase a fase**: ca
 | B00 · Base y auditoría | ✅ Hecha | 0.10.21 |
 | B01 · Contratos de contenido y estado | ✅ Hecha | 0.10.22 |
 | B02 · XP híbrida y entrega al PNJ | ✅ Hecha | 0.10.24 |
-| B03 · Motor de recursos y efectos | Pendiente | — |
+| B03 · Motor de recursos y efectos | ✅ Hecha | 0.10.25 |
 | B04 · Catálogo efectivo, selección y elecciones | Pendiente | — |
 | B05 · Compañeros, formas y dispositivos | Pendiente | — |
 | B06 · 14 clases base (1–9) | Pendiente | — |
@@ -1111,15 +1111,15 @@ El simulador y pruebas se amplían junto a cada fase, no solo en B12. No hacen f
 ### B03 · Motor de recursos y efectos
 
 **Objetivo:** reemplazar dependencia universal de usos por descanso.
-- [ ] Barra principal, generación, coste y recuperación por fase.
-- [ ] Estados con origen, duración y acumulación explícita.
-- [ ] Cooldowns por turno y adaptación de control a jefes.
-- [ ] Sincronizar recursos del encuentro con personaje.
-- [ ] Adaptar pociones/pergaminos y coste de acción.
-- [ ] Mantener ataque gratuito útil.
+- [x] Barra principal, generación, coste y recuperación por fase. (0.10.25)
+- [x] Estados con origen, duración y acumulación explícita. (0.10.25: se refrescan, no se acumulan)
+- [x] Cooldowns por turno y adaptación de control a jefes. (0.10.25: un turno y el resto a vulnerable)
+- [x] Sincronizar recursos del encuentro con personaje. (0.10.25, `characters.pools` y migración 0014)
+- [x] Adaptar pociones/pergaminos y coste de acción. (0.10.25: la clase de quien bebe decide barra o usos)
+- [x] Mantener ataque gratuito útil. (0.10.25: el coste solo lo llevan las habilidades)
 **Archivos:** engine/combat.py, services/combat_service.py, characters.py, schemas.py, items.yaml.
 **Pruebas:** falta de recurso, coste una vez, pasivas sin bucles, expiración, save/reload, repetición de bonus.
-**Terminado:** un luchador de Foco y un usuario de Maná completan varios combates consecutivos sin economía rota.
+**Terminado:** un luchador de Foco y un usuario de Maná completan varios combates consecutivos sin economía rota. **Hecho en 0.10.25** con el Guerrero y el Hechicero como pilotos, probado en la suite y con `tgtest`. Las otras doce clases siguen con usos por descanso hasta B06, y las dos formas conviven sin tocarse. Pendiente: los contadores de apoyo por rama (B07).
 
 ### B04 · Catálogo efectivo, selección y elecciones
 

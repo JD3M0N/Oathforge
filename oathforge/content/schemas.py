@@ -122,7 +122,11 @@ class ClassAbility(Strict):
     # heal · hide · passive
     kind: Literal["strike", "spell", "turn", "buff", "surge", "heal", "hide", "save", "curse", "passive"]
     action: Literal["action", "bonus", "none"] = "action"
-    uses: int | None = None  # per rest; None = unlimited
+    uses: int | None = None  # per rest; None = unlimited (classes without a resource bar)
+    # classes with their own bar (GameClass.resource) pay with it instead of with uses per rest
+    cost: int = Field(0, ge=0)
+    generates: int = Field(0, ge=0)  # what using it puts back into the bar
+    cooldown: int = Field(0, ge=0)  # turns of combat before it can be used again; never real seconds
     damage: str | None = None
     extra_damage: str | None = None
     damage_type: DamageType | None = None
@@ -160,6 +164,7 @@ class GameClass(Strict):
     signature: list[str] = []
     casting: Literal["int", "wis", "cha"] | None = None  # spell attacks and healing use this modifier
     resource: str | None = None  # its own bar in content/progression.yaml (Conviction, Focus, Mana…)
+    resource_on_attack: int = Field(0, ge=0)  # what a basic attack puts into the bar (Fury, Conviction, Focus)
     array: dict[str, int]
     skills: list[str]
     items: dict[str, int]
@@ -188,18 +193,28 @@ class RestoreHp(Strict):
 
 
 class RestoreSpellCharge(Strict):
-    """+uses of a spent spell (only classes that cast spells)."""
+    """Magic back in the bottle: +``amount`` uses of a spent spell, or +``pool`` of the class's own bar.
+
+    Which one applies depends on the drinker's class, never on the item: a class with a resource
+    (GameClass.resource) has no uses to give back.
+    """
 
     type: Literal["restore_spell_charge"]
     amount: int = 1
+    pool: int = 0
 
 
 class ShortRest(Strict):
-    """A short rest in a bottle: part of the HP (never past the injury cap) and a use of a spent ability."""
+    """A short rest in a bottle: part of the HP (never past the injury cap) and some of what was spent.
+
+    ``charges`` are uses of a spent ability; ``pool`` is what goes into the class's own bar instead.
+    Which one applies depends on the drinker's class, never on the item.
+    """
 
     type: Literal["short_rest"]
     hp_percent: float = 0.20
     charges: int = 1
+    pool: int = 0
     cooldown_seconds: int = 4 * 3600
 
 
@@ -331,6 +346,9 @@ class Monster(Strict):
     indefinite: Text | None = None  # "un murciélago de cueva" / "a cave bat", for generic texts  # how long /skin takes for one of these (small prey 10 s, more for big ones)
     cowardly: bool = False
     immune: list[str] = []  # statuses
+    # a boss never goes down to a control chain: hard control lasts one turn on it and the rest of the
+    # duration becomes `vulnerable`, said out loud in the log. Never a silent immunity (roadmap_balance §5.3).
+    boss: bool = False
     type: CreatureType = "humanoid"
     resist: list[DamageType] = []
     vulnerable: list[DamageType] = []

@@ -243,6 +243,11 @@ async def build_combatant(session: AsyncSession, char: Character, cid: str = "p1
     return combatant_from(char, await equipped(session, char), await skills_of(session, char), cid)
 
 
+def _per_turn(char: Character) -> int:
+    res = get_content().progression.resources.get(get_content().classes[char.class_key].resource or "")
+    return res.per_turn if res else 0
+
+
 def combatant_from(char: Character, gear: dict[str, ItemInstance], skills: dict[str, CharacterSkill],
                    cid: str = "p1") -> Combatant:
     """The player's combat stats from already loaded gear and skills (no database; also used by the simulator)."""
@@ -264,6 +269,10 @@ def combatant_from(char: Character, gear: dict[str, ItemInstance], skills: dict[
         dex_mod=mods(char)["dex"], passive_perception=10 + skill_bonus(char, skills, "perception"),
         attacks=attack_profiles(char, gear), immune=immunities(char), level=char.level,
         skill_bonus=all_skill_bonuses(char, skills), abilities=dict(char.resources),
+        resource=0 if (rd := resource_def(char)) and rd.starts_empty else pool_of(char),
+        resource_max=resource_max(char),
+        resource_key=cls.resource or "", resource_per_turn=_per_turn(char),
+        resource_on_attack=cls.resource_on_attack,
         sneak_dice=sneak, extra_attack=any(p.extra_attack for p in passives),
         halve_first_hit=any(p.halve_first_hit for p in passives),
         relentless="relentless" in lineage.traits,
@@ -278,11 +287,50 @@ def combatant_from(char: Character, gear: dict[str, ItemInstance], skills: dict[
 # ---------------------------------------------------------------- progression
 
 BUILD_VERSION = 1
+POOLS_VERSION = 1
 MILESTONES = "milestones"  # char.build: the narrative gates already crossed
 
 
 def build_of(char: Character) -> dict:
     return char.build or {"v": BUILD_VERSION}
+
+
+def resource_def(char: Character):
+    """The class's own bar, or None while the class still runs on uses per rest."""
+    key = get_content().classes[char.class_key].resource
+    return get_content().progression.resources.get(key) if key else None
+
+
+def resource_max(char: Character) -> int:
+    res = resource_def(char)
+    return class_build.resource_max(res, char.level) if res else 0
+
+
+def pool_of(char: Character) -> int:
+    """How much the hero has in their bar right now; a full bar for anyone who never had one."""
+    res = get_content().classes[char.class_key].resource
+    if not res:
+        return 0
+    stored = (char.pools or {}).get(res)
+    return min(resource_max(char), resource_max(char) if stored is None else int(stored))
+
+
+def set_pool(char: Character, amount: int) -> None:
+    res = get_content().classes[char.class_key].resource
+    if res:
+        char.pools = {**(char.pools or {}), "v": POOLS_VERSION, res: max(0, min(resource_max(char), amount))}
+
+
+def refill_pool(char: Character) -> None:
+    """A rest fills the bar, whatever its class recovers during a fight."""
+    set_pool(char, resource_max(char))
+
+
+def reward_pool(char: Character) -> None:
+    """A won fight gives back its share of the bar. Only a victory: no recharging by fleeing."""
+    res = resource_def(char)
+    if res and res.on_victory:
+        set_pool(char, pool_of(char) + round(resource_max(char) * res.on_victory))
 
 
 def milestones_of(char: Character) -> list[str]:

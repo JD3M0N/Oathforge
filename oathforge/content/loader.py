@@ -35,6 +35,7 @@ from oathforge.content.schemas import (
     Text,
     Zone,
 )
+from oathforge.engine import class_build
 from oathforge.engine.gathering import GATHER_SKILLS, MASTERIES
 from oathforge.content.achievement_schemas import Achievement, validate_catalog
 
@@ -492,6 +493,19 @@ def _class_progression_errors(c: Content) -> list[str]:
     for key, cls in c.classes.items():
         if cls.resource is not None and cls.resource not in prog.resources:
             errors.append(f"class {key}: unknown resource '{cls.resource}'")
+        if cls.resource is None and cls.resource_on_attack:
+            errors.append(f"class {key}: it generates on attack but has no bar to put it in")
+        for akey, a in cls.abilities.items():
+            where = f"class {key} ability {akey}"
+            if a.kind == "passive" and (a.cost or a.generates or a.cooldown):
+                errors.append(f"{where}: a passive neither costs nor generates nor cools down")
+            if cls.resource is None and (a.cost or a.generates):
+                errors.append(f"{where}: it uses a bar, but {key} has none")
+            if cls.resource is not None and a.uses is not None:
+                errors.append(f"{where}: {key} pays with {cls.resource}, not with uses per rest")
+            top = class_build.resource_max(prog.resources[cls.resource], a.level) if cls.resource else 0
+            if cls.resource is not None and a.cost > top:
+                errors.append(f"{where}: it costs {a.cost}, more than the {top} the bar holds at level {a.level}")
     clash = set(c.class_specializations) & set(c.specializations)
     if clash:
         errors.append(f"class branch and mastery branch share an id: {sorted(clash)}")

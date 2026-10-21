@@ -122,6 +122,8 @@ warrior:
   items: {warhammer: 1, handaxe: 1, chain_mail: 1, shield: 1, healing_potion: 1}
   equip: [warhammer, handaxe, chain_mail, shield]
   signature: [action_surge, second_wind]
+  resource: focus            # piloto de la barra de clase (B03); las demás clases llegan en B06
+  resource_on_attack: 1      # atacar es lo que lo construye; el ataque básico nunca cuesta nada
   abilities:
     second_wind:
       name: {es: Segundo Aliento, en: Second Wind}
@@ -132,7 +134,8 @@ warrior:
       level: 1
       kind: heal
       action: bonus
-      uses: 1
+      cost: 4                # Foco, no un uso por descanso
+      cooldown: 2
       heal_dice: 1d10
       heal_add: level
     defense_style:
@@ -154,7 +157,8 @@ warrior:
       level: 2
       kind: surge
       action: bonus
-      uses: 1
+      cost: 5
+      cooldown: 3
     improved_critical:
       name: {es: Crítico Mejorado, en: Improved Critical}
       description: {es: Tus ataques son críticos con 19 o 20., en: Your attacks score a critical hit on a 19 or 20.}
@@ -272,6 +276,7 @@ sorcerer:
   items: {quarterstaff: 1, dagger: 1, healing_potion: 1}
   equip: [quarterstaff]
   signature: [fire_bolt]
+  resource: mana             # piloto de la barra de clase (B03); las demás clases llegan en B06
   abilities:
     fire_bolt:
       name: {es: Rayo de Fuego, en: Fire Bolt}
@@ -301,7 +306,7 @@ sorcerer:
         en: "A whisper and the enemy's eyelids weigh like lead. It makes a WIS save; on a failure it falls asleep for 2 turns: it does not act and your attacks have advantage, but it wakes up if it takes damage. Two uses per rest."
       level: 2
       kind: save
-      uses: 2
+      cost: 3
       save: wis
       status: asleep
       status_turns: 2
@@ -313,7 +318,8 @@ sorcerer:
         en: "A bead of fire that flies to the enemy and bursts. Its whole row makes a DEX save: 3d6 fire damage, half on a success. Ideal against groups in the front line. One use per rest."
       level: 3
       kind: save
-      uses: 1
+      cost: 6
+      cooldown: 2
       area: row
       save: dex
       damage: 3d6
@@ -327,7 +333,7 @@ sorcerer:
         en: "Three darts of light that find their mark on their own. There is no roll: they always hit and deal 3d4+3 force damage. Perfect to finish off an enemy with high AC. Two uses per rest."
       level: 5
       kind: spell
-      uses: 2
+      cost: 4
       auto_hit: true
       damage: 3d4+3
       damage_type: force

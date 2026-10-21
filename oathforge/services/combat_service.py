@@ -27,6 +27,7 @@ def monster_combatant(key: str, cid: str) -> Combatant:
     return Combatant(
         id=cid, side="enemy", ref=key, name=m.name.model_dump(), hp=m.hp, max_hp=m.hp, ac=m.ac, row=m.row,
         dex_mod=m.dex, wis_mod=m.wis, passive_perception=10 + m.wis, immune=list(m.immune), cowardly=m.cowardly, xp=m.xp,
+        boss=m.boss,
         creature_type=m.type, resist=list(m.resist), weak_to=list(m.vulnerable), immune_damage=list(m.immune_damage),
         attacks=[
             AttackProfile(key=f"a{i}", name=a.name.model_dump(), to_hit=a.to_hit, damage=a.damage,
@@ -166,12 +167,16 @@ async def _sync_and_maybe_finish(session, char, enc, state: EncounterState, rng,
     p = state.combatants["p1"]
     char.hp = p.hp
     char.resources = {k: v for k, v in p.abilities.items()}
+    if p.resource_max:  # the bar follows the hero out of the fight
+        characters.set_pool(char, p.resource)
     enc.state = state.model_dump(mode="json")
     if state.status == "active":
         return
     if enc.status != "active":
         return
     enc.status = state.status
+    if state.status == "victory":  # only a win gives magic back: entering and fleeing recharges nothing
+        characters.reward_pool(char)
     metrics = enc.achievement_metrics or {}
     if metrics:
         enc.achievement_metrics = {**metrics, "final_hp": p.hp, "status": state.status}
@@ -254,6 +259,8 @@ def log_event(state: EncounterState, entry: LogEntry) -> Event:
         p["skill"] = c.skills[p["skill"]].name.model_dump()
     if "status" in p:
         p["status"] = _both(f"status.{p['status']}")
+    if "resource" in p and p["resource"] in c.progression.resources:
+        p["resource"] = c.progression.resources[p["resource"]].name.model_dump()
     if "type" in p:
         p["type"] = _both(f"dmg.{p['type']}")
     if entry.key == "combat.damage":  # logs saved before v0.2.0 have no effect

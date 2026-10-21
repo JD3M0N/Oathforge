@@ -15,6 +15,7 @@ from oathforge.content import get_content
 from oathforge.content.schemas import RestoreHp, RestoreSpellCharge
 from oathforge.database.models import Character, ItemInstance
 from oathforge.engine.dice import roll
+from oathforge.services import characters
 from oathforge.services.events import Outcome
 
 
@@ -161,7 +162,18 @@ def spell_choices(char: Character, item) -> list[str]:
     """The spent spells a spell-restoring item could bring back (empty for any other item)."""
     if not any(isinstance(e, RestoreSpellCharge) for e in effects_of(item)):
         return []
+    if get_content().classes[char.class_key].resource:  # a bar has no single spell to pick
+        return []
     return [k for k, _ in spent_abilities(char, spells_only=True)]
+
+
+def _restore_pool(char: Character, amount: int, out: Outcome) -> None:
+    res = characters.resource_def(char)
+    before = characters.pool_of(char)
+    characters.set_pool(char, before + amount)
+    out.add("inv.pool_restored", resource=res.name.model_dump(),
+            amount=characters.pool_of(char) - before,
+            left=characters.pool_of(char), max=characters.resource_max(char))
 
 
 def _restore_use(char: Character, key: str, amount: int, out: Outcome) -> None:
@@ -175,10 +187,14 @@ def _refusal(char: Character, effect, now: float) -> str | None:
     if isinstance(effect, RestoreHp):
         return "inv.err.full_hp" if char.hp >= hp_cap(char) else None
     if isinstance(effect, RestoreSpellCharge):
+        if get_content().classes[char.class_key].resource:
+            full = characters.pool_of(char) >= characters.resource_max(char)
+            return "inv.err.no_spent_spell" if (full or not effect.pool) else None
         return "inv.err.no_spent_spell" if not spent_abilities(char, spells_only=True) else None
     if (char.cooldowns or {}).get("short_rest", 0) > now:
         return "inv.err.cooldown"
-    if char.hp >= hp_cap(char) and not spent_abilities(char, spells_only=False):
+    if char.hp >= hp_cap(char) and not spent_abilities(char, spells_only=False) and (
+            characters.pool_of(char) >= characters.resource_max(char)):
         return "inv.err.no_need"
     return None
 
@@ -211,15 +227,19 @@ async def use_item_outside_combat(session: AsyncSession, char: Character, key: s
             out.add("inv.healed", item=name, amount=char.hp - before, hp=char.hp, max_hp=char.max_hp)
         elif isinstance(effect, RestoreSpellCharge):
             out.add("inv.used", item=name)
-            spent = [k for k, _ in spent_abilities(char, spells_only=True)]
-            _restore_use(char, ability if ability in spent else spent[0], effect.amount, out)
+            if characters.resource_max(char):  # straight into the class's own bar
+                _restore_pool(char, effect.pool, out)
+            else:
+                spent = [k for k, _ in spent_abilities(char, spells_only=True)]
+                _restore_use(char, ability if ability in spent else spent[0], effect.amount, out)
         else:  # short rest: part of the HP, a use back, then the cooldown; never lifts "injured"
             out.add("inv.short_rest", item=name)
             char.hp = min(hp_cap(char), char.hp + max(1, round(char.max_hp * effect.hp_percent)))
             if char.hp > before:
                 out.add("inv.healed_hp", amount=char.hp - before, hp=char.hp, max_hp=char.max_hp)
-            spent = spent_abilities(char, spells_only=False)
-            if spent:
+            if characters.resource_max(char):
+                _restore_pool(char, effect.pool, out)
+            elif spent := spent_abilities(char, spells_only=False):
                 _restore_use(char, spent[0][0], effect.charges, out)
             char.cooldowns = {**(char.cooldowns or {}), "short_rest": now + effect.cooldown_seconds}
     return out
