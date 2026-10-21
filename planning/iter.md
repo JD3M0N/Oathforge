@@ -22,6 +22,8 @@ Versionado `0.x.y`: **y** (parche) en arreglos y cambios pequeños; **x** (menor
 | 0.8.3 | Planning reorganizado: Possibilium, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md`, `content/officina/` |
 | 0.9.0 | Logros e identidad: 30 logros, dos metalogros, títulos, destacados, objetivos seguidos y reconocimiento retroactivo verificable |
 | 0.9.1 | Hoja de ruta de 0.10 (consolidación) y 0.11 (multijugador): `planning/roadmap.md` |
+| 0.10.21 | 0.10-I (B00): el contrato de la revisión de clases, progresión 1–20 y campaña en `planning/roadmap_balance.md`, y la auditoría de la base (solo documentación) |
+| 0.10.20 | Marcado en `TODO.md` y `planning/roadmap.md` lo que F15 deja hecho (solo documentación) |
 | 0.10.19 | Profesiones (F15, cierre): `tests/features.md` con el recorrido completo y los resúmenes de planning al día; queda la partida de prueba en ES y EN |
 | 0.10.18 | Profesiones (F15, 10.ª parte): el catálogo T1 (materiales de rango 4, acero y ocho recetas con nivel 10 para equiparse) y los maestros que venden los componentes de su oficio |
 | 0.10.17 | Profesiones (F15, 9.ª parte): quince herramientas especializadas (rápida, selectiva y productiva por disciplina), una elegida por disciplina y fijada al empezar cada trabajo |
@@ -50,12 +52,12 @@ El detalle de 0.10 y 0.11 (fichas por sistema, hitos, puerta de salida y trazabi
   - juramento verificable y auditoría de los logros de 0.9.0 ([progressio](progressio.md));
   - contrato de combate, jefe de dos fases y matriz de ocho clases ([pugna](pugna.md), [ordines](ordines.md));
   - **oficios, maestrías y aficiones por fases** (F15, su [contrato](roadmap-profesiones.md)): refinado de maestrías, Sastrería como octavo oficio, Gremio de Aventureros, una calle con un puesto y un maestro por oficio, habitación con cama y cofre, ramas a rango 2, herramientas especializadas y catálogo T0/T1 ([opificia](opificia.md));
-  - economía auditada y las primeras especializaciones de clase a nivel 5, una por clase (PKG-04; [ordines](ordines.md));
-  - tutorial completo ES/EN y arco de nivel 5 ([mundus](mundus.md)).
+  - economía auditada ([mercatura](mercatura.md));
+  - **la revisión de clases, progresión y campaña** (hito 0.10-I, su [contrato](roadmap_balance.md), desde 0.10.21): catorce clases con recurso propio, 41 ramas elegidas al nivel 10, XP más hitos hasta el 20, entrega de misiones al dador, campaña nueva con el Recaudador y el Ciervo, región cercana para 11–20, tiempos sin atajos de beta y reinicio limpio antes de abrir ([ordines](ordines.md), [progressio](progressio.md), [mundus](mundus.md)). *Sustituye a las especializaciones al nivel 5 y al arco de nivel 5 que figuraban aquí.*
 - **0.11, multijugador por incrementos** ([societas](societas.md)): grupo de 2 en la cripta (PKG-01 + PKG-02), grupos de 2–4 con ausencias (PKG-03), misiones y encargos con custodia (PKG-05), gremio mínimo y duelo consentido; después, eventos como la crisis del hierro (PKG-08).
 - **Producción audiovisual en paralelo** (no bloquea lo anterior): estilo, tres portadas de lugar, un retrato de NPC y una pista ([ars](ars.md) §16).
 - **Expediciones** (fase 2 del viaje: escenas, estilos, atajos, favoritos) cuando haya contenido que las merezca.
-- **Más adelante**: segunda región (Frosthold o Stormport), más clases (Explorador y Artificiero), Mini App, TTS.
+- **Más adelante**: más regiones (Frosthold o Stormport) después de la del hito 0.10-I, Mini App, TTS.
 
 ## Antes de invitar a amigos (GDD §17.6)
 

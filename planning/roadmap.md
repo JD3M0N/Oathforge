@@ -56,6 +56,9 @@ La serie 0.9 ya está publicada: **0.9.0** trajo los logros y **0.9.1** este doc
 | 0.10-F · Profundizar progresión | **0.10.9 – 0.10.19** | F15 por fases ([contrato](roadmap-profesiones.md)): 0.10.9 el contrato; 0.10.10 recetas y tiers; 0.10.11 Gremio y calle con un puesto por oficio; 0.10.12 refinado; 0.10.13 Sastrería y planos; 0.10.14 habitación y cofre; 0.10.15 instantánea de actividad; 0.10.16 ramas; 0.10.17 herramientas; 0.10.18 catálogo T1; 0.10.19 cierre. F16 y F19 después |
 | 0.10-G · Integrar | 0.10.10 | Tutorial completo ES/EN, arco de nivel 5, lote visual |
 | 0.10-H · Candidato | 0.10.11 | Puerta de salida, migración, restauración y documentación |
+| 0.10-I · Clases, progresión 1–20 y campaña | **0.10.21 en adelante** | La entrega más grande del proyecto, con su propio contrato en [roadmap_balance.md](roadmap_balance.md): 14 clases, 41 ramas elegidas al nivel 10, XP más hitos hasta el 20, entrega de misiones al dador, campaña nueva con el Recaudador y el Ciervo, región cercana para 11–20, tiempos sin atajos de beta, retirada de la cripta y reinicio de lanzamiento. Quince fases B00–B14, una o varias por parche; 0.10.21 es B00 (auditoría) |
+
+El hito I llega después de los demás porque reescribe lo que ellos consolidaron: donde una ficha de la sección 4 contradiga a `roadmap_balance.md`, manda el contrato nuevo. Lo entregado en F15 (oficios, maestrías, herramientas, habitación y catálogo T0/T1) **se conserva**, no se rehace.
 
 La numeración es orientativa: si un hito necesita más parches, se usan. El hito A va después de la primera entrega de F01 porque la interfaz no toca dinero ni IA y los testers la necesitan ya; A sigue siendo requisito antes de cualquier cambio de economía o de texto libre. Al cerrar cada versión: actualizar el **Estado actual** del resumen latino afectado, `tests/features.md` y `planning/iter.md`, y marcar aquí las casillas hechas con la versión (`[x] … (0.10.0)`).
 
@@ -313,6 +316,8 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 <a id="F07"></a>
 ### F07 · Descanso, derrota y recuperación
 
+> **Sustituida por B08 de [roadmap_balance.md](roadmap_balance.md): tiempos normales sin atajos de beta, descanso corto limitado y derrota con coste pequeño y tope.** Lo de abajo es la versión anterior del plan; se conserva como historia.
+
 **Referencias:** [TODO L36](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L36) · [TODO L61](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L61) · [TODO L87](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L87).
 
 **Implementado:** Descanso largo, osario gratis, curación en capilla, heridas y tónico de descanso corto.
@@ -392,6 +397,8 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 <a id="F10"></a>
 ### F10 · Mapa, movimiento, exploración y mazmorras
 
+> **Sustituida por B11 y B13 de [roadmap_balance.md](roadmap_balance.md) en lo que toca a mazmorras y segunda región: la Cripta Hundida sale del contenido activo y la región 11–20 es nueva y cercana a Crownreach.** Lo de abajo es la versión anterior del plan; se conserva como historia.
+
 **Referencias:** [TODO L50](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L50) · [TODO L63](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L63) · [TODO L65](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L65) · [TODO L78](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L78) · [TODO L93](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L93).
 
 **Implementado:** Viaje directo, grafo, Dijkstra, restricciones de descubrimiento, combate fijo bloqueante y 📜 al objetivo.
@@ -446,6 +453,8 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 <a id="F12"></a>
 ### F12 · Misiones, encargos PNJ y aventuras
 
+> **Sustituida por B02 y B09–B11 de [roadmap_balance.md](roadmap_balance.md): estado «lista para entregar» y pago atómico al dador, campaña nueva y aventuras 11–20.** Lo de abajo es la versión anterior del plan; se conserva como historia.
+
 **Referencias:** [TODO L33](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L33) · [TODO L78](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L78) · [TODO L79](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L79) · [TODO L80](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L80) · [TODO L89](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L89).
 
 **Implementado:** Objetivos y etapas, recompensas, decisiones del relicario y señales de progreso; objetivos completados pueden pagar inmediatamente.
@@ -473,6 +482,8 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 <a id="F13"></a>
 ### F13 · Tutorial y primera sesión
 
+> **Sustituida por B09 y B10 de [roadmap_balance.md](roadmap_balance.md): la campaña inicial se reescribe entera hasta el nivel 10, con mentor nuevo, Recaudador y Ciervo.** Lo de abajo es la versión anterior del plan; se conserva como historia.
+
 **Referencias:** [TODO L32](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L32) · [TODO L33](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L33).
 
 **Implementado:** Diez misiones sin cripta, jefe Viejo Colmillo, ayudas beta y tutorial-stats.
@@ -499,6 +510,8 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 
 <a id="F14"></a>
 ### F14 · Clases e identidad jugable
+
+> **Sustituida por B03 y B06 de [roadmap_balance.md](roadmap_balance.md): 14 clases con recurso propio en vez de ocho con usos por descanso.** Lo de abajo es la versión anterior del plan; se conserva como historia.
 
 **Referencias:** [TODO L34](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L34) · [TODO L35](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L35) · [TODO L37](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L37).
 
@@ -643,6 +656,8 @@ Cada ficha diferencia lo existente de la propuesta, señala las decisiones que h
 
 <a id="F19"></a>
 ### F19 · Especializaciones y reentrenamiento
+
+> **Sustituida por B01, B04 y B07 de [roadmap_balance.md](roadmap_balance.md): 41 ramas elegidas al nivel 10, no ocho al 5, y sin reentrenamiento libre.** Lo de abajo es la versión anterior del plan; se conserva como historia.
 
 **Referencias:** [TODO L34](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L34) · [TODO L33](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L33) · [TODO L38](https://github.com/JD3M0N/Oathforge/blob/36e967b2be88dceed3e1fe2af23417fe5d0ae7a4/TODO.md#L38).
 

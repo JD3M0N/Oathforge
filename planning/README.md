@@ -6,6 +6,7 @@ Qué queremos construir y por qué. No es documentación del código (eso está 
 |---|---|
 | [Possibilium.md](Possibilium.md) | **Libro principal**: todas las ideas, alternativas y preguntas, con IDs (`CLA-01`, `MIN-01`…); archivo histórico de los PDF en los anexos |
 | [roadmap.md](roadmap.md) | **Plan de 0.10 y 0.11**: 20 fichas de sistema, hitos, puerta de salida y cobertura del TODO |
+| [roadmap_balance.md](roadmap_balance.md) | **Contrato de 0.10-I**: 14 clases, 41 ramas elegidas al nivel 10, progresión híbrida de XP e hitos hasta el 20, campaña nueva con dos jefes, región cercana y reinicio de lanzamiento |
 | [roadmap-profesiones.md](roadmap-profesiones.md) | **Contrato de F15**: ocho oficios, maestrías con refinado, ramas, herramientas, T0/T1, Gremio de Aventureros, calle con un puesto por oficio y habitación |
 | [iter.md](iter.md) | Hoja de ruta: qué entra en cada versión (resumen; el detalle de 0.10/0.11 está en roadmap) |
 | [ordines.md](ordines.md) | Clases y especializaciones |

@@ -4,6 +4,19 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.21] - 2026-10-21
+
+0.10-I (B00): el contrato de la revisión más grande del proyecto y la auditoría de la base. Solo documentación.
+
+### Añadido
+- **`planning/roadmap_balance.md`**: el contrato de **0.10-I**, la revisión de clases, progresión y campaña. Catorce clases (Mago y Hechicero se fusionan, Sacerdote pasa a Clérigo y entran seis nuevas), **41 ramas que se eligen al nivel 10**, progresión híbrida de **XP más hitos hasta el nivel 20**, entrega de las misiones a quien las dio, una campaña inicial nueva con el Recaudador de Ceniza y el Ciervo de Hierro, una región cercana a Crownreach para los niveles 11–20, tiempos normales sin atajos de beta, la retirada de la Cripta Hundida y el reinicio limpio antes de abrir. Se trabaja en quince fases (B00–B14), una o varias por parche.
+- **Auditoría de la base 0.10.20** dentro de ese documento: línea base de la suite (410 pasan; los 5 fallos que quedan son del `.env` local, no del código) e inventario de todo lo que la entrega tendrá que tocar —ids `priest` y `mage`, el aviso de rama al nivel 5, el techo de nivel 5, la mejora de atributo del 4, los usos por descanso, los atajos de beta y las 31 referencias a la cripta—.
+
+### Cambiado
+- **`TODO.md`**: la especialización pasa del nivel 5 al **10**, «siguientes clases» pasa a las catorce con su recurso propio, «más misiones después del nivel 5» y «segunda región» pasan a la campaña 1–20 y a la región cercana, y el campamento de entrenamiento baja a idea.
+- **`planning/roadmap.md`** estrena el hito **0.10-I** y marca como sustituidas las fichas F07, F10, F12, F13, F14 y F19, que se conservan como historia. Lo entregado en F15 no se rehace.
+- `planning/README.md` enlaza el contrato nuevo.
+
 ## [0.10.20] - 2026-10-20
 
 Marcado lo que F15 deja hecho. Solo documentación.

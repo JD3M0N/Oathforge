@@ -2,6 +2,8 @@
 
 Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada punto están en [`planning/`](planning/README.md) (libro principal: [Possibilium](planning/Possibilium.md)); los bugs de los testers, en sus `TODO-<nombre>.md`.
 
+> **En marcha: 0.10-I, la revisión de clases, progresión 1–20 y campaña.** Su contrato está en [`planning/roadmap_balance.md`](planning/roadmap_balance.md) (fases B00–B14, una o varias por parche 0.10.x). Donde un punto de esta lista lo contradiga, manda el contrato.
+
 **Leyenda:** 🔴 prioridad alta · 🟡 media · 🟢 cuando haya tiempo · ◐ ya existe en parte · 💡 IDEA = idea por pensar y decidir, no una tarea aprobada
 
 ---
@@ -30,11 +32,11 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 ## 🧙 Clases y progresión · [ordines](planning/ordines.md) · [progressio](planning/progressio.md)
 
 - [ ] 🟡 ◐ Probar el tutorial de 10 misiones (v0.8.2) con la beta: cuánto se tarda en terminarlo y dónde se atasca la gente. *Hecho: `oath tutorial-stats` lo mide (v0.7.24); la espera hasta la noche para los murciélagos ya no existe (v0.7.15). Falta: la partida con los testers y ajustar con los datos.*
-- [ ] 🟢 **Campamento de entrenamiento** al acabar el tutorial (nivel 3–5, a reescalar): misiones opcionales de 3 a 5 por clase para sentir qué es ser Paladín, Bardo, Pícaro…, y hacer ahí el juramento y entrar en la clase. Los nuevos pueden saltárselo. Ver cómo encaja con la compra de atributos por puntos.
-- [ ] 🔴 Elegir especialización a nivel 5. *La ficha completa ya muestra la especialización cuando exista; con la cadena de misiones de v0.5.0 se llega a nivel 5 enseguida.*
-- [ ] 🟡 Renombrar el golpe base del Paladín a **Castigo divino** (*Divine Smite*, como en D&D) en lugar de «Golpe Consagrado».
-- [ ] 🟡 ◐ **Sistema de descanso**: descanso corto en cualquier sitio (recuperar parte de la vida y algunos usos) y largo en posada. *Hecho: descanso gratis en el osario de la cripta (v0.5.0), el tónico del reposo (v0.6.2), descanso largo de 8 h de juego en la posada y «Curar heridas» en la capilla (v0.7.0). Falta: un descanso corto sin poción; decidir si el osario también debe tardar 8 h.*
-- [ ] 🟡 Siguientes clases: **Explorador (Ranger) y Artificiero** (Mago, Druida y Bardo en v0.4.0; Brujo en v0.4.4).
+- [ ] 💡 IDEA **Campamento de entrenamiento** (roadmap_balance N05): misiones opcionales de 3 a 5 por clase para sentir qué es ser Paladín, Bardo, Pícaro… *Ya no es requisito: la campaña nueva es común para todas las clases y la rama se elige al nivel 10 sin prueba previa. Queda como ampliación posterior a la graduación.*
+- [ ] 🔴 **Elegir especialización a nivel 10** (B04 y B07): 41 ramas, una por personaje, elegida directamente en el Gremio antes del Ciervo de Hierro; después, un modificador al 13, otro al 17 y la técnica culminante al 20. *Sustituye a la idea anterior de elegirla al nivel 5: la campaña nueva lleva hasta el 10 y el nivel 5 pasa a ser un entrenamiento (también al 12 y al 18).* Sin cambio libre de rama; sí reelección gratuita si un cambio de balance altera cómo funciona.
+- [ ] 🟡 Renombrar el golpe base del Paladín a **Castigo divino** (*Divine Smite*, como en D&D) en lugar de «Golpe Consagrado». *Entra en B06, cuando se rediseñe el Paladín con su barra de Convicción.*
+- [ ] 🟡 ◐ **Sistema de descanso**: descanso corto en cualquier sitio (recuperar parte de la vida y algunos usos) y largo en posada. *Hecho: descanso gratis en el osario de la cripta (v0.5.0), el tónico del reposo (v0.6.2), descanso largo de 8 h de juego en la posada y «Curar heridas» en la capilla (v0.7.0). Falta: un descanso corto sin poción (B08, con su límite por descanso largo y los tiempos normales de §12); el osario de la cripta desaparece con ella.*
+- [ ] 🔴 **Catorce clases** (B06): a las ocho de hoy se suman Explorador, Artífice, Monje, Chamán, Bárbaro y Caballero de la Muerte; Mago y Hechicero se fusionan en Hechicero y Sacerdote pasa a Clérigo (los ids `mage` y `priest` se conservan). Cada una con su recurso propio —Convicción, Foco, Furia, Energía, Maná, Resonancia, Esencia, Carga, Poder rúnico— en vez de usos por descanso (B03).
 - [ ] 🟢 Juramentos con consecuencias, títulos y cicatrices en la ficha.
 - [ ] 🟡 **Ranuras de equipo**: hoy hay 4 (arma principal, a distancia, mano secundaria/escudo y cuerpo). Ampliar a cabeza, manos, pies, cuello (amuleto), 2 anillos y capa, y decidir cuántas caben en `/sheet` sin que pese ([mercatura](planning/mercatura.md)).
 - [ ] 🟢 Objetos con procedencia (quién los fabricó o encontró).
@@ -69,8 +71,8 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🟡 ◐ **Desuello según el peso de la presa**: lo que da y lo que tarda `/skin`, calculado con el peso de cada animal en vez de un valor fijo. *Ya solo se desuellan bestias con `harvest` (nunca un esqueleto) y cada una tiene su `skin_seconds` (v0.7.21).*
 - [ ] 🟢 **Rareza de criaturas**: dentro de los encuentros de cada zona, algunas salen menos (10–15 %). Más adelante, según la hora y el clima.
 - [ ] 🟢 «Algo brilla» al fondo de la mina: hoy es solo ambiente; convertirlo en un descubrimiento con recompensa.
-- [ ] 🟡 Más misiones después del nivel 5 y misiones secundarias repetibles (encargos de caza diarios).
-- [ ] 🔴 **Entregar las misiones a quien las dio**: al cumplir los objetivos la misión queda «lista para entregar»; al hablar con ese PNJ cobras la recompensa y te da la siguiente.
+- [ ] 🔴 **Campaña de nivel 1 a 20** (B09–B11): la iniciación se reescribe entera hasta el 10 (mentor nuevo, ocho actos, el Recaudador de Ceniza y el Ciervo de Hierro) y una región cercana a Crownreach da el contenido de 11 a 20. *Sustituye a «más misiones después del nivel 5».* Las secundarias repetibles de baja presión entran con la región, sin encargos diarios obligatorios.
+- [ ] 🔴 **Entregar las misiones a quien las dio** (B02): al cumplir los objetivos la misión queda «lista para entregar»; al hablar con ese PNJ cobras la recompensa y te da la siguiente. Es también la puerta del nivel 10: entregar al Recaudador cumple el hito, pero solo subes si además tienes la XP.
 - [ ] 🔴 ◐ **Profesiones y recolección** · [opificia](planning/opificia.md), [contrato](planning/roadmap-profesiones.md). *Hecho (v0.6.0): actividades de campo, maestrías, mina, arboleda, claro y ribera, desuello y crónicas. Hecho (v0.6.1): oficios con 2 plazas, Barrio de Oficios, recetas y `/professions`. Hecho (v0.6.2): poción de maná y tónico del reposo. Hecho (v0.7.0): Escribanía y Artificiería (pergaminos y bombas para el combate), Cocina y Pesca como aficiones sin plaza y guía `/prof_<oficio>`. Hecho (v0.7.19–0.7.21): `/masteries`, `/hobbies`, Ingeniería, la Pesca como afición, actividades que terminan solas y `/skin`. **Hecho (v0.10.9–0.10.19)**: Gremio de Aventureros, una calle con un puesto y un maestro por oficio, el refinado como maestría, Sastrería, técnicas y planos, el cuarto con cama y cofre, las ramas, las herramientas especializadas y el catálogo T0/T1. Falta: la partida de prueba en ES y EN, y el balance con la beta (sobre todo la bomba de fuego, que da a toda una fila).*
 - [ ] 🟢 **Fabricar sin estación fija**: que cada oficio tenga una herramienta portátil (un yunque portátil para la herrería, un alambique para la alquimia…) para fabricar en cualquier sitio. Decidir si sustituye a las estaciones o es una mejora que se consigue.
 - [ ] 🟢 ◐ Afinidades de maestría, durabilidad de herramientas y vetas que se agotan (después de la beta). *Hecho (v0.10.16): dos ramas por maestría y por Pesca, a rango 2 en vez de a 3, con la anterior pausada y no perdida. Falta: durabilidad (nota N06) y vetas finitas.*
@@ -103,7 +105,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 - [ ] 🟢 Más facciones (Verdant Pact para el Bosque, Hollow Choir para la Cripta).
 - [ ] 🟢 **Eventos**: batallas por bandos en el bosque, defender la ciudad de una invasión, raids globales semanales…
 - [ ] 🟢 Contratos entre jugadores con oro en custodia.
-- [ ] 🟢 Segunda región (Frosthold o Stormport).
+- [ ] 🔴 **Región nueva para los niveles 11–20** (B11), cercana a Crownreach y conectada con la trama de los cargamentos desviados; la ciudad sigue siendo el centro de servicios. *Sustituye a «segunda región (Frosthold o Stormport)»; Frosthold y Stormport quedan como ideas lejanas.*
 
 ## 🛡️ Robustez · [iter](planning/iter.md)
 
