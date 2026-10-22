@@ -71,6 +71,21 @@ class Text(Strict):
         return getattr(self, lang, None) or self.en
 
 
+class WorldGuide(Strict):
+    summary: Text
+    setting: Text
+    society: Text
+    technology: Text
+    magic: Text
+    backgrounds: Text
+
+    def context(self, lang: str) -> str:
+        return "\n".join((
+            self.summary.get(lang), self.setting.get(lang), self.society.get(lang),
+            self.technology.get(lang), self.magic.get(lang), self.backgrounds.get(lang),
+        ))
+
+
 class Article(Strict):
     """The article before a place's name in a sentence; empty where the language uses none ("Crownreach Market")."""
     es: str = ""

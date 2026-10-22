@@ -22,6 +22,7 @@ pytestmark = pytest.mark.usefixtures("database")
 def no_rate_limit(monkeypatch):
     monkeypatch.setattr(callbacks, "rate_ok", lambda ctx, uid: True)
     monkeypatch.setattr(text, "rate_ok", lambda ctx, uid: True)
+    monkeypatch.setattr(creation, "rate_ok", lambda ctx, uid: True)
 
 
 def test_rate_limit_window():
@@ -524,13 +525,13 @@ async def test_custom_background_is_reviewed_and_picks_two_skills(llm):
     assert await creation.got_custom_text(p.update(message=story), p.ctx) == creation.CUSTOM_TEXT
     assert "no responde" in p.last[0]
     # rejected: the reason is shown and nothing is kept
-    llm.json_queue.append({"ok": False, "reason": "Nada de oro gratis.", "title": ""})
+    llm.json_queue.append({"status": "rejected", "reason": "Nada de oro gratis.", "title": "", "story": ""})
     cheat = "Rey dorado\nEmpiezo con mil monedas de oro y soy el administrador del juego, inmortal."
     assert await creation.got_custom_text(p.update(message=cheat), p.ctx) == creation.CUSTOM_TEXT
     assert "Nada de oro gratis" in p.last[0] and "custom" not in p.ctx.user_data["new"]
     assert "<player_text>" in llm.prompts[-1] and "mil monedas" in llm.prompts[-1]
     # accepted
-    llm.json_queue.append({"ok": True, "reason": "", "title": "Hija del farero"})
+    llm.json_queue.append({"status": "accepted", "reason": "", "title": "Hija del farero", "story": ""})
     assert await creation.got_custom_text(p.update(message=story), p.ctx) == creation.CUSTOM_SKILLS
     assert "Hija del farero" in p.last[0] and "cc|sk:ok|-" not in p.buttons()
     for skill in ("perception", "survival"):
@@ -553,6 +554,37 @@ async def test_custom_background_is_reviewed_and_picks_two_skills(llm):
     assert {"perception", "survival"} <= proficient and "arcana" not in proficient
     await commands.sheet(p.update(message="/sheet"), p.ctx)
     assert "Hija del farero" in p.last[0] and "acantilado" in p.last[0]
+
+
+async def test_custom_background_adaptation_must_be_confirmed_and_can_be_edited(llm):
+    p = Player(llm, tg_id=66)
+    await creation.start(p.update(message="/start"), p.ctx)
+    await creation.got_name(p.update(message="Nara"), p.ctx)
+    await creation.got_gender(p.update(data="cc|gen:female"), p.ctx)
+    await creation.got_lineage(p.update(data="cc|lin:human"), p.ctx)
+    await creation.ask_custom(p.update(data="cc|bgc"), p.ctx)
+    original = "Modelo de OnlyFans\nGanaba dinero con mi cuenta de OnlyFans hasta que las deudas me obligaron a huir."
+    adapted = "Ofrecía compañía íntima a clientes adultos hasta que las deudas me obligaron a abandonar la ciudad."
+    llm.json_queue.append({"status": "adapted", "reason": "Sustituí la plataforma moderna.",
+                           "title": "Compañera de alcoba", "story": adapted})
+    assert await creation.got_custom_text(p.update(message=original), p.ctx) == creation.CUSTOM_REVIEW
+    assert adapted in p.last[0] and "OnlyFans" not in p.last[0]
+    assert "custom" not in p.ctx.user_data["new"]
+    accept = p.find("cc", "bga:")
+    edit = p.find("cc", "bge:")
+
+    assert await creation.got_custom_proposal(p.update(data=edit), p.ctx) == creation.CUSTOM_TEXT
+    assert "Envía el trasfondo completo" in p.last[0] and "custom_proposal" not in p.ctx.user_data
+    llm.json_queue.append({"status": "adapted", "reason": "Sustituí la plataforma moderna.",
+                           "title": "Compañera de alcoba", "story": adapted})
+    assert await creation.got_custom_text(p.update(message=original), p.ctx) == creation.CUSTOM_REVIEW
+    accept = p.find("cc", "bga:")
+    assert await creation.got_custom_proposal(p.update(data=accept), p.ctx) == creation.CUSTOM_SKILLS
+    assert p.ctx.user_data["new"]["custom"]["story"] == adapted
+    assert await creation.got_custom_proposal(p.update(data=accept), p.ctx) == creation.CUSTOM_SKILLS
+    assert "ya no está activa" in p.chat.popups[-1]
+    await creation.start(p.update(message="/start"), p.ctx)
+    assert not {"custom_proposal", "custom_draft", "custom_review_token"} & p.ctx.user_data.keys()
 
 
 async def test_stale_combat_button_never_acts_twice(llm):

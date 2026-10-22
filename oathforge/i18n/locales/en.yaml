@@ -101,15 +101,23 @@ create:
     ✍️ <b>Your own background</b>
     Write it in one message: on the <b>first line</b> its name (up to {title_max} characters) and <b>below</b> your story (up to {story_max}).
 
+    <b>Aetherfall:</b> {world}
+
     <i>For example:
     Lighthouse keeper's daughter
     I grew up tending the beacon of a cliff that no ship visits any more…</i>
 
-    The AI reviews it before accepting it: no insults, nothing inappropriate and no tricks (it never gives gold or powers). Then you choose 2 skills.
+    The AI reviews it before accepting it. If an idea does not fit the world, it will propose an adapted version for you to accept or edit. It never grants gold or powers. Then you choose 2 skills.
   custom_bad: "That doesn't fit. First line: the name (2–{title_max} characters). Below it: your story ({story_min}–{story_max} characters)."
   custom_checking: "🔎 Reviewing your background…"
-  custom_unavailable: "😔 The AI that reviews backgrounds isn't answering right now. Try again in a while or pick one from the list."
-  custom_rejected: "🚫 That background can't be accepted: {reason}\nWrite another one, or go back to the list."
+  custom_unavailable: "😔 The AI that reviews backgrounds isn't answering right now. You can retry or pick one from the list."
+  custom_retry: "🔄 Retry"
+  custom_rejected: "🚫 I can't preserve the central idea of that background: {reason}\nEdit it, or go back to the list."
+  custom_proposal: "🪶 <b>Proposal adapted to Aetherfall</b>\n{reason}\n\n<b>{title}</b>\n<i>{story}</i>\n\nReview it before continuing."
+  custom_accept: "✅ Accept proposal"
+  custom_edit: "✏️ Edit"
+  custom_edit_prompt: "✏️ Send the complete background again: name on the first line and story below it."
+  custom_outdated: "That proposal is no longer active."
   custom_ok: "✅ <b>{title}</b> accepted."
   custom_skills: "🎓 Choose <b>{n}</b> skills you mastered back then ({chosen}/{n}):"
   custom_skills_left: "Choose {n} skills first."

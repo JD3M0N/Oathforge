@@ -2,7 +2,7 @@
 
 Resumen de [Possibilium §13–14, §19, §21–23](Possibilium.md#s13).
 
-## Estado actual (0.9.0)
+## Estado actual (0.10.26)
 
 ### Logros de mundo e historia
 
@@ -11,6 +11,8 @@ Resumen de [Possibilium §13–14, §19, §21–23](Possibilium.md#s13).
 - Descubrimientos y caza diurna/nocturna se registran como hechos; las expansiones no cambian condiciones ya publicadas.
 
 ### Lugares
+
+- `content/world/guide.yaml` resume el canon necesario para crear personajes: ambientación, sociedad, tecnología, magia y lo que un pasado personal puede añadir sin convertirlo en verdad global. La revisión de trasfondos usa esta guía completa.
 
 Aetherfall → continente Terra Coronata → zonas (`content/world/<continente>/<zona>/<lugar>/place.yaml`):
 

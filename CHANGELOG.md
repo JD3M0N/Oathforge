@@ -4,6 +4,16 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.26] - 2026-10-21
+
+### Añadido
+- **Guía canónica de Aetherfall** en content/world/guide.yaml: resume en español e inglés la ambientación, sociedad, tecnología, magia y límites de lo que un trasfondo puede declarar. Se valida al cargar el contenido y se muestra resumida al escribir un trasfondo propio.
+- **Propuestas adaptadas**: si la idea del jugador contiene una plataforma, marca o anacronismo, Gemini conserva su identidad, oficio y motivación y propone un equivalente de Aetherfall. El jugador puede aceptarlo, editarlo o volver a la lista; propuestas y botones antiguos no se pueden reutilizar.
+
+### Cambiado
+- El trabajo sexual entre adultos y otros pasados oscuros se aceptan cuando se describen sin detalles explícitos. Solo se rechaza cuando una reformulación segura no puede conservar la idea central o cuando se intentan imponer ventajas, autoridad o hechos canónicos.
+- La revisión de trasfondos devuelve accepted, adapted o rejected, recibe la guía del mundo y el linaje como contexto fiable, respeta los límites de longitud y registra el resultado sin guardar el texto del jugador en action_logs.
+
 ## [0.10.25] - 2026-10-21
 
 0.10-I (B03): las clases estrenan su propia barra, en vez de usos por descanso.

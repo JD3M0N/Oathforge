@@ -4,7 +4,7 @@ Resumen de [Possibilium §25](Possibilium.md#s25).
 
 **Regla de oro: la IA nunca decide resultados.** Interpreta → el motor valida, tira y guarda → la IA narra los hechos.
 
-## Estado actual (0.8.2)
+## Estado actual (0.10.26)
 
 - Gemini (`google-genai`), con tres tipos de llamada: rápida (interpretar, revisar trasfondos), narrativa (narrar, diálogo de NPC) y crónica. **Los tres usan Gemini 3.1 Flash-Lite** (`GEMINI_MODEL_*` en `.env`).
 - **Presupuesto**: 150 llamadas al día por jugador (`AI_USER_DAILY_CALLS`) y 15 crónicas (`AI_USER_DAILY_CHRONICLES`), comprobado antes de cada llamada (`ai_usage`). Si se agota, se avisa y se juega con botones y plantillas; `/hero` y `/sheet` muestran el uso.
@@ -18,7 +18,7 @@ Resumen de [Possibilium §25](Possibilium.md#s25).
   Al menos 12 variantes por caso en es y en, con los mismos marcadores; se validan al arrancar y se eligen con `ai/fallbacks.pick` (`clave.contexto` → `clave` → `default`).
 - **Cómo escribirlos**: segunda persona y fantasía oscura sobria; solo narran, nunca conceden objetos, oro, XP, curación ni confianza; no inventan armas, heridas, clima ni botín; el descanso empieza, no cura; la derrota se cuenta con dignidad; si no hay materiales, `{loot}` lo dice. Un NPC nuevo necesita su lista en `dialogue.yaml`.
 - **Seguridad**: texto del jugador delimitado (`<player_text>`); ids de la IA validados contra el contexto (si no, `narrate_only`); dificultades acotadas.
-- **Trasfondo propio**: `moderation.review_background` (JSON `{ok, reason, title}`) rechaza ofensas, personas reales y ventajas («empiezo con 1000 de oro»); sin Gemini no se acepta. La historia aceptada llega al narrador como dato.
+- **Trasfondo propio**: `moderation.review_background` devuelve `accepted`, `adapted` o `rejected` con la guía canónica y el linaje como contexto. Acepta oficios adultos sin detalles explícitos, adapta plataformas y anacronismos conservando la idea y pide confirmación antes de guardar la propuesta. Sigue rechazando ventajas, autoridad, hechos canónicos y contenido que no admite una reformulación segura; sin Gemini no se acepta.
 - NPC con persona, objetivos, secretos y memoria básica; cada llamada se guarda en `artifacts/ai/`.
 
 ## Decidido

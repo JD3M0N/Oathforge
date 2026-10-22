@@ -27,6 +27,7 @@ def test_content_loads_and_references_resolve():
     assert c.start_location in c.locations
     assert c.respawn_location in c.locations
     assert len(c.classes) == 8 and len(c.monsters) == 10 and len(c.items) == 97 and len(c.npcs) == 13
+    assert "Aetherfall" in c.world_guide.summary.es and "internet" in c.world_guide.technology.en
 
 
 def test_every_text_has_both_languages():

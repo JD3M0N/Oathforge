@@ -101,15 +101,23 @@ create:
     ✍️ <b>Tu propio trasfondo</b>
     Escríbelo en un mensaje: en la <b>primera línea</b>, su nombre (hasta {title_max} caracteres), y <b>debajo</b>, tu historia (hasta {story_max}).
 
+    <b>Aetherfall:</b> {world}
+
     <i>Por ejemplo:
     Hija del farero
     Crecí cuidando la lámpara de un acantilado al que ya no llega ningún barco…</i>
 
-    La IA lo revisa antes de aceptarlo: sin insultos, nada inapropiado y sin trampas (nunca da oro ni poderes). Después eliges 2 habilidades.
+    La IA lo revisa antes de aceptarlo. Si una idea no encaja con el mundo, te propondrá una versión adaptada para que la aceptes o edites. Nunca da oro ni poderes. Después eliges 2 habilidades.
   custom_bad: "Así no encaja. Primera línea: el nombre (2–{title_max} caracteres). Debajo: tu historia ({story_min}–{story_max} caracteres)."
   custom_checking: "🔎 Revisando tu trasfondo…"
-  custom_unavailable: "😔 La IA que revisa los trasfondos no responde ahora. Prueba dentro de un rato o elige uno de la lista."
-  custom_rejected: "🚫 Ese trasfondo no se puede aceptar: {reason}\nEscribe otro o vuelve a la lista."
+  custom_unavailable: "😔 La IA que revisa los trasfondos no responde ahora. Puedes reintentarlo o elegir uno de la lista."
+  custom_retry: "🔄 Reintentar"
+  custom_rejected: "🚫 No puedo conservar la idea central de ese trasfondo: {reason}\nEdítalo o vuelve a la lista."
+  custom_proposal: "🪶 <b>Propuesta adaptada a Aetherfall</b>\n{reason}\n\n<b>{title}</b>\n<i>{story}</i>\n\nRevísala antes de continuar."
+  custom_accept: "✅ Aceptar propuesta"
+  custom_edit: "✏️ Editar"
+  custom_edit_prompt: "✏️ Envía el trasfondo completo otra vez: nombre en la primera línea e historia debajo."
+  custom_outdated: "Esa propuesta ya no está activa."
   custom_ok: "✅ <b>{title}</b> aceptado."
   custom_skills: "🎓 Elige <b>{n}</b> habilidades que dominabas entonces ({chosen}/{n}):"
   custom_skills_left: "Elige primero {n} habilidades."

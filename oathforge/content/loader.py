@@ -33,6 +33,7 @@ from oathforge.content.schemas import (
     Skill,
     Specialization,
     Text,
+    WorldGuide,
     Zone,
 )
 from oathforge.engine import class_build
@@ -63,6 +64,7 @@ class Content:
     media: MediaCatalog
     start_location: str
     respawn_location: str
+    world_guide: WorldGuide
     achievements: dict[str, Achievement] = field(default_factory=dict)
     chronicles: dict[str, list[Text]] = field(default_factory=dict)  # = fallbacks["chronicles"]
     # generic texts when Gemini is down or out of budget: content/fallbacks/<category>.yaml -> key -> texts
@@ -190,6 +192,7 @@ def load_content(directory: Path = CONTENT_DIR) -> Content:
         media=world.media,
         start_location=world.start,
         respawn_location=respawn[0] if respawn else world.start,
+        world_guide=WorldGuide.model_validate(_read_file(directory / "world" / "guide.yaml")),
         chronicles=fallbacks["chronicles"],
         fallbacks=fallbacks,
         professions=_parse(Profession, _read(directory, "professions")),

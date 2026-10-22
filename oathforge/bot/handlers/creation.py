@@ -15,9 +15,9 @@ from telegram.ext import (
 )
 
 from oathforge.ai import moderation
-from oathforge.bot.handlers.common import current_view, edit_or_send, load, offer_keyboard, send
+from oathforge.bot.handlers.common import current_view, edit_or_send, load, offer_keyboard, rate_ok, send
 from oathforge.bot import render
-from oathforge.bot.keyboards import btn, cb, grid, markup
+from oathforge.bot.keyboards import btn, cb, grid, markup, nonce
 from oathforge.bot.render import CLASS_ICONS, attribute
 from oathforge.content import get_content
 from oathforge.database.session import session_scope
@@ -27,7 +27,7 @@ from oathforge.engine.progression import max_hp
 from oathforge.i18n import t
 from oathforge.services import audit, characters
 
-NAME, GENDER, LINEAGE, BACKGROUND, CLASS, ABILITIES, CONFIRM, CUSTOM_TEXT, CUSTOM_SKILLS = range(9)
+NAME, GENDER, LINEAGE, BACKGROUND, CLASS, ABILITIES, CONFIRM, CUSTOM_TEXT, CUSTOM_REVIEW, CUSTOM_SKILLS = range(10)
 GENDERS = ("male", "female")
 
 
@@ -43,6 +43,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         return ConversationHandler.END
     context.user_data["lang"] = lang
     context.user_data["new"] = {}
+    context.user_data.pop("custom_proposal", None)
+    context.user_data.pop("custom_draft", None)
+    context.user_data.pop("custom_review_token", None)
     await send(update, t(lang, "create.welcome"), markup([[btn(t(lang, "btn.rulebook"), cb("rb", "index"))]]))
     await send(update, t(lang, "create.ask_name"))
     return NAME
@@ -115,6 +118,10 @@ async def more_backgrounds(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     q = update.callback_query
     await q.answer()
     lang = context.user_data.get("lang", "es")
+    context.user_data.pop("custom_proposal", None)
+    context.user_data.pop("custom_draft", None)
+    context.user_data.pop("custom_review_token", None)
+    context.user_data.get("new", {}).pop("custom", None)
     everything = q.data.split("|")[1] == "bgl:all"  # "cc|bgl:all|-"
     await edit_or_send(update, *background_step(lang, everything=everything))
     return BACKGROUND
@@ -152,16 +159,24 @@ async def ask_custom(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     lang = context.user_data.get("lang", "es")
     if "lineage" not in context.user_data.get("new", {}):
         return BACKGROUND
+    context.user_data.pop("custom_proposal", None)
+    context.user_data.pop("custom_draft", None)
+    context.user_data.pop("custom_review_token", None)
+    context.user_data["new"].pop("custom", None)
+    guide = escape(get_content().world_guide.summary.get(lang))
     kb = markup([[btn(t(lang, "create.custom_back"), cb("cc", "bgl:basic"))]])
     await edit_or_send(update, t(lang, "create.custom_ask", title_max=moderation.TITLE_MAX,
-                                 story_max=moderation.STORY_MAX), kb)
+                                 story_max=moderation.STORY_MAX, world=guide), kb)
     return CUSTOM_TEXT
 
 
 async def got_custom_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    """The AI reviews the name and story; without an answer from it, no custom background (pick a listed one)."""
+    """Review a player draft; a compatible rewrite is offered for confirmation."""
     lang = context.user_data.get("lang", "es")
-    new = context.user_data.get("new", {})
+    context.user_data.pop("custom_proposal", None)
+    if not rate_ok(context, update.effective_user.id):
+        await send(update, t(lang, "err.rate"))
+        return CUSTOM_TEXT
     back = markup([[btn(t(lang, "create.custom_back"), cb("cc", "bgl:basic"))]])
     parts = moderation.split_background(update.message.text or "")
     if parts is None:
@@ -169,20 +184,108 @@ async def got_custom_text(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                              story_min=moderation.STORY_MIN, story_max=moderation.STORY_MAX), back)
         return CUSTOM_TEXT
     title, story = parts
+    context.user_data["custom_draft"] = (title, story)
+    return await _review_custom(update, context, title, story)
+
+
+def _custom_state(context: ContextTypes.DEFAULT_TYPE) -> int:
+    if "custom_proposal" in context.user_data:
+        return CUSTOM_REVIEW
+    if "custom" in context.user_data.get("new", {}):
+        return CUSTOM_SKILLS
+    return CUSTOM_TEXT
+
+
+async def _review_custom(update: Update, context: ContextTypes.DEFAULT_TYPE, title: str, story: str) -> int:
+    lang = context.user_data.get("lang", "es")
+    new = context.user_data.get("new", {})
+    back = markup([[btn(t(lang, "create.custom_back"), cb("cc", "bgl:basic"))]])
+    token = context.user_data["custom_review_token"] = nonce()
     await send(update, t(lang, "create.custom_checking"))
     async with session_scope() as session:
         user, _ = await load(session, update)
         user_id = user.id
+    c = get_content()
+    lineage = c.lineages.get(new.get("lineage"))
+    if lineage is None:
+        return BACKGROUND
+    lineage_context = f"{lineage.name.get(lang)}: {lineage.description.get(lang)}"
     review = await moderation.review_background(context.bot_data["llm"], lang=lang, title=title, story=story,
+                                                world_context=c.world_guide.context(lang),
+                                                lineage_context=lineage_context,
                                                 user_id=user_id)
+    async with session_scope() as session:
+        await audit.log(session, user_id=user_id, character_id=None, verb="background_review",
+                        result={"status": review.status if review else "unavailable"})
+    if context.user_data.get("custom_review_token") != token:
+        return _custom_state(context)
     if review is None:
-        await send(update, t(lang, "create.custom_unavailable"), back)
+        retry = markup([[btn(t(lang, "create.custom_retry"), cb("cc", f"bgr:{token}"))],
+                        [btn(t(lang, "create.custom_back"), cb("cc", "bgl:basic"))]])
+        await send(update, t(lang, "create.custom_unavailable"), retry)
         return CUSTOM_TEXT
-    if not review.ok:
+    if review.status == "rejected":
+        context.user_data.pop("custom_proposal", None)
         await send(update, t(lang, "create.custom_rejected", reason=escape(review.reason or "…")), back)
         return CUSTOM_TEXT
-    new["custom"] = {"title": review.title, "story": story, "skills": []}
+    if review.status == "adapted":
+        context.user_data["custom_proposal"] = {
+            "token": token, "title": review.title, "story": review.story, "reason": review.reason,
+        }
+        await send(update, *_custom_proposal_panel(context.user_data["custom_proposal"], lang))
+        return CUSTOM_REVIEW
+    new["custom"] = {"title": review.title, "story": review.story, "skills": []}
+    context.user_data.pop("custom_draft", None)
     await send(update, *custom_skills_panel(new, lang))
+    return CUSTOM_SKILLS
+
+
+async def retry_custom(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    q = update.callback_query
+    lang = context.user_data.get("lang", "es")
+    token = q.data.split("|")[1].split(":")[1]
+    draft = context.user_data.get("custom_draft")
+    if token != context.user_data.get("custom_review_token") or not draft:
+        await q.answer(t(lang, "create.custom_outdated"), show_alert=True)
+        return _custom_state(context)
+    if not rate_ok(context, update.effective_user.id):
+        await q.answer(t(lang, "err.rate"), show_alert=True)
+        return CUSTOM_TEXT
+    await q.answer()
+    return await _review_custom(update, context, *draft)
+
+
+def _custom_proposal_panel(proposal: dict, lang: str):
+    text = t(lang, "create.custom_proposal", reason=escape(proposal["reason"] or "…"),
+             title=escape(proposal["title"]), story=escape(proposal["story"]))
+    token = proposal["token"]
+    rows = [[btn(t(lang, "create.custom_accept"), cb("cc", f"bga:{token}")),
+             btn(t(lang, "create.custom_edit"), cb("cc", f"bge:{token}"))],
+            [btn(t(lang, "create.custom_back"), cb("cc", "bgl:basic"))]]
+    return text, markup(rows)
+
+
+async def got_custom_proposal(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    q = update.callback_query
+    lang = context.user_data.get("lang", "es")
+    action, token = q.data.split("|")[1].split(":", 1)
+    proposal = context.user_data.get("custom_proposal")
+    if not proposal or token != proposal["token"]:
+        await q.answer(t(lang, "create.custom_outdated"), show_alert=True)
+        return _custom_state(context)
+    await q.answer()
+    if action == "bge":
+        context.user_data.pop("custom_proposal", None)
+        context.user_data.pop("custom_review_token", None)
+        kb = markup([[btn(t(lang, "create.custom_back"), cb("cc", "bgl:basic"))]])
+        await edit_or_send(update, t(lang, "create.custom_edit_prompt"), kb)
+        return CUSTOM_TEXT
+    context.user_data["new"]["custom"] = {
+        "title": proposal["title"], "story": proposal["story"], "skills": [],
+    }
+    context.user_data.pop("custom_proposal", None)
+    context.user_data.pop("custom_draft", None)
+    await edit_or_send(update, *custom_skills_panel(context.user_data["new"], lang))
     return CUSTOM_SKILLS
 
 
@@ -379,7 +482,10 @@ def handler() -> ConversationHandler:
                          CallbackQueryHandler(more_backgrounds, pattern=r"^cc\|bgl:"),
                          CallbackQueryHandler(ask_custom, pattern=r"^cc\|bgc")],
             CUSTOM_TEXT: [MessageHandler(filters.TEXT & ~filters.COMMAND, got_custom_text),
+                          CallbackQueryHandler(retry_custom, pattern=r"^cc\|bgr:"),
                           CallbackQueryHandler(more_backgrounds, pattern=r"^cc\|bgl:")],
+            CUSTOM_REVIEW: [CallbackQueryHandler(got_custom_proposal, pattern=r"^cc\|bg[ae]:"),
+                            CallbackQueryHandler(more_backgrounds, pattern=r"^cc\|bgl:")],
             CUSTOM_SKILLS: [CallbackQueryHandler(got_custom_skill, pattern=r"^cc\|sk:"),
                             CallbackQueryHandler(more_backgrounds, pattern=r"^cc\|bgl:")],
             CLASS: [CallbackQueryHandler(got_class, pattern=r"^cc\|cls:")],

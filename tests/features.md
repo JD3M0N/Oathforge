@@ -6,6 +6,7 @@ Cada pasada se hace con una clase distinta (la que menos se haya probado) y se a
 
 ## Personaje
 - [ ] `/start` sin personaje: elegir idioma, clase, linaje y trasfondo, nombre
+- [ ] Trasfondo propio: ver la guía, aceptar uno compatible, adaptar un anacronismo, editar/aceptar la propuesta y comprobar que un botón viejo no actúa
 - [ ] Ficha 🧝 Héroe: stats, PV, maná/recursos, habilidades de la clase
 - [ ] Todo el texto sale en el idioma elegido (sin claves de i18n crudas)
 
