@@ -22,6 +22,7 @@ Versionado `0.x.y`: **y** (parche) en arreglos y cambios pequeños; **x** (menor
 | 0.8.3 | Planning reorganizado: Possibilium, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md`, `content/officina/` |
 | 0.9.0 | Logros e identidad: 30 logros, dos metalogros, títulos, destacados, objetivos seguidos y reconocimiento retroactivo verificable |
 | 0.9.1 | Hoja de ruta de 0.10 (consolidación) y 0.11 (multijugador): `planning/roadmap.md` |
+| 0.10.33 | 0.10-I (B07, lote B): doce ramas más (curación, regeneración, melodías, reacciones y control); 32 de 41 listas; el simulador cura cuando va por debajo de un tercio |
 | 0.10.32 | 0.10-I (B07, lote A): veinte ramas de clase listas con su recorrido del 10 al 20; gastar estados, represalia, robo de vida y trucos de lanzador que escalan; simulador con rama |
 | 0.10.31 | 0.10-I (B06, 3.ª parte): Explorador, Artífice, Chamán y Caballero de la Muerte nuevos y Brujo con barra: ya son catorce clases con recurso y habilidades de nivel 1 a 9 |
 | 0.10.30 | 0.10-I (B06, 2.ª parte): Clérigo, Hechicero, Druida y Bardo con barra (Maná y Resonancia) y habilidades hasta el nivel 9 |

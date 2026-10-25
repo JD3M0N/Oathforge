@@ -310,3 +310,12 @@ Veinte ramas de daño, marcas, defensa y maniobras: Vengador, Custodio Sagrado, 
 - [x] En Telegram: `/path` en el Gremio ofrece las ramas listas y bloquea las que no, la ficha enseña el recorrido entero, la confirmación es definitiva y `/skill_` explica «gasta la marca» y su coste (Telegram, ES).
 - [ ] Las mismas pantallas en inglés.
 - [ ] Un combate real con Vengador marcando y gastando la marca (Telegram).
+
+## 0.10-I · Las 41 ramas, lote B (B07, v0.10.33)
+
+Doce ramas de curación, regeneración, melodías, reacciones y control: Redentor, Dominio de la Vida, de la Luz y de la Guerra, Guardián del Bosque, Círculo de las Esporas, Cantor de Guerra, Ilusionista, Armero Rúnico, Catalizador, Elementalista y Tejemareas.
+
+- [x] Las mismas pruebas automáticas del lote A cubren las doce: recorrido entero, camino por nivel, decisiones distintas entre ramas hermanas, modificadores que cambian algo y suelo contra un jefe de su nivel.
+- [ ] En Telegram (ES): `/path` ofrece las doce y la ficha enseña el recorrido; probar con un Clérigo de la Vida que la Curación radiante deja barrera.
+- [ ] En Telegram (EN): las mismas pantallas.
+- [ ] Un combate real con Elementalista: Espíritu de fuego y luego Estallido de vapor que gasta la quemadura.

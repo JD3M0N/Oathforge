@@ -27,7 +27,7 @@ from oathforge.services import characters, combat_service
 
 MAX_ROUNDS = 50
 # main-action abilities, most valuable first; limited uses are spent before unlimited ones
-ACTION_PRIORITY = ("summon", "converge", "command", "shift", "turn", "save", "strike", "spell", "curse", "buff")
+ACTION_PRIORITY = ("summon", "converge", "command", "shift", "heal", "turn", "save", "strike", "spell", "curse", "buff")
 HELPERS = ("summon", "converge", "command", "shift")  # abilities of the helpers and forms of B05
 
 
@@ -160,7 +160,7 @@ def _helpers_ok(state: EncounterState, me: Combatant, a) -> bool:
 
 def _worth_it(me: Combatant, key: str, a, weapon) -> bool:
     """What costs something is worth it; a free one only if it hits as hard as the weapon."""
-    if me.abilities.get(key) is not None or a.cost or a.kind in ("strike", "turn") + HELPERS:
+    if me.abilities.get(key) is not None or a.cost or a.kind in ("strike", "turn", "heal") + HELPERS:
         return True
     if not a.damage:
         return False
@@ -172,7 +172,8 @@ def _main(state: EncounterState, me: Combatant, rng: random.Random, defs: dict, 
     if use_abilities:
         options = [k for k, a in defs.items()
                    if a.action == "action" and _usable(me, k, defs) and a.kind in ACTION_PRIORITY
-                   and _worth_it(me, k, a, weapon) and _helpers_ok(state, me, a)]
+                   and _worth_it(me, k, a, weapon) and _helpers_ok(state, me, a)
+                   and (a.kind != "heal" or me.hp * 3 < me.max_hp)]
         # the dearest first: what the bar pays for, then what has limited uses, then the free ones
         options.sort(key=lambda k: (ACTION_PRIORITY.index(defs[k].kind), -defs[k].cost,
                                     me.abilities[k] is None))

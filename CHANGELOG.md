@@ -4,6 +4,19 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.33] - 2026-10-25
+
+0.10-I (B07, lote B): **doce ramas más.** Con las veinte del lote A son 32 de las 41 las que ya se pueden elegir; este lote reúne la curación, la regeneración, las melodías, las reacciones y el control.
+
+### Añadido
+- **Doce ramas listas**, con su recorrido entero del 10 al 20: Redentor (Paladín), Dominio de la Vida, de la Luz y de la Guerra (Clérigo), Guardián del Bosque y Círculo de las Esporas (Druida), Cantor de Guerra e Ilusionista (Bardo), Armero Rúnico y Catalizador (Artífice), Elementalista y Tejemareas (Chamán).
+- Curar de verdad es una decisión: barreras de PV temporales tras la curación, robo de vida acotado, curación como acción adicional y una Absolución o Santuario al 20.
+- Controlar y aprovechar el control: aplicar miedo, deslumbre, esporas o trabas y gastarlos después por daño extra, como ya hacían las marcas.
+- Los lanzadores heridos recuperan recurso (`resource_on_hurt` también en Dominio de la Guerra, Esporas, Elementalista y Tejemareas): sin ello se quedaban sin barra a los dos turnos.
+
+### Cambiado
+- El simulador cura con la acción principal cuando va por debajo de un tercio de PV (antes solo usaba las curaciones de acción adicional).
+
 ## [0.10.32] - 2026-10-25
 
 0.10-I (B07, lote A): **por fin se puede elegir una rama de clase.** Veinte de las 41, las de daño, marcas, defensa y maniobras, ya tienen su recorrido entero del nivel 10 al 20.
