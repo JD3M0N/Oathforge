@@ -9,6 +9,8 @@
 
 > Objetivo: convertir la base individual de Oathforge en una aventura completa de nivel 1 a 20, con 14 clases rediseñadas, 41 especializaciones funcionales, oficios relevantes y una campaña que enseñe jugando. La IA interpreta y narra; el motor valida cada resultado.
 
+> **Plan de trabajo:** el orden, las reglas de cierre y el estado actual están en [plan_implementacion_0.10.md](plan_implementacion_0.10.md).
+
 ### Estados usados
 
 - **Aprobado:** decisión explícita del usuario durante el diseño.

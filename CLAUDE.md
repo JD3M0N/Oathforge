@@ -24,6 +24,10 @@ Antes de editar nada, comprueba la rama (`git branch --show-current`) y el usuar
 - No añadas `Co-Authored-By` ni ninguna atribución a Claude en commits ni en PR.
 - Versionado obligatorio en cada commit (ver `AGENTS.md`). Los commits automáticos de la Action de TODO no suben versión.
 
+## Serie 0.10-I (clases, progresión 1–20 y campaña)
+
+Si la tarea es seguir esta serie, empieza por `planning/plan_implementacion_0.10.md` (estado, siguiente fase y reglas de cierre) y lee solo la fase que toca en `planning/roadmap_balance.md`, por rangos. Avanza una fase y para.
+
 ## Josue
 
 - Suele poner ejemplos con el Paladín porque es la clase que prueba: salvo que diga lo contrario, el ejemplo vale para todas las clases.
