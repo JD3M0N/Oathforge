@@ -58,6 +58,13 @@ def tags(branch: str) -> set[str]:
     return found
 
 
+def test_all_forty_one_branches_are_ready():
+    assert len(C.class_specializations) == 41
+    assert not [k for k, b in C.class_specializations.items() if not b.ready]
+
+
+
+
 # ------------------------------------------------------------------ the path is whole
 
 @pytest.mark.parametrize("key", READY)

@@ -1839,6 +1839,117 @@ summoner:
     es: Dos entidades de un repertorio mixto actúan solas sobre la presa marcada; una orden conjunta te cuesta la acción. Nunca hay una tercera.
     en: Two entities from a mixed roster act on their own against the marked quarry; a joint order costs you your action. There is never a third.
   roles: [dmg, control]
+  ready: true
+  abilities:
+    bond_of_the_called:
+      name: {es: Vínculo de Lo Llamado, en: Bond of the Called}
+      description:
+        es: Tus conjuros suman tu modificador de conjuro al daño y tienes +1 a la CA.
+        en: Your spells add your spellcasting modifier to damage and you have +1 AC.
+      level: 10
+      kind: passive
+      action: none
+      spell_damage_bonus: true
+      ac_bonus: 1
+    call_astral_blade:
+      name: {es: Llamar a la Espada Astral, en: Call the Astral Blade}
+      description:
+        es: Una hoja de luz fría combate a tu lado 4 turnos y corta a la presa marcada.
+        en: A blade of cold light fights beside you for 4 turns and cuts the marked quarry.
+      level: 10
+      kind: summon
+      cost: 6
+      entity: astral_blade
+    call_wandering_ember:
+      name: {es: Llamar al Ascua Errante, en: Call the Wandering Ember}
+      description:
+        es: Una brasa viva desgasta a toda una fila durante 4 turnos, sin fallar.
+        en: A living coal wears down a whole row for 4 turns, never missing.
+      level: 10
+      kind: summon
+      cost: 6
+      entity: wandering_ember
+    grand_convergence:
+      name: {es: Convergencia, en: Convergence}
+      description:
+        es: 'Acción adicional: todo lo que has llamado pega más fuerte y mejor 3 turnos.'
+        en: 'Bonus action: everything you have called hits harder and truer for 3 turns.'
+      level: 10
+      kind: converge
+      action: bonus
+      cost: 5
+      cooldown: 3
+      boost_turns: 3
+    call_stone_guardian:
+      name: {es: Llamar al Guardián de Piedra, en: Call the Stone Guardian}
+      description:
+        es: Un coloso de roca recibe los golpes por ti durante 5 turnos.
+        en: A rock colossus takes the blows for you for 5 turns.
+      level: 15
+      kind: summon
+      cost: 8
+      entity: stone_guardian
+    call_storm_spirit:
+      name: {es: Llamar al Espíritu de la Tormenta, en: Call the Storm Spirit}
+      description:
+        es: Un relámpago con voluntad descarga sobre la presa marcada durante 4 turnos.
+        en: A lightning bolt with a will discharges on the marked quarry for 4 turns.
+      level: 20
+      kind: summon
+      cost: 20
+      entity: storm_spirit
+  modifiers:
+    moth_in_the_sleeve:
+      level: 13
+      name: {es: Polilla en la Manga, en: Moth in the Sleeve}
+      description:
+        es: Aprendes a llamar a la Polilla del Velo, que asusta al rival cada dos turnos.
+        en: You learn to call the Veil Moth, which frightens the foe every other turn.
+      grants:
+        call_veil_moth:
+          name: {es: Llamar a la Polilla del Velo, en: Call the Veil Moth}
+          description:
+            es: La Polilla del Velo asusta al rival cada dos turnos durante 5 turnos.
+            en: The Veil Moth frightens the foe every other turn for 5 turns.
+          level: 13
+          kind: summon
+          cost: 6
+          entity: veil_moth
+    tighter_convergence:
+      level: 13
+      name: {es: Convergencia Ceñida, en: Tighter Convergence}
+      description:
+        es: La Convergencia cuesta 2 menos y se recupera un turno antes.
+        en: Convergence costs 2 less and recovers a turn sooner.
+      patches:
+        grand_convergence:
+          cost: -2
+          cooldown: -1
+    ordered_blade:
+      level: 17
+      name: {es: Hoja a Tus Órdenes, en: Blade at Your Command}
+      description:
+        es: Puedes ordenar a la Espada Astral que golpee ya, con 4d8 de fuerza extra.
+        en: You can order the Astral Blade to strike now, with 4d8 extra force.
+      grants:
+        order_astral_blade:
+          name: {es: Ordenar a la Espada Astral, en: Order the Astral Blade}
+          description:
+            es: La Espada Astral golpea ya a la presa marcada con 4d8 extra.
+            en: The Astral Blade strikes the marked quarry now with 4d8 extra.
+          level: 17
+          kind: command
+          cost: 6
+          cooldown: 1
+          entity: astral_blade
+          extra_damage: 4d8
+    cheaper_spirit:
+      level: 17
+      name: {es: Espíritu Asequible, en: Affordable Spirit}
+      description: {es: Llamar al Espíritu de la tormenta cuesta 6 menos., en: Calling the Storm Spirit costs 6 less.}
+      patches:
+        call_storm_spirit:
+          cost: -6
 
 chronomancer:
   class_key: sorcerer
@@ -1847,6 +1958,106 @@ chronomancer:
     es: Retrasas una amenaza que viene y alteras, dentro de un límite, cuándo vuelve a estar lista una técnica. Anticipar vale más que pegar fuerte.
     en: You delay an oncoming threat and shift, within limits, when a technique comes back. Anticipating beats hitting hard.
   roles: [control, deff]
+  ready: true
+  abilities:
+    temporal_calm:
+      name: {es: Calma Temporal, en: Temporal Calm}
+      description: {es: '+2 a la CA: ves venir lo que viene.', en: '+2 AC: you see what is coming.'}
+      level: 10
+      kind: passive
+      action: none
+      ac_bonus: 2
+    stuttering_time:
+      name: {es: Tiempo Entrecortado, en: Stuttering Time}
+      description:
+        es: 'El objetivo tira SAB: si falla, recibe 3d8 de fuerza y queda trabado 2 turnos.'
+        en: 'The target rolls a WIS save: on a fail it takes 3d8 force and is restrained for 2 turns.'
+      level: 10
+      kind: save
+      cost: 7
+      cooldown: 2
+      damage: 3d8
+      damage_type: force
+      save: wis
+      status: restrained
+      status_turns: 2
+    rewind:
+      name: {es: Rebobinar, en: Rewind}
+      description:
+        es: 'Acción adicional: ganas 2d8 PV temporales y adelantas 2 turnos el resto de tus enfriamientos.'
+        en: 'Bonus action: you gain 2d8 temporary HP and take 2 turns off the rest of your cooldowns.'
+      level: 10
+      kind: buff
+      action: bonus
+      cost: 6
+      cooldown: 3
+      temp_hp: 2d8
+      reduces_cooldowns: 2
+    time_bolt:
+      name: {es: Dardo Temporal, en: Time Bolt}
+      description: {es: 'Ataque de conjuro a distancia: 4d8 de fuerza.', en: 'Ranged spell attack: 4d8 force.'}
+      level: 10
+      kind: spell
+      cost: 8
+      cooldown: 1
+      damage: 4d8
+      damage_type: force
+    foreseen_blow:
+      name: {es: Golpe Previsto, en: Foreseen Blow}
+      description:
+        es: El primer golpe que recibes cada ronda hace la mitad de daño.
+        en: The first blow you take each round does half damage.
+      level: 15
+      kind: passive
+      action: none
+      halve_first_hit: true
+    temporal_collapse:
+      name: {es: Colapso Temporal, en: Temporal Collapse}
+      description:
+        es: 'Toda la fila tira SAB: 9d8 de fuerza, la mitad si la supera, y aturdida 2 turnos si falla; adelantas 3 turnos tus enfriamientos.'
+        en: 'The whole row rolls a WIS save: 9d8 force, half on a success, and stunned for 2 turns on a fail; you take 3 turns off your cooldowns.'
+      level: 20
+      kind: save
+      cost: 30
+      cooldown: 5
+      damage: 9d8
+      damage_type: force
+      save: wis
+      area: row
+      half_on_save: true
+      status: stunned
+      status_turns: 2
+      reduces_cooldowns: 3
+  modifiers:
+    quicker_rewind:
+      level: 13
+      name: {es: Rebobinado Ágil, en: Quick Rewind}
+      description: {es: Rebobinar se recupera 1 turno antes., en: Rewind recovers 1 turn sooner.}
+      patches:
+        rewind:
+          cooldown: -1
+    deeper_slow:
+      level: 13
+      name: {es: Lentitud Profunda, en: Deeper Slowness}
+      description: {es: El Tiempo entrecortado hace 5d8 y traba 1 turno más., en: Stuttering Time deals 5d8 and restrains 1 turn longer.}
+      patches:
+        stuttering_time:
+          damage: 5d8
+          status_turns: 1
+    cheap_bolt:
+      level: 17
+      name: {es: Dardo Económico, en: Cheap Bolt}
+      description: {es: El Dardo temporal cuesta 3 menos., en: Time Bolt costs 3 less.}
+      patches:
+        time_bolt:
+          cost: -3
+    grander_collapse:
+      level: 17
+      name: {es: Colapso Mayor, en: Grander Collapse}
+      description: {es: El Colapso temporal hace 12d8 en lugar de 9d8., en: Temporal Collapse deals 12d8 instead of 9d8.}
+      patches:
+        temporal_collapse:
+          damage: 12d8
 
 shapeshifter:
   class_key: druid
@@ -1855,6 +2066,118 @@ shapeshifter:
     es: Peleas casi siempre transformado. Una forma resistente y otra ofensiva sustituyen tus acciones principales, y cambiar cuesta.
     en: You fight mostly transformed. A tough form and an aggressive one replace your main actions, and switching costs you.
   roles: [dmg, deff]
+  ready: true
+  abilities:
+    wild_hide:
+      name: {es: Piel Salvaje, en: Wild Hide}
+      description: {es: '+1 a la CA, dentro y fuera de las formas.', en: '+1 AC, in and out of your shapes.'}
+      level: 10
+      kind: passive
+      action: none
+      ac_bonus: 1
+    take_bear_form:
+      name: {es: Tomar Forma de Oso, en: Take Bear Form}
+      description:
+        es: 'Acción adicional: tomas la forma de oso (zarpazos pesados y PV temporales la primera vez).'
+        en: 'Bonus action: you take bear form (heavy claws and temporary HP the first time).'
+      level: 10
+      kind: shift
+      action: bonus
+      cost: 4
+      form: bear
+    take_panther_form:
+      name: {es: Tomar Forma de Pantera, en: Take Panther Form}
+      description:
+        es: 'Acción adicional: tomas la forma de pantera (mordiscos veloces y letales).'
+        en: 'Bonus action: you take panther form (quick, deadly bites).'
+      level: 10
+      kind: shift
+      action: bonus
+      cost: 4
+      form: panther
+    leave_form:
+      name: {es: Recuperar la Forma Humana, en: Return to Human Form}
+      description:
+        es: 'Acción adicional: vuelves a tu forma y a tus conjuros.'
+        en: 'Bonus action: you return to your own shape and your spells.'
+      level: 10
+      kind: shift
+      action: bonus
+      form: none
+    take_treant_form:
+      name: {es: Tomar Forma de Ent, en: Take Treant Form}
+      description:
+        es: 'Acción adicional: tomas la forma de ent (casi inamovible, golpes lentos).'
+        en: 'Bonus action: you take treant form (nearly immovable, slow blows).'
+      level: 15
+      kind: shift
+      action: bonus
+      cost: 6
+      form: treant
+    take_primal_form:
+      name: {es: Tomar Forma Primigenia, en: Take Primal Form}
+      description:
+        es: 'Acción adicional: tomas la forma de bestia primigenia (garra de 2d8 y muchos PV temporales).'
+        en: 'Bonus action: you take primal beast form (a 2d8 claw and lots of temporary HP).'
+      level: 20
+      kind: shift
+      action: bonus
+      cost: 14
+      form: primal_beast
+  modifiers:
+    economical_shape:
+      level: 13
+      name: {es: Forma Económica, en: Economical Shape}
+      description: {es: Tomar forma de oso o de pantera cuesta 2 menos., en: Taking bear or panther form costs 2 less.}
+      patches:
+        take_bear_form:
+          cost: -2
+        take_panther_form:
+          cost: -2
+    rending_roar:
+      level: 13
+      name: {es: Rugido Desgarrador, en: Rending Roar}
+      description:
+        es: Aprendes un ataque con arma que añade 3d8 cortante, también en forma.
+        en: You learn a weapon attack that adds 3d8 slashing, in shape too.
+      grants:
+        rending_strike:
+          name: {es: Desgarrón, en: Rend}
+          description: {es: Un ataque con arma que añade 3d8 de daño cortante., en: A weapon attack that adds 3d8 slashing damage.}
+          level: 13
+          kind: strike
+          cost: 8
+          cooldown: 1
+          extra_damage: 3d8
+          damage_type: slashing
+    forest_mending:
+      level: 17
+      name: {es: Savia Curativa, en: Healing Sap}
+      description:
+        es: Aprendes a curarte 5d8 + tu modificador de conjuro como acción adicional.
+        en: You learn to heal 5d8 + your spellcasting modifier as a bonus action.
+      grants:
+        sap_mending:
+          name: {es: Savia Curativa, en: Healing Sap}
+          description:
+            es: 'Acción adicional: recuperas 5d8 + tu modificador de conjuro en PV.'
+            en: 'Bonus action: recover 5d8 + your spellcasting modifier in HP.'
+          level: 17
+          kind: heal
+          action: bonus
+          cost: 8
+          cooldown: 2
+          heal_dice: 5d8
+          heal_add: casting
+    cheap_titan:
+      level: 17
+      name: {es: Formas Asequibles, en: Affordable Shapes}
+      description: {es: Las formas de ent y primigenia cuestan 3 y 5 menos., en: Treant and primal forms cost 3 and 5 less.}
+      patches:
+        take_treant_form:
+          cost: -3
+        take_primal_form:
+          cost: -5
 
 grove_warden:
   class_key: druid
@@ -2303,6 +2626,105 @@ demonologist:
     es: 'Un servidor poderoso con nombre propio que es siempre el mismo: alimentas el vínculo, le ordenas una técnica y te proteges tras él. Evoluciona, no se reemplaza.'
     en: 'One powerful servant with a name of its own, always the same: you feed the bond, order a technique and shelter behind it. It evolves; it is never swapped.'
   roles: [dmg, deff]
+  ready: true
+  abilities:
+    pact_bond:
+      name: {es: Vínculo del Pacto, en: Pact Bond}
+      description:
+        es: Tu Servidor del Pacto combate a tu lado en cada pelea, siempre el mismo, y tienes +1 a la CA.
+        en: Your Pact Servant fights beside you in every fight, always the same one, and you have +1 AC.
+      level: 10
+      kind: passive
+      action: none
+      entity: pact_servant
+      ac_bonus: 1
+    infernal_order:
+      name: {es: Orden Infernal, en: Infernal Order}
+      description:
+        es: Tu servidor golpea ya a la presa marcada con 3d8 extra.
+        en: Your servant strikes the marked quarry now with 3d8 extra.
+      level: 10
+      kind: command
+      cost: 6
+      cooldown: 1
+      entity: pact_servant
+      extra_damage: 3d8
+    feed_the_bond:
+      name: {es: Alimentar el Vínculo, en: Feed the Bond}
+      description:
+        es: 'Acción adicional: tu servidor pega más fuerte y mejor 3 turnos.'
+        en: 'Bonus action: your servant hits harder and truer for 3 turns.'
+      level: 10
+      kind: converge
+      action: bonus
+      cost: 5
+      cooldown: 3
+      boost_turns: 3
+    servant_shield:
+      name: {es: Escudo del Servidor, en: Servant's Shield}
+      description:
+        es: 'Acción adicional: tu servidor te cubre y ganas 4d8 PV temporales.'
+        en: 'Bonus action: your servant covers you and you gain 4d8 temporary HP.'
+      level: 10
+      kind: buff
+      action: bonus
+      cost: 5
+      cooldown: 3
+      temp_hp: 4d8
+    lasting_pact:
+      name: {es: Pacto Duradero, en: Lasting Pact}
+      description:
+        es: El primer golpe que recibes cada ronda hace la mitad de daño.
+        en: The first blow you take each round does half damage.
+      level: 15
+      kind: passive
+      action: none
+      halve_first_hit: true
+    infernal_apex:
+      name: {es: Cima Infernal, en: Infernal Apex}
+      description:
+        es: Tu servidor golpea ya a la presa marcada con 9d8 extra.
+        en: Your servant strikes the marked quarry now with 9d8 extra.
+      level: 20
+      kind: command
+      cost: 24
+      cooldown: 4
+      entity: pact_servant
+      extra_damage: 9d8
+  modifiers:
+    fierce_servant:
+      level: 13
+      name: {es: Servidor Feroz, en: Fierce Servant}
+      description: {es: La Orden infernal añade 5d8 en lugar de 3d8., en: Infernal Order adds 5d8 instead of 3d8.}
+      patches:
+        infernal_order:
+          extra_damage: 5d8
+    thicker_shield:
+      level: 13
+      name: {es: Escudo Más Grueso, en: Thicker Shield}
+      description:
+        es: El Escudo del servidor da 6d8 PV temporales en lugar de 4d8.
+        en: Servant's Shield gives 6d8 temporary HP instead of 4d8.
+      patches:
+        servant_shield:
+          temp_hp: 6d8
+    cheap_bond:
+      level: 17
+      name: {es: Vínculo Barato, en: Cheap Bond}
+      description:
+        es: Alimentar el vínculo cuesta 2 menos y se recupera un turno antes.
+        en: Feed the Bond costs 2 less and recovers a turn sooner.
+      patches:
+        feed_the_bond:
+          cost: -2
+          cooldown: -1
+    grander_apex:
+      level: 17
+      name: {es: Cima Mayor, en: Grander Apex}
+      description: {es: La Cima infernal añade 12d8 en lugar de 9d8., en: Infernal Apex adds 12d8 instead of 9d8.}
+      patches:
+        infernal_apex:
+          extra_damage: 12d8
 
 hexblade:
   class_key: warlock
@@ -2409,6 +2831,114 @@ necromancer:
     es: Tus técnicas generan vestigios y los gastas en poder funerario o en un sirviente temporal. No necesitas un cadáver ajeno.
     en: Your techniques leave remnants, spent either on funerary power or on a temporary servant. You need nobody else's corpse.
   roles: [dmg, control]
+  ready: true
+  abilities:
+    funerary_power:
+      name: {es: Poder Funerario, en: Funerary Power}
+      description:
+        es: Tus conjuros suman tu modificador de conjuro al daño y cada golpe que te hiere de verdad te da 3 de recurso.
+        en: Your spells add your spellcasting modifier to damage and every blow that really hurts you gives 3 resource.
+      level: 10
+      kind: passive
+      action: none
+      spell_damage_bonus: true
+      resource_on_hurt: 3
+    raise_thrall:
+      name: {es: Levantar un Siervo, en: Raise a Thrall}
+      description:
+        es: Un cuerpo levantado combate a tu lado 5 turnos y golpea a la presa marcada.
+        en: A risen body fights beside you for 5 turns and strikes the marked quarry.
+      level: 10
+      kind: summon
+      cost: 6
+      entity: risen_thrall
+    grave_touch:
+      name: {es: Toque de Tumba, en: Grave Touch}
+      description:
+        es: 'Ataque de conjuro a distancia: 3d8 necrótico, y te cura la mitad del daño que hace.'
+        en: 'Ranged spell attack: 3d8 necrotic, and it heals you for half the damage it deals.'
+      level: 10
+      kind: spell
+      cost: 6
+      cooldown: 1
+      damage: 3d8
+      damage_type: necrotic
+      leech_pct: 50
+    dark_rite:
+      name: {es: Rito Oscuro, en: Dark Rite}
+      description:
+        es: 'Acción adicional: tus siervos pegan más fuerte y mejor 3 turnos.'
+        en: 'Bonus action: your thralls hit harder and truer for 3 turns.'
+      level: 10
+      kind: converge
+      action: bonus
+      cost: 5
+      cooldown: 3
+      boost_turns: 3
+    raise_bone_horde:
+      name: {es: Levantar la Horda, en: Raise the Horde}
+      description:
+        es: Un enjambre de esqueletos desgasta a toda una fila durante 4 turnos.
+        en: A swarm of skeletons wears down a whole row for 4 turns.
+      level: 15
+      kind: summon
+      cost: 10
+      entity: bone_horde
+    legion_of_the_dead:
+      name: {es: Legión de los Muertos, en: Legion of the Dead}
+      description:
+        es: 'Toda la fila tira DES: 10d8 necrótico, la mitad si la supera, y te cura el 40 % del daño que hace.'
+        en: 'The whole row rolls a DEX save: 10d8 necrotic, half on a success, and it heals you for 40% of the damage it deals.'
+      level: 20
+      kind: save
+      cost: 30
+      cooldown: 5
+      damage: 10d8
+      damage_type: necrotic
+      save: dex
+      area: row
+      half_on_save: true
+      leech_pct: 40
+  modifiers:
+    hungrier_touch:
+      level: 13
+      name: {es: Toque Voraz, en: Hungrier Touch}
+      description:
+        es: El Toque de tumba te cura el 80 % del daño en lugar del 50 %.
+        en: Grave Touch heals 80% of the damage instead of 50%.
+      patches:
+        grave_touch:
+          leech_pct: 80
+    quicker_rite:
+      level: 13
+      name: {es: Rito Veloz, en: Quick Rite}
+      description: {es: El Rito oscuro se recupera un turno antes., en: Dark Rite recovers a turn sooner.}
+      patches:
+        dark_rite:
+          cooldown: -1
+    ordered_thrall:
+      level: 17
+      name: {es: Siervo Obediente, en: Obedient Thrall}
+      description:
+        es: Puedes ordenar a tu siervo que golpee ya, con 4d8 extra.
+        en: You can order your thrall to strike now, with 4d8 extra.
+      grants:
+        order_thrall:
+          name: {es: Ordenar al Siervo, en: Order the Thrall}
+          description: {es: El siervo golpea ya a la presa marcada con 4d8 extra., en: The thrall strikes the marked quarry now with 4d8 extra.}
+          level: 17
+          kind: command
+          cost: 6
+          cooldown: 1
+          entity: risen_thrall
+          extra_damage: 4d8
+    grander_legion:
+      level: 17
+      name: {es: Legión Mayor, en: Grander Legion}
+      description: {es: La Legión de los muertos hace 12d8 en lugar de 10d8., en: Legion of the Dead deals 12d8 instead of 10d8.}
+      patches:
+        legion_of_the_dead:
+          damage: 12d8
 
 sharpshooter:
   class_key: ranger
@@ -2531,6 +3061,99 @@ beastmaster:
     es: Una bestia compañera estable y ataques coordinados. Le ordenas atacar o ayudarte a resistir; no se compra ni se repone.
     en: One steady animal companion and coordinated attacks. You order it to strike or to help you hold; it is never bought nor replaced.
   roles: [dmg, deff]
+  ready: true
+  abilities:
+    beast_bond:
+      name: {es: Vínculo con la Bestia, en: Beast Bond}
+      description:
+        es: Tu lobo compañero combate a tu lado en cada pelea, siempre el mismo, y tienes +1 a la CA.
+        en: Your wolf companion fights beside you in every fight, always the same one, and you have +1 AC.
+      level: 10
+      kind: passive
+      action: none
+      entity: wolf_companion
+      ac_bonus: 1
+    coordinated_attack:
+      name: {es: Ataque Coordinado, en: Coordinated Attack}
+      description: {es: Tu bestia ataca ya a la presa marcada con 2d8 extra., en: Your beast attacks the marked quarry now with 2d8 extra.}
+      level: 10
+      kind: command
+      cost: 4
+      cooldown: 1
+      entity: wolf_companion
+      extra_damage: 2d8
+    beast_guard:
+      name: {es: Bestia Protectora, en: Guardian Beast}
+      description:
+        es: 'Acción adicional: tu bestia se interpone y ganas 3d8 PV temporales.'
+        en: 'Bonus action: your beast steps in and you gain 3d8 temporary HP.'
+      level: 10
+      kind: buff
+      action: bonus
+      cost: 4
+      cooldown: 3
+      temp_hp: 3d8
+    pack_hunt:
+      name: {es: Caza en Manada, en: Pack Hunt}
+      description:
+        es: 'Acción adicional: tu bestia pega más fuerte y mejor 3 turnos.'
+        en: 'Bonus action: your beast hits harder and truer for 3 turns.'
+      level: 10
+      kind: converge
+      action: bonus
+      cost: 4
+      cooldown: 3
+      boost_turns: 3
+    pack_instinct:
+      name: {es: Instinto de Manada, en: Pack Instinct}
+      description: {es: Haces crítico con un 19 o un 20., en: You score a critical hit on a 19 or 20.}
+      level: 15
+      kind: passive
+      action: none
+      crit_range: 19
+    savage_charge:
+      name: {es: Embestida Salvaje, en: Savage Charge}
+      description: {es: Tu bestia ataca ya a la presa marcada con 8d8 extra., en: Your beast attacks the marked quarry now with 8d8 extra.}
+      level: 20
+      kind: command
+      cost: 14
+      cooldown: 3
+      entity: wolf_companion
+      extra_damage: 8d8
+  modifiers:
+    sharper_orders:
+      level: 13
+      name: {es: Órdenes Afiladas, en: Sharper Orders}
+      description: {es: El Ataque coordinado añade 4d8 en lugar de 2d8., en: Coordinated Attack adds 4d8 instead of 2d8.}
+      patches:
+        coordinated_attack:
+          extra_damage: 4d8
+    thicker_hide:
+      level: 13
+      name: {es: Piel Más Gruesa, en: Thicker Hide}
+      description:
+        es: La Bestia protectora da 5d8 PV temporales en lugar de 3d8.
+        en: Guardian Beast gives 5d8 temporary HP instead of 3d8.
+      patches:
+        beast_guard:
+          temp_hp: 5d8
+    cheap_hunt:
+      level: 17
+      name: {es: Caza Barata, en: Cheap Hunt}
+      description:
+        es: La Caza en manada cuesta 2 menos y se recupera un turno antes.
+        en: Pack Hunt costs 2 less and recovers a turn sooner.
+      patches:
+        pack_hunt:
+          cost: -2
+          cooldown: -1
+    grander_charge:
+      level: 17
+      name: {es: Embestida Mayor, en: Grander Charge}
+      description: {es: La Embestida salvaje añade 10d8 en lugar de 8d8., en: Savage Charge adds 10d8 instead of 8d8.}
+      patches:
+        savage_charge:
+          extra_damage: 10d8
 
 iron_fist:
   class_key: monk
@@ -2839,6 +3462,117 @@ artillerist:
     es: Un arma desplegada dispara sola. Tú administras munición abstracta, recargas o aprovechas el blanco que deja abierto.
     en: A deployed weapon fires on its own. You manage abstract ammunition, reload, or exploit the target it leaves open.
   roles: [dmg, control]
+  ready: true
+  abilities:
+    field_calibration:
+      name: {es: Calibración de Campo, en: Field Calibration}
+      description:
+        es: Tus conjuros suman tu modificador de conjuro al daño y tienes +1 a la CA.
+        en: Your spells add your spellcasting modifier to damage and you have +1 AC.
+      level: 10
+      kind: passive
+      action: none
+      spell_damage_bonus: true
+      ac_bonus: 1
+    deploy_cannon:
+      name: {es: Desplegar el Cañón, en: Deploy the Cannon}
+      description:
+        es: Un cañón de asedio dispara solo a la presa marcada mientras dure el combate.
+        en: A siege cannon fires on its own at the marked quarry for as long as the fight lasts.
+      level: 10
+      kind: summon
+      cost: 7
+      entity: siege_cannon
+    focused_fire:
+      name: {es: Fuego Concentrado, en: Focused Fire}
+      description:
+        es: 'Acción adicional: tu cañón dispara más fuerte y mejor 3 turnos.'
+        en: 'Bonus action: your cannon fires harder and truer for 3 turns.'
+      level: 10
+      kind: converge
+      action: bonus
+      cost: 5
+      cooldown: 3
+      boost_turns: 3
+    tracer_round:
+      name: {es: Proyectil Trazador, en: Tracer Round}
+      description:
+        es: 'El objetivo tira DES: si falla, recibe 2d8 perforante y queda vulnerable 3 turnos.'
+        en: 'The target rolls a DEX save: on a fail it takes 2d8 piercing and is vulnerable for 3 turns.'
+      level: 10
+      kind: save
+      cost: 5
+      cooldown: 2
+      damage: 2d8
+      damage_type: piercing
+      save: dex
+      status: vulnerable
+      status_turns: 3
+    exploit_gap:
+      name: {es: Aprovechar el Hueco, en: Exploit the Opening}
+      description:
+        es: 'Ataque de conjuro a distancia: 3d8 perforante. Si el objetivo está vulnerable, gasta esa grieta por otros 5d8.'
+        en: 'Ranged spell attack: 3d8 piercing. If the target is vulnerable, it spends that opening for another 5d8.'
+      level: 10
+      kind: spell
+      cost: 8
+      cooldown: 1
+      damage: 3d8
+      damage_type: piercing
+      consumes: vulnerable
+      consume_damage: 5d8
+    ballistic_tables:
+      name: {es: Tablas Balísticas, en: Ballistic Tables}
+      description: {es: Haces crítico con un 19 o un 20., en: You score a critical hit on a 19 or 20.}
+      level: 15
+      kind: passive
+      action: none
+      crit_range: 19
+    siege_volley:
+      name: {es: Salva de Asedio, en: Siege Volley}
+      description:
+        es: Tu cañón dispara ya a la presa marcada con 9d8 extra.
+        en: Your cannon fires at the marked quarry now with 9d8 extra.
+      level: 20
+      kind: command
+      cost: 24
+      cooldown: 4
+      entity: siege_cannon
+      extra_damage: 9d8
+  modifiers:
+    heavier_shells:
+      level: 13
+      name: {es: Proyectiles Pesados, en: Heavier Shells}
+      description:
+        es: Aprovechar el hueco hace 8d8 en lugar de 5d8 al gastar la grieta.
+        en: Exploit the Opening deals 8d8 instead of 5d8 when it spends the opening.
+      patches:
+        exploit_gap:
+          consume_damage: 8d8
+    longer_tracer:
+      level: 13
+      name: {es: Traza Duradera, en: Lasting Tracer}
+      description: {es: El Proyectil trazador deja vulnerable 2 turnos más., en: Tracer Round leaves the target vulnerable 2 turns longer.}
+      patches:
+        tracer_round:
+          status_turns: 2
+    cheap_volley:
+      level: 17
+      name: {es: Salva Barata, en: Cheap Volley}
+      description: {es: La Salva de asedio cuesta 6 menos., en: Siege Volley costs 6 less.}
+      patches:
+        siege_volley:
+          cost: -6
+    faster_focus:
+      level: 17
+      name: {es: Foco Rápido, en: Fast Focus}
+      description:
+        es: El Fuego concentrado cuesta 2 menos y se recupera un turno antes.
+        en: Focused Fire costs 2 less and recovers a turn sooner.
+      patches:
+        focused_fire:
+          cost: -2
+          cooldown: -1
 
 catalyst:
   class_key: artificer
@@ -2963,6 +3697,105 @@ construct_master:
     es: Un autómata que configuras antes del combate protege e interviene. Hace algo distinto de un cañón quieto.
     en: An automaton you configure before the fight protects and intervenes. It does a different job from a stationary gun.
   roles: [deff, control]
+  ready: true
+  abilities:
+    plated_chassis:
+      name: {es: Chasis Blindado, en: Plated Chassis}
+      description: {es: +2 a la CA., en: +2 AC.}
+      level: 10
+      kind: passive
+      action: none
+      ac_bonus: 2
+    assemble_guardian:
+      name: {es: Montar el Guardián, en: Assemble the Guardian}
+      description:
+        es: Un autómata guardián recibe los golpes por ti hasta romperse. Solo cabe un constructo a la vez.
+        en: A guardian automaton takes the blows for you until it breaks. Only one construct fits at a time.
+      level: 10
+      kind: summon
+      cost: 7
+      entity: guardian_construct
+    assemble_arc_construct:
+      name: {es: Montar el Autómata de Arco, en: Assemble the Arc Automaton}
+      description:
+        es: Un autómata de arco traba al rival con descargas cada dos turnos. Solo cabe un constructo a la vez.
+        en: An arc automaton pins the foe with discharges every other turn. Only one construct fits at a time.
+      level: 10
+      kind: summon
+      cost: 7
+      entity: arc_construct
+    overclock:
+      name: {es: Sobreimpulso, en: Overclock}
+      description: {es: 'Acción adicional: tu constructo rinde más 3 turnos.', en: 'Bonus action: your construct performs better for 3 turns.'}
+      level: 10
+      kind: converge
+      action: bonus
+      cost: 5
+      cooldown: 3
+      boost_turns: 3
+    field_repairs:
+      name: {es: Reparaciones de Campo, en: Field Repairs}
+      description:
+        es: 'Acción adicional: recuperas 3d8 + tu modificador de conjuro en PV.'
+        en: 'Bonus action: recover 3d8 + your spellcasting modifier in HP.'
+      level: 10
+      kind: heal
+      action: bonus
+      cost: 6
+      cooldown: 2
+      heal_dice: 3d8
+      heal_add: casting
+    reinforced_frame:
+      name: {es: Armazón Reforzado, en: Reinforced Frame}
+      description:
+        es: El primer golpe que recibes cada ronda hace la mitad de daño.
+        en: The first blow you take each round does half damage.
+      level: 15
+      kind: passive
+      action: none
+      halve_first_hit: true
+    assemble_titan:
+      name: {es: Montar el Titán, en: Assemble the Titan}
+      description:
+        es: Un autómata titán recibe los golpes por ti. Solo cabe un constructo a la vez.
+        en: A titan automaton takes the blows for you. Only one construct fits at a time.
+      level: 20
+      kind: summon
+      cost: 26
+      entity: titan_automaton
+  modifiers:
+    cheap_assembly:
+      level: 13
+      name: {es: Montaje Económico, en: Economical Assembly}
+      description:
+        es: Montar el guardián o el autómata de arco cuesta 2 menos.
+        en: Assembling the guardian or the arc automaton costs 2 less.
+      patches:
+        assemble_guardian:
+          cost: -2
+        assemble_arc_construct:
+          cost: -2
+    better_repairs:
+      level: 13
+      name: {es: Mejores Reparaciones, en: Better Repairs}
+      description: {es: Las Reparaciones de campo curan 5d8 en lugar de 3d8., en: Field Repairs heals 5d8 instead of 3d8.}
+      patches:
+        field_repairs:
+          heal_dice: 5d8
+    swift_overclock:
+      level: 17
+      name: {es: Sobreimpulso Ágil, en: Swift Overclock}
+      description: {es: El Sobreimpulso se recupera un turno antes., en: Overclock recovers a turn sooner.}
+      patches:
+        overclock:
+          cooldown: -1
+    cheaper_titan:
+      level: 17
+      name: {es: Titán Asequible, en: Affordable Titan}
+      description: {es: Montar el titán cuesta 8 menos., en: Assembling the Titan costs 8 less.}
+      patches:
+        assemble_titan:
+          cost: -8
 
 elementalist:
   class_key: shaman
@@ -3095,6 +3928,115 @@ ancestral_guardian:
     es: Un tótem y una presencia ancestral te protegen y responden a las agresiones. La decisión es mantener el vínculo o consumirlo.
     en: A totem and an ancestral presence shield you and answer aggression. The choice is to keep the bond or spend it.
   roles: [deff, control]
+  ready: true
+  abilities:
+    ancestral_presence:
+      name: {es: Presencia Ancestral, en: Ancestral Presence}
+      description:
+        es: Quien te hiere de verdad recibe 1d6 de fuerza, y cada golpe así te da 3 de recurso.
+        en: Whoever really hurts you takes 1d6 force, and every such blow gives you 3 resource.
+      level: 10
+      kind: passive
+      action: none
+      thorns: 1d6
+      bonus_damage_type: force
+      resource_on_hurt: 3
+    raise_totem:
+      name: {es: Alzar el Tótem, en: Raise the Totem}
+      description:
+        es: Un tótem ancestral asusta al rival cada dos turnos. Solo cabe un tótem a la vez.
+        en: An ancestral totem frightens the foe every other turn. Only one totem fits at a time.
+      level: 10
+      kind: summon
+      cost: 6
+      entity: ancestral_totem
+    raise_warding_totem:
+      name: {es: Alzar el Tótem Protector, en: Raise the Warding Totem}
+      description:
+        es: Un tótem protector recibe los golpes por ti hasta quebrarse. Solo cabe un tótem a la vez.
+        en: A warding totem takes the blows for you until it cracks. Only one totem fits at a time.
+      level: 10
+      kind: summon
+      cost: 6
+      entity: warding_totem
+    ancestors_shield:
+      name: {es: Escudo de los Ancestros, en: Ancestors' Shield}
+      description: {es: 'Acción adicional: ganas 4d8 PV temporales.', en: 'Bonus action: you gain 4d8 temporary HP.'}
+      level: 10
+      kind: buff
+      action: bonus
+      cost: 5
+      cooldown: 3
+      temp_hp: 4d8
+    unbroken_line:
+      name: {es: Linaje Inquebrantable, en: Unbroken Line}
+      description:
+        es: El primer golpe que recibes cada ronda hace la mitad de daño.
+        en: The first blow you take each round does half damage.
+      level: 15
+      kind: passive
+      action: none
+      halve_first_hit: true
+    ancestral_wrath:
+      name: {es: Ira Ancestral, en: Ancestral Wrath}
+      description:
+        es: 'Ataque de conjuro a distancia: 5d8 de fuerza. Si el objetivo está asustado, gasta ese miedo por otros 10d8.'
+        en: 'Ranged spell attack: 5d8 force. If the target is frightened, it spends that fear for another 10d8.'
+      level: 20
+      kind: spell
+      cost: 22
+      cooldown: 3
+      damage: 5d8
+      damage_type: force
+      consumes: frightened
+      consume_damage: 10d8
+  modifiers:
+    deeper_roots:
+      level: 13
+      name: {es: Raíces Profundas, en: Deeper Roots}
+      description:
+        es: El Escudo de los ancestros da 6d8 PV temporales en lugar de 4d8.
+        en: Ancestors' Shield gives 6d8 temporary HP instead of 4d8.
+      patches:
+        ancestors_shield:
+          temp_hp: 6d8
+    rally_the_ancestors:
+      level: 13
+      name: {es: Reunir a los Ancestros, en: Rally the Ancestors}
+      description:
+        es: 'Aprendes a reforzar lo que has alzado: tu tótem rinde más 3 turnos.'
+        en: 'You learn to empower what you raised: your totem performs better for 3 turns.'
+      grants:
+        rally_ancestors:
+          name: {es: Reunir a los Ancestros, en: Rally the Ancestors}
+          description: {es: 'Acción adicional: tu tótem rinde más 3 turnos.', en: 'Bonus action: your totem performs better for 3 turns.'}
+          level: 13
+          kind: converge
+          action: bonus
+          cost: 5
+          cooldown: 3
+          boost_turns: 3
+    cheaper_wrath:
+      level: 17
+      name: {es: Ira Asequible, en: Affordable Wrath}
+      description: {es: La Ira ancestral cuesta 6 menos., en: Ancestral Wrath costs 6 less.}
+      patches:
+        ancestral_wrath:
+          cost: -6
+    ancestral_mending:
+      level: 17
+      name: {es: Sanación Ancestral, en: Ancestral Mending}
+      description: {es: Aprendes a curarte 5d8 + tu modificador de conjuro., en: You learn to heal 5d8 + your spellcasting modifier.}
+      grants:
+        mend_with_ancestors:
+          name: {es: Sanación Ancestral, en: Ancestral Mending}
+          description: {es: Recuperas 5d8 + tu modificador de conjuro en PV., en: You recover 5d8 + your spellcasting modifier in HP.}
+          level: 17
+          kind: heal
+          cost: 8
+          cooldown: 2
+          heal_dice: 5d8
+          heal_add: casting
 
 tideweaver:
   class_key: shaman

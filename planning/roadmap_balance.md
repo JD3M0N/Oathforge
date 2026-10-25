@@ -57,7 +57,7 @@ Hito **0.10-I** del [roadmap general](roadmap.md). Se avanza **fase a fase**: ca
 | B04 · Catálogo efectivo, selección y elecciones | ✅ Hecha | 0.10.27 |
 | B05 · Compañeros, formas y dispositivos | ✅ Hecha | 0.10.28 |
 | B06 · 14 clases base (1–9) | ✅ Hecha | 0.10.29–0.10.31 |
-| B07 · 41 ramas | En curso: lotes A y B de 3 (32 de 41) | 0.10.33 |
+| B07 · 41 ramas | ✅ Hecha: 41 de 41 | 0.10.32–0.10.34 |
 | B08 · Tiempos, descanso, derrota y economía | Pendiente | — |
 | B09 · Campaña hasta el Recaudador | Pendiente | — |
 | B10 · Ciervo y graduación | Pendiente | — |
@@ -1162,10 +1162,10 @@ El simulador y pruebas se amplían junto a cada fase, no solo en B12. No hacen f
 **Objetivo:** cumplir el catálogo completo, sin publicar nombres vacíos.
 - [x] Lote A: daño directo, marcas, defensa y maniobras. (0.10.32: 20 ramas)
 - [x] Lote B: curación, regeneración, melodías, reacciones y control. (0.10.33: 12 ramas, 32 de 41)
-- [ ] Lote C: entidades, formas, tótems y tiempo.
-- [ ] Para cada rama: pasiva/técnica 10, desarrollo fijo, dos elecciones y culminación.
+- [x] Lote C: entidades, formas, tótems y tiempo. (0.10.34: 9 ramas, 41 de 41)
+- [x] Para cada rama: pasiva/técnica 10, desarrollo fijo, dos elecciones y culminación.
 - [ ] Separar Catalyst de Alquimia en reglas y guías.
-- [ ] Crear prueba que demuestre una decisión característica de cada rama.
+- [x] Crear prueba que demuestre una decisión característica de cada rama.
 **Archivos:** classes.yaml, class_specializations propuesto, efectos del motor, simulador, i18n.
 **Pruebas:** cuatro combinaciones 13×17 por rama (164 configuraciones al 20), con casos por mecánica y barridos de simulación.
 **Terminado:** las 41 ramas son seleccionables solo cuando tienen recorrido 10–20 y material ES/EN completo.

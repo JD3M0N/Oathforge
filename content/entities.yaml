@@ -114,3 +114,72 @@ ancestral_totem:
   status: frightened
   status_turns: 1
   period: 2
+
+# --- lote C de las ramas (B07): más seres para el Nigromante, el Invocador, el Maestro de Constructos y el Guardián Ancestral ---
+risen_thrall:
+  name: {es: Siervo exhumado, en: Risen Thrall}
+  description: {es: "Un cuerpo levantado a la fuerza que golpea sin descanso a la presa marcada.", en: "A body forced back to its feet that strikes the marked quarry without rest."}
+  kind: summon
+  role: damage
+  icon: "💀"
+  hp: 8
+  hp_per_level: 2
+  to_hit: 4
+  damage: 1d8+2
+  damage_type: necrotic
+  duration: 5
+
+bone_horde:
+  name: {es: Horda de huesos, en: Bone Horde}
+  description: {es: "Un enjambre de esqueletos que desgasta a toda una fila, sin fallar.", en: "A swarm of skeletons that wears down a whole row, never missing."}
+  kind: summon
+  role: area
+  icon: "🦴"
+  hp: 6
+  hp_per_level: 1
+  damage: 1d6+1
+  damage_type: necrotic
+  duration: 4
+
+storm_spirit:
+  name: {es: Espíritu de la tormenta, en: Storm Spirit}
+  description: {es: "Un relámpago con voluntad que descarga sobre la presa marcada.", en: "A lightning bolt with a will, discharging on the marked quarry."}
+  kind: summon
+  role: damage
+  icon: "⚡"
+  hp: 8
+  hp_per_level: 2
+  to_hit: 6
+  damage: 2d8+3
+  damage_type: force
+  duration: 4
+
+arc_construct:
+  name: {es: Autómata de arco, en: Arc automaton}
+  description: {es: "Un constructo que traba al rival con descargas cada dos turnos, en vez de proteger.", en: "A construct that pins the foe with discharges every other turn instead of shielding."}
+  kind: construct
+  role: disrupt
+  icon: "⚙️"
+  hp: 10
+  hp_per_level: 2
+  status: restrained
+  status_turns: 1
+  period: 2
+
+titan_automaton:
+  name: {es: Autómata titán, en: Titan automaton}
+  description: {es: "El constructo mayor: un muro de metal que recibe los golpes por ti.", en: "The greater construct: a wall of metal that takes the blows for you."}
+  kind: construct
+  role: guard
+  icon: "🛡️"
+  hp: 30
+  hp_per_level: 6
+
+warding_totem:
+  name: {es: Tótem protector, en: Warding totem}
+  description: {es: "Un tótem que recibe los golpes en tu lugar hasta quebrarse.", en: "A totem that takes the blows in your place until it cracks."}
+  kind: totem
+  role: guard
+  icon: "🪨"
+  hp: 12
+  hp_per_level: 3

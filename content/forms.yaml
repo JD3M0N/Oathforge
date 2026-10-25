@@ -20,3 +20,23 @@ panther:
   temp_hp_per_level: 1
   attacks:
     - {name: {es: Mordisco, en: Bite}, damage: 1d10, damage_type: piercing, ability: dex}
+
+treant:
+  name: {es: Forma de ent, en: Treant form}
+  description: {es: "Un tronco vivo: golpeas despacio, pero casi nada te mueve.", en: "A living trunk: you hit slowly, but almost nothing moves you."}
+  icon: "🌳"
+  ac_bonus: 3
+  temp_hp: 8
+  temp_hp_per_level: 4
+  attacks:
+    - {name: {es: Porrazo, en: Slam}, damage: 1d10, damage_type: bludgeoning, ability: str}
+
+primal_beast:
+  name: {es: Forma de bestia primigenia, en: Primal beast form}
+  description: {es: "El animal que dio origen a todos: garra, colmillo y una piel que no se rinde.", en: "The animal that begat all others: claw, fang and a hide that never yields."}
+  icon: "🦁"
+  ac_bonus: 2
+  temp_hp: 10
+  temp_hp_per_level: 5
+  attacks:
+    - {name: {es: Garra primigenia, en: Primal claw}, damage: 2d8, damage_type: slashing, ability: str}

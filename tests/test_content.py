@@ -279,7 +279,7 @@ def test_entities_and_forms_are_validated():
     from oathforge.content.schemas import ClassAbility, ClassSpecialization, EntityDef
 
     c = load_content()
-    assert len(c.entities) == 9 and len(c.forms) == 2 and _entity_errors(c) == []
+    assert len(c.entities) == 15 and len(c.forms) == 4 and _entity_errors(c) == []
     text = {"es": "x", "en": "x"}
 
     def ab(kind, **kw):

@@ -319,3 +319,12 @@ Doce ramas de curación, regeneración, melodías, reacciones y control: Redento
 - [ ] En Telegram (ES): `/path` ofrece las doce y la ficha enseña el recorrido; probar con un Clérigo de la Vida que la Curación radiante deja barrera.
 - [ ] En Telegram (EN): las mismas pantallas.
 - [ ] Un combate real con Elementalista: Espíritu de fuego y luego Estallido de vapor que gasta la quemadura.
+
+## 0.10-I · Las 41 ramas, lote C (B07, v0.10.34)
+
+Nueve ramas con entidades, formas y tiempo: Invocador, Cronomante, Cambiaformas, Demonólogo, Nigromante, Señor de Bestias, Artillero, Maestro de Constructos y Guardián Ancestral.
+
+- [x] Las pruebas automáticas de ramas cubren las 41 (recorrido, camino por nivel, decisiones distintas, modificadores, suelo contra jefe) y que ninguna queda sin terminar.
+- [ ] En Telegram (ES/EN): `/path` ofrece las 41; un Demonólogo ve a su servidor en el combate y lo ordena.
+- [ ] En Telegram: un Cambiaformas toma forma de oso y vuelve a la humana sin curarse.
+- [ ] En Telegram: un Maestro de Constructos monta el guardián y no puede montar también el de arco.

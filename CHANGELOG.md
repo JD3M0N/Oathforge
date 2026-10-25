@@ -4,6 +4,17 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.34] - 2026-10-25
+
+0.10-I (B07, lote C): **las 41 ramas ya se pueden elegir.** Este lote cierra B07 con las nueve de entidades, formas, tótems y tiempo.
+
+### Añadido
+- **Nueve ramas listas**, con su recorrido del 10 al 20: Invocador, Cronomante, Cambiaformas, Demonólogo, Nigromante, Señor de Bestias, Artillero, Maestro de Constructos y Guardián Ancestral.
+- Seis entidades nuevas (Siervo exhumado, Horda de huesos, Espíritu de la tormenta, Autómata de arco, Autómata titán, Tótem protector) y dos formas (ent y bestia primigenia).
+- Cronomante: adelantar los enfriamientos propios (`reduces_cooldowns`) y trabar o aturdir al rival.
+- Constructos y tótems son una elección: solo cabe uno a la vez (guardián o autómata de arco; tótem que asusta o que protege).
+- Prueba de que no queda ninguna rama sin terminar.
+
 ## [0.10.33] - 2026-10-25
 
 0.10-I (B07, lote B): **doce ramas más.** Con las veinte del lote A son 32 de las 41 las que ya se pueden elegir; este lote reúne la curación, la regeneración, las melodías, las reacciones y el control.
