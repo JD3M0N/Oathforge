@@ -26,7 +26,7 @@ def test_content_loads_and_references_resolve():
     c = load_content()
     assert c.start_location in c.locations
     assert c.respawn_location in c.locations
-    assert len(c.classes) == 14 and len(c.monsters) == 24 and len(c.items) == 101 and len(c.npcs) == 17
+    assert len(c.classes) == 14 and len(c.monsters) == 27 and len(c.items) == 101 and len(c.npcs) == 17
     assert "Aetherfall" in c.world_guide.summary.es and "internet" in c.world_guide.technology.en
 
 

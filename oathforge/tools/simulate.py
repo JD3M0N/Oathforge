@@ -28,6 +28,8 @@ from oathforge.services import characters, combat_service
 MAX_ROUNDS = 50
 # main-action abilities, most valuable first; limited uses are spent before unlimited ones
 PREPARED_POTIONS = 2  # healing potions the simulated hero carries, drunk below 40% HP
+SAVE_FOR_WINDOW = True  # the informed hero keeps costed attacks for the boss's exposed window
+VETERAN_POTIONS = 3  # from level 10 they are greater potions (4d4+4): the campaign hands out and sells them
 ACTION_PRIORITY = ("summon", "converge", "command", "shift", "heal", "turn", "save", "strike", "spell", "curse", "buff")
 HELPERS = ("summon", "converge", "command", "shift")  # abilities of the helpers and forms of B05
 
@@ -72,14 +74,22 @@ def sim_character(class_key: str, level: int, lineage: str, background: str, bra
     return char
 
 
-def sim_gear(char: Character) -> dict[str, ItemInstance]:
-    """Starting equipment, equipped like ``create_character`` does."""
+T1_BODY = {"str": "steel_breastplate"}  # the piece the guild lends at level 10 (camp_kit): heavy for the strong, boiled leather for the rest
+T1_BODY_DEFAULT = "hardened_leather"
+
+
+def sim_gear(char: Character, kit: str = "t0") -> dict[str, ItemInstance]:
+    """Starting equipment, equipped like ``create_character`` does. ``kit="t1"``: from level 10, the one level-10 body
+    piece Tamsin lends in the campaign (a reasonable preparation, not a full set)."""
     c = get_content()
     gear: dict[str, ItemInstance] = {}
     for key in c.classes[char.class_key].equip:
         slot = c.items[key].slot
         if slot and slot not in gear:
             gear[slot] = ItemInstance(item_key=key, qty=1, equipped_slot=slot, history=[])
+    if kit == "t1" and char.level >= c.progression.specialization_level:
+        key = T1_BODY.get(c.classes[char.class_key].primary, T1_BODY_DEFAULT)
+        gear["body"] = ItemInstance(item_key=key, qty=1, equipped_slot="body", history=[])
     return gear
 
 
@@ -168,20 +178,28 @@ def _worth_it(me: Combatant, key: str, a, weapon) -> bool:
     return weapon is None or dice.parse(a.damage).average + me.spell_damage_bonus >= dice.parse(weapon.damage).average
 
 
-def _main(state: EncounterState, me: Combatant, rng: random.Random, defs: dict, use_abilities: bool) -> None:
+def _main(state: EncounterState, me: Combatant, rng: random.Random, defs: dict, use_abilities: bool,
+          informed: bool = True) -> None:
     weapon = _weapon(me)
-    if me.consumables.get("healing_potion", 0) > 0 and me.hp * 5 < 2 * me.max_hp:  # a potion when low
-        if _try(state, Action(kind="heal_item", heal_amount=dice.roll("2d4+2", rng).total), rng, defs):
+    if informed and me.consumables.get("healing_potion", 0) > 0 and me.hp * 5 < 2 * me.max_hp:  # a potion when low
+        dose = "4d4+4" if me.level >= 10 else "2d4+2"
+        if _try(state, Action(kind="heal_item", heal_amount=dice.roll(dose, rng).total), rng, defs):
             return
     aiming = [f for f in state.enemies_of(me) if f.pattern_state == "aiming" and f.heavy]
-    if aiming and me.hp <= 2.5 * dice.parse(aiming[0].heavy.damage).average:  # the signal says: guard
+    if informed and aiming and (me.hp <= 2.5 * dice.parse(aiming[0].heavy.damage).average
+                                or me.hp * 5 < 3 * me.max_hp):  # the signal says: guard
         if _try(state, Action(kind="defend"), rng, defs):
             return
     if use_abilities:
+        # against a boss with a pattern the informed hero wears the plate down with what is free and saves what costs
+        # for the window: the plate gone or the boss reloading (exposed)
+        patterned = [f for f in state.enemies_of(me) if f.pattern]
+        saving = SAVE_FOR_WINDOW and informed and any(f.plate > 0 and f.pattern_state != "reloading" for f in patterned)
         options = [k for k, a in defs.items()
                    if a.action == "action" and _usable(me, k, defs) and a.kind in ACTION_PRIORITY
                    and _worth_it(me, k, a, weapon) and _helpers_ok(state, me, a)
-                   and (a.kind != "heal" or me.hp * 3 < me.max_hp)]
+                   and (a.kind != "heal" or me.hp * 3 < me.max_hp)
+                   and not (saving and a.kind in ("strike", "spell", "save", "curse") and (a.cost or me.abilities.get(k) is not None))]
         # the dearest first: what the bar pays for, then what has limited uses, then the free ones
         options.sort(key=lambda k: (ACTION_PRIORITY.index(defs[k].kind), -defs[k].cost,
                                     me.abilities[k] is None))
@@ -201,18 +219,19 @@ def _main(state: EncounterState, me: Combatant, rng: random.Random, defs: dict, 
     _try(state, Action(kind="defend"), rng, defs)
 
 
-def play_turn(state: EncounterState, rng: random.Random, defs: dict, use_abilities: bool = True) -> None:
+def play_turn(state: EncounterState, rng: random.Random, defs: dict, use_abilities: bool = True,
+              informed: bool = True) -> None:
     """One player turn: bonus action first, then the action (twice with Action Surge), then end the turn."""
     me = state.combatants["p1"]
     rnd = state.round
     if use_abilities:
         _bonus(state, me, rng, defs)
     if state.status == "active" and state.current.id == "p1" and state.round == rnd:
-        _main(state, me, rng, defs, use_abilities)
+        _main(state, me, rng, defs, use_abilities, informed)
     if use_abilities and state.status == "active" and state.current.id == "p1" and state.round == rnd:
         surge = next((k for k in combat.available_bonus_actions(state, me, defs) if defs[k].kind == "surge"), None)
         if surge and _try(state, Action(kind="ability", ability=surge), rng, defs):
-            _main(state, me, rng, defs, use_abilities)
+            _main(state, me, rng, defs, use_abilities, informed)
     if state.status == "active" and state.current.id == "p1" and state.round == rnd:
         _try(state, Action(kind="end_turn"), rng, defs)
 
@@ -226,6 +245,8 @@ class Fight:
     hp_left: float  # fraction of max HP
     damage_dealt: int
     damage_taken: int  # net of healing: max HP minus HP at the end
+    ended: dict | None = None  # what the hero keeps for the next fight of a sequence: hp, uses, bar
+    potions_used: int = 0
 
 
 def _bring_helpers(state: EncounterState, player: Combatant, char: Character) -> None:
@@ -240,19 +261,26 @@ def _bring_helpers(state: EncounterState, player: Combatant, char: Character) ->
 
 
 def fight(class_key: str, level: int, monsters: list[str], seed: int, lineage: str, background: str,
-          use_abilities: bool = True, branch: str | None = None) -> Fight:
+          use_abilities: bool = True, branch: str | None = None, policy: str = "informed", kit: str = "t0",
+          carry: dict | None = None) -> Fight:
+    """One fight. ``policy``: "basic" ignores the boss's signals and the potions, "informed" answers them.
+    ``kit``: "t0" start gear, "t1" adds the level-10 piece. ``carry``: the hero as a previous fight left him."""
     rng = random.Random(seed)
     char = sim_character(class_key, level, lineage, background, branch)
-    player = characters.combatant_from(char, sim_gear(char), sim_skills(char))
+    player = characters.combatant_from(char, sim_gear(char, kit), sim_skills(char))
     defs = combat_service.ability_defs(char)
-    player.consumables = {"healing_potion": PREPARED_POTIONS}  # a reasonable preparation for a boss
+    stock = VETERAN_POTIONS if level >= 10 else PREPARED_POTIONS
+    player.consumables = {"healing_potion": stock if policy == "informed" else 0}
+    if carry:
+        player.hp, player.abilities, player.resource = carry["hp"], dict(carry["abilities"]), carry["resource"]
+        player.consumables = {"healing_potion": carry["potions"]}
     state = EncounterState(location="simulation", combatants={"p1": player})
     _bring_helpers(state, player, char)
     for i, key in enumerate(monsters, start=1):
         state.combatants[f"m{i}"] = combat_service.monster_combatant(key, f"m{i}")
     combat.start(state, rng)
     while state.status == "active" and state.round <= MAX_ROUNDS:
-        play_turn(state, rng, defs, use_abilities)
+        play_turn(state, rng, defs, use_abilities, policy == "informed")
     me = state.combatants["p1"]
     foes = [c for c in state.combatants.values() if c.side == "enemy"]
     return Fight(
@@ -261,7 +289,36 @@ def fight(class_key: str, level: int, monsters: list[str], seed: int, lineage: s
         hp_left=max(0, me.hp) / me.max_hp,
         damage_dealt=sum(f.max_hp - max(0, f.hp) + f.plate_max - f.plate for f in foes),
         damage_taken=me.max_hp - max(0, me.hp),
+        ended={"hp": max(0, me.hp), "abilities": dict(me.abilities), "resource": me.resource,
+               "potions": me.consumables.get("healing_potion", 0)},
+        potions_used=(stock if policy == "informed" else 0) - me.consumables.get("healing_potion", 0),
     )
+
+
+SHORT_RESTS_BETWEEN = 2  # the campaign's allowance between two long rests (engine/timings.py)
+
+
+def sequence(class_key: str, level: int, groups: list[list[str]], seed: int, lineage: str, background: str,
+             branch: str | None = None, policy: str = "informed", kit: str = "t0") -> list[Fight]:
+    """Fights back to back. The informed hero takes a short rest (30% of his HP, half of his bar, one use) when he is
+    under 60% and has rests left; the basic one never rests. Stops at the first defeat."""
+    from oathforge.engine import timings
+    out: list[Fight] = []
+    carry, rests = None, SHORT_RESTS_BETWEEN
+    for i, keys in enumerate(groups):
+        f = fight(class_key, level, keys, seed + i, lineage, background, True, branch, policy, kit, carry)
+        out.append(f)
+        if f.status != "victory":
+            break
+        carry = dict(f.ended)
+        char = sim_character(class_key, level, lineage, background, branch)
+        if policy == "informed" and rests and carry["hp"] < 0.6 * char.max_hp:
+            rests -= 1
+            carry["hp"] = min(char.max_hp, carry["hp"] + round(char.max_hp * timings.SHORT_REST_HP_PCT))
+            full = characters.resource_max(char)
+            if full:
+                carry["resource"] = min(full, carry["resource"] + round(full * timings.SHORT_REST_POOL_PCT))
+    return out
 
 
 def summarize(fights: list[Fight]) -> dict:
@@ -279,14 +336,15 @@ def summarize(fights: list[Fight]) -> dict:
 
 
 def simulate(classes: list[str], monsters: list[str], levels: list[int], n: int, seed: int, lineage: str,
-             background: str, use_abilities: bool = True, branch: str | None = None) -> list[dict]:
+             background: str, use_abilities: bool = True, branch: str | None = None, policy: str = "informed",
+             kit: str = "t0") -> list[dict]:
     """One row per class x enemy group x level; ``monsters`` entries are keys joined with ``+``."""
     rows = []
     for level in levels:
         for cls in classes:
             for group in monsters:
                 keys = group.split("+")
-                fights = [fight(cls, level, keys, seed + i, lineage, background, use_abilities, branch)
+                fights = [fight(cls, level, keys, seed + i, lineage, background, use_abilities, branch, policy, kit)
                           for i in range(n)]
                 rows.append({"class": cls if not branch else f"{cls}/{branch}", "enemies": group, "level": level,
                              **summarize(fights)})
@@ -337,6 +395,9 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--branch", default=None, help="a class branch to play (from level 10), e.g. avenger")
     parser.add_argument("--no-abilities", action="store_true", help="weapon attacks only")
+    parser.add_argument("--policy", choices=("basic", "informed"), default="informed",
+                        help="informed answers the boss's signals and drinks potions; basic does not")
+    parser.add_argument("--kit", choices=("t0", "t1"), default="t0", help="t1: the level-10 piece of the campaign")
     parser.add_argument("--no-save", action="store_true", help="don't write artifacts/simulations/")
     args = parser.parse_args(argv)
 
@@ -351,7 +412,7 @@ def main(argv: list[str] | None = None) -> None:
         classes = [c.class_specializations[args.branch].class_key]
     levels = _levels(args.level)
     rows = simulate(classes, monsters, levels, args.n, args.seed, args.lineage, args.background,
-                    not args.no_abilities, args.branch)
+                    not args.no_abilities, args.branch, args.policy, args.kit)
     print(_table(rows))
     if not args.no_save:
         params = {k: v for k, v in vars(args).items() if k != "no_save"}

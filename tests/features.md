@@ -368,3 +368,9 @@ Sin ayudas de beta: todo lleva su tiempo real. Tabla única en `engine/timings.p
 - [ ] En Telegram: recorrer los ocho lugares; la recolección da hierro profundo, corazón de roble y seda; el mapa conecta todo.
 - [ ] En Telegram: la decisión de «El agua de la cantera» cambia la reputación y no se puede repetir.
 - [ ] En Telegram: reunir los núcleos, encender la baliza en tres pasos (limpiar, encajar, encender) y vencer al Custodio a nivel 20.
+
+## 0.10-I · Balance integral (B12, v0.10.40)
+
+- [x] Pruebas automáticas de `oath balance`: intervalos de Wilson, celdas reproducibles, kit T1, secuencias, informe y modelo de ritmo.
+- [ ] Jugando a mano con tres clases (guerrero, clériga, hechicero) hasta el nivel 10: contrastar el modelo de ritmo del informe con el tiempo real (`oath tutorial-stats`).
+- [ ] Pelear con un Pirómano o un Tirador contra el Custodio con pociones mayores y comprobar si se siente injusto.

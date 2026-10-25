@@ -19,6 +19,7 @@ COMMANDS = [
     ("Testing", [
         ("tgtest", "send|press|show|login", "Play the bot from the Telegram test account."),
         ("simulate", "[--level 1-5]", "Simulate fights for balance (--help)."),
+        ("balance", "[--n 16] [--quick]", "Balance report of the campaign: classes, branches, policies, pace."),
         ("achievements-backfill", "[--apply] [--character-id ID] [--after-id ID]", "Preview (default) or apply achievements earned before v0.9."),
         ("tutorial-stats", "", "How long each player takes per tutorial mission and where they get stuck."),
     ]),
@@ -230,6 +231,10 @@ def main(argv: list[str] | None = None) -> None:
         from oathforge.tools.simulate import main as simulate
 
         simulate(rest)
+    elif command == "balance":
+        from oathforge.tools.balance import main as balance
+
+        balance(rest)
     elif command == "achievements-backfill":
         from oathforge.tools.achievements_backfill import main as backfill
 

@@ -245,7 +245,7 @@ ash_collector:
     plate: 30
     cycle: 2
     cycle_broken: 1
-    heavy: {name: {es: Descarga de ballesta, en: Crossbow volley}, to_hit: 8, damage: 3d6+4, damage_type: piercing, ranged: true}
+    heavy: {name: {es: Descarga de ballesta, en: Crossbow volley}, to_hit: 9, damage: 4d6+5, damage_type: piercing, ranged: true}
   boss: true
   xp: 600
   gold: 6d10
@@ -534,19 +534,19 @@ beacon_keeper:
   indefinite: {es: "el custodio de las balizas", en: "the beacon keeper"}
   icon: 🔆
   description: {es: "El último encargado de las balizas del valle. Su luz regula lo que el Taller del Regulador ya no puede: la prueba de quien quiera llamarse veterano.", en: "The last keeper of the vale's beacons. His light regulates what the Regulator Workshop no longer can: the test of whoever wants to call themselves a veteran."}
-  hp: 230
+  hp: 200
   ac: 19
   dex: 2
   wis: 1
   row: front
   attacks:
-    - {name: {es: "Báculo del faro", en: "Lighthouse staff"}, to_hit: 13, damage: 2d8+8, damage_type: bludgeoning}
+    - {name: {es: "Báculo del faro", en: "Lighthouse staff"}, to_hit: 11, damage: 2d8+6, damage_type: bludgeoning}
   pattern:
     plate: 50
     rearm: 25
     cycle: 2
     cycle_broken: 1
-    heavy: {name: {es: "Haz de la baliza", en: "Beacon beam"}, to_hit: 14, damage: 5d8+8, damage_type: radiant, ranged: true}
+    heavy: {name: {es: "Haz de la baliza", en: "Beacon beam"}, to_hit: 12, damage: 5d8+6, damage_type: radiant, ranged: true}
   boss: true
   xp: 6000
   gold: "12d10"
@@ -558,3 +558,63 @@ beacon_keeper:
   lore:
     es: "El último encargado de las balizas del valle. Su luz regula lo que el Taller del Regulador ya no puede: la prueba de quien quiera llamarse veterano."
     en: "The last keeper of the vale's beacons. His light regulates what the Regulator Workshop no longer can: the test of whoever wants to call themselves a veteran."
+
+ash_hound:
+  name: {es: "Sabueso de ceniza", en: "Ash hound"}
+  indefinite: {es: "sabueso de ceniza", en: "ash hound"}
+  icon: 🐩
+  description: {es: "Perro de guardia de los peajes, entrenado para seguir el olor del hierro. Muerde y se retira.", en: "A toll-post guard dog trained to follow the smell of iron. It bites and backs off."}
+  hp: 34
+  ac: 13
+  dex: 1
+  wis: 1
+  row: front
+  attacks:
+    - {name: {es: "Mordisco", en: "Bite"}, to_hit: 6, damage: 1d8+3, damage_type: piercing}
+  xp: 90
+  gold: "0"
+  type: beast
+  habitat: {es: "Puesto de Peaje Abandonado", en: "Abandoned Toll Post"}
+  lore:
+    es: "Perro de guardia de los peajes, entrenado para seguir el olor del hierro. Muerde y se retira."
+    en: "A toll-post guard dog trained to follow the smell of iron. It bites and backs off."
+
+toll_enforcer:
+  name: {es: "Cobrador del peaje", en: "Toll enforcer"}
+  indefinite: {es: "cobrador del peaje", en: "toll enforcer"}
+  icon: 💂
+  description: {es: "Un matón a sueldo que cobra el peaje a quien no lleva un sello. Rara vez lo hace a solas.", en: "A hired thug who collects the toll from anyone without a seal. He rarely does it alone."}
+  hp: 46
+  ac: 14
+  dex: 1
+  wis: 1
+  row: front
+  attacks:
+    - {name: {es: "Porra de hierro", en: "Iron cudgel"}, to_hit: 6, damage: 1d10+4, damage_type: bludgeoning}
+  xp: 120
+  gold: "2d10"
+  type: humanoid
+  habitat: {es: "Puesto de Peaje Abandonado", en: "Abandoned Toll Post"}
+  lore:
+    es: "Un matón a sueldo que cobra el peaje a quien no lleva un sello. Rara vez lo hace a solas."
+    en: "A hired thug who collects the toll from anyone without a seal. He rarely does it alone."
+
+post_sergeant:
+  name: {es: "Sargento del peaje", en: "Post sergeant"}
+  indefinite: {es: "sargento del peaje", en: "post sergeant"}
+  icon: 🪖
+  description: {es: "Manda a los cobradores del peaje. Cree que las órdenes falsas son órdenes de verdad.", en: "He commands the toll enforcers. He believes the forged orders are real ones."}
+  hp: 62
+  ac: 15
+  dex: 1
+  wis: 1
+  row: front
+  attacks:
+    - {name: {es: "Hacha de guardia", en: "Guard axe"}, to_hit: 7, damage: 2d6+4, damage_type: slashing}
+  xp: 180
+  gold: "3d10"
+  type: humanoid
+  habitat: {es: "Puesto de Peaje Abandonado", en: "Abandoned Toll Post"}
+  lore:
+    es: "Manda a los cobradores del peaje. Cree que las órdenes falsas son órdenes de verdad."
+    en: "He commands the toll enforcers. He believes the forged orders are real ones."

@@ -1908,7 +1908,7 @@ reg_arrive:
     - {kind: visit, target: ford_post}
     - {kind: talk, target: orsa}
   rewards:
-    - {xp: 600}
+    - {xp: 400}
     - {give_item: {greater_healing_potion: 1}}
   stages:
     locked:
@@ -1952,7 +1952,7 @@ reg_cargo:
     - {kind: kill, target: ash_smuggler, count: 4}
     - {kind: kill, target: ash_crossbowman, count: 2}
   rewards:
-    - {xp: 900}
+    - {xp: 650}
     - {gold: 60}
   stages:
     locked:
@@ -1990,7 +1990,7 @@ reg_quarry:
     - {kind: kill, target: quarry_crawler, count: 3}
     - {kind: gather, target: coal, count: 6}
   rewards:
-    - {xp: 1100}
+    - {xp: 750}
   stages:
     locked:
       state: locked
@@ -2030,7 +2030,7 @@ reg_water:
         es: "Pasas el día cargando barriles junto a los carreteros. Al final, Kellan abre el libro de turnos y escribe tu nombre en él. La Guardia de Plata lo sabrá."
         en: "You spend the day hauling barrels beside the carters. At the end Kellan opens the shift book and writes your name in it. The Silver Guard will hear of it."
       effects:
-        - {xp: 1200}
+        - {xp: 850}
         - {reputation: {silver_covenant: 10}}
         - {set_flag: valley_water_kellan}
     side_with_smuggler:
@@ -2042,7 +2042,7 @@ reg_water:
         es: "Cierras un trato en voz baja: el agua volverá, pero a un precio que no figurará en ningún libro. Kellan no dice nada, pero deja de mirarte a los ojos."
         en: "You strike a quiet deal: the water will return, but at a price that will appear in no ledger. Kellan says nothing, but stops meeting your eyes."
       effects:
-        - {xp: 1200}
+        - {xp: 850}
         - {gold: 80}
         - {reputation: {crimson_syndicate: 10, silver_covenant: -5}}
         - {set_flag: valley_water_smuggler}
@@ -2081,7 +2081,7 @@ reg_wood:
     - {kind: kill, target: antler_wolf, count: 4}
     - {kind: kill, target: antler_hart, count: 2}
   rewards:
-    - {xp: 1400}
+    - {xp: 1000}
     - {give_item: {heartwood_log: 2}}
   stages:
     locked:
@@ -2119,7 +2119,7 @@ reg_sawmill:
     - {kind: kill, target: lumber_brute, count: 2}
     - {kind: kill, target: sawblade_automaton, count: 2}
   rewards:
-    - {xp: 1800}
+    - {xp: 1250}
     - {gold: 80}
   stages:
     locked:
@@ -2161,7 +2161,7 @@ reg_glass:
     - {kind: kill, target: glass_eel, count: 3}
     - {kind: gather, target: moonleaf, count: 4}
   rewards:
-    - {xp: 2000}
+    - {xp: 1400}
   stages:
     locked:
       state: locked
@@ -2197,7 +2197,7 @@ reg_workshop:
     - {kind: visit, target: regulator_workshop}
     - {kind: kill, target: regulator_sentinel, count: 3}
   rewards:
-    - {xp: 3200}
+    - {xp: 2250}
   stages:
     locked:
       state: locked
@@ -2242,7 +2242,7 @@ reg_repair:
         es: "Retiras el óxido con un paño y el hueco de la baliza queda limpio. Encajarás el núcleo en cuanto termines."
         en: "You wipe the rust off with a cloth and the beacon’s socket is clean. You will fit the core as soon as you are done."
       effects:
-        - {xp: 300}
+        - {xp: 200}
     fit:
       label: {es: "🔩 Encajar el núcleo", en: "🔩 Fit the core"}
       location: beacon_height
@@ -2254,7 +2254,7 @@ reg_repair:
         en: "The core clicks in and the tower’s gear turns a full revolution, for the first time in years."
       effects:
         - {take_item: {regulator_core: 1}}
-        - {xp: 300}
+        - {xp: 200}
     light:
       label: {es: "🔥 Encender la baliza", en: "🔥 Light the beacon"}
       location: beacon_height
@@ -2264,7 +2264,7 @@ reg_repair:
         es: "Una llama blanca sube por la torre y se ve desde Crownreach. Abajo, el viento cambia. Algo grande se mueve en lo alto del Alto: el Custodio ha despertado."
         en: "A white flame climbs the tower and can be seen from Crownreach. Below, the wind changes. Something big moves on the Height: the Keeper has awakened."
       effects:
-        - {xp: 1800}
+        - {xp: 1250}
         - {set_flag: beacon_trial}
   stages:
     locked:
@@ -2312,7 +2312,7 @@ reg_warden:
   objectives:
     - {kind: kill, target: beacon_warden, count: 2}
   rewards:
-    - {xp: 3600}
+    - {xp: 2500}
     - {give_item: {greater_healing_potion: 2}}
   stages:
     locked:
@@ -2349,7 +2349,7 @@ reg_trial:
   objectives:
     - {kind: kill, target: beacon_keeper}
   rewards:
-    - {xp: 5000}
+    - {xp: 3500}
     - {gold: 300}
     - {give_item: {greater_healing_potion: 3}}
     - {set_flag: vale_veteran}

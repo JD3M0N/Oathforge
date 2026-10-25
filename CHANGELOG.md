@@ -4,6 +4,24 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.40] - 2026-10-25
+
+0.10-I (B12): **balance integral.** Se mide la campaña, no un jabalí: clases y ramas contra encuentros de su nivel, dos políticas, un equipo razonable, secuencias y un modelo de ritmo. El informe está en `planning/informe_balance_0.10.md`.
+
+### Añadido
+- **`oath balance`** (`oathforge/tools/balance.py`): matriz de 14 clases (niveles 1, 3, 5 y 9) y 41 ramas (10, 13, 17 y 20) contra rival débil, estándar, élite, pareja y jefe; política básica frente a informada; intervalos de Wilson al 95 %; secuencias de combates con descansos cortos; duración por rol; defectos con suelos; modelo de ritmo con dos sesiones diarias; informe con versión, commit, semilla y limitaciones. Usa todos los núcleos.
+- **Simulador**: `--policy basic|informed` (la informada se defiende al aviso del jefe, bebe pociones, guarda el recurso para la ventana expuesta), `--kit t1` (la pieza de nivel 10 del gremio), pociones mayores desde el nivel 10 y secuencias que arrastran vida y recurso.
+- **Tres criaturas** para los niveles 6–9 (sabueso de ceniza, cobrador del peaje, sargento del peaje) en el Puesto de Peaje Abandonado: no había nada entre el Viejo Colmillo y el nivel 11.
+- Pruebas de la herramienta (intervalos, celdas reproducibles, kit, secuencias, informe y modelo de ritmo).
+
+### Cambiado
+- Custodio de las Balizas: 200 PV (antes 230) y menos daño, porque las ramas de lanzador ganaban 0 %; el Recaudador de Ceniza descarga más fuerte (4d6+5) para que ignorar la señal duela.
+- XP de las misiones del valle al 70 %: antes casi todo el camino al nivel 20 salía de las misiones.
+
+### Hallazgos (ver el informe)
+- El ritmo es unas seis veces más corto que la meta: unas 6 horas de juego dirigido, ≈ 2,4 días a dos sesiones de 75 min, frente a 15–20 días. Hay que ampliar contenido, alargar tiempos o bajar la meta.
+- Luz, Pirómano, Tirador y Tejemareas no llegan al 35 % contra el Custodio, y 35 parejas del mismo nivel quedan por debajo del 55 %, sobre todo lanzadores. No se tocó su diseño.
+
 ## [0.10.39] - 2026-10-25
 
 0.10-I (B11): **el Valle de la Fragua Gris, de los niveles 11 al 20.** Región provisional (nombre y lore pendientes de que Josue los apruebe) con ocho lugares, doce criaturas, tres PNJ y once misiones hasta la prueba final.

@@ -315,3 +315,5 @@ Las 26 imágenes actuales son de un estilo anterior. Se rehacen con el prompt de
 - [ ] **Criatura nueva (0.10.38)**: El Ciervo de Hierro (`content/monsters/iron_stag/images/portrait.jpg` es un marcador de posición; prompt en `portrait.prompt.md`) y una imagen de la Hondonada del Ciervo.
 
 - [ ] **Región nueva (0.10.39)**: doce criaturas con retrato de marcador de posición en `content/monsters/<criatura>/images/` (contrabandista y ballestero de ceniza, reptante de cantera, lobo astado, cervato de hierro, leñador desbocado, autómata de sierra, anguila de vidrio, acechador de esquirlas, centinela del regulador, guardián de baliza y Custodio de las Balizas), imágenes de los ocho lugares del Valle de la Fragua Gris y retratos de Orsa, Kellan e Iwen.
+
+- [ ] **Criaturas 6–9 (0.10.40)**: sabueso de ceniza, cobrador del peaje y sargento del peaje (marcadores de posición en `content/monsters/<criatura>/images/`).

@@ -1,0 +1,6 @@
+# Créditos y licencia de cada archivo de esta carpeta (planning/ars.md §Licencias).
+portrait.jpg:
+  author: Claude (marcador de posición)
+  source: imagen provisional generada con PIL en la v0.10.40; no es arte final
+  license: uso propio del proyecto
+  notes: sustituir por la ilustración real con el prompt de portrait.prompt.md (768x1024, tools/prepare_image.py --kind portrait)

@@ -21,8 +21,15 @@ encounters:
   - {monsters: [bandit, bandit], weight: 3}
   - {monsters: [bandit_captain, bandit], weight: 2, min_level: 4}
   - {monsters: [goblin_scout, goblin_scout], weight: 1}
+  - {monsters: [ash_hound], weight: 3, min_level: 5}
+  - {monsters: [toll_enforcer], weight: 3, min_level: 6}
+  - {monsters: [toll_enforcer, ash_hound], weight: 2, min_level: 8}
+  - {monsters: [post_sergeant], weight: 2, min_level: 8}
+  - {monsters: [post_sergeant, toll_enforcer], weight: 2, min_level: 9}
 night_encounters:
   - {monsters: [bandit, bandit], weight: 3}
   - {monsters: [bandit_captain], weight: 2}
+  - {monsters: [ash_hound, ash_hound], weight: 3, min_level: 6}
+  - {monsters: [post_sergeant], weight: 2, min_level: 8}
 fixed_encounters:
   - {monsters: [ash_collector], flag: cleared_ash_collector, if_flag: collector_hunt}

@@ -20,8 +20,8 @@
 | B09 Campaña común hasta el Recaudador | ✅ con mentor y trama provisionales (Tamsin Harrow); el refactor de Vale/instructor queda para después | 0.10.36–0.10.37 |
 | B10 Ciervo de Hierro y graduación | ✅ (región → B11) | 0.10.38 |
 | B11 Región cercana 11–20 | ✅ región provisional; 11 misiones de las 18–24 previstas, sin secundarias | 0.10.39 |
-| **B12 Balance integral** | ⏳ **siguiente** | |
-| B13 Retirar cripta, documentación y reinicio que conserva preferencias | ⏳ | |
+| B12 Balance integral | ✅ medición y primeros ajustes (informe en `planning/informe_balance_0.10.md`); ritmo y lanzadores sin resolver | 0.10.40 |
+| **B13 Retirar cripta, documentación y reinicio que conserva preferencias** | ⏳ **siguiente** | |
 | B14 Candidato de lanzamiento | ⏳ | |
 
 Decisiones de Josue que siguen vigentes:
@@ -40,9 +40,6 @@ Decisiones de Josue que siguen vigentes:
 6. Pruebas: `pytest tests/<área> -q` mientras trabajas, `tests/test_content.py` si tocas `content/`, **suite completa antes del commit**, `oath simulate` si tocas combate, `tgtest` en ES y EN para lo que ve el jugador.
 
 ## Lo que queda por hacer
-
-### B12 · Balance integral
-Las cifras de clases, ramas y entidades son **semillas**. Aquí se miden con `oath simulate --level 1-20 [--branch …]` y se ajustan. Casos conocidos: lanzadores flojos contra jefes, Tirador de nivel 20, Filo Maldito y Piromante marginales. El simulador aún no modela bien la política de B12 (cuándo curar, cuándo ordenar al servidor).
 
 ### B13 · Retirar la cripta y reinicio de lanzamiento
 Quitar la cripta (`crypt`, `reliquary`, Holt, Aldren, títulos) y el procedimiento de reinicio que **conserva preferencias** (distinto de `oath reset-players`). Aquí entran también las migraciones de datos viejos.
@@ -69,6 +66,7 @@ Cierre: revisión de `tests/features.md` entera jugando con la cuenta de prueba,
 - **Ramas:** `content/class_specializations.yaml` (41, todas `ready: true`). El cargador exige pasiva y técnica al 10, técnica al 20, exactamente dos modificadores en cada nivel de modificador, claves de habilidad únicas entre ramas y costes que quepan en la barra. `tests/engine/test_branches.py` exige decisiones distintas entre ramas hermanas y un suelo de victorias contra un jefe sintético.
 - **Simulador:** `oathforge/tools/simulate.py` (`--branch`, entrenamientos y modificadores por defecto, política de invocar/ordenar/curar).
 
+- **Balance (B12):** `oath balance --n 32 --seed 7` genera el informe; `simulate.py` tiene `policy`, `kit` y `sequence`; el informe vigente es `planning/informe_balance_0.10.md`.
 - **Valle (B11):** `content/world/terra_coronata/greyforge_vale/` (8 lugares), `reg_*` en `quests.yaml` (orden 60–70) encadenados desde `camp_stag`; PNJ `orsa`, `kellan`, `iwen`; criaturas del 11 al 20 con patrón en los jefes; la puerta es la bandera `valley_open` y la prueba final arranca con `beacon_trial`.
 - **Campaña (B09):** `camp_*` en `quests.yaml` (orden 20–47) encadenados por `after` desde `tut_chapel` hasta `camp_collector`; Tamsin (`tamsin`) es la mentora provisional; jefe con patrón en `Monster.pattern` (`engine/combat.py`: placa, aviso, descarga, recarga); `profession_xp` y `unlock_profession` para los oficios; `toll_post` es el lugar del jefe y `collector_hunt` lo activa.
 - **Tiempos y descanso:** `engine/timings.py` es la única tabla (`gathering` la reexporta); el descanso corto es la actividad `short_rest` (contador `flags.short_rests`, se borra en `exploration.wake_rested`); la actividad guarda su `result.tool` y `inventory.sell` lo respeta; derrota con `DEFEAT_GOLD_CAP_PER_LEVEL`; la Capilla cobra `min(coste, oro)`.

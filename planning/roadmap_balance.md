@@ -64,7 +64,7 @@ Hito **0.10-I** del [roadmap general](roadmap.md). Se avanza **fase a fase**: ca
 | B09 · Campaña hasta el Recaudador | ✅ Hecha (mentor y trama provisionales) | 0.10.36–0.10.37 |
 | B10 · Ciervo y graduación | ✅ Hecha (la región es B11) | 0.10.38 |
 | B11 · Región y aventuras 11–20 | ✅ Hecha con región provisional y menos misiones de las previstas (11 de 18–24) | 0.10.39 |
-| B12 · Balance integral | Pendiente | — |
+| B12 · Balance integral | ✅ Hecha como medición y primeros ajustes; ritmo y lanzadores sin resolver | 0.10.40 |
 | B13 · Retirar cripta, documentación y reinicio | Pendiente | — |
 | B14 · Candidato y lanzamiento | Pendiente | — |
 
@@ -1224,11 +1224,11 @@ El simulador y pruebas se amplían junto a cada fase, no solo en B12. No hacen f
 ### B12 · Balance integral
 
 **Objetivo:** medir campaña, no solo un jabalí.
-- [ ] Simulador usa builds efectivos, equipo y decisiones de recursos.
-- [ ] Escenarios §15 y políticas informadas por rama.
-- [ ] Runs de dos sesiones diarias para medir ritmo.
-- [ ] Ajustar XP, daño, recuperación, tiempos y economía por datos.
-- [ ] Resolver diferencias de duración entre HEAL/DEFF/DMG/CONTROL.
+- [x] Simulador usa builds efectivos, equipo y decisiones de recursos. (0.10.40: política informada, kit T1, pociones, secuencias)
+- [x] Escenarios §15 (parcial) y política informada común. (0.10.40; sin barrido 13×17 ni uso conservador/explosivo)
+- [ ] Runs de dos sesiones diarias para medir ritmo. (0.10.40: sólo un modelo con tiempos supuestos; faltan sesiones reales)
+- [x] Ajustar XP, daño, recuperación, tiempos y economía por datos. (0.10.40: XP del valle, Custodio, Recaudador, criaturas 6–9; el ritmo sigue corto)
+- [x] Duración entre HEAL/DEFF/DMG/CONTROL medida: defensa +30 % sobre daño, no el doble. (0.10.40)
 **Terminado:** informe de balance con versión/semillas, defectos resueltos y limitaciones explícitas.
 
 ### B13 · Retirar cripta, corregir documentación y preparar reset
