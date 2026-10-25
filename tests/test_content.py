@@ -26,7 +26,7 @@ def test_content_loads_and_references_resolve():
     c = load_content()
     assert c.start_location in c.locations
     assert c.respawn_location in c.locations
-    assert len(c.classes) == 10 and len(c.monsters) == 10 and len(c.items) == 98 and len(c.npcs) == 13
+    assert len(c.classes) == 14 and len(c.monsters) == 10 and len(c.items) == 98 and len(c.npcs) == 13
     assert "Aetherfall" in c.world_guide.summary.es and "internet" in c.world_guide.technology.en
 
 
@@ -261,9 +261,11 @@ def test_a_class_branch_pointing_nowhere_is_caught():
     c = load_content()
     text = {"es": "x", "en": "x"}
     stray = ClassSpecialization(class_key="nobody", name=text, description=text, roles=["dmg"])
-    early = c.class_specializations["blood"].model_copy(update={"ready": True})  # its class does not exist yet
-    broken = dataclasses.replace(c, class_specializations={**c.class_specializations,
-                                                           "stray": stray, "blood": early})
+    # a class the roadmap still owes: its branches load, but none may be ready before the class exists
+    owed = ClassSpecialization(class_key="dragonrider", name=text, description=text, roles=["dmg"], ready=True)
+    prog = c.progression.model_copy(update={"future_classes": ["dragonrider"]})
+    broken = dataclasses.replace(c, progression=prog, class_specializations={
+        **c.class_specializations, "stray": stray, "owed": owed})
     errors = _class_progression_errors(broken)
     assert any("unknown class 'nobody'" in e for e in errors)
     assert any("it cannot be ready" in e for e in errors)

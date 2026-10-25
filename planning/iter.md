@@ -22,6 +22,7 @@ Versionado `0.x.y`: **y** (parche) en arreglos y cambios pequeños; **x** (menor
 | 0.8.3 | Planning reorganizado: Possibilium, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md`, `content/officina/` |
 | 0.9.0 | Logros e identidad: 30 logros, dos metalogros, títulos, destacados, objetivos seguidos y reconocimiento retroactivo verificable |
 | 0.9.1 | Hoja de ruta de 0.10 (consolidación) y 0.11 (multijugador): `planning/roadmap.md` |
+| 0.10.31 | 0.10-I (B06, 3.ª parte): Explorador, Artífice, Chamán y Caballero de la Muerte nuevos y Brujo con barra: ya son catorce clases con recurso y habilidades de nivel 1 a 9 |
 | 0.10.30 | 0.10-I (B06, 2.ª parte): Clérigo, Hechicero, Druida y Bardo con barra (Maná y Resonancia) y habilidades hasta el nivel 9 |
 | 0.10.29 | 0.10-I (B06, 1.ª parte): Bárbaro y Monje nuevos; Guerrero, Paladín y Pícaro con barra y habilidades hasta el nivel 9; Castigo divino; estrictos suelos para todas las clases |
 | 0.10.28 | 0.10-I (B05): entidades que combaten solas (invocaciones, servidor, bestia, constructos, torretas, tótems), invocar/ordenar/converger, formas y compañero permanente con nombre |

@@ -56,7 +56,7 @@ Hito **0.10-I** del [roadmap general](roadmap.md). Se avanza **fase a fase**: ca
 | B03 · Motor de recursos y efectos | ✅ Hecha | 0.10.25 |
 | B04 · Catálogo efectivo, selección y elecciones | ✅ Hecha | 0.10.27 |
 | B05 · Compañeros, formas y dispositivos | ✅ Hecha | 0.10.28 |
-| B06 · 14 clases base (1–9) | En curso: 2 de 3 grupos | 0.10.30 |
+| B06 · 14 clases base (1–9) | ✅ Hecha | 0.10.29–0.10.31 |
 | B07 · 41 ramas | Pendiente | — |
 | B08 · Tiempos, descanso, derrota y economía | Pendiente | — |
 | B09 · Campaña hasta el Recaudador | Pendiente | — |
@@ -1148,14 +1148,14 @@ El simulador y pruebas se amplían junto a cada fase, no solo en B12. No hacen f
 ### B06 · Rediseñar 14 clases base y nivel 1–9
 
 **Objetivo:** todas juegan bien antes de especializarse.
-- [ ] Hechicero fusionado y seis clases nuevas. *El renombrado de ids y nombres visibles de Clérigo y Hechicero ya está hecho (0.10.23). Grupo 1 (Guerrero, Bárbaro, Paladín, Pícaro, Monje) hecho en 0.10.29; grupo 2 (Clérigo, Hechicero, Druida, Bardo) en 0.10.30.*
-- [ ] Kit de inicio y curva por clase.
-- [ ] Equipo recomendado, atributos y recurso descritos.
-- [ ] No anticipar toda la especialización: conservar identidad base.
-- [ ] Enseñanza adaptada a recurso y opciones de cada clase.
+- [x] Hechicero fusionado y seis clases nuevas. (0.10.23 el renombrado; grupo 1 en 0.10.29, grupo 2 en 0.10.30, grupo 3 en 0.10.31)
+- [x] Kit de inicio y curva por clase. (0.10.29–0.10.31)
+- [x] Equipo recomendado, atributos y recurso descritos. (0.10.29–0.10.31; solo se añadió un objeto, las vendas del Monje)
+- [x] No anticipar toda la especialización: conservar identidad base. (0.10.29–0.10.31: nada de lo de la rama está en las clases)
+- [ ] Enseñanza adaptada a recurso y opciones de cada clase. *Es la campaña (B09): el tutorial actual no distingue barras.*
 **Orden recomendado:** Guerrero/Bárbaro/Paladín/Pícaro/Monje; Clérigo/Hechicero/Druida/Bardo; Brujo/Explorador/Artífice/Chamán/Caballero.
 **Pruebas:** 14 clases a niveles 1, 3, 5 y 9; encuentros individuales, grupos y varios combates sin descanso completo.
-**Terminado:** ninguna necesita rama, oficio o compañero de otro jugador para superar iniciación.
+**Terminado:** ninguna necesita rama, oficio o compañero de otro jugador para superar iniciación. **Hecho en 0.10.31** para las catorce, con una prueba única (`tests/engine/test_class_roster.py`). Los suelos son de simulador, no de partida: la prueba de la iniciación con cada clase es B09. Faltan los seis retratos (`TODO-images.md`).
 
 ### B07 · Entregar las 41 ramas por familias
 

@@ -268,6 +268,41 @@ Recorte circular: el motivo centrado y legible en pequeño.
   An open old book with a glowing quill and a small crown above it, centered on a deep teal background, bold readable silhouette, icon composition. [ESTILO]
   ```
 
+## Clases nuevas (B06) · `content/classes/<clase>/images/portrait.{male,female}.jpg`
+
+Las seis clases que llegaron con 0.10.29 y 0.10.31 **ya se juegan sin retrato**: la ficha sale sin foto hasta que haya arte. Al integrar cada imagen: `tools/prepare_image.py … --kind portrait`, su `media.yaml` y su `portrait.<género>.prompt.md` al lado (lo exige `tests/test_content.py`), y quitar la clase de `pending_art` en `test_class_portraits_and_unknown_class_folder`.
+
+- [ ] **Bárbaro** ♂ / ♀
+  ```text
+  A male barbarian of Aetherfall, broad and scarred, braided dark beard, bare shoulders painted with ochre war marks, a fur mantle, a warhammer resting on his shoulder, fierce grin. Waist-up portrait, simple softly painted windswept highlands background. [ESTILO]
+  A female barbarian of Aetherfall, tall and powerful, wild braided hair, ochre war marks across her cheekbones, fur mantle over bare arms, a handaxe in each hand, defiant stare. Waist-up portrait, simple softly painted windswept highlands background. [ESTILO]
+  ```
+- [ ] **Monje** ♂ / ♀
+  ```text
+  A male monk of Aetherfall, lean and calm, shaved head, simple undyed linen robes, hands wrapped in leather strips, balanced fighting stance, serene focused gaze. Waist-up portrait, simple softly painted mountain monastery courtyard background. [ESTILO]
+  A female monk of Aetherfall, wiry and composed, hair tied in a short topknot, plain grey linen robes, wrapped hands raised in guard, quiet intense gaze. Waist-up portrait, simple softly painted mountain monastery courtyard background. [ESTILO]
+  ```
+- [ ] **Explorador** ♂ / ♀
+  ```text
+  A male ranger of Aetherfall, weathered and watchful, short beard, green-grey hooded cloak over leather armor, a shortbow in hand and a quiver at his shoulder, reading tracks on the ground. Waist-up portrait, simple softly painted autumn forest background. [ESTILO]
+  A female ranger of Aetherfall, sharp-eyed and lithe, dark braid over one shoulder, green-grey hooded cloak over leather armor, drawing a shortbow, calm focused expression. Waist-up portrait, simple softly painted autumn forest background. [ESTILO]
+  ```
+- [ ] **Artífice** ♂ / ♀
+  ```text
+  A male artificer of Aetherfall, inventive and ink-stained, round brass goggles pushed up on his forehead, scale armor with copper fittings, a humming brass-and-crystal device strapped to his forearm. Waist-up portrait, simple softly painted cluttered workshop background with warm lamplight. [ESTILO]
+  A female artificer of Aetherfall, quick and curious, short hair, brass goggles around her neck, scale armor with copper fittings, a humming brass-and-crystal device on her forearm, amused smile. Waist-up portrait, simple softly painted cluttered workshop background with warm lamplight. [ESTILO]
+  ```
+- [ ] **Chamán** ♂ / ♀
+  ```text
+  A male shaman of Aetherfall, middle-aged and weathered, bone and feather charms woven into long hair, leather vest with painted spirals, a gnarled quarterstaff topped with a small glowing stone. Waist-up portrait, simple softly painted river-bank at dusk background. [ESTILO]
+  A female shaman of Aetherfall, ageless and watchful, feather and shell charms in her braided hair, leather vest with painted spirals, a gnarled quarterstaff with a small glowing stone, a faint smile. Waist-up portrait, simple softly painted river-bank at dusk background. [ESTILO]
+  ```
+- [ ] **Caballero de la Muerte** ♂ / ♀
+  ```text
+  A male death knight of Aetherfall, grim and pale, black plate-and-chain armor etched with glowing pale-blue runes, a longsword with frost-lit runes held point-down, hollow resolute eyes. Waist-up portrait, simple softly painted cold ruined chapel background. [ESTILO]
+  A female death knight of Aetherfall, severe and pale, black plate-and-chain armor etched with glowing pale-blue runes, a longsword with frost-lit runes held point-down, hollow resolute eyes. Waist-up portrait, simple softly painted cold ruined chapel background. [ESTILO]
+  ```
+
 ## Rehacer al nuevo estilo (baja prioridad)
 
 Las 26 imágenes actuales son de un estilo anterior. Se rehacen con el prompt de su `.prompt.md` + `[ESTILO]` cuando toque; mientras, valen.

@@ -4,6 +4,25 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.31] - 2026-10-25
+
+0.10-I (B06, 3.ª parte): cierre de las clases base. Llegan el Explorador, el Artífice, el Chamán y el Caballero de la Muerte, y el Brujo pasa a su barra. **Ya son catorce, todas con su recurso y habilidades de nivel 1 a 9.**
+
+### Añadido
+- **Explorador** (Foco): dispara con el arco. *Disparo certero*, *Marca de presa* (cada golpe suma un dado perforante), *Paso del bosque*, *Lluvia de flechas*, *Bálsamo del bosque*, *Disparo doble*, *Flecha envenenada*, *Ojo de halcón* y *Tormenta de flechas*.
+- **Artífice** (Carga): un aparato que carga y descarga, sin pociones ni oficio de Alquimia. *Descarga del aparato*, *Pulso restaurador*, *Reactivo corrosivo*, *Espuma protectora*, *Sobrecarga*, *Armamento arcano*, *Reacción en cadena*, *Blindaje reforzado* y *Gran descarga*.
+- **Chamán** (Maná): *Chispa elemental*, *Piel de piedra*, *Marea sanadora*, *Agarre de tierra*, *Latigazo de escarcha*, *Resguardo de los espíritus*, *Cadena de tormenta*, *Cuero de tierra* y *Llamada de la tempestad*.
+- **Caballero de la Muerte** (Poder rúnico): sus golpes cargan el poder que luego descarga. *Golpe de muerte*, *Runa protectora*, *Sorber vitalidad*, *Cadenas de escarcha*, *Hoja rúnica*, *Aniquilar*, *Voluntad impía*, *Despiadado* y *Ráfaga aullante*.
+- **Brujo** (Esencia) con *Drenar vida*, *Piel de sombra*, *Hambre del vacío* y *Desgarro de alma*.
+- Los prompts de los seis retratos pendientes en `TODO-images.md`.
+
+### Cambiado
+- El **reglamento** explica la barra de clase, nombra las catorce clases y manda a `/path`; ya no habla de usos por descanso ni de que las especializaciones «llegarán más adelante».
+- `planning/ordines.md` recoge la tabla de las catorce clases con su recurso y su identidad de los niveles 1 a 9.
+- El **Poder rúnico** parte de una base de 2, como la Convicción, para que el primer golpe sea posible.
+- Ya no hay clases «futuras» en `progression.yaml`: la lista queda vacía.
+- La prueba de las clases (`test_class_roster.py`) ya no tiene lista de pendientes: exige lo mismo a las catorce.
+
 ## [0.10.30] - 2026-10-25
 
 0.10-I (B06, 2.ª parte): los lanzadores. El Clérigo, el Hechicero, el Druida y el Bardo dejan los usos por descanso y pasan a su barra, con habilidades de nivel 1 a 9.

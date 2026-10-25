@@ -1211,12 +1211,10 @@ warlock:
   abilities:
     eldritch_blast:
       name: {es: Estallido Sobrenatural, en: Eldritch Blast}
-      description:
-        es: 'Ataque de conjuro a distancia (CAR): 1d10 de daño de fuerza. Ilimitado.'
-        en: 'Ranged spell attack (CHA): 1d10 force damage. Unlimited.'
+      description: {es: 'Ataque de conjuro a distancia (CAR): 1d10 de daño de fuerza.', en: 'Ranged spell attack (CHA): 1d10 force damage.'}
       details:
-        es: 'Un rayo de energía crepitante, regalo de tu patrón. Es un ataque de conjuro a distancia con tu CAR que hace 1d10 de daño de fuerza. No tiene usos: es tu ataque de siempre.'
-        en: 'A beam of crackling energy, a gift from your patron. It is a ranged spell attack with your CHA that deals 1d10 force damage. It has no uses: it is your everyday attack.'
+        es: 'Un rayo de energía crepitante, regalo de tu patrón. Es un ataque de conjuro a distancia con tu CAR que hace 1d10 de daño de fuerza. No cuesta nada: es tu ataque de siempre.'
+        en: 'A beam of crackling energy, a gift from your patron. It is a ranged spell attack with your CHA that deals 1d10 force damage. It costs nothing: it is your everyday attack.'
       level: 1
       kind: spell
       damage: 1d10
@@ -1227,39 +1225,39 @@ warlock:
         es: 'Acción adicional: maldices a un enemigo 3 turnos, sin salvación; cada golpe que le das suma 1d6 de daño necrótico.'
         en: 'Bonus action: you curse one enemy for 3 turns, no save; each hit you land on it adds 1d6 necrotic damage.'
       details:
-        es: 'Señalas al enemigo y tu patrón lo marca. Como acción adicional lo maldices 3 turnos, sin salvación: cada golpe que le das suma 1d6 de daño necrótico. Úsalo primero y ataca después. Dos usos por descanso.'
-        en: 'You point at the enemy and your patron marks it. As a bonus action you curse it for 3 turns, with no save: every hit you land adds 1d6 necrotic damage. Cast it first, then attack. Two uses per rest.'
+        es: 'Señalas al enemigo y tu patrón lo marca. Como acción adicional lo maldices 3 turnos, sin salvación: cada golpe que le das suma 1d6 de daño necrótico. Úsalo primero y ataca después. Gasta Esencia.'
+        en: 'You point at the enemy and your patron marks it. As a bonus action you curse it for 3 turns, with no save: every hit you land adds 1d6 necrotic damage. Cast it first, then attack. It spends Essence.'
       level: 1
       kind: curse
       action: bonus
-      uses: 2
       status: hexed
       status_turns: 3
+      cost: 2
     shadow_armor:
       name: {es: Armadura de Sombras, en: Shadow Armor}
       description:
         es: 'Acción adicional: las sombras te envuelven y ganas 2d4 + CAR PV temporales.'
         en: 'Bonus action: shadows wrap around you and you gain 2d4 + CHA temporary HP.'
       details:
-        es: Las sombras se te pegan como una segunda piel. Como acción adicional ganas 2d4 + CAR PV temporales, que se pierden antes que los tuyos. Un uso por descanso.
-        en: The shadows cling to you like a second skin. As a bonus action you gain 2d4 + CHA temporary HP, lost before your own. One use per rest.
+        es: Las sombras se te pegan como una segunda piel. Como acción adicional ganas 2d4 + CAR PV temporales, que se pierden antes que los tuyos. Gasta Esencia.
+        en: The shadows cling to you like a second skin. As a bonus action you gain 2d4 + CHA temporary HP, lost before your own. It spends Essence.
       level: 2
       kind: buff
       action: bonus
-      uses: 1
       temp_hp: 2d4
       heal_add: casting
+      cost: 3
+      cooldown: 3
     void_whispers:
       name: {es: Susurros del Vacío, en: Void Whispers}
       description:
         es: 'Toda la fila del objetivo hace una salvación de SAB: 2d6 de daño psíquico, la mitad si la supera; quien falla queda con miedo 1 turno.'
         en: 'The target''s whole row makes a WIS save: 2d6 psychic damage, half on a success; those who fail are frightened for 1 turn.'
       details:
-        es: 'Voces del vacío llenan la cabeza de tus enemigos. Toda la fila del objetivo hace una salvación de SAB: 2d6 de daño psíquico, la mitad si la supera, y quien falla queda con miedo un turno. Un uso por descanso.'
-        en: 'Voices from the void fill your enemies'' heads. The target''s whole row makes a WIS save: 2d6 psychic damage, half on a success, and whoever fails is frightened for a turn. One use per rest.'
+        es: 'Voces del vacío llenan la cabeza de tus enemigos. Toda la fila del objetivo hace una salvación de SAB: 2d6 de daño psíquico, la mitad si la supera, y quien falla queda con miedo un turno. Gasta Esencia.'
+        en: 'Voices from the void fill your enemies'' heads. The target''s whole row makes a WIS save: 2d6 psychic damage, half on a success, and whoever fails is frightened for a turn. It spends Essence.'
       level: 3
       kind: save
-      uses: 1
       area: row
       save: wis
       damage: 2d6
@@ -1267,6 +1265,8 @@ warlock:
       half_on_save: true
       status: frightened
       status_turns: 1
+      cost: 5
+      cooldown: 2
     agonizing_blast:
       name: {es: Estallido Agónico, en: Agonizing Blast}
       description: {es: Sumas tu CAR al daño de tus conjuros., en: You add your CHA to the damage of your spells.}
@@ -1277,3 +1277,604 @@ warlock:
       kind: passive
       action: none
       spell_damage_bonus: true
+    life_drain:
+      name: {es: Drenar Vida, en: Life Drain}
+      description:
+        es: 'Ataque de conjuro a distancia: 3d6 de daño necrótico. Cuesta 4 de Esencia.'
+        en: 'Ranged spell attack: 3d6 necrotic damage. Costs 4 Essence.'
+      details:
+        es: Tu patrón arranca la vida de tu rival y te la presta. Más caro que el rayo, pero con un buen empujón de daño.
+        en: Your patron tears the life from your rival and lends it to you. Dearer than the blast, but with a good shove of damage.
+      level: 4
+      kind: spell
+      cost: 4
+      damage: 3d6
+      damage_type: necrotic
+    shadow_skin:
+      name: {es: Piel de Sombra, en: Shadow Skin}
+      description: {es: +1 a la CA., en: +1 AC.}
+      details:
+        es: 'Las sombras ya no te cubren por ratos: son tu piel. Siempre tienes +1 a la CA, sin hacer nada.'
+        en: 'The shadows no longer cover you in turns: they are your skin. You always have +1 AC, with no action needed.'
+      level: 6
+      kind: passive
+      action: none
+      ac_bonus: 1
+    hunger_of_the_void:
+      name: {es: Hambre del Vacío, en: Hunger of the Void}
+      description:
+        es: 'Toda la fila tira DES: 4d6 de frío, la mitad si la supera. Cuesta 8 de Esencia.'
+        en: 'The whole row rolls a DEX save: 4d6 cold, half on a success. Costs 8 Essence.'
+      details:
+        es: Un vacío helado se abre bajo la fila y se traga el calor de todos. Daño de área a cambio de una buena parte de tu pacto.
+        en: A freezing void opens beneath the row and swallows everyone's warmth. Area damage in exchange for a good part of your pact.
+      level: 7
+      kind: save
+      cost: 8
+      cooldown: 3
+      damage: 4d6
+      damage_type: cold
+      save: dex
+      area: row
+      half_on_save: true
+    soul_rend:
+      name: {es: Desgarro de Alma, en: Soul Rend}
+      description:
+        es: 'Ataque de conjuro a distancia: 6d6 de daño necrótico. Cuesta 9 de Esencia.'
+        en: 'Ranged spell attack: 6d6 necrotic damage. Costs 9 Essence.'
+      details:
+        es: Lo que tu patrón te dio, devuelto de golpe. Tu mayor castigo a un solo objetivo.
+        en: What your patron gave you, returned at once. Your greatest punishment on a single target.
+      level: 9
+      kind: spell
+      cost: 9
+      cooldown: 3
+      damage: 6d6
+      damage_type: necrotic
+  resource: essence
+
+ranger:
+  name: {es: Explorador, en: Ranger}
+  description:
+    es: 'Cazador paciente: observa, marca a su presa y la derriba con flechas certeras desde lejos.'
+    en: 'A patient hunter: observes, marks the quarry and brings it down with true arrows from afar.'
+  hit_die: 10
+  primary: dex
+  casting: wis
+  array: {dex: 15, wis: 14, con: 13, str: 12, int: 10, cha: 8}
+  skills: [stealth, survival]
+  items: {shortbow: 1, dagger: 1, leather_armor: 1, healing_potion: 1}
+  equip: [shortbow, dagger, leather_armor]
+  signature: [aimed_shot, prey_mark]
+  resource: focus
+  resource_on_attack: 1
+  abilities:
+    aimed_shot:
+      name: {es: Disparo Certero, en: Aimed Shot}
+      description:
+        es: Un disparo con el arco que añade 1d8 de daño perforante. Cuesta 4 de Foco.
+        en: A shot with the bow that adds 1d8 piercing damage. Costs 4 Focus.
+      details:
+        es: Respiras, apuntas y sueltas. Es tu disparo normal, pero si acierta suma 1d8 de daño. Atacar te devuelve Foco; este disparo lo gasta.
+        en: You breathe, aim and loose. It is your normal shot, but on a hit it adds 1d8 damage. Attacking gives Focus back; this shot spends it.
+      level: 1
+      kind: strike
+      cost: 4
+      ranged: true
+      extra_damage: 1d8
+      damage_type: piercing
+    prey_mark:
+      name: {es: Marca de Presa, en: Prey Mark}
+      description:
+        es: 'Acción adicional: marcas a un enemigo 3 turnos, sin salvación; cada golpe tuyo le suma 1d6 perforante. Cuesta 2 de Foco.'
+        en: 'Bonus action: you mark an enemy for 3 turns, no save; every hit of yours adds 1d6 piercing to it. Costs 2 Focus.'
+      details:
+        es: 'Lees su rastro y ya sabes dónde duele. Marca primero y dispara después: cada impacto sobre la presa marcada pega un poco más fuerte.'
+        en: 'You read its tracks and already know where it hurts. Mark first, shoot after: every hit on the marked quarry lands a little harder.'
+      level: 1
+      kind: curse
+      action: bonus
+      cost: 2
+      status: marked
+      status_turns: 3
+    woodland_step:
+      name: {es: Paso del Bosque, en: Woodland Step}
+      description:
+        es: 'Acción adicional: Sigilo contra su percepción; si sale, tu próximo ataque tiene ventaja. Cuesta 2 de Foco.'
+        en: 'Bonus action: a Stealth check against their perception; if it works, your next attack has advantage. Costs 2 Focus.'
+      details:
+        es: Te mueves sin ruido entre la maleza. Si te pierden de vista, tu siguiente disparo llega con ventaja.
+        en: You move without a sound through the undergrowth. If they lose sight of you, your next shot comes with advantage.
+      level: 2
+      kind: hide
+      action: bonus
+      cost: 2
+    volley:
+      name: {es: Lluvia de Flechas, en: Volley}
+      description:
+        es: 'Toda la fila tira DES: 2d6 perforante, la mitad si la supera. Cuesta 5 de Foco.'
+        en: 'The whole row rolls a DEX save: 2d6 piercing, half on a success. Costs 5 Focus.'
+      details:
+        es: Sueltas varias flechas a la vez sobre la fila entera. Ninguna pega fuerte, pero no se libra nadie del todo.
+        en: You loose several arrows at once over the whole row. None hits hard, but nobody gets off entirely.
+      level: 3
+      kind: save
+      cost: 5
+      cooldown: 2
+      damage: 2d6
+      damage_type: piercing
+      save: dex
+      area: row
+      half_on_save: true
+    natures_balm:
+      name: {es: Bálsamo del Bosque, en: Nature's Balm}
+      description:
+        es: 'Acción adicional: recuperas 1d8 + tu modificador de conjuro en PV. Cuesta 3 de Foco.'
+        en: 'Bonus action: recover 1d8 + your spellcasting modifier in HP. Costs 3 Focus.'
+      details:
+        es: Hierbas que conoces de memoria, mascadas y aplicadas en un segundo. Como es una acción adicional, curas y sigues disparando.
+        en: Herbs you know by heart, chewed and applied in a second. As a bonus action, you heal and keep shooting.
+      level: 4
+      kind: heal
+      action: bonus
+      cost: 3
+      cooldown: 3
+      heal_dice: 1d8
+      heal_add: casting
+    twin_shots:
+      name: {es: Disparo Doble, en: Twin Shots}
+      description: {es: Atacas dos veces con tu acción de ataque., en: You attack twice with your attack action.}
+      details:
+        es: 'Cuando ya has leído la presa, no necesitas más de un respiro: disparas dos veces en la misma acción, cada disparo con su tirada.'
+        en: 'Once you have read the quarry you need no more than a breath: you shoot twice in the same action, each shot with its own roll.'
+      level: 5
+      kind: passive
+      action: none
+      extra_attack: true
+    poison_arrow:
+      name: {es: Flecha Envenenada, en: Poison Arrow}
+      description:
+        es: Un disparo con el arco que añade 2d6 de daño de veneno. Cuesta 5 de Foco.
+        en: A shot with the bow that adds 2d6 poison damage. Costs 5 Focus.
+      details:
+        es: Una punta untada con algo que ya conoces bien. Cuesta más que el disparo certero, pero muerde de verdad.
+        en: A tip smeared with something you know well. It costs more than the aimed shot, but it really bites.
+      level: 6
+      kind: strike
+      cost: 5
+      cooldown: 2
+      ranged: true
+      extra_damage: 2d6
+      damage_type: poison
+    hawk_eye:
+      name: {es: Ojo de Halcón, en: Hawk's Eye}
+      description: {es: Haces crítico con un 19 o un 20., en: You score a critical hit on a 19 or 20.}
+      details:
+        es: Ves el punto débil desde lejos. Tus disparos son críticos también con un 19 natural.
+        en: You see the weak spot from afar. Your shots are critical on a natural 19 too.
+      level: 8
+      kind: passive
+      action: none
+      crit_range: 19
+    storm_of_arrows:
+      name: {es: Tormenta de Flechas, en: Storm of Arrows}
+      description:
+        es: 'Toda la fila tira DES: 4d6 perforante, la mitad si la supera. Cuesta 10 de Foco.'
+        en: 'The whole row rolls a DEX save: 4d6 piercing, half on a success. Costs 10 Focus.'
+      details:
+        es: El cielo se oscurece con tus flechas. Es lo más grande que puedes hacer con el arco, y pide varios turnos para repetirse.
+        en: The sky darkens with your arrows. It is the biggest thing you can do with the bow, and it takes several turns to repeat.
+      level: 9
+      kind: save
+      cost: 10
+      cooldown: 3
+      damage: 4d6
+      damage_type: piercing
+      save: dex
+      area: row
+      half_on_save: true
+
+artificer:
+  name: {es: Artífice, en: Artificer}
+  description:
+    es: 'Inventor de campo: un aparato que carga y descarga, con reactivos para curar, proteger o corroer.'
+    en: 'A field inventor: a device that charges and discharges, with reagents to mend, shield or corrode.'
+  hit_die: 8
+  primary: int
+  casting: int
+  array: {int: 15, con: 14, dex: 13, wis: 12, str: 10, cha: 8}
+  skills: [arcana, investigation]
+  items: {mace: 1, scale_mail: 1, healing_potion: 1}
+  equip: [mace, scale_mail]
+  signature: [arc_bolt]
+  resource: charge
+  abilities:
+    arc_bolt:
+      name: {es: Descarga del Aparato, en: Device Bolt}
+      description: {es: 'Ataque de conjuro a distancia (INT): 1d10 de daño de fuerza.', en: 'Ranged spell attack (INT): 1d10 force damage.'}
+      details:
+        es: Un pulso seco de energía sale de tu aparato. Es tu ataque de siempre y no cuesta Carga, también desde la retaguardia.
+        en: A dry pulse of energy leaves your device. It is your everyday attack and costs no Charge, from the back row too.
+      level: 1
+      kind: spell
+      damage: 1d10
+      damage_type: force
+    repair_pulse:
+      name: {es: Pulso Restaurador, en: Restoring Pulse}
+      description:
+        es: 'Acción adicional: recuperas 1d8 + tu modificador de conjuro en PV. Cuesta 3 de Carga.'
+        en: 'Bonus action: recover 1d8 + your spellcasting modifier in HP. Costs 3 Charge.'
+      details:
+        es: 'Tu aparato libera un pulso que cierra heridas. Gasta Carga, no pociones: no entra ni sale nada de tu mochila.'
+        en: 'Your device releases a pulse that closes wounds. It spends Charge, not potions: nothing enters or leaves your backpack.'
+      level: 1
+      kind: heal
+      action: bonus
+      cost: 3
+      cooldown: 2
+      heal_dice: 1d8
+      heal_add: casting
+    corrosive_flask:
+      name: {es: Reactivo Corrosivo, en: Corrosive Reagent}
+      description:
+        es: 'El objetivo tira DES: 2d6 de veneno, la mitad si la supera. Cuesta 4 de Carga.'
+        en: 'The target rolls a DEX save: 2d6 poison, half on a success. Costs 4 Charge.'
+      details:
+        es: 'Tu aparato rocía un reactivo que corroe lo que toca. No es una poción: sale de tu Carga y no se vende ni se guarda.'
+        en: 'Your device sprays a reagent that eats what it touches. It is not a potion: it comes from your Charge and can be neither sold nor stored.'
+      level: 2
+      kind: save
+      cost: 4
+      damage: 2d6
+      damage_type: poison
+      save: dex
+      half_on_save: true
+    foam_shield:
+      name: {es: Espuma Protectora, en: Protective Foam}
+      description:
+        es: 'Acción adicional: ganas 2d6 + tu modificador de conjuro de PV temporales. Cuesta 4 de Carga.'
+        en: 'Bonus action: you gain 2d6 + your spellcasting modifier in temporary HP. Costs 4 Charge.'
+      details:
+        es: 'Una espuma densa te cubre y amortigua el siguiente golpe. Es una acción adicional: protégete y sigue trabajando.'
+        en: 'A dense foam covers you and cushions the next blow. It is a bonus action: shield yourself and keep working.'
+      level: 3
+      kind: buff
+      action: bonus
+      cost: 4
+      cooldown: 3
+      temp_hp: 2d6
+      heal_add: casting
+    overcharge:
+      name: {es: Sobrecarga, en: Overcharge}
+      description:
+        es: 'Ataque de conjuro a distancia: 3d8 de daño de fuerza. Cuesta 5 de Carga.'
+        en: 'Ranged spell attack: 3d8 force damage. Costs 5 Charge.'
+      details:
+        es: Fuerzas el aparato más allá de lo seguro y descargas todo en un pulso. Caro, pero pega como nada de lo que llevas.
+        en: You push the device past what is safe and discharge it all in one pulse. Dear, but it hits like nothing else you carry.
+      level: 4
+      kind: spell
+      cost: 5
+      damage: 3d8
+      damage_type: force
+    arcane_armament:
+      name: {es: Armamento Arcano, en: Arcane Armament}
+      description: {es: Tus conjuros suman tu modificador de conjuro al daño., en: Your spells add your spellcasting modifier to damage.}
+      details:
+        es: 'Tu aparato ya no solo dispara: está afinado para ti. Tus conjuros suman tu modificador de conjuro al daño.'
+        en: 'Your device no longer just fires: it is tuned to you. Your spells add your spellcasting modifier to damage.'
+      level: 5
+      kind: passive
+      action: none
+      spell_damage_bonus: true
+    chain_reaction:
+      name: {es: Reacción en Cadena, en: Chain Reaction}
+      description:
+        es: 'Toda la fila tira DES: 4d6 de fuego, la mitad si la supera. Cuesta 8 de Carga.'
+        en: 'The whole row rolls a DEX save: 4d6 fire, half on a success. Costs 8 Charge.'
+      details:
+        es: Un reactivo prende a otro y ese a otro. Cuando son varios en fila, rinde mucho más que cualquier disparo.
+        en: One reagent lights another and that one another. When there are several in a row, it pays far more than any single shot.
+      level: 6
+      kind: save
+      cost: 8
+      cooldown: 3
+      damage: 4d6
+      damage_type: fire
+      save: dex
+      area: row
+      half_on_save: true
+    reinforced_plating:
+      name: {es: Blindaje Reforzado, en: Reinforced Plating}
+      description: {es: +1 a la CA., en: +1 AC.}
+      details:
+        es: Has ido reforzando tu coraza placa a placa. Siempre tienes +1 a la CA, sin hacer nada.
+        en: You have been reinforcing your armor plate by plate. You always have +1 AC, with no action needed.
+      level: 8
+      kind: passive
+      action: none
+      ac_bonus: 1
+    grand_discharge:
+      name: {es: Gran Descarga, en: Grand Discharge}
+      description:
+        es: 'Ataque de conjuro a distancia: 6d8 de daño de fuerza. Cuesta 10 de Carga.'
+        en: 'Ranged spell attack: 6d8 force damage. Costs 10 Charge.'
+      details:
+        es: Todo el aparato descargado a la vez. Es lo mayor que puedes soltar y tarda unos turnos en volver a cargarse.
+        en: The whole device discharged at once. It is the most you can release and it takes a few turns to charge again.
+      level: 9
+      kind: spell
+      cost: 10
+      cooldown: 3
+      damage: 6d8
+      damage_type: force
+
+shaman:
+  name: {es: Chamán, en: Shaman}
+  description:
+    es: 'Voz de los espíritus: pide prestada la fuerza de los elementos para golpear, sanar y proteger.'
+    en: 'Voice of the spirits: borrows the strength of the elements to strike, heal and protect.'
+  hit_die: 8
+  primary: wis
+  casting: wis
+  array: {wis: 15, con: 14, str: 13, dex: 12, int: 10, cha: 8}
+  skills: [survival, medicine]
+  items: {quarterstaff: 1, leather_armor: 1, healing_potion: 1}
+  equip: [quarterstaff, leather_armor]
+  signature: [elemental_spark]
+  resource: mana
+  abilities:
+    elemental_spark:
+      name: {es: Chispa Elemental, en: Elemental Spark}
+      description: {es: 'Ataque de conjuro a distancia (SAB): 1d8 de daño de fuego.', en: 'Ranged spell attack (WIS): 1d8 fire damage.'}
+      details:
+        es: Una chispa que un espíritu del fuego te presta un instante. Es tu ataque de siempre y no cuesta Maná.
+        en: A spark that a fire spirit lends you for a moment. It is your everyday attack and costs no Mana.
+      level: 1
+      kind: spell
+      damage: 1d8
+      damage_type: fire
+    stoneskin:
+      name: {es: Piel de Piedra, en: Stoneskin}
+      description:
+        es: 'Acción adicional: ganas 2d4 + tu modificador de conjuro de PV temporales. Cuesta 3 de Maná.'
+        en: 'Bonus action: you gain 2d4 + your spellcasting modifier in temporary HP. Costs 3 Mana.'
+      details:
+        es: Un espíritu de la tierra endurece tu piel por un rato. Es una acción adicional barata para encajar el siguiente golpe.
+        en: A spirit of the earth hardens your skin for a while. A cheap bonus action to soak up the next blow.
+      level: 1
+      kind: buff
+      action: bonus
+      cost: 3
+      cooldown: 3
+      temp_hp: 2d4
+      heal_add: casting
+    tidal_mending:
+      name: {es: Marea Sanadora, en: Tidal Mending}
+      description:
+        es: Recuperas 1d10 + tu modificador de conjuro en PV. Cuesta 4 de Maná.
+        en: You recover 1d10 + your spellcasting modifier in HP. Costs 4 Mana.
+      details:
+        es: El agua que cura sube por tus manos. Usa tu acción, así que cúrate cuando el combate te lo permita.
+        en: The water that heals rises through your hands. It uses your action, so heal when the fight lets you.
+      level: 2
+      kind: heal
+      cost: 4
+      heal_dice: 1d10
+      heal_add: casting
+    earth_grasp:
+      name: {es: Agarre de Tierra, en: Earth Grasp}
+      description:
+        es: 'Toda la fila tira DES: quien falla queda enredado 2 turnos. Cuesta 5 de Maná.'
+        en: 'The whole row rolls a DEX save: whoever fails is restrained for 2 turns. Costs 5 Mana.'
+      details:
+        es: La tierra misma sujeta los pies de la fila entera. No hace daño, pero un enemigo atrapado ya no es un problema.
+        en: The earth itself holds the feet of the whole row. It does no damage, but a trapped enemy is no longer a problem.
+      level: 3
+      kind: save
+      cost: 5
+      cooldown: 3
+      save: dex
+      area: row
+      status: restrained
+      status_turns: 2
+    frost_lash:
+      name: {es: Latigazo de Escarcha, en: Frost Lash}
+      description:
+        es: 'Ataque de conjuro a distancia: 3d6 de daño de frío. Cuesta 4 de Maná.'
+        en: 'Ranged spell attack: 3d6 cold damage. Costs 4 Mana.'
+      details:
+        es: Un látigo de hielo que un espíritu del invierno hace restallar por ti. Más caro que la chispa, pero mucho más fuerte.
+        en: A whip of ice that a winter spirit cracks for you. Dearer than the spark, but much stronger.
+      level: 4
+      kind: spell
+      cost: 4
+      damage: 3d6
+      damage_type: cold
+    spirit_ward:
+      name: {es: Resguardo de los Espíritus, en: Spirit Ward}
+      description: {es: Eres inmune al miedo., en: You are immune to fear.}
+      details:
+        es: 'Los espíritus te cuidan: ni el grito de un espectro ni un conjuro te hacen retroceder. Siempre activa.'
+        en: 'The spirits watch over you: neither a spectre''s wail nor a spell makes you flinch. Always on.'
+      level: 5
+      kind: passive
+      action: none
+      immune: [frightened]
+    storm_chain:
+      name: {es: Cadena de Tormenta, en: Storm Chain}
+      description:
+        es: 'Toda la fila tira DES: 4d6 de fuego, la mitad si la supera. Cuesta 8 de Maná.'
+        en: 'The whole row rolls a DEX save: 4d6 fire, half on a success. Costs 8 Mana.'
+      details:
+        es: El rayo salta de uno a otro por toda la fila. Es tu daño de área, y rinde más cuanto más juntos están.
+        en: Lightning leaps from one to the next along the whole row. It is your area damage, and it pays more the closer together they stand.
+      level: 6
+      kind: save
+      cost: 8
+      cooldown: 2
+      damage: 4d6
+      damage_type: fire
+      save: dex
+      area: row
+      half_on_save: true
+    earthen_hide:
+      name: {es: Cuero de Tierra, en: Earthen Hide}
+      description: {es: +1 a la CA., en: +1 AC.}
+      details:
+        es: La tierra te ha tomado cariño. Siempre tienes +1 a la CA, sin hacer nada.
+        en: The earth has grown fond of you. You always have +1 AC, with no action needed.
+      level: 8
+      kind: passive
+      action: none
+      ac_bonus: 1
+    tempest_call:
+      name: {es: Llamada de la Tempestad, en: Tempest Call}
+      description:
+        es: 'Toda la fila tira DES: 5d6 de frío y queda aturdida un turno si falla. Cuesta 12 de Maná.'
+        en: 'The whole row rolls a DEX save: 5d6 cold and stunned for a turn on a fail. Costs 12 Mana.'
+      details:
+        es: Llamas a la tormenta entera y la sueltas sobre la fila. Es tu gasto más grande y casi siempre decide el combate.
+        en: You call the whole storm and let it loose on the row. It is your biggest spend and it almost always decides the fight.
+      level: 9
+      kind: save
+      cost: 12
+      cooldown: 4
+      damage: 5d6
+      damage_type: cold
+      save: dex
+      area: row
+      half_on_save: true
+      status: stunned
+
+death_knight:
+  name: {es: Caballero de la Muerte, en: Death Knight}
+  description:
+    es: 'Guerrero atado a runas de muerte y escarcha: sus golpes cargan el poder que luego descarga.'
+    en: 'A warrior bound to runes of death and frost: his blows charge the power he later unleashes.'
+  hit_die: 10
+  primary: str
+  array: {str: 15, con: 14, cha: 13, wis: 12, dex: 10, int: 8}
+  skills: [athletics, intimidation]
+  items: {longsword: 1, chain_mail: 1, healing_potion: 1}
+  equip: [longsword, chain_mail]
+  signature: [death_strike]
+  resource: runic_power
+  resource_on_attack: 2
+  abilities:
+    death_strike:
+      name: {es: Golpe de Muerte, en: Death Strike}
+      description:
+        es: Un ataque con arma que añade 1d8 de daño necrótico. Cuesta 3 de Poder rúnico.
+        en: A weapon attack that adds 1d8 necrotic damage. Costs 3 Runic Power.
+      details:
+        es: Las runas de tu hoja beben vida con cada golpe. Es tu ataque normal, pero si acierta suma 1d8 de daño necrótico. Tus golpes cargan el Poder rúnico; este lo descarga.
+        en: The runes on your blade drink life with every blow. It is your normal attack, but on a hit it adds 1d8 necrotic damage. Your blows charge Runic Power; this one discharges it.
+      level: 1
+      kind: strike
+      cost: 3
+      extra_damage: 1d8
+      damage_type: necrotic
+    rune_ward:
+      name: {es: Runa Protectora, en: Rune Ward}
+      description: {es: +1 a la CA., en: +1 AC.}
+      details:
+        es: Una runa grabada en tu armadura la vuelve más dura de lo que debería. Siempre tienes +1 a la CA, sin hacer nada.
+        en: A rune carved on your armor makes it harder than it should be. You always have +1 AC, with no action needed.
+      level: 1
+      kind: passive
+      action: none
+      ac_bonus: 1
+    blood_tap:
+      name: {es: Sorber Vitalidad, en: Blood Tap}
+      description:
+        es: 'Acción adicional: recuperas 1d10 + tu nivel en PV. Cuesta 4 de Poder rúnico.'
+        en: 'Bonus action: recover 1d10 + your level in HP. Costs 4 Runic Power.'
+      details:
+        es: Tomas para ti la vitalidad que tu hoja ha ido bebiendo. Como es una acción adicional, curas y sigues golpeando.
+        en: You take for yourself the vitality your blade has been drinking. As a bonus action you heal and keep striking.
+      level: 2
+      kind: heal
+      action: bonus
+      cost: 4
+      cooldown: 2
+      heal_dice: 1d10
+      heal_add: level
+    frost_chains:
+      name: {es: Cadenas de Escarcha, en: Frost Chains}
+      description:
+        es: 'El objetivo tira DES: si falla, recibe 1d6 de frío y queda enredado 2 turnos. Cuesta 4 de Poder rúnico.'
+        en: 'The target rolls a DEX save: on a fail it takes 1d6 cold and is restrained for 2 turns. Costs 4 Runic Power.'
+      details:
+        es: Cadenas de hielo salen de tu hoja y atan al rival al suelo. Daño pequeño, pero un enemigo trabado es un enemigo al que le acierta cualquiera.
+        en: Chains of ice leap from your blade and bind the foe to the ground. Small damage, but a bound enemy is one anyone can hit.
+      level: 3
+      kind: save
+      cost: 4
+      cooldown: 3
+      damage: 1d6
+      damage_type: cold
+      save: dex
+      status: restrained
+      status_turns: 2
+    rune_blade:
+      name: {es: Hoja Rúnica, en: Rune Blade}
+      description: {es: Atacas dos veces con tu acción de ataque., en: You attack twice with your attack action.}
+      details:
+        es: 'Las runas aceleran tu brazo: golpeas dos veces en la misma acción, cada golpe con su tirada, y cada golpe carga tu Poder rúnico.'
+        en: 'The runes quicken your arm: you strike twice in the same action, each blow with its own roll, and each blow charges your Runic Power.'
+      level: 5
+      kind: passive
+      action: none
+      extra_attack: true
+    obliterate:
+      name: {es: Aniquilar, en: Obliterate}
+      description:
+        es: Un ataque con arma que añade 2d8 de daño de frío. Cuesta 6 de Poder rúnico.
+        en: A weapon attack that adds 2d8 cold damage. Costs 6 Runic Power.
+      details:
+        es: 'Tu golpe más frío: la escarcha de la runa estalla al impactar. Pide unos turnos para volver a cargarse.'
+        en: 'Your coldest blow: the rune''s frost bursts on impact. It asks a few turns to charge again.'
+      level: 6
+      kind: strike
+      cost: 6
+      cooldown: 2
+      extra_damage: 2d8
+      damage_type: cold
+    unholy_will:
+      name: {es: Voluntad Impía, en: Unholy Will}
+      description: {es: Eres inmune al miedo., en: You are immune to fear.}
+      details:
+        es: Lo que te ata a las runas ya no conoce el miedo. Siempre activa, sin gastar acciones.
+        en: What binds you to the runes no longer knows fear. Always on, with no action needed.
+      level: 7
+      kind: passive
+      action: none
+      immune: [frightened]
+    merciless:
+      name: {es: Despiadado, en: Merciless}
+      description: {es: Haces crítico con un 19 o un 20., en: You score a critical hit on a 19 or 20.}
+      details:
+        es: No dudas, no sueltas, no fallas por piedad. Tus golpes son críticos también con un 19 natural.
+        en: You do not hesitate, do not let go, do not miss out of mercy. Your blows are critical on a natural 19 too.
+      level: 8
+      kind: passive
+      action: none
+      crit_range: 19
+    howling_blast:
+      name: {es: Ráfaga Aullante, en: Howling Blast}
+      description:
+        es: 'Toda la fila tira DES: 4d6 de frío, la mitad si la supera. Cuesta 10 de Poder rúnico.'
+        en: 'The whole row rolls a DEX save: 4d6 cold, half on a success. Costs 10 Runic Power.'
+      details:
+        es: Todo el Poder rúnico que has ido cargando sale de golpe en una ráfaga helada sobre la fila. Es lo mayor que puedes soltar.
+        en: All the Runic Power you have charged leaves at once in an icy blast over the row. It is the most you can release.
+      level: 9
+      kind: save
+      cost: 10
+      cooldown: 3
+      damage: 4d6
+      damage_type: cold
+      save: dex
+      area: row
+      half_on_save: true

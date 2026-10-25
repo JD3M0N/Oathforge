@@ -106,13 +106,13 @@ resources:
     description:
       es: Las runas se cargan con cada golpe que das o recibes y se descargan en técnicas.
       en: The runes charge with every blow you land or take and discharge into techniques.
-    base: 0
+    base: 2
     per_level: 2
     starts_empty: true
 
-# Las seis clases nuevas que aprueba roadmap_balance §6 y que todavía no existen en classes.yaml.
-# Sus ramas cargan y se validan, pero ninguna puede estar lista hasta que B06 escriba la clase.
-future_classes: [ranger, artificer, shaman, death_knight]
+# Clases aprobadas en roadmap_balance §6 que todavía no existen en classes.yaml. Sus ramas cargan y se validan,
+# pero ninguna puede estar lista hasta que exista la clase. Con B06 terminada están las catorce y la lista queda vacía.
+future_classes: []
 
 # Entrenamientos: en cada nivel de training_levels (5, 12 y 18) el jugador elige UNO de estos dos paquetes.
 # Se suman: tres elecciones son tres paquetes. Sustituyen a la mejora de atributo del nivel 4.

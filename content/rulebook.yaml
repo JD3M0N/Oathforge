@@ -65,13 +65,13 @@ combat:
   body:
     es: |-
       El combate es por turnos, en el orden de la iniciativa (d20 + DES). En tu turno tienes una acción (atacar, una habilidad de clase, usar un objeto) y a veces una acción adicional.
-      • Las habilidades tienen usos por descanso; los ves en los botones.
+      • Cada clase tiene su propia barra (Foco, Furia, Convicción, Energía, Maná, Resonancia, Esencia, Carga o Poder rúnico): las habilidades la gastan y el coste está en el botón. El ataque básico siempre es gratis. Un descanso largo la llena.
       • «🎒 Objetos»: pociones, pergaminos y bombas.
       • Huir es una prueba de Atletismo o Acrobacias contra CD {flee_dc_base} + {flee_dc_step} por enemigo; si falla, pierdes el turno.
       Al acabar, «📜 Informe» (o /report) cuenta la batalla tirada a tirada.
     en: |-
       Combat is turn-based, in initiative order (d20 + DEX). On your turn you get one action (attack, a class ability, use an item) and sometimes a bonus action.
-      • Abilities have uses per rest; the buttons show them.
+      • Every class has its own bar (Focus, Fury, Conviction, Energy, Mana, Resonance, Essence, Charge or Runic Power): abilities spend it and the cost is on the button. The basic attack is always free. A long rest fills it.
       • "🎒 Items": potions, scrolls and bombs.
       • Fleeing is an Athletics or Acrobatics check against DC {flee_dc_base} + {flee_dc_step} per enemy; if it fails, you lose the turn.
       Afterwards, "📜 Report" (or /report) tells the battle roll by roll.
@@ -81,13 +81,13 @@ rest:
   title: {es: Descanso y curación, en: Rest and healing}
   body:
     es: |-
-      • Descanso largo en la posada de La Corona Rota: {rest_gold} de oro y 8 horas de juego ({rest_min} minutos reales). {beta_rest} Recuperas toda la vida y los usos de tus habilidades, y se curan las heridas graves.
+      • Descanso largo en la posada de La Corona Rota: {rest_gold} de oro y 8 horas de juego ({rest_min} minutos reales). {beta_rest} Recuperas toda la vida y tu barra de clase, y se curan las heridas graves.
       • En la Cripta Hundida, ya despejada, puedes descansar gratis: es el único sitio fuera de la posada donde se hace un descanso largo.
       • «Curar heridas» en la Capilla del Alba: gratis durante la beta y al momento. La hermana Ysolde cierra también las heridas graves que deja una derrota.
       • Las pociones de curación ayudan fuera de la ciudad; el tónico del reposo da un descanso corto y luego tarda un rato en poder usarse otra vez.
       En el juego también pasan el día y la noche: algunas criaturas cambian según la hora.
     en: |-
-      • Long rest at the Broken Crown inn: {rest_gold} gold and 8 game hours ({rest_min} real minutes). {beta_rest} You recover all your HP and ability uses, and grave wounds heal.
+      • Long rest at the Broken Crown inn: {rest_gold} gold and 8 game hours ({rest_min} real minutes). {beta_rest} You recover all your HP and your class bar, and grave wounds heal.
       • In the Sunken Crypt, once cleared, you can rest for free: it is the only place outside the inn where a long rest happens.
       • "Cure wounds" at the Chapel of Dawn: free during the beta and right away. Sister Ysolde also closes the grave wounds a defeat leaves.
       • Healing potions help outside the city; the rest draught grants a short rest and then needs a while before it works again.
@@ -120,12 +120,12 @@ classes:
   title: {es: Clases, en: Classes}
   body:
     es: |-
-      La clase decide cómo luchas: tu dado de golpe, tu atributo principal, tus habilidades por nivel. Las especializaciones llegarán más adelante.
-      Guerrero y Paladín aguantan en primera línea, el Pícaro golpea desde las sombras, Hechicero, Brujo y Druida lanzan conjuros, Clérigo y Bardo cuidan del grupo.
+      La clase decide cómo luchas: tu dado de golpe, tu atributo principal, tu barra de recurso y tus habilidades por nivel. Tu rama de clase se elige al nivel {branch_level} (/path).
+      Guerrero, Bárbaro, Paladín y Caballero de la Muerte aguantan en primera línea; el Monje pelea con técnica, el Pícaro desde las sombras y el Explorador desde lejos; Hechicero, Brujo, Druida y Chamán lanzan conjuros, el Artífice usa su aparato, y Clérigo y Bardo cuidan del grupo.
       Todas las clases y sus habilidades: /classes
     en: |-
-      Your class decides how you fight: your hit die, your primary ability and your abilities by level. Specializations will come later.
-      Warrior and Paladin hold the front line, the Rogue strikes from the shadows, Sorcerer, Warlock and Druid cast spells, Cleric and Bard look after the party.
+      Your class decides how you fight: your hit die, your primary ability, your resource bar and your abilities by level. Your class branch is chosen at level {branch_level} (/path).
+      Warrior, Barbarian, Paladin and Death Knight hold the front line; the Monk fights with technique, the Rogue from the shadows and the Ranger from afar; Sorcerer, Warlock, Druid and Shaman cast spells, the Artificer uses a device, and Cleric and Bard look after the party.
       Every class and its abilities: /classes
 
 activities:

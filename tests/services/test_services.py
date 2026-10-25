@@ -127,7 +127,7 @@ async def test_create_warlock():
     async with session_scope() as s:
         char = await get_char(s, cid)
         assert char.gender is None  # created without choosing (as before v0.4.4)
-        assert char.resources == {"eldritch_blast": None, "hex": 2}
+        assert char.resources == {"eldritch_blast": None, "hex": None}  # Essence pays, not uses per rest
         cb = await characters.build_combatant(s, char)
         assert cb.row == "back" and cb.casting_mod == 3 and cb.spell_dc == 8 + 3 + 2 and cb.spell_damage_bonus == 0
         from oathforge.services.events import Outcome

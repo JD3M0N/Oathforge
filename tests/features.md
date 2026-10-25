@@ -283,3 +283,15 @@ Clérigo (Maná), Hechicero (Maná), Druida (Maná) y Bardo (Resonancia). Cuatro
 - [x] Los nombres de habilidad nuevos llevan las mismas mayúsculas que los antiguos («Golpe de Gracia», «Cono de Frío») (a mano).
 - [x] `/class_bard` en español: habilidad, acción y coste de barra («🔹 3») en cada línea (Telegram).
 - [ ] Un combate de Hechicero gastando Maná hasta quedarse en el Rayo de Fuego, y uno de Bardo desde cero (Telegram).
+
+## 0.10-I · Las catorce clases, último grupo (B06, v0.10.31)
+
+Brujo (Esencia), Explorador (Foco), Artífice (Carga), Chamán (Maná) y Caballero de la Muerte (Poder rúnico). Con ellos terminan las catorce.
+
+- [x] Las **catorce** clases cumplen las mismas exigencias: barra propia, técnica distintiva, nada que dependa de una rama, calendario sin un botón nuevo cada nivel, bandido en los niveles 1, 3, 5 y 9, pareja de goblins desde el 5, tres combates seguidos sin descanso (automático).
+- [x] Ninguna clase usa ya «usos por descanso»; el camino antiguo sigue cubierto con una clase inventada (automático).
+- [x] El reglamento habla de la barra, de las catorce clases y de `/path`, sin usos por descanso ni «las especializaciones llegarán» (automático y a mano).
+- [x] Explorador: el Disparo certero usa el **arco**, gasta 4 de Foco y la barra vuelve (Telegram, EN).
+- [ ] Las mismas pantallas en español para las seis clases nuevas.
+- [ ] Un combate completo con Caballero de la Muerte (Poder rúnico desde cero) y con Artífice (Carga) (Telegram).
+- [ ] Integrar los seis retratos cuando existan (`TODO-images.md`).

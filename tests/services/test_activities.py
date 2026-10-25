@@ -594,14 +594,26 @@ async def test_objective_covers_missions_with_choices(monkeypatch):
 # ---------------------------------------------------------------- mana potion
 
 async def test_mana_potion_restores_a_spent_spell_of_a_class_that_has_uses():
-    cid = await new_character(cls="warlock", tools=("mana_potion",))  # still on uses per rest until B06 ends
-    async with session_scope() as s:
-        char = await get_char(s, cid)
-        char.level, char.resources = 3, {"hex": 0, "shadow_armor": 0, "void_whispers": 0}
-        from oathforge.content import get_content
-        assert set(inventory.spell_choices(char, get_content().items["mana_potion"])) == {"hex", "shadow_armor", "void_whispers"}
-        out = await inventory.use_item_outside_combat(s, char, "mana_potion", random.Random(0), ability="hex")
-        assert out.ok and char.resources["hex"] == 1
+    """No shipped class counts uses per rest any more (every one has a bar), but content may still define one,
+    so the old path stays covered with a made-up class: a cleric whose spells have uses and no bar."""
+    from oathforge.content import get_content
+
+    content = get_content()
+    old = content.classes["cleric"]
+    abilities = {k: a.model_copy(update={"cost": 0, "cooldown": 0, "uses": 2 if a.kind in ("heal", "turn") else None})
+                 for k, a in old.abilities.items()}
+    content.classes["old_school"] = old.model_copy(update={"resource": None, "abilities": abilities})
+    try:
+        cid = await new_character(cls="old_school", tools=("mana_potion",))
+        async with session_scope() as s:
+            char = await get_char(s, cid)
+            char.level, char.resources = 3, {"healing_word": 0, "turn_undead": 0}
+            assert set(inventory.spell_choices(char, content.items["mana_potion"])) == {"healing_word", "turn_undead"}
+            out = await inventory.use_item_outside_combat(s, char, "mana_potion", random.Random(0),
+                                                         ability="turn_undead")
+            assert out.ok and char.resources == {"healing_word": 0, "turn_undead": 1}
+    finally:
+        content.classes.pop("old_school", None)
 
 
 async def test_the_bar_of_a_class_that_has_one_has_no_spell_to_choose():
