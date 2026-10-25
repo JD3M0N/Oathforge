@@ -844,3 +844,19 @@ flash_bomb:
   value: 20
   stackable: true
   combat: {kind: save, save: dex, save_dc: 13, status: stunned, status_turns: 1}
+
+toll_ledger:
+  name: {es: Libro de cargas del peaje, en: Toll ledger}
+  icon: "📒"
+  description: {es: "Un libro de tapas manchadas con las cargas que pasaron por el peaje del camino, y los nombres que faltan en el del gremio.", en: "A stained ledger of the loads that passed the road's toll post, and the names missing from the guild's."}
+  type: quest
+  value: 0
+  sellable: false
+
+forgery_proof:
+  name: {es: Prueba de falsificación, en: Forgery proof}
+  icon: "📜"
+  description: {es: "Órdenes con el sello viejo del gremio y la letra del Recaudador. Con esto, la Guardia de Plata no podrá mirar a otro lado.", en: "Orders bearing the guild's old seal and the Collector's hand. With this, the Silver Guard cannot look the other way."}
+  type: quest
+  value: 0
+  sellable: false

@@ -17,8 +17,8 @@
 | B06 Catorce clases base, niveles 1–9 | ✅ | 0.10.29–31 |
 | B07 Las 41 ramas | ✅ | 0.10.32–34 |
 | B08 Tiempos, descanso, derrota y economía | ✅ (falta stock crítico y cobertura T0/T1 de herramientas → B09) | 0.10.35 |
-| **B09 Campaña común hasta el Recaudador** | ⏸ propuesta de mentor y trama escrita en `planning/mundus.md`; **espera la aprobación de Josue** antes del texto final; el motor de objetivos nuevos ya está | 0.10.36 (parcial) |
-| B10 Ciervo de Hierro y graduación | ⏳ | |
+| B09 Campaña común hasta el Recaudador | ✅ con mentor y trama provisionales (Tamsin Harrow); el refactor de Vale/instructor queda para después | 0.10.36–0.10.37 |
+| **B10 Ciervo de Hierro y graduación** | ⏳ **siguiente** | |
 | B11 Región cercana 11–20 | ⏳ | |
 | B12 Balance integral | ⏳ | |
 | B13 Retirar cripta, documentación y reinicio que conserva preferencias | ⏳ | |
@@ -40,11 +40,6 @@ Decisiones de Josue que siguen vigentes:
 6. Pruebas: `pytest tests/<área> -q` mientras trabajas, `tests/test_content.py` si tocas `content/`, **suite completa antes del commit**, `oath simulate` si tocas combate, `tgtest` en ES y EN para lo que ve el jugador.
 
 ## Lo que queda por hacer
-
-### B09 · Campaña común hasta el Recaudador
-1. Primero `planning/mundus.md`: mentor y trama **provisionales** para que Josue los apruebe.
-2. Luego los actos I–VI en `quests.yaml`, `npcs.yaml`, `monsters.yaml`; nuevos tipos de objetivo (equipar, aprender oficio, abrir cofre, humo, elegir rama…); el Recaudador de Ceniza y su entrega (hito `ash_collector`, tope de nivel 10).
-- `content/quests.yaml` es grande: léelo por rangos.
 
 ### B10 · Ciervo de Hierro y graduación
 Jefe y entrega del hito `iron_stag` (abre el tope 20). Depende de B07 y B09.
@@ -80,6 +75,7 @@ Cierre: revisión de `tests/features.md` entera jugando con la cuenta de prueba,
 - **Ramas:** `content/class_specializations.yaml` (41, todas `ready: true`). El cargador exige pasiva y técnica al 10, técnica al 20, exactamente dos modificadores en cada nivel de modificador, claves de habilidad únicas entre ramas y costes que quepan en la barra. `tests/engine/test_branches.py` exige decisiones distintas entre ramas hermanas y un suelo de victorias contra un jefe sintético.
 - **Simulador:** `oathforge/tools/simulate.py` (`--branch`, entrenamientos y modificadores por defecto, política de invocar/ordenar/curar).
 
+- **Campaña (B09):** `camp_*` en `quests.yaml` (orden 20–47) encadenados por `after` desde `tut_chapel` hasta `camp_collector`; Tamsin (`tamsin`) es la mentora provisional; jefe con patrón en `Monster.pattern` (`engine/combat.py`: placa, aviso, descarga, recarga); `profession_xp` y `unlock_profession` para los oficios; `toll_post` es el lugar del jefe y `collector_hunt` lo activa.
 - **Tiempos y descanso:** `engine/timings.py` es la única tabla (`gathering` la reexporta); el descanso corto es la actividad `short_rest` (contador `flags.short_rests`, se borra en `exploration.wake_rested`); la actividad guarda su `result.tool` y `inventory.sell` lo respeta; derrota con `DEFEAT_GOLD_CAP_PER_LEVEL`; la Capilla cobra `min(coste, oro)`.
 
 ## Trampas ya encontradas

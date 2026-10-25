@@ -696,9 +696,9 @@ async def test_the_whole_chain_from_the_muster_to_the_crypt():
         assert (char.gold, char.xp) == (gold, xp)
         char.location = "broken_crown_tavern"
         assert (await quests.turn_in(s, char, "old_tusk", ["bram"], rng)).ok
-        assert (char.gold, char.xp) == (gold + 80, xp + 300)
+        assert (char.gold, char.xp) == (gold, xp + 300)
         again = await quests.turn_in(s, char, "old_tusk", ["bram"], rng)  # the service pays once
-        assert not again.ok and (char.gold, char.xp) == (gold + 80, xp + 300)
+        assert not again.ok and (char.gold, char.xp) == (gold, xp + 300)
         prog = await quests.progress(s, char)
         assert all(prog[k].state == "completed" for k, q in get_content().quests.items() if q.tutorial)
         assert prog["sealed_box"].stage == "not_started" and char.level >= 3

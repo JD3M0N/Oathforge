@@ -61,7 +61,7 @@ Hito **0.10-I** del [roadmap general](roadmap.md). Se avanza **fase a fase**: ca
 | B06 · 14 clases base (1–9) | ✅ Hecha | 0.10.29–0.10.31 |
 | B07 · 41 ramas | ✅ Hecha: 41 de 41 | 0.10.32–0.10.34 |
 | B08 · Tiempos, descanso, derrota y economía | ✅ Hecha salvo stock crítico y cobertura T0/T1 (pasan a B09) | 0.10.35 |
-| B09 · Campaña hasta el Recaudador | Pendiente | — |
+| B09 · Campaña hasta el Recaudador | ✅ Hecha (mentor y trama provisionales) | 0.10.36–0.10.37 |
 | B10 · Ciervo y graduación | Pendiente | — |
 | B11 · Región y aventuras 11–20 | Pendiente | — |
 | B12 · Balance integral | Pendiente | — |
@@ -1188,12 +1188,12 @@ El simulador y pruebas se amplían junto a cada fase, no solo en B12. No hacen f
 ### B09 · Campaña común hasta el Recaudador
 
 **Objetivo:** aprender sistemas mediante la historia.
-- [ ] Escribir lore del mentor y texto ES/EN.
-- [ ] Actos I–VI con eventos y objetivos verificables.
-- [ ] Ocho variantes de las tres tareas de oficio.
-- [ ] Habitación, plano, maestrías, pesca/cocina, diario, reputación, huida.
-- [ ] Recaudador con señales, protección y recarga.
-- [ ] Entrega que establece el hito 10; camino para XP faltante.
+- [x] Escribir lore del mentor y texto ES/EN. (0.10.37, provisional)
+- [x] Actos I–VI con eventos y objetivos verificables. (0.10.37)
+- [x] Ocho variantes de las tres tareas de oficio. (0.10.37: una misión con tres objetivos por oficio)
+- [x] Habitación, plano, maestrías, pesca/cocina, diario, reputación, huida. (0.10.36–0.10.37; sin objetivo de diario ni de título)
+- [x] Recaudador con señales, protección y recarga. (0.10.37)
+- [x] Entrega que establece el hito 10 (0.10.37); el camino para la XP faltante ya lo cubre el hito sin perder XP (0.10.24).
 **Archivos:** quests.yaml, npcs.yaml, monsters.yaml, content/world, fallbacks, quest service, media.
 **Pruebas:** todas las clases; cada ruta de oficio; jugador que vende material o cambia oficio; falta/exceso de XP.
 **Terminado:** primera sesión completa y campaña sin callejones hasta la selección al 10.

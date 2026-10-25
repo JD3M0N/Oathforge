@@ -70,7 +70,7 @@ Pacto de Plata y Sindicato Carmesí con reputación −100..100 (precios ±25 %)
 - Los ids de lugar son globales y no cambian al mover carpetas; la jerarquía conceptual del GDD no renombra carpetas.
 - Mundo compartido con ecos (rumores) mientras el juego sea individual.
 
-## Propuesta B09 · Los nombres que faltan (PROVISIONAL, espera la aprobación de Josue)
+## Propuesta B09 · Los nombres que faltan (PROVISIONAL, implementada en 0.10.37; Josue puede cambiarla)
 
 > Nada de esto es canon ni está en `content/`. Es el texto que pide N01 (roadmap_balance §8.2) antes de escribir los actos I–VI. Cuando Josue lo apruebe (o lo corrija) se escribe la campaña en `quests.yaml`/`npcs.yaml`/`monsters.yaml`.
 

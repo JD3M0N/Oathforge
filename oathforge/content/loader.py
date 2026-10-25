@@ -44,7 +44,7 @@ from oathforge.content.achievement_schemas import Achievement, validate_catalog
 
 EFFECT_KINDS = {
     "give_item", "take_item", "gold", "reputation", "set_flag", "xp", "milestone",
-    "npc_memory", "trust", "damage", "world_rumor",
+    "npc_memory", "trust", "damage", "world_rumor", "profession_xp",
 }
 
 
@@ -444,7 +444,9 @@ def validate_references(c: Content) -> None:
         need("quest", quest.after, c.quests, where)
         for field in ("unlock_stage", "objective_stage", "turn_in_stage", "complete_stage"):
             need("stage", getattr(quest, field), quest.stages, f"{where} {field}")
-        if (quest.after or quest.unlock_flag) and quest.unlock_stage is None:
+        if quest.unlock_profession and quest.unlock_profession not in c.professions:
+            errors.append(f"{where}: unknown profession '{quest.unlock_profession}'")
+        if (quest.after or quest.unlock_flag or quest.unlock_profession) and quest.unlock_stage is None:
             errors.append(f"{where}: locked missions need an unlock_stage")
         if quest.objectives and (quest.objective_stage is None or quest.complete_stage is None):
             errors.append(f"{where}: objectives need objective_stage and complete_stage")
@@ -465,7 +467,8 @@ def validate_references(c: Content) -> None:
                  "rest": places, "heal": places,
                  "read": ("rulebook section", c.rulebook),
                  "equip": any_items, "stash": any_items, "take": any_items, "buy": any_items, "sell": any_items,
-                 "learn_profession": ("profession", c.professions), "blueprint": items,
+                 "learn_profession": ("profession", {**c.professions, "any": None}), "blueprint": items,
+                 "short_rest": ("target", {"any": None}),
                  "smoke": ("target", {"any": None}),
                  "branch": ("branch", {**c.class_specializations, "any": None})}
         for obj in quest.objectives:
@@ -727,6 +730,10 @@ def _validate_effect(c: Content, eff: dict, where: str, errors: list[str]) -> No
         for item in arg:
             if item not in c.items:
                 errors.append(f"{where}: unknown item '{item}'")
+    elif kind == "profession_xp":
+        for prof in arg:
+            if prof not in c.professions:
+                errors.append(f"{where}: unknown profession '{prof}'")
     elif kind == "milestone":
         if c.progression is None or arg not in c.progression.milestones:
             errors.append(f"{where}: unknown milestone '{arg}'")

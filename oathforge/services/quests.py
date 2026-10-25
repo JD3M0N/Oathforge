@@ -69,7 +69,9 @@ async def ensure_progress(session: AsyncSession, char: Character) -> dict[str, Q
 
 
 def _unlocked(quest: Quest, prog: dict[str, QuestProgress], char: Character) -> bool:
-    if quest.after is None and quest.unlock_flag is None:
+    if quest.after is None and quest.unlock_flag is None and quest.unlock_profession is None:
+        return False
+    if quest.unlock_profession and quest.unlock_profession not in (char.professions or {}).get("active", []):
         return False
     after_ok = quest.after is None or (quest.after in prog and prog[quest.after].state == "completed")
     flag_ok = quest.unlock_flag is None or bool(char.flags.get(quest.unlock_flag))
@@ -123,7 +125,7 @@ def objective_key(obj: QuestObjective) -> str:
     return f"quest.objective.{obj.kind}" + ("_any" if obj.target == "any" else "")
 
 
-ANY_TARGET = ("hunt", "rest", "heal", "equip", "stash", "take", "buy", "sell", "smoke", "branch")  # kinds that accept "any"
+ANY_TARGET = ("hunt", "rest", "heal", "short_rest", "learn_profession", "equip", "stash", "take", "buy", "sell", "smoke", "branch")  # kinds that accept "any"
 
 
 def _matches(obj: QuestObjective, kind: str, target: str) -> bool:
@@ -372,6 +374,11 @@ async def apply_effects(session: AsyncSession, char: Character, effects: list[di
             before_level = char.level
             characters.grant_xp(char, int(arg), out)
             await achievements.levels(session, char, out, before_level)
+        elif kind == "profession_xp":  # a master's first lessons: the trade's rank is what its recipes ask for
+            xp_map = dict((char.professions or {}).get("xp", {}))
+            for prof, amount in arg.items():
+                xp_map[prof] = xp_map.get(prof, 0) + int(amount)
+            char.professions = {**(char.professions or {}), "xp": xp_map}
         elif kind == "reputation":
             for faction, delta in arg.items():
                 await npcs.adjust_reputation(session, char, faction, int(delta), out)

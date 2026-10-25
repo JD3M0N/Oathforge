@@ -412,6 +412,17 @@ class MonsterAttack(Strict):
     applies: StatusApply | None = None
 
 
+class BossPattern(Strict):
+    """A boss that telegraphs (roadmap_balance §9.1): ``plate`` points of protection that damage wears down before
+    its HP, a ``heavy`` attack announced a turn before, and a reload where it is exposed. After ``cycle`` ordinary
+    turns it aims; once the plate is gone, after ``cycle_broken``."""
+
+    plate: int = Field(ge=1)
+    cycle: int = Field(2, ge=1)
+    cycle_broken: int = Field(1, ge=1)
+    heavy: MonsterAttack
+
+
 class LootEntry(Strict):
     item: str
     chance: float
@@ -446,6 +457,7 @@ class Monster(Strict):
     # a boss never goes down to a control chain: hard control lasts one turn on it and the rest of the
     # duration becomes `vulnerable`, said out loud in the log. Never a silent immunity (roadmap_balance §5.3).
     boss: bool = False
+    pattern: BossPattern | None = None
     type: CreatureType = "humanoid"
     resist: list[DamageType] = []
     vulnerable: list[DamageType] = []
@@ -854,7 +866,8 @@ class QuestObjective(Strict):
     # equip / buy / sell / stash / take: item (or "any") · learn_profession: profession · blueprint: the blueprint item
     # smoke: a fight left with a smoke bomb ("any") · branch: the class branch taken (or "any")
     kind: Literal["kill", "hunt", "talk", "visit", "gather", "skin", "craft", "rest", "heal", "read",
-                  "equip", "learn_profession", "stash", "take", "buy", "sell", "smoke", "branch", "blueprint"]
+                  "equip", "learn_profession", "stash", "take", "buy", "sell", "smoke", "branch", "blueprint",
+                  "short_rest"]
     target: str  # monster, npc, location, item or rulebook section key ("any" for hunt / rest / heal)
     count: int = 1
 
@@ -877,6 +890,7 @@ class Quest(Strict):
     hint: Text | None = None
     after: str | None = None
     unlock_flag: str | None = None
+    unlock_profession: str | None = None  # opens while the hero practises this trade
     unlock_stage: str | None = None
     # all objectives met on `objective_stage` -> rewards, then `complete_stage`.
     # With `turn_in_stage` the mission stops there instead, waiting for `giver` to be paid in person:

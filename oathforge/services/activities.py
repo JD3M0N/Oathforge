@@ -332,7 +332,7 @@ async def claim(session: AsyncSession, char: Character, now: float | None = None
     if act.kind == "short_rest":
         char.flags = {**(char.flags or {}), SHORT_RESTS: (char.flags or {}).get(SHORT_RESTS, 0) + 1}
         _finish(act, "short_rest", {}, 0, now)
-        return exploration.short_rested(char)
+        return exploration.short_rested(char).extend(await quests.advance(session, char, "short_rest", "any", rng))
     if act.kind == "rest":
         _finish(act, "rest", {}, 0, now)
         return exploration.wake_rested(char).extend(await quests.advance(session, char, "rest", act.location, rng))

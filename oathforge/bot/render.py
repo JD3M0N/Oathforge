@@ -2117,7 +2117,7 @@ def combat_token(version: int | None, turn_index: int) -> str:
 
 PANEL_BLOCKS = 6  # recent actions shown under the combatants
 # results that belong to the action above them (damage of a hit, saves of a spell...): drawn indented under it
-FOLLOW_UPS = {"combat.damage", "combat.absorbed", "combat.defeated", "combat.relentless", "combat.wake",
+FOLLOW_UPS = {"combat.plate_hit", "combat.plate_broken", "combat.damage", "combat.absorbed", "combat.defeated", "combat.relentless", "combat.wake",
               "combat.status", "combat.immune", "combat.save", "combat.temp_hp"}
 
 
@@ -2231,6 +2231,11 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
         temp = f" (+{cb_.temp_hp})" if cb_.temp_hp else ""
         lines.append(f"{icon} <b>{escape(cb_.name[lang])}</b> ❤️ {cb_.hp}/{cb_.max_hp}{temp} "
                      f"{hp_bar(cb_.hp, cb_.max_hp)} 🛡️ {cb_.ac} · {row} {st}".rstrip())
+        if cb_.plate_max:  # the boss's protection and what it is about to do
+            lines.append("   " + (t(lang, "combat.plate_line", plate=cb_.plate, max=cb_.plate_max,
+                                   bar=hp_bar(cb_.plate, cb_.plate_max)) if cb_.plate else t(lang, "combat.plate_gone")))
+        if cb_.pattern_state != "ready":
+            lines.append("   " + t(lang, f"combat.intent_{cb_.pattern_state}"))
         if cb_.resource_max:  # one main bar, and nothing else in the header (roadmap_balance N15)
             res = c.progression.resources[cb_.resource_key]
             lines.append(f"   🔹 {escape(res.name.get(lang))} {cb_.resource}/{cb_.resource_max} "

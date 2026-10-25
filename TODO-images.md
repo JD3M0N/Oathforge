@@ -309,3 +309,5 @@ Las 26 imágenes actuales son de un estilo anterior. Se rehacen con el prompt de
 
 - [ ] **Clases** (16, `content/classes/<clase>/images/portrait.{male,female}.jpg`): paladín, guerrero, pícaro, sacerdote, mago, druida, brujo, bardo. Prompts incompletos (PENDIENTE) en mago ♂♀, druida ♂♀, brujo ♂♀ y bardo ♂.
 - [ ] **Criaturas** (10, `content/monsters/<criatura>/images/portrait.jpg`): bandido, capitán bandido, goblin explorador, lobo gris, esqueleto de la cripta, Guardián de la Cripta (Ser Aldren), jabalí, murciélago de cueva, Viejo Colmillo, rata gigante.
+
+- [ ] **Criatura nueva (0.10.37)**: El Recaudador de Ceniza (`content/monsters/ash_collector/images/portrait.jpg` es un marcador de posición; el prompt real está en `portrait.prompt.md`). Falta también un retrato de Tamsin Harrow y una imagen del Puesto de Peaje Abandonado.

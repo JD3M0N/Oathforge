@@ -344,3 +344,11 @@ Sin ayudas de beta: todo lleva su tiempo real. Tabla única en `engine/timings.p
 - [x] Prueba automática: comprar, vender, equipar, guardar y sacar avanzan una misión (y comprar otro objeto no).
 - [ ] En Telegram: una misión de prueba con «Equípate una pieza» se completa al equipar desde el inventario.
 - [ ] En Telegram: salir de un combate con una bomba de humo cuenta como `smoke`; huir a pie no.
+
+## 0.10-I · Campaña hasta el Recaudador (B09, v0.10.37)
+
+- [x] Pruebas automáticas: cadena entera de misiones, llegada al jefe, material suficiente por oficio, decisión con reputación, humo siempre a la venta, mecánica del jefe (placa, aviso, descarga, recarga).
+- [ ] En Telegram (ES/EN), jugando de cero con cuatro clases: del tutorial a «Una entrega sospechosa» y hasta «El Recaudador de Ceniza» sin quedarse atascado (`oath tutorial-stats` y diario).
+- [ ] En Telegram: aprender cada uno de los ocho oficios y completar su encargo con el material que da el maestro.
+- [ ] En Telegram: «Volver también es vencer» (coger el libro, salir con humo, curarse) y que el panel de combate avise «Apunta» y «Recarga».
+- [ ] En Telegram: derrotar al Recaudador, entregar a Tamsin y comprobar el hito y el tope 10 con XP suficiente y con XP de menos.

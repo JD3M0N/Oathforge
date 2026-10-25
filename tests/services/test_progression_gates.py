@@ -126,7 +126,7 @@ async def test_beating_the_boss_pays_nothing_until_the_giver_hears_it():
         assert [k for k, _ in await quests.ready_to_turn_in(s, char, ["bram"])] == [TUSK]
         assert await quests.ready_to_turn_in(s, char, ["vale"]) == []  # not his mission
         out = await quests.turn_in(s, char, TUSK, ["bram"], rng)
-        assert out.ok and (char.gold, char.xp) == (gold + 80, xp + 300)
+        assert out.ok and (char.gold, char.xp) == (gold, xp + 300)
         assert (await quests.progress(s, char))[TUSK].state == "completed"
 
 
@@ -153,7 +153,7 @@ async def test_handing_it_in_twice_pays_once():
         for _ in range(3):  # a double tap, or an old menu still on screen
             again = await quests.turn_in(s, char, TUSK, ["bram"], rng)
             assert not again.ok and again.error == "quest.err.not_ready"
-        assert (char.gold, char.xp) == (gold + 80, xp + 300)
+        assert (char.gold, char.xp) == (gold, xp + 300)
 
 
 async def test_a_mission_that_is_not_finished_cannot_be_handed_in():

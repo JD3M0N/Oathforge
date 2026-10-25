@@ -4,6 +4,27 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.37] - 2026-10-25
+
+0.10-I (B09, cierre): **la campaña común hasta el Recaudador de Ceniza.** Del tutorial al nivel 10 sin callejones: 21 misiones nuevas, el mentor y un jefe que avisa sus golpes. Las decisiones de mentor y trama las tomé yo como provisionales (Josue las revisará, y el refactor de Vale e instructor queda para después).
+
+### Añadido
+- **Tamsin Harrow, «la Linterna»**, exploradora del Gremio (de día en el Gremio, de noche en la taberna), con persona, saludos y doce respaldos de diálogo ES/EN.
+- **Actos I–VI** (`quests.yaml`): Una entrega sospechosa → Lo que se lleva puesto → Lo que se guarda → Elige tu mano → ocho encargos de oficio (uno por oficio, con el material y las primeras lecciones que da su maestro) → Rastros en el barro → Hierbas para el camino → Una caña y una sartén → Rumor o hecho (decisión con reputación) → Pociones para el camino → Volver también es vencer (libro de cargas, humo, curación) → La mesa de Tamsin (tres pistas con botones) → El Recaudador de Ceniza.
+- **El Recaudador de Ceniza** y el **Puesto de Peaje Abandonado** (nuevo lugar del Camino del Viejo Rey). El jefe lleva una **placa** que se desgasta con cualquier daño, **avisa** su disparo fuerte un turno antes, descarga y **recarga expuesto**; al romperse la placa avisa más a menudo. Defenderse debilita el disparo. El panel muestra la placa y su intención. Entrega a Tamsin: hito `ash_collector` (tope de nivel 10), 600 de XP.
+- Motor: mecánica de jefe con patrón (`pattern` en el monstruo), efecto `profession_xp`, `unlock_profession` en las misiones y el objetivo `short_rest` (los de 0.10.36 ya estaban).
+- Objetos de misión: libro de cargas del peaje y prueba de falsificación. La bomba de humo se vende en la forja de Tessa (fuente siempre recuperable).
+- Pruebas del jefe (aviso, descarga, recarga, placa) y de la campaña (cadena entera, llegada al jefe, material suficiente en cada oficio, decisión con reputación a ambos lados, humo siempre disponible).
+
+### Cambiado
+- El Viejo Colmillo ya no paga 80 de oro: queda como caza opcional con su botín y su XP.
+- El simulador cuenta el daño a la placa como daño al jefe.
+
+### Pendiente
+- Retratos reales del Recaudador y de Tamsin (hay un marcador de posición, `TODO-images.md`).
+- Los casters siguen flojos contra el jefe en el simulador (Chamán 60 % al nivel 9): se ajusta en B12.
+- Las tres tareas de cada oficio son una misión con tres objetivos, no tres misiones; son ≈ 33 misiones entre tutorial y campaña.
+
 ## [0.10.36] - 2026-10-25
 
 0.10-I (B09, 1.ª parte): **objetivos de misión que nacen de los servicios.** Es el motor de la campaña hasta el Recaudador; el texto del mentor y de los actos queda a la espera de la aprobación de `planning/mundus.md`.

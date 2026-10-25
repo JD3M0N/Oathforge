@@ -1,0 +1,28 @@
+name: {es: Puesto de Peaje Abandonado, en: Abandoned Toll Post}
+article: {es: el, en: the}
+kind: wild
+hunting: true  # «Cazar»: los guardias del peaje; con la pista de la mesa de Tamsin, el Recaudador
+description:
+  es: >-
+    Una garita de tablas, una barrera rota y un pozo cegado a un lado del Camino del Viejo Rey. Parece
+    abandonado, pero las huellas de carros y de botas son recientes.
+  en: >-
+    A plank guardhouse, a broken barrier and a blocked well beside the Old King's Road. It looks
+    abandoned, but the cart and boot prints are fresh.
+exits:
+  - {to: old_kings_road, minutes: 35, danger: 2}
+hunt_day:
+  es: 🏹 Rondas el peaje y das con uno de sus guardias.
+  en: 🏹 You prowl the toll post and run into one of its guards.
+hunt_night:
+  es: 🏹 Una lámpara se mueve tras la garita. Alguien te ha oído.
+  en: 🏹 A lamp moves behind the guardhouse. Someone has heard you.
+encounters:
+  - {monsters: [bandit, bandit], weight: 3}
+  - {monsters: [bandit_captain, bandit], weight: 2, min_level: 4}
+  - {monsters: [goblin_scout, goblin_scout], weight: 1}
+night_encounters:
+  - {monsters: [bandit, bandit], weight: 3}
+  - {monsters: [bandit_captain], weight: 2}
+fixed_encounters:
+  - {monsters: [ash_collector], flag: cleared_ash_collector, if_flag: collector_hunt}

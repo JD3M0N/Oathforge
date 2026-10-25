@@ -173,6 +173,15 @@ class Combatant(BaseModel):
     boss: bool = False
     cowardly: bool = False
     xp: int = 0
+    # a boss with a pattern (roadmap_balance §9.1): a plate that wears away before its HP, a signalled heavy
+    # attack, and a reload where it is exposed. ``pattern``: {"cycle": normal turns before it aims, "cycle_broken": same
+    # once the plate is gone}
+    plate: int = 0
+    plate_max: int = 0
+    pattern: dict | None = None
+    pattern_state: Literal["ready", "aiming", "reloading"] = "ready"
+    pattern_count: int = 0
+    heavy: AttackProfile | None = None
     # turn state
     action_used: bool = False
     bonus_used: bool = False
@@ -747,6 +756,16 @@ def _apply_damage(state, target: Combatant, amount: int, damage_type: str) -> li
         amount //= 2
         target.dodge_used = True
     guarded: list[LogEntry] = []
+    if target.plate > 0 and amount > 0:  # the plate takes it first; anyone can wear it down
+        worn = min(target.plate, amount)
+        target.plate -= worn
+        amount -= worn
+        guarded.append(LogEntry(key="combat.plate_hit", params={"target": target.id, "amount": worn,
+                                                                "left": target.plate}))
+        if target.plate == 0:
+            guarded.append(LogEntry(key="combat.plate_broken", params={"target": target.id}))
+        if amount == 0:
+            return guarded
     if target.side == "player" and state.entities and amount > 0:
         guard = next((e for e in state.entities.values()
                       if e.owner == target.id and e.role == "guard" and e.active), None)
@@ -1058,6 +1077,8 @@ def _enemy_turn(state: EncounterState, me: Combatant, rng) -> list[LogEntry]:
         me.fled = True
         return [LogEntry(key="combat.enemy_flees", params={"actor": me.id})]
     target = min(foes, key=lambda f: (f.hp, f.id))
+    if me.pattern and me.pattern_state != "ready":
+        return _pattern_turn(state, me, target, rng)
     melee = [a for a in me.attacks if not a.ranged]
     ranged = [a for a in me.attacks if a.ranged]
     logs: list[LogEntry] = []
@@ -1072,7 +1093,27 @@ def _enemy_turn(state: EncounterState, me: Combatant, rng) -> list[LogEntry]:
     targets = valid_targets(state, me, profile.ranged)
     if target not in targets:
         target = targets[0]
-    return logs + _attack(state, me, target, profile, rng, None)
+    logs += _attack(state, me, target, profile, rng, None)
+    if me.pattern:  # after enough ordinary turns it aims, out loud
+        me.pattern_count += 1
+        broken = me.plate_max and me.plate == 0
+        if me.pattern_count >= me.pattern["cycle_broken" if broken else "cycle"]:
+            me.pattern_state = "aiming"
+            logs.append(LogEntry(key="combat.boss_aim", params={"actor": me.id}))
+    return logs
+
+
+def _pattern_turn(state: EncounterState, me: Combatant, target: Combatant, rng) -> list[LogEntry]:
+    """A boss that aimed last turn fires its heavy attack; the turn after, it reloads and is exposed.
+    ``defend`` is the answer anyone has: it gives the shot disadvantage."""
+    if me.pattern_state == "aiming":
+        me.pattern_state = "reloading"
+        logs = [LogEntry(key="combat.boss_fire", params={"actor": me.id})]
+        logs += _attack(state, me, target, me.heavy, rng, None, weapon=False)
+        me.statuses["vulnerable"] = 2  # ticks once at the end of this turn: it lasts through the hero's next one
+        return logs
+    me.pattern_state, me.pattern_count = "ready", 0
+    return [LogEntry(key="combat.boss_reload", params={"actor": me.id})]
 
 
 def _check_end(state: EncounterState, logs: list[LogEntry]) -> None:

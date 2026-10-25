@@ -250,7 +250,7 @@ def fight(class_key: str, level: int, monsters: list[str], seed: int, lineage: s
         status=state.status if state.status != "active" else "timeout",
         rounds=min(state.round, MAX_ROUNDS),
         hp_left=max(0, me.hp) / me.max_hp,
-        damage_dealt=sum(f.max_hp - max(0, f.hp) for f in foes),
+        damage_dealt=sum(f.max_hp - max(0, f.hp) + f.plate_max - f.plate for f in foes),
         damage_taken=me.max_hp - max(0, me.hp),
     )
 

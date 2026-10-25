@@ -475,7 +475,6 @@ old_tusk:
     - {kind: kill, target: old_tusk}
   rewards:
     - xp: 300
-    - gold: 80
   stages:
     locked:
       state: locked
@@ -707,3 +706,970 @@ sealed_box:
         - xp: 300
         - set_flag: old_tusk_hunt
         - world_rumor: {es: "Alguien vio a {name} salir del bosque cubierto de polvo de tumba. Nadie sabe qué encontró.", en: "Someone saw {name} leave the woods covered in grave dust. No one knows what they found."}
+
+camp_order:
+  order: 20
+  giver: vale
+  after: tut_chapel
+  name: {es: "Una entrega sospechosa", en: "A Suspicious Delivery"}
+  summary:
+    es: "Vale te enseña una orden del gremio que no cuadra con su libro. Hay una exploradora que quiere hablar con alguien nuevo."
+    en: "Vale shows you a guild order that does not match her ledger. A scout wants to talk to someone new."
+  hint:
+    es: "Habla con Tamsin Harrow en el Gremio de Aventureros (de noche, en la taberna). Luego sal al Camino del Viejo Rey y derrota a dos bandidos: «🏹 Cazar» o lo que salga al viajar."
+    en: "Talk to Tamsin Harrow at the Adventurers' Guild (at night, in the tavern). Then go out on the Old King's Road and beat two bandits: \"🏹 Hunt\" or whatever turns up on the way."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: talk, target: tamsin}
+    - {kind: kill, target: bandit, count: 2}
+  rewards:
+    - {xp: 100}
+    - {give_item: {leather_armor: 1}}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Vale tiene algo que enseñarte."
+        en: "Vale has something to show you."
+    active:
+      journal:
+        es: "Vale te enseña una orden con el sello del gremio que no está en su libro. «Habla con Tamsin Harrow, la Linterna. Lleva dos años buscando justo esto.» Después, demuestra que sabes defenderte en el Camino del Viejo Rey."
+        en: "Vale shows you an order stamped with the guild's seal that is not in her ledger. \"Talk to Tamsin Harrow, the Lantern. She has spent two years looking for exactly this.\" Then prove you can look after yourself on the Old King's Road."
+      location_text:
+        adventurers_guild:
+          es: "Una mujer de pelo gris, con un farol de latón colgado del cinto aunque sea de día, estudia un mapa. Es Tamsin. 🗨️ Habla con ella."
+          en: "A grey-haired woman with a brass lantern hanging from her belt even in daylight studies a map. That is Tamsin. 🗨️ Talk to her."
+    done:
+      state: completed
+      journal:
+        es: "Tamsin te escuchó sin interrumpir. «Un recluta que no ha sido señalado aún… justo lo que necesitaba», dijo, y te dio una armadura de cuero que había guardado. Tendrás que aprender a llevarla."
+        en: "Tamsin heard you out without interrupting. \"A recruit who has not been marked yet… exactly what I needed,\" she said, and handed you a leather armor she had put aside. You will have to learn to wear it."
+
+camp_gear:
+  order: 21
+  giver: tamsin
+  after: camp_order
+  name: {es: "Lo que se lleva puesto", en: "What You Wear"}
+  summary:
+    es: "Tamsin quiere ver que sabes vestir lo que cargas y que no sales sin pociones."
+    en: "Tamsin wants to see that you can wear what you carry, and that you never leave without potions."
+  hint:
+    es: "Abre tu inventario (🎒) y equípate una pieza. Compra una poción de curación a Mira, en el mercado."
+    en: "Open your inventory (🎒) and equip a piece of gear. Buy a healing potion from Mira at the market."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: equip, target: any}
+    - {kind: buy, target: healing_potion}
+  rewards:
+    - {xp: 70}
+    - {give_item: {smoke_bomb: 1}}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Tamsin tiene otra lección."
+        en: "Tamsin has another lesson."
+    active:
+      journal:
+        es: "Equípate una pieza de equipo y compra una poción de curación en el mercado. «El camino no perdona a quien lleva el equipo en la mochila», dice Tamsin."
+        en: "Equip a piece of gear and buy a healing potion at the market. \"The road does not forgive anyone who carries their gear in the pack,\" says Tamsin."
+    done:
+      state: completed
+      journal:
+        es: "Tamsin asiente al verte la armadura puesta y te da una bomba de humo: «Para el día que no puedas ganar. Sal siempre con una»."
+        en: "Tamsin nods at the armor you now wear and hands you a smoke bomb: \"For the day you cannot win. Never leave without one.\""
+
+camp_roof:
+  order: 22
+  giver: tamsin
+  after: camp_gear
+  name: {es: "Lo que se guarda", en: "What You Keep"}
+  summary:
+    es: "Un recluta que lo lleva todo encima tropieza. Tamsin te enseña a guardar y a recobrar el aliento."
+    en: "A recruit who carries everything trips. Tamsin shows you how to stash things and catch your breath."
+  hint:
+    es: "En tu cuarto del Gremio, guarda un objeto en el cofre y vuelve a sacar algo (🗄️). Después toma un «💤 Descanso corto» en ⚒ Actividades."
+    en: "In your room at the Guild, stash an item in the chest and take something out again (🗄️). Then take a \"💤 Short rest\" from ⚒ Activities."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: stash, target: any}
+    - {kind: take, target: any}
+    - {kind: short_rest, target: any}
+  rewards:
+    - {xp: 80}
+    - {gold: 5}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Tamsin quiere verte organizado."
+        en: "Tamsin wants to see you organised."
+    active:
+      journal:
+        es: "Guarda algo en el cofre de tu cuarto, vuelve a sacarlo y haz un descanso corto. «Un respiro a tiempo vale más que una poción», dice Tamsin."
+        en: "Stash something in your room's chest, take it out again and take a short rest. \"A breather at the right time is worth more than a potion,\" says Tamsin."
+      location_text:
+        adventurers_guild:
+          es: "Arriba está tu cuarto con el cofre. Los descansos cortos no cuestan nada: solo dos entre dos descansos largos."
+          en: "Upstairs is your room with the chest. Short rests cost nothing: only two between long rests."
+    done:
+      state: completed
+      journal:
+        es: "Tu cuarto ya parece un cuarto. Tamsin te dice que lo de los descansos cortos se aprende a base de equivocarse… y de contar hasta dos."
+        en: "Your room finally looks like a room. Tamsin says short rests are learned by getting them wrong… and by counting to two."
+
+camp_trade_pick:
+  order: 23
+  giver: tamsin
+  after: camp_roof
+  name: {es: "Elige tu mano", en: "Choose Your Hand"}
+  summary:
+    es: "Toda orden falsa necesita manos que fabriquen lo que se mueve. Tamsin te pide que aprendas un oficio, el que quieras."
+    en: "Every forged order needs hands that make what gets moved. Tamsin asks you to learn a trade, any trade."
+  hint:
+    es: "Ve al Barrio de Oficios y aprende uno de los oficios con su maestro (🛠️ Oficios). No importa cuál: tu clase no te obliga a ninguno."
+    en: "Go to Craftsmen's Row and learn one of the trades from its master (🛠️ Professions). It does not matter which: your class forces none on you."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: learn_profession, target: any}
+  rewards:
+    - {xp: 100}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Tamsin quiere saber qué sabes hacer con las manos."
+        en: "Tamsin wants to know what you can do with your hands."
+    active:
+      journal:
+        es: "Aprende un oficio con su maestro, en el Barrio de Oficios. Herrería, alquimia, carpintería, peletería, joyería, escribanía, ingeniería o sastrería: cualquiera sirve."
+        en: "Learn a trade from its master on Craftsmen's Row. Blacksmithing, alchemy, carpentry, leatherworking, jewelcrafting, scribing, engineering or tailoring: any will do."
+      location_text:
+        crownreach_workshops:
+          es: "Cada puesto es de un maestro. Entra en el que te llame y habla con él: 🛠️ Oficios."
+          en: "Each stall belongs to a master. Step into the one that calls to you and talk to them: 🛠️ Professions."
+    done:
+      state: completed
+      journal:
+        es: "Ya tienes un oficio. Tamsin sonríe: «Ahora habrá que ganárselo»."
+        en: "You have a trade now. Tamsin smiles: \"Now you will have to earn it.\""
+
+camp_trade_alchemy:
+  order: 24
+  giver: ilva
+  after: camp_trade_pick
+  unlock_profession: alchemy
+  name: {es: "Primeros encargos de alquimia", en: "First alchemy jobs"}
+  summary:
+    es: "Tu maestro te encarga tres tareas para ver si vales: fabricar dos pociones de curación, usarlo o venderlo."
+    en: "Your master gives you three tasks to see if you are worth it: make two healing potions, then use or sell it."
+  hint:
+    es: "Ve al puesto de tu maestro en el Barrio de Oficios y pide las primeras lecciones. Fabrica dos pociones de curación y vende algo."
+    en: "Go to your master's stall on Craftsmen's Row and ask for the first lessons. Make two healing potions and sell something."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: working
+  complete_stage: done
+  objectives:
+    - {kind: craft, target: healing_potion, count: 2}
+    - {kind: sell, target: any}
+  rewards:
+    - {xp: 120}
+    - {gold: 10}
+  actions:
+    start:
+      label: {es: "🎓 Primeras lecciones de alquimia", en: "🎓 First lessons in alchemy"}
+      npc: ilva
+      location: alchemist_stall
+      stages: [active]
+      to_stage: working
+      text:
+        es: "Tu maestro te pone delante el material y un primer encargo: dos pociones de curación. «Hazlo despacio y bien; lo rápido ya vendrá.»"
+        en: "Your master sets the material in front of you and a first job: two healing potions. \"Slow and right; fast comes later.\""
+      effects:
+        - {give_item: {bloodroot: 4, water_flask: 2}}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Aún no practicas este oficio."
+        en: "You do not practise this trade yet."
+    active:
+      journal:
+        es: "Habla con tu maestro en su puesto y pide las primeras lecciones de alquimia."
+        en: "Talk to your master at their stall and ask for the first alchemy lessons."
+    working:
+      journal:
+        es: "Fabrica dos pociones de curación en la estación del puesto y vende algo a un mercader."
+        en: "Make two healing potions at the stall's station and sell something to a merchant."
+    done:
+      state: completed
+      journal:
+        es: "Tu maestro examina tu trabajo y gruñe satisfecho. «Para ser el primero, no está mal»."
+        en: "Your master looks over your work and grunts, satisfied. \"For a first, that is not bad.\""
+
+camp_trade_blacksmithing:
+  order: 25
+  giver: tessa
+  after: camp_trade_pick
+  unlock_profession: blacksmithing
+  name: {es: "Primeros encargos de herrería", en: "First blacksmithing jobs"}
+  summary:
+    es: "Tu maestro te encarga tres tareas para ver si vales: fabricar una espada de hierro, usarlo o venderlo."
+    en: "Your master gives you three tasks to see if you are worth it: make an iron sword, then use or sell it."
+  hint:
+    es: "Ve al puesto de tu maestro en el Barrio de Oficios y pide las primeras lecciones. Fabrica una espada de hierro y equípatelo."
+    en: "Go to your master's stall on Craftsmen's Row and ask for the first lessons. Make an iron sword and equip it."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: working
+  complete_stage: done
+  objectives:
+    - {kind: craft, target: iron_sword}
+    - {kind: equip, target: any}
+  rewards:
+    - {xp: 120}
+    - {gold: 10}
+  actions:
+    start:
+      label: {es: "🎓 Primeras lecciones de herrería", en: "🎓 First lessons in blacksmithing"}
+      npc: tessa
+      location: forge_stall
+      stages: [active]
+      to_stage: working
+      text:
+        es: "Tu maestro te pone delante el material y un primer encargo: una espada de hierro. «Hazlo despacio y bien; lo rápido ya vendrá.»"
+        en: "Your master sets the material in front of you and a first job: an iron sword. \"Slow and right; fast comes later.\""
+      effects:
+        - {give_item: {iron_ingot: 2, oak_plank: 1}}
+        - {profession_xp: {blacksmithing: 80}}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Aún no practicas este oficio."
+        en: "You do not practise this trade yet."
+    active:
+      journal:
+        es: "Habla con tu maestro en su puesto y pide las primeras lecciones de herrería."
+        en: "Talk to your master at their stall and ask for the first blacksmithing lessons."
+    working:
+      journal:
+        es: "Fabrica una espada de hierro en la estación del puesto y equípatelo."
+        en: "Make an iron sword at the stall's station and equip it."
+    done:
+      state: completed
+      journal:
+        es: "Tu maestro examina tu trabajo y gruñe satisfecho. «Para ser el primero, no está mal»."
+        en: "Your master looks over your work and grunts, satisfied. \"For a first, that is not bad.\""
+
+camp_trade_carpentry:
+  order: 26
+  giver: garrick
+  after: camp_trade_pick
+  unlock_profession: carpentry
+  name: {es: "Primeros encargos de carpintería", en: "First carpentry jobs"}
+  summary:
+    es: "Tu maestro te encarga tres tareas para ver si vales: fabricar un bastón de roble, usarlo o venderlo."
+    en: "Your master gives you three tasks to see if you are worth it: make an oak staff, then use or sell it."
+  hint:
+    es: "Ve al puesto de tu maestro en el Barrio de Oficios y pide las primeras lecciones. Fabrica un bastón de roble y equípatelo."
+    en: "Go to your master's stall on Craftsmen's Row and ask for the first lessons. Make an oak staff and equip it."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: working
+  complete_stage: done
+  objectives:
+    - {kind: craft, target: oak_staff}
+    - {kind: equip, target: any}
+  rewards:
+    - {xp: 120}
+    - {gold: 10}
+  actions:
+    start:
+      label: {es: "🎓 Primeras lecciones de carpintería", en: "🎓 First lessons in carpentry"}
+      npc: garrick
+      location: carpenter_stall
+      stages: [active]
+      to_stage: working
+      text:
+        es: "Tu maestro te pone delante el material y un primer encargo: un bastón de roble. «Hazlo despacio y bien; lo rápido ya vendrá.»"
+        en: "Your master sets the material in front of you and a first job: an oak staff. \"Slow and right; fast comes later.\""
+      effects:
+        - {give_item: {oak_plank: 2, clean_fiber: 1}}
+        - {profession_xp: {carpentry: 80}}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Aún no practicas este oficio."
+        en: "You do not practise this trade yet."
+    active:
+      journal:
+        es: "Habla con tu maestro en su puesto y pide las primeras lecciones de carpintería."
+        en: "Talk to your master at their stall and ask for the first carpentry lessons."
+    working:
+      journal:
+        es: "Fabrica un bastón de roble en la estación del puesto y equípatelo."
+        en: "Make an oak staff at the stall's station and equip it."
+    done:
+      state: completed
+      journal:
+        es: "Tu maestro examina tu trabajo y gruñe satisfecho. «Para ser el primero, no está mal»."
+        en: "Your master looks over your work and grunts, satisfied. \"For a first, that is not bad.\""
+
+camp_trade_leatherworking:
+  order: 27
+  giver: oda
+  after: camp_trade_pick
+  unlock_profession: leatherworking
+  name: {es: "Primeros encargos de peletería", en: "First leatherworking jobs"}
+  summary:
+    es: "Tu maestro te encarga tres tareas para ver si vales: fabricar un cuero reforzado, usarlo o venderlo."
+    en: "Your master gives you three tasks to see if you are worth it: make a reinforced leather, then use or sell it."
+  hint:
+    es: "Ve al puesto de tu maestro en el Barrio de Oficios y pide las primeras lecciones. Fabrica un cuero reforzado y vende algo."
+    en: "Go to your master's stall on Craftsmen's Row and ask for the first lessons. Make a reinforced leather and sell something."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: working
+  complete_stage: done
+  objectives:
+    - {kind: craft, target: reinforced_leather}
+    - {kind: sell, target: any}
+  rewards:
+    - {xp: 120}
+    - {gold: 10}
+  actions:
+    start:
+      label: {es: "🎓 Primeras lecciones de peletería", en: "🎓 First lessons in leatherworking"}
+      npc: oda
+      location: tannery_stall
+      stages: [active]
+      to_stage: working
+      text:
+        es: "Tu maestro te pone delante el material y un primer encargo: un cuero reforzado. «Hazlo despacio y bien; lo rápido ya vendrá.»"
+        en: "Your master sets the material in front of you and a first job: a reinforced leather. \"Slow and right; fast comes later.\""
+      effects:
+        - {give_item: {treated_leather: 3, iron_ingot: 1}}
+        - {profession_xp: {leatherworking: 80}}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Aún no practicas este oficio."
+        en: "You do not practise this trade yet."
+    active:
+      journal:
+        es: "Habla con tu maestro en su puesto y pide las primeras lecciones de peletería."
+        en: "Talk to your master at their stall and ask for the first leatherworking lessons."
+    working:
+      journal:
+        es: "Fabrica un cuero reforzado en la estación del puesto y vende algo a un mercader."
+        en: "Make a reinforced leather at the stall's station and sell something to a merchant."
+    done:
+      state: completed
+      journal:
+        es: "Tu maestro examina tu trabajo y gruñe satisfecho. «Para ser el primero, no está mal»."
+        en: "Your master looks over your work and grunts, satisfied. \"For a first, that is not bad.\""
+
+camp_trade_jewelcrafting:
+  order: 28
+  giver: pell
+  after: camp_trade_pick
+  unlock_profession: jewelcrafting
+  name: {es: "Primeros encargos de joyería", en: "First jewelcrafting jobs"}
+  summary:
+    es: "Tu maestro te encarga tres tareas para ver si vales: fabricar dos anillos de cobre, usarlo o venderlo."
+    en: "Your master gives you three tasks to see if you are worth it: make two copper rings, then use or sell it."
+  hint:
+    es: "Ve al puesto de tu maestro en el Barrio de Oficios y pide las primeras lecciones. Fabrica dos anillos de cobre y equípatelo."
+    en: "Go to your master's stall on Craftsmen's Row and ask for the first lessons. Make two copper rings and equip it."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: working
+  complete_stage: done
+  objectives:
+    - {kind: craft, target: copper_ring, count: 2}
+    - {kind: equip, target: any}
+  rewards:
+    - {xp: 120}
+    - {gold: 10}
+  actions:
+    start:
+      label: {es: "🎓 Primeras lecciones de joyería", en: "🎓 First lessons in jewelcrafting"}
+      npc: pell
+      location: jeweler_stall
+      stages: [active]
+      to_stage: working
+      text:
+        es: "Tu maestro te pone delante el material y un primer encargo: dos anillos de cobre. «Hazlo despacio y bien; lo rápido ya vendrá.»"
+        en: "Your master sets the material in front of you and a first job: two copper rings. \"Slow and right; fast comes later.\""
+      effects:
+        - {give_item: {copper_ingot: 2}}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Aún no practicas este oficio."
+        en: "You do not practise this trade yet."
+    active:
+      journal:
+        es: "Habla con tu maestro en su puesto y pide las primeras lecciones de joyería."
+        en: "Talk to your master at their stall and ask for the first jewelcrafting lessons."
+    working:
+      journal:
+        es: "Fabrica dos anillos de cobre en la estación del puesto y equípatelo."
+        en: "Make two copper rings at the stall's station and equip it."
+    done:
+      state: completed
+      journal:
+        es: "Tu maestro examina tu trabajo y gruñe satisfecho. «Para ser el primero, no está mal»."
+        en: "Your master looks over your work and grunts, satisfied. \"For a first, that is not bad.\""
+
+camp_trade_scribing:
+  order: 29
+  giver: lorent
+  after: camp_trade_pick
+  unlock_profession: scribing
+  name: {es: "Primeros encargos de escribanía", en: "First scribing jobs"}
+  summary:
+    es: "Tu maestro te encarga tres tareas para ver si vales: fabricar un pergamino de rayo ígneo, usarlo o venderlo."
+    en: "Your master gives you three tasks to see if you are worth it: make a firebolt scroll, then use or sell it."
+  hint:
+    es: "Ve al puesto de tu maestro en el Barrio de Oficios y pide las primeras lecciones. Fabrica un pergamino de rayo ígneo y vende algo."
+    en: "Go to your master's stall on Craftsmen's Row and ask for the first lessons. Make a firebolt scroll and sell something."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: working
+  complete_stage: done
+  objectives:
+    - {kind: craft, target: scroll_firebolt}
+    - {kind: sell, target: any}
+  rewards:
+    - {xp: 120}
+    - {gold: 10}
+  actions:
+    start:
+      label: {es: "🎓 Primeras lecciones de escribanía", en: "🎓 First lessons in scribing"}
+      npc: lorent
+      location: scribe_stall
+      stages: [active]
+      to_stage: working
+      text:
+        es: "Tu maestro te pone delante el material y un primer encargo: un pergamino de rayo ígneo. «Hazlo despacio y bien; lo rápido ya vendrá.»"
+        en: "Your master sets the material in front of you and a first job: a firebolt scroll. \"Slow and right; fast comes later.\""
+      effects:
+        - {give_item: {bloodroot: 1, coal: 1, boar_hide: 1}}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Aún no practicas este oficio."
+        en: "You do not practise this trade yet."
+    active:
+      journal:
+        es: "Habla con tu maestro en su puesto y pide las primeras lecciones de escribanía."
+        en: "Talk to your master at their stall and ask for the first scribing lessons."
+    working:
+      journal:
+        es: "Fabrica un pergamino de rayo ígneo en la estación del puesto y vende algo a un mercader."
+        en: "Make a firebolt scroll at the stall's station and sell something to a merchant."
+    done:
+      state: completed
+      journal:
+        es: "Tu maestro examina tu trabajo y gruñe satisfecho. «Para ser el primero, no está mal»."
+        en: "Your master looks over your work and grunts, satisfied. \"For a first, that is not bad.\""
+
+camp_trade_engineering:
+  order: 30
+  giver: dunn
+  after: camp_trade_pick
+  unlock_profession: engineering
+  name: {es: "Primeros encargos de ingeniería", en: "First engineering jobs"}
+  summary:
+    es: "Tu maestro te encarga tres tareas para ver si vales: fabricar dos bombas de humo, usarlo o venderlo."
+    en: "Your master gives you three tasks to see if you are worth it: make two smoke bombs, then use or sell it."
+  hint:
+    es: "Ve al puesto de tu maestro en el Barrio de Oficios y pide las primeras lecciones. Fabrica dos bombas de humo y vende algo."
+    en: "Go to your master's stall on Craftsmen's Row and ask for the first lessons. Make two smoke bombs and sell something."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: working
+  complete_stage: done
+  objectives:
+    - {kind: craft, target: smoke_bomb, count: 2}
+    - {kind: sell, target: any}
+  rewards:
+    - {xp: 120}
+    - {gold: 10}
+  actions:
+    start:
+      label: {es: "🎓 Primeras lecciones de ingeniería", en: "🎓 First lessons in engineering"}
+      npc: dunn
+      location: engineer_stall
+      stages: [active]
+      to_stage: working
+      text:
+        es: "Tu maestro te pone delante el material y un primer encargo: dos bombas de humo. «Hazlo despacio y bien; lo rápido ya vendrá.»"
+        en: "Your master sets the material in front of you and a first job: two smoke bombs. \"Slow and right; fast comes later.\""
+      effects:
+        - {give_item: {coal: 2, iron_ore: 1, plant_fiber: 4}}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Aún no practicas este oficio."
+        en: "You do not practise this trade yet."
+    active:
+      journal:
+        es: "Habla con tu maestro en su puesto y pide las primeras lecciones de ingeniería."
+        en: "Talk to your master at their stall and ask for the first engineering lessons."
+    working:
+      journal:
+        es: "Fabrica dos bombas de humo en la estación del puesto y vende algo a un mercader."
+        en: "Make two smoke bombs at the stall's station and sell something to a merchant."
+    done:
+      state: completed
+      journal:
+        es: "Tu maestro examina tu trabajo y gruñe satisfecho. «Para ser el primero, no está mal»."
+        en: "Your master looks over your work and grunts, satisfied. \"For a first, that is not bad.\""
+
+camp_trade_tailoring:
+  order: 31
+  giver: hedda
+  after: camp_trade_pick
+  unlock_profession: tailoring
+  name: {es: "Primeros encargos de sastrería", en: "First tailoring jobs"}
+  summary:
+    es: "Tu maestro te encarga tres tareas para ver si vales: fabricar un jubón acolchado, usarlo o venderlo."
+    en: "Your master gives you three tasks to see if you are worth it: make a padded jerkin, then use or sell it."
+  hint:
+    es: "Ve al puesto de tu maestro en el Barrio de Oficios y pide las primeras lecciones. Fabrica un jubón acolchado y equípatelo."
+    en: "Go to your master's stall on Craftsmen's Row and ask for the first lessons. Make a padded jerkin and equip it."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: working
+  complete_stage: done
+  objectives:
+    - {kind: craft, target: padded_jerkin}
+    - {kind: equip, target: any}
+  rewards:
+    - {xp: 120}
+    - {gold: 10}
+  actions:
+    start:
+      label: {es: "🎓 Primeras lecciones de sastrería", en: "🎓 First lessons in tailoring"}
+      npc: hedda
+      location: tailor_stall
+      stages: [active]
+      to_stage: working
+      text:
+        es: "Tu maestro te pone delante el material y un primer encargo: un jubón acolchado. «Hazlo despacio y bien; lo rápido ya vendrá.»"
+        en: "Your master sets the material in front of you and a first job: a padded jerkin. \"Slow and right; fast comes later.\""
+      effects:
+        - {give_item: {clean_fiber: 8}}
+        - {profession_xp: {tailoring: 80}}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Aún no practicas este oficio."
+        en: "You do not practise this trade yet."
+    active:
+      journal:
+        es: "Habla con tu maestro en su puesto y pide las primeras lecciones de sastrería."
+        en: "Talk to your master at their stall and ask for the first tailoring lessons."
+    working:
+      journal:
+        es: "Fabrica un jubón acolchado en la estación del puesto y equípatelo."
+        en: "Make a padded jerkin at the stall's station and equip it."
+    done:
+      state: completed
+      journal:
+        es: "Tu maestro examina tu trabajo y gruñe satisfecho. «Para ser el primero, no está mal»."
+        en: "Your master looks over your work and grunts, satisfied. \"For a first, that is not bad.\""
+
+camp_tracks:
+  order: 40
+  giver: tamsin
+  after: camp_trade_pick
+  name: {es: "Rastros en el barro", en: "Tracks in the Mud"}
+  summary:
+    es: "Hay huellas de carros donde no debería haber carros. Tamsin quiere que aprendas a leerlas."
+    en: "There are cart tracks where no carts should be. Tamsin wants you to learn to read them."
+  hint:
+    es: "Caza o rastrea dos veces en el Camino del Viejo Rey o en el Prado de los Colmillos («🏹 Cazar», «🐾 Rastrear»)."
+    en: "Hunt or track twice on the Old King's Road or in Tusk Meadow (\"🏹 Hunt\", \"🐾 Track\")."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: hunt, target: any, count: 2}
+  rewards:
+    - {xp: 130}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Tamsin sospecha de los caminos."
+        en: "Tamsin distrusts the roads."
+    active:
+      journal:
+        es: "Caza o rastrea dos veces fuera de la ciudad y fíjate en las huellas."
+        en: "Hunt or track twice outside the city and pay attention to the tracks."
+    done:
+      state: completed
+      journal:
+        es: "«Cuatro ruedas, carga pesada y nada de mulas», resume Tamsin. «No es un carro de granja»."
+        en: "\"Four wheels, a heavy load and no mules,\" Tamsin sums up. \"That is no farm cart.\""
+
+camp_herbs:
+  order: 41
+  giver: tamsin
+  after: camp_tracks
+  name: {es: "Hierbas para el camino", en: "Herbs for the Road"}
+  summary:
+    es: "Antes de seguir los carros hacen falta provisiones. Tamsin te manda a por raíz de sangre y a por agua."
+    en: "Before following the carts you need supplies. Tamsin sends you for bloodroot and water."
+  hint:
+    es: "Recoge raíz de sangre (⚒ Actividades en el Bosque de los Susurros o el Claro de Raíz Roja) y compra dos cantimploras a Mira."
+    en: "Gather bloodroot (⚒ Activities in the Whispering Woods or Redroot Clearing) and buy two water flasks from Mira."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: gather, target: bloodroot, count: 6}
+    - {kind: buy, target: water_flask, count: 2}
+  rewards:
+    - {xp: 120}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Falta preparar el viaje."
+        en: "The trip still needs preparing."
+    active:
+      journal:
+        es: "Reúne seis raíces de sangre y dos cantimploras para las pociones del camino."
+        en: "Collect six bloodroots and two water flasks for the road's potions."
+    done:
+      state: completed
+      journal:
+        es: "Tamsin guarda las hierbas como si fueran oro. «Con esto sobrevivimos a un par de emboscadas»."
+        en: "Tamsin stores the herbs as if they were gold. \"This gets us through a couple of ambushes.\""
+
+camp_fish:
+  order: 42
+  giver: tamsin
+  after: camp_herbs
+  name: {es: "Una caña y una sartén", en: "A Rod and a Pan"}
+  summary:
+    es: "Un grupo que no come no marcha. Tamsin te pide pescado y un guiso caliente."
+    en: "A group that does not eat does not march. Tamsin asks you for fish and a hot stew."
+  hint:
+    es: "Pesca dos peces en la Orilla del Arroyo de Plata (necesitas la caña de Tessa) y cocina un estofado del cazador en el fogón de la taberna."
+    en: "Catch two fish at Silverbrook Bank (you need Tessa's rod) and cook a hunter's stew at the tavern hearth."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: gather, target: river_fish, count: 2}
+    - {kind: craft, target: hunter_stew}
+  rewards:
+    - {xp: 120}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Tamsin tiene hambre."
+        en: "Tamsin is hungry."
+    active:
+      journal:
+        es: "Pesca y cocina: dos peces y un estofado del cazador."
+        en: "Fish and cook: two fish and a hunter's stew."
+    done:
+      state: completed
+      journal:
+        es: "Tamsin se come el estofado sin decir nada y repite. Eso, de ella, es un elogio."
+        en: "Tamsin eats the stew without a word and asks for more. From her, that is praise."
+
+camp_rumor:
+  order: 43
+  giver: bram
+  after: camp_fish
+  name: {es: "Rumor o hecho", en: "Rumour or Fact"}
+  summary:
+    es: "En la taberna ya se habla de los carros. Bram jura que es cosa de fantasmas; Holt dice que no."
+    en: "The tavern is already talking about the carts. Bram swears it is ghosts; Holt says otherwise."
+  hint:
+    es: "Habla con Bram en la taberna y decide a quién crees: al rumor o a los hechos que te cuente Holt."
+    en: "Talk to Bram at the tavern and decide whom you believe: the rumour, or the facts Holt gives you."
+  start_stage: locked
+  unlock_stage: active
+  actions:
+    believe:
+      label: {es: "🗣️ Creer el rumor de Bram", en: "🗣️ Believe Bram’s rumour"}
+      npc: bram
+      location: broken_crown_tavern
+      stages: [active]
+      to_stage: done
+      text:
+        es: "«Fantasmas, sí», repites. Bram sonríe y te invita a una cerveza. Holt, desde su mesa, no dice nada, pero te mira. Te quedas sin pista nueva y algo peor visto por la Guardia."
+        en: "\"Ghosts, yes,\" you repeat. Bram grins and buys you a beer. Holt, from his table, says nothing, but watches you. You get no new lead, and the Guard thinks a little less of you."
+      effects:
+        - {xp: 60}
+        - {reputation: {silver_covenant: -5}}
+        - {set_flag: rumor_believed}
+    check:
+      label: {es: "🔎 Contrastar con los hechos de Holt", en: "🔎 Check it against Holt’s facts"}
+      npc: bram
+      location: broken_crown_tavern
+      stages: [active]
+      to_stage: done
+      text:
+        es: "Dejas a Bram con sus fantasmas y vas a ver a Holt. Él te enseña un parte de la Guardia: tres carros del gremio salieron y ninguno llegó. Ni un cadáver, ni un fantasma. Te llevas una pista de verdad."
+        en: "You leave Bram to his ghosts and go to Holt. He shows you a Guard report: three guild carts left and none arrived. Not a body, not a ghost. You come away with a real lead."
+      effects:
+        - {xp: 120}
+        - {reputation: {silver_covenant: 5}}
+        - {set_flag: rumor_checked}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Algo se comenta en la taberna."
+        en: "Something is being said at the tavern."
+    active:
+      journal:
+        es: "Bram habla de fantasmas en el camino. Decide si le crees o contrastas los hechos con Holt."
+        en: "Bram talks of ghosts on the road. Decide whether to believe him or check the facts with Holt."
+    done:
+      state: completed
+      journal:
+        es: "Tomaste tu decisión y el pueblo lo supo: en Crownreach, lo que dices sobre un rumor también es un hecho."
+        en: "You made your choice and the town knew it: in Crownreach, what you say about a rumour is also a fact."
+
+camp_supplies:
+  order: 44
+  giver: tamsin
+  after: camp_rumor
+  name: {es: "Pociones para el camino", en: "Potions for the Road"}
+  summary:
+    es: "Antes del puesto del peaje, Tamsin quiere que lleves humo y curación de sobra."
+    en: "Before the toll post, Tamsin wants you carrying smoke and healing to spare."
+  hint:
+    es: "Compra una bomba de humo en la forja de Tessa (o fabrícala si eres ingeniero) y una poción de curación a Mira."
+    en: "Buy a smoke bomb at Tessa's forge (or make one if you are an engineer) and a healing potion from Mira."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: buy, target: smoke_bomb}
+    - {kind: buy, target: healing_potion}
+  rewards:
+    - {xp: 100}
+    - {give_item: {healing_potion: 1}}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Tamsin repasa la lista de equipo."
+        en: "Tamsin goes over the gear list."
+    active:
+      journal:
+        es: "Compra una bomba de humo y una poción de curación para el viaje."
+        en: "Buy a smoke bomb and a healing potion for the trip."
+    done:
+      state: completed
+      journal:
+        es: "«Ahora sí parece que sabes a dónde vas», dice Tamsin, y repasa tu mochila bolsillo por bolsillo."
+        en: "\"Now you look like someone who knows where they are going,\" says Tamsin, and goes through your pack pocket by pocket."
+
+camp_ledger:
+  order: 45
+  giver: tamsin
+  after: camp_supplies
+  name: {es: "Volver también es vencer", en: "Coming Back Is Winning Too"}
+  summary:
+    es: "En un peaje abandonado del camino hay un libro de cargas. Cogerlo es fácil; salir con él, no."
+    en: "In an abandoned toll post on the road there is a ledger. Taking it is easy; getting out with it is not."
+  hint:
+    es: "Ve al Puesto de Peaje Abandonado (Camino del Viejo Rey) y coge el libro. Los guardias te verán: sal del combate con una bomba de humo y cúrate con Ysolde."
+    en: "Go to the Abandoned Toll Post (Old King's Road) and take the ledger. The guards will see you: leave the fight with a smoke bomb and get healed by Ysolde."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: escape
+  complete_stage: done
+  objectives:
+    - {kind: smoke, target: any}
+    - {kind: heal, target: any}
+  rewards:
+    - {xp: 300}
+  actions:
+    take_ledger:
+      label: {es: "📒 Coger el libro de cargas", en: "📒 Take the ledger"}
+      location: toll_post
+      stages: [active]
+      to_stage: escape
+      text:
+        es: "Entre las tablas de una garita encuentras un libro con las cargas del peaje, y los nombres que faltan en el del gremio. Lo escondes bajo la capa justo cuando una voz grita: «¡Ahí hay alguien!»"
+        en: "Between the planks of a guardhouse you find a ledger with the toll loads, and the names missing from the guild’s. You hide it under your cloak just as a voice shouts: \"Someone is there!\""
+      effects:
+        - {give_item: {toll_ledger: 1}}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Tamsin tiene un destino en mente."
+        en: "Tamsin has a destination in mind."
+    active:
+      journal:
+        es: "Ve al Puesto de Peaje Abandonado y coge el libro de cargas."
+        en: "Go to the Abandoned Toll Post and take the ledger."
+      location_text:
+        toll_post:
+          es: "Una garita de tablas y una barrera rota. Hay huellas de carros y de botas nuevas: el sitio no está tan abandonado como parece. 📒 Hay un libro entre las tablas."
+          en: "A plank guardhouse and a broken barrier. There are cart tracks and fresh boot prints: the place is not as abandoned as it looks. 📒 There is a ledger among the planks."
+    escape:
+      journal:
+        es: "Los guardias del peaje te han visto. Sal del combate con una bomba de humo y cúrate: Ysolde te espera en la Capilla del Alba."
+        en: "The toll guards have seen you. Leave the fight with a smoke bomb and get healed: Ysolde waits at the Chapel of the Dawn."
+    done:
+      state: completed
+      journal:
+        es: "Volviste con el libro y con el aliento. Tamsin lo abre y, por primera vez, sonríe de verdad: «Los nombres que faltan»."
+        en: "You came back with the ledger and your breath. Tamsin opens it and, for the first time, truly smiles: \"The missing names.\""
+
+camp_table:
+  order: 46
+  giver: tamsin
+  after: camp_ledger
+  name: {es: "La mesa de Tamsin", en: "Tamsin’s Table"}
+  summary:
+    es: "Con el libro en la mano, Tamsin extiende sus mapas y te pide ayuda para atar tres cabos."
+    en: "With the ledger in hand, Tamsin spreads her maps and asks for help tying up three loose ends."
+  hint:
+    es: "Habla con Tamsin (Gremio de día, taberna de noche) y examina tres pistas: el sello, la letra y la ruta."
+    en: "Talk to Tamsin (Guild by day, tavern by night) and examine three clues: the seal, the handwriting and the route."
+  start_stage: locked
+  unlock_stage: active
+  actions:
+    seal:
+      label: {es: "🔍 Comparar el sello", en: "🔍 Compare the seal"}
+      npc: tamsin
+      stages: [active]
+      to_stage: hand
+      text:
+        es: "El sello de la orden es auténtico… y robado. Es el que usaba Vale hace dos años, antes de renovarlo. Quien firma tiene acceso al viejo cuño."
+        en: "The order’s seal is genuine… and stolen. It is the one Vale used two years ago, before it was replaced. Whoever signs has access to the old die."
+      effects:
+        - {xp: 30}
+    hand:
+      label: {es: "🔍 Comparar la letra", en: "🔍 Compare the handwriting"}
+      npc: tamsin
+      stages: [hand]
+      to_stage: route
+      text:
+        es: "La letra del libro de cargas es de una mano que firma «el Recaudador», sin nombre. Cobra peaje a los carros del gremio, y a cambio los deja pasar con otra carga."
+        en: "The ledger’s handwriting belongs to a hand that signs “the Collector”, with no name. They charge the guild carts a toll, and in return let them through with a different load."
+      effects:
+        - {xp: 30}
+    route:
+      label: {es: "🔍 Seguir la ruta de los carros", en: "🔍 Follow the carts’ route"}
+      npc: tamsin
+      stages: [route]
+      to_stage: done
+      text:
+        es: "Todas las rutas acaban en el mismo peaje. «Ahí está», dice Tamsin, y marca el sitio con el dedo. «Vamos a cobrarle lo que nos debe.»"
+        en: "Every route ends at the same toll post. \"There,\" says Tamsin, marking the spot with her finger. \"Let us collect what he owes us.\""
+      effects:
+        - {xp: 40}
+        - {set_flag: collector_hunt}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Tamsin aún no ha abierto el libro."
+        en: "Tamsin has not opened the ledger yet."
+    active:
+      journal:
+        es: "Examina con Tamsin el sello del libro de cargas."
+        en: "Examine the ledger’s seal with Tamsin."
+    hand:
+      journal:
+        es: "Compara con Tamsin la letra del libro."
+        en: "Compare the ledger’s handwriting with Tamsin."
+    route:
+      journal:
+        es: "Sigue con Tamsin la ruta de los carros en el mapa."
+        en: "Follow the carts’ route on the map with Tamsin."
+    done:
+      state: completed
+      journal:
+        es: "Tres cabos atados: sello robado, un cobrador sin nombre y un peaje en el camino. Falta ir a por él."
+        en: "Three loose ends tied: a stolen seal, a nameless collector and a toll post on the road. All that remains is going after them."
+
+camp_collector:
+  order: 47
+  giver: tamsin
+  after: camp_table
+  name: {es: "El Recaudador de Ceniza", en: "The Ash Collector"}
+  summary:
+    es: "Quien firma las órdenes falsas cobra peaje en un puesto del camino. Tamsin quiere su prueba, y que tú se la traigas."
+    en: "Whoever signs the forged orders charges a toll at a post on the road. Tamsin wants the proof, and for you to bring it."
+  hint:
+    es: "Descansa y llévate pociones y humo. En el Puesto de Peaje Abandonado, «🏹 Cazar» te llevará hasta el Recaudador. Cuando cae, vuelve con Tamsin para entregar la prueba."
+    en: "Rest, and bring potions and smoke. At the Abandoned Toll Post, \"🏹 Hunt\" leads you to the Collector. Once he falls, go back to Tamsin and hand in the proof."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  turn_in_stage: told
+  complete_stage: done
+  objectives:
+    - {kind: kill, target: ash_collector}
+  rewards:
+    - {xp: 600}
+    - {gold: 40}
+    - {milestone: ash_collector}
+    - {give_item: {healing_potion: 2}}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Tamsin traza el plan."
+        en: "Tamsin draws up the plan."
+    active:
+      journal:
+        es: "Derrota al Recaudador de Ceniza en el Puesto de Peaje Abandonado. Es un tirador: cuando apunta, defiéndete; cuando recarga, ataca. Su placa se desgasta con cualquier daño."
+        en: "Defeat the Ash Collector at the Abandoned Toll Post. He is a marksman: when he aims, defend; when he reloads, attack. His plate wears down under any damage."
+      location_text:
+        toll_post:
+          es: "Las huellas de botas llevan a la garita del fondo. Alguien te espera con la ballesta cargada."
+          en: "The boot prints lead to the guardhouse at the back. Someone waits for you with a loaded crossbow."
+    told:
+      state: ready
+      journal:
+        es: "El Recaudador ha caído y llevas su prueba. Vuelve con Tamsin y entrégasela."
+        en: "The Collector is down and you carry his proof. Go back to Tamsin and hand it to her."
+    done:
+      state: completed
+      journal:
+        es: "Tamsin lee la prueba, la sella y se la lleva a Holt. «El gremio vuelve a tener su nombre limpio, y tú, recluta, ya no lo eres. Ahora decide qué clase de aventurero quieres ser.»"
+        en: "Tamsin reads the proof, seals it and takes it to Holt. \"The guild has its good name back, and you, recruit, are one no longer. Now decide what kind of adventurer you want to be.\""
