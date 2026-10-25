@@ -26,7 +26,7 @@ def test_content_loads_and_references_resolve():
     c = load_content()
     assert c.start_location in c.locations
     assert c.respawn_location in c.locations
-    assert len(c.classes) == 14 and len(c.monsters) == 27 and len(c.items) == 101 and len(c.npcs) == 17
+    assert len(c.classes) == 14 and len(c.monsters) == 25 and len(c.items) == 100 and len(c.npcs) == 17
     assert "Aetherfall" in c.world_guide.summary.es and "internet" in c.world_guide.technology.en
 
 
@@ -81,7 +81,7 @@ def test_world_hierarchy():
     hubs = [k for k, loc in c.locations.items() if loc.hub]
     assert hubs == ["crownreach_plaza"]
     assert c.locations["broken_crown_tavern"].zone == "crownreach"
-    assert c.locations["crypt_sanctum"].zone == "sunken_crypt"
+    assert c.locations["beacon_height"].zone == "greyforge_vale" and "ruin_sanctum" not in c.locations  # no crypt
 
 
 def test_media_catalog_finds_city_panorama_by_time_of_day():

@@ -30,15 +30,15 @@ def test_conversation_transcript(root):
 
 def test_battle_steps_accumulate(root):
     state = {"round": 1, "status": "active", "combatants": {}}
-    recorder.battle(7, "sunken_crypt", character="Edda", actor_action=None,
+    recorder.battle(7, "toll_post", character="Edda", actor_action=None,
                     lines=["<b>Edda</b> 15"], raw=[{"key": "combat.initiative"}], state=state)
     end = {"round": 2, "status": "victory",
            "combatants": {"p1": {"name": {"es": "Edda"}, "hp": 9, "max_hp": 12}}}
-    recorder.battle(7, "sunken_crypt", character="Edda", actor_action={"kind": "attack"},
+    recorder.battle(7, "toll_post", character="Edda", actor_action={"kind": "attack"},
                     lines=["Edda golpea"], raw=[{"key": "combat.hit"}], state=end)
-    md = next((root / "battles").glob("*/7-sunken_crypt.md")).read_text(encoding="utf-8")
+    md = next((root / "battles").glob("*/7-toll_post.md")).read_text(encoding="utf-8")
     assert "- Edda 15" in md and "victory" in md and "Edda: 9/12" in md
-    data = json.loads(next((root / "battles").glob("*/7-sunken_crypt.json")).read_text(encoding="utf-8"))
+    data = json.loads(next((root / "battles").glob("*/7-toll_post.json")).read_text(encoding="utf-8"))
     assert len(data["steps"]) == 2 and data["status"] == "victory"
 
 

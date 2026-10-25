@@ -42,9 +42,10 @@ async def test_prompt_injection_changes_nothing(llm):
     assert "<player_text>" in llm.prompts[0]
 
 
+@pytest.mark.usefixtures("ruins")
 async def test_unknown_target_is_rejected(llm):
     uid, cid = await setup_char()
-    llm.json_queue.append({"type": "move", "target": "crypt_sanctum"})
+    llm.json_queue.append({"type": "move", "target": "ruin_sanctum"})
     res = await actions.handle_free_text(llm, uid, "teleport to the boss", random.Random(0))
     assert res.intent.type == "narrate_only"
     assert (await load_char(cid)).location == "broken_crown_tavern"

@@ -72,6 +72,12 @@ class Achievement(Strict):
             raise ValueError("hint text required")
         return self
 
+# quest flags that are also achievement events, and the written decisions a flag stands for
+FLAG_EVENTS = {"valley_open"}
+DECISION_FLAGS = {"rumor_believed": "believed", "rumor_checked": "checked",
+                  "valley_water_smuggler": "smuggler", "valley_water_kellan": "kellan"}
+
+
 def validate_catalog(content):
     catalog = content.achievements
     edges = {key: set() for key in catalog}
@@ -80,12 +86,12 @@ def validate_catalog(content):
              ("reputation", "faction"): content.factions, ("unlock", "key"): catalog}
     for event in ("kill", "seen", "secrets"):
         pools[event, "monster"] = content.monsters
-    pools["flag", "key"] = {"crypt_unlocked"}
+    pools["flag", "key"] = FLAG_EVENTS
     pools["discovery", "key"] = {f"{k}:{d}" for k, loc in content.locations.items() for d in loc.discoveries}
     from oathforge.engine.gathering import GATHER_SKILLS, MASTERIES
     pools["activity", "skill"] = GATHER_SKILLS
     pools["mastery", "skill"] = MASTERIES
-    pools["decision", "key"] = {"covenant", "syndicate", "opened"}
+    pools["decision", "key"] = set(DECISION_FLAGS.values())
     pools["profession", "key"] = content.professions
 
     def walk(key, condition):

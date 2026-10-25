@@ -1,6 +1,7 @@
 """Console commands: ``oath help`` (also ``oathforge help`` or ``python -m oathforge help``)."""
 
 import asyncio
+from pathlib import Path
 import shutil
 import sys
 import textwrap
@@ -15,6 +16,9 @@ COMMANDS = [
     ("Players", [
         ("delete-player", "[id|name] [--yes]", "Delete one player; without a name, list them."),
         ("reset-players", "[--yes]", "Delete every player (stop the bot first)."),
+        ("launch-reset", "[--yes] [--backup FILE]", "Wipe the game, keep accounts and quotas; takes a backup first (stop the bot)."),
+        ("backup", "FILE", "Write the whole database to a JSON file."),
+        ("restore", "FILE [--yes]", "Replace the whole database with a backup (stop the bot)."),
     ]),
     ("Testing", [
         ("tgtest", "send|press|show|login", "Play the bot from the Telegram test account."),
@@ -89,6 +93,97 @@ async def reset_players(confirm: bool) -> None:
             for name in reversed(tables):  # children first
                 await conn.execute(text(f'DELETE FROM "{name}"'))
             print("deleted")
+    finally:
+        await engine.dispose()
+
+
+def _backup_dir():
+    from oathforge.config import get_settings
+
+    return get_settings().artifacts_dir / "backups"
+
+
+async def backup(path: str | None) -> None:
+    """Dump every table to one JSON file (read only)."""
+    import time
+
+    from sqlalchemy.ext.asyncio import AsyncSession
+
+    from oathforge.services import launch
+
+    target = Path(path) if path else _backup_dir() / f"{time.strftime('%Y%m%d-%H%M%S')}.json"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    engine = _db()
+    try:
+        async with AsyncSession(engine) as session:
+            data = await launch.dump(session)
+        target.write_text(launch.to_json(data), encoding="utf-8")
+        for name, rows in data["tables"].items():
+            print(f"  {name:24} {len(rows)}")
+        print(f"saved {target}")
+    finally:
+        await engine.dispose()
+
+
+async def restore(path: str, confirm: bool) -> None:
+    """Replace the whole database with a backup. Shows the counts first; only --yes does it."""
+    import json
+
+    from sqlalchemy.ext.asyncio import AsyncSession
+
+    from oathforge.services import launch
+
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    for name, rows in data["tables"].items():
+        print(f"  {name:24} {len(rows)}")
+    if not confirm:
+        print("nothing restored; repeat with --yes (the current data is replaced)")
+        return
+    engine = _db()
+    try:
+        async with AsyncSession(engine) as session:
+            await launch.restore(session, data)
+            await session.commit()
+        print("restored")
+    finally:
+        await engine.dispose()
+
+
+async def launch_reset(confirm: bool, backup_path: str | None) -> None:
+    """The launch reset: show what goes and what stays; with --yes, back up first, wipe, check, commit."""
+    import time
+
+    from sqlalchemy.ext.asyncio import AsyncSession
+
+    from oathforge.services import launch
+
+    engine = _db()
+    try:
+        async with AsyncSession(engine) as session:
+            report = await launch.reset_for_launch(session, apply=False)
+            print("goes:")
+            for name, n in report.wiped.items():
+                print(f"  {name:24} {n}")
+            print("stays:")
+            for name, n in report.kept.items():
+                print(f"  {name:24} {n}")
+            if not confirm:
+                print("nothing changed; repeat with --yes (a backup is written first)")
+                return
+            target = Path(backup_path) if backup_path else _backup_dir() / f"before-launch-{time.strftime('%Y%m%d-%H%M%S')}.json"
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(launch.to_json(await launch.dump(session)), encoding="utf-8")
+            print(f"backup {target}")
+            report = await launch.reset_for_launch(session, apply=True)
+            if report.orphans:
+                await session.rollback()
+                print("left hanging, so nothing was committed:")
+                for line in report.orphans:
+                    print(f"  {line}")
+                sys.exit(1)
+            await session.commit()
+            print(f"reset done; {report.settings_trimmed} accounts lost their old-game preferences")
+            print("restore with: oath restore", target, "--yes")
     finally:
         await engine.dispose()
 
@@ -243,6 +338,17 @@ def main(argv: list[str] | None = None) -> None:
         asyncio.run(tutorial_stats())
     elif command == "reset-players":
         asyncio.run(reset_players("--yes" in rest))
+    elif command == "launch-reset":
+        path = rest[rest.index("--backup") + 1] if "--backup" in rest else None
+        asyncio.run(launch_reset("--yes" in rest, path))
+    elif command == "backup":
+        asyncio.run(backup(rest[0] if rest else None))
+    elif command == "restore":
+        files = [a for a in rest if a != "--yes"]
+        if not files:
+            print("usage: oath restore FILE [--yes]")
+            sys.exit(2)
+        asyncio.run(restore(files[0], "--yes" in rest))
     elif command == "delete-player":
         names = [a for a in rest if a != "--yes"]
         asyncio.run(delete_player(" ".join(names) or None, "--yes" in rest))

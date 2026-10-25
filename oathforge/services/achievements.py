@@ -8,7 +8,7 @@ import uuid
 
 from sqlalchemy import select
 from oathforge.content import get_content
-from oathforge.content.achievement_schemas import EDITION
+from oathforge.content.achievement_schemas import DECISION_FLAGS, EDITION, FLAG_EVENTS
 from oathforge.database.models import (
     Character, QuestProgress, FactionReputation,
     AchievementProgress, AchievementUnlock, HeroFact,
@@ -201,8 +201,12 @@ async def backfill_character(session, char):
             fact("visit", {"location": place, "outside": c.locations[place].zone != "crownreach"})
     for level in range(2, char.level + 1):
         fact("level", {"level": level})
-    if (char.flags or {}).get("crypt_unlocked"):
-        fact("flag", {"key": "crypt_unlocked"})
+    for key in FLAG_EVENTS:
+        if (char.flags or {}).get(key):
+            fact("flag", {"key": key})
+    for flag, key in DECISION_FLAGS.items():  # the written decisions are kept in flags
+        if (char.flags or {}).get(flag):
+            fact("decision", {"key": key})
     # Discovery flags shared with quest rewards cannot prove that discovery was resolved.
     for monster, entry in (char.bestiary or {}).items():
         if monster not in c.monsters:
@@ -225,15 +229,6 @@ async def backfill_character(session, char):
     for key, quest in c.quests.items():
         if key in completed or any(old in completed for old in quest.legacy_done):
             fact("quest", {"quest": key})
-    # Delivered/sold stages and their corresponding endings preserve the decision.
-    for q in quests:
-        if q.quest_key == "sealed_box":
-            if q.stage in ("returned_covenant", "completed_covenant"):
-                fact("decision", {"key": "covenant"})
-            elif q.stage in ("sold_syndicate", "completed_syndicate"):
-                fact("decision", {"key": "syndicate"})
-            elif q.stage == "opened_box":
-                fact("decision", {"key": "opened"})
     for row in (await session.scalars(select(FactionReputation).where(
             FactionReputation.character_id == char.id))).all():
         fact("reputation", {"faction": row.faction_key, "value": row.value})

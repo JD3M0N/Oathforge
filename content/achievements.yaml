@@ -64,26 +64,26 @@ whispers:
     event: visit
     match:
       location: whispering_woods
-beneath_crown:
+valley_opened:
   edition: v0_9
   category: exploration
   form: milestone
   visibility: public
   name:
-    es: Bajo la corona
-    en: Beneath the Crown
+    es: El valle se abre
+    en: The Vale Opens
   description:
-    es: Obtén acceso a la Cripta Hundida.
-    en: Gain access to the Sunken Crypt.
+    es: Gradúate con el Ciervo de Hierro y abre el camino al Valle de la Fragua Gris.
+    en: Graduate with the Iron Stag and open the road to Greyforge Vale.
   earned:
-    es: 'Tu historia recuerda este logro: Bajo la corona.'
-    en: 'Your story remembers this feat: Beneath the Crown.'
+    es: 'Tu historia recuerda este logro: El valle se abre.'
+    en: 'Your story remembers this feat: The Vale Opens.'
   points: 10
   condition:
     kind: event
     event: flag
     match:
-      key: crypt_unlocked
+      key: valley_open
 no_stone:
   edition: v0_9
   category: exploration
@@ -156,29 +156,29 @@ first_victory:
     event: combat
     match:
       status: victory
-cryptbreaker:
+collector_collected:
   edition: v0_9
   category: combat
   form: milestone
   visibility: public
   name:
-    es: Rompecriptas
-    en: Cryptbreaker
+    es: Cobrador cobrado
+    en: Collector Collected
   description:
-    es: Derrota al Guardián de la Cripta.
-    en: Defeat the Crypt Warden.
+    es: Derrota al Recaudador de Ceniza.
+    en: Defeat the Ash Collector.
   earned:
-    es: 'Tu historia recuerda este logro: Rompecriptas.'
-    en: 'Your story remembers this feat: Cryptbreaker.'
+    es: 'Tu historia recuerda este logro: Cobrador cobrado.'
+    en: 'Your story remembers this feat: Collector Collected.'
   points: 40
   condition:
     kind: event
     event: kill
     match:
-      monster: crypt_warden
+      monster: ash_collector
   title:
-    es: Rompecriptas
-    en: Cryptbreaker
+    es: Cobrador cobrado
+    en: Collector Collected
 last_breath:
   edition: v0_9
   category: combat
@@ -451,75 +451,75 @@ long_road:
     - tut_bats
     - tut_chapel
     - old_tusk
-silver_allegiance:
+facts_first:
   edition: v0_9
   category: story
   form: narrative
   visibility: hint
   name:
-    es: Lealtad de plata
-    en: Silver Allegiance
+    es: Los hechos primero
+    en: Facts First
   description:
-    es: Entrega el relicario al Pacto de Plata.
-    en: Deliver the locket to the Silver Covenant.
+    es: Contrasta el rumor de la taberna con los hechos de la Guardia.
+    en: Check the tavern rumour against the Guard's facts.
   earned:
-    es: 'Tu historia recuerda este logro: Lealtad de plata.'
-    en: 'Your story remembers this feat: Silver Allegiance.'
+    es: 'Tu historia recuerda este logro: Los hechos primero.'
+    en: 'Your story remembers this feat: Facts First.'
   points: 20
   condition:
     kind: event
     event: decision
     match:
-      key: covenant
+      key: checked
   hint:
-    es: Un relicario, varios caminos. La decisión deja huella.
-    en: One locket, several paths. Your choice leaves a mark.
-crimson_bargain:
+    es: En Crownreach, lo que dices sobre un rumor también es un hecho.
+    en: In Crownreach, what you say about a rumour is also a fact.
+tall_tale:
   edition: v0_9
   category: story
   form: narrative
   visibility: hint
   name:
-    es: Trato carmesí
-    en: Crimson Bargain
+    es: Un cuento de fantasmas
+    en: A Ghost Story
   description:
-    es: Vende el relicario al Sindicato Carmesí.
-    en: Sell the locket to the Crimson Syndicate.
+    es: Cree el rumor de Bram sobre los carros fantasma.
+    en: Believe Bram's rumour about the ghost carts.
   earned:
-    es: 'Tu historia recuerda este logro: Trato carmesí.'
-    en: 'Your story remembers this feat: Crimson Bargain.'
+    es: 'Tu historia recuerda este logro: Un cuento de fantasmas.'
+    en: 'Your story remembers this feat: A Ghost Story.'
   points: 20
   condition:
     kind: event
     event: decision
     match:
-      key: syndicate
+      key: believed
   hint:
-    es: Un relicario, varios caminos. La decisión deja huella.
-    en: One locket, several paths. Your choice leaves a mark.
-sealed_no_more:
+    es: En Crownreach, lo que dices sobre un rumor también es un hecho.
+    en: In Crownreach, what you say about a rumour is also a fact.
+quiet_deal:
   edition: v0_9
   category: story
   form: narrative
   visibility: hint
   name:
-    es: Algunos sellos deben permanecer
-    en: Some Seals Should Hold
+    es: Un trato callado
+    en: A Quiet Deal
   description:
-    es: Abre el relicario sellado.
-    en: Open the sealed locket.
+    es: Acepta el trato del contrabandista por el agua de la cantera.
+    en: Accept the smuggler's deal for the quarry's water.
   earned:
-    es: 'Tu historia recuerda este logro: Algunos sellos deben permanecer.'
-    en: 'Your story remembers this feat: Some Seals Should Hold.'
+    es: 'Tu historia recuerda este logro: Un trato callado.'
+    en: 'Your story remembers this feat: A Quiet Deal.'
   points: 20
   condition:
     kind: event
     event: decision
     match:
-      key: opened
+      key: smuggler
   hint:
-    es: Un relicario, varios caminos. La decisión deja huella.
-    en: One locket, several paths. Your choice leaves a mark.
+    es: El agua volvió. El precio no figura en ningún libro.
+    en: The water ran again. The price is in no ledger.
 remembered:
   edition: v0_9
   category: story
@@ -692,10 +692,8 @@ warden_crownreach:
     es: Guardián de Crownreach
     en: Warden of Crownreach
   description:
-    es: Conoce la ciudad, completa el tutorial, derrota al Guardián y completa El relicario sellado por
-      cualquier final.
-    en: Know the city, complete the tutorial, defeat the Warden and finish The Sealed Locket with any
-      ending.
+    es: Conoce la ciudad, completa el tutorial, derrota al Recaudador de Ceniza y completa su misión.
+    en: Know the city, complete the tutorial, defeat the Ash Collector and finish his mission.
   earned:
     es: 'Tu historia recuerda este logro: Guardián de Crownreach.'
     en: 'Your story remembers this feat: Warden of Crownreach.'
@@ -710,11 +708,11 @@ warden_crownreach:
       values:
       - know_city
       - long_road
-      - cryptbreaker
+      - collector_collected
     - kind: event
       event: quest
       match:
-        quest: sealed_box
+        quest: camp_collector
   title:
     es: Guardián de Crownreach
     en: Warden of Crownreach
@@ -814,8 +812,8 @@ came_back:
     es: Volví por ti
     en: I Came Back for You
   description:
-    es: Huye de un combate y, más tarde, acaba con el Guardián de la Cripta.
-    en: Flee a battle and, later, put down the Crypt Warden.
+    es: Huye de un combate y, más tarde, acaba con el Recaudador de Ceniza.
+    en: Flee a battle and, later, put down the Ash Collector.
   earned:
     es: 'Tu historia recuerda este logro: Volví por ti.'
     en: 'Your story remembers this feat: I Came Back for You.'
@@ -828,7 +826,7 @@ came_back:
         match: {status: fled}
       - kind: event
         event: kill
-        match: {monster: crypt_warden}
+        match: {monster: ash_collector}
 night_victor:
   edition: v0_9
   category: curiosity

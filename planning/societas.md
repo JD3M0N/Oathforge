@@ -10,7 +10,7 @@ Resumen de [Possibilium §12 y §24](Possibilium.md#s12).
 
 ## Decidido
 
-- Primera prueba: dos amigos en la Cripta Hundida (PKG-02), ampliable a cuatro.
+- Primera prueba: dos amigos en una aventura corta del Valle de la Fragua Gris (PKG-02; la Cripta Hundida se retiró en 0.10.41), ampliable a cuatro.
 - PvP solo con consentimiento y sin pérdidas permanentes.
 - Nunca usar el personaje de un ausente sin consentimiento; mostrar nombres de personaje, no datos de Telegram.
 

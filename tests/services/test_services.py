@@ -46,7 +46,7 @@ async def test_create_character_sets_everything_up():
         assert characters.skill_bonus(char, skills, "athletics") == 3 + 2
         prog = await quests.progress(s, char)
         assert prog["tut_muster"].state == "active"
-        assert prog["sealed_box"].stage == "locked" and prog["tut_town"].state == "locked"
+        assert prog["camp_order"].stage == "locked" and prog["tut_town"].state == "locked"
         assert char.resources == {"consecrated_strike": None}  # Conviction pays for it, not uses per rest
         assert characters.resource_max(char) == 2 + 2 * 1
 
@@ -155,11 +155,12 @@ def test_name_validation():
 
 # ---------------------------------------------------------------- exploration
 
+@pytest.mark.usefixtures("ruins")
 async def test_travel_only_along_routes():
     _, cid = await new_character()
     async with session_scope() as s:
         char = await get_char(s, cid)
-        out = await exploration.travel(s, char, "crypt_sanctum", random.Random(0))
+        out = await exploration.travel(s, char, "ruin_sanctum", random.Random(0))
         assert not out.ok and char.location == "crownreach_plaza"
         out = await exploration.travel(s, char, "broken_crown_tavern", random.Random(0))
         assert out.ok and char.location == "broken_crown_tavern"
@@ -200,33 +201,36 @@ async def test_defeat_ends_the_trip():
         assert "trip" not in char.flags
 
 
+@pytest.mark.usefixtures("ruins")
 async def test_locked_route_needs_flag():
     _, cid = await new_character()
     async with session_scope() as s:
         char = await get_char(s, cid)
         char.location = "whispering_woods"
-        assert "crypt_entrance" not in [e.to for e in exploration.exits(char)]
-        char.flags = {"crypt_unlocked": True}
-        assert "crypt_entrance" in [e.to for e in exploration.exits(char)]
+        assert "ruin_entrance" not in [e.to for e in exploration.exits(char)]
+        char.flags = {"ruins_unlocked": True}
+        assert "ruin_entrance" in [e.to for e in exploration.exits(char)]
 
 
+@pytest.mark.usefixtures("ruins")
 async def test_fixed_encounter_triggers_once():
     _, cid = await new_character()
     async with session_scope() as s:
         char = await get_char(s, cid)
-        char.location, char.flags = "whispering_woods", {"crypt_unlocked": True}
-        out = await exploration.travel(s, char, "crypt_entrance", random.Random(1))
+        char.location, char.flags = "whispering_woods", {"ruins_unlocked": True}
+        out = await exploration.travel(s, char, "ruin_entrance", random.Random(1))
         assert out.encounter_id and char.state in ("in_combat", "idle")
         enc = await combat_service.active_encounter(s, char)
         if enc:
-            assert enc.fixed_flag == "cleared_crypt_entrance"
+            assert enc.fixed_flag == "cleared_ruin_entrance"
 
 
+@pytest.mark.usefixtures("ruins")
 async def test_investigate_finds_discovery_once():
     _, cid = await new_character(cls="rogue", bg="scholar")
     async with session_scope() as s:
         char = await get_char(s, cid)
-        char.location = "crypt_ossuary"
+        char.location = "ruin_ossuary"
         gold0 = char.gold
         for seed in range(40):
             char.checks_tried = {}  # a new day: failed secrets can be tried again
@@ -242,11 +246,12 @@ class AlwaysOne(random.Random):
         return a
 
 
+@pytest.mark.usefixtures("ruins")
 async def test_failed_investigation_waits_for_tomorrow(monkeypatch):
     _, cid = await new_character(cls="rogue", bg="scholar")
     async with session_scope() as s:
         char = await get_char(s, cid)
-        char.location = "crypt_ossuary"
+        char.location = "ruin_ossuary"
         out = await exploration.investigate(s, char, AlwaysOne())
         assert out.events[-1].key == "explore.found_nothing"
         assert (await exploration.investigate(s, char, random.Random(0))).events[0].key == "explore.already_tried"
@@ -450,12 +455,13 @@ async def test_combat_victory_grants_rewards():
         assert any(e.key == "progress.xp" for e in out.events)
 
 
+@pytest.mark.usefixtures("ruins")
 async def test_combat_defeat_respawns_injured():
     _, cid = await new_character()
     async with session_scope() as s:
         char = await get_char(s, cid)
         char.location, char.hp, char.gold = "old_kings_road", 1, 100
-        enc, out = await _fight(s, char, ["crypt_warden"])
+        enc, out = await _fight(s, char, ["test_warden"])
         assert enc.status == "defeat"
         assert char.location == "crownreach_plaza" and char.conditions.get("injured")
         assert char.gold == 90 and char.hp >= 1
@@ -485,49 +491,43 @@ async def test_level_up():
 
 # ---------------------------------------------------------------- quest
 
-async def unlock_sealed_box(s, char) -> None:
-    prog = (await quests.progress(s, char, lock=True))["sealed_box"]
-    prog.stage, prog.state = "not_started", "available"
 
 
-async def test_sealed_box_covenant_branch_to_completion():
+async def open_rumor(s, char) -> None:
+    prog = (await quests.progress(s, char, lock=True))["camp_rumor"]
+    prog.stage, prog.state = "active", "active"
+    char.location = "broken_crown_tavern"
+
+
+async def test_a_written_decision_pays_reputation_leaves_a_flag_and_cannot_be_taken_twice():
     _, cid = await new_character()
     rng = random.Random(3)
     async with session_scope() as s:
         char = await get_char(s, cid)
-        await unlock_sealed_box(s, char)
-        char.location = "whispering_woods"
-        out = await quests.perform(s, char, "sealed_box.approach_guard", [], rng)
-        assert out.ok and await inventory.count(s, char, "sealed_reliquary") == 1
-        char.location = "crownreach_plaza"
-        out = await quests.perform(s, char, "sealed_box.give_box_holt", ["holt"], rng)
-        assert out.ok and char.flags["crypt_unlocked"]
-        assert await inventory.count(s, char, "sealed_reliquary") == 0
+        await open_rumor(s, char)
+        out = await quests.perform(s, char, "camp_rumor.check", ["bram"], rng)
+        assert out.ok and char.flags["rumor_checked"] and "rumor_believed" not in char.flags
         reps = await npcs.reputations(s, char)
-        assert reps["silver_covenant"] >= 15 and reps["crimson_syndicate"] == -5
-        mems = await npcs.recall(s, "holt", char)
-        assert any("reliquary" in m.text for m in mems)
+        assert reps["silver_covenant"] >= 5
+        prog = (await quests.progress(s, char))["camp_rumor"]
+        assert prog.stage == "done" and prog.state == "completed"
         # already done: cannot repeat or take the other branch
-        assert not (await quests.perform(s, char, "sealed_box.sell_box_mira", ["mira"], rng)).ok
-        out = await quests.on_defeat(s, char, "crypt_warden", rng)
-        prog = (await quests.progress(s, char))["sealed_box"]
-        assert prog.stage == "completed_covenant" and prog.state == "completed"
-        rumors = await npcs.recent_rumors(s)
-        assert any("Aldric" in r["es"] for r in rumors)
+        assert not (await quests.perform(s, char, "camp_rumor.believe", ["bram"], rng)).ok
+        assert not (await quests.perform(s, char, "camp_rumor.check", ["bram"], rng)).ok
 
 
 async def test_quest_action_needs_npc_present_and_location():
     _, cid = await new_character()
     async with session_scope() as s:
         char = await get_char(s, cid)
-        assert not (await quests.perform(s, char, "sealed_box.approach_guard", [], random.Random(0))).ok
-        await inventory.add_item(s, char, "sealed_reliquary")
-        prog = await s.scalar(select(QuestProgress).where(QuestProgress.character_id == cid,
-                                                          QuestProgress.quest_key == "sealed_box"))
-        prog.stage = "has_box"
-        assert not (await quests.perform(s, char, "sealed_box.give_box_holt", [], random.Random(0))).ok
-        assert (await quests.perform(s, char, "sealed_box.sell_box_mira", ["mira"], random.Random(0))).ok
-        assert char.flags.get("syndicate_in_crypt")
+        assert not (await quests.perform(s, char, "camp_rumor.check", ["bram"], random.Random(0))).ok  # still locked
+        await open_rumor(s, char)
+        char.location = "crownreach_plaza"
+        assert not (await quests.perform(s, char, "camp_rumor.check", ["bram"], random.Random(0))).ok  # wrong place
+        char.location = "broken_crown_tavern"
+        assert not (await quests.perform(s, char, "camp_rumor.check", [], random.Random(0))).ok  # Bram is not here
+        assert (await quests.perform(s, char, "camp_rumor.believe", ["bram"], random.Random(0))).ok
+        assert char.flags.get("rumor_believed")
 
 
 # ---------------------------------------------------------------- npcs
@@ -629,25 +629,34 @@ async def test_mission_chain_talk_then_hunt():
         assert prog["tut_boars"].state == "completed" and prog["tut_herbs"].state == "active"
         assert char.xp == 25 + 25 + 25 + 100  # the fights' XP comes from the fight, not from here
         assert await inventory.count(s, char, "sickle") == 1
-        assert prog["sealed_box"].state == "locked"
+        assert prog["camp_order"].state == "locked"
 
 
-async def test_mission_unlocks_by_flag_and_counts_only_when_active():
+async def test_mission_unlocks_by_flag_and_counts_only_when_active(monkeypatch):
+    from oathforge.content.schemas import Quest
+    monkeypatch.setitem(get_content().quests, "flagged", Quest.model_validate({
+        "order": 99, "giver": "bram", "name": {"es": "Con bandera", "en": "Flagged"}, "summary": {"es": "-", "en": "-"},
+        "start_stage": "locked", "unlock_stage": "active", "unlock_flag": "test_flag", "objective_stage": "active",
+        "complete_stage": "done", "rewards": [{"xp": 10}], "objectives": [{"kind": "kill", "target": "bandit", "count": 3}],
+        "stages": {"locked": {"state": "locked", "journal": {"es": "-", "en": "-"}},
+                   "active": {"journal": {"es": "-", "en": "-"}},
+                   "done": {"state": "completed", "journal": {"es": "-", "en": "-"}}}}))
     _, cid = await new_character()
     rng = random.Random(1)
     async with session_scope() as s:
         char = await get_char(s, cid)
-        await quests.on_defeat(s, char, "crypt_skeleton", rng)  # crypt_bones still locked: no count
-        assert (await quests.progress(s, char))["crypt_bones"].counters == {}
-        char.flags = {**char.flags, "crypt_unlocked": True}
+        await quests.on_defeat(s, char, "bandit", rng)  # still locked: no count
+        assert (await quests.progress(s, char))["flagged"].counters == {}
+        char.flags = {**char.flags, "test_flag": True}
         await quests.refresh(s, char, Outcome())
-        assert (await quests.progress(s, char))["crypt_bones"].state == "active"
+        assert (await quests.progress(s, char))["flagged"].state == "active"
         for _ in range(3):
-            await quests.on_defeat(s, char, "crypt_skeleton", rng)
-        assert (await quests.progress(s, char))["crypt_bones"].state == "completed"
+            await quests.on_defeat(s, char, "bandit", rng)
+        assert (await quests.progress(s, char))["flagged"].state == "completed"
 
 
-async def test_the_whole_chain_from_the_muster_to_the_crypt():
+@pytest.mark.usefixtures("ruins")
+async def test_the_whole_chain_from_the_muster_to_the_first_act():
     """With the table of twenty levels the old chain goes a little past five; no gate stops it,
     because the gates of roadmap_balance only start at nine."""
     _, cid = await new_character()
@@ -687,7 +696,7 @@ async def test_the_whole_chain_from_the_muster_to_the_crypt():
         await quests.on_talk(s, char, "vale", rng)
         prog = await quests.progress(s, char)
         assert prog["old_tusk"].state == "active" and char.flags.get("old_tusk_hunt")
-        assert prog["sealed_box"].state == "locked"  # no crypt during the tutorial
+        assert prog["camp_order"].state == "active"  # the campaign opened with the last lesson; Old Tusk is optional
         await fight(char, "old_tusk")
         prog = await quests.progress(s, char)
         assert prog["old_tusk"].state == "ready"  # beating it is not getting paid: Bram owes you
@@ -701,19 +710,15 @@ async def test_the_whole_chain_from_the_muster_to_the_crypt():
         assert not again.ok and (char.gold, char.xp) == (gold, xp + 300)
         prog = await quests.progress(s, char)
         assert all(prog[k].state == "completed" for k, q in get_content().quests.items() if q.tutorial)
-        assert prog["sealed_box"].stage == "not_started" and char.level >= 3
-        # after the tutorial: Holt's reliquary and the crypt
-        char.location = "whispering_woods"
-        await quests.perform(s, char, "sealed_box.approach_guard", [], rng)
-        char.location = "crownreach_plaza"
-        await quests.perform(s, char, "sealed_box.give_box_holt", ["holt"], rng)
-        assert (await quests.progress(s, char))["crypt_bones"].state == "active"
-        for monster, n in (("crypt_skeleton", 4), ("crypt_warden", 1)):
-            for _ in range(n):
-                await fight(char, monster)
+        assert prog["camp_order"].state == "active" and char.level >= 3  # the first act opens
+        # Act I: Tamsin, two bandits, a leather armor; then the gear lesson opens
+        await quests.on_talk(s, char, "tamsin", rng)
+        for _ in range(2):
+            await fight(char, "bandit")
         prog = await quests.progress(s, char)
-        assert prog["sealed_box"].state == "completed" and prog["crypt_bones"].state == "completed"
-        assert char.level == 6 and characters.eligible_level(char) == 6  # nothing gates it below nine
+        assert prog["camp_order"].state == "completed" and prog["camp_gear"].state == "active"
+        assert await inventory.count(s, char, "leather_armor") >= 1
+        assert characters.eligible_level(char) == char.level  # nothing gates it below nine
 
 
 async def test_ensure_progress_adds_missions_to_old_characters():
@@ -721,13 +726,13 @@ async def test_ensure_progress_adds_missions_to_old_characters():
     async with session_scope() as s:
         char = await get_char(s, cid)
         for p in (await quests.progress(s, char)).values():
-            if p.quest_key != "sealed_box":
+            if p.quest_key != "camp_collector":
                 await s.delete(p)
     async with session_scope() as s:
         char = await get_char(s, cid)
         journal = await quests.journal(s, char)
         assert [k for k, _, p in journal if p is None] == [
-            k for k, _ in quests.ordered_quests() if k != "sealed_box"]
+            k for k, _ in quests.ordered_quests() if k != "camp_collector"]
         await quests.refresh(s, char, Outcome())
         prog = await quests.progress(s, char)
         assert set(prog) == set(get_content().quests) and prog["tut_muster"].state == "active"

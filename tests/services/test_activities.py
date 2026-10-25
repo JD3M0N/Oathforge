@@ -618,17 +618,26 @@ async def test_objective_respects_the_hour(monkeypatch):
     assert "tusk_meadow" in exploration._objective_spots(char, "kill", "cave_bat")
 
 
+@pytest.mark.usefixtures("ruins")
 async def test_objective_covers_missions_with_choices(monkeypatch):
-    """The reliquary has no counted objectives: its actions and its boss still give the 📜 a place."""
+    """A mission without counted objectives: its actions and its boss still give the 📜 a place."""
     from oathforge.content import get_content
+    from oathforge.content.schemas import Quest
     monkeypatch.setattr(exploration, "is_night", lambda now=None: False)
-    quest = get_content().quests["sealed_box"]
-    char = Character(level=3, flags={"crypt_unlocked": True}, location="crownreach_plaza")
-    assert exploration._stage_spots(char, quest, "not_started") == {"whispering_woods"}
-    assert exploration._stage_spots(char, quest, "has_box") >= {"crownreach_plaza"}  # Holt
-    assert exploration._stage_spots(char, quest, "returned_covenant") == {"crypt_sanctum"}
-    char.flags["cleared_crypt_sanctum"] = True
-    assert exploration._stage_spots(char, quest, "returned_covenant") == set()
+    text = {"es": "-", "en": "-"}
+    quest = Quest.model_validate({
+        "order": 99, "name": text, "summary": text, "start_stage": "first",
+        "stages": {"first": {"journal": text}, "second": {"journal": text}, "fight": {"journal": text},
+                   "done": {"state": "completed", "journal": text}},
+        "actions": {"go": {"label": text, "text": text, "location": "whispering_woods", "stages": ["first"], "to_stage": "second"},
+                    "talk": {"label": text, "text": text, "npc": "holt", "stages": ["second"], "to_stage": "fight"}},
+        "triggers": [{"event": "defeat", "target": "test_warden", "stages": ["fight"], "to_stage": "done", "text": text}]})
+    char = Character(level=3, flags={"ruins_unlocked": True}, location="crownreach_plaza")
+    assert exploration._stage_spots(char, quest, "first") == {"whispering_woods"}
+    assert exploration._stage_spots(char, quest, "second") >= {"crownreach_plaza"}  # Holt
+    assert exploration._stage_spots(char, quest, "fight") == {"ruin_sanctum"}
+    char.flags["cleared_ruin_sanctum"] = True
+    assert exploration._stage_spots(char, quest, "fight") == set()
 
 
 # ---------------------------------------------------------------- mana potion

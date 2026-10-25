@@ -9,7 +9,6 @@ description:
     Rain beats on the leaves of the Thornwood oaks. Between the trunks, the wind seems to speak names.
 exits:
   - {to: old_kings_road, minutes: 40, danger: 2}
-  - {to: crypt_entrance, minutes: 20, requires_flag: crypt_unlocked}
   - {to: elderwood_grove, minutes: 20, danger: 1}
   - {to: redroot_clearing, minutes: 15, danger: 1}
 encounters:
@@ -41,10 +40,3 @@ discoveries:
     text:
       es: Reconoces raíz de sangre entre los helechos y preparas un ungüento curativo.
       en: You spot bloodroot among the ferns and prepare a healing salve.
-  hidden_stairs:
-    skill: perception
-    tier: very_hard
-    sets_flag: crypt_unlocked
-    text:
-      es: Bajo un manto de hiedra descubres unos peldaños de piedra que descienden hacia la oscuridad.
-      en: Beneath a curtain of ivy you find stone steps descending into darkness.

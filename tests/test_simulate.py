@@ -31,9 +31,10 @@ def test_same_seed_same_numbers():
     assert run(7) != run(8)
 
 
+@pytest.mark.usefixtures("ruins")
 def test_abilities_matter():
-    with_abilities = sim.simulate(["paladin"], ["crypt_warden"], [3], 100, 0, "human", "soldier")[0]
-    weapons_only = sim.simulate(["paladin"], ["crypt_warden"], [3], 100, 0, "human", "soldier", False)[0]
+    with_abilities = sim.simulate(["paladin"], ["test_warden"], [3], 100, 0, "human", "soldier")[0]
+    weapons_only = sim.simulate(["paladin"], ["test_warden"], [3], 100, 0, "human", "soldier", False)[0]
     assert with_abilities["win_pct"] > weapons_only["win_pct"]
 
 

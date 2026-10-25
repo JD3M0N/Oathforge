@@ -9,7 +9,7 @@ Resumen de [Possibilium §20](Possibilium.md#s20).
   - **vista**: nombre, tipo, descripción, historia (`lore`), hábitat y si sale de día o de noche (`active`);
   - **1 derrota**: PV, CA y ataques;
   - **3 derrotas**: vulnerabilidades, resistencias, inmunidades, XP y botín.
-- 10 criaturas en `content/monsters.yaml`: bandido, capitán bandido, goblin explorador, lobo gris, esqueleto de la cripta, Guardián de la Cripta (Ser Aldren), jabalí, murciélago de cueva, Viejo Colmillo y rata gigante. Icono propio (`icon`) e ilustración en `content/monsters/<criatura>/images/portrait.jpg` («🖼️ Ver ilustración», `/monster_<clave>`).
+- 25 criaturas en `content/monsters.yaml` (0.10.41): las del tutorial (bandido, capitán bandido, goblin explorador, lobo gris, jabalí, murciélago de cueva, Viejo Colmillo, rata gigante), las del camino (sabueso, cobrador y sargento del peaje; Recaudador de Ceniza; Ciervo de Hierro) y las doce del Valle de la Fragua Gris. Los esqueletos y el Guardián de la Cripta se retiraron. Icono propio (`icon`) e ilustración en `content/monsters/<criatura>/images/portrait.jpg` («🖼️ Ver ilustración», `/monster_<clave>`).
 - Bestias con `harvest` y `skin_seconds` para el desuello.
 - **Balance del tutorial**: jabalí, bandido y esqueleto 7 PV, +2, 1d4; murciélago 5 PV, +3, 1d4; capitán 26 PV, +4, 1d8+1; Viejo Colmillo 18 PV, CA 11, +3, 1d8+1 (el mago de nivel 4 gana el 89 % en el simulador). Las parejas salen por `min_level`: prado desde nivel 2, mina y camino desde 3, capitán desde 4, lobos desde 3 y parejas de lobos desde 4.
 

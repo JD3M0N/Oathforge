@@ -10,7 +10,7 @@ Resumen de [Possibilium §17–18](Possibilium.md#s17).
 - Stock con bloqueo de fila: dos jugadores no compran a la vez la última poción.
 - **Beta**: pociones de vida y de maná a 1 de oro; Ysolde cura gratis; el descanso no cobra tiempo.
 - Entradas de oro: trasfondo, botín, misiones, venta de materiales, robos. Salidas: tiendas, descanso, cambio de oficio y el 10 % al ser derrotado.
-- El relicario se puede vender al Sindicato Carmesí (decisión con reputación).
+- Las decisiones de la campaña (creer o contrastar el rumor, el trato del agua) mueven la reputación con el Pacto de Plata y el Sindicato Carmesí (0.10.36–0.10.41).
 - **Equipo**: 4 ranuras (principal, distancia, secundaria/escudo, cuerpo); lo equipado sale primero en el inventario; `crafted_by` en lo fabricado.
 
 ## Decidido

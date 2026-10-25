@@ -11,7 +11,7 @@ Resumen de [Possibilium §8–9](Possibilium.md#s08) (y equipo en [mercatura](me
 - **Niveles 1–20** (0.10.24): la tabla vive en `content/progression.yaml` y los cinco primeros umbrales siguen siendo 0 / 200 / 500 / 1000 / 1800 XP. PV: dado completo a nivel 1, después media + 1 + CON. Subida de nivel en un mensaje propio.
 - **Competencias** 0–3 que mejoran con el uso, con rendimientos decrecientes si se repite lo mismo en 24 h.
 - Una prueba de habilidad se intenta una vez por habilidad, lugar y día de juego (4 h reales); se desbloquea al día siguiente o al subir de nivel (`characters.checks_tried`).
-- El tutorial (10 misiones, unos 750 XP de misión) lleva a nivel 3–4; relicario y cripta llevan a 5.
+- El tutorial (10 misiones, unos 750 XP de misión) lleva a nivel 3–4; la campaña hasta el Recaudador lleva al 7–9 (ver `informe_balance_0.10.md`).
 - Reputación con dos facciones; los juramentos siguen pendientes.
 - **Logros**: 34 individuales y dos metalogros, por personaje (dos de ellos ocultos hasta conseguirlos); puntos de logro sin poder ni uso económico. Edición fija v0_9 y concesiones atómicas con evidencia. En la interfaz se llaman «Logros», nunca «hazañas».
 - **Identidad**: cinco títulos desbloqueables, uno equipado, tres logros destacados y tres objetivos seguidos. El título se ve en `/hero`, en `/sheet` y en la cabecera del Libro del Héroe, y va como dato al narrador y a los PNJ, que pueden saludarte por él; concederlo sigue siendo solo del motor. El progreso anterior se reconoce solo cuando hay evidencia persistida.

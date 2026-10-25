@@ -12,8 +12,8 @@ bram:
   goals: Keep the tavern profitable and safe; hear every story first.
   secrets: Owes money to the Crimson Syndicate and lets Mira use the back room to settle the debt.
   knowledge: >-
-    Silver Guard patrols have gone missing near the Whispering Woods. Old folks say a crypt lies under the
-    forest. Mira sits in the corner at night. Tessa the smith is the best in the city.
+    Silver Guard carts have gone missing on the Old King's Road. Old folks say it is ghosts; the Guard says
+    otherwise. Mira sits in the corner at night. Tessa the smith is the best in the city.
   passive_perception: 13
   steal_gold: 2d6+4
 
@@ -29,10 +29,10 @@ mira:
     Mira is a sharp, soft-spoken informant of the Crimson Syndicate. Speaks in short, dry sentences,
     answers questions with questions, never gives information for free, respects competence and despises
     sanctimony.
-  goals: Get the sealed reliquary from the Silver Guard before the Covenant does; the Syndicate believes it opens a crypt full of relics.
-  secrets: The Syndicate ambushed the Silver Guard courier in the woods. She knows the courier carried the reliquary.
+  goals: Learn who is diverting the guild's carts on the Old King's Road before the Covenant does, and sell the answer to the best bidder.
+  secrets: The Syndicate bought cargo from the toll post for a season and never asked what it was.
   knowledge: >-
-    The reliquary is the key to the Sunken Crypt. Sergeant Holt is honest but rigid. Bram owes the Syndicate.
+    Someone who signs "the Collector" runs the carts on the Old King's Road. Sergeant Holt is honest but rigid. Bram owes the Syndicate.
   passive_perception: 15
   shop:
     items: [dagger, rope, healing_potion, mana_potion, water_flask]
@@ -80,11 +80,11 @@ holt:
   persona: >-
     Sergeant Holt is a weathered, rigid but honest officer of the Silver Guard. Formal, terse, dutiful.
     Grieves silently for missing soldiers. Values oaths and truth; distrusts thieves and the Syndicate.
-  goals: Find the courier who vanished in the Whispering Woods carrying the sealed reliquary, and keep the crypt sealed.
-  secrets: The Covenant fears that whoever opens the reliquary will wake Ser Aldren, the Crypt Warden.
+  goals: Find out who forged the guild's orders and why three guild carts left Crownreach and never arrived.
+  secrets: The Covenant fears that someone inside the Guard sold the old seal of the guild.
   knowledge: >-
-    A courier, Private Edda, carried a sealed reliquary through the Whispering Woods three days ago and never
-    arrived. The Sunken Crypt lies under the woods; the reliquary holds the key that opens it.
+    Three guild carts left for the valley and none arrived. He receives proof against whoever signed the false
+    orders, and rewards those who bring it. Tamsin Harrow, the guild's scout, works with him.
   passive_perception: 14
 
 tessa:
@@ -98,7 +98,7 @@ tessa:
     Tessa is a cheerful, soot-covered smith with burn-scarred forearms. Proud of her craft, blunt about bad
     gear, fond of brave fools. Speaks fast and laughs loud.
   goals: Get iron from Frosthold despite the closed roads; make a blade worthy of a legend.
-  secrets: She forged the lock of the sealed reliquary years ago and knows it can be opened without breaking the seal.
+  secrets: She forged the guild's old seal die years ago and wonders who still has the mould.
   knowledge: >-
     Iron prices are rising because the northern roads are dangerous. The Silver Guard buys her armor. She teaches
     blacksmithing at her forge, the first stall on Craftsmen's Row, and sells the tools a gatherer needs.
@@ -119,10 +119,10 @@ ysolde:
     Sister Ysolde is a calm, tired priestess in her fifties who has bandaged half the adventurers of Crownreach.
     Gentle but no fool; scolds the reckless, never refuses the dying. Speaks softly, with dry humour.
   goals: Keep the chapel's doors open day and night and the city's healers fed.
-  secrets: She read the warden's inscription long before anyone else and fears what the crypt holds.
+  secrets: She tended the survivors of the first ambush on the Old King's Road and saw the guild's seal on their orders.
   knowledge: >-
-    Many who went into the Sunken Crypt came back cursed or not at all. The Silver Guard pays her for every
-    soldier she saves. The inscription under the altar speaks of a warden who will not sleep.
+    Many who went down the Old King's Road came back wounded or not at all. The Silver Guard pays her for every
+    soldier she saves. Wounds from crossbow bolts are her speciality, and she has seen too many lately.
   passive_perception: 14
 
 # Un maestro por puesto del Barrio de Oficios: enseña y cambia su oficio y explica sus técnicas.
@@ -196,7 +196,7 @@ pell:
     Pell is an elderly, immaculate jeweler who speaks quietly and never looks up from his work for long. Courteous,
     exacting, faintly amused by adventurers who think a rough gem is already a jewel.
   goals: Set one stone worth remembering before his hands fail him.
-  secrets: He appraised the sealed reliquary's fittings years ago and recognised the metal.
+  secrets: He appraised gems that came out of the quarry with the metal of ancient regulators in their setting and recognised it.
   knowledge: >-
     Rough gems come from the deep seams of Old Pass Mine and need a practised miner. Ore is smelted into ingots at
     the guild's furnace. He makes settings and rings, and teaches jewelcrafting at his bench.

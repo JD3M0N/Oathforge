@@ -667,8 +667,8 @@ cleric:
         es: Todos los no-muertos enemigos sufren 2d6 de daño radiante y quedan aturdidos un turno.
         en: Every undead enemy takes 2d6 radiant damage and is stunned for a turn.
       details:
-        es: 'Alzas tu símbolo sagrado y los muertos recuerdan que deberían estar quietos. Todos los no muertos enemigos reciben 2d6 de daño radiante y quedan aturdidos un turno. Contra cualquier otra criatura no hace nada: úsalo en la cripta.'
-        en: 'You raise your holy symbol and the dead remember they should lie still. Every undead enemy takes 2d6 radiant damage and is stunned for a turn. Against any other creature it does nothing: use it in the crypt.'
+        es: 'Alzas tu símbolo sagrado y los muertos recuerdan que deberían estar quietos. Todos los no muertos enemigos reciben 2d6 de daño radiante y quedan aturdidos un turno. Contra cualquier otra criatura no hace nada: úsalo contra los muertos que caminan.'
+        en: 'You raise your holy symbol and the dead remember they should lie still. Every undead enemy takes 2d6 radiant damage and is stunned for a turn. Against any other creature it does nothing: use it against the walking dead.'
       level: 2
       kind: turn
       damage: 2d6

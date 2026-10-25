@@ -142,7 +142,7 @@ def pace() -> list[dict]:
     xp, minutes, rows = 0, 0.0, []
     from oathforge.services import quests as q
     for key, quest in q.ordered_quests():
-        if quest.order >= 100 or key in ("sealed_box", "crypt_bones"):
+        if quest.order >= 100:
             continue
         m, x = _quest_minutes_and_xp(quest)
         xp, minutes = xp + x, minutes + m

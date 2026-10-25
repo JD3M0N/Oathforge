@@ -479,9 +479,10 @@ book:
   quest: "✅ You finished \"{what}\"."
   decision: "⚖️ {what}"
   decision_text:
-    covenant: "You handed the reliquary to the Silver Guard."
-    syndicate: "You sold the reliquary to the Crimson Syndicate."
-    opened: "You broke the reliquary's seal with your own hands."
+    checked: "You checked the tavern rumour against the Guard's facts."
+    believed: "You believed Bram's rumour about the ghost carts."
+    smuggler: "You accepted the smuggler's deal for the quarry's water."
+    kellan: "You helped Kellan with the quarry's water rota."
   unlock: "🏆 Achievement: {what}"
   level: "⬆️ You reached level {what}."
   kill: "⚔️ You slew your first {what}."

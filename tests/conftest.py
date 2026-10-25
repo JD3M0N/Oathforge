@@ -54,6 +54,15 @@ async def database(tmp_path_factory):
 
 
 @pytest.fixture
+def ruins(monkeypatch):
+    """A test-only dungeon (tests/ruins.py): the game has none, the engine still supports one."""
+    from tests import ruins as r
+    r.install(monkeypatch)
+    yield
+    r.uninstall()
+
+
+@pytest.fixture
 def is_postgres(database) -> bool:
     return database.startswith("postgresql")
 

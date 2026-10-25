@@ -82,14 +82,14 @@ rest:
   body:
     es: |-
       • Descanso largo en la posada de La Corona Rota: {rest_gold} de oro y {rest_min} minutos reales. Si lo abandonas no recuperas nada. Recuperas toda la vida y tu barra de clase, se curan las heridas graves y vuelven tus descansos cortos.
-      • En la Cripta Hundida, ya despejada, puedes descansar gratis: es el único sitio fuera de la posada donde se hace un descanso largo.
+      • El Puesto del Vado, en el Valle de la Fragua Gris, tiene su propia cama (también de pago): el único refugio fuera de Crownreach.
       • «Curar heridas» en la Capilla del Alba: {heal_gold} de oro (si llevas menos, te atienden por lo que tengas) y al momento. La hermana Ysolde cierra también las heridas graves que deja una derrota.
       • Descanso corto, en cualquier sitio: {short_rest_min} minutos, gratis; recuperas un {short_rest_pct} % de la vida (sin pasar del límite de las heridas graves) y parte de tu barra o de un uso gastado. Solo {short_rests} entre dos descansos largos.
       • Las pociones de curación ayudan fuera de la ciudad; el tónico del reposo da un descanso corto y luego tarda un rato en poder usarse otra vez.
       En el juego también pasan el día y la noche: algunas criaturas cambian según la hora.
     en: |-
       • Long rest at the Broken Crown inn: {rest_gold} gold and {rest_min} real minutes. If you abandon it you recover nothing. You recover all your HP and your class bar, grave wounds heal and your short rests come back.
-      • In the Sunken Crypt, once cleared, you can rest for free: it is the only place outside the inn where a long rest happens.
+      • Ford Post, in Greyforge Vale, has its own bed (also for a fee): the only shelter outside Crownreach.
       • "Cure wounds" at the Chapel of Dawn: {heal_gold} gold (if you carry less, they treat you for what you have) and right away. Sister Ysolde also closes the grave wounds a defeat leaves.
       • Short rest, anywhere: {short_rest_min} minutes, free; you recover {short_rest_pct}% of your HP (never past the grave-wound limit) and part of your bar or of a spent use. Only {short_rests} between two long rests.
       • Healing potions help outside the city; the rest draught grants a short rest and then needs a while before it works again.
@@ -217,13 +217,13 @@ travel:
   title: {es: Viajar y explorar, en: Travel and explore}
   body:
     es: |-
-      Eliges adónde ir y el juego pone el camino. A cualquier lugar que ya conozcas llegas en un toque, aunque esté lejos: de la cripta despejada a la plaza, o de la plaza a la mina. Lo que aún no conoces se explora camino a camino, y una sala de mazmorra con enemigos te detiene hasta que la limpies.
+      Eliges adónde ir y el juego pone el camino. A cualquier lugar que ya conozcas llegas en un toque, aunque esté lejos: del Puesto del Vado a la plaza, o de la plaza a la mina. Lo que aún no conoces se explora camino a camino.
       ⚠️ es el peligro del peor tramo del viaje. Cada viaje tira una sola vez por emboscada: un tramo ⚠️ tiene un {trip_base} % y cada ⚠️ más del peor tramo suma otro {trip_base} %; cada tramo peligroso de más añade {trip_step} %, hasta un {trip_cap} % como mucho. Si te emboscan, el viaje se para ahí; al acabar, «▶️ Seguir» te lleva al destino sin otra tirada.
       El mapa enseña dónde estás, tu objetivo (📜, si ya sabes llegar), a dónde puedes ir, a qué distancia (en yardas) y qué se puede hacer en cada lugar: /map
       Viajar es inmediato: la distancia es solo una referencia y no gasta tiempo. Lo que sí lleva tiempo real son las actividades.
       Los botones cubren lo habitual, pero también puedes escribir lo que quieras hacer («me escondo tras la barra y escucho»): la IA lo interpreta y el motor decide qué pasa.
     en: |-
-      You choose where to go and the game finds the way. Any place you already know is one tap away, however far: from the cleared crypt to the plaza, or from the plaza to the mine. What you don't know yet is explored one road at a time, and a dungeon room with enemies stops you until you clear it.
+      You choose where to go and the game finds the way. Any place you already know is one tap away, however far: from Ford Post to the plaza, or from the plaza to the mine. What you don't know yet is explored one road at a time.
       ⚠️ is the danger of the worst stretch of the trip. Each trip rolls for an ambush only once: a ⚠️ road has a {trip_base} % chance and each further ⚠️ on the worst stretch adds another {trip_base} %; every extra dangerous stretch adds {trip_step} %, up to {trip_cap} % at most. If you are ambushed, the trip stops there; afterwards, «▶️ Carry on» takes you to the destination with no further roll.
       The map shows where you are, your objective (📜, if you already know the way), where you can go, how far it is (in yards) and what you can do in each place: /map
       Travelling is immediate: the distance is only a reference and takes no time. What does take real time are the activities.

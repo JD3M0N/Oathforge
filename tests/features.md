@@ -38,7 +38,7 @@ Cada pasada se hace con una clase distinta (la que menos se haya probado) y se a
 - [ ] El camino no atraviesa salas con combate fijo pendiente
 - [ ] 📜 al objetivo lleva al siguiente paso de cada misión activa sin revelar sitios desconocidos
 - [ ] 📜 respeta la hora: de día no manda a cazar criaturas que solo salen de noche
-- [ ] 📜 aparece también en misiones con decisiones (relicario: buscar, entregar a Holt, guardián)
+- [ ] 📜 aparece también en misiones con decisiones (rumor de Bram, agua de la cantera)
 - [ ] Tramos ⚠️: emboscada con una sola tirada; «▶️ Seguir hacia…» termina el viaje
 - [ ] Al llegar sin más que contar, el mapa se convierte en la escena («Llegas a X…»)
 - [ ] Solo distancias en yardas, sin tiempos
@@ -72,7 +72,7 @@ Cada pasada se hace con una clase distinta (la que menos se haya probado) y se a
 - [ ] Aceptar y entregar misiones; al cumplir un objetivo, aviso del siguiente
 - [ ] Saludo de regreso (`greeting_return`) tras terminar una misión del NPC
 - [ ] Sin IA: el NPC recuerda la pista de la misión activa
-- [ ] Las 10 misiones del tutorial se completan sin pasar por la cripta; anotar minutos de cada una
+- [ ] Las 10 misiones del tutorial se completan sin salir del camino principal; anotar minutos de cada una
 
 ## Diario y reglas
 - [ ] 📖 Diario: misiones activas/hechas, 📈 Estadísticas
@@ -374,3 +374,10 @@ Sin ayudas de beta: todo lleva su tiempo real. Tabla única en `engine/timings.p
 - [x] Pruebas automáticas de `oath balance`: intervalos de Wilson, celdas reproducibles, kit T1, secuencias, informe y modelo de ritmo.
 - [ ] Jugando a mano con tres clases (guerrero, clériga, hechicero) hasta el nivel 10: contrastar el modelo de ritmo del informe con el tiempo real (`oath tutorial-stats`).
 - [ ] Pelear con un Pirómano o un Tirador contra el Custodio con pociones mayores y comprobar si se siente injusto.
+
+## 0.10-I · Cripta retirada y reinicio (B13, v0.10.41)
+
+- [x] Pruebas automáticas: el reinicio borra el juego y deja cuentas, presupuesto de IA, imágenes y auditoría; copia y restauración exactas; mazmorra de pruebas para el motor.
+- [ ] En Telegram (ES/EN): el mapa no ofrece ningún lugar de cripta; el Bosque de los Susurros ya no tiene escalones ocultos; nadie habla del relicario (Mira, Holt, Ysolde, Tessa, Pell, Bram).
+- [ ] En el diario de logros: aparecen «El valle se abre», «Cobrador cobrado» y las tres decisiones; no los de la cripta.
+- [ ] En staging con una copia de producción: `oath launch-reset` en seco, `backup`, `launch-reset --yes`, `restore`, y comparar los conteos de cada tabla.

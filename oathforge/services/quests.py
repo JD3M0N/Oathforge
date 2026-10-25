@@ -12,6 +12,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from oathforge.content import get_content
+from oathforge.content.achievement_schemas import DECISION_FLAGS, FLAG_EVENTS
 from oathforge.i18n import t
 from oathforge.content.schemas import Quest, QuestAction, QuestObjective
 from oathforge.database.models import Character, QuestProgress
@@ -346,10 +347,6 @@ async def _set_stage(session, char, quest: Quest, p: QuestProgress, stage: str, 
     elif p.state == "active":
         await achievements.emit(session, char, out, "quest_start", {"quest": p.quest_key},
                                 f"quest:{p.quest_key}:started")
-    decisions = {"returned_covenant": "covenant", "sold_syndicate": "syndicate", "opened_box": "opened"}
-    if p.quest_key == "sealed_box" and stage in decisions:
-        await achievements.emit(session, char, out, "decision", {"key": decisions[stage]},
-                                f"decision:sealed_box:{stage}")
 
 
 async def apply_effects(session: AsyncSession, char: Character, effects: list[dict], out: Outcome,
@@ -384,8 +381,10 @@ async def apply_effects(session: AsyncSession, char: Character, effects: list[di
                 await npcs.adjust_reputation(session, char, faction, int(delta), out)
         elif kind == "set_flag":
             char.flags = {**char.flags, str(arg): True}
-            if arg == "crypt_unlocked":
+            if arg in FLAG_EVENTS:
                 await achievements.emit(session, char, out, "flag", {"key": arg}, f"flag:{arg}")
+            if arg in DECISION_FLAGS:  # a written decision leaves its mark
+                await achievements.emit(session, char, out, "decision", {"key": DECISION_FLAGS[arg]}, f"decision:{arg}")
         elif kind == "npc_memory":
             await npcs.remember(session, arg["npc"], char, arg["text"].format(name=char.name),
                                 int(arg.get("importance", 3)))

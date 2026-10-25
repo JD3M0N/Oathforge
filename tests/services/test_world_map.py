@@ -46,6 +46,7 @@ class Calm(random.Random):
         return 0.99
 
 
+@pytest.mark.usefixtures("ruins")
 async def test_new_places_one_stretch_at_a_time_known_ones_in_one_tap():
     _, cid = await new_character()
     async with session_scope() as s:
@@ -54,7 +55,7 @@ async def test_new_places_one_stretch_at_a_time_known_ones_in_one_tap():
         assert world_map.route_to(char, "elderwood_grove") is None
         far = {r.to: r for r in world_map.beyond(char)}
         assert far["elderwood_grove"].minutes == 60 and far["elderwood_grove"].via == ("whispering_woods",)
-        assert "crypt_entrance" not in far  # another zone, and hidden
+        assert "ruin_entrance" not in far  # another zone, and hidden
         for place in ("old_kings_road", "whispering_woods", "elderwood_grove"):
             characters.visited(char, place)
         assert "elderwood_grove" not in {r.to for r in world_map.beyond(char)}
@@ -67,40 +68,43 @@ async def test_new_places_one_stretch_at_a_time_known_ones_in_one_tap():
         assert out.events[0].key == "explore.arrived_via"
 
 
-async def test_cleared_crypt_back_to_town_in_one_tap():
+@pytest.mark.usefixtures("ruins")
+async def test_cleared_ruin_back_to_town_in_one_tap():
     c = get_content()
     _, cid = await new_character()
     async with session_scope() as s:
         char = await get_char(s, cid)
-        rooms = ["crypt_entrance", "crypt_hall", "crypt_gallery", "crypt_sanctum"]
+        rooms = ["ruin_entrance", "ruin_hall", "ruin_gallery", "ruin_sanctum"]
         for place in ["crownreach_plaza", "old_kings_road", "whispering_woods", *rooms]:
             characters.visited(char, place)
-        char.flags = {**char.flags, "crypt_unlocked": True}
-        char.location = "crypt_sanctum"
+        char.flags = {**char.flags, "ruins_unlocked": True}
+        char.location = "ruin_sanctum"
         assert world_map.route_to(char, "crownreach_plaza") is None  # the guards of the hall still wait
-        assert world_map.route_to(char, "crypt_gallery") is not None  # next door: you can walk into them
+        assert world_map.route_to(char, "ruin_gallery") is not None  # next door: you can walk into them
         char.flags = {**char.flags, **{fe.flag: True for r in rooms for fe in c.locations[r].fixed_encounters}}
         home = world_map.route_to(char, "crownreach_plaza")
-        assert home.via == ("crypt_gallery", "crypt_hall", "crypt_entrance", "whispering_woods", "old_kings_road")
+        assert home.via == ("ruin_gallery", "ruin_hall", "ruin_entrance", "whispering_woods", "old_kings_road")
 
 
+@pytest.mark.usefixtures("ruins")
 async def test_hidden_route_and_yards():
     _, cid = await new_character()
     async with session_scope() as s:
         char = await get_char(s, cid)
         char.location = "whispering_woods"
-        assert world_map.route_to(char, "crypt_entrance") is None
-        char.flags = {"crypt_unlocked": True}
-        assert world_map.route_to(char, "crypt_entrance").yards == 2000
-        char.location = "crypt_hall"
-        gallery = world_map.route_to(char, "crypt_gallery")
+        assert world_map.route_to(char, "ruin_entrance") is None
+        char.flags = {"ruins_unlocked": True}
+        assert world_map.route_to(char, "ruin_entrance").yards == 2000
+        char.location = "ruin_hall"
+        gallery = world_map.route_to(char, "ruin_gallery")
         assert (gallery.minutes, gallery.yards) == (3, 150)  # knee-deep water
 
 
+@pytest.mark.usefixtures("ruins")
 def test_place_activities():
     tavern = dict(world_map.activities("broken_crown_tavern", ["bram"]))
     assert tavern["rest"] == {"cost": 5} and "craft" in tavern and "npc" in tavern
     market = [k for k, _ in world_map.activities("crownreach_market", ["mira", "tessa"])]
     assert market.count("shop") == 2
     assert [k for k, _ in world_map.activities("ironvein_mine", [])] == ["gather_mining", "hunt"]
-    assert world_map.activities("crypt_ossuary", []) == [("rest_free", {"cost": 0})]
+    assert world_map.activities("ruin_ossuary", []) == [("rest_free", {"cost": 0})]

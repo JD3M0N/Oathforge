@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from oathforge.config import get_settings
 from oathforge.content import get_content
+from oathforge.content.achievement_schemas import FLAG_EVENTS
 from oathforge.content.schemas import EncounterEntry, Exit, Location
 from oathforge.database.models import Character
 from oathforge.engine import timings
@@ -126,7 +127,7 @@ def trip_chance(route: world_map.Route) -> float:
 
 def _ambush_stop(char: Character, route: world_map.Route, rng: random.Random):
     """Where on the way the ambush happens, or None: a dangerous road with creatures at its end, weighted by
-    danger. A place whose own fight is waiting (a crypt room) keeps that fight instead."""
+    danger. A place whose own fight is waiting (a boss's lair) keeps that fight instead."""
     c = get_content()
     spots = [(i, s) for i, s in enumerate(route.stretches)
              if s.danger and encounter_table(c.locations[s.to], char.level) and not world_map.blocks_passage(char, s.to)]
@@ -246,8 +247,8 @@ async def investigate(session: AsyncSession, char: Character, rng: random.Random
         char.flags = {**char.flags, disc.sets_flag: True}
         await achievements.emit(session, char, out, "discovery", {"key": f"{char.location}:{key}"},
                                 f"discovery:{char.location}:{key}")
-        if disc.sets_flag == "crypt_unlocked":
-            await achievements.emit(session, char, out, "flag", {"key": disc.sets_flag}, "flag:crypt_unlocked")
+        if disc.sets_flag in FLAG_EVENTS:
+            await achievements.emit(session, char, out, "flag", {"key": disc.sets_flag}, f"flag:{disc.sets_flag}")
         for item, qty in disc.gives.items():
             await inventory.add_item(session, char, item, qty)
             out.add("loot.item", item=c.items[item].labelled(), qty=qty, item_key=item)
@@ -255,11 +256,11 @@ async def investigate(session: AsyncSession, char: Character, rng: random.Random
             char.gold += disc.gold
             out.add("loot.gold", gold=disc.gold)
         await characters.practice(session, char, disc.skill, disc.tier, f"discover:{key}", out)
-        if disc.sets_flag == "crypt_unlocked":
+        if disc.sets_flag in FLAG_EVENTS:
             out.add("explore.new_route")
     if not found:
         out.add("explore.found_nothing")
-    await quests.refresh(session, char, out)  # a discovery flag can open a mission (crypt_unlocked)
+    await quests.refresh(session, char, out)  # a discovery flag can open a mission
     return out
 
 

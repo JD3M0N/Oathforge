@@ -29,8 +29,8 @@ async def test_delete_player_cascades_and_spares_the_others():
         party = Party(leader_character_id=aldric.id)
         s.add(party)
         await s.flush()
-        mine = Encounter(character_id=aldric.id, location="crypt", state={})
-        theirs = Encounter(character_id=brenna.id, party_id=party.id, location="crypt", state={})
+        mine = Encounter(character_id=aldric.id, location="toll_post", state={})
+        theirs = Encounter(character_id=brenna.id, party_id=party.id, location="toll_post", state={})
         s.add_all([mine, theirs])
         await s.flush()
         s.add_all([

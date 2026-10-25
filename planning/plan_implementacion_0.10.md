@@ -21,8 +21,8 @@
 | B10 Ciervo de Hierro y graduación | ✅ (región → B11) | 0.10.38 |
 | B11 Región cercana 11–20 | ✅ región provisional; 11 misiones de las 18–24 previstas, sin secundarias | 0.10.39 |
 | B12 Balance integral | ✅ medición y primeros ajustes (informe en `planning/informe_balance_0.10.md`); ritmo y lanzadores sin resolver | 0.10.40 |
-| **B13 Retirar cripta, documentación y reinicio que conserva preferencias** | ⏳ **siguiente** | |
-| B14 Candidato de lanzamiento | ⏳ | |
+| B13 Retirar cripta, documentación y reinicio que conserva preferencias | ✅ salvo el ensayo en staging con datos reales | 0.10.41 |
+| **B14 Candidato de lanzamiento** | ⏳ **siguiente** | |
 
 Decisiones de Josue que siguen vigentes:
 - **Avanzar fase a fase y parar al final de cada una** con el resumen y lo que conviene probar a mano.
@@ -40,9 +40,6 @@ Decisiones de Josue que siguen vigentes:
 6. Pruebas: `pytest tests/<área> -q` mientras trabajas, `tests/test_content.py` si tocas `content/`, **suite completa antes del commit**, `oath simulate` si tocas combate, `tgtest` en ES y EN para lo que ve el jugador.
 
 ## Lo que queda por hacer
-
-### B13 · Retirar la cripta y reinicio de lanzamiento
-Quitar la cripta (`crypt`, `reliquary`, Holt, Aldren, títulos) y el procedimiento de reinicio que **conserva preferencias** (distinto de `oath reset-players`). Aquí entran también las migraciones de datos viejos.
 
 ### B14 · Candidato de lanzamiento
 Cierre: revisión de `tests/features.md` entera jugando con la cuenta de prueba, README raíz (solo si Josue lo pide), anuncio en los dos canales.
@@ -66,6 +63,7 @@ Cierre: revisión de `tests/features.md` entera jugando con la cuenta de prueba,
 - **Ramas:** `content/class_specializations.yaml` (41, todas `ready: true`). El cargador exige pasiva y técnica al 10, técnica al 20, exactamente dos modificadores en cada nivel de modificador, claves de habilidad únicas entre ramas y costes que quepan en la barra. `tests/engine/test_branches.py` exige decisiones distintas entre ramas hermanas y un suelo de victorias contra un jefe sintético.
 - **Simulador:** `oathforge/tools/simulate.py` (`--branch`, entrenamientos y modificadores por defecto, política de invocar/ordenar/curar).
 
+- **Reinicio (B13):** `services/launch.py` + `oath launch-reset|backup|restore`; procedimiento en `planning/reinicio_lanzamiento.md`; la mazmorra de pruebas es `tests/ruins.py` (fixture `ruins`); las decisiones escritas emiten logro por `DECISION_FLAGS`.
 - **Balance (B12):** `oath balance --n 32 --seed 7` genera el informe; `simulate.py` tiene `policy`, `kit` y `sequence`; el informe vigente es `planning/informe_balance_0.10.md`.
 - **Valle (B11):** `content/world/terra_coronata/greyforge_vale/` (8 lugares), `reg_*` en `quests.yaml` (orden 60–70) encadenados desde `camp_stag`; PNJ `orsa`, `kellan`, `iwen`; criaturas del 11 al 20 con patrón en los jefes; la puerta es la bandera `valley_open` y la prueba final arranca con `beacon_trial`.
 - **Campaña (B09):** `camp_*` en `quests.yaml` (orden 20–47) encadenados por `after` desde `tut_chapel` hasta `camp_collector`; Tamsin (`tamsin`) es la mentora provisional; jefe con patrón en `Monster.pattern` (`engine/combat.py`: placa, aviso, descarga, recarga); `profession_xp` y `unlock_profession` para los oficios; `toll_post` es el lugar del jefe y `collector_hunt` lo activa.

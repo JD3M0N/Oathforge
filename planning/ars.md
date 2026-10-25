@@ -60,6 +60,8 @@ Este documento no aprueba automáticamente un estilo, proveedor, presupuesto, re
 
 Inventario binario: **28 imágenes** (16 de clase 1,916 MB; 10 de criaturas 1,064 MB; ciudad de día y de noche 0,30 MB). Lo que falta, con su prompt, está en [`TODO-images.md`](../TODO-images.md).
 
+> **Nota 0.10.41:** la Cripta Hundida, sus esqueletos y Ser Aldren se retiraron del juego; lo que este documento dice de ellos (láminas, prompts de Ser Aldren, paleta de la cripta) es historia y ya no se integra. Las criaturas nuevas (Recaudador, Ciervo, doce del Valle) tienen marcadores de posición con su prompt en `TODO-images.md`.
+
 Las diez criaturas: bandido, capitán bandido, goblin explorador, lobo gris, esqueleto de la cripta, Guardián de la Cripta, jabalí, murciélago de cueva, Viejo Colmillo y rata gigante. El Guardián es **Ser Aldren**, un caballero muerto que custodia el relicario (canon del YAML). Su armadura, rostro y color de brillo necesitan referencia artística aprobada. El Viejo Colmillo es desde la 0.8.2 el jefe final del tutorial: candidato a ilustración de evento.
 
 ### PLANIFICADO, TODAVÍA NO IMPLEMENTADO

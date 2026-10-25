@@ -83,60 +83,6 @@ grey_wolf:
     es: Caza en manada. Su mordisco puede dejar al objetivo sangrando.
     en: Hunts in packs. Its bite can leave its prey bleeding.
 
-crypt_skeleton:
-  name: {es: Esqueleto de la cripta, en: Crypt skeleton}
-  indefinite: {es: un esqueleto de la cripta, en: a crypt skeleton}
-  icon: 💀
-  description: {es: Huesos unidos por una voluntad que no es la suya., en: Bones bound together by a will not their own.}
-  hp: 7
-  ac: 13
-  dex: 2
-  attacks:
-    - {name: {es: Espada oxidada, en: Rusted sword}, to_hit: 2, damage: 1d4, damage_type: slashing}
-  xp: 50
-  gold: 1d4
-  immune: [poisoned, frightened, bleeding]
-  type: undead
-  vulnerable: [bludgeoning, radiant]
-  immune_damage: [poison]
-  habitat: {es: Cripta Hundida, en: Sunken Crypt}
-  lore:
-    es: Soldados de Ser Aldren que siguen montando guardia. Las mazas y la luz sagrada los hacen pedazos.
-    en: Ser Aldren's soldiers, still standing guard. Maces and holy light shatter them.
-
-crypt_warden:
-  name: {es: Guardián de la Cripta, en: Crypt Warden}
-  indefinite: {es: el Guardián de la Cripta, en: the Crypt Warden}
-  icon: 👻
-  description:
-    es: Un caballero muerto hace siglos, aún fiel a un juramento que nadie recuerda.
-    en: A knight dead for centuries, still loyal to an oath no one remembers.
-  hp: 40
-  ac: 15
-  dex: 0
-  wis: 2
-  attacks:
-    - {name: {es: Espadón espectral, en: Spectral greatsword}, to_hit: 4, damage: 1d8+2, damage_type: necrotic, applies: {status: frightened, turns: 1, chance: 0.25}}
-    - {name: {es: Lamento helado, en: Freezing wail}, to_hit: 4, damage: 2d4, damage_type: cold, ranged: true}
-  boss: true   # el control duro no lo encadena: dura un turno y el resto pasa a vulnerable
-  xp: 700
-  gold: 6d10
-  loot:
-    - {item: healing_potion, chance: 1.0, qty: 2}
-  immune: [poisoned, frightened, bleeding]
-  type: undead
-  vulnerable: [radiant]
-  resist: [necrotic, cold]
-  immune_damage: [poison]
-  habitat: {es: "Cripta Hundida: santuario", en: "Sunken Crypt: sanctum"}
-  lore:
-    es: >-
-      Ser Aldren juró custodiar el relicario hasta que una mano honesta lo devolviera. Su espadón infunde
-      miedo; la luz sagrada le hace mucho daño.
-    en: >-
-      Ser Aldren swore to guard the reliquary until an honest hand returned it. His greatsword instills
-      fear; holy light hurts him badly.
-
 boar:
   name: {es: Jabalí, en: Boar}
   indefinite: {es: un jabalí, en: a boar}

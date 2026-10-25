@@ -143,16 +143,6 @@ rope:
   value: 1
   stackable: true
 
-sealed_reliquary:
-  name: {es: Relicario sellado, en: Sealed reliquary}
-  icon: "📿"
-  description:
-    es: Una pequeña caja de plata con el sello de la Guardia de Plata. Algo tintinea dentro.
-    en: A small silver box bearing the seal of the Silver Guard. Something rattles inside.
-  type: quest
-  value: 0
-  sellable: false
-
 boar_tusk:
   name: {es: Colmillo de jabalí, en: Boar tusk}
   icon: "🦷"

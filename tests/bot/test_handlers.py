@@ -220,16 +220,17 @@ async def test_an_ambushed_trip_carries_on(llm):
     assert char.location == "tusk_meadow" and "trip" not in char.flags
 
 
+@pytest.mark.usefixtures("ruins")
 async def test_combat_through_buttons(llm):
     p = Player(llm, tg_id=7, lang="en")
     await create(p)
     async with session_scope() as s:
         char = await s.scalar(select(Character).with_for_update())
-        char.location, char.flags = "whispering_woods", {"crypt_unlocked": True}
+        char.location, char.flags = "whispering_woods", {"ruins_unlocked": True}
         char.hp = char.max_hp = 400
     await p.press("scene|-|-")
     await p.press(p.find("trv"))
-    await p.press(p.find("go", "crypt_entrance"))
+    await p.press(p.find("go", "ruin_entrance"))
     assert "Combat" in p.last[0]
 
     for _ in range(80):
@@ -261,19 +262,20 @@ async def test_combat_through_buttons(llm):
     assert "Battle report" in full and "Round 0" in full and "Round 1" in full and "Victory" in full
     assert "Battle summary" in p.last[0]
     await p.press(p.find("scene"))
-    assert "Sunken Crypt" in p.last[0]
+    assert "Ruins: entrance" in p.last[0]
 
 
+@pytest.mark.usefixtures("ruins")
 async def test_priest_sacred_flame_burns_skeletons(llm):
     p = Player(llm, tg_id=8, lang="en")
     await create(p, cls="cleric")
     async with session_scope() as s:
         char = await s.scalar(select(Character).with_for_update())
-        char.location, char.flags = "whispering_woods", {"crypt_unlocked": True}
+        char.location, char.flags = "whispering_woods", {"ruins_unlocked": True}
         char.hp = char.max_hp = 400
     await p.press("scene|-|-")
     await p.press(p.find("trv"))
-    await p.press(p.find("go", "crypt_entrance"))
+    await p.press(p.find("go", "ruin_entrance"))
     assert p.find("cb", "abl:sacred_flame")
 
     for _ in range(80):
@@ -291,6 +293,7 @@ async def test_priest_sacred_flame_burns_skeletons(llm):
     assert any("weak to it" in t_ for t_, _ in p.chat.sent)
 
 
+@pytest.mark.usefixtures("ruins")
 async def test_mage_fireball_asks_for_a_target_and_rolls_saves(llm):
     from oathforge.services import characters
 
@@ -298,12 +301,12 @@ async def test_mage_fireball_asks_for_a_target_and_rolls_saves(llm):
     await create(p, cls="sorcerer")
     async with session_scope() as s:
         char = await s.scalar(select(Character).with_for_update())
-        char.location, char.flags = "whispering_woods", {"crypt_unlocked": True}
+        char.location, char.flags = "whispering_woods", {"ruins_unlocked": True}
         char.hp = char.max_hp = 400
         char.level, char.resources = 3, characters.full_resources("sorcerer", 3)
     await p.press("scene|-|-")
     await p.press(p.find("trv"))
-    await p.press(p.find("go", "crypt_entrance"))
+    await p.press(p.find("go", "ruin_entrance"))
     assert "abl:fire_bolt" in str(p.buttons()) and "abl:sleep" not in str(p.buttons())  # featured, the rest in ✨
     await p.press(p.find("cb", "pwrs"))
     assert "abl:sleep" in str(p.buttons()) and "abl:fire_bolt" not in str(p.buttons())
@@ -313,16 +316,17 @@ async def test_mage_fireball_asks_for_a_target_and_rolls_saves(llm):
     assert any(t_ and "DEX save" in t_ for t_, _ in p.chat.sent)
 
 
+@pytest.mark.usefixtures("ruins")
 async def test_warlock_hex_is_a_bonus_action_with_a_target(llm):
     p = Player(llm, tg_id=14, lang="en")
     await create(p, cls="warlock")
     async with session_scope() as s:
         char = await s.scalar(select(Character).with_for_update())
-        char.location, char.flags = "whispering_woods", {"crypt_unlocked": True}
+        char.location, char.flags = "whispering_woods", {"ruins_unlocked": True}
         char.hp = char.max_hp = 400
     await p.press("scene|-|-")
     await p.press(p.find("trv"))
-    await p.press(p.find("go", "crypt_entrance"))
+    await p.press(p.find("go", "ruin_entrance"))
     assert p.find("cb", "abl:eldritch_blast")
     await p.press(p.find("cb", "pwrs"))
     await p.press(p.find("cb", "abl:hex"))
@@ -644,7 +648,7 @@ async def test_journal_missions_and_bestiary_views(llm, monkeypatch):
     await p.press("jrl|-|-")  # the old log button opens the chronicle
     assert "Alistamiento" in p.last[0] and "Día 1" in p.last[0]
     await p.press("jrb|-|-")
-    assert "0/27" in p.last[0]
+    assert "0/25" in p.last[0]
     await p.press("jrr|-|-")
     assert p.last[0]
 

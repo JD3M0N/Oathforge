@@ -7,7 +7,7 @@ Resumen de [Possibilium §13–14, §19, §21–23](Possibilium.md#s13).
 ### Logros de mundo e historia
 
 - Los conjuntos de ciudad y exploración son listas fijas de lugares de la edición v0_9; cuentan visitas efectivas, no destinos conocidos automáticamente.
-- Los tres caminos del relicario son alternativas y el metalogro acepta cualquier final. Abrir el relicario requiere la acción explícita; completar la cripta en solitario no prueba su apertura.
+- Las decisiones escritas (el rumor de Bram, el agua de la cantera) son alternativas que dejan una bandera y su logro; el metalogro del Recaudador acepta cualquier final. (La cripta y el relicario se retiraron en 0.10.41.)
 - Descubrimientos y caza diurna/nocturna se registran como hechos; las expansiones no cambian condiciones ya publicadas.
 
 ### Lugares
@@ -18,7 +18,7 @@ Aetherfall → continente Terra Coronata → zonas (`content/world/<continente>/
 
 - **Crownreach** (ciudad, 13 lugares): plaza (hub), **Gremio de Aventureros** (Vale; horno, aserradero, secadero, mesa de preparación y fogón: el refinado de las maestrías está abierto a cualquiera), taberna La Corona Rota (Bram, fogón, posada), mercado (Mira), Capilla del Alba (hermana Ysolde; cura gratis todos los PV y heridas graves en la beta) y el **Barrio de Oficios**, una calle de la que cuelgan los siete puestos de oficio, cada uno con su estación y su maestro: la Forja de Tessa (herrería), la Botica de Ilva (alquimia), el Taller de Garrick (carpintería), la Curtiduría de Oda (peletería), el Banco de Pell (joyería), el Escritorio de Lorent (escribanía), el Taller de Dunn (ingeniería) y el Telar de Hedda (sastrería). Cada oficio se aprende y se cambia solo en su puesto (`Location.teaches`). El mapa agrupa los puestos bajo la calle con un botón «🛠️ Puestos», para que la ciudad siga cabiendo en una pantalla. Son ocho puestos, uno por oficio.
 - **Tierras salvajes**: Camino del Viejo Rey, Bosque de los Susurros, Prado de los Colmillos (caza de día y de noche), Mina del Paso Viejo, Arboleda Antigua, Claro de la Raíz Roja, Ribera de Silverbrook.
-- **Cripta Hundida** (mazmorra): salas con combates fijos, osario con descanso gratis y santuario de Ser Aldren.
+- **Sin mazmorra** desde 0.10.41: el motor conserva salas con combate fijo, rutas ocultas y descanso gratis (probados con la mazmorra de pruebas `tests/ruins.py`), pero el juego no tiene ninguna.
 - Reloj día/noche: un día de juego = 4 h reales; los NPC tienen horario. `GAME_CLOCK_OFFSET_HOURS` lo adelanta para pruebas.
 
 ### Mapa y viaje (0.7.6, viaje directo en 0.8.0)
@@ -57,7 +57,7 @@ Objetivos: `kill`, `talk`, `visit`, `read` (sección del `/rulebook`), `hunt` (v
 
 - Beta (`config.py`, `# beta only`): mientras hay una misión del tutorial activa, toda actividad con tiempo termina al momento y da lo que falta; el descanso largo es instantáneo; pociones a 1 de oro.
 - `legacy_done`: quien completó las misiones antiguas tiene el tutorial hecho, sin recompensa.
-- Después: **11. El relicario sellado** (Holt; tres finales: devolverlo al Pacto, venderlo al Sindicato o abrirlo; 50 + 100 + 300 XP) y **12. Huesos inquietos** (3 esqueletos; 300 XP).
+- Después: la campaña de Tamsin (`camp_*`, hasta el Recaudador y el Ciervo) y el Valle de la Fragua Gris (`reg_*`). El relicario y la cripta (misiones 11 y 12) se retiraron en 0.10.41.
 - `oath tutorial-stats`: minutos por misión y dónde se atasca cada jugador.
 
 ### Facciones y rumores

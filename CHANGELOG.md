@@ -4,6 +4,29 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.41] - 2026-10-25
+
+0.10-I (B13): **se retira la cripta y se prepara el reinicio de lanzamiento.** El juego ya no tiene mazmorra ni el hilo del relicario; la campaña es la de Tamsin y el valle. El reinicio que conserva a las personas está implementado y ensayado en pruebas, pero **no se ha ejecutado**.
+
+### Eliminado
+- La **Cripta Hundida** entera (cinco salas), el Esqueleto de la cripta, el Guardián de la Cripta (Ser Aldren), el relicario sellado, las misiones *El relicario sellado* y *Huesos inquietos*, los escalones ocultos del Bosque de los Susurros y la bandera `crypt_unlocked`.
+- Los logros del relicario y de la cripta se sustituyen por los de la nueva edición: **El valle se abre** (abrir el valle), **Cobrador cobrado** (derrotar al Recaudador, con título), **Los hechos primero**, **Un cuento de fantasmas** y **Un trato callado** (decisiones escritas del rumor y del agua). El metalogro *Guardián de Crownreach* y *Volví por ti* pasan al Recaudador.
+- Del reglamento, de las guías y de los textos de los PNJ, toda mención a la cripta y al relicario (Mira, Holt, Ysolde, Tessa, Pell y Bram hablan ahora de las órdenes falsas).
+
+### Añadido
+- **`oath launch-reset`** (`oathforge/services/launch.py`): borra la partida y conserva cuentas con sus ajustes generales, el presupuesto de IA, las imágenes y la auditoría. En seco por defecto; con `--yes` escribe una copia, borra, comprueba que no queda ninguna referencia colgando y confirma.
+- **`oath backup` y `oath restore`**: volcado lógico de toda la base en un archivo JSON y su restauración exacta (ids, fechas y secuencias de PostgreSQL).
+- `planning/reinicio_lanzamiento.md`: qué se borra, qué se queda, el procedimiento, el plan de vuelta atrás y el ensayo hecho.
+- Una **mazmorra de pruebas** (`tests/ruins.py`) para las pruebas del motor (salas con combate fijo, ruta oculta, cama gratis, jefe y descubrimientos), que antes usaban la cripta.
+- Cinco pruebas del reinicio y la copia (en PostgreSQL cuando hay base de pruebas).
+
+### Cambiado
+- Las decisiones escritas de la campaña emiten su logro por la bandera que dejan (`DECISION_FLAGS`), no por un nombre de misión.
+- La conducta de los PNJ de la ciudad y la clase de clérigo ya no hablan de la cripta.
+
+### Pendiente
+- El **ensayo en staging con una copia de producción** (hace falta una base real); el README raíz sigue nombrando la cripta (se rehace al final, B14).
+
 ## [0.10.40] - 2026-10-25
 
 0.10-I (B12): **balance integral.** Se mide la campaña, no un jabalí: clases y ramas contra encuentros de su nivel, dos políticas, un equipo razonable, secuencias y un modelo de ritmo. El informe está en `planning/informe_balance_0.10.md`.

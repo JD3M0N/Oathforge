@@ -70,14 +70,14 @@ async def test_backfill_proves_only_saved_facts():
     cid = await hero()
     async with session_scope() as s:
         char = await load(s, cid)
-        char.flags = {"stats": {"places": ["crownreach_plaza"]}, "crypt_unlocked": True}
+        char.flags = {"stats": {"places": ["crownreach_plaza"]}, "valley_open": True}
         char.masteries = {"mining": 500}
         char.bestiary = {"boar": {"seen": 3, "killed": 3}}
         prog = await quests.ensure_progress(s, char)
-        prog["sealed_box"].state, prog["sealed_box"].stage = "completed", "completed_alone"
+        prog["camp_collector"].state, prog["camp_collector"].stage = "completed", "done"
         granted = await a.backfill_character(s, char)
-        assert {"beneath_crown", "experienced", "field_notes", "know_enemy", "story_begins"} <= set(granted)
-        assert not {"sealed_no_more", "no_reserves", "know_city", "handmade", "two_skies"} & set(granted)
+        assert {"valley_opened", "experienced", "field_notes", "know_enemy", "story_begins"} <= set(granted)
+        assert not {"quiet_deal", "no_reserves", "know_city", "handmade", "two_skies"} & set(granted)
         assert await a.backfill_character(s, char) == []
         assert all(u.retroactive for u in (await s.scalars(select(AchievementUnlock))).all())
         assert await s.scalar(select(func.count()).select_from(AchievementNotification)) == 1
@@ -96,15 +96,15 @@ async def test_preferences_limits_replacement_ownership_and_language():
         assert (await a.preference(s, char, "track", keys[3], "full")).error == "achievements.full"
         assert (await a.preference(s, char, "track", keys[3], "replace", keys[0])).ok
         assert (await a.preference(s, char, "track", keys[0], "replace")).error == "achievements.stale"
-        assert (await a.preference(s, char, "title", "cryptbreaker", "bad")).error == "achievements.invalid"
-        await a.apply_events(s, char, [event(cid, "boss", "kill", monster="crypt_warden")])
-        assert (await a.preference(s, char, "title", "cryptbreaker", "title")).ok
-        assert (await a.preference(s, char, "feature", "cryptbreaker", "feature")).ok
+        assert (await a.preference(s, char, "title", "collector_collected", "bad")).error == "achievements.invalid"
+        await a.apply_events(s, char, [event(cid, "boss", "kill", monster="ash_collector")])
+        assert (await a.preference(s, char, "title", "collector_collected", "title")).ok
+        assert (await a.preference(s, char, "feature", "collector_collected", "feature")).ok
         snap = await a.snapshot(s, char)
-        assert "Rompecriptas" in achievement_views.identity(snap, "es")[0]
-        assert "Cryptbreaker" in achievement_views.identity(snap, "en")[0]
+        assert "Cobrador cobrado" in achievement_views.identity(snap, "es")[0]
+        assert "Collector Collected" in achievement_views.identity(snap, "en")[0]
         other_char = await load(s, other)
-        assert (await a.preference(s, other_char, "title", "cryptbreaker", "theft")).error == "achievements.invalid"
+        assert (await a.preference(s, other_char, "title", "collector_collected", "theft")).error == "achievements.invalid"
         with pytest.raises(ValueError):
             await a.apply_events(s, other_char, [event(cid, "wrong", "seen", monster="boar")])
         await a.apply_events(s, char, [event(cid, "rank", "mastery", skill="mining", rank=3)])
@@ -118,7 +118,7 @@ async def test_preferences_limits_replacement_ownership_and_language():
             assert (await a.preference(s, char, "feature", key, f"feature-{key}")).ok
         assert (await a.preference(s, char, "feature", "first_victory", "feature-full")).error == "achievements.full"
         assert (await a.preference(s, char, "feature", "first_victory", "feature-replace", "handmade")).ok
-        assert (await s.get(AchievementPreferences, cid)).featured == ["cryptbreaker", "field_notes", "first_victory"]
+        assert (await s.get(AchievementPreferences, cid)).featured == ["collector_collected", "field_notes", "first_victory"]
 
 
 async def test_notification_failure_restart_and_lease():
@@ -158,13 +158,13 @@ async def test_menus_are_bilingual_bounded_and_hide_conditions():
                 text, keyboard = achievement_views.view(snap, lang, arg)
                 assert len(text) < 4096
                 assert all(len(b.callback_data.encode()) <= 64 for row in keyboard.inline_keyboard for b in row)
-            text, _ = achievement_views.view(snap, lang, "d:sealed_no_more")
-            assert get_content().achievements["sealed_no_more"].description.get(lang) not in text
-        await a.preference(s, char, "reveal", "sealed_no_more", "reveal")
-        text, _ = achievement_views.view(await a.snapshot(s, char), "en", "d:sealed_no_more")
-        assert "Open the sealed locket" in text
+            text, _ = achievement_views.view(snap, lang, "d:quiet_deal")
+            assert get_content().achievements["quiet_deal"].description.get(lang) not in text
+        await a.preference(s, char, "reveal", "quiet_deal", "reveal")
+        text, _ = achievement_views.view(await a.snapshot(s, char), "en", "d:quiet_deal")
+        assert "Accept the smuggler" in text
 
-async def test_meta_all_relic_endings():
+async def test_meta_the_tutorial_and_the_collector():
     cid = await hero()
     async with session_scope() as s:
         char = await load(s, cid)
@@ -174,11 +174,11 @@ async def test_meta_all_relic_endings():
             events.append(event(cid, f"visit:{place}", "visit", location=place))
         for quest in cat["long_road"].condition.values:
             events.append(event(cid, f"quest:{quest}", "quest", quest=quest))
-        events += [event(cid, "boss", "kill", monster="crypt_warden"),
-                   event(cid, "relic_complete", "quest", quest="sealed_box")]
+        events += [event(cid, "boss", "kill", monster="ash_collector"),
+                   event(cid, "collector_complete", "quest", quest="camp_collector")]
         granted = await a.apply_events(s, char, events)
         assert "warden_crownreach" in granted
-        assert not {"silver_allegiance", "crimson_bargain", "sealed_no_more"} & set(granted)
+        assert not {"facts_first", "tall_tale", "quiet_deal"} & set(granted)
 
 async def test_concurrent_events_and_notification_claim(is_postgres):
     if not is_postgres:
@@ -235,22 +235,22 @@ async def test_gather_tool_cancel_and_restart():
         assert await s.scalar(select(AchievementUnlock.id).where(AchievementUnlock.achievement_key == "trade_tools"))
         assert not (await activities.claim(s, char, now=1001)).ok
 
-@pytest.mark.parametrize("action,expected", [
-    ("give_box_holt", "silver_allegiance"), ("sell_box_mira", "crimson_bargain"), ("open_box", "sealed_no_more"),
+@pytest.mark.parametrize("quest,action,npc,expected", [
+    ("camp_rumor", "check", "bram", "facts_first"), ("camp_rumor", "believe", "bram", "tall_tale"),
+    ("reg_water", "side_with_smuggler", "kellan", "quiet_deal"),
 ])
-async def test_relic_decisions_are_actual_transitions(action, expected):
+async def test_written_decisions_are_actual_transitions(quest, action, npc, expected):
     cid = await hero()
     async with session_scope() as s:
         char = await load(s, cid)
-        char.location = "crownreach_plaza" if action == "give_box_holt" else "crownreach_market"
-        row = (await quests.ensure_progress(s, char))["sealed_box"]
-        row.stage, row.state = "has_box", "active"
-        await inventory.add_item(s, char, "sealed_reliquary")
-        out = await quests.perform(s, char, f"sealed_box.{action}", ["holt", "mira"], random.Random(1))
+        char.location = "broken_crown_tavern"
+        row = (await quests.ensure_progress(s, char))[quest]
+        row.stage, row.state = "active", "active"
+        out = await quests.perform(s, char, f"{quest}.{action}", [npc], random.Random(1))
         assert out.ok
         assert expected in out.achievement_unlocks
-        assert sum(k in out.achievement_unlocks for k in ("silver_allegiance", "crimson_bargain", "sealed_no_more")) == 1
-        assert not (await quests.perform(s, char, f"sealed_box.{action}", ["holt", "mira"], random.Random(1))).ok
+        assert sum(k in out.achievement_unlocks for k in ("facts_first", "tall_tale", "quiet_deal")) == 1
+        assert not (await quests.perform(s, char, f"{quest}.{action}", [npc], random.Random(1))).ok
 
 async def test_missed_discovery_and_known_city_do_not_count(monkeypatch):
     from oathforge.services import world_map
@@ -392,7 +392,7 @@ async def test_the_equipped_title_reaches_the_narrator():
     async with session_scope() as s:
         char = await load(s, cid)
         assert await a.equipped_title(s, char) is None
-        await a.apply_events(s, char, [event(cid, "kill:warden", "kill", monster="crypt_warden")])
-        assert (await a.preference(s, char, "title", "cryptbreaker", nonce="nt")).ok
+        await a.apply_events(s, char, [event(cid, "kill:warden", "kill", monster="ash_collector")])
+        assert (await a.preference(s, char, "title", "collector_collected", nonce="nt")).ok
         title = await a.equipped_title(s, char)
         assert title is not None and "known as" in describe_character(char, title=title)

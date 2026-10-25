@@ -23,7 +23,7 @@ Motor puro en `oathforge/engine/combat.py`, persistido como JSON en `encounters.
 - **Informe**: «📊 Resumen» (resultado, daño, aciertos, críticos, curación, recompensas, páginas por ronda) y «📜 Informe» completo; `/report`. Se reconstruye desde `combat_actions` (`actor="start"` y `actor="end"`).
 - **Jefes con patrón** (0.10.37–38): `Monster.pattern` da una placa que absorbe daño, un golpe fuerte anunciado un turno antes, una ventana expuesta tras descargar y, si hay `rearm`, un segundo endurecimiento a media vida (Recaudador de Ceniza, Ciervo de Hierro). **💡 ¿Qué hago?** (`engine/combat_help.py`) responde con reglas y las habilidades de la clase.
 - **Derrota** (tope de 15 de oro por nivel desde 0.10.35): pierdes el 10 % del oro y quedas «herido» (techo del 50 % de PV) hasta descansar o curarte.
-- **Descanso** (0.10.35, tiempos en `engine/timings.py`): largo en la posada (5 de oro, 15 min reales; recompensa al terminar, abandonar no da nada); **corto** en cualquier sitio (3 min, gratis, 30 % de PV sin pasar del tope de heridas, parte de la barra; dos entre dos largos); osario de la cripta gratis (se retira en B13); tónico del reposo como descanso corto (enfriamiento 4 h); Ysolde cura por 3 de oro (quien lleva menos paga lo que tenga).
+- **Descanso** (0.10.35, tiempos en `engine/timings.py`): largo en la posada (5 de oro, 15 min reales; recompensa al terminar, abandonar no da nada); **corto** en cualquier sitio (3 min, gratis, 30 % de PV sin pasar del tope de heridas, parte de la barra; dos entre dos largos); tónico del reposo como descanso corto (enfriamiento 4 h); Ysolde cura por 3 de oro (quien lleva menos paga lo que tenga).
 - Simulador: `oath simulate --level 1-5` (200 combates por clase × enemigo × nivel).
 
 ## Decidido

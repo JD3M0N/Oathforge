@@ -65,7 +65,7 @@ Hito **0.10-I** del [roadmap general](roadmap.md). Se avanza **fase a fase**: ca
 | B10 · Ciervo y graduación | ✅ Hecha (la región es B11) | 0.10.38 |
 | B11 · Región y aventuras 11–20 | ✅ Hecha con región provisional y menos misiones de las previstas (11 de 18–24) | 0.10.39 |
 | B12 · Balance integral | ✅ Hecha como medición y primeros ajustes; ritmo y lanzadores sin resolver | 0.10.40 |
-| B13 · Retirar cripta, documentación y reinicio | Pendiente | — |
+| B13 · Retirar cripta, documentación y reinicio | ✅ Hecha salvo el ensayo en staging con datos reales | 0.10.41 |
 | B14 · Candidato y lanzamiento | Pendiente | — |
 
 Decisiones tomadas al empezar (21-10-2026): el mentor (N01) y la región 11–20 (N02) los **propone el agente como provisionales** en `planning/` y Josue los aprueba antes del texto final de B09 y B11. Antes de empezar se borraron todos los jugadores de la base de desarrollo (`oath reset-players --yes`); el reinicio de lanzamiento que conserva preferencias es otro procedimiento (§16, B13).
@@ -1234,11 +1234,11 @@ El simulador y pruebas se amplían junto a cada fase, no solo en B12. No hacen f
 ### B13 · Retirar cripta, corregir documentación y preparar reset
 
 **Objetivo:** eliminar contradicciones antes de lanzar.
-- [ ] Revisar referencias de mundo, objetos, logros y pruebas a cripta.
-- [ ] Sustituir misiones antiguas y logros incompatibles de la nueva edición.
-- [ ] Actualizar resúmenes, TODO, roadmap e iter.
-- [ ] Crear procedimiento de reinicio que conserve preferencias.
-- [ ] Ensayo de backup/restore y proceso en staging.
+- [x] Revisar referencias de mundo, objetos, logros y pruebas a cripta. (0.10.41)
+- [x] Sustituir misiones antiguas y logros incompatibles de la nueva edición. (0.10.41)
+- [x] Actualizar resúmenes, TODO, roadmap e iter. (0.10.41; el README raíz se rehace en B14)
+- [x] Crear procedimiento de reinicio que conserve preferencias. (0.10.41: `planning/reinicio_lanzamiento.md`)
+- [ ] Ensayo de backup/restore y proceso en staging. (0.10.41: ensayado en pruebas contra PostgreSQL; falta el staging con una copia de producción)
 **Terminado:** cero referencias activas rotas y reinicio ensayado sin tocar datos reales.
 
 ### B14 · Candidato y lanzamiento

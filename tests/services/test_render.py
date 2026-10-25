@@ -42,6 +42,7 @@ def check(view):
                 assert len(b.callback_data.encode()) <= 64, b.callback_data
 
 
+@pytest.mark.usefixtures("ruins")
 @pytest.mark.parametrize("lang", ["es", "en"])
 async def test_all_views_render(lang):
     c = get_content()
@@ -76,15 +77,15 @@ async def test_all_views_render(lang):
                 check(text)
                 assert "bestiary." not in text and "creature." not in text and "dmg." not in text
 
-        prog = (await quests.progress(s, char, lock=True))["sealed_box"]
-        prog.stage, prog.state = "not_started", "available"
-        char.location = "whispering_woods"
-        out = await quests.perform(s, char, "sealed_box.approach_guard", [], random.Random(0))
+        prog = (await quests.progress(s, char, lock=True))["camp_rumor"]
+        prog.stage, prog.state = "active", "active"
+        char.location = "broken_crown_tavern"
+        out = await quests.perform(s, char, "camp_rumor.check", ["bram"], random.Random(0))
         check(render.outcome_text(out, lang, narration="Llueve <fuerte> & frío"))
 
-        char.location = "crypt_sanctum"
+        char.location = "ruin_sanctum"
         char.hp = char.max_hp = 300
-        enc, out = await combat_service.start_encounter(s, char, ["crypt_warden", "crypt_skeleton"], random.Random(2))
+        enc, out = await combat_service.start_encounter(s, char, ["test_warden", "test_skeleton"], random.Random(2))
         check(render.outcome_text(out, lang))
         check(render.combat_panel(char, enc.state, lang))
         check(render.combat_panel(char, enc.state, lang, target_menu="atk:main"))
@@ -203,6 +204,7 @@ async def test_class_pages(lang):
         assert "/class_paladin" in sheet
 
 
+@pytest.mark.usefixtures("ruins")
 @pytest.mark.parametrize("lang", ["es", "en"])
 async def test_battle_report(lang):
     from oathforge.engine.combat import Action
@@ -212,9 +214,9 @@ async def test_battle_report(lang):
         char = await characters.create_character(s, user, "Edda", "dwarf", "acolyte", "paladin")
         assert await combat_service.battle_report(s, char) is None
         check(render.report_page(None, 0, lang))
-        char.location = "crypt_sanctum"
+        char.location = "ruin_sanctum"
         char.hp = char.max_hp = 300
-        enc, _ = await combat_service.start_encounter(s, char, ["crypt_skeleton", "crypt_skeleton"], random.Random(5))
+        enc, _ = await combat_service.start_encounter(s, char, ["test_skeleton", "test_skeleton"], random.Random(5))
         rng = random.Random(6)
         while enc.status == "active":
             await combat_service.act(s, char, enc, Action(kind="attack", weapon="main"), rng)
@@ -231,7 +233,7 @@ async def test_battle_report(lang):
         everything = [e for _, es in report.rounds for e in es]
         dealt = sum(e.params["amount"] for e in everything if e.key == "combat.damage" and e.params["target"] != "p1")
         assert report.stats["dealt"] == dealt > 0
-        assert report.stats["defeated"] == {"crypt_skeleton": 2}
+        assert report.stats["defeated"] == {"test_skeleton": 2}
         assert report.stats["hits"] <= report.stats["attacks"]
         assert any(ev.key == "progress.xp" for ev in report.rewards)
 

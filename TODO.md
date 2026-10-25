@@ -46,7 +46,7 @@ Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada pu
 
 - [ ] 🟡 ◐ **Sistema de imágenes**: catálogo de activos + `file_id` de Telegram; una imagen por lugar y retratos de NPC. *Hecho en v0.3.0: carpetas del mundo, catálogo, caché de `file_id` y «Ver ciudad» en Crownreach; retratos de clase en v0.4.1, v0.4.4 y v0.5.1 (todas las clases). Faltan las imágenes de cada lugar («Ver lugar») y los retratos de NPC.*
 - [ ] 🟡 **Canciones en las tabernas**: botón «Escuchar ambiente» con música en bucle (empezar por La Corona Rota).
-- [ ] 🟡 **Voces para personajes importantes** (Bram, Tessa, el Guardián de la Cripta) como notas de voz OGG/Opus.
+- [ ] 🟡 **Voces para personajes importantes** (Bram, Tessa, Tamsin) como notas de voz OGG/Opus.
 - [ ] 🟢 **Stickers por personaje**: pack con los retratos y expresiones de los NPC.
 - [ ] 🟢 Ficha de personaje compartible (tarjeta de 900 × 1200 con Pillow).
 - [ ] 🟢 Mapa del mundo con niebla de guerra por personaje.

@@ -479,9 +479,10 @@ book:
   quest: "✅ Terminaste «{what}»."
   decision: "⚖️ {what}"
   decision_text:
-    covenant: "Entregaste el relicario a la Guardia de Plata."
-    syndicate: "Vendiste el relicario al Sindicato Carmesí."
-    opened: "Rompiste el sello del relicario con tus propias manos."
+    checked: "Contrastaste el rumor de la taberna con los hechos de la Guardia."
+    believed: "Creíste el rumor de Bram sobre los carros fantasma."
+    smuggler: "Aceptaste el trato del contrabandista por el agua de la cantera."
+    kellan: "Ayudaste a Kellan con el reparto del agua de la cantera."
   unlock: "🏆 Logro: {what}"
   level: "⬆️ Alcanzaste el nivel {what}."
   kill: "⚔️ Abatiste tu primer {what}."
