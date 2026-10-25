@@ -46,7 +46,8 @@ async def test_create_character_sets_everything_up():
         prog = await quests.progress(s, char)
         assert prog["tut_muster"].state == "active"
         assert prog["sealed_box"].stage == "locked" and prog["tut_town"].state == "locked"
-        assert char.resources == {"consecrated_strike": 2}
+        assert char.resources == {"consecrated_strike": None}  # Conviction pays for it, not uses per rest
+        assert characters.resource_max(char) == 2 + 2 * 1
 
 
 async def test_create_warrior():
@@ -56,7 +57,7 @@ async def test_create_warrior():
         gear = await characters.equipped(s, char)
         assert set(gear) == {"main_hand", "ranged", "body", "off_hand"}
         assert characters.armor_class(char, gear) == 16 + 2 + 1  # chain mail, shield, Defense style
-        assert char.resources == {"second_wind": None}  # the warrior pays with Focus, not with uses
+        assert char.resources == {"second_wind": None, "power_strike": None}  # the warrior pays with Focus
         assert characters.pool_of(char) == characters.resource_max(char) == 4  # base 3 + 1 per level
         cb = await characters.build_combatant(s, char)
         assert cb.row == "front" and cb.crit_range == 20
@@ -280,7 +281,8 @@ async def test_long_rest_is_80_minutes_asleep_then_restores():
     _, cid = await new_character()
     async with session_scope() as s:
         char = await get_char(s, cid)
-        char.location, char.hp, char.resources = "broken_crown_tavern", 1, {"consecrated_strike": 0}
+        char.location, char.hp = "broken_crown_tavern", 1
+        characters.set_pool(char, 0)  # the bar is spent
         char.conditions = {"injured": True}
         out = await activities.start(s, char, "rest", "rest", now=1000)
         assert out.ok and char.gold == 10 and char.state == "busy" and char.hp == 1  # paid, asleep, not healed yet
@@ -288,7 +290,7 @@ async def test_long_rest_is_80_minutes_asleep_then_restores():
         assert (await activities.claim(s, char, now=1000 + 79 * 60)).error == "activity.err.not_ready"
         out = await activities.claim(s, char, now=1000 + 80 * 60)
         assert out.ok and char.state == "idle" and char.hp == char.max_hp
-        assert char.resources["consecrated_strike"] == 2 and "injured" not in char.conditions
+        assert characters.pool_of(char) == characters.resource_max(char) > 0 and "injured" not in char.conditions
 
 
 async def test_abandoned_rest_heals_nothing_and_keeps_the_gold():

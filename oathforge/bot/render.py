@@ -96,8 +96,10 @@ def ability_tags(a, lang: str) -> str:
     if a.kind == "passive" or a.action == "none":
         return t(lang, "ability.passive")
     tags = [t(lang, f"ability.action.{a.action}")]
-    tags.append(t(lang, "ability.uses", n=a.uses) if a.uses
-                else t(lang, "ability.unlimited"))
+    if a.cost:  # a class with a bar pays with it
+        tags.append(t(lang, "ability.cost", n=a.cost))
+    else:
+        tags.append(t(lang, "ability.uses", n=a.uses) if a.uses else t(lang, "ability.unlimited"))
     return " · ".join(tags)
 
 
@@ -1940,7 +1942,8 @@ def backgrounds_list(lang: str) -> str:
 # ---------------------------------------------------------------- classes
 
 CLASS_ICONS = {"paladin": "🛡️", "rogue": "🗡️", "warrior": "⚔️", "cleric": "✝️", "sorcerer": "🔮", "druid": "🌿",
-               "bard": "🎻", "warlock": "🕯️"}
+               "bard": "🎻", "warlock": "🕯️", "barbarian": "🪓", "monk": "🥋", "ranger": "🏹", "artificer": "⚙️",
+               "shaman": "🌊", "death_knight": "💀"}
 
 
 def classes_list(lang: str) -> tuple[str, InlineKeyboardMarkup]:
@@ -2259,7 +2262,8 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
 
     if target_menu and target_menu != "powers":
         kind, _, arg = target_menu.partition(":")
-        spell = kind == "abl" and arg in defs and defs[arg].kind in ("spell", "save", "curse", "command")
+        spell = kind == "abl" and arg in defs and (defs[arg].kind in ("spell", "save", "curse", "command")
+                                                   or (defs[arg].kind == "strike" and defs[arg].ranged))
         ranged = any(a.key == arg and a.ranged for a in me.attacks) or kind in ("obj", "itm") or spell
         for foe in valid_targets(state, me, ranged):
             rows.append([btn(f"🎯 {foe.name[lang]} ({foe.hp}/{foe.max_hp})", cb("cb", f"{target_menu}:{foe.id}", n))])

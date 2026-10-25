@@ -39,7 +39,7 @@ resources:
     description:
       es: Se acumula cumpliendo tu juramento en el combate y se gasta en castigo y protección sagrada.
       en: It builds as you keep your oath in battle and pays for holy punishment and protection.
-    base: 0
+    base: 2
     per_level: 2
     per_turn: 1
     starts_empty: true
@@ -112,7 +112,7 @@ resources:
 
 # Las seis clases nuevas que aprueba roadmap_balance §6 y que todavía no existen en classes.yaml.
 # Sus ramas cargan y se validan, pero ninguna puede estar lista hasta que B06 escriba la clase.
-future_classes: [barbarian, ranger, monk, artificer, shaman, death_knight]
+future_classes: [ranger, artificer, shaman, death_knight]
 
 # Entrenamientos: en cada nivel de training_levels (5, 12 y 18) el jugador elige UNO de estos dos paquetes.
 # Se suman: tres elecciones son tres paquetes. Sustituyen a la mejora de atributo del nivel 4.

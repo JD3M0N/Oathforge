@@ -13,7 +13,8 @@ from pydantic import BaseModel, Field
 from oathforge.engine.checks import check, dc_for
 from oathforge.engine.dice import d20, roll
 
-NEGATIVE_STATUSES = {"bleeding", "burning", "poisoned", "frightened", "stunned", "vulnerable", "asleep", "restrained", "hexed"}
+NEGATIVE_STATUSES = {"bleeding", "burning", "poisoned", "frightened", "stunned", "vulnerable", "asleep", "restrained", "hexed",
+                     "marked"}
 # A status refreshes, it never stacks: applying it again keeps the longer of the two durations, and the
 # duration goes down once per turn of whoever carries it (_tick_statuses).
 HARD_CONTROL = ("stunned", "asleep", "restrained", "frightened")
@@ -28,6 +29,7 @@ DOT = {"bleeding": "1d4", "burning": "1d6"}
 BLESS_BONUS = 2
 INSPIRATION_DIE = "1d6"
 HEX_DIE = "1d6"  # necrotic, on every hit against a hexed target
+MARK_DIE = "1d6"  # piercing, on every hit against a marked quarry (the hunter's counterpart of the hex)
 SKIP_TURN = ("stunned", "asleep")
 FLEE_DC_BASE = 10  # fleeing: this plus FLEE_DC_PER_FOE for each enemy still standing
 FLEE_DC_PER_FOE = 2
@@ -413,7 +415,7 @@ def _use_ability(state, actor, action, ability, rng) -> list[LogEntry]:
         raise CombatError("combat.err.no_resource")
     logs: list[LogEntry] = []
     if ability.kind == "strike":
-        profile = next((a for a in actor.attacks if not a.ranged), None)
+        profile = next((a for a in actor.attacks if a.ranged == ability.ranged), None)
         if profile is None:
             raise CombatError("combat.err.no_weapon")
         logs.append(LogEntry(key="combat.ability", params={"actor": actor.id, "ability": action.ability}))
@@ -661,6 +663,8 @@ def _attack(state, attacker, target, profile: AttackProfile, rng, extra, weapon:
         extras.append((roll(attacker.bonus_damage, rng, crit).total, attacker.bonus_damage_type))
     if attacker.side == "player" and "hexed" in target.statuses:
         extras.append((roll(HEX_DIE, rng, crit).total, "necrotic"))
+    if attacker.side == "player" and "marked" in target.statuses:
+        extras.append((roll(MARK_DIE, rng, crit).total, "piercing"))
     sneak = 0
     if (
         attacker.sneak_dice and not attacker.sneak_used

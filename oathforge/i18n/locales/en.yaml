@@ -580,7 +580,8 @@ ability:
     bonus: "bonus action"
   uses_one: "1 use per rest"
   uses: "{n} uses per rest"
-  unlimited: "unlimited"
+  unlimited: "free"
+  cost: "🔹 {n}"
 
 steal:
   success: "You lift {gold} gold from {npc} without being noticed."
@@ -713,6 +714,7 @@ status:
   inspired: "inspiration"
   wild_shape: "wild shape"
   hexed: "hexed"
+  marked: "marked quarry"
   icon:
     bleeding: "🩸"
     burning: "🔥"
@@ -728,6 +730,7 @@ status:
     inspired: "🎵"
     wild_shape: "🐻"
     hexed: "🕯️"
+    marked: "🎯"
 
 dmg:
   slashing: "slashing"

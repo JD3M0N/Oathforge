@@ -36,9 +36,7 @@ def sim_character(class_key: str, level: int, lineage: str, background: str) -> 
     """A transient character as ``create_character`` + ``grant_xp`` would leave it (never saved)."""
     c = get_content()
     cls = c.classes[class_key]
-    scores = characters.starting_scores(class_key, lineage)
-    if level >= 4:
-        scores[cls.primary] = min(20, scores[cls.primary] + 2)
+    scores = characters.starting_scores(class_key, lineage)  # no ability boost on the way: the trainings replaced it
     hp = progression.max_hp(cls.hit_die, modifier(scores["con"]), level)
     return Character(
         id=0, name="Sim", lineage=lineage, background=background, class_key=class_key, abilities=scores,
@@ -105,7 +103,7 @@ def _bonus(state: EncounterState, me: Combatant, rng: random.Random, defs: dict)
         if a.kind == "surge":
             continue
         target = _target(state, me, ranged=True)
-        if a.kind == "curse" and (target is None or "hexed" in state.combatants[target].statuses):
+        if a.kind == "curse" and (target is None or a.status in state.combatants[target].statuses):
             continue
         if _try(state, Action(kind="ability", ability=key, target=target), rng, defs):
             return
@@ -141,7 +139,8 @@ def _main(state: EncounterState, me: Combatant, rng: random.Random, defs: dict, 
                 continue
             if a.kind == "curse" and all(a.status in f.statuses for f in state.enemies_of(me)):
                 continue
-            if _try(state, Action(kind="ability", ability=key, target=_target(state, me, a.kind != "strike")),
+            if _try(state, Action(kind="ability", ability=key,
+                                  target=_target(state, me, a.kind != "strike" or a.ranged)),
                     rng, defs):
                 return
     if weapon and _try(state, Action(kind="attack", weapon=weapon.key, target=_target(state, me, weapon.ranged)),

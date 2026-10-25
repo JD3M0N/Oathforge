@@ -256,3 +256,19 @@ Recorrido completo, con la cuenta de prueba, en ES y EN. Lo marcado (automático
 - [x] Recorridos completos con una rama prestada: Demonólogo, Invocador y Cambiaformas, sobre el servicio y la base de datos (automático).
 - [x] El panel muestra una línea por aliado, la forma y los textos nuevos sin marcadores sueltos, en ES y EN (automático).
 - [ ] Jugar un combate con un Invocador o un Cambiaformas de verdad en Telegram (pendiente de B07: ninguna rama está lista).
+
+## 0.10-I · Las catorce clases, primer grupo (B06, v0.10.29)
+
+Guerrero, Bárbaro, Paladín, Pícaro y Monje. Cada clase con su barra, de nivel 1 a 9.
+
+- [x] Cada clase tiene su barra, una técnica distintiva y algo que pagar desde el nivel 1; el ataque básico nunca cuesta nada (automático).
+- [x] Ninguna necesita rama, aliado, oficio ni otro jugador; del 10 en adelante es de la rama (automático).
+- [x] Calendario de poderes: de 6 a 9 llegan una o dos mejoras, no un botón nuevo cada nivel (automático).
+- [x] Una barra que empieza vacía (Furia, Convicción) puede ganarse lo que cuesta su primera técnica (automático).
+- [x] Todas ganan a un bandido en los niveles 1, 3, 5 y 9 y a una pareja de goblins desde el 5 (simulador, automático).
+- [x] Tres combates seguidos sin descanso completo: la barra nunca sale de su rango y siempre queda un ataque gratis (automático).
+- [x] El `strike` a distancia usa el arco y el cuerpo a cuerpo la hoja; la presa marcada recibe un dado extra de cada golpe (automático).
+- [x] El Monje golpea con DES (las vendas son ligeras) y se viste de disciplina: CA 10 + DES + 3 (automático).
+- [x] Las diez clases en el menú de creación, la ficha y `/class_<clase>` sin retrato ni marcadores sueltos (Telegram, EN).
+- [ ] Las mismas pantallas en español.
+- [ ] Un combate completo con Bárbaro (Furia desde cero) y con Paladín (Convicción) (Telegram).

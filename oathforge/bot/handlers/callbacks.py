@@ -564,7 +564,7 @@ def _needs_target(state, me, kind: str, key: str, defs) -> bool:
         a = defs.get(key)
         if a is None or a.kind not in ("strike", "spell", "save", "curse", "command"):
             return False
-        return len(valid_targets(state, me, ranged=a.kind != "strike")) > 1
+        return len(valid_targets(state, me, ranged=a.kind != "strike" or a.ranged)) > 1
     if kind == "obj":
         obj = state.scene_objects.get(key)
         return obj is not None and obj.targets == "one" and len(state.enemies_of(me)) > 1

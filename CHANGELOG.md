@@ -4,6 +4,24 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.29] - 2026-10-25
+
+0.10-I (B06, 1.ª parte): las clases marciales. Llegan el Bárbaro y el Monje y se rehacen el Guerrero, el Paladín y el Pícaro, todos con su propia barra y habilidades de nivel 1 a 9.
+
+### Añadido
+- **Bárbaro** (Furia): se enciende atacando y empieza cada combate en cero. *Defensa sin armadura*, *Golpe temerario*, *Furia* (bendición y PV temporales), *Golpe de barrido*, *Asalto implacable*, *Instinto brutal*, *Golpe salvaje* y *Pisotón atronador*.
+- **Monje** (Foco): golpea con DES y se viste de disciplina, sin armadura (CA 10 + DES + 3). *Ráfaga de golpes*, *Golpe aturdidor*, *Desviar golpes*, *Respiración serena*, *Mil puños*, *Cuerpo de hierro*, *Ola arrolladora* y *Foco perfecto*. Estrena las **vendas de combate**, su única arma.
+- **Guerrero (Foco), Paladín (Convicción) y Pícaro (Energía)** pasan a barra y ganan hasta cinco habilidades nuevas cada uno entre los niveles 1 y 9: *Golpe poderoso*, *Embestida de escudo*, *Golpe de gracia*; *Favor divino*, *Cólera sagrada*, *Luz purificadora*; *Golpe bajo*, *Zancadilla*, *Acción astuta*, *Filo mortal*…
+- **El golpe base del Paladín es ahora el *Castigo divino***, como pedía el TODO, y gasta Convicción en lugar de usos.
+- **Ataques a distancia con técnica** (`ranged` en un `strike`, para quien dispara) y el estado **presa marcada**, que añade un dado perforante a cada golpe de quien la marcó.
+- Una prueba que recorre **todas las clases** y exige lo mismo de cada una: barra propia, técnica distintiva y algo que pagar desde el nivel 1, nada que dependa de una rama, un aliado o un oficio, un calendario sin un botón nuevo cada nivel, victoria sobre un bandido en los niveles 1, 3, 5 y 9 y sobre una pareja de goblins desde el 5, y tres combates seguidos sin que la barra se salga de su rango.
+- Las etiquetas de habilidad muestran su coste de barra («🔹 4») en vez de «ilimitado».
+
+### Cambiado
+- La **Convicción** parte de una base de 2, para que el primer Castigo divino sea posible.
+- El simulador ya no sube un atributo en el nivel 4 (los entrenamientos lo sustituyeron) y entiende los ataques a distancia con técnica.
+- Los retratos de las clases nuevas están pendientes (`TODO-images.md`): la ficha se muestra sin foto, como el juego ya hacía con cualquier cosa sin arte, y no se inventa ninguno.
+
 ## [0.10.28] - 2026-10-25
 
 0.10-I (B05): aliados que combaten solos, formas y compañeros permanentes. La base técnica de las ramas complejas, todavía sin ninguna rama que la use.

@@ -26,7 +26,7 @@ def test_content_loads_and_references_resolve():
     c = load_content()
     assert c.start_location in c.locations
     assert c.respawn_location in c.locations
-    assert len(c.classes) == 8 and len(c.monsters) == 10 and len(c.items) == 97 and len(c.npcs) == 13
+    assert len(c.classes) == 10 and len(c.monsters) == 10 and len(c.items) == 98 and len(c.npcs) == 13
     assert "Aetherfall" in c.world_guide.summary.es and "internet" in c.world_guide.technology.en
 
 
@@ -126,9 +126,13 @@ def test_class_portraits_and_unknown_class_folder(tmp_path):
 
     c = load_content()
     portrait = "classes/{}/images/portrait.{}.jpg"
-    for cls in c.classes:  # every class has a man and a woman
+    # the classes of roadmap_balance B06 wait for their art (TODO-images.md): the game shows the sheet without
+    # a photo until then. An integrated portrait always comes with its media.yaml and prompt (test below).
+    pending_art = {"barbarian", "monk", "ranger", "artificer", "shaman", "death_knight"}
+    for cls in c.classes:  # every other class has a man and a woman
         for gender in ("male", "female"):
-            assert [a.key for a in c.media.class_images(cls, gender)] == [portrait.format(cls, gender)]
+            got = [a.key for a in c.media.class_images(cls, gender)]
+            assert got == ([] if cls in pending_art else [portrait.format(cls, gender)]), cls
     assert [a.key for a in c.media.class_images("warlock")] == [portrait.format("warlock", "female")]  # no gender: first
 
     shutil.copytree(CONTENT_DIR / "classes", tmp_path / "classes")

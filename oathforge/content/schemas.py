@@ -14,7 +14,7 @@ DC_TIERS = {"trivial": 5, "easy": 10, "medium": 13, "hard": 16, "very_hard": 19}
 STATUSES = (
     "bleeding", "burning", "poisoned", "frightened", "stunned",
     "vulnerable", "hidden", "defending", "blessed",
-    "asleep", "restrained", "inspired", "wild_shape",
+    "asleep", "restrained", "inspired", "wild_shape", "marked",
 )
 DamageType = Literal[
     "slashing", "piercing", "bludgeoning", "radiant", "necrotic", "cold", "fire", "poison", "force", "psychic",
@@ -211,7 +211,7 @@ class ClassAbility(Strict):
     heal_dice: str | None = None
     heal_add: Literal["level", "casting"] | None = None
     status: Literal[
-        "blessed", "stunned", "frightened", "asleep", "restrained", "inspired", "wild_shape", "hexed",
+        "blessed", "stunned", "frightened", "asleep", "restrained", "inspired", "wild_shape", "hexed", "marked",
     ] | None = None
     status_turns: int = 1
     targets_type: CreatureType | None = None
@@ -230,6 +230,7 @@ class ClassAbility(Strict):
     crit_range: int | None = None  # e.g. 19: critical on 19-20
     bonus_damage: str | None = None  # once per turn on a melee weapon hit
     bonus_damage_type: DamageType | None = None
+    ranged: bool = False  # strike: with the ranged weapon instead of the melee one
     entity: str | None = None  # summon / command: the template. A passive with it brings the permanent companion
     form: str | None = None  # shift
     boost_turns: int = Field(3, ge=1)  # converge

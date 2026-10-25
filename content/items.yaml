@@ -52,6 +52,15 @@ quarterstaff:
   value: 2
   weapon: {damage: 1d6, damage_type: bludgeoning}
 
+hand_wraps:
+  name: {es: Vendas de combate, en: Hand wraps}
+  icon: "🥊"
+  description: {es: "Tiras de lino y cuero para golpear con los puños sin romperte los nudillos; lo único que lleva un monje.", en: "Strips of linen and leather to strike with your fists without breaking your knuckles; all a monk carries."}
+  type: weapon
+  slot: main_hand
+  value: 3
+  weapon: {damage: 1d6, damage_type: bludgeoning, finesse: true}
+
 rapier:
   name: {es: Estoque, en: Rapier}
   icon: "🤺"

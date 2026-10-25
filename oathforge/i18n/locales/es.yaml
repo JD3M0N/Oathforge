@@ -580,7 +580,8 @@ ability:
     bonus: "acción adicional"
   uses_one: "1 uso por descanso"
   uses: "{n} usos por descanso"
-  unlimited: "sin límite"
+  unlimited: "gratis"
+  cost: "🔹 {n}"
 
 steal:
   success: "Le quitas {gold} de oro a {npc} sin que lo note."
@@ -713,6 +714,7 @@ status:
   inspired: "inspiración"
   wild_shape: "forma salvaje"
   hexed: "maleficio"
+  marked: "presa marcada"
   icon:
     bleeding: "🩸"
     burning: "🔥"
@@ -728,6 +730,7 @@ status:
     inspired: "🎵"
     wild_shape: "🐻"
     hexed: "🕯️"
+    marked: "🎯"
 
 dmg:
   slashing: "cortante"
