@@ -161,7 +161,8 @@ btn:
   shop: "🛒 Comerciar"
   rest: "🛏️ Descanso largo ({cost} 🪙)"
   rest_free: "🛏️ Descanso largo (gratis)"
-  heal: "🙏 Curar heridas (gratis)"
+  short_rest: "💤 Descanso corto"
+  heal: "🙏 Curar heridas ({cost} 🪙)"
   wake: "☀️ Levantarse"
   inventory: "🎒 Inventario"
   sheet: "🧝 Héroe"
@@ -295,6 +296,7 @@ shop:
     no_gold: "No tienes suficiente oro (necesitas {price})."
     no_buy: "Este comerciante no compra nada."
     cant_sell: "No puedes vender eso (¿está equipado?)."
+    tool_in_use: "Esa herramienta la estás usando ahora mismo: véndela cuando termines."
   group:
     weapons: "⚔️ Armas"
     armor: "🛡️ Armaduras y escudos"
@@ -510,8 +512,9 @@ explore:
   hunt_day: "🏹 Rastreas la zona y das con tu presa."
   hunt_night: "🦇 Te adentras en la oscuridad. Algo se mueve cerca."
   hunt_boss: "🐗 La tierra tiembla. Algo enorme se abre paso entre la hierba."
-  rested: "☀️ Te levantas descansado tras ocho horas de sueño. Recuperas todas tus fuerzas: {hp} PV y todos tus usos."
-  healed: "🙏 La hermana Ysolde murmura una plegaria y te venda: recuperas {amount} PV ({hp}/{max_hp})."
+  rested: "☀️ Te levantas descansado. Recuperas todas tus fuerzas: {hp} PV y todos tus usos."
+  short_rested: "💤 Recobras el aliento."
+  healed: "🙏 La hermana Ysolde murmura una plegaria y te venda: recuperas {amount} PV ({hp}/{max_hp}). Dejas {cost} de oro en la caja de la capilla."
   healed_injured: "✨ Su plegaria cierra también tus heridas graves: ya no estás herido."
   err:
     in_combat: "¡Estás en pleno combate!"
@@ -826,10 +829,6 @@ rulebook:
   title: "📘 <b>Reglamento de Aetherfall</b>"
   intro: "Lo que necesitas para jugar, sección a sección. Toca una para abrirla."
   index: "📘 Índice"
-  beta_rest_on: "Durante la beta el descanso es inmediato."
-  beta_rest_off: "El descanso ocupa ese tiempo real."
-  beta_tutorial_on: "Durante el tutorial las actividades terminan al instante."
-  beta_tutorial_off: "Las actividades ocupan su tiempo real desde la primera."
 
 lineages:
   title: "🧬 <b>Linajes de Aetherfall</b>"
@@ -912,7 +911,8 @@ acts:
     stay: "mucho más botín, pero al final puede haber emboscada"
     track: "experiencia de rastreo y trofeos; acaba en combate con la presa"
     skin: "piel y carne de las piezas que acabas de cazar"
-    rest: "ocho horas de sueño ({minutes} min): vida y usos al máximo"
+    rest: "un buen sueño ({minutes} min): vida y usos al máximo, y las heridas graves se curan"
+    short_rest: "un respiro de {minutes} min: parte de la vida y de lo gastado, sin curar heridas graves (te quedan {left} hasta el próximo descanso largo)"
     craft: "las recetas de tus oficios en las estaciones de aquí"
     heal: "vida al máximo y heridas graves cerradas"
 activity:
@@ -921,8 +921,9 @@ activity:
     skin: "Te pones a desollar en {place}. En {seconds} s tienes la piel y la carne."
     stay: "Empiezas una expedición larga de {skill} en {place} ({minutes} min). Traerás mucho más, pero al final puede haber emboscada."
     track: "Te agachas y empiezas a buscar rastros en {place} ({minutes} min)."
-    rest: "Pagas {cost} de oro y te acuestas en {place}. Ocho horas de sueño: despiertas en {minutes} min."
-    rest_free: "Te acuestas en {place}. Ocho horas de sueño: despiertas en {minutes} min."
+    rest: "Pagas {cost} de oro y te acuestas en {place}. Despiertas en {minutes} min."
+    rest_free: "Te acuestas en {place}. Despiertas en {minutes} min."
+    short_rest: "Te sientas a recobrar el aliento en {place}. En {minutes} min estarás algo mejor."
   done:
     gather: "✅ Terminas tu trabajo en {place}."
     stay: "✅ Tu expedición en {place} termina sin incidentes."
@@ -932,11 +933,10 @@ activity:
     stay: "Expedición de {skill} en {place}"
     track: "Rastreo en {place}"
     rest: "Durmiendo en {place}"
+    short_rest: "Recobrando el aliento en {place}"
     skin: "Desollando en {place}"
   cancelled: "Abandonas la tarea. No te llevas nada."
   bonus: "🍀 Tu maestría te da algo extra: {loot}."
-  tutorial_instant: "⚡ Durante el tutorial (beta) esto termina al momento."
-  tutorial: "⚡ Tutorial: Vale te enseña el atajo y terminas al momento ({skill} en {place}). Fuera del tutorial, esto lleva su tiempo."
   stay_ambush: "⚠️ Cuando cargas lo obtenido ({loot}), algo sale de las sombras... Victoria: te lo llevas todo. Huida: la mitad. Derrota: lo pierdes."
   stay_saved: "📦 Conservas toda la carga de la expedición."
   stay_half: "📦 En la huida se pierde la mitad de la carga."
@@ -953,8 +953,8 @@ activity:
   ready: "¡Listo! Enseguida te llega lo obtenido."
   stay_warning: "⚠️ Al terminar puede haber emboscada. Victoria: todo; huida: la mitad; derrota: nada."
   busy_hint: "No puedes viajar ni empezar otra cosa hasta que termine o la abandones. Al acabar te llega lo obtenido, aunque cierres Telegram."
-  busy_hint_rest: "Mientras duermes no puedes viajar ni hacer otra cosa. Si te levantas antes, no recuperas nada y el oro no se devuelve."
-  ready_rest: "☀️ Has dormido tus ocho horas. Enseguida despiertas."
+  busy_hint_rest: "Mientras descansas no puedes viajar ni hacer otra cosa. Si te levantas antes, no recuperas nada y el oro no se devuelve."
+  ready_rest: "☀️ Has descansado. Enseguida despiertas."
   options: "🧰 <b>Trabajo de campo</b>: {list}"
   err:
     busy: "Tienes una tarea en marcha. Espera a que termine o abandónala."
@@ -963,6 +963,7 @@ activity:
     no_tool: "Necesitas: {tool}. Tessa vende herramientas en el mercado de Crownreach."
     none: "No tienes ninguna tarea en marcha."
     not_ready: "Aún no ha terminado: faltan {minutes} min."
+    no_short_rest: "Ya has tomado todos los descansos cortos que tocan: haz un descanso largo."
 
 mastery:
   name:

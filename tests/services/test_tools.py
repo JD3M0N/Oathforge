@@ -87,7 +87,7 @@ async def test_a_faster_tool_shortens_the_job_it_starts():
         await activities.select_tool(s, char, "quick_pickaxe")
         assert (await activities.start(s, char, "gather", "mining", 100.0)).ok
         act = await activities.open_activity(s, char)
-        assert act.ends_at - act.started_at == 270  # five minutes, ten percent less
+        assert act.ends_at - act.started_at == round(gathering.GATHER_SECONDS * 0.9)  # ten percent less
 
 
 async def test_a_tool_of_another_discipline_changes_nothing():

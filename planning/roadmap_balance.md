@@ -60,7 +60,7 @@ Hito **0.10-I** del [roadmap general](roadmap.md). Se avanza **fase a fase**: ca
 | B05 · Compañeros, formas y dispositivos | ✅ Hecha | 0.10.28 |
 | B06 · 14 clases base (1–9) | ✅ Hecha | 0.10.29–0.10.31 |
 | B07 · 41 ramas | ✅ Hecha: 41 de 41 | 0.10.32–0.10.34 |
-| B08 · Tiempos, descanso, derrota y economía | Pendiente | — |
+| B08 · Tiempos, descanso, derrota y economía | ✅ Hecha salvo stock crítico y cobertura T0/T1 (pasan a B09) | 0.10.35 |
 | B09 · Campaña hasta el Recaudador | Pendiente | — |
 | B10 · Ciervo y graduación | Pendiente | — |
 | B11 · Región y aventuras 11–20 | Pendiente | — |
@@ -1175,12 +1175,12 @@ El simulador y pruebas se amplían junto a cada fase, no solo en B12. No hacen f
 ### B08 · Tiempos, descanso, derrota y economía
 
 **Objetivo:** dejar de equilibrar con ayudas de beta.
-- [ ] Aplicar tabla §12; retirar aceleración residual del tutorial.
-- [ ] Descanso corto y largo con interrupción segura.
-- [ ] Matriz de acciones busy; permitir consulta y gestión compatibles.
-- [ ] Herramientas en mochila y selección ya implementada preservadas.
-- [ ] Precios normales, stock crítico y cobertura T0/T1 de clases.
-- [ ] Derrota inicial con coste limitado y retorno seguro.
+- [x] Aplicar tabla §12; retirar aceleración residual del tutorial. (0.10.35)
+- [x] Descanso corto y largo con interrupción segura. (0.10.35)
+- [x] Matriz de acciones busy; permitir consulta y gestión compatibles. (0.10.35: ya estaba casi toda; se añade no vender la herramienta en uso)
+- [x] Herramientas en mochila y selección ya implementada preservadas. (0.10.35)
+- [ ] Precios normales (hecho en 0.10.35), stock crítico y cobertura T0/T1 de clases (pendiente, con la campaña de B09).
+- [x] Derrota inicial con coste limitado y retorno seguro. (0.10.35: 10 % con tope de 15 por nivel)
 **Archivos:** activities.py, inventory.py, home.py, crafting.py, config.py, items/recipes/professions, render/rulebook.
 **Pruebas:** reiniciar temporizador, cambiar/vender herramienta comprometida, doble claim, descanso cancelado, arbitraje de lotes, ausencia de oro.
 **Terminado:** sesión de 60–90 minutos funcional sin atajos ni bloqueos económicos.

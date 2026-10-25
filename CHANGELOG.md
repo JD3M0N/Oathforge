@@ -4,6 +4,28 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.35] - 2026-10-25
+
+0.10-I (B08): **tiempos reales, descanso corto y derrota con tope.** Se acaban las ayudas de beta: el descanso y el tutorial llevan su tiempo y las pociones cuestan lo que valen.
+
+### Añadido
+- **Tabla de tiempos en un solo sitio** (`engine/timings.py`): recolección 4 min, expedición 15, rastreo 3, descanso largo 15, descanso corto 3. El reglamento y el panel de Actividades leen esa misma tabla.
+- **Descanso corto** (💤 en Actividades, en cualquier sitio, gratis): al terminar da un 30 % de la vida (sin pasar del tope de las heridas graves) y parte de la barra o un uso gastado; no cura heridas graves. Solo dos entre dos descansos largos, que los devuelven. Abandonarlo no da nada.
+- La actividad guarda la herramienta con la que empezó: **no se puede vender la única que estás usando**.
+- Pruebas: descanso largo con su tiempo, descanso cancelado, doble cobro, descansos cortos limitados, venta de la herramienta en uso y tope de la derrota.
+
+### Cambiado
+- **Derrota**: el 10 % del oro con un tope de 15 por nivel (y nunca deuda). Sigue sin quitar equipo ni compañeros.
+- «Curar heridas» de la Capilla cuesta 3 de oro; quien lleva menos paga lo que tenga, así que nadie se queda atascado sin oro.
+- Pociones de curación (20) y de maná (60) a su precio normal.
+- Textos del reglamento, de las misiones del tutorial y de Actividades sin referencias a la beta ni a «ocho horas de sueño».
+
+### Eliminado
+- `beta_instant_rest` y `beta_instant_tutorial` (config), el atajo `tutorial_boost` de las misiones y los textos y pruebas que los acompañaban.
+
+### Pendiente de B08
+- Stock crítico y cobertura T0/T1 de herramientas para todas las clases (se revisa con la campaña, B09).
+
 ## [0.10.34] - 2026-10-25
 
 0.10-I (B07, lote C): **las 41 ramas ya se pueden elegir.** Este lote cierra B07 con las nueve de entidades, formas, tótems y tiempo.

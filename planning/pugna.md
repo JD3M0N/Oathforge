@@ -21,8 +21,8 @@ Motor puro en `oathforge/engine/combat.py`, persistido como JSON en `encounters.
 - Botones por clase: ataques + habilidad 🌟 en la primera fila, «✨ Acciones» con el resto.
 - **Panel**: ❤️ PV y barra, 🛡️ CA; bloques por acción (🗡️ acierto, 💥 crítico, 💨 fallo, «🎲 14 +5 = 19 vs 🛡️ 13»); separador por ronda.
 - **Informe**: «📊 Resumen» (resultado, daño, aciertos, críticos, curación, recompensas, páginas por ronda) y «📜 Informe» completo; `/report`. Se reconstruye desde `combat_actions` (`actor="start"` y `actor="end"`).
-- **Derrota**: pierdes el 10 % del oro y quedas «herido» (techo del 50 % de PV) hasta descansar o curarte.
-- **Descanso**: largo en la posada (diseño: 5 de oro y 8 h de juego; **en la beta, instantáneo**); osario de la cripta gratis; tónico del reposo como descanso corto (enfriamiento 4 h); Ysolde cura gratis en la beta.
+- **Derrota** (tope de 15 de oro por nivel desde 0.10.35): pierdes el 10 % del oro y quedas «herido» (techo del 50 % de PV) hasta descansar o curarte.
+- **Descanso** (0.10.35, tiempos en `engine/timings.py`): largo en la posada (5 de oro, 15 min reales; recompensa al terminar, abandonar no da nada); **corto** en cualquier sitio (3 min, gratis, 30 % de PV sin pasar del tope de heridas, parte de la barra; dos entre dos largos); osario de la cripta gratis (se retira en B13); tónico del reposo como descanso corto (enfriamiento 4 h); Ysolde cura por 3 de oro (quien lleva menos paga lo que tenga).
 - Simulador: `oath simulate --level 1-5` (200 combates por clase × enemigo × nivel).
 
 ## Decidido

@@ -13,7 +13,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from oathforge.content import get_content
 from oathforge.content.schemas import RestoreHp, RestoreSpellCharge
-from oathforge.database.models import Character, ItemInstance
+from oathforge.database.models import Character, ItemInstance, WorldActivity
 from oathforge.engine.dice import roll
 from oathforge.services import characters
 from oathforge.services.events import Outcome
@@ -167,7 +167,7 @@ def spell_choices(char: Character, item) -> list[str]:
     return [k for k, _ in spent_abilities(char, spells_only=True)]
 
 
-def _restore_pool(char: Character, amount: int, out: Outcome) -> None:
+def restore_pool(char: Character, amount: int, out: Outcome) -> None:
     res = characters.resource_def(char)
     before = characters.pool_of(char)
     characters.set_pool(char, before + amount)
@@ -176,7 +176,7 @@ def _restore_pool(char: Character, amount: int, out: Outcome) -> None:
             left=characters.pool_of(char), max=characters.resource_max(char))
 
 
-def _restore_use(char: Character, key: str, amount: int, out: Outcome) -> None:
+def restore_use(char: Character, key: str, amount: int, out: Outcome) -> None:
     a = characters.abilities_of(char)[key]
     char.resources = {**char.resources, key: min(a.uses, char.resources[key] + amount)}
     out.add("inv.use_restored", ability=a.name.model_dump(), uses=char.resources[key], max=a.uses)
@@ -228,19 +228,19 @@ async def use_item_outside_combat(session: AsyncSession, char: Character, key: s
         elif isinstance(effect, RestoreSpellCharge):
             out.add("inv.used", item=name)
             if characters.resource_max(char):  # straight into the class's own bar
-                _restore_pool(char, effect.pool, out)
+                restore_pool(char, effect.pool, out)
             else:
                 spent = [k for k, _ in spent_abilities(char, spells_only=True)]
-                _restore_use(char, ability if ability in spent else spent[0], effect.amount, out)
+                restore_use(char, ability if ability in spent else spent[0], effect.amount, out)
         else:  # short rest: part of the HP, a use back, then the cooldown; never lifts "injured"
             out.add("inv.short_rest", item=name)
             char.hp = min(hp_cap(char), char.hp + max(1, round(char.max_hp * effect.hp_percent)))
             if char.hp > before:
                 out.add("inv.healed_hp", amount=char.hp - before, hp=char.hp, max_hp=char.max_hp)
             if characters.resource_max(char):
-                _restore_pool(char, effect.pool, out)
+                restore_pool(char, effect.pool, out)
             elif spent := spent_abilities(char, spells_only=False):
-                _restore_use(char, spent[0][0], effect.charges, out)
+                restore_use(char, spent[0][0], effect.charges, out)
             char.cooldowns = {**(char.cooldowns or {}), "short_rest": now + effect.cooldown_seconds}
     return out
 
@@ -272,6 +272,13 @@ async def buy(session: AsyncSession, char: Character, npc_key: str, item_key: st
                          gold=char.gold)
 
 
+async def committed_tool(session: AsyncSession, char: Character) -> str | None:
+    """The tool the running activity was started with (activities.start stores it): not for sale until it ends."""
+    act = await session.scalar(select(WorldActivity).where(
+        WorldActivity.character_id == char.id, WorldActivity.status.in_(("running", "awaiting_combat"))))
+    return (act.result or {}).get("tool") if act else None
+
+
 async def sell(session: AsyncSession, char: Character, npc_key: str, instance_id: int, reputation: int) -> Outcome:
     npc = get_content().npcs[npc_key]
     if not npc.shop or not npc.shop.buys:
@@ -282,6 +289,8 @@ async def sell(session: AsyncSession, char: Character, npc_key: str, instance_id
     item = get_content().items[inst.item_key]
     if not item.sellable or inst.equipped_slot:
         return Outcome.refused("shop.err.cant_sell")
+    if inst.qty <= 1 and inst.item_key == await committed_tool(session, char):  # the only one, and in use
+        return Outcome.refused("shop.err.tool_in_use")
     price = sell_price(inst.item_key, reputation)
     if inst.qty > 1:
         inst.qty -= 1

@@ -51,11 +51,11 @@ health:
   title: {es: Puntos de vida y dado de golpe, en: Hit points and hit die}
   body:
     es: |-
-      Los puntos de vida (PV) son el aguante de tu héroe. A 0 PV caes derrotado: despiertas en un lugar seguro con la mitad de la vida, herido (hasta un descanso largo) y con un {defeat_gold_pct} % menos de oro.
+      Los puntos de vida (PV) son el aguante de tu héroe. A 0 PV caes derrotado: despiertas en un lugar seguro con la mitad de la vida, herido (hasta un descanso largo) y con un {defeat_gold_pct} % menos de oro (como mucho {defeat_gold_cap} por nivel). Nunca pierdes equipo ni compañeros.
       El dado de golpe depende de la clase (d6 para el Hechicero, d10 para el Paladín…). A nivel 1 tienes el máximo del dado + tu modificador de CON; cada nivel suma la mitad del dado + 1 + CON.
       Por eso la Constitución importa a todas las clases.
     en: |-
-      Hit points (HP) are your hero's staying power. At 0 HP you are defeated: you wake up somewhere safe at half HP, injured (until a long rest) and with {defeat_gold_pct}% less gold.
+      Hit points (HP) are your hero's staying power. At 0 HP you are defeated: you wake up somewhere safe at half HP, injured (until a long rest) and with {defeat_gold_pct}% less gold (at most {defeat_gold_cap} per level). You never lose gear or companions.
       The hit die depends on the class (d6 for the Sorcerer, d10 for the Paladin…). At level 1 you get the die's maximum + your CON modifier; each level adds half the die + 1 + CON.
       That is why Constitution matters to every class.
 
@@ -81,15 +81,17 @@ rest:
   title: {es: Descanso y curación, en: Rest and healing}
   body:
     es: |-
-      • Descanso largo en la posada de La Corona Rota: {rest_gold} de oro y 8 horas de juego ({rest_min} minutos reales). {beta_rest} Recuperas toda la vida y tu barra de clase, y se curan las heridas graves.
+      • Descanso largo en la posada de La Corona Rota: {rest_gold} de oro y {rest_min} minutos reales. Si lo abandonas no recuperas nada. Recuperas toda la vida y tu barra de clase, se curan las heridas graves y vuelven tus descansos cortos.
       • En la Cripta Hundida, ya despejada, puedes descansar gratis: es el único sitio fuera de la posada donde se hace un descanso largo.
-      • «Curar heridas» en la Capilla del Alba: gratis durante la beta y al momento. La hermana Ysolde cierra también las heridas graves que deja una derrota.
+      • «Curar heridas» en la Capilla del Alba: {heal_gold} de oro (si llevas menos, te atienden por lo que tengas) y al momento. La hermana Ysolde cierra también las heridas graves que deja una derrota.
+      • Descanso corto, en cualquier sitio: {short_rest_min} minutos, gratis; recuperas un {short_rest_pct} % de la vida (sin pasar del límite de las heridas graves) y parte de tu barra o de un uso gastado. Solo {short_rests} entre dos descansos largos.
       • Las pociones de curación ayudan fuera de la ciudad; el tónico del reposo da un descanso corto y luego tarda un rato en poder usarse otra vez.
       En el juego también pasan el día y la noche: algunas criaturas cambian según la hora.
     en: |-
-      • Long rest at the Broken Crown inn: {rest_gold} gold and 8 game hours ({rest_min} real minutes). {beta_rest} You recover all your HP and your class bar, and grave wounds heal.
+      • Long rest at the Broken Crown inn: {rest_gold} gold and {rest_min} real minutes. If you abandon it you recover nothing. You recover all your HP and your class bar, grave wounds heal and your short rests come back.
       • In the Sunken Crypt, once cleared, you can rest for free: it is the only place outside the inn where a long rest happens.
-      • "Cure wounds" at the Chapel of Dawn: free during the beta and right away. Sister Ysolde also closes the grave wounds a defeat leaves.
+      • "Cure wounds" at the Chapel of Dawn: {heal_gold} gold (if you carry less, they treat you for what you have) and right away. Sister Ysolde also closes the grave wounds a defeat leaves.
+      • Short rest, anywhere: {short_rest_min} minutes, free; you recover {short_rest_pct}% of your HP (never past the grave-wound limit) and part of your bar or of a spent use. Only {short_rests} between two long rests.
       • Healing potions help outside the city; the rest draught grants a short rest and then needs a while before it works again.
       The game also has day and night: some creatures change with the hour.
 
@@ -133,7 +135,7 @@ activities:
   title: {es: Actividades, en: Activities}
   body:
     es: |-
-      Fuera de la ciudad, cada lugar tiene sus actividades. Llevan tiempo real: mientras trabajas no puedes viajar ni hacer otra cosa. {beta_tutorial} Al acabar, el bot te manda lo obtenido aunque hayas cerrado Telegram. Todas están en «⚒ Actividades» (teclado fijo o escena), con su duración y lo que te falta.
+      Fuera de la ciudad, cada lugar tiene sus actividades. Llevan tiempo real, también en el tutorial: mientras trabajas no puedes viajar ni hacer otra cosa. Al acabar, el bot te manda lo obtenido aunque hayas cerrado Telegram. Todas están en «⚒ Actividades» (teclado fijo o escena), con su duración y lo que te falta.
       • ⛏️ Minar (pico), 🪓 talar (hacha), 🌿 recolectar hierbas (hoz) y 🎣 pescar (caña): «Trabajar» dura {gather_min} min y da {gather_units} materiales. Sin peligro.
       • 🏕️ Expedición larga: {stay_min} min y {stay_units} materiales, más XP. Al final puede haber emboscada ({ambush} según el lugar): si ganas te lo llevas todo, si huyes la mitad y si caes lo pierdes.
       • 🐾 Rastrear: {track_min} min siguiendo huellas. El {prey_pct} % de las veces das con una presa y peleas; si la vences, te llevas trofeos además del desuello.
@@ -142,7 +144,7 @@ activities:
       • 🛏️ Descansar: en la taberna, 8 horas de juego ({rest_min} min) para recuperar PV y habilidades.
       Cada actividad sube su maestría, de 0 a {max_rank}: cada rango da un {bonus_pct} % más de probabilidad de botín extra (hasta {bonus_cap} %) y abre recursos más raros. Todas: /masteries
     en: |-
-      Outside the city, each place has its own activities. They take real time: while you work you cannot travel or do anything else. {beta_tutorial} When it ends, the bot sends you what you got even if you closed Telegram. They all live in "⚒ Activities" (fixed keyboard or scene), with how long they take and what you lack.
+      Outside the city, each place has its own activities. They take real time, the tutorial included: while you work you cannot travel or do anything else. When it ends, the bot sends you what you got even if you closed Telegram. They all live in "⚒ Activities" (fixed keyboard or scene), with how long they take and what you lack.
       • ⛏️ Mining (pickaxe), 🪓 woodcutting (axe), 🌿 herb gathering (sickle) and 🎣 fishing (rod): "Work" takes {gather_min} min and gives {gather_units} materials. No danger.
       • 🏕️ Long expedition: {stay_min} min and {stay_units} materials, more XP. At the end you may be ambushed ({ambush} depending on the place): win and you keep it all, flee and you keep half, fall and you lose it.
       • 🐾 Tracking: {track_min} min following tracks. {prey_pct} % of the time you find prey and fight it; beat it and you get trophies on top of skinning.
@@ -218,13 +220,13 @@ travel:
       Eliges adónde ir y el juego pone el camino. A cualquier lugar que ya conozcas llegas en un toque, aunque esté lejos: de la cripta despejada a la plaza, o de la plaza a la mina. Lo que aún no conoces se explora camino a camino, y una sala de mazmorra con enemigos te detiene hasta que la limpies.
       ⚠️ es el peligro del peor tramo del viaje. Cada viaje tira una sola vez por emboscada: un tramo ⚠️ tiene un {trip_base} % y cada ⚠️ más del peor tramo suma otro {trip_base} %; cada tramo peligroso de más añade {trip_step} %, hasta un {trip_cap} % como mucho. Si te emboscan, el viaje se para ahí; al acabar, «▶️ Seguir» te lleva al destino sin otra tirada.
       El mapa enseña dónde estás, tu objetivo (📜, si ya sabes llegar), a dónde puedes ir, a qué distancia (en yardas) y qué se puede hacer en cada lugar: /map
-      En la beta viajar es instantáneo: la distancia es solo una referencia y no gasta tiempo. Lo que sí lleva tiempo real son las actividades.
+      Viajar es inmediato: la distancia es solo una referencia y no gasta tiempo. Lo que sí lleva tiempo real son las actividades.
       Los botones cubren lo habitual, pero también puedes escribir lo que quieras hacer («me escondo tras la barra y escucho»): la IA lo interpreta y el motor decide qué pasa.
     en: |-
       You choose where to go and the game finds the way. Any place you already know is one tap away, however far: from the cleared crypt to the plaza, or from the plaza to the mine. What you don't know yet is explored one road at a time, and a dungeon room with enemies stops you until you clear it.
       ⚠️ is the danger of the worst stretch of the trip. Each trip rolls for an ambush only once: a ⚠️ road has a {trip_base} % chance and each further ⚠️ on the worst stretch adds another {trip_base} %; every extra dangerous stretch adds {trip_step} %, up to {trip_cap} % at most. If you are ambushed, the trip stops there; afterwards, «▶️ Carry on» takes you to the destination with no further roll.
       The map shows where you are, your objective (📜, if you already know the way), where you can go, how far it is (in yards) and what you can do in each place: /map
-      In the beta, travelling is instant: the distance is only a reference and takes no time. What does take real time are the activities.
+      Travelling is immediate: the distance is only a reference and takes no time. What does take real time are the activities.
       Buttons cover the usual, but you can also type whatever you want to do ("I hide behind the bar and listen"): the AI interprets it and the engine decides what happens.
 
 achievements:

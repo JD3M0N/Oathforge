@@ -14,7 +14,7 @@ from oathforge.content import get_content
 from oathforge.content.schemas import DC_TIERS
 from oathforge.database.models import Character
 from oathforge.engine.checks import modifier, proficiency_bonus
-from oathforge.engine import gathering
+from oathforge.engine import gathering, timings
 from oathforge.engine import combat, pointbuy, progression
 from oathforge.engine.combat import EncounterState, affordable, available_bonus_actions, valid_targets
 from oathforge.engine.progression import skill_rank
@@ -334,7 +334,7 @@ def activity_panel(char: Character, act, lines: list[str], n: str, lang: str,
     """The scene while a field activity runs: what, how long is left, Refresh / Abandon. It ends by itself
     (the bot sends the result), so there is nothing to collect. ``started``: the line of the moment it began."""
     seconds = activities.remaining_seconds(act)
-    rest = act.kind == "rest"
+    rest = act.kind in activities.REST_KINDS
     if seconds == 0:
         left = t(lang, "activity.ready_rest" if rest else "activity.ready")
     elif seconds < 60:
@@ -371,13 +371,13 @@ async def activity_entries(session: AsyncSession, char: Character, lang: str,
         label = t(lang, "btn.hunt_night" if night and loc.night_encounters else "btn.hunt")
         out.append((f"<b>{label}</b> · <i>{t(lang, 'acts.desc.hunt')}</i>", btn(label, cb("hunt", "-", n))))
     labels = {"gather": "btn.gather_{}", "stay": "btn.stay", "track": "btn.track", "skin": "btn.skin",
-              "rest": "btn.rest" if activities.rest_cost(char) else "btn.rest_free"}
+              "rest": "btn.rest" if activities.rest_cost(char) else "btn.rest_free", "short_rest": "btn.short_rest"}
     for kind, skill, refusal in await activities.availability(session, char):
         seconds = activities.skin_seconds(characters.pending_skin(char)) if kind == "skin" \
-            else gathering.SECONDS[kind]
+            else timings.SECONDS[kind]
         label = t(lang, labels[kind].format(skill), minutes=seconds // 60, seconds=seconds,
                   cost=activities.rest_cost(char) or 0)
-        desc = t(lang, f"acts.desc.{kind}", minutes=seconds // 60)
+        desc = t(lang, f"acts.desc.{kind}", minutes=seconds // 60, left=activities.short_rests_left(char))
         line = f"<b>{escape(label)}</b> · <i>{desc}</i>"
         tool = activities.tool_for(char, kind, skill)
         button = btn(label, cb("rest", "-", n) if kind == "rest" else cb("act", f"{kind}:{skill}", n))
@@ -401,8 +401,8 @@ async def activity_entries(session: AsyncSession, char: Character, lang: str,
     if loc.stations:
         out.append((f"<b>{t(lang, 'btn.craft')}</b> · <i>{t(lang, 'acts.desc.craft')}</i>", btn(t(lang, "btn.craft"), cb("crf"))))
     if loc.healer is not None:
-        out.append((f"<b>{t(lang, 'btn.heal')}</b> · <i>{t(lang, 'acts.desc.heal')}</i>",
-                    btn(t(lang, "btn.heal"), cb("heal", "-", n))))  # free during the beta
+        label = t(lang, "btn.heal", cost=exploration.healer_price(char))
+        out.append((f"<b>{label}</b> · <i>{t(lang, 'acts.desc.heal')}</i>", btn(label, cb("heal", "-", n))))
     return out
 
 
@@ -1872,10 +1872,11 @@ def rule_numbers(lang: str = "es") -> dict:
         "trip_base": round(exploration.ENCOUNTER_CHANCE_PER_DANGER * 100),
         "trip_step": round(exploration.TRIP_EXTRA_PER_STRETCH * 100),
         "trip_cap": round(exploration.TRIP_CHANCE_CAP * 100),
-        "beta_rest": t(lang, "rulebook.beta_rest_on" if settings.beta_instant_rest else "rulebook.beta_rest_off"),
-        "beta_tutorial": t(lang, "rulebook.beta_tutorial_on" if settings.beta_instant_tutorial else "rulebook.beta_tutorial_off"),
-        "gather_min": gathering.GATHER_SECONDS // 60, "stay_min": gathering.STAY_SECONDS // 60,
-        "track_min": gathering.TRACK_SECONDS // 60, "rest_min": gathering.REST_SECONDS // 60,
+        "gather_min": timings.GATHER_SECONDS // 60, "stay_min": timings.STAY_SECONDS // 60,
+        "track_min": timings.TRACK_SECONDS // 60, "rest_min": timings.REST_SECONDS // 60,
+        "short_rest_min": timings.SHORT_REST_SECONDS // 60, "short_rests": timings.SHORT_RESTS_PER_LONG,
+        "short_rest_pct": round(timings.SHORT_REST_HP_PCT * 100), "heal_gold": min((loc.healer.cost for loc in c.locations.values() if loc.healer), default=0),
+        "defeat_gold_cap": characters.DEFEAT_GOLD_CAP_PER_LEVEL,
         "gather_units": "{}–{}".format(*gathering.GATHER_UNITS), "stay_units": "{}–{}".format(*gathering.STAY_UNITS),
         "ambush": f"{round(min(ambush) * 100)}–{round(max(ambush) * 100)} %" if ambush else "—",
         "prey_pct": round(gathering.TRACK_PREY_CHANCE * 100), "bonus_pct": round(gathering.BONUS_PER_RANK * 100),

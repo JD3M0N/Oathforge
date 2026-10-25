@@ -9,7 +9,7 @@ from sqlalchemy import select
 from oathforge.config import get_settings
 from oathforge.database.models import Character, WorldActivity
 from oathforge.database.session import session_scope
-from oathforge.engine import gathering
+from oathforge.engine import gathering, timings
 from oathforge.engine.combat import Action
 from oathforge.services import activities, characters, chronicles, combat_service, exploration, inventory
 from oathforge.services.events import Outcome
@@ -439,46 +439,16 @@ async def _activate(s, char, qkey):
     p.stage, p.state, p.counters = quest.objective_stage, "active", {}
 
 
-async def test_tutorial_gathering_is_instant_once_and_only_what_it_asks_for():
-    from oathforge.services import quests
+async def test_tutorial_activities_take_their_real_time():
     cid = await new_character()
     now = time.time()
     async with session_scope() as s:
         char = await get_char(s, cid)
-        await _activate(s, char, "tut_mine")  # 3 iron ore
-        out = await activities.start(s, char, "gather", "mining", now)
-        assert out.ok and char.state == "idle" and any(e.key == "activity.tutorial" for e in out.events)
-        assert await inventory.count(s, char, "iron_ore") == 3 and await inventory.count(s, char, "coal") == 0
-        assert (await quests.progress(s, char))["tut_mine"].state == "completed"
-        assert await activities.open_activity(s, char) is None  # nothing to collect, nothing running
-        # the shortcut was used: the next one takes its normal time
         await _activate(s, char, "tut_mine")
-        assert (await activities.start(s, char, "gather", "mining", now)).ok and char.state == "busy"
-
-
-async def test_no_tutorial_shortcut_for_another_resource_or_outside_the_tutorial():
-    cid = await new_character()
-    async with session_scope() as s:
-        char = await get_char(s, cid)
-        await _activate(s, char, "tut_herbs")  # bloodroot: the mine has none
-        assert (await activities.start(s, char, "gather", "mining")).ok and char.state == "busy"
-    cid = await new_character(tg_id=2)
-    async with session_scope() as s:
-        char = await get_char(s, cid)  # only "Mustering In" is active: nothing to gather
-        assert (await activities.start(s, char, "stay", "mining")).ok and char.state == "busy"
-
-
-async def test_tutorial_skinning_guarantees_the_meat_once():
-    cid = await new_character(location="tusk_meadow", tools=("skinning_knife",))
-    async with session_scope() as s:
-        char = await get_char(s, cid)
-        await _activate(s, char, "tut_boars")  # 2 hunts and 2 raw meat
-        meat = []
-        for seed in range(6):
-            got = await activities.skin(s, char, ["boar"], random.Random(seed), Outcome())
-            meat.append(got.get("raw_meat", 0))
-        assert meat[0] >= 2  # the first skinning, whatever the dice say
-        assert char.flags["tutorial_boosts"] == ["tut_boars"]
+        out = await activities.start(s, char, "gather", "mining", now)
+        act = await activity(s, cid)
+        assert out.ok and char.state == "busy" and act.ends_at - act.started_at == gathering.GATHER_SECONDS
+        assert (await activities.claim(s, char, now + 10)).error == "activity.err.not_ready"
 
 
 async def test_fishing_levels_the_fishing_hobby():
@@ -521,35 +491,105 @@ async def test_skinning_waits_for_skin_and_is_lost_when_leaving(monkeypatch):
         assert (await activities.start(s, char, "skin", "skinning", now)).error == "activity.err.nothing_to_skin"
 
 
-# ---------------------------------------------------------------- beta shortcuts (beta only)
+# ---------------------------------------------------------------- rest
 
-async def test_beta_long_rest_is_instant(beta):
+async def test_long_rest_takes_its_time_and_pays_when_it_ends():
     cid = await new_character(location="broken_crown_tavern", tools=())
+    now = time.time()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        char.hp, char.conditions, char.gold = 1, {"injured": True}, 20
+        out = await activities.start(s, char, "rest", "rest", now)
+        act = await activity(s, cid)
+        assert out.ok and char.state == "busy" and act.ends_at - act.started_at == timings.REST_SECONDS
+        assert char.gold == 20 - activities.rest_cost(char) and char.hp == 1  # nothing is restored on lying down
+        assert (await activities.claim(s, char, now + 60)).error == "activity.err.not_ready"
+        assert (await activities.claim(s, char, now + timings.REST_SECONDS)).ok
+        assert char.hp == char.max_hp and "injured" not in char.conditions and char.state == "idle"
+
+
+async def test_a_cancelled_rest_gives_nothing_back():
+    cid = await new_character(location="broken_crown_tavern", tools=())
+    now = time.time()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        char.hp, char.conditions, char.gold = 1, {"injured": True}, 20
+        await activities.start(s, char, "rest", "rest", now)
+        gold = char.gold
+        assert (await activities.cancel(s, char, now + 600)).ok
+        assert char.hp == 1 and char.gold == gold and "injured" in char.conditions and char.state == "idle"
+        assert (await activities.claim(s, char, now + timings.REST_SECONDS)).error == "activity.err.none"  # no double claim
+
+
+async def test_a_short_rest_is_partial_limited_and_a_long_rest_gives_the_uses_back():
+    cid = await new_character(location="broken_crown_tavern", tools=())
+    now = time.time()
     async with session_scope() as s:
         char = await get_char(s, cid)
         char.hp, char.conditions = 1, {"injured": True}
-        out = await activities.start(s, char, "rest", "rest")
-        assert out.ok and char.state == "idle" and char.hp == char.max_hp and "injured" not in char.conditions
-        assert (await activity(s, cid)).status == "done"
+        for n in range(timings.SHORT_RESTS_PER_LONG):
+            assert (await activities.start(s, char, "short_rest", "rest", now)).ok
+            assert (await activity(s, cid)).ends_at - now == timings.SHORT_REST_SECONDS
+            before = char.hp
+            assert (await activities.claim(s, char, now + timings.SHORT_REST_SECONDS)).ok
+            assert before < char.hp <= char.max_hp // 2 and "injured" in char.conditions  # never past the injury cap
+        assert (await activities.start(s, char, "short_rest", "rest", now)).error == "activity.err.no_short_rest"
+        assert (await activities.start(s, char, "rest", "rest", now)).ok
+        await activities.claim(s, char, now + timings.REST_SECONDS)
+        char.hp = 1
+        assert (await activities.start(s, char, "short_rest", "rest", now)).ok
 
 
-async def test_beta_tutorial_activities_end_at_once(beta):
-    cid = await new_character()  # the first tutorial mission is active
+async def test_the_tool_in_use_cannot_be_sold_until_the_job_ends():
+    from oathforge.content import get_content
+    from oathforge.database.models import ItemInstance
+    shop = next(k for k, n in get_content().npcs.items() if n.shop and n.shop.buys)
+    cid = await new_character()
+    now = time.time()
     async with session_scope() as s:
         char = await get_char(s, cid)
-        out = await activities.start(s, char, "gather", "mining")
-        assert out.ok and char.state == "idle" and any(e.key == "activity.tutorial_instant" for e in out.events)
-        assert (await activity(s, cid)).status == "done"
+        pick = await s.scalar(select(ItemInstance).where(ItemInstance.owner_character_id == char.id,
+                                                         ItemInstance.item_key == "pickaxe"))
+        assert (await activities.start(s, char, "gather", "mining", now)).ok
+        assert (await inventory.sell(s, char, shop, pick.id, 0)).error == "shop.err.tool_in_use"
+        assert await inventory.count(s, char, "pickaxe") == 1
+        await activities.claim(s, char, now + gathering.GATHER_SECONDS)
+        assert (await inventory.sell(s, char, shop, pick.id, 0)).ok  # the job is over: it is just an item again
 
 
-async def test_beta_activities_keep_their_time_after_the_tutorial(beta):
-    from oathforge.services import quests
+async def test_a_second_claim_pays_nothing():
+    cid = await new_character()
+    now = time.time()
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        await activities.start(s, char, "gather", "mining", now)
+        assert (await activities.claim(s, char, now + gathering.GATHER_SECONDS)).ok
+        ore = await inventory.count(s, char, "iron_ore")
+        assert (await activities.claim(s, char, now + gathering.GATHER_SECONDS)).error == "activity.err.none"
+        assert await inventory.count(s, char, "iron_ore") == ore
+
+
+async def test_a_defeat_costs_a_small_capped_share_of_the_gold():
     cid = await new_character()
     async with session_scope() as s:
         char = await get_char(s, cid)
-        for p in (await quests.ensure_progress(s, char)).values():
-            p.state = "completed"
-        assert (await activities.start(s, char, "gather", "mining")).ok and char.state == "busy"
+        char.gold = 1000
+        await characters.defeat_penalty(char, Outcome())
+        assert char.gold == 1000 - characters.DEFEAT_GOLD_CAP_PER_LEVEL * char.level  # the cap, not 10%
+        char.gold = 50
+        await characters.defeat_penalty(char, Outcome())
+        assert char.gold == 45  # 10% of a small purse
+        char.gold = 0
+        await characters.defeat_penalty(char, Outcome())
+        assert char.gold == 0  # never in debt
+
+
+async def test_a_short_rest_is_refused_when_it_would_give_nothing():
+    cid = await new_character(location="broken_crown_tavern", tools=())
+    async with session_scope() as s:
+        char = await get_char(s, cid)
+        char.hp = char.max_hp
+        assert (await activities.start(s, char, "short_rest", "rest")).error == "inv.err.no_need"
 
 
 async def test_a_hunt_victory_counts_for_hunt_missions_day_or_night(monkeypatch):
@@ -624,5 +664,5 @@ async def test_the_bar_of_a_class_that_has_one_has_no_spell_to_choose():
         assert inventory.spell_choices(char, get_content().items["mana_potion"]) == []
 
 
-def test_beta_potions_cost_one_gold():
-    assert inventory.buy_price("healing_potion", -100) == 1 and inventory.buy_price("mana_potion", 0) == 1
+def test_potions_cost_their_real_price():
+    assert inventory.buy_price("healing_potion", 0) == 20 and inventory.buy_price("mana_potion", 0) == 60

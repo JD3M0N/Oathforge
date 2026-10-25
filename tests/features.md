@@ -328,3 +328,13 @@ Nueve ramas con entidades, formas y tiempo: Invocador, Cronomante, Cambiaformas,
 - [ ] En Telegram (ES/EN): `/path` ofrece las 41; un Demonólogo ve a su servidor en el combate y lo ordena.
 - [ ] En Telegram: un Cambiaformas toma forma de oso y vuelve a la humana sin curarse.
 - [ ] En Telegram: un Maestro de Constructos monta el guardián y no puede montar también el de arco.
+
+## 0.10-I · Tiempos, descanso, derrota y economía (B08, v0.10.35)
+
+Sin ayudas de beta: todo lleva su tiempo real. Tabla única en `engine/timings.py`.
+
+- [x] Pruebas automáticas: descanso largo con su tiempo y recompensa al terminar, descanso cancelado sin nada, doble cobro, descansos cortos limitados (dos) y devueltos por el largo, tope de la derrota, venta de la herramienta en uso, precios de las pociones.
+- [ ] En Telegram (ES/EN): Actividades ofrece «💤 Descanso corto» (con cuántos quedan) y «🛏️ Descanso largo» con 15 min; el panel cuenta el tiempo y «Abandonar» no devuelve nada.
+- [ ] En Telegram: el tutorial entero con tiempos reales (recolectar 4 min, desollar segundos); `oath tutorial-stats` cuadra con lo jugado.
+- [ ] En Telegram: perder un combate con mucho oro cuesta como mucho 15 por nivel; con 0 de oro, nada; Ysolde cura aunque no te alcance.
+- [ ] En Telegram: con el pico en uso, la tienda no te deja venderlo («la estás usando»).

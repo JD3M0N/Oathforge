@@ -13,6 +13,7 @@ from oathforge.bot.handlers import callbacks, commands, creation, text
 from oathforge.bot.keyboards import parse
 from oathforge.database.models import Character, Encounter
 from oathforge.database.session import session_scope
+from oathforge.engine import timings
 from oathforge.services import exploration
 
 pytestmark = pytest.mark.usefixtures("database")
@@ -166,7 +167,7 @@ async def test_full_flow(llm, monkeypatch):
     # ⚒ Activities: a long rest leaves you asleep, getting up early gives nothing
     await p.press("acts|-|-")
     await p.press(p.find("rest"))
-    assert (await char_row()).state == "busy" and "80 min" in p.last[0]
+    assert (await char_row()).state == "busy" and f"{timings.REST_SECONDS // 60} min" in p.last[0]
     await p.press(p.find("actx"))
     assert (await char_row()).state == "idle"
 
@@ -765,7 +766,7 @@ async def test_mining_buttons_collect_and_chronicle(llm):
     await p.press(p.find("act", "gather:mining"))
     assert len(p.chat.sent) == sent + 1  # the Activities message becomes "you start working"
     assert "Te pones a trabajar" in p.last[0] and "Minería" in p.last[0]
-    assert "Termina en 5 min" in p.last[0] and "actx" in str(p.buttons()) and "Recoger" not in str(p.last[1])
+    assert f"Termina en {timings.GATHER_SECONDS // 60} min" in p.last[0] and "actx" in str(p.buttons()) and "Recoger" not in str(p.last[1])
     await p.press(p.find("actc"))  # 🔄 Refresh before the end: just the panel again, no error
     assert "Termina en" in p.last[0] and "Aún no ha terminado" not in p.chat.sent[-2][0]
     await p.press("trv|-|-")  # an old travel button: the travel menu is not offered while busy

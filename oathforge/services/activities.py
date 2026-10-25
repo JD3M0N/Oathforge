@@ -1,6 +1,6 @@
-"""Timed field activities: Gather (5 min, safe), Stay (15 min, more loot, may end in an ambush)
-and Track (5 min, then a fight with the prey). A long rest at an inn is one too (80 min asleep), and so is
-skinning the beasts just killed (/skin, a few seconds).
+"""Timed field activities: Gather (safe), Stay (longer, more loot, may end in an ambush) and Track (then a
+fight with the prey). A long rest at an inn is one too, a short rest anywhere, and so is skinning the beasts
+just killed (/skin, a few seconds). How long each takes: ``engine/timings.py``.
 
     start  -> the character is busy until ``ends_at`` (unix seconds stored in the database)
     claim  -> the result is rolled once from the activity's seed, stored and paid
@@ -18,17 +18,18 @@ from types import SimpleNamespace
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from oathforge.config import get_settings
 from oathforge.content import get_content
 from oathforge.content.schemas import Gathering, Location
 from oathforge.database.models import Character, WorldActivity
-from oathforge.engine import gathering
+from oathforge.engine import gathering, timings
 from oathforge.i18n import t
 from oathforge.services import characters, combat_service, exploration, inventory, quests, specializations
 from oathforge.services import achievements
 from oathforge.services.events import Outcome
 
-KINDS = ("gather", "stay", "track", "rest", "skin")
+KINDS = ("gather", "stay", "track", "rest", "short_rest", "skin")
+REST_KINDS = ("rest", "short_rest")
+SHORT_RESTS = exploration.SHORT_RESTS
 OPEN = ("running", "awaiting_combat")
 SKINNING_KNIFE = "skinning_knife"
 
@@ -125,6 +126,10 @@ async def select_tool(session: AsyncSession, char: Character, key: str) -> Outco
                          skill=characters.mastery_name(item.tool.skill))
 
 
+def short_rests_left(char: Character) -> int:
+    return max(0, timings.SHORT_RESTS_PER_LONG - (char.flags or {}).get(SHORT_RESTS, 0))
+
+
 def rest_cost(char: Character) -> int | None:
     """What a long rest costs here: the inn's price, 0 in your own bed, or None where you cannot sleep."""
     loc = get_content().locations[char.location]
@@ -144,6 +149,11 @@ async def check(session: AsyncSession, char: Character, kind: str, skill: str) -
             return Outcome.refused("explore.err.no_rest")
         if char.gold < cost:
             return Outcome.refused("shop.err.no_gold", price=cost)
+    elif kind == "short_rest":
+        if short_rests_left(char) == 0:
+            return Outcome.refused("activity.err.no_short_rest")
+        if not exploration.short_rest_helps(char):
+            return Outcome.refused("inv.err.no_need")
     elif kind == "track":
         if not loc.hunting:
             return Outcome.refused("activity.err.unavailable")
@@ -164,6 +174,7 @@ async def availability(session: AsyncSession, char: Character) -> list[tuple[str
     kinds = options(char)
     if characters.pending_skin(char):
         kinds.append(("skin", "skinning"))
+    kinds.append(("short_rest", "rest"))
     if rest_cost(char) is not None:
         kinds.append(("rest", "rest"))
     return [(kind, skill, await check(session, char, kind, skill)) for kind, skill in kinds]
@@ -215,7 +226,7 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str,
     c = get_content()
     loc = c.locations[char.location]
     g = None
-    if kind == "rest":
+    if kind in REST_KINDS:
         skill = "rest"
     elif kind == "track":
         skill = "tracking"
@@ -229,20 +240,8 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str,
     tool_checked = kind == "skin" or (kind in ("gather", "stay") and bool(g.tool))
     now = _now(now)
     characters.drop_pending_skin(char)  # skinning now, or something else: the carcasses are left behind
-    if kind == "skin":
-        harvest = {h.item for k in beasts for h in c.monsters[k].harvest}
-        if await quests.tutorial_boost(session, char, "skin", harvest):  # the tutorial's shortcut: at once
-            out = Outcome().add("activity.tutorial", skill=characters.mastery_name(skill), place=loc.phrase())
-            await skin(session, char, beasts, random.Random(), out)
-            return out
-    if kind in ("gather", "stay"):
-        rank = gathering.rank_for(characters.mastery_xp(char, skill))
-        here = {r.item for r in g.resources if r.min_rank <= rank}
-        boost = await quests.tutorial_boost(session, char, "gather", here)
-        if boost:
-            return await _tutorial_gather(session, char, kind, skill, loc, boost, now)
     rules = rules_snapshot(char, g, skill, kind) if kind in ("gather", "stay") else None
-    seconds = skin_seconds(beasts) if kind == "skin" else gathering.SECONDS[kind]
+    seconds = skin_seconds(beasts) if kind == "skin" else timings.SECONDS[kind]
     if kind == "skin":
         seconds = modifiers(char, "skinning").seconds(seconds)
     if rules is not None:
@@ -251,21 +250,19 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str,
         seconds = modifiers(char, "tracking").seconds(seconds)
     act = WorldActivity(character_id=char.id, location=char.location, kind=kind, skill=skill, started_at=now,
                         ends_at=now + seconds, status="running", seed=secrets.randbits(48),
-                        result={"tool_checked": tool_checked, **({"rules": rules} if rules else {}),
+                        result={"tool_checked": tool_checked, **({"tool": tool_for(char, kind, skill)} if tool_checked else {}),
+                                **({"rules": rules} if rules else {}),
                                 **({"monsters": beasts} if kind == "skin" else {})})
     session.add(act)
     await session.flush()
     char.state = "busy"
-    settings = get_settings()
     if kind == "rest":  # paid on lying down; abandoning gives nothing back
         cost = rest_cost(char) or 0
         char.gold -= cost
-        if settings.beta_instant_rest:  # beta only: wake up at once
-            return await claim(session, char, act.ends_at)
         return Outcome().add("activity.started.rest" if cost else "activity.started.rest_free",
                              place=loc.phrase(), cost=cost, minutes=seconds // 60)
-    if settings.beta_instant_tutorial and await quests.in_tutorial(session, char):  # beta only: done at once
-        return Outcome().add("activity.tutorial_instant").extend(await claim(session, char, act.ends_at))
+    if kind == "short_rest":
+        return Outcome().add("activity.started.short_rest", place=loc.phrase(), minutes=seconds // 60)
     out = Outcome().add(f"activity.started.{kind}", skill=characters.mastery_name(skill),
                         place=loc.phrase(), minutes=seconds // 60, seconds=seconds)
     if kind in ("track", "stay") and char.hp * 2 < char.max_hp:  # this may end in a fight
@@ -290,25 +287,6 @@ async def offer_skinning(session: AsyncSession, char: Character, monster_keys: l
     char.flags = {**(char.flags or {}), characters.PENDING_SKIN: {"monsters": beasts, "location": char.location}}
     names = {lang: ", ".join(c.monsters[k].name.get(lang) for k in beasts) for lang in ("es", "en")}
     out.add("activity.can_skin", beasts=names, seconds=skin_seconds(beasts))
-
-
-async def _tutorial_gather(session, char, kind: str, skill: str, loc: Location, boost, now: float) -> Outcome:
-    """The tutorial's shortcut: done at once, with exactly what the mission still asks for, no ambush."""
-    qkey, item, missing = boost
-    quests.use_tutorial_boost(char, qkey)
-    items = {item: missing}
-    xp = gathering.GATHER_XP
-    act = WorldActivity(character_id=char.id, location=char.location, kind=kind, skill=skill, started_at=now,
-                        ends_at=now, status="done", resolved_at=now, seed=0,
-                        result={"outcome": "tutorial", "items": items, "xp": xp,
-                                "tool_checked": bool(_gathering(loc, skill).tool)})
-    session.add(act)
-    await session.flush()
-    out = Outcome().add("activity.tutorial", skill=characters.mastery_name(skill), place=loc.phrase())
-    await _give(session, char, items, out, random.Random())
-    characters.grant_mastery(char, skill, xp, out)
-    await _achievement_activity(session, char, act, out)
-    return out
 
 
 async def cancel(session: AsyncSession, char: Character, now: float | None = None) -> Outcome:
@@ -351,6 +329,10 @@ async def claim(session: AsyncSession, char: Character, now: float | None = None
     loc = c.locations[act.location]
     char.state = "idle"
     characters.bump_stats(char, activities=1)
+    if act.kind == "short_rest":
+        char.flags = {**(char.flags or {}), SHORT_RESTS: (char.flags or {}).get(SHORT_RESTS, 0) + 1}
+        _finish(act, "short_rest", {}, 0, now)
+        return exploration.short_rested(char)
     if act.kind == "rest":
         _finish(act, "rest", {}, 0, now)
         return exploration.wake_rested(char).extend(await quests.advance(session, char, "rest", act.location, rng))
@@ -443,11 +425,6 @@ async def skin(session: AsyncSession, char: Character, monster_keys: list[str], 
     for key in beasts:
         for item, qty in gathering.roll_harvest(rng, c.monsters[key].harvest, rank).items():
             got[item] = got.get(item, 0) + qty
-    boost = await quests.tutorial_boost(session, char, "skin", {h.item for k in beasts for h in c.monsters[k].harvest})
-    if boost:  # the tutorial's shortcut: what the mission asks for is guaranteed
-        qkey, item, missing = boost
-        quests.use_tutorial_boost(char, qkey)
-        got[item] = max(got.get(item, 0), missing)
     if got:
         out.add("activity.trophies" if trophy else "activity.skinned", loot=loot_text(got))
         for key, qty in got.items():
@@ -517,7 +494,7 @@ async def due(session: AsyncSession, now: float | None = None) -> list[int]:
 def describe(act: WorldActivity, lang: str) -> str:
     """'Minería en Mina del Paso Viejo' for panels."""
     c = get_content()
-    skill = "" if act.kind == "rest" else characters.mastery_name(act.skill)[lang]
+    skill = "" if act.kind in REST_KINDS else characters.mastery_name(act.skill)[lang]
     return t(lang, f"activity.kind.{act.kind}", skill=skill, place=c.locations[act.location].phrase()[lang])
 
 
@@ -525,7 +502,7 @@ LOST = ("stay_lost", "track_lost")  # the ambush won: the activity did not finis
 
 
 async def _achievement_activity(session, char, act, out):
-    if act.kind != "rest" and (act.result or {}).get("outcome") not in LOST:
+    if act.kind not in REST_KINDS and (act.result or {}).get("outcome") not in LOST:
         await achievements.emit(session, char, out, "activity",
             {"skill": act.skill, "tool": bool((act.result or {}).get("tool_checked"))}, f"activity:{act.id}:done")
         await achievements.mastery(session, char, out, act.skill, f"activity:{act.id}:done")

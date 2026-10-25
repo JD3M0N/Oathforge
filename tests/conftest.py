@@ -37,19 +37,7 @@ def artifacts_dir(tmp_path_factory):
     # the rest of .env must not move the tests either: the suite assumes the defaults
     settings.default_language = "es"
     settings.gemini_model_fallback = ""  # an extra model in the chain changes what the AI client tries
-    # beta only: tests check the real timed activities; the beta shortcuts have their own tests (beta fixture)
-    settings.beta_instant_rest = False
-    settings.beta_instant_tutorial = False
     return settings.artifacts_dir
-
-
-@pytest.fixture
-def beta():
-    """Turn the beta shortcuts on for one test (instant long rest, instant tutorial activities)."""
-    settings = get_settings()
-    settings.beta_instant_rest = settings.beta_instant_tutorial = True
-    yield settings
-    settings.beta_instant_rest = settings.beta_instant_tutorial = False
 
 
 @pytest.fixture

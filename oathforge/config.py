@@ -52,11 +52,6 @@ class Settings(BaseSettings):
     tg_test_api_hash: str = ""
     tg_test_bot: str = ""  # the bot's @username
 
-    # beta only: a long rest ends at once (it normally takes 80 minutes asleep)
-    beta_instant_rest: bool = True
-    # beta only: while a tutorial mission is active, timed activities (gather, mine, track, skin) end at once
-    beta_instant_tutorial: bool = True
-
     default_language: str = "es"
     supported_languages: tuple[str, ...] = ("es", "en")
 

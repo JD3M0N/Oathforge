@@ -4,7 +4,7 @@
 >
 > **Cómo usarlo en una sesión nueva:** lee este archivo, la tabla de §0 de `roadmap_balance.md` y la sección de la fase que toca (Grep por `### B08 ·`, etc.; el documento es grande, léelo por rangos). No releas las fases ya hechas: su estado está en el CHANGELOG (primeras entradas) y en `tests/features.md`.
 
-## Estado (al cerrar 0.10.34)
+## Estado (al cerrar 0.10.35)
 
 | Fase | Estado | Versión |
 |---|---|---|
@@ -16,8 +16,8 @@
 | B05 Compañeros, formas y dispositivos | ✅ | 0.10.28 |
 | B06 Catorce clases base, niveles 1–9 | ✅ | 0.10.29–31 |
 | B07 Las 41 ramas | ✅ | 0.10.32–34 |
-| **B08 Tiempos, descanso, derrota y economía** | ⏳ **siguiente** | |
-| B09 Campaña común hasta el Recaudador | ⏳ | |
+| B08 Tiempos, descanso, derrota y economía | ✅ (falta stock crítico y cobertura T0/T1 de herramientas → B09) | 0.10.35 |
+| **B09 Campaña común hasta el Recaudador** | ⏸ propuesta de mentor y trama escrita en `planning/mundus.md`; **espera la aprobación de Josue** antes del texto final | |
 | B10 Ciervo de Hierro y graduación | ⏳ | |
 | B11 Región cercana 11–20 | ⏳ | |
 | B12 Balance integral | ⏳ | |
@@ -41,12 +41,6 @@ Decisiones de Josue que siguen vigentes:
 
 ## Lo que queda por hacer
 
-### B08 · Tiempos, descanso, derrota y economía
-- Tabla de tiempos de §12 centralizada (un solo sitio, no números sueltos).
-- Apagar `beta_instant_rest` y `beta_instant_tutorial` en `config.py` y retirar `quests.tutorial_boost`: tiempos reales, sin atajos de beta.
-- Descanso corto limitado; matriz de acciones en `busy`; derrota con coste pequeño y tope; precios normales.
-- Servicios implicados: `activities`, `exploration`, `world_map`, `characters` (descanso), `combat_service` (derrota). Cualquier cambio de economía, permisos o concurrencia lleva test.
-
 ### B09 · Campaña común hasta el Recaudador
 1. Primero `planning/mundus.md`: mentor y trama **provisionales** para que Josue los apruebe.
 2. Luego los actos I–VI en `quests.yaml`, `npcs.yaml`, `monsters.yaml`; nuevos tipos de objetivo (equipar, aprender oficio, abrir cofre, humo, elegir rama…); el Recaudador de Ceniza y su entrega (hito `ash_collector`, tope de nivel 10).
@@ -68,6 +62,8 @@ Quitar la cripta (`crypt`, `reliquary`, Holt, Aldren, títulos) y el procedimien
 Cierre: revisión de `tests/features.md` entera jugando con la cuenta de prueba, README raíz (solo si Josue lo pide), anuncio en los dos canales.
 
 ## Pendientes pequeños (no bloquean ninguna fase)
+- Stock crítico y cobertura T0/T1 de herramientas para todas las clases (resto de B08): revisarlo al escribir la campaña de B09.
+- Comprobar en Telegram el descanso corto, el tutorial con tiempos reales y la derrota con tope (casillas de `tests/features.md`).
 - Seis retratos de las clases nuevas (prompts en `TODO-images.md`).
 - Comprobar en Telegram, en ES y EN, las pantallas de las clases y ramas nuevas.
 - Un botón para poner nombre al servidor o a la bestia (`companions.rename` existe, sin interfaz).
@@ -83,6 +79,8 @@ Cierre: revisión de `tests/features.md` entera jugando con la cuenta de prueba,
 - **Entidades y formas:** `engine/combat.py` (`Entity`, `Shape`, `summon/command/converge/shift`), `content/entities.yaml`, `content/forms.yaml`, `services/companions.py` para el compañero permanente. Máximo: 2 invocaciones, 1 de cada otro tipo. Los permanentes (servidor, bestia) los trae una pasiva con `entity`.
 - **Ramas:** `content/class_specializations.yaml` (41, todas `ready: true`). El cargador exige pasiva y técnica al 10, técnica al 20, exactamente dos modificadores en cada nivel de modificador, claves de habilidad únicas entre ramas y costes que quepan en la barra. `tests/engine/test_branches.py` exige decisiones distintas entre ramas hermanas y un suelo de victorias contra un jefe sintético.
 - **Simulador:** `oathforge/tools/simulate.py` (`--branch`, entrenamientos y modificadores por defecto, política de invocar/ordenar/curar).
+
+- **Tiempos y descanso:** `engine/timings.py` es la única tabla (`gathering` la reexporta); el descanso corto es la actividad `short_rest` (contador `flags.short_rests`, se borra en `exploration.wake_rested`); la actividad guarda su `result.tool` y `inventory.sell` lo respeta; derrota con `DEFEAT_GOLD_CAP_PER_LEVEL`; la Capilla cobra `min(coste, oro)`.
 
 ## Trampas ya encontradas
 - **Windows/pytest:** usa `--basetemp` dentro del scratchpad y `-p no:cacheprovider` si da `PermissionError`.

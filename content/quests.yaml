@@ -3,8 +3,7 @@
 # `after` (misión completada) o `unlock_flag`. El diario las ordena por `order`.
 # 1-10: el tutorial (Vale, Bram): hablar, ciudad, tiendas, cazar, desollar, recolectar, cocinar, minar, curarse y
 # descansar, y un jefe en el prado. Sin mazmorras. 11-12 (relicario y cripta) son la primera aventura después.
-# `tutorial`: la actividad que encaja con su objetivo termina al momento y da lo que falta (en la beta, siempre;
-# fuera de la beta, una vez por misión).
+# `tutorial`: misión del tutorial (cuenta en `oath tutorial-stats`). Sus actividades llevan su tiempo real.
 # `legacy_done`: quien completó alguna de esas misiones antiguas empieza con esta completada (sin recompensa).
 
 tut_muster:
@@ -99,8 +98,8 @@ tut_market:
     es: «Nadie sale de la ciudad sin pociones», dice Vale. Quiere que conozcas a quienes las venden.
     en: "\"Nobody leaves the city without potions,\" says Vale. She wants you to meet the people who sell them."
   hint:
-    es: Habla con Mira en el Mercado de Crownreach y con Tessa en su forja, el primer puesto del Barrio de Oficios («💬 Hablar»). Con «🛒 Comerciar» ves sus tiendas; durante la beta las pociones cuestan 1 de oro.
-    en: Talk to Mira at Crownreach Market and to Tessa at her forge, the first stall on Craftsmen's Row ("💬 Talk"). "🛒 Trade" opens their shops; during the beta potions cost 1 gold.
+    es: Habla con Mira en el Mercado de Crownreach y con Tessa en su forja, el primer puesto del Barrio de Oficios («💬 Hablar»). Con «🛒 Comerciar» ves sus tiendas.
+    en: Talk to Mira at Crownreach Market and to Tessa at her forge, the first stall on Craftsmen's Row ("💬 Talk"). "🛒 Trade" opens their shops.
   start_stage: locked
   unlock_stage: active
   objective_stage: active
@@ -393,8 +392,8 @@ tut_chapel:
     es: «Nadie vuelve entero de ahí fuera», dice Vale. Antes de darte por listo, quiere que conozcas a la hermana Ysolde.
     en: "\"Nobody comes back whole from out there,\" says Vale. Before she calls you ready, she wants you to meet Sister Ysolde."
   hint:
-    es: Ve a la Capilla del Alba y habla con la hermana Ysolde («⚒ Actividades» → «🙏 Curar heridas», gratis durante la beta). Luego haz un «🛏️ Descanso largo» en las Actividades de la taberna, que devuelve la vida y los usos de tus habilidades (en la beta, al momento). Después, vuelve con Vale.
-    en: Go to the Chapel of the Dawn and talk to Sister Ysolde ("⚒ Activities" → "🙏 Cure wounds", free during the beta). Then take a "🛏️ Long rest" from the tavern's Activities, which restores your health and your abilities' uses (at once during the beta). Then report back to Vale.
+    es: Ve a la Capilla del Alba y habla con la hermana Ysolde («⚒ Actividades» → «🙏 Curar heridas»; si no llevas con qué pagar, te atienden igual). Luego haz un «🛏️ Descanso largo» en las Actividades de la taberna, que devuelve la vida y los usos de tus habilidades. Después, vuelve con Vale.
+    en: Go to the Chapel of the Dawn and talk to Sister Ysolde ("⚒ Activities" → "🙏 Cure wounds"; if you can't pay, they treat you anyway). Then take a "🛏️ Long rest" from the tavern's Activities, which restores your health and your abilities' uses. Then report back to Vale.
   start_stage: locked
   unlock_stage: active
   objective_stage: active

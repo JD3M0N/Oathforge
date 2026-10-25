@@ -11,7 +11,6 @@ from dataclasses import dataclass
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from oathforge.config import get_settings
 from oathforge.content import get_content
 from oathforge.i18n import t
 from oathforge.content.schemas import Quest, QuestAction, QuestObjective
@@ -211,37 +210,6 @@ async def on_talk(session: AsyncSession, char: Character, npc: str, rng: random.
 
 async def on_visit(session: AsyncSession, char: Character, location: str, rng: random.Random) -> Outcome:
     return await advance(session, char, "visit", location, rng)
-
-
-TUTORIAL_BOOSTS = "tutorial_boosts"  # char.flags: tutorial missions whose shortcut was already used
-
-
-async def tutorial_boost(session: AsyncSession, char: Character, kind: str,
-                         candidates: set[str]) -> tuple[str, str, int] | None:
-    """The accelerated tutorial: (mission, item, how many are missing) when an active tutorial mission asks
-    to `kind` (gather / skin) one of the `candidates` and its shortcut is still unused. Once per mission."""
-    # beta only: the shortcut works every time, not once per mission
-    used = set() if get_settings().beta_instant_tutorial else set((char.flags or {}).get(TUTORIAL_BOOSTS, []))
-    prog = await ensure_progress(session, char)
-    for qkey, quest in ordered_quests():
-        p = prog[qkey]
-        if not quest.tutorial or qkey in used or p.state != "active" or p.stage != quest.objective_stage:
-            continue
-        for obj, n in objective_progress(quest, p):
-            if obj.kind == kind and obj.target in candidates and n < obj.count:
-                return qkey, obj.target, obj.count - n
-    return None
-
-
-async def in_tutorial(session: AsyncSession, char: Character) -> bool:
-    """Whether a tutorial mission is under way."""
-    prog = await ensure_progress(session, char)
-    return any(quest.tutorial and prog[qkey].state == "active" for qkey, quest in ordered_quests())
-
-
-def use_tutorial_boost(char: Character, quest_key: str) -> None:
-    flags = char.flags or {}
-    char.flags = {**flags, TUTORIAL_BOOSTS: [*flags.get(TUTORIAL_BOOSTS, []), quest_key]}
 
 
 async def giver_hint(session: AsyncSession, char: Character, npc_key: str) -> dict | None:

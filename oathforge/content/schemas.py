@@ -868,7 +868,7 @@ class Quest(Strict):
     # missions: the journal lists them by `order`; a locked mission opens at `unlock_stage`
     # once the `after` mission is completed or the `unlock_flag` is set
     order: int = 100
-    # a tutorial mission: the first activity that fits its objective ends at once, with what it asks for
+    # a tutorial mission (counted by `oath tutorial-stats`); its activities take their real time
     tutorial: bool = False
     giver: str | None = None  # npc
     hint: Text | None = None

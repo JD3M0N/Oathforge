@@ -16,7 +16,8 @@ from oathforge.services import companions
 from oathforge.services.events import Outcome
 
 NAME_MAX = 24
-DEFEAT_GOLD_PCT = 10  # a defeat costs this share of the gold you carry
+DEFEAT_GOLD_PCT = 10  # a defeat costs this share of the gold you carry...
+DEFEAT_GOLD_CAP_PER_LEVEL = 15  # ...but never more than this per level: a small price, not a ruin
 
 
 # ---------------------------------------------------------------- users
@@ -598,7 +599,7 @@ async def practice(session: AsyncSession, char: Character, skill: str, tier: str
 
 async def defeat_penalty(char: Character, out: Outcome) -> None:
     c = get_content()
-    lost = char.gold * DEFEAT_GOLD_PCT // 100
+    lost = min(char.gold * DEFEAT_GOLD_PCT // 100, DEFEAT_GOLD_CAP_PER_LEVEL * char.level)
     char.gold -= lost
     char.hp = max(1, char.max_hp // 2)
     char.location = c.respawn_location

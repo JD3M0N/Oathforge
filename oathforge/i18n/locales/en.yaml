@@ -161,7 +161,8 @@ btn:
   shop: "🛒 Trade"
   rest: "🛏️ Long rest ({cost} 🪙)"
   rest_free: "🛏️ Long rest (free)"
-  heal: "🙏 Cure wounds (free)"
+  short_rest: "💤 Short rest"
+  heal: "🙏 Cure wounds ({cost} 🪙)"
   wake: "☀️ Get up"
   inventory: "🎒 Inventory"
   sheet: "🧝 Hero"
@@ -295,6 +296,7 @@ shop:
     no_gold: "You don't have enough gold (you need {price})."
     no_buy: "This merchant doesn't buy anything."
     cant_sell: "You can't sell that (is it equipped?)."
+    tool_in_use: "You are using that tool right now: sell it when you finish."
   group:
     weapons: "⚔️ Weapons"
     armor: "🛡️ Armour and shields"
@@ -510,8 +512,9 @@ explore:
   hunt_day: "🏹 You scout the area and find your prey."
   hunt_night: "🦇 You step into the dark. Something moves nearby."
   hunt_boss: "🐗 The ground trembles. Something huge pushes through the grass."
-  rested: "☀️ You get up rested after eight hours of sleep. You recover all your strength: {hp} HP and every use."
-  healed: "🙏 Sister Ysolde murmurs a prayer and bandages you: you recover {amount} HP ({hp}/{max_hp})."
+  rested: "☀️ You get up rested. You recover all your strength: {hp} HP and every use."
+  short_rested: "💤 You catch your breath."
+  healed: "🙏 Sister Ysolde murmurs a prayer and bandages you: you recover {amount} HP ({hp}/{max_hp}). You leave {cost} gold in the chapel's box."
   healed_injured: "✨ Her prayer closes your grave wounds too: you are no longer injured."
   err:
     in_combat: "You are in the middle of a fight!"
@@ -826,10 +829,6 @@ rulebook:
   title: "📘 <b>Rulebook of Aetherfall</b>"
   intro: "What you need to play, one section at a time. Tap one to open it."
   index: "📘 Index"
-  beta_rest_on: "During the beta, resting is instant."
-  beta_rest_off: "Resting takes that much real time."
-  beta_tutorial_on: "During the tutorial, activities finish at once."
-  beta_tutorial_off: "Activities take their real time from the very first one."
 
 lineages:
   title: "🧬 <b>Lineages of Aetherfall</b>"
@@ -912,7 +911,8 @@ acts:
     stay: "a much bigger haul, but it may end in an ambush"
     track: "tracking XP and trophies; it ends in a fight with the prey"
     skin: "hide and meat from what you just hunted"
-    rest: "eight hours of sleep ({minutes} min): full health and uses"
+    rest: "a good sleep ({minutes} min): full health and uses, and grave wounds close"
+    short_rest: "a {minutes} min breather: part of your health and of what you spent, grave wounds stay ({left} left until your next long rest)"
     craft: "your professions' recipes at the stations here"
     heal: "full health and grave wounds closed"
 activity:
@@ -921,8 +921,9 @@ activity:
     skin: "You start skinning at {place}. In {seconds} s you have the hide and meat."
     stay: "You start a long {skill} expedition at {place} ({minutes} min). You'll bring back much more, but there may be an ambush at the end."
     track: "You crouch and start looking for tracks at {place} ({minutes} min)."
-    rest: "You pay {cost} gold and lie down at {place}. Eight hours of sleep: you wake up in {minutes} min."
-    rest_free: "You lie down at {place}. Eight hours of sleep: you wake up in {minutes} min."
+    rest: "You pay {cost} gold and lie down at {place}. You wake up in {minutes} min."
+    rest_free: "You lie down at {place}. You wake up in {minutes} min."
+    short_rest: "You sit down to catch your breath at {place}. In {minutes} min you will feel a bit better."
   done:
     gather: "✅ You finish your work at {place}."
     stay: "✅ Your expedition at {place} ends without trouble."
@@ -932,11 +933,10 @@ activity:
     stay: "{skill} expedition at {place}"
     track: "Tracking at {place}"
     rest: "Sleeping at {place}"
+    short_rest: "Catching your breath at {place}"
     skin: "Skinning at {place}"
   cancelled: "You abandon the task. You take nothing with you."
   bonus: "🍀 Your mastery gives you something extra: {loot}."
-  tutorial_instant: "⚡ During the tutorial (beta) this ends at once."
-  tutorial: "⚡ Tutorial: Vale shows you the shortcut and you are done at once ({skill} at {place}). Outside the tutorial, this takes time."
   stay_ambush: "⚠️ As you load up your haul ({loot}), something comes out of the shadows... Victory: you keep it all. Flee: half. Defeat: you lose it."
   stay_saved: "📦 You keep the whole expedition load."
   stay_half: "📦 Half of the load is lost as you flee."
@@ -953,8 +953,8 @@ activity:
   ready: "Done! What you got is on its way."
   stay_warning: "⚠️ There may be an ambush at the end. Victory: everything; flee: half; defeat: nothing."
   busy_hint: "You can't travel or start anything else until it ends or you abandon it. When it ends, what you got comes to you, even if you close Telegram."
-  busy_hint_rest: "While you sleep you can't travel or do anything else. If you get up early, you recover nothing and the gold is not refunded."
-  ready_rest: "☀️ You have slept your eight hours. You wake up in a moment."
+  busy_hint_rest: "While you rest you can't travel or do anything else. If you get up early, you recover nothing and the gold is not refunded."
+  ready_rest: "☀️ You have rested. You get up in a moment."
   options: "🧰 <b>Fieldwork</b>: {list}"
   err:
     busy: "You have a task under way. Wait for it to end or abandon it."
@@ -963,6 +963,7 @@ activity:
     no_tool: "You need: {tool}. Tessa sells tools at the Crownreach market."
     none: "You have no task under way."
     not_ready: "Not finished yet: {minutes} min left."
+    no_short_rest: "You have taken all the short rests you get: take a long rest."
 
 mastery:
   name:

@@ -29,7 +29,7 @@ Dos cosas que conviene saber antes de tocar nada: las maestrías no están en el
 - El resultado se tira con la semilla de la actividad y se paga una vez (bloqueo + índice único parcial).
 - **Instantánea al empezar**: la actividad guarda su tabla, su rango y sus modificadores (rama + herramienta), y se cobra con eso. Un cambio de catálogo o un reinicio no alteran un premio en marcha.
 - **Hallazgo raro**: los recursos de rango 3+ se tiran **una vez por actividad** y sustituyen una unidad común. Los bonos de raro son relativos (10 % × 1,05 = 10,5 %) y la unidad extra tiene una sola oportunidad por trabajo, sin XP.
-- **Tutorial** (`tutorial: true`): la actividad que encaja con el objetivo termina al momento y da lo que falta. **En la beta, siempre durante el tutorial**; fuera de la beta, una vez por misión (`char.flags.tutorial_boosts`).
+- **Tutorial** (`tutorial: true`): solo marca la misión para `oath tutorial-stats`. Desde 0.10.35 sus actividades llevan su tiempo real (se retiró el atajo `tutorial_boost`). La actividad guarda la herramienta con la que empezó y no se puede vender mientras dura.
 - Herramientas: las básicas (pico, hacha, hoz, cuchillo, caña) las vende Tessa; además hay **quince especializadas** (rápida, selectiva y productiva por disciplina), y se elige **una por disciplina**: tener tres no suma.
 
 | Lugar | Desde | Maestría | Emboscada |

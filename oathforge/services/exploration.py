@@ -9,6 +9,7 @@ from oathforge.config import get_settings
 from oathforge.content import get_content
 from oathforge.content.schemas import EncounterEntry, Exit, Location
 from oathforge.database.models import Character
+from oathforge.engine import timings
 from oathforge.engine.checks import check, dc_for
 from oathforge.services import characters, combat_service, inventory, quests, world_map
 from oathforge.services import achievements
@@ -281,13 +282,44 @@ async def check_skill(session: AsyncSession, char: Character, skill: str, tier: 
     return out, res.success
 
 
+SHORT_RESTS = "short_rests"  # char.flags: short rests taken since the last long rest
+
+
+def short_rest_helps(char: Character) -> bool:
+    """Whether a short rest would give anything back (HP below the injury cap, a spent bar or use)."""
+    return (char.hp < inventory.hp_cap(char) or inventory.spent_abilities(char, spells_only=False)
+            or characters.pool_of(char) < characters.resource_max(char))
+
+
+def short_rested(char: Character) -> Outcome:
+    """The end of a short rest: part of the HP (never past the injury cap) and some of what was spent.
+    It never lifts "injured"; only a long rest does."""
+    out = Outcome().add("explore.short_rested")
+    before = char.hp
+    char.hp = min(inventory.hp_cap(char), char.hp + max(1, round(char.max_hp * timings.SHORT_REST_HP_PCT)))
+    if char.hp > before:
+        out.add("inv.healed_hp", amount=char.hp - before, hp=char.hp, max_hp=char.max_hp)
+    if characters.resource_max(char):
+        inventory.restore_pool(char, max(1, round(characters.resource_max(char) * timings.SHORT_REST_POOL_PCT)), out)
+    elif spent := inventory.spent_abilities(char, spells_only=False):
+        inventory.restore_use(char, spent[0][0], timings.SHORT_REST_USES, out)
+    return out
+
+
 def wake_rested(char: Character) -> Outcome:
     """The end of a long rest (activities.claim): full HP and uses, and grave wounds healed."""
+    char.flags = {k: v for k, v in (char.flags or {}).items() if k != SHORT_RESTS}
     char.hp = char.max_hp
     characters.refill_resources(char)
     characters.refill_pool(char)
     char.conditions = {k: v for k, v in char.conditions.items() if k != "injured"}
     return Outcome().add("explore.rested", hp=char.hp)
+
+
+def healer_price(char: Character) -> int:
+    """What the chapel's healer asks of this hero: the fee, or whatever gold they carry if that is less."""
+    healer = get_content().locations[char.location].healer
+    return min(healer.cost, char.gold) if healer else 0
 
 
 async def cure_wounds(session: AsyncSession, char: Character, rng: random.Random) -> Outcome:
@@ -300,13 +332,13 @@ async def cure_wounds(session: AsyncSession, char: Character, rng: random.Random
     injured = bool(char.conditions.get("injured"))
     if char.hp >= char.max_hp and not injured:
         return Outcome.refused("inv.err.full_hp")
-    # beta: Ysolde heals everything for free and closes grave wounds, so nobody gets stuck injured and broke
-    # after a defeat; revisit with the economy (healer.cost and healer.heal stay in place.yaml for then)
+    price = healer_price(char)  # a hero with less than the fee is treated for what they have: never stuck broke
+    char.gold -= price
     if injured:
         char.conditions = {k: v for k, v in char.conditions.items() if k != "injured"}
     before = char.hp
     char.hp = char.max_hp
-    out = Outcome().add("explore.healed", amount=char.hp - before, hp=char.hp, max_hp=char.max_hp)
+    out = Outcome().add("explore.healed", amount=char.hp - before, hp=char.hp, max_hp=char.max_hp, cost=price)
     if injured:
         out.add("explore.healed_injured")
     return out.extend(await quests.advance(session, char, "heal", char.location, rng))

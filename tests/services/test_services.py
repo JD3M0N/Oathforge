@@ -7,6 +7,7 @@ from sqlalchemy import func, select
 from oathforge.database.models import ActionLog, Character, ItemInstance, NpcMemory, QuestProgress
 from oathforge.content import get_content
 from oathforge.database.session import session_scope
+from oathforge.engine import timings
 from oathforge.engine.combat import Action, EncounterState
 from oathforge.services.events import Outcome
 from oathforge.services import (
@@ -277,7 +278,7 @@ async def test_free_check_once_per_skill_place_and_day(monkeypatch):
         assert list(char.checks_tried) == ["free:investigation:broken_crown_tavern"]
 
 
-async def test_long_rest_is_80_minutes_asleep_then_restores():
+async def test_long_rest_takes_its_time_asleep_then_restores():
     from oathforge.services import activities
 
     _, cid = await new_character()
@@ -289,8 +290,8 @@ async def test_long_rest_is_80_minutes_asleep_then_restores():
         out = await activities.start(s, char, "rest", "rest", now=1000)
         assert out.ok and char.gold == 10 and char.state == "busy" and char.hp == 1  # paid, asleep, not healed yet
         assert (await exploration.travel(s, char, "crownreach_plaza", random.Random(0))).error == "activity.err.busy"
-        assert (await activities.claim(s, char, now=1000 + 79 * 60)).error == "activity.err.not_ready"
-        out = await activities.claim(s, char, now=1000 + 80 * 60)
+        assert (await activities.claim(s, char, now=1000 + timings.REST_SECONDS - 60)).error == "activity.err.not_ready"
+        out = await activities.claim(s, char, now=1000 + timings.REST_SECONDS)
         assert out.ok and char.state == "idle" and char.hp == char.max_hp
         assert characters.pool_of(char) == characters.resource_max(char) > 0 and "injured" not in char.conditions
 
@@ -307,7 +308,7 @@ async def test_abandoned_rest_heals_nothing_and_keeps_the_gold():
         assert char.hp == 1 and char.gold == 10 and char.state == "idle"
 
 
-async def test_chapel_cures_wounds_for_free_and_closes_grave_ones():
+async def test_chapel_cures_wounds_for_a_fee_and_closes_grave_ones():
     _, cid = await new_character()
     async with session_scope() as s:
         char = await get_char(s, cid)
@@ -315,8 +316,8 @@ async def test_chapel_cures_wounds_for_free_and_closes_grave_ones():
         assert (await exploration.cure_wounds(s, char, random.Random(0))).error == "inv.err.full_hp"
         char.hp = 1
         out = await exploration.cure_wounds(s, char, random.Random(0))
-        assert out.ok and char.gold == 15 and char.hp == char.max_hp  # free and complete during the beta
-        # after a defeat: injured and broke, Ysolde still helps and closes the grave wounds
+        assert out.ok and char.gold == 12 and char.hp == char.max_hp  # the fee (3 gold), and complete
+        # after a defeat: injured and broke, Ysolde still helps (for what you have: nothing) and closes the grave wounds
         char.hp, char.gold, char.conditions = 1, 0, {"injured": True}
         out = await exploration.cure_wounds(s, char, random.Random(0))
         assert out.ok and "injured" not in char.conditions and "explore.healed_injured" in [e.key for e in out.events]

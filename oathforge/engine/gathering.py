@@ -7,16 +7,13 @@ d20 skills. Bonus units from rank never give extra XP, so progress cannot snowba
 import random
 from dataclasses import dataclass, field
 
+from oathforge.engine.timings import GATHER_SECONDS, REST_SECONDS, SECONDS, STAY_SECONDS, TRACK_SECONDS  # noqa: F401
+
 MASTERIES = ("mining", "woodcutting", "herbalism", "skinning", "tracking")  # field masteries
 GATHER_SKILLS = (*MASTERIES, "fishing")  # what a place can offer: a mastery, or fishing (a hobby since v0.7.20)
 RANK_XP = (0, 80, 240, 500, 900, 1500)  # accumulated XP for ranks 0..5
 MAX_RANK = len(RANK_XP) - 1
 
-GATHER_SECONDS = 5 * 60
-STAY_SECONDS = 15 * 60
-TRACK_SECONDS = 5 * 60
-REST_SECONDS = 80 * 60  # a long rest: 8 game hours (a game day lasts 4 real hours)
-SECONDS = {"gather": GATHER_SECONDS, "stay": STAY_SECONDS, "track": TRACK_SECONDS, "rest": REST_SECONDS}
 
 GATHER_UNITS = (2, 3)
 STAY_UNITS = (8, 10)

@@ -5,6 +5,7 @@ Resumen de [Possibilium §17–18](Possibilium.md#s17).
 ## Estado actual (0.8.2)
 
 - Tiendas en NPC (`content/npcs.yaml`, campo `shop`), abiertas por categorías (⚔️ Armas, 🛡️ Armaduras, 🧪 Consumibles, 🧰 Herramientas…) con la ficha `/item_` de cada objeto.
+- Pociones a precio normal desde 0.10.35 (curación 20, maná 60); ya no hay precios de beta.
 - Compra: valor base ±25 % según la reputación con la facción del NPC (−100..100). Venta: 50 %, ajustado igual; todo lo que vale ≥ 1 se vende por ≥ 1 (`services/inventory.py`).
 - Stock con bloqueo de fila: dos jugadores no compran a la vez la última poción.
 - **Beta**: pociones de vida y de maná a 1 de oro; Ysolde cura gratis; el descanso no cobra tiempo.
