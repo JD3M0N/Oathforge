@@ -218,6 +218,7 @@ btn:
   restart: "🔄 Empezar de nuevo"
   continue: "▶️ Continuar"
   defend: "🛡️ Defender"
+  help: "💡 ¿Qué hago?"
   potion: "🧪 Poción"
   items: "🎒 Objetos"
   move_back: "↩️ A retaguardia"
@@ -662,6 +663,7 @@ combat:
   guard_absorbs: "🛡️ {entity} recibe {amount} de daño por ti ({left} le quedan)."
   plate_hit: "🛡️ La placa de {target} encaja {amount} de daño ({left} le quedan)."
   plate_broken: "💥 ¡La placa de {target} salta en pedazos!"
+  plate_rearm: "🛡️ ¡{target} se endurece de nuevo! Placa: {plate}."
   plate_line: "🛡️ Placa {plate}/{max} {bar}"
   plate_gone: "🛡️ Sin placa: está al descubierto"
   boss_aim: "⚠️ {actor} apunta con la ballesta: el próximo disparo será fuerte. ¡Defiéndete o prepárate!"
@@ -1249,3 +1251,11 @@ path:
     not_ready: "Esa rama todavía no está lista."
     no_reroll: "No tienes una segunda elección disponible."
     no_choice: "No tienes esa elección pendiente."
+
+chelp:
+  none: "—"
+  aiming: "⚠️ Va a disparar fuerte: defiéndete (el disparo falla más), cúrate ({heal}) o prepárate ({guard})."
+  reloading: "🔧 Está expuesto: golpea fuerte ahora ({damage})."
+  plate: "🛡️ Su placa absorbe daño: cualquier ataque la desgasta ({damage}). Sin ella, tus golpes llegan a su vida."
+  low_hp: "❤️ Vas justo de vida: cúrate ({heal}), protégete ({guard}), bebe una poción o huye."
+  plain: "⚔️ Ataca ({damage}), defiéndete si te hacen daño o usa tus habilidades."

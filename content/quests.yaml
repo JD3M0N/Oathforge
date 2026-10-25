@@ -1673,3 +1673,216 @@ camp_collector:
       journal:
         es: "Tamsin lee la prueba, la sella y se la lleva a Holt. «El gremio vuelve a tener su nombre limpio, y tú, recluta, ya no lo eres. Ahora decide qué clase de aventurero quieres ser.»"
         en: "Tamsin reads the proof, seals it and takes it to Holt. \"The guild has its good name back, and you, recruit, are one no longer. Now decide what kind of adventurer you want to be.\""
+
+camp_path:
+  order: 50
+  giver: tamsin
+  after: camp_collector
+  name: {es: "Tu camino", en: "Your Path"}
+  summary:
+    es: "Con la prueba entregada, Tamsin te lleva ante el tablón del gremio: ahora toca elegir qué clase de aventurero quieres ser de verdad."
+    en: "With the proof handed in, Tamsin takes you to the guild board: now you choose what kind of adventurer you truly want to be."
+  hint:
+    es: "Necesitas nivel 10. Si te falta experiencia, completa encargos y caza hasta reunirla (se suma sola). Con nivel 10, abre /path en el Gremio de Aventureros, compara las ramas de tu clase y confirma una."
+    en: "You need level 10. If you lack experience, take jobs and hunt until you have it (it adds up by itself). At level 10, open /path at the Adventurers' Guild, compare your class's branches and confirm one."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: branch, target: any}
+  rewards:
+    - {xp: 400}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Tamsin tiene una decisión que no es suya."
+        en: "Tamsin has a decision that is not hers."
+    active:
+      journal:
+        es: "Alcanza el nivel 10 y elige tu rama en el Gremio de Aventureros (/path). No hay cambio libre: lee bien la ficha de cada una antes de confirmar."
+        en: "Reach level 10 and choose your branch at the Adventurers' Guild (/path). There is no free change: read each branch's sheet carefully before confirming."
+      location_text:
+        adventurers_guild:
+          es: "El tablón del gremio ofrece las ramas de tu clase. Compáralas con calma: tu elección es para siempre."
+          en: "The guild board lists your class's branches. Compare them calmly: your choice is for good."
+    done:
+      state: completed
+      journal:
+        es: "Elegiste tu camino. Tamsin, apoyada en la pared, lo celebra a su manera: «Ahora sí eres alguien»."
+        en: "You chose your path. Tamsin, leaning on the wall, celebrates in her own way: \"Now you are somebody.\""
+
+camp_kit:
+  order: 51
+  giver: tamsin
+  after: camp_path
+  name: {es: "Equipo para la hondonada", en: "Kit for the Hollow"}
+  summary:
+    es: "Antes de la hondonada, el gremio te presta una pieza de equipo de nivel 10. Solo una: el resto, con tus manos."
+    en: "Before the hollow, the guild lends you one level-10 piece of gear. Just one: the rest, with your own hands."
+  hint:
+    es: "Habla con Tamsin, elige una pieza (armadura o arma) y equípatela. No hace falta un conjunto completo."
+    en: "Talk to Tamsin, pick one piece (armor or weapon) and equip it. You do not need a full set."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: kit
+  complete_stage: done
+  objectives:
+    - {kind: equip, target: any}
+  rewards:
+    - {xp: 200}
+    - {give_item: {greater_healing_potion: 1, smoke_bomb: 1}}
+  actions:
+    pick_steel_breastplate:
+      label: {es: "🛡️ Coraza de acero", en: "🛡️ Steel breastplate"}
+      npc: tamsin
+      stages: [active]
+      to_stage: kit
+      text:
+        es: "Tamsin te echa la coraza sobre los hombros. «Pesa, pero el Ciervo pesa más.»"
+        en: "Tamsin drops the breastplate over your shoulders. \"It is heavy, but the Stag is heavier.\""
+      effects:
+        - {give_item: {steel_breastplate: 1}}
+    pick_hardened_leather:
+      label: {es: "🥋 Cuero endurecido", en: "🥋 Hardened leather"}
+      npc: tamsin
+      stages: [active]
+      to_stage: kit
+      text:
+        es: "Tamsin te tiende el cuero hervido. «Ligero para quien necesita moverse.»"
+        en: "Tamsin hands you the boiled leather. \"Light, for someone who needs to move.\""
+      effects:
+        - {give_item: {hardened_leather: 1}}
+    pick_steel_sword:
+      label: {es: "⚔️ Espada de acero", en: "⚔️ Steel sword"}
+      npc: tamsin
+      stages: [active]
+      to_stage: kit
+      text:
+        es: "Tamsin te da la espada por el pomo. «Un buen filo no sustituye a la cabeza, pero ayuda.»"
+        en: "Tamsin passes you the sword by the pommel. \"A good edge is no substitute for a head, but it helps.\""
+      effects:
+        - {give_item: {steel_sword: 1}}
+    pick_heartwood_staff:
+      label: {es: "🪄 Bastón de corazón de roble", en: "🪄 Heartwood staff"}
+      npc: tamsin
+      stages: [active]
+      to_stage: kit
+      text:
+        es: "Tamsin te pone el bastón en la mano. «La madera aguanta lo que tú le cantes.»"
+        en: "Tamsin puts the staff in your hand. \"The wood holds whatever you channel through it.\""
+      effects:
+        - {give_item: {heartwood_staff: 1}}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Tamsin rebusca en el armario del gremio."
+        en: "Tamsin rummages in the guild cupboard."
+    active:
+      journal:
+        es: "Habla con Tamsin y elige una pieza de equipo de nivel 10 del gremio."
+        en: "Talk to Tamsin and pick a level-10 piece of gear from the guild."
+    kit:
+      journal:
+        es: "Equípate la pieza que te dio Tamsin (🎒 Inventario)."
+        en: "Equip the piece Tamsin gave you (🎒 Inventory)."
+    done:
+      state: completed
+      journal:
+        es: "Con la pieza puesta y una poción mayor en la mochila, Tamsin te da una última palmada en el hombro."
+        en: "With the piece on and a greater potion in your pack, Tamsin gives you one last clap on the shoulder."
+
+camp_signs:
+  order: 52
+  giver: tamsin
+  after: camp_kit
+  name: {es: "Señales en la arboleda", en: "Signs in the Grove"}
+  summary:
+    es: "Algo ha descortezado los robles más allá de la Arboleda Antigua. Tamsin cree que es la criatura que ronda el valle."
+    en: "Something has stripped the oaks beyond the Elderwood Grove. Tamsin thinks it is the creature that roams the vale."
+  hint:
+    es: "Ve a la Arboleda Antigua y examina los troncos marcados."
+    en: "Go to the Elderwood Grove and examine the marked trunks."
+  start_stage: locked
+  unlock_stage: active
+  actions:
+    read_bark:
+      label: {es: "🔍 Examinar los troncos descortezados", en: "🔍 Examine the stripped trunks"}
+      location: elderwood_grove
+      stages: [active]
+      to_stage: done
+      text:
+        es: "Los robles están descortezados a la altura de un hombre y en la madera hay incrustaciones grises, como de metal. Las pezuñas se internan hacia una hondonada. Lo que ronda aquí embiste con la cabeza gacha: se anuncia antes de golpear."
+        en: "The oaks are stripped of bark to a man’s height and the wood has grey, metallic inlays. The hoofprints lead on to a hollow. Whatever lurks here charges with its head lowered: it announces itself before it strikes."
+      effects:
+        - {xp: 150}
+        - {set_flag: stag_hunt}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Tamsin señala un mapa."
+        en: "Tamsin points at a map."
+    active:
+      journal:
+        es: "Examina los troncos descortezados de la Arboleda Antigua."
+        en: "Examine the stripped trunks of the Elderwood Grove."
+      location_text:
+        elderwood_grove:
+          es: "Entre los robles hay uno con la corteza arrancada y el tronco surcado de vetas grises. 🔍 Examínalo."
+          en: "Among the oaks one has its bark torn off and its trunk streaked with grey veins. 🔍 Examine it."
+    done:
+      state: completed
+      journal:
+        es: "Ya sabes dónde está: la Hondonada del Ciervo, al fondo de la arboleda. Y sabes lo que hace antes de cargar."
+        en: "You know where it is: Stag's Hollow, at the far end of the grove. And you know what it does before it charges."
+
+camp_stag:
+  order: 53
+  giver: tamsin
+  after: camp_signs
+  name: {es: "El Ciervo de Hierro", en: "The Iron Stag"}
+  summary:
+    es: "Un ciervo endurecido por el metal de los reguladores arcanos embiste a quien se acerca a la hondonada. Es tu graduación."
+    en: "A stag hardened by the metal of the arcane regulators charges anyone who nears the hollow. It is your graduation."
+  hint:
+    es: "Descansa, llévate pociones y humo. En la Hondonada del Ciervo, «🏹 Cazar» te lleva hasta él. Cuando baja la cabeza, defiéndete; tras la carga, ataca con todo; cuando su coraza cae, no te confíes: puede endurecerse una vez más. Usa 💡 ¿Qué hago? en el combate."
+    en: "Rest, and bring potions and smoke. At Stag's Hollow, \"🏹 Hunt\" leads you to it. When it lowers its head, defend; after the charge, hit with everything; when its armor falls, do not relax: it can harden once more. Use 💡 What do I do? in the fight."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  turn_in_stage: told
+  complete_stage: done
+  objectives:
+    - {kind: kill, target: iron_stag}
+  rewards:
+    - {xp: 2000}
+    - {gold: 100}
+    - {milestone: iron_stag}
+    - {give_item: {greater_healing_potion: 2}}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Tamsin se ata el farol al cinto."
+        en: "Tamsin ties the lantern to her belt."
+    active:
+      journal:
+        es: "Derrota al Ciervo de Hierro en la Hondonada del Ciervo. Su coraza absorbe daño; avisa su carga bajando la cabeza; tras cargar queda expuesto; a media vida se endurece una vez más."
+        en: "Defeat the Iron Stag in Stag's Hollow. Its armor soaks damage; it announces its charge by lowering its head; after charging it is exposed; at half its life it hardens once more."
+      location_text:
+        stag_hollow:
+          es: "El aire huele a metal frío. Entre los robles pelados, algo enorme levanta la cabeza."
+          en: "The air smells of cold metal. Between the stripped oaks, something huge lifts its head."
+    told:
+      state: ready
+      journal:
+        es: "El Ciervo de Hierro ha caído. Vuelve con Tamsin y cuéntaselo: es tu graduación."
+        en: "The Iron Stag is down. Go back to Tamsin and tell her: it is your graduation."
+    done:
+      state: completed
+      journal:
+        es: "Tamsin te entrega la insignia del gremio sin ceremonia. «Ya no hay más lecciones. El valle está abierto: allí también faltan nombres.»"
+        en: "Tamsin hands you the guild's badge without ceremony. \"No more lessons. The vale is open: names are missing there too.\""

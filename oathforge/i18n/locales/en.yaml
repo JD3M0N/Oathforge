@@ -218,6 +218,7 @@ btn:
   restart: "🔄 Start over"
   continue: "▶️ Continue"
   defend: "🛡️ Defend"
+  help: "💡 What do I do?"
   potion: "🧪 Potion"
   items: "🎒 Items"
   move_back: "↩️ To the back"
@@ -662,6 +663,7 @@ combat:
   guard_absorbs: "🛡️ {entity} takes {amount} damage for you ({left} left)."
   plate_hit: "🛡️ {target}'s plate takes {amount} damage ({left} left)."
   plate_broken: "💥 {target}'s plate shatters!"
+  plate_rearm: "🛡️ {target} hardens again! Plate: {plate}."
   plate_line: "🛡️ Plate {plate}/{max} {bar}"
   plate_gone: "🛡️ No plate: wide open"
   boss_aim: "⚠️ {actor} levels the crossbow: the next shot will be a heavy one. Defend or get ready!"
@@ -1249,3 +1251,11 @@ path:
     not_ready: "That branch is not ready yet."
     no_reroll: "You have no second choice available."
     no_choice: "You do not have that choice pending."
+
+chelp:
+  none: "—"
+  aiming: "⚠️ A heavy shot is coming: defend (it misses more), heal ({heal}) or brace ({guard})."
+  reloading: "🔧 It is exposed: hit hard now ({damage})."
+  plate: "🛡️ Its plate soaks damage: any attack wears it down ({damage}). Without it, your hits reach its HP."
+  low_hp: "❤️ You are low on HP: heal ({heal}), protect yourself ({guard}), drink a potion or flee."
+  plain: "⚔️ Attack ({damage}), defend if you are taking damage, or use your abilities."

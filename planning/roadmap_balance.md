@@ -62,7 +62,7 @@ Hito **0.10-I** del [roadmap general](roadmap.md). Se avanza **fase a fase**: ca
 | B07 · 41 ramas | ✅ Hecha: 41 de 41 | 0.10.32–0.10.34 |
 | B08 · Tiempos, descanso, derrota y economía | ✅ Hecha salvo stock crítico y cobertura T0/T1 (pasan a B09) | 0.10.35 |
 | B09 · Campaña hasta el Recaudador | ✅ Hecha (mentor y trama provisionales) | 0.10.36–0.10.37 |
-| B10 · Ciervo y graduación | Pendiente | — |
+| B10 · Ciervo y graduación | ✅ Hecha (la región es B11) | 0.10.38 |
 | B11 · Región y aventuras 11–20 | Pendiente | — |
 | B12 · Balance integral | Pendiente | — |
 | B13 · Retirar cripta, documentación y reinicio | Pendiente | — |
@@ -1201,11 +1201,11 @@ El simulador y pruebas se amplían junto a cada fase, no solo en B12. No hacen f
 ### B10 · Ciervo y graduación
 
 **Objetivo:** culminar aprendizaje usando la rama escogida.
-- [ ] Selección directa integrada con el gremio.
-- [ ] Preparación T1 asequible sin exigir conjunto completo.
-- [ ] Ciervo: endurecimiento, carga y vulnerabilidad.
-- [ ] Entrega de graduación y apertura de región.
-- [ ] Ayuda contextual con respuestas válidas por clase.
+- [x] Selección directa integrada con el gremio. (0.10.38: la misión «Tu camino» lleva a /path)
+- [x] Preparación T1 asequible sin exigir conjunto completo. (0.10.38: una pieza de nivel 10 a elegir)
+- [x] Ciervo: endurecimiento, carga y vulnerabilidad. (0.10.38)
+- [x] Entrega de graduación (0.10.38); la apertura de región es B11.
+- [x] Ayuda contextual con respuestas válidas por clase. (0.10.38)
 **Pruebas:** 41 ramas al nivel 10; victoria, derrota, huida y retorno; ayuda sin revelar resultados futuros.
 **Terminado:** todas las ramas superan el encuentro con preparación razonable y el diario explica el paso siguiente.
 

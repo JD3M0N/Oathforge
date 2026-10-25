@@ -418,6 +418,7 @@ class BossPattern(Strict):
     turns it aims; once the plate is gone, after ``cycle_broken``."""
 
     plate: int = Field(ge=1)
+    rearm: int = Field(0, ge=0)  # the plate hardens again, once, when the boss is down to half its HP
     cycle: int = Field(2, ge=1)
     cycle_broken: int = Field(1, ge=1)
     heavy: MonsterAttack

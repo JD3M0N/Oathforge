@@ -19,7 +19,7 @@ def chain(c, start="tut_chapel"):
 def test_the_campaign_runs_from_the_tutorial_to_the_collector_and_opens_level_ten():
     c = get_content()
     path = chain(c)
-    assert path[0] == "camp_order" and path[-1] == "camp_collector"
+    assert path[0] == "camp_order" and "camp_collector" in path
     # every act is on the way, in order
     for act in ("camp_gear", "camp_roof", "camp_trade_pick", "camp_tracks", "camp_rumor", "camp_ledger", "camp_table"):
         assert act in path
@@ -92,3 +92,24 @@ def test_smoke_is_always_obtainable_for_the_escape():
     c = get_content()
     sellers = [k for k, n in c.npcs.items() if n.shop and "smoke_bomb" in n.shop.items]
     assert sellers  # sold, never gated behind a rare drop (roadmap_balance §8.5)
+
+
+def test_the_graduation_runs_after_the_collector_and_opens_level_twenty():
+    c = get_content()
+    path = chain(c)
+    assert path[-5:] == ["camp_collector", "camp_path", "camp_kit", "camp_signs", "camp_stag"]
+    stag = c.quests["camp_stag"]
+    assert {"milestone": "iron_stag"} in stag.rewards and stag.turn_in_stage and stag.giver == "tamsin"
+    assert any(e.to == "stag_hollow" for e in c.locations["elderwood_grove"].exits)
+    fixed = next(f for f in c.locations["stag_hollow"].fixed_encounters if "iron_stag" in f.monsters)
+    assert any({"set_flag": fixed.if_flag} in a.effects for q in c.quests.values() for a in q.actions.values())
+
+
+def test_the_kit_is_one_piece_not_a_full_set_and_every_option_is_level_ten_gear():
+    c = get_content()
+    kit = c.quests["camp_kit"]
+    picks = [a for k, a in kit.actions.items() if k.startswith("pick_")]
+    assert len(picks) >= 3
+    for a in picks:
+        (item,) = next(e["give_item"] for e in a.effects if "give_item" in e)
+        assert c.items[item].min_level == 10 and (c.items[item].slot or c.items[item].type)

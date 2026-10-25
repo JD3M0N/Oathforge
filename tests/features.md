@@ -352,3 +352,11 @@ Sin ayudas de beta: todo lleva su tiempo real. Tabla única en `engine/timings.p
 - [ ] En Telegram: aprender cada uno de los ocho oficios y completar su encargo con el material que da el maestro.
 - [ ] En Telegram: «Volver también es vencer» (coger el libro, salir con humo, curarse) y que el panel de combate avise «Apunta» y «Recarga».
 - [ ] En Telegram: derrotar al Recaudador, entregar a Tamsin y comprobar el hito y el tope 10 con XP suficiente y con XP de menos.
+
+## 0.10-I · Ciervo de Hierro y graduación (B10, v0.10.38)
+
+- [x] Pruebas automáticas: mecánica del Ciervo, reglas de la ayuda (ES/EN), cadena de la graduación, piezas de equipo y suelo del 20 % de las 41 ramas al nivel 10.
+- [ ] En Telegram (ES/EN): a nivel 10, «Tu camino» lleva a `/path`; elegir rama; «Equipo para la hondonada» ofrece cuatro piezas y una sola se equipa.
+- [ ] En Telegram: examinar los troncos de la Arboleda Antigua, ir a la Hondonada del Ciervo y «🏹 Cazar» lleva al jefe.
+- [ ] En Telegram: el panel avisa «Apunta» antes de la carga y «Recarga» después; 💡 ¿Qué hago? responde distinto con un Guerrero y con un Clérigo.
+- [ ] En Telegram: vencer al Ciervo, entregar a Tamsin y ver el tope subir a 20; probar también derrota, huida con humo y volver a intentarlo.

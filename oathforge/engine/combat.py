@@ -178,6 +178,8 @@ class Combatant(BaseModel):
     # once the plate is gone}
     plate: int = 0
     plate_max: int = 0
+    rearm: int = 0  # the plate it hardens again with, once, when it is down to half its HP
+    rearmed: bool = False
     pattern: dict | None = None
     pattern_state: Literal["ready", "aiming", "reloading"] = "ready"
     pattern_count: int = 0
@@ -798,6 +800,9 @@ def _apply_damage(state, target: Combatant, amount: int, damage_type: str) -> li
             target.defeated = True
             target.statuses.clear()
             logs.append(LogEntry(key="combat.defeated", params={"target": target.id}))
+    if target.rearm and not target.rearmed and not target.defeated and target.hp * 2 <= target.max_hp:
+        target.rearmed, target.plate = True, target.rearm
+        logs.append(LogEntry(key="combat.plate_rearm", params={"target": target.id, "plate": target.rearm}))
     return logs
 
 

@@ -28,6 +28,7 @@ def monster_combatant(key: str, cid: str) -> Combatant:
         id=cid, side="enemy", ref=key, name=m.name.model_dump(), hp=m.hp, max_hp=m.hp, ac=m.ac, row=m.row,
         dex_mod=m.dex, wis_mod=m.wis, passive_perception=10 + m.wis, immune=list(m.immune), cowardly=m.cowardly, xp=m.xp,
         boss=m.boss, plate=m.pattern.plate if m.pattern else 0, plate_max=m.pattern.plate if m.pattern else 0,
+        rearm=m.pattern.rearm if m.pattern else 0,
         pattern={"cycle": m.pattern.cycle, "cycle_broken": m.pattern.cycle_broken} if m.pattern else None,
         heavy=AttackProfile(key="heavy", name=m.pattern.heavy.name.model_dump(), to_hit=m.pattern.heavy.to_hit,
                             damage=m.pattern.heavy.damage, damage_type=m.pattern.heavy.damage_type,

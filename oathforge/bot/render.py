@@ -14,7 +14,7 @@ from oathforge.content import get_content
 from oathforge.content.schemas import DC_TIERS
 from oathforge.database.models import Character
 from oathforge.engine.checks import modifier, proficiency_bonus
-from oathforge.engine import gathering, timings
+from oathforge.engine import combat_help, gathering, timings
 from oathforge.engine import combat, pointbuy, progression
 from oathforge.engine.combat import EncounterState, affordable, available_bonus_actions, valid_targets
 from oathforge.engine.progression import skill_rank
@@ -2110,6 +2110,16 @@ def _cost_tag(me, uses: int | None, ability) -> str:
     return f" ({uses})" if uses is not None else ""
 
 
+def combat_help_text(state: EncounterState, me, defs: dict, lang: str) -> str:
+    """💡 A short popup: what the fight asks for now, and the hero's own abilities that answer it."""
+    lines = []
+    for key, roles in combat_help.hints(state, me, defs):
+        names = {role: ", ".join(defs[k].name.get(lang) for k in keys[:2]) for role, keys in roles.items() if keys}
+        lines.append(t(lang, f"chelp.{key}", **{role: names.get(role, t(lang, "chelp.none")) for role in
+                                              ("heal", "guard", "damage", "control")}))
+    return "\n".join(lines)
+
+
 def combat_token(version: int | None, turn_index: int) -> str:
     """Third field of every combat button: "<encounter.version>.<turn_index>.<nonce>"."""
     return f"{version or 0}.{turn_index}.{nonce()}"
@@ -2319,6 +2329,7 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
     if not me.action_used:
         buttons.append(btn(t(lang, "btn.flee"), cb("cb", "flee", n)))
     buttons.append(btn(t(lang, "btn.end_turn"), cb("cb", "end", n)))
+    buttons.append(btn(t(lang, "btn.help"), cb("cb", "hlp", n)))
     rows += grid(buttons)
     lines.append(f"<i>{t(lang, 'combat.hint')}</i>")
     return "\n".join(lines)[:MAX_MESSAGE], markup(rows)

@@ -4,6 +4,22 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.38] - 2026-10-25
+
+0.10-I (B10): **el Ciervo de Hierro y la graduación.** Del nivel 10 al hito `iron_stag` (tope 20): elegir rama, recibir una pieza de nivel 10, leer las señales y vencer al jefe con lo que has escogido.
+
+### Añadido
+- **El Ciervo de Hierro** y la **Hondonada del Ciervo** (al fondo de la Arboleda Antigua): coraza que absorbe daño, **carga anunciada** (baja la cabeza un turno antes), ventana de **vulnerabilidad** tras cargar y, a media vida, **se endurece una vez más** (`rearm`). Defenderse debilita la carga.
+- **💡 ¿Qué hago?** en el panel de combate: reglas y plantillas, sin IA. Lee el combate (avisa, recarga, placa, poca vida) y nombra las habilidades de **tu** clase que sirven (curar, protegerse, golpear). Un popup, sin gastar acción.
+- Acto VII: **Tu camino** (elegir rama en el gremio, nivel 10), **Equipo para la hondonada** (Tamsin ofrece una pieza de nivel 10 a elegir, sin exigir conjunto completo), **Señales en la arboleda** (examinar los troncos) y **El Ciervo de Hierro** (entrega a Tamsin: hito `iron_stag`, XP, poción mayor).
+- El simulador bebe pociones por debajo del 40 % de vida (2 de preparación) y se defiende cuando el jefe avisa.
+- Pruebas: mecánica del Ciervo, reglas de la ayuda en ES/EN, cadena de la graduación, piezas del equipo y un suelo del 20 % para las **41 ramas** al nivel 10.
+
+### Pendiente
+- Retrato real del Ciervo (marcador de posición).
+- Las ramas de lanzador de fuego, hielo y arcano rondan el 40–50 % contra el Ciervo en el simulador; se ajusta en B12.
+- La región cercana a la que apunta la entrega («el valle») es el B11.
+
 ## [0.10.37] - 2026-10-25
 
 0.10-I (B09, cierre): **la campaña común hasta el Recaudador de Ceniza.** Del tutorial al nivel 10 sin callejones: 21 misiones nuevas, el mentor y un jefe que avisa sus golpes. Las decisiones de mentor y trama las tomé yo como provisionales (Josue las revisará, y el refactor de Vale e instructor queda para después).

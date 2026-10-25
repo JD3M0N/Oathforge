@@ -18,8 +18,8 @@
 | B07 Las 41 ramas | ✅ | 0.10.32–34 |
 | B08 Tiempos, descanso, derrota y economía | ✅ (falta stock crítico y cobertura T0/T1 de herramientas → B09) | 0.10.35 |
 | B09 Campaña común hasta el Recaudador | ✅ con mentor y trama provisionales (Tamsin Harrow); el refactor de Vale/instructor queda para después | 0.10.36–0.10.37 |
-| **B10 Ciervo de Hierro y graduación** | ⏳ **siguiente** | |
-| B11 Región cercana 11–20 | ⏳ | |
+| B10 Ciervo de Hierro y graduación | ✅ (región → B11) | 0.10.38 |
+| **B11 Región cercana 11–20** | ⏳ **siguiente** | |
 | B12 Balance integral | ⏳ | |
 | B13 Retirar cripta, documentación y reinicio que conserva preferencias | ⏳ | |
 | B14 Candidato de lanzamiento | ⏳ | |
@@ -40,9 +40,6 @@ Decisiones de Josue que siguen vigentes:
 6. Pruebas: `pytest tests/<área> -q` mientras trabajas, `tests/test_content.py` si tocas `content/`, **suite completa antes del commit**, `oath simulate` si tocas combate, `tgtest` en ES y EN para lo que ve el jugador.
 
 ## Lo que queda por hacer
-
-### B10 · Ciervo de Hierro y graduación
-Jefe y entrega del hito `iron_stag` (abre el tope 20). Depende de B07 y B09.
 
 ### B11 · Región cercana 11–20
 Región provisional («Greyforge Vale»), criaturas de los niveles 11–20 (hoy no existen; el simulador usa un jefe sintético) y lugares. Texto final tras la aprobación de Josue.

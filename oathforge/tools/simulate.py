@@ -27,6 +27,7 @@ from oathforge.services import characters, combat_service
 
 MAX_ROUNDS = 50
 # main-action abilities, most valuable first; limited uses are spent before unlimited ones
+PREPARED_POTIONS = 2  # healing potions the simulated hero carries, drunk below 40% HP
 ACTION_PRIORITY = ("summon", "converge", "command", "shift", "heal", "turn", "save", "strike", "spell", "curse", "buff")
 HELPERS = ("summon", "converge", "command", "shift")  # abilities of the helpers and forms of B05
 
@@ -169,6 +170,13 @@ def _worth_it(me: Combatant, key: str, a, weapon) -> bool:
 
 def _main(state: EncounterState, me: Combatant, rng: random.Random, defs: dict, use_abilities: bool) -> None:
     weapon = _weapon(me)
+    if me.consumables.get("healing_potion", 0) > 0 and me.hp * 5 < 2 * me.max_hp:  # a potion when low
+        if _try(state, Action(kind="heal_item", heal_amount=dice.roll("2d4+2", rng).total), rng, defs):
+            return
+    aiming = [f for f in state.enemies_of(me) if f.pattern_state == "aiming" and f.heavy]
+    if aiming and me.hp <= 2.5 * dice.parse(aiming[0].heavy.damage).average:  # the signal says: guard
+        if _try(state, Action(kind="defend"), rng, defs):
+            return
     if use_abilities:
         options = [k for k, a in defs.items()
                    if a.action == "action" and _usable(me, k, defs) and a.kind in ACTION_PRIORITY
@@ -237,6 +245,7 @@ def fight(class_key: str, level: int, monsters: list[str], seed: int, lineage: s
     char = sim_character(class_key, level, lineage, background, branch)
     player = characters.combatant_from(char, sim_gear(char), sim_skills(char))
     defs = combat_service.ability_defs(char)
+    player.consumables = {"healing_potion": PREPARED_POTIONS}  # a reasonable preparation for a boss
     state = EncounterState(location="simulation", combatants={"p1": player})
     _bring_helpers(state, player, char)
     for i, key in enumerate(monsters, start=1):

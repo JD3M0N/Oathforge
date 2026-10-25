@@ -22,6 +22,7 @@ Versionado `0.x.y`: **y** (parche) en arreglos y cambios pequeños; **x** (menor
 | 0.8.3 | Planning reorganizado: Possibilium, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md`, `content/officina/` |
 | 0.9.0 | Logros e identidad: 30 logros, dos metalogros, títulos, destacados, objetivos seguidos y reconocimiento retroactivo verificable |
 | 0.9.1 | Hoja de ruta de 0.10 (consolidación) y 0.11 (multijugador): `planning/roadmap.md` |
+| 0.10.38 | 0.10-I (B10): Ciervo de Hierro (coraza, carga anunciada, ventana de vulnerabilidad, se endurece de nuevo), 💡 ¿Qué hago? por clase, acto VII (rama, pieza de nivel 10, señales, graduación) |
 | 0.10.37 | 0.10-I (B09, cierre): campaña común hasta el Recaudador (21 misiones, Tamsin, ocho oficios, puesto de peaje) y jefe con placa, aviso y recarga |
 | 0.10.36 | 0.10-I (B09, 1.ª parte): nueve tipos de objetivo de misión (equipar, comprar, vender, guardar, sacar, oficio, plano, humo, rama); propuesta del mentor en `mundus.md` |
 | 0.10.35 | 0.10-I (B08): tiempos reales en una tabla (`engine/timings.py`), descanso corto limitado, derrota con tope, pociones a precio normal; sin ayudas de beta |

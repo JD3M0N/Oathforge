@@ -16,6 +16,7 @@ night:
     The trunks creak in the dark. Far off, a howl; then another, closer.
 exits:
   - {to: whispering_woods, minutes: 20, danger: 1}
+  - {to: stag_hollow, minutes: 15, danger: 1}
 encounters:
   - {monsters: [grey_wolf], weight: 3}
   - {monsters: [boar], weight: 2}

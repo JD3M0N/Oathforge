@@ -1,0 +1,26 @@
+name: {es: Hondonada del Ciervo, en: Stag's Hollow}
+article: {es: la, en: ""}
+kind: wild
+hunting: true  # «Cazar»: lobos y jabalíes; con las señales de la arboleda, el Ciervo de Hierro
+description:
+  es: >-
+    Una hondonada al fondo de la Arboleda Antigua, con robles descortezados hasta la altura de un hombre y
+    el suelo marcado por pezuñas hondas. Aquí el aire huele a metal frío.
+  en: >-
+    A hollow at the far end of the Elderwood Grove, with oaks stripped of bark to a man's height and the
+    ground scarred by deep hoofprints. The air here smells of cold metal.
+exits:
+  - {to: elderwood_grove, minutes: 15, danger: 1}
+hunt_day:
+  es: 🏹 Sigues las pezuñas por la hondonada y das con algo que se mueve entre los troncos.
+  en: 🏹 You follow the hoofprints through the hollow and find something moving between the trunks.
+hunt_night:
+  es: 🏹 Algo grande respira en la oscuridad, entre los robles pelados.
+  en: 🏹 Something big breathes in the dark between the stripped oaks.
+encounters:
+  - {monsters: [grey_wolf, grey_wolf], weight: 3}
+  - {monsters: [boar, boar], weight: 2}
+night_encounters:
+  - {monsters: [grey_wolf, grey_wolf], weight: 3}
+fixed_encounters:
+  - {monsters: [iron_stag], flag: cleared_iron_stag, if_flag: stag_hunt}

@@ -498,6 +498,10 @@ async def _combat(update: Update, context, arg: str, n: str) -> None:
             await edit_or_send(update, text, kb)
             return
 
+        if kind == "hlp":  # 💡 What do I do?: rules, no AI, nothing is spent
+            await answer(update, render.combat_help_text(state, me, combat_service.ability_defs(char), lang))
+            return
+
         if kind in ("itms", "pwrs"):  # the list of scrolls and bombs, or of class powers
             menu = "items" if kind == "itms" else "powers"
             text, kb = render.combat_panel(char, enc.state, lang, target_menu=menu, version=enc.version)
