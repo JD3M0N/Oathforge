@@ -35,7 +35,7 @@ Cada clase vive en `content/classes.yaml`: dado de golpe, atributo principal, re
 - `tests/engine/test_class_roster.py` exige a **cada** clase lo mismo: barra propia, técnica desde el nivel 1, nada que dependa de una rama o un aliado, victoria sobre un bandido (niveles 1, 3, 5 y 9) y sobre una pareja de goblins (5 y 9).
 - Los retratos del Bárbaro, el Monje, el Explorador, el Artífice, el Chamán y el Caballero de la Muerte están pendientes ([TODO-images](../TODO-images.md)).
 - `extra_attack` está en Guerrero, Paladín, Bárbaro, Monje, Explorador y Caballero (con claves propias en las nuevas, para que cada página de habilidad hable de su clase).
-- Ramas: 41 declaradas, ninguna elegible hasta B07.
+- Ramas: 41 declaradas; **20 elegibles desde 0.10.32** (lote A de B07) con su recorrido del 10 al 20. Las ramas comparten una docena de mecánicas pequeñas (gastar un estado, responder a una herida, robar vida acotado, enfriamientos, barreras, entidades y formas) y `tests/engine/test_branches.py` exige que dos ramas de una clase no hagan las mismas decisiones.
 
 ## Decidido
 

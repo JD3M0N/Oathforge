@@ -38,7 +38,7 @@ from oathforge.content.schemas import (
     WorldGuide,
     Zone,
 )
-from oathforge.engine import class_build
+from oathforge.engine import class_build, dice
 from oathforge.engine.gathering import GATHER_SKILLS, MASTERIES
 from oathforge.content.achievement_schemas import Achievement, validate_catalog
 
@@ -532,6 +532,32 @@ def _ability_errors(prog, resource: str | None, where: str, owner: str, a) -> li
     errors = []
     if a.kind == "passive" and (a.cost or a.generates or a.cooldown):
         errors.append(f"{where}: a passive neither costs nor generates nor cools down")
+    if bool(a.consumes) != bool(a.consume_damage):
+        errors.append(f"{where}: consumes and consume_damage go together")
+    if a.consumes and a.kind not in ("strike", "spell", "save"):
+        errors.append(f"{where}: only a strike, spell or save can consume a status")
+    if a.leech_pct and a.kind not in ("strike", "spell", "save"):
+        errors.append(f"{where}: only a strike, spell or save can leech")
+    if (a.thorns or a.resource_on_hurt) and a.kind != "passive":
+        errors.append(f"{where}: thorns and resource_on_hurt answer a blow, so they belong to a passive")
+    if a.reduces_cooldowns and a.kind == "passive":
+        errors.append(f"{where}: a passive cannot cut cooldowns")
+    if a.damage_tiers:
+        if not a.damage:
+            errors.append(f"{where}: damage_tiers need a base damage to grow from")
+        for lvl, expr in a.damage_tiers.items():
+            try:
+                dice.parse(expr)
+            except ValueError:
+                errors.append(f"{where}: damage tier {lvl} is not dice")
+    if a.attack_with and a.kind != "passive":
+        errors.append(f"{where}: attack_with is a trait, so it belongs to a passive")
+    for dice_field in ("consume_damage", "thorns"):
+        if getattr(a, dice_field):
+            try:
+                dice.parse(getattr(a, dice_field))
+            except ValueError:
+                errors.append(f"{where}: {dice_field} is not dice")
     if resource is None and (a.cost or a.generates):
         errors.append(f"{where}: it uses a bar, but {owner} has none")
     if resource is not None and a.uses is not None:
@@ -558,9 +584,16 @@ def _branch_errors(c: Content, prog, key: str, branch: ClassSpecialization) -> l
         where = f"class branch {key} modifier {mkey}"
         if mod.level not in prog.modifier_levels:
             errors.append(f"{where}: level {mod.level} is not one of the modifier levels {prog.modifier_levels}")
-        for target in mod.patches:
+        pool = {**(cls.abilities if cls else {}), **branch.abilities}
+        for target, patch in mod.patches.items():
             if target not in known:
                 errors.append(f"{where}: it tunes '{target}', which the branch does not have")
+                continue
+            for field in ("damage", "extra_damage", "consume_damage", "heal_dice", "temp_hp"):
+                if getattr(patch, field) is not None and getattr(pool[target], field) is None:
+                    errors.append(f"{where}: it replaces {field} of '{target}', which has none to replace")
+            if patch.leech_pct is not None and not pool[target].leech_pct:
+                errors.append(f"{where}: it changes the leech of '{target}', which does not leech")
         for akey, a in mod.grants.items():
             if a.level < mod.level:
                 errors.append(f"{where}: it grants '{akey}' at level {a.level}, before its own level {mod.level}")

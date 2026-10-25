@@ -157,6 +157,16 @@ def ability_mechanics(a, lang: str) -> list[str]:
         out.append(t(lang, "skill.crit_range", n=a.crit_range))
     if a.bonus_damage:
         out.append(t(lang, "skill.bonus_damage", dice=a.bonus_damage, type=dmg(a.bonus_damage_type)))
+    if a.consumes and a.consume_damage:
+        out.append(t(lang, "skill.consumes", status=t(lang, "status." + a.consumes), dice=a.consume_damage))
+    if a.leech_pct:
+        out.append(t(lang, "skill.leech", n=a.leech_pct))
+    if a.reduces_cooldowns:
+        out.append(t(lang, "skill.reduces_cooldowns", n=a.reduces_cooldowns))
+    if a.thorns:
+        out.append(t(lang, "skill.thorns", dice=a.thorns, type=dmg(a.bonus_damage_type or "radiant")))
+    if a.resource_on_hurt:
+        out.append(t(lang, "skill.resource_on_hurt", n=a.resource_on_hurt))
     if a.entity and a.entity in c.entities:
         e = c.entities[a.entity]
         out.append(t(lang, "skill.entity", icon=e.icon, name=e.name.get(lang), role=t(lang, "skill.role." + e.role)))

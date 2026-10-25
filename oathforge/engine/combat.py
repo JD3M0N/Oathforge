@@ -153,6 +153,9 @@ class Combatant(BaseModel):
     base_attacks: list[AttackProfile] = []  # their own attacks, kept while a form replaces them
     forms_taken: list[str] = []  # forms already taken this fight: their reserve is given only the first time
     mark: str | None = None  # the quarry their entities concentrate on
+    thorns: str | None = None  # dice of damage the attacker takes back when this one is really hurt
+    thorns_type: str = "radiant"
+    resource_on_hurt: int = 0  # what the bar gets when this one is really hurt
     sneak_dice: int = 0
     extra_attack: bool = False
     halve_first_hit: bool = False
@@ -414,6 +417,10 @@ def _use_ability(state, actor, action, ability, rng) -> list[LogEntry]:
     if actor.resource_max and ability.cost > actor.resource:
         raise CombatError("combat.err.no_resource")
     logs: list[LogEntry] = []
+    foes_before = {e.id: e.hp for e in state.enemies_of(actor)}
+    quarry = None
+    if ability.consumes and ability.kind in ("strike", "spell", "save"):
+        quarry = _resolve_target(state, actor, action.target, ranged=ability.ranged or ability.kind != "strike")
     if ability.kind == "strike":
         profile = next((a for a in actor.attacks if a.ranged == ability.ranged), None)
         if profile is None:
@@ -471,6 +478,22 @@ def _use_ability(state, actor, action, ability, rng) -> list[LogEntry]:
         logs += _shift(state, actor, ability)
     else:
         raise CombatError("combat.err.passive")
+    if quarry is not None and ability.consume_damage and quarry.active and ability.consumes in quarry.statuses:
+        del quarry.statuses[ability.consumes]  # spent: it no longer ticks, and it hurts now
+        logs.append(LogEntry(key="combat.consumed", params={"actor": actor.id, "target": quarry.id,
+                                                            "status": ability.consumes}))
+        logs += _apply_damage(state, quarry, roll(ability.consume_damage, rng).total,
+                              ability.damage_type or "force")
+    if ability.leech_pct:
+        dealt = sum(foes_before[i] - max(0, state.combatants[i].hp) for i in foes_before)
+        gained = _heal(actor, dealt * ability.leech_pct // 100)
+        if gained:
+            logs.append(LogEntry(key="combat.leech", params={"actor": actor.id, "amount": gained}))
+    if ability.reduces_cooldowns and actor.cooldowns:  # the ability's own cooldown is set below, so it is not cut
+        actor.cooldowns = {k: v - ability.reduces_cooldowns for k, v in actor.cooldowns.items()
+                           if v - ability.reduces_cooldowns > 0}
+        logs.append(LogEntry(key="combat.cooldowns_cut", params={"actor": actor.id,
+                                                                 "turns": ability.reduces_cooldowns}))
     if uses is not None:
         actor.abilities[action.ability] = uses - 1
     if actor.resource_max:  # paid once, whatever the ability did
@@ -551,6 +574,10 @@ def _cast(state, actor, ability, key, target_id, rng, to_hit: int, dc: int, dmg_
         amount += _heal_add(actor, ability)
         healed = _heal(actor, amount)
         logs.append(LogEntry(key="combat.heal", params={"actor": actor.id, "ability": key, "amount": healed}))
+        if ability.temp_hp and healed:  # a barrier only for healing that was real, never for a full life bar
+            barrier = roll(ability.temp_hp, rng).total + _heal_add(actor, ability)
+            actor.temp_hp = max(actor.temp_hp, barrier)
+            logs.append(LogEntry(key="combat.temp_hp", params={"actor": actor.id, "amount": actor.temp_hp}))
     return logs
 
 
@@ -675,6 +702,7 @@ def _attack(state, attacker, target, profile: AttackProfile, rng, extra, weapon:
         attacker.sneak_used = True
         dmg += sneak
     params.update(crit=crit, sneak=sneak)
+    hurt_before = target.hp + target.temp_hp
     logs = [LogEntry(key="combat.crit" if crit else "combat.hit", params=params)]
     logs += _apply_damage(state, target, dmg, profile.damage_type)
     for amount, dtype in extras:
@@ -683,6 +711,25 @@ def _attack(state, attacker, target, profile: AttackProfile, rng, extra, weapon:
     ap = profile.applies
     if ap and target.active and rng.random() < ap.get("chance", 1.0):
         logs += _apply_status(target, ap["status"], ap["turns"])
+    logs += _answer_blow(state, attacker, target, hurt_before, rng)
+    return logs
+
+
+def _answer_blow(state, attacker: Combatant, target: Combatant, hurt_before: int, rng) -> list[LogEntry]:
+    """Once per attack, and only if the blow really hurt (HP or temporary HP): the bar fills and the attacker
+    takes thorns damage. The answer goes straight to _apply_damage, so it can never answer itself."""
+    if target.side != "player" or not (target.thorns or target.resource_on_hurt):
+        return []
+    if target.hp + target.temp_hp >= hurt_before:
+        return []
+    logs: list[LogEntry] = []
+    if gain_resource(target, target.resource_on_hurt):
+        logs.append(LogEntry(key="combat.resource_gained", params={
+            "actor": target.id, "resource": target.resource_key, "amount": target.resource_on_hurt,
+            "left": target.resource}))
+    if target.thorns and attacker.active and attacker.side != target.side:
+        logs.append(LogEntry(key="combat.thorns", params={"actor": target.id, "target": attacker.id}))
+        logs += _apply_damage(state, attacker, roll(target.thorns, rng).total, target.thorns_type)
     return logs
 
 

@@ -27,22 +27,48 @@ from oathforge.services import characters, combat_service
 
 MAX_ROUNDS = 50
 # main-action abilities, most valuable first; limited uses are spent before unlimited ones
-ACTION_PRIORITY = ("turn", "save", "strike", "spell", "curse", "buff")
+ACTION_PRIORITY = ("summon", "converge", "command", "shift", "turn", "save", "strike", "spell", "curse", "buff")
+HELPERS = ("summon", "converge", "command", "shift")  # abilities of the helpers and forms of B05
 
 
 # ---------------------------------------------------------------- the simulated hero
 
-def sim_character(class_key: str, level: int, lineage: str, background: str) -> Character:
-    """A transient character as ``create_character`` + ``grant_xp`` would leave it (never saved)."""
+def default_choices(class_key: str, level: int, branch: str | None, picks: dict | None = None) -> dict:
+    """What a player would have picked by `level`: the offensive training at 5 and 18, the resilient one at 12, and
+    the first option of every modifier. `picks` overrides any of them ({"modifier:13": "heavy_verdict"})."""
+    c = get_content()
+    prog = c.progression
+    trainings = {5: "keen", 12: "hardy", 18: "keen"}
+    out = {f"training:{lvl}": trainings.get(lvl, "keen") for lvl in prog.training_levels if lvl <= level}
+    if branch:
+        mods = c.class_specializations[branch].modifiers
+        for lvl in prog.modifier_levels:
+            if lvl <= level:
+                out[f"modifier:{lvl}"] = next(k for k, m in mods.items() if m.level == lvl)
+    return {**out, **(picks or {})}
+
+
+def sim_character(class_key: str, level: int, lineage: str, background: str, branch: str | None = None,
+                  picks: dict | None = None) -> Character:
+    """A transient character as ``create_character`` + ``grant_xp`` would leave it (never saved), with the
+    trainings, the branch and the modifiers a player would have chosen by that level."""
     c = get_content()
     cls = c.classes[class_key]
+    if branch and c.class_specializations[branch].class_key != class_key:
+        raise ValueError(f"branch '{branch}' does not belong to class '{class_key}'")
     scores = characters.starting_scores(class_key, lineage)  # no ability boost on the way: the trainings replaced it
     hp = progression.max_hp(cls.hit_die, modifier(scores["con"]), level)
-    return Character(
+    char = Character(
         id=0, name="Sim", lineage=lineage, background=background, class_key=class_key, abilities=scores,
         level=level, xp=0, hp=hp, max_hp=hp, gold=0, location=c.start_location, state="idle", flags={},
         conditions={}, resources=characters.full_resources(class_key, level), bestiary={}, checks_tried={},
+        specialization=branch if level >= c.progression.specialization_level else None,
+        build={"v": characters.BUILD_VERSION, characters.CHOICES: default_choices(class_key, level, branch, picks)},
+        pools={},
     )
+    characters.refill_resources(char)  # the catalogue now includes the branch and the modifiers
+    char.max_hp = char.hp = characters.max_hp_for(char)  # and the trainings' hit points
+    return char
 
 
 def sim_gear(char: Character) -> dict[str, ItemInstance]:
@@ -63,8 +89,9 @@ def sim_skills(char: Character) -> dict[str, CharacterSkill]:
     return {s: CharacterSkill(skill=s, proficient=s in proficient, xp=0, recent=[]) for s in c.skills}
 
 
-def hero(class_key: str, level: int, lineage: str, background: str) -> tuple[Combatant, dict]:
-    char = sim_character(class_key, level, lineage, background)
+def hero(class_key: str, level: int, lineage: str, background: str, branch: str | None = None,
+         picks: dict | None = None) -> tuple[Combatant, dict]:
+    char = sim_character(class_key, level, lineage, background, branch, picks)
     return characters.combatant_from(char, sim_gear(char), sim_skills(char)), combat_service.ability_defs(char)
 
 
@@ -102,6 +129,8 @@ def _bonus(state: EncounterState, me: Combatant, rng: random.Random, defs: dict)
             continue
         if a.kind == "surge":
             continue
+        if a.kind in HELPERS and not _helpers_ok(state, me, a):
+            continue
         target = _target(state, me, ranged=True)
         if a.kind == "curse" and (target is None or a.status in state.combatants[target].statuses):
             continue
@@ -115,9 +144,23 @@ def _weapon(me: Combatant):
     return ranged if ranged and (me.row == "back" or melee is None) else melee
 
 
+def _helpers_ok(state: EncounterState, me: Combatant, a) -> bool:
+    """Summon, order, converge and shift only when they would do something."""
+    mine = [e for e in state.entities.values() if e.owner == me.id and e.active]
+    if a.kind == "summon":
+        return a.entity in state.entity_defs and not any(e.key == a.entity for e in state.entities.values())
+    if a.kind == "converge":
+        return bool(mine) and not all(e.boost for e in mine)
+    if a.kind == "command":
+        return any(e.key == a.entity and e.role != "guard" and e.acted_round < state.round for e in mine)
+    if a.kind == "shift":
+        return a.form != "none" and a.form in me.shapes and me.form != a.form and me.form is None
+    return True
+
+
 def _worth_it(me: Combatant, key: str, a, weapon) -> bool:
     """What costs something is worth it; a free one only if it hits as hard as the weapon."""
-    if me.abilities.get(key) is not None or a.cost or a.kind in ("strike", "turn"):
+    if me.abilities.get(key) is not None or a.cost or a.kind in ("strike", "turn") + HELPERS:
         return True
     if not a.damage:
         return False
@@ -129,7 +172,7 @@ def _main(state: EncounterState, me: Combatant, rng: random.Random, defs: dict, 
     if use_abilities:
         options = [k for k, a in defs.items()
                    if a.action == "action" and _usable(me, k, defs) and a.kind in ACTION_PRIORITY
-                   and _worth_it(me, k, a, weapon)]
+                   and _worth_it(me, k, a, weapon) and _helpers_ok(state, me, a)]
         # the dearest first: what the bar pays for, then what has limited uses, then the free ones
         options.sort(key=lambda k: (ACTION_PRIORITY.index(defs[k].kind), -defs[k].cost,
                                     me.abilities[k] is None))
@@ -176,11 +219,25 @@ class Fight:
     damage_taken: int  # net of healing: max HP minus HP at the end
 
 
+def _bring_helpers(state: EncounterState, player: Combatant, char: Character) -> None:
+    """What the hero may call in the fight, like combat_service does at the start of a real one."""
+    from oathforge.services import companions
+    for a in characters.abilities_of(char).values():
+        if a.kind in ("summon", "command") and a.entity:
+            state.entity_defs[a.entity] = companions.template(a.entity, char)
+        elif a.kind == "passive" and a.entity:
+            tpl = state.entity_defs[a.entity] = companions.template(a.entity, char)
+            combat.spawn(state, player, tpl, persistent=True, acts_now=True)
+
+
 def fight(class_key: str, level: int, monsters: list[str], seed: int, lineage: str, background: str,
-          use_abilities: bool = True) -> Fight:
+          use_abilities: bool = True, branch: str | None = None) -> Fight:
     rng = random.Random(seed)
-    player, defs = hero(class_key, level, lineage, background)
+    char = sim_character(class_key, level, lineage, background, branch)
+    player = characters.combatant_from(char, sim_gear(char), sim_skills(char))
+    defs = combat_service.ability_defs(char)
     state = EncounterState(location="simulation", combatants={"p1": player})
+    _bring_helpers(state, player, char)
     for i, key in enumerate(monsters, start=1):
         state.combatants[f"m{i}"] = combat_service.monster_combatant(key, f"m{i}")
     combat.start(state, rng)
@@ -212,15 +269,17 @@ def summarize(fights: list[Fight]) -> dict:
 
 
 def simulate(classes: list[str], monsters: list[str], levels: list[int], n: int, seed: int, lineage: str,
-             background: str, use_abilities: bool = True) -> list[dict]:
+             background: str, use_abilities: bool = True, branch: str | None = None) -> list[dict]:
     """One row per class x enemy group x level; ``monsters`` entries are keys joined with ``+``."""
     rows = []
     for level in levels:
         for cls in classes:
             for group in monsters:
                 keys = group.split("+")
-                fights = [fight(cls, level, keys, seed + i, lineage, background, use_abilities) for i in range(n)]
-                rows.append({"class": cls, "enemies": group, "level": level, **summarize(fights)})
+                fights = [fight(cls, level, keys, seed + i, lineage, background, use_abilities, branch)
+                          for i in range(n)]
+                rows.append({"class": cls if not branch else f"{cls}/{branch}", "enemies": group, "level": level,
+                             **summarize(fights)})
     return rows
 
 
@@ -266,6 +325,7 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--lineage", default=next(iter(c.lineages)))
     parser.add_argument("--background", default=next(iter(c.backgrounds)))
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--branch", default=None, help="a class branch to play (from level 10), e.g. avenger")
     parser.add_argument("--no-abilities", action="store_true", help="weapon attacks only")
     parser.add_argument("--no-save", action="store_true", help="don't write artifacts/simulations/")
     args = parser.parse_args(argv)
@@ -275,9 +335,13 @@ def main(argv: list[str] | None = None) -> None:
         k for g in monsters for k in g.split("+") if k not in c.monsters]
     if unknown:
         parser.error(f"unknown class or monster: {', '.join(unknown)}")
+    if args.branch and args.branch not in c.class_specializations:
+        parser.error(f"unknown branch: {args.branch}")
+    if args.branch:
+        classes = [c.class_specializations[args.branch].class_key]
     levels = _levels(args.level)
     rows = simulate(classes, monsters, levels, args.n, args.seed, args.lineage, args.background,
-                    not args.no_abilities)
+                    not args.no_abilities, args.branch)
     print(_table(rows))
     if not args.no_save:
         params = {k: v for k, v in vars(args).items() if k != "no_save"}

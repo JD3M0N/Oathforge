@@ -112,7 +112,11 @@ async def test_the_branch_refuses_everything_that_is_not_allowed(branch):
         assert (await paths.choose_branch(s, char, BRANCH)).error == "path.err.not_guild"
         char.location = guild()
         assert (await paths.choose_branch(s, char, "pyromancer")).error == "path.err.unknown"  # another class
-        assert (await paths.choose_branch(s, char, "battle_master")).error == "path.err.not_ready"
+        get_content().class_specializations["t_unfinished"] = finished_branch(ready=False)
+        try:
+            assert (await paths.choose_branch(s, char, "t_unfinished")).error == "path.err.not_ready"
+        finally:
+            get_content().class_specializations.pop("t_unfinished", None)
         assert (await paths.choose_branch(s, char, "no_such")).error == "path.err.unknown"
         assert char.specialization is None
 
@@ -309,5 +313,5 @@ async def test_two_choices_at_once_leave_one_applied(branch, is_postgres):
 
 def test_a_patch_never_makes_a_cost_negative_or_a_duration_zero():
     base = ability(1, "buff", status="blessed", status_turns=1, cost=1, cooldown=1)
-    patched = class_build._patched(base, -5, -5, -5)
+    patched = class_build._patched(base, AbilityPatch(cost=-5, cooldown=-5, status_turns=-5))
     assert (patched.cost, patched.cooldown, patched.status_turns) == (0, 0, 1)

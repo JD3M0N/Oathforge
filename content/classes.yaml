@@ -648,6 +648,7 @@ cleric:
       kind: spell
       damage: 1d8
       damage_type: radiant
+      damage_tiers: {5: 2d8, 11: 3d8, 17: 4d8}
     healing_word:
       name: {es: Palabra Sanadora, en: Healing Word}
       description: {es: 'Acción adicional: recuperas 2d4 + SAB PV.', en: 'Bonus action: recover 2d4 + WIS HP.'}
@@ -783,6 +784,7 @@ sorcerer:
       kind: spell
       damage: 1d10
       damage_type: fire
+      damage_tiers: {5: 2d10, 11: 3d10, 17: 4d10}
     mage_armor:
       name: {es: Armadura de Mago, en: Mage Armor}
       description: {es: +3 a la CA si no llevas armadura., en: +3 AC while you wear no armor.}
@@ -933,6 +935,7 @@ druid:
       kind: spell
       damage: 1d6
       damage_type: piercing
+      damage_tiers: {5: 2d6, 11: 3d6, 17: 4d6}
     cure_wounds:
       name: {es: Curar Heridas, en: Cure Wounds}
       description: {es: Recuperas 1d8 + SAB PV., en: Recover 1d8 + WIS HP.}
@@ -1082,6 +1085,7 @@ bard:
       status: frightened
       status_turns: 1
       generates: 2
+      damage_tiers: {5: 2d4, 11: 3d4, 17: 4d4}
     bardic_inspiration:
       name: {es: Inspiración Bárdica, en: Bardic Inspiration}
       description: {es: 'Acción adicional: tu próxima tirada de ataque suma 1d6.', en: 'Bonus action: your next attack roll adds 1d6.'}
@@ -1219,6 +1223,7 @@ warlock:
       kind: spell
       damage: 1d10
       damage_type: force
+      damage_tiers: {5: 2d10, 11: 3d10, 17: 4d10}
     hex:
       name: {es: Maleficio, en: Hex}
       description:
@@ -1499,6 +1504,7 @@ artificer:
       kind: spell
       damage: 1d10
       damage_type: force
+      damage_tiers: {5: 2d10, 11: 3d10, 17: 4d10}
     repair_pulse:
       name: {es: Pulso Restaurador, en: Restoring Pulse}
       description:
@@ -1634,6 +1640,7 @@ shaman:
       kind: spell
       damage: 1d8
       damage_type: fire
+      damage_tiers: {5: 2d8, 11: 3d8, 17: 4d8}
     stoneskin:
       name: {es: Piel de Piedra, en: Stoneskin}
       description:

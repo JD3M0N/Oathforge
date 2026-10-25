@@ -205,6 +205,9 @@ class ClassAbility(Strict):
     generates: int = Field(0, ge=0)  # what using it puts back into the bar
     cooldown: int = Field(0, ge=0)  # turns of combat before it can be used again; never real seconds
     damage: str | None = None
+    # a free spell that grows with the hero: from each level on, these dice replace `damage`. Without it the
+    # everyday attack of a caster would stay at its level-1 size for ever and the Mana would be all they had.
+    damage_tiers: dict[int, str] = {}
     extra_damage: str | None = None
     damage_type: DamageType | None = None
     heal_per_level: int | None = None
@@ -212,6 +215,7 @@ class ClassAbility(Strict):
     heal_add: Literal["level", "casting"] | None = None
     status: Literal[
         "blessed", "stunned", "frightened", "asleep", "restrained", "inspired", "wild_shape", "hexed", "marked",
+        "vulnerable", "poisoned", "burning", "bleeding",
     ] | None = None
     status_turns: int = 1
     targets_type: CreatureType | None = None
@@ -231,6 +235,19 @@ class ClassAbility(Strict):
     bonus_damage: str | None = None  # once per turn on a melee weapon hit
     bonus_damage_type: DamageType | None = None
     ranged: bool = False  # strike: with the ranged weapon instead of the melee one
+    # a passive: weapon attacks use this ability if it is better than STR/DEX (the Hexblade fights with CHA)
+    attack_with: Literal["str", "dex", "int", "wis", "cha"] | None = None
+    # spend a status the target carries for extra damage (a mark, a burn, a seal): keeping it ticking is the other
+    # choice. The status goes away and `consume_damage` is added; without it the ability is just what it is.
+    consumes: Literal["marked", "hexed", "burning", "bleeding", "poisoned", "vulnerable", "restrained", "frightened",
+                      "stunned", "asleep"] | None = None
+    consume_damage: str | None = None
+    leech_pct: int = Field(0, ge=0, le=100)  # heal this share of the real damage this ability dealt
+    reduces_cooldowns: int = Field(0, ge=0)  # take this many turns off every OTHER cooldown of the hero
+    # a passive that answers a blow: damage back to the attacker, and/or what the bar gets for being hit.
+    # Each counts once per attack and only if damage was really taken; the answer never answers itself.
+    thorns: str | None = None
+    resource_on_hurt: int = Field(0, ge=0)
     entity: str | None = None  # summon / command: the template. A passive with it brings the permanent companion
     form: str | None = None  # shift
     boost_turns: int = Field(3, ge=1)  # converge
@@ -583,6 +600,13 @@ class AbilityPatch(Strict):
     cost: int = 0
     cooldown: int = 0
     status_turns: int = 0
+    # fixed replacements: the ability keeps its shape, with these dice instead
+    damage: str | None = None
+    extra_damage: str | None = None
+    consume_damage: str | None = None
+    heal_dice: str | None = None
+    temp_hp: str | None = None
+    leech_pct: int | None = None
 
 
 class Modifier(Strict):

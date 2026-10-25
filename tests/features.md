@@ -295,3 +295,18 @@ Brujo (Esencia), Explorador (Foco), Artífice (Carga), Chamán (Maná) y Caballe
 - [ ] Las mismas pantallas en español para las seis clases nuevas.
 - [ ] Un combate completo con Caballero de la Muerte (Poder rúnico desde cero) y con Artífice (Carga) (Telegram).
 - [ ] Integrar los seis retratos cuando existan (`TODO-images.md`).
+
+## 0.10-I · Las 41 ramas, lote A (B07, v0.10.32)
+
+Veinte ramas de daño, marcas, defensa y maniobras: Vengador, Custodio Sagrado, Inquisidor, Maestro de Batalla, Baluarte, Berserker, Coloso, Asesino, Duelista, Saboteador, Puño de Hierro, Danzante de Sombras, Piromante, Criomante, Arcanista, Tempestario, Tirador, Filo Maldito, Sangre y Escarcha.
+
+- [x] Cada rama lista tiene su recorrido entero: pasiva y técnica al 10, desarrollo al 15, dos modificadores en el 13 y dos en el 17, técnica culminante al 20 (automático).
+- [x] El camino llega a su nivel: a los 10, 13, 17 y 20 el personaje tiene exactamente lo que le toca (automático).
+- [x] Dos ramas de una misma clase no hacen las mismas decisiones: cada una aplica, gasta, responde, cura o protege de forma distinta (automático).
+- [x] Cada modificador cambia de verdad al personaje, y las dos opciones de un nivel no dan lo mismo (automático).
+- [x] Gastar un estado es una decisión real: sin el estado no se gasta nada, con él se gasta y hace daño (automático).
+- [x] El robo de vida cura solo de daño hecho, y la represalia responde solo a una herida real (automático).
+- [x] Ninguna rama es inútil contra un jefe de su nivel en los niveles 10, 13, 17 y 20 (simulador, automático).
+- [x] En Telegram: `/path` en el Gremio ofrece las ramas listas y bloquea las que no, la ficha enseña el recorrido entero, la confirmación es definitiva y `/skill_` explica «gasta la marca» y su coste (Telegram, ES).
+- [ ] Las mismas pantallas en inglés.
+- [ ] Un combate real con Vengador marcando y gastando la marca (Telegram).

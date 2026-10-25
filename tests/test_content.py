@@ -223,11 +223,11 @@ def test_the_catalogue_of_class_branches():
     per_class = {}
     for branch in c.class_specializations.values():
         per_class.setdefault(branch.class_key, []).append(branch)
-    assert len(per_class) == 14  # the eight of today plus the six that B06 will write
+    assert len(per_class) == 14  # the fourteen classes of B06
     assert set(per_class) - set(c.classes) == set(c.progression.future_classes)
-    for key, branch in c.class_specializations.items():
-        assert not branch.ready, f"{key}: no branch is playable before B07 finishes its 10-20 path"
     assert not set(c.class_specializations) & set(c.specializations)  # class branch vs mastery branch
+    for key, branch in c.class_specializations.items():  # a ready branch is a whole path; an unfinished one is empty
+        assert branch.ready or not (branch.abilities or branch.modifiers), f"{key}: half a path is worse than none"
 
 
 def test_progression_gates_and_resources():

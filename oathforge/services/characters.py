@@ -308,6 +308,9 @@ def attack_profiles(char: Character, gear: dict[str, ItemInstance]) -> list[Atta
         item = c.items[inst.item_key]
         w = item.weapon
         ability = m["dex"] if w.ranged else (max(m["str"], m["dex"]) if w.finesse else m["str"])
+        for p in class_passives(char):  # a trait that lets the hero fight with another ability (Hexblade: CHA)
+            if p.attack_with and not w.ranged:
+                ability = max(ability, m[p.attack_with])
         sign = "+" if ability >= 0 else "-"
         out.append(AttackProfile(
             key="main" if slot == "main_hand" else "ranged", name=item.name.model_dump(),
@@ -361,6 +364,9 @@ def combatant_from(char: Character, gear: dict[str, ItemInstance], skills: dict[
         crit_range=min([p.crit_range for p in passives if p.crit_range] or [20]),
         casting_mod=casting_mod, spell_to_hit=spell_to_hit, spell_dc=spell_dc,
         spell_damage_bonus=casting_mod if any(p.spell_damage_bonus for p in passives) else 0,
+        thorns=next((p.thorns for p in passives if p.thorns), None),
+        thorns_type=next((p.bonus_damage_type or "radiant" for p in passives if p.thorns), "radiant"),
+        resource_on_hurt=sum(p.resource_on_hurt for p in passives),
         bonus_damage=bonus.bonus_damage if bonus else None,
         bonus_damage_type=(bonus.bonus_damage_type or "radiant") if bonus else "radiant",
     )

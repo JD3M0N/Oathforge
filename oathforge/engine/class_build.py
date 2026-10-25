@@ -132,12 +132,29 @@ def chosen_modifiers(branch: ClassSpecialization, taken: Mapping[str, str]) -> d
     return out
 
 
-def _patched(ability: ClassAbility, cost: int, cooldown: int, status_turns: int) -> ClassAbility:
-    return ability.model_copy(update={
-        "cost": max(0, ability.cost + cost),
-        "cooldown": max(0, ability.cooldown + cooldown),
-        "status_turns": max(1, ability.status_turns + status_turns),
-    })
+def _patched(ability: ClassAbility, patch) -> ClassAbility:
+    """An ability with a modifier's fixed numbers applied: deltas never go below their floor, and replacement
+    dice only replace what the ability already had (a patch cannot invent a mechanic)."""
+    update = {
+        "cost": max(0, ability.cost + patch.cost),
+        "cooldown": max(0, ability.cooldown + patch.cooldown),
+        "status_turns": max(1, ability.status_turns + patch.status_turns),
+    }
+    for field in ("damage", "extra_damage", "consume_damage", "heal_dice", "temp_hp"):
+        value = getattr(patch, field)
+        if value is not None and getattr(ability, field) is not None:
+            update[field] = value
+    if patch.leech_pct is not None and ability.leech_pct:
+        update["leech_pct"] = patch.leech_pct
+    return ability.model_copy(update=update)
+
+
+def _at_level(ability: ClassAbility, level: int) -> ClassAbility:
+    """The dice of a growing spell at this level."""
+    if not ability.damage_tiers:
+        return ability
+    reached = [lvl for lvl in ability.damage_tiers if lvl <= level]
+    return ability.model_copy(update={"damage": ability.damage_tiers[max(reached)]}) if reached else ability
 
 
 def build_for(class_key: str, cls: GameClass, level: int, prog: Progression, *,
@@ -159,8 +176,9 @@ def build_for(class_key: str, cls: GameClass, level: int, prog: Progression, *,
         for mod in chosen_modifiers(branch, taken).values():
             for akey, patch in mod.patches.items():
                 if akey in abilities:
-                    abilities[akey] = _patched(abilities[akey], patch.cost, patch.cooldown, patch.status_turns)
+                    abilities[akey] = _patched(abilities[akey], patch)
             abilities.update({k: a for k, a in mod.grants.items() if a.level <= level})
+    abilities = {k: _at_level(a, level) for k, a in abilities.items()}
     bonuses = training_bonuses(taken, prog)
     return Build(
         level=level,

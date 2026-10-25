@@ -4,6 +4,26 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.32] - 2026-10-25
+
+0.10-I (B07, lote A): **por fin se puede elegir una rama de clase.** Veinte de las 41, las de daño, marcas, defensa y maniobras, ya tienen su recorrido entero del nivel 10 al 20.
+
+### Añadido
+- **Veinte ramas listas**, cada una con una pasiva y una técnica al 10, un desarrollo fijo al 15, dos modificadores a elegir en el 13 y otros dos en el 17, y una técnica culminante al 20: Vengador, Custodio Sagrado e Inquisidor (Paladín); Maestro de Batalla y Baluarte (Guerrero); Berserker y Coloso (Bárbaro); Asesino, Duelista y Saboteador (Pícaro); Puño de Hierro y Danzante de Sombras (Monje); Piromante, Criomante, Arcanista y Tempestario (Hechicero); Tirador (Explorador); Filo Maldito (Brujo); Sangre y Escarcha (Caballero de la Muerte). Las 21 restantes siguen sin poder elegirse y `/path` lo dice.
+- **Gastar un estado** (`consumes`): una técnica puede gastar una marca, una quemadura, una traba o un sello del objetivo a cambio de daño extra. Dejar que siga corriendo o gastarlo es la decisión del Vengador, el Piromante, el Criomante, el Maestro de Batalla, el Tirador o el Caballero de Escarcha.
+- **Represalia** (`thorns`, `resource_on_hurt`): una pasiva que responde a una herida real —el atacante recibe daño, la barra se llena—. Una vez por ataque, solo si el golpe hirió de verdad y sin que la respuesta se responda a sí misma. Para el Custodio, el Baluarte, el Coloso, la Sangre y el Tempestario.
+- **Robo de vida acotado** (`leech_pct`): cura una parte del daño real que hizo la técnica, nunca más de la vida máxima ni de un golpe fallado. Para la Sangre.
+- **Reducir enfriamientos** (`reduces_cooldowns`) y **barrera al curar** (un `temp_hp` en una curación solo si curó de verdad).
+- **Los modificadores pueden cambiar dados**, no solo costes y duraciones: «Veredicto pesado» cambia 3d8 por 5d8. Un parche solo sustituye lo que la habilidad ya tenía: no inventa una mecánica.
+- **Los trucos de los lanzadores escalan con el nivel** (`damage_tiers`): el Rayo de Fuego, la Llama Sagrada, el Látigo de Espinas, el Estallido, la Burla, la Descarga y la Chispa pasan a 2, 3 y 4 dados en los niveles 5, 11 y 17. Sin esto los lanzadores se quedaban sin nada que hacer al agotar el Maná.
+- **El Filo Maldito pelea con CAR** (`attack_with`), como pedía su identidad.
+- El **simulador** juega con rama, entrenamientos y modificadores (`oath simulate --branch avenger --level 10-20`) y sabe invocar, ordenar, converger y transformarse.
+- Más estados que una técnica puede aplicar: vulnerable, envenenado, ardiendo y sangrando.
+
+### Cambiado
+- `/path` ofrece de verdad las ramas listas de tu clase y deja las otras bloqueadas.
+- Las pruebas de ramas ya no dan por hecho que ninguna esté lista: usan ramas sintéticas.
+
 ## [0.10.31] - 2026-10-25
 
 0.10-I (B06, 3.ª parte): cierre de las clases base. Llegan el Explorador, el Artífice, el Chamán y el Caballero de la Muerte, y el Brujo pasa a su barra. **Ya son catorce, todas con su recurso y habilidades de nivel 1 a 9.**

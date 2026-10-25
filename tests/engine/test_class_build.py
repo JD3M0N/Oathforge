@@ -91,10 +91,10 @@ def test_a_branch_of_another_class_is_refused():
 
 def test_a_branch_that_is_not_ready_or_comes_too_early_does_not_apply():
     c, p = get_content(), prog()
-    avenger = c.class_specializations["avenger"]
+    unfinished = c.class_specializations["avenger"].model_copy(update={"ready": False})  # whatever the content says
     assert cb.build_for("paladin", c.classes["paladin"], 10, p,
-                        specialization="avenger", branch=avenger).specialization is None  # not ready yet
-    ready = avenger.model_copy(update={"ready": True})
+                        specialization="avenger", branch=unfinished).specialization is None  # not ready yet
+    ready = unfinished.model_copy(update={"ready": True})
     assert cb.build_for("paladin", c.classes["paladin"], 10, p,
                         specialization="avenger", branch=ready).specialization == "avenger"
     early = cb.build_for("paladin", c.classes["paladin"], p.specialization_level - 1, p,
