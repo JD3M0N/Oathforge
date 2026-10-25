@@ -171,7 +171,8 @@ async def test_level_up_cards_are_separate_messages(lang):
     aura = get_content().classes["paladin"].abilities["aura_of_resolve"]
     assert aura.description.get(lang) in cards[1]  # level 3 explains the new ability
     assert f"{start_hp} →" in cards[0]
-    assert "💪" in cards[2]  # level 4: attribute boost
+    assert "💪" not in cards[2]  # level 4 no longer raises an ability: the trainings replaced it
+    assert "/path" in cards[3]  # level 5 owes a training, and the card says where to pick it
 
 
 @pytest.mark.parametrize("lang", ["es", "en"])

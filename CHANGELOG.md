@@ -4,6 +4,24 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.27] - 2026-10-25
+
+0.10-I (B04): el camino de clase. La rama, los entrenamientos y los modificadores ya se eligen y cambian lo que el héroe puede hacer.
+
+### Añadido
+- **El catálogo efectivo único**: `characters.effective()` junta clase, rama, modificadores y entrenamientos, y es lo que leen el motor, la ficha, el descanso, las pociones, `/skill_<clave>` y la tarjeta de subida. Ya no hay listas paralelas.
+- **`/path` (🧭 Tu camino)**, también desde la ficha: tu rama, las elecciones pendientes, la ficha de cada opción con lo que de verdad hace y una **confirmación definitiva** («⚠️ No se puede deshacer»). La rama se elige al **nivel 10 en el Gremio**; los entrenamientos y los modificadores, en cualquier sitio.
+- **Entrenamientos en los niveles 5, 12 y 18**: dos paquetes, *Instinto afilado* (+1 a atacar y a la CD) y *Temple* (+8 PV y +2 de barra). Los PV nuevos son reales y no curan el resto; la barra no se rellena.
+- **Modificadores** (13 y 17): dos opciones fijas por nivel que afinan una habilidad (coste, enfriamiento, duración) o conceden otra nueva.
+- **Segunda elección gratuita**, una sola vez, si una actualización cambia de forma sustancial cómo juega tu rama (`revision`). Deshace los modificadores y conserva los entrenamientos.
+- El loader exige que una rama esté **completa para estar lista**: pasiva y técnica del 10, técnica culminante del 20 y exactamente dos modificadores en cada nivel de elección. Y que ninguna rama reutilice la clave de otra habilidad.
+
+### Cambiado
+- **Se retira la mejora de atributo del nivel 4** y el aviso de «pronto podrás elegir una especialización» del 5: los sustituyen los entrenamientos y el aviso del 10. El reglamento lo explica con las cifras del motor.
+- Las elecciones pendientes se encolan: saltar niveles de golpe no pierde ninguna.
+- Se quita el campo `specializations` de cada clase en `classes.yaml`, que eran solo nombres y contradecían el catálogo de 41 ramas.
+- Ninguna rama es elegible todavía (B07 les escribe el recorrido de 10 a 20), y `/path` lo dice en vez de ofrecer algo a medias.
+
 ## [0.10.26] - 2026-10-21
 
 ### Añadido

@@ -22,6 +22,7 @@ Versionado `0.x.y`: **y** (parche) en arreglos y cambios pequeños; **x** (menor
 | 0.8.3 | Planning reorganizado: Possibilium, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md`, `content/officina/` |
 | 0.9.0 | Logros e identidad: 30 logros, dos metalogros, títulos, destacados, objetivos seguidos y reconocimiento retroactivo verificable |
 | 0.9.1 | Hoja de ruta de 0.10 (consolidación) y 0.11 (multijugador): `planning/roadmap.md` |
+| 0.10.27 | 0.10-I (B04): el camino de clase —`/path`, entrenamientos 5/12/18, modificadores 13/17, rama al 10 y segunda elección gratuita— sobre un catálogo efectivo único |
 | 0.10.26 | Trasfondos propios adaptados al canon: guía bilingüe de Aetherfall, propuestas confirmables y temas adultos no explícitos |
 | 0.10.25 | 0.10-I (B03): la barra de clase en el motor (coste, generación, enfriamientos por turno), Guerrero con Foco y Hechicero con Maná, y los jefes que no se encadenan |
 | 0.10.24 | 0.10-I (B02): el nivel necesita XP y un hito narrativo, y las misiones se entregan y se cobran en persona |

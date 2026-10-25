@@ -151,9 +151,9 @@ def spent_abilities(char: Character, spells_only: bool) -> list[tuple[str, int]]
     if spells_only and not cls.casting:
         return []
     out = []
-    for key, a in cls.abilities.items():
+    for key, a in characters.abilities_of(char).items():
         left = char.resources.get(key)
-        if a.uses and a.level <= char.level and a.kind != "passive" and left is not None and left < a.uses:
+        if a.uses and a.kind != "passive" and left is not None and left < a.uses:
             out.append((key, a.uses - left))
     return sorted(out, key=lambda kv: -kv[1])
 
@@ -177,7 +177,7 @@ def _restore_pool(char: Character, amount: int, out: Outcome) -> None:
 
 
 def _restore_use(char: Character, key: str, amount: int, out: Outcome) -> None:
-    a = get_content().classes[char.class_key].abilities[key]
+    a = characters.abilities_of(char)[key]
     char.resources = {**char.resources, key: min(a.uses, char.resources[key] + amount)}
     out.add("inv.use_restored", ability=a.name.model_dump(), uses=char.resources[key], max=a.uses)
 

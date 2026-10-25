@@ -499,16 +499,9 @@ def _class_progression_errors(c: Content) -> list[str]:
         if cls.resource is None and cls.resource_on_attack:
             errors.append(f"class {key}: it generates on attack but has no bar to put it in")
         for akey, a in cls.abilities.items():
-            where = f"class {key} ability {akey}"
-            if a.kind == "passive" and (a.cost or a.generates or a.cooldown):
-                errors.append(f"{where}: a passive neither costs nor generates nor cools down")
-            if cls.resource is None and (a.cost or a.generates):
-                errors.append(f"{where}: it uses a bar, but {key} has none")
-            if cls.resource is not None and a.uses is not None:
-                errors.append(f"{where}: {key} pays with {cls.resource}, not with uses per rest")
-            top = class_build.resource_max(prog.resources[cls.resource], a.level) if cls.resource else 0
-            if cls.resource is not None and a.cost > top:
-                errors.append(f"{where}: it costs {a.cost}, more than the {top} the bar holds at level {a.level}")
+            errors += _ability_errors(prog, cls.resource, f"class {key} ability {akey}", key, a)
+    if prog.training_levels and not prog.trainings:
+        errors.append("progression: there are training levels but no training packages")
     clash = set(c.class_specializations) & set(c.specializations)
     if clash:
         errors.append(f"class branch and mastery branch share an id: {sorted(clash)}")
@@ -519,9 +512,83 @@ def _class_progression_errors(c: Content) -> list[str]:
         elif branch.class_key in future and branch.ready:
             errors.append(f"class branch {key}: its class '{branch.class_key}' does not exist yet, it cannot be ready")
         branches.setdefault(branch.class_key, []).append(key)
+        errors += _branch_errors(c, prog, key, branch)
+    errors += _unique_ability_errors(c)
     for key in c.classes:
         if c.class_specializations and key not in branches:
             errors.append(f"class {key}: it has no branch to choose at level {prog.specialization_level}")
+    return errors
+
+
+def _ability_errors(prog, resource: str | None, where: str, owner: str, a) -> list[str]:
+    """What an ability may cost, whoever owns it: a class, a branch or a modifier."""
+    errors = []
+    if a.kind == "passive" and (a.cost or a.generates or a.cooldown):
+        errors.append(f"{where}: a passive neither costs nor generates nor cools down")
+    if resource is None and (a.cost or a.generates):
+        errors.append(f"{where}: it uses a bar, but {owner} has none")
+    if resource is not None and a.uses is not None:
+        errors.append(f"{where}: {owner} pays with {resource}, not with uses per rest")
+    top = class_build.resource_max(prog.resources[resource], a.level) if resource in prog.resources else 0
+    if resource is not None and a.cost > top:
+        errors.append(f"{where}: it costs {a.cost}, more than the {top} the bar holds at level {a.level}")
+    return errors
+
+
+def _branch_errors(c: Content, prog, key: str, branch: ClassSpecialization) -> list[str]:
+    """A branch is playable only with its whole 10-20 path (roadmap_balance §5.2 and §13.1)."""
+    errors: list[str] = []
+    cls = c.classes.get(branch.class_key)
+    resource = cls.resource if cls else None
+    first, last = prog.specialization_level, len(prog.xp)
+    for akey, a in branch.abilities.items():
+        where = f"class branch {key} ability {akey}"
+        if a.level < first:
+            errors.append(f"{where}: a branch gives nothing before level {first}")
+        errors += _ability_errors(prog, resource, where, branch.class_key, a)
+    known = set(branch.abilities) | (set(cls.abilities) if cls else set())
+    for mkey, mod in branch.modifiers.items():
+        where = f"class branch {key} modifier {mkey}"
+        if mod.level not in prog.modifier_levels:
+            errors.append(f"{where}: level {mod.level} is not one of the modifier levels {prog.modifier_levels}")
+        for target in mod.patches:
+            if target not in known:
+                errors.append(f"{where}: it tunes '{target}', which the branch does not have")
+        for akey, a in mod.grants.items():
+            if a.level < mod.level:
+                errors.append(f"{where}: it grants '{akey}' at level {a.level}, before its own level {mod.level}")
+            errors += _ability_errors(prog, resource, f"{where} grants {akey}", branch.class_key, a)
+    if not branch.ready:
+        return errors
+    live = [a for a in branch.abilities.values()]
+    if not any(a.level == first and a.kind == "passive" for a in live):
+        errors.append(f"class branch {key}: ready, but it has no passive for level {first}")
+    if not any(a.level == first and a.kind != "passive" for a in live):
+        errors.append(f"class branch {key}: ready, but it has no technique for level {first}")
+    if not any(a.level == last and a.kind != "passive" for a in live):
+        errors.append(f"class branch {key}: ready, but it has no culminating technique for level {last}")
+    for lvl in prog.modifier_levels:
+        n = sum(1 for m in branch.modifiers.values() if m.level == lvl)
+        if n != 2:
+            errors.append(f"class branch {key}: ready, but level {lvl} has {n} modifiers, not two")
+    return errors
+
+
+def _unique_ability_errors(c: Content) -> list[str]:
+    """A branch never reuses the key of another ability: the logs, /skill_<key> and the buttons would not
+    know which one is meant. (Classes may share a key on purpose, like Extra Attack.)"""
+    owners: dict[str, set[str]] = {}
+    for ckey, cls in c.classes.items():
+        for akey in cls.abilities:
+            owners.setdefault(akey, set()).add(f"class {ckey}")
+    errors = []
+    for bkey, branch in c.class_specializations.items():
+        mine = [*branch.abilities, *(k for m in branch.modifiers.values() for k in m.grants)]
+        for akey in mine:
+            other = owners.get(akey, set()) - {f"branch {bkey}"}
+            if other:
+                errors.append(f"ability '{akey}' of branch {bkey} is already defined by {sorted(other)[0]}")
+            owners.setdefault(akey, set()).add(f"branch {bkey}")
     return errors
 
 

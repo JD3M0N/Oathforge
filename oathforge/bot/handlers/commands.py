@@ -307,6 +307,7 @@ def handlers() -> list[BaseHandler]:
         CommandHandler("inventory", _view(render.inventory_view)),
         CommandHandler("journal", _view(render.journal)),
         CommandHandler("quests", _view(render.missions)),
+        CommandHandler("path", _view(render.path_view)),
         CommandHandler(["rulebook", "rules"], rulebook),
         CommandHandler(["lineage", "race"], lineages),
         CommandHandler("background", backgrounds),

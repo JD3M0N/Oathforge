@@ -4,6 +4,7 @@
 cmd:
   activities: "Actividades: qué puedes hacer aquí"
   masteries: "Maestrías de campo"
+  path: "Tu camino: rama y elecciones"
   hobbies: "Aficiones: cocina y pesca"
   achievements: Logros, títulos y objetivos
   start: "Empezar o volver a la escena"
@@ -155,6 +156,8 @@ btn:
   investigate: "🔎 Investigar"
   talk: "💬 Hablar"
   turn_in: "📜 Entregar: {quest}"
+  path: "🧭 Tu camino ({n})"
+  path_plain: "🧭 Tu camino"
   shop: "🛒 Comerciar"
   rest: "🛏️ Descanso largo ({cost} 🪙)"
   rest_free: "🛏️ Descanso largo (gratis)"
@@ -559,9 +562,9 @@ progress:
   xp: "✨ +{amount} XP."
   level_up: "🎉 ¡Subes a nivel {level}! PV máximos: {max_hp}."
   new_ability: "🌟 Nueva habilidad: {ability}."
-  asi: "Tu {ability} aumenta en 2."
   skill_rank: "Tu dominio de {skill} mejora (rango {rank})."
-  specialization_soon: "Has alcanzado el nivel 5. Pronto podrás elegir una especialización."
+  path_open: "🧭 Has llegado al nivel 10: ya puedes elegir tu rama en el Gremio. Mira /path."
+  choice: "🧭 Tienes una elección pendiente. Mira /path."
   milestone: "🏅 Un paso que no se olvida: {milestone}."
 
 level_card:
@@ -800,7 +803,7 @@ classes:
   items: "🎒 Equipo inicial: {list}"
   abilities: "✨ Habilidades de clase"
   level: "Nv {level}"
-  specializations: "🌟 <b>Especializaciones (nivel 5)</b>"
+  specializations: "🌟 <b>Ramas (nivel {level})</b>"
 
 report:
   title: "📊 <b>Resumen de batalla</b> · {place}"
@@ -1134,3 +1137,41 @@ achievements:
     story: 📜 Historia
     knowledge: 📚 Conocimiento
     curiosity: 🎭 Curiosidades
+
+path:
+  title: "🧭 <b>Tu camino</b>"
+  yours: "Tu rama: <b>{branch}</b> · {roles}"
+  reroll_hint: "El Gremio revisó esta rama y cambió cómo se juega. Puedes elegir otra, una sola vez y gratis."
+  open: "Has llegado al nivel {level}: es hora de elegir tu rama. Es para siempre."
+  open_where: "Se elige en el Gremio de Aventureros. Ve allí y vuelve a abrir esto."
+  open_here: "Estás en el Gremio. Mira las ramas de tu clase:"
+  none_ready: "Ninguna rama de tu clase está lista todavía. El Gremio aún las está terminando; vuelve en una actualización próxima."
+  locked: "Tu rama se elige al nivel {level}. Ahora eres de nivel {level_now}."
+  owed: "Elecciones pendientes"
+  taken: "Lo que has elegido"
+  modifier: "modificador"
+  pick:
+    training: "🎯 Entrenamiento (nivel {level})"
+    modifier: "✨ Modificador (nivel {level})"
+  ask:
+    training: "🎯 <b>Entrenamiento del nivel {level}</b>. Elige uno; es definitivo."
+    modifier: "✨ <b>Modificador del nivel {level}</b>. Elige uno; es definitivo."
+  role:
+    dmg: "daño"
+    deff: "defensa"
+    heal: "recuperación"
+    control: "control"
+  confirm_branch: "¿Tomar el camino de <b>{branch}</b>?"
+  confirm_reroll: "¿Cambiar a <b>{branch}</b>? Pierdes los modificadores de tu rama anterior y conservas los entrenamientos."
+  confirm_pick: "¿Elegir <b>{name}</b>?"
+  final: "⚠️ No se puede deshacer."
+  chosen: "🧭 Tomas el camino de {branch}."
+  picked: "✅ Elegiste: {name}."
+  err:
+    unknown: "Esa opción no existe para ti."
+    level: "Tu rama se elige al nivel {level}."
+    not_guild: "Eso se decide en el Gremio de Aventureros."
+    already: "Ya tomaste tu camino. No se cambia."
+    not_ready: "Esa rama todavía no está lista."
+    no_reroll: "No tienes una segunda elección disponible."
+    no_choice: "No tienes esa elección pendiente."

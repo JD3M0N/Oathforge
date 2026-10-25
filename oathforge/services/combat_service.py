@@ -19,7 +19,7 @@ from oathforge.services.events import Event, Outcome, render_event
 
 
 def ability_defs(char: Character) -> dict:
-    return dict(get_content().classes[char.class_key].abilities)
+    return characters.abilities_of(char)  # class, branch, modifiers: the one catalogue
 
 
 def monster_combatant(key: str, cid: str) -> Combatant:
@@ -248,7 +248,7 @@ def log_event(state: EncounterState, entry: LogEntry) -> Event:
     if "item" in p and p["item"] in c.items:
         p["item"] = c.items[p["item"]].name.model_dump()
     if "ability" in p:
-        ability = next((cls.abilities[p["ability"]] for cls in c.classes.values() if p["ability"] in cls.abilities), None)
+        ability = characters.find_ability(p["ability"])
         p["ability"] = ability.name.model_dump() if ability else p["ability"]
     if "object" in p:
         obj = c.locations[state.location].scene_objects.get(p["object"]) if state.location in c.locations else None

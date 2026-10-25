@@ -54,11 +54,6 @@ paladin:
       kind: passive
       action: none
       extra_attack: true
-  specializations:
-    vengeance: {es: Juramento de Venganza, en: Oath of Vengeance}
-    protection: {es: Guardián Sagrado, en: Sacred Guardian}
-    redemption: {es: Redentor, en: Redeemer}
-    inquisition: {es: Inquisidor, en: Inquisitor}
 
 rogue:
   name: {es: Pícaro, en: Rogue}
@@ -104,11 +99,6 @@ rogue:
       kind: passive
       action: none
       halve_first_hit: true
-  specializations:
-    assassin: {es: Asesino, en: Assassin}
-    spy: {es: Espía, en: Spy}
-    duelist: {es: Duelista, en: Duelist}
-    trapper: {es: Trampero, en: Trapper}
 
 warrior:
   name: {es: Guerrero, en: Warrior}
@@ -179,11 +169,6 @@ warrior:
       kind: passive
       action: none
       extra_attack: true
-  specializations:
-    champion: {es: Campeón, en: Champion}
-    battle_master: {es: Maestro de Batalla, en: Battle Master}
-    guardian: {es: Guardián, en: Guardian}
-    berserker: {es: Berserker, en: Berserker}
 
 cleric:
   name: {es: Clérigo, en: Cleric}
@@ -257,11 +242,6 @@ cleric:
       action: none
       bonus_damage: 1d8
       bonus_damage_type: radiant
-  specializations:
-    life: {es: Dominio de la Vida, en: Life Domain}
-    light: {es: Dominio de la Luz, en: Light Domain}
-    war: {es: Dominio de la Guerra, en: War Domain}
-    grave: {es: Dominio de la Tumba, en: Grave Domain}
 
 sorcerer:
   name: {es: Hechicero, en: Sorcerer}
@@ -337,11 +317,6 @@ sorcerer:
       auto_hit: true
       damage: 3d4+3
       damage_type: force
-  specializations:
-    pyromancer: {es: Piromante, en: Pyromancer}
-    cryomancer: {es: Criomante, en: Cryomancer}
-    arcanist: {es: Arcanista, en: Arcanist}
-    chronomancer: {es: Cronomante, en: Chronomancer}
 
 druid:
   name: {es: Druida, en: Druid}
@@ -415,11 +390,6 @@ druid:
       kind: passive
       action: none
       spell_damage_bonus: true
-  specializations:
-    shapeshifter: {es: Cambiaformas, en: Shapeshifter}
-    warden: {es: Guardián, en: Warden}
-    summoner: {es: Invocador, en: Summoner}
-    spores: {es: Esporas, en: Spores}
 
 bard:
   name: {es: Bardo, en: Bard}
@@ -495,11 +465,6 @@ bard:
       kind: passive
       action: none
       halve_first_hit: true
-  specializations:
-    illusionist: {es: Ilusionista, en: Illusionist}
-    diplomat: {es: Diplomático, en: Diplomat}
-    war_chanter: {es: Cantor de Guerra, en: War Chanter}
-    trickster: {es: Embaucador, en: Trickster}
 
 warlock:
   name: {es: Brujo, en: Warlock}
@@ -575,8 +540,3 @@ warlock:
       kind: passive
       action: none
       spell_damage_bonus: true
-  specializations:
-    fiend: {es: Pactista Infernal, en: Fiend Pact}
-    necromancer: {es: Nigromante, en: Necromancer}
-    hexblade: {es: Filo Maldito, en: Hexblade}
-    void: {es: Vacío, en: Void}

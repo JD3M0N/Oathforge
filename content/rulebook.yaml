@@ -26,10 +26,10 @@ abilities:
   body:
     es: |-
       Seis atributos describen a tu héroe. Cada uno da un modificador: (atributo − 10) ÷ 2, redondeando hacia abajo. 10 da +0, 14 da +2, 16 da +3, 8 da −1.
-      Se reparten al crear el personaje con {points} puntos (como en D&D) más el bonificador de tu linaje. A nivel {asi_level}, tu atributo principal sube +2.
+      Se reparten al crear el personaje con {points} puntos (como en D&D) más el bonificador de tu linaje. En los niveles {training_levels} eliges un entrenamiento, y al nivel {branch_level} tu rama de clase (mira /path).
     en: |-
       Six abilities describe your hero. Each gives a modifier: (score − 10) ÷ 2, rounded down. 10 gives +0, 14 gives +2, 16 gives +3, 8 gives −1.
-      You assign them at creation with {points} points (as in D&D) plus your lineage bonus. At level {asi_level} your primary ability rises by +2.
+      You assign them at creation with {points} points (as in D&D) plus your lineage bonus. At levels {training_levels} you pick a training, and at level {branch_level} your class branch (see /path).
 
 armor:
   icon: "🛡️"

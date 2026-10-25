@@ -185,7 +185,6 @@ class GameClass(Strict):
     items: dict[str, int]
     equip: list[str]
     abilities: dict[str, ClassAbility]
-    specializations: dict[str, Text] = {}
 
     @field_validator("array")
     @classmethod
@@ -512,11 +511,34 @@ class ResourceDef(Strict):
     starts_empty: bool = False  # Fury and the like begin a fight at zero and are built up
 
 
+class AbilityPatch(Strict):
+    """Fixed numbers a modifier moves on an ability that already exists. Never a formula."""
+
+    cost: int = 0
+    cooldown: int = 0
+    status_turns: int = 0
+
+
+class Modifier(Strict):
+    """One of the two options the hero picks at level 13 and again at 17: fixed, and kept.
+
+    It tunes abilities the hero already has (``patches``) and/or gives a new one (``grants``).
+    """
+
+    level: int = Field(ge=1, le=MAX_CHARACTER_LEVEL)
+    name: Text
+    description: Text
+    patches: dict[str, AbilityPatch] = {}
+    grants: dict[str, ClassAbility] = {}
+
+
 class ClassSpecialization(Strict):
     """One of the 41 class branches, chosen at level 10 and kept (see planning/roadmap_balance.md §6).
 
     It is a different thing from ``Specialization``, which is a branch of a field mastery.
-    ``ready`` stays false until the branch has its whole 10-20 path, so it cannot be picked yet.
+    ``ready`` stays false until the branch has its whole 10-20 path, so it cannot be picked yet:
+    the passive and the technique of level 10, the fixed development, two options at each modifier
+    level and the culminating technique of level 20.
     """
 
     class_key: str
@@ -524,6 +546,28 @@ class ClassSpecialization(Strict):
     description: Text  # its loop: what decision the branch gives the player
     roles: list[Role] = Field(min_length=1, max_length=2)
     ready: bool = False
+    # bumped when an update substantially changes how the branch plays: whoever chose it earlier
+    # may then choose again once, for free (roadmap_balance D09)
+    revision: int = Field(1, ge=1)
+    abilities: dict[str, ClassAbility] = {}  # levels 10-20
+    modifiers: dict[str, Modifier] = {}
+
+
+class TrainingEffects(Strict):
+    """What a training package changes in the numbers, so the hero sees HP, attack, DC or bar move."""
+
+    max_hp: int = Field(0, ge=0)
+    to_hit: int = Field(0, ge=0)  # weapon and spell attacks
+    spell_dc: int = Field(0, ge=0)
+    resource_max: int = Field(0, ge=0)
+
+
+class Training(Strict):
+    """A package offered at levels 5, 12 and 18: an offensive one and a resilient or secondary one."""
+
+    name: Text
+    description: Text
+    effects: TrainingEffects
 
 
 class Milestone(Strict):
@@ -548,6 +592,7 @@ class Progression(Strict):
     base_cap: int = Field(MAX_CHARACTER_LEVEL, ge=1, le=MAX_CHARACTER_LEVEL)  # the cap with no milestone done
     milestones: dict[str, Milestone] = {}
     resources: dict[str, ResourceDef] = {}
+    trainings: dict[str, Training] = {}  # every training level offers all of them
     # classes approved in roadmap_balance §6 that B06 has not written yet: their branches load and
     # validate, but none of them may be ready, so nobody can pick one.
     future_classes: list[str] = []

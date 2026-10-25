@@ -217,3 +217,18 @@ Recorrido completo, con la cuenta de prueba, en ES y EN. Lo marcado (automático
 - [x] El registro dice «−4 Foco (0 restante)» con el nombre traducido, no la clave (Telegram, ES y EN).
 - [ ] Un combate completo con Hechicero gastando Maná hasta quedarse en el Rayo de Fuego (Telegram).
 - [ ] Migración 0014 en una base de prueba, con su `downgrade`.
+
+## 0.10-I · El camino de clase (B04, v0.10.27)
+
+### Rama, entrenamientos y modificadores
+- [x] La rama se elige al 10, en el Gremio, una vez; con nivel bajo, lejos del Gremio, de otra clase o sin estar lista se rechaza sin escribir (automático).
+- [x] Elegir rama cambia el catálogo en el motor, la ficha, el descanso y `/skill_<clave>`, y no recarga barra, usos ni vida (automático).
+- [x] Entrenamiento del 5: PV, ataque, CD y barra cambian de verdad; los PV nuevos son reales y no curan el resto (automático).
+- [x] Un entrenamiento no se toma dos veces, ni antes de su nivel, ni con una opción inventada (automático).
+- [x] Saltar niveles encola los entrenamientos: del 4 al 13 de golpe no pierde el del 5 ni el del 12 (automático).
+- [x] Un modificador afina una habilidad o concede otra; el de otro nivel o rama se rechaza; dos toques aplican uno (automático).
+- [x] La segunda elección gratuita solo existe tras revisar la rama, es de un solo uso y conserva los entrenamientos (automático).
+- [x] Dos modificadores a la vez dejan uno aplicado (PostgreSQL, automático).
+- [x] `/path`: rama, elecciones pendientes, ficha de opciones y confirmación definitiva; el botón viejo ya no existe (Telegram, ES).
+- [ ] `/path` en inglés y la tarjeta de subida del 5 con su aviso (Telegram, EN).
+- [ ] Elegir una rama de verdad en el Gremio (pendiente de B07: ninguna rama está lista).

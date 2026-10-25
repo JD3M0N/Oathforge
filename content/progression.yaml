@@ -113,3 +113,20 @@ resources:
 # Las seis clases nuevas que aprueba roadmap_balance §6 y que todavía no existen en classes.yaml.
 # Sus ramas cargan y se validan, pero ninguna puede estar lista hasta que B06 escriba la clase.
 future_classes: [barbarian, ranger, monk, artificer, shaman, death_knight]
+
+# Entrenamientos: en cada nivel de training_levels (5, 12 y 18) el jugador elige UNO de estos dos paquetes.
+# Se suman: tres elecciones son tres paquetes. Sustituyen a la mejora de atributo del nivel 4.
+# Cifras semilla; el paquete resistente vale lo mismo que el ofensivo en poder, no en estilo.
+trainings:
+  keen:
+    name: {es: Instinto afilado, en: Keen edge}
+    description:
+      es: "Entrenas para golpear donde duele: +1 a las tiradas de ataque, con arma o con conjuro, y +1 a la CD de tus conjuros."
+      en: "You train to strike where it hurts: +1 to attack rolls, weapon or spell, and +1 to your spell DC."
+    effects: {to_hit: 1, spell_dc: 1}
+  hardy:
+    name: {es: Temple, en: Hardiness}
+    description:
+      es: "Entrenas para aguantar: +8 PV máximos y +2 a lo que cabe en tu barra de clase."
+      en: "You train to endure: +8 max HP and +2 to what your class bar can hold."
+    effects: {max_hp: 8, resource_max: 2}

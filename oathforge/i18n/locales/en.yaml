@@ -4,6 +4,7 @@
 cmd:
   activities: "Activities: what you can do here"
   masteries: "Field masteries"
+  path: "Your path: branch and choices"
   hobbies: "Hobbies: cooking and fishing"
   achievements: Achievements, titles and objectives
   start: "Start or return to the scene"
@@ -155,6 +156,8 @@ btn:
   investigate: "🔎 Investigate"
   talk: "💬 Talk"
   turn_in: "📜 Hand in: {quest}"
+  path: "🧭 Your path ({n})"
+  path_plain: "🧭 Your path"
   shop: "🛒 Trade"
   rest: "🛏️ Long rest ({cost} 🪙)"
   rest_free: "🛏️ Long rest (free)"
@@ -559,9 +562,9 @@ progress:
   xp: "✨ +{amount} XP."
   level_up: "🎉 You reach level {level}! Max HP: {max_hp}."
   new_ability: "🌟 New ability: {ability}."
-  asi: "Your {ability} increases by 2."
   skill_rank: "Your mastery of {skill} improves (rank {rank})."
-  specialization_soon: "You reached level 5. Soon you will be able to choose a specialization."
+  path_open: "🧭 You reached level 10: you can choose your branch at the Guild now. See /path."
+  choice: "🧭 You have a choice waiting. See /path."
   milestone: "🏅 A step nobody forgets: {milestone}."
 
 level_card:
@@ -800,7 +803,7 @@ classes:
   items: "🎒 Starting gear: {list}"
   abilities: "✨ Class abilities"
   level: "Lv {level}"
-  specializations: "🌟 <b>Specializations (level 5)</b>"
+  specializations: "🌟 <b>Branches (level {level})</b>"
 
 report:
   title: "📊 <b>Battle summary</b> · {place}"
@@ -1134,3 +1137,41 @@ achievements:
     story: 📜 Story
     knowledge: 📚 Knowledge
     curiosity: 🎭 Curiosities
+
+path:
+  title: "🧭 <b>Your path</b>"
+  yours: "Your branch: <b>{branch}</b> · {roles}"
+  reroll_hint: "The Guild reviewed this branch and changed how it plays. You may choose another, once and for free."
+  open: "You reached level {level}: time to choose your branch. It is for good."
+  open_where: "It is chosen at the Adventurers' Guild. Go there and open this again."
+  open_here: "You are at the Guild. Look at the branches of your class:"
+  none_ready: "No branch of your class is ready yet. The Guild is still finishing them; come back after a coming update."
+  locked: "Your branch is chosen at level {level}. You are level {level_now} now."
+  owed: "Choices waiting"
+  taken: "What you chose"
+  modifier: "modifier"
+  pick:
+    training: "🎯 Training (level {level})"
+    modifier: "✨ Modifier (level {level})"
+  ask:
+    training: "🎯 <b>Level {level} training</b>. Pick one; it is final."
+    modifier: "✨ <b>Level {level} modifier</b>. Pick one; it is final."
+  role:
+    dmg: "damage"
+    deff: "defense"
+    heal: "recovery"
+    control: "control"
+  confirm_branch: "Take the path of <b>{branch}</b>?"
+  confirm_reroll: "Switch to <b>{branch}</b>? You lose the modifiers of your old branch and keep your trainings."
+  confirm_pick: "Choose <b>{name}</b>?"
+  final: "⚠️ This cannot be undone."
+  chosen: "🧭 You take the path of {branch}."
+  picked: "✅ You chose: {name}."
+  err:
+    unknown: "That option does not exist for you."
+    level: "Your branch is chosen at level {level}."
+    not_guild: "That is decided at the Adventurers' Guild."
+    already: "You already took your path. It does not change."
+    not_ready: "That branch is not ready yet."
+    no_reroll: "You have no second choice available."
+    no_choice: "You do not have that choice pending."

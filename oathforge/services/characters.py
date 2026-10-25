@@ -16,7 +16,6 @@ from oathforge.services.events import Outcome
 
 NAME_MAX = 24
 DEFEAT_GOLD_PCT = 10  # a defeat costs this share of the gold you carry
-ASI_LEVEL = 4  # the level that raises the class's primary ability by 2
 
 
 # ---------------------------------------------------------------- users
@@ -144,8 +143,27 @@ async def create_character(
 
 
 def full_resources(class_key: str, level: int) -> dict[str, int | None]:
+    """Uses of the base class at that level, for anyone who has no character yet (creation, tests, simulator)."""
     cls = get_content().classes[class_key]
     return {k: a.uses for k, a in cls.abilities.items() if a.level <= level and a.kind != "passive"}
+
+
+def sync_resources(char: Character) -> None:
+    """Make ``char.resources`` match the effective abilities after the catalogue changed (a branch, a
+    modifier, a level). What the hero already has is kept as it is, so choosing never recharges anything."""
+    old = char.resources or {}
+    new: dict[str, int | None] = {}
+    for key, a in effective(char).abilities.items():
+        if a.kind == "passive":
+            continue
+        left = old.get(key, a.uses)
+        new[key] = min(left, a.uses) if left is not None and a.uses is not None else left
+    char.resources = new
+
+
+def refill_resources(char: Character) -> None:
+    """A rest gives back every use, branch abilities included."""
+    char.resources = {k: a.uses for k, a in effective(char).abilities.items() if a.kind != "passive"}
 
 
 # ---------------------------------------------------------------- derived stats
@@ -181,9 +199,51 @@ async def equipped(session: AsyncSession, char: Character) -> dict[str, ItemInst
     return {r.equipped_slot: r for r in rows}
 
 
+def taken_of(char: Character) -> dict[str, str]:
+    """The training and modifier choices already made: {"training:5": "keen", "modifier:13": …}."""
+    return dict(build_of(char).get(CHOICES, {}))
+
+
+def effective(char: Character) -> class_build.Build:
+    """What this hero can really do now: class, branch, modifiers and trainings. The single answer for
+    the engine, the sheet, the rest, the consumables, the simulator and the reports."""
+    c = get_content()
+    prog = c.progression
+    return class_build.build_for(
+        char.class_key, c.classes[char.class_key], char.level, prog,
+        specialization=char.specialization, branch=c.class_specializations.get(char.specialization or ""),
+        taken=taken_of(char), resource=resource_def(char),
+    )
+
+
+def abilities_of(char: Character) -> dict:
+    return dict(effective(char).abilities)
+
+
+def find_ability(key: str | None):
+    """An ability by its key, wherever it lives: a class, a branch or something a modifier grants."""
+    if not key:
+        return None
+    c = get_content()
+    for cls in c.classes.values():
+        if key in cls.abilities:
+            return cls.abilities[key]
+    for branch in c.class_specializations.values():
+        if key in branch.abilities:
+            return branch.abilities[key]
+        for mod in branch.modifiers.values():
+            if key in mod.grants:
+                return mod.grants[key]
+    return None
+
+
+def bonus_of(char: Character, name: str) -> int:
+    """A summed training effect: max_hp, to_hit, spell_dc or resource_max."""
+    return effective(char).bonuses.get(name, 0)
+
+
 def class_passives(char: Character) -> list:
-    cls = get_content().classes[char.class_key]
-    return [a for a in cls.abilities.values() if a.kind == "passive" and a.level <= char.level]
+    return list(effective(char).passives().values())
 
 
 def immunities(char: Character) -> list[str]:
@@ -196,7 +256,7 @@ def spell_stats(char: Character) -> tuple[int, int, int]:
     cls = get_content().classes[char.class_key]
     casting = mods(char)[cls.casting] if cls.casting else 0
     pb = proficiency_bonus(char.level)
-    return casting, casting + pb, 8 + casting + pb
+    return casting, casting + pb + bonus_of(char, "to_hit"), 8 + casting + pb + bonus_of(char, "spell_dc")
 
 
 def armor_class(char: Character, gear: dict[str, ItemInstance]) -> int:
@@ -217,7 +277,7 @@ def armor_class(char: Character, gear: dict[str, ItemInstance]) -> int:
 def attack_profiles(char: Character, gear: dict[str, ItemInstance]) -> list[AttackProfile]:
     c = get_content()
     m = mods(char)
-    pb = proficiency_bonus(char.level)
+    pb = proficiency_bonus(char.level) + bonus_of(char, "to_hit")
     out = []
     for slot in ("main_hand", "ranged"):
         inst = gear.get(slot)
@@ -289,6 +349,8 @@ def combatant_from(char: Character, gear: dict[str, ItemInstance], skills: dict[
 BUILD_VERSION = 1
 POOLS_VERSION = 1
 MILESTONES = "milestones"  # char.build: the narrative gates already crossed
+CHOICES = "choices"  # char.build: {"training:5": "keen", "modifier:13": "…"}
+BRANCH_REV = "branch_rev"  # char.build: the revision of the branch the hero chose
 
 
 def build_of(char: Character) -> dict:
@@ -303,7 +365,12 @@ def resource_def(char: Character):
 
 def resource_max(char: Character) -> int:
     res = resource_def(char)
-    return class_build.resource_max(res, char.level) if res else 0
+    return class_build.resource_max(res, char.level) + _training_total(char, "resource_max") if res else 0
+
+
+def _training_total(char: Character, name: str) -> int:
+    """Training effects without building the whole catalogue (the bar's top is read while building it)."""
+    return class_build.training_bonuses(taken_of(char), get_content().progression)[name]
 
 
 def pool_of(char: Character) -> int:
@@ -367,32 +434,35 @@ def grant_milestone(char: Character, key: str, out: Outcome) -> bool:
     return True
 
 
+def max_hp_for(char: Character, level: int | None = None) -> int:
+    """Hit points at a level: the hit die, the CON modifier and whatever the trainings added."""
+    cls = get_content().classes[char.class_key]
+    base = progression.max_hp(cls.hit_die, modifier(char.abilities["con"]), level or char.level)
+    return base + _training_total(char, "max_hp")
+
+
 def apply_levels(char: Character, out: Outcome) -> None:
     """Raise the hero to the level they are entitled to. Called after XP and after a milestone."""
     c = get_content()
-    cls = c.classes[char.class_key]
+    prog = c.progression
     target = eligible_level(char)
     while char.level < target:
         char.level += 1
-        if char.level == ASI_LEVEL:
-            scores = dict(char.abilities)
-            scores[cls.primary] = min(20, scores[cls.primary] + 2)
-            char.abilities = scores
-            out.add("progress.asi", ability=c.abilities[cls.primary].name.model_dump())
         old_max = char.max_hp
-        char.max_hp = progression.max_hp(cls.hit_die, modifier(char.abilities["con"]), char.level)
+        char.max_hp = max_hp_for(char)
         char.hp += char.max_hp - old_max
-        resources = full_resources(char.class_key, char.level)
-        resources.update({k: v for k, v in char.resources.items() if k in resources})
-        for key, ability in cls.abilities.items():
+        sync_resources(char)
+        built = effective(char)
+        for key, ability in built.abilities.items():
             if ability.level == char.level:
-                resources[key] = ability.uses if ability.kind != "passive" else None
                 out.add("progress.new_ability", ability=ability.name.model_dump(), cls=char.class_key, ability_key=key)
-        char.resources = {k: v for k, v in resources.items() if k in full_resources(char.class_key, char.level)}
         out.add("progress.level_up", level=char.level, max_hp=char.max_hp, prev_max_hp=old_max,
                 cls=char.class_key)
-        if char.level == 5:
-            out.add("progress.specialization_soon")
+        if char.level == prog.specialization_level:
+            out.add("progress.path_open")
+        for choice in built.pending:
+            if choice.level == char.level:  # a pick the hero owes since exactly this level
+                out.add("progress.choice", kind=choice.kind, level=choice.level)
 
 
 def mastery_name(skill: str) -> dict:

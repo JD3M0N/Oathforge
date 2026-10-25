@@ -10,10 +10,12 @@ are needed**. The effective level is the lowest of what XP allows, what the mile
 the maximum (§4.1).
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Iterable, Mapping
 
-from oathforge.content.schemas import ClassAbility, ClassSpecialization, GameClass, Progression, ResourceDef
+from oathforge.content.schemas import (
+    ClassAbility, ClassSpecialization, GameClass, Modifier, Progression, ResourceDef,
+)
 
 TRAINING = "training"
 MODIFIER = "modifier"
@@ -36,10 +38,11 @@ class Build:
     level: int
     class_key: str
     specialization: str | None
-    abilities: dict[str, ClassAbility]  # usable now, branch included; passives are in here too
+    abilities: dict[str, ClassAbility]  # usable now, branch and modifiers included; passives too
     resource: str | None
-    resource_max: int
+    resource_max: int  # the bar's top, trainings included
     pending: tuple[Choice, ...]  # choices the hero reached but has not made
+    bonuses: dict[str, int] = field(default_factory=dict)  # summed training effects: max_hp, to_hit…
 
     def usable(self) -> dict[str, ClassAbility]:
         return {k: a for k, a in self.abilities.items() if a.kind != "passive"}
@@ -107,22 +110,65 @@ def pending_choices(level: int, taken: Mapping[str, str], prog: Progression,
 
 # ------------------------------------------------------------------- build
 
+def training_bonuses(taken: Mapping[str, str], prog: Progression) -> dict[str, int]:
+    """The summed numbers of every training package the hero has taken. Unknown ids add nothing."""
+    total: dict[str, int] = {"max_hp": 0, "to_hit": 0, "spell_dc": 0, "resource_max": 0}
+    for key, option in taken.items():
+        training = prog.trainings.get(option) if key.startswith(f"{TRAINING}:") else None
+        if training is not None:
+            for name in total:
+                total[name] += getattr(training.effects, name)
+    return total
+
+
+def chosen_modifiers(branch: ClassSpecialization, taken: Mapping[str, str]) -> dict[str, Modifier]:
+    """The modifiers the hero picked that really belong to ``branch`` at the level they were picked."""
+    out = {}
+    for key, option in taken.items():
+        kind, _, lvl = key.partition(":")
+        mod = branch.modifiers.get(option) if kind == MODIFIER and lvl.isdigit() else None
+        if mod is not None and mod.level == int(lvl):
+            out[option] = mod
+    return out
+
+
+def _patched(ability: ClassAbility, cost: int, cooldown: int, status_turns: int) -> ClassAbility:
+    return ability.model_copy(update={
+        "cost": max(0, ability.cost + cost),
+        "cooldown": max(0, ability.cooldown + cooldown),
+        "status_turns": max(1, ability.status_turns + status_turns),
+    })
+
+
 def build_for(class_key: str, cls: GameClass, level: int, prog: Progression, *,
               specialization: str | None = None, branch: ClassSpecialization | None = None,
               taken: Mapping[str, str] | None = None, resource: ResourceDef | None = None) -> Build:
-    """The hero's effective catalogue. ``branch`` must belong to ``class_key``; a branch that is
-    not ready, or a level below the one where branches are chosen, leaves the hero without one."""
+    """The hero's effective catalogue: class, branch, modifiers and trainings, all in one place.
+
+    ``branch`` must belong to ``class_key``; a branch that is not ready, or a level below the one where
+    branches are chosen, leaves the hero without one. ``taken`` maps each choice (``training:5``,
+    ``modifier:13``) to what the hero picked."""
+    taken = taken or {}
     if branch is not None and branch.class_key != class_key:
         raise ValueError(f"branch '{specialization}' does not belong to class '{class_key}'")
     if branch is None or not branch.ready or level < prog.specialization_level:
-        specialization = None
+        branch, specialization = None, None
     abilities = {k: a for k, a in cls.abilities.items() if a.level <= level}
+    if branch is not None:
+        abilities.update({k: a for k, a in branch.abilities.items() if a.level <= level})
+        for mod in chosen_modifiers(branch, taken).values():
+            for akey, patch in mod.patches.items():
+                if akey in abilities:
+                    abilities[akey] = _patched(abilities[akey], patch.cost, patch.cooldown, patch.status_turns)
+            abilities.update({k: a for k, a in mod.grants.items() if a.level <= level})
+    bonuses = training_bonuses(taken, prog)
     return Build(
         level=level,
         class_key=class_key,
         specialization=specialization,
         abilities=abilities,
         resource=cls.resource,
-        resource_max=resource_max(resource, level) if resource else 0,
-        pending=pending_choices(level, taken or {}, prog, specialized=specialization is not None),
+        resource_max=resource_max(resource, level) + bonuses["resource_max"] if resource else 0,
+        pending=pending_choices(level, taken, prog, specialized=specialization is not None),
+        bonuses=bonuses,
     )

@@ -54,7 +54,7 @@ Hito **0.10-I** del [roadmap general](roadmap.md). Se avanza **fase a fase**: ca
 | B01 · Contratos de contenido y estado | ✅ Hecha | 0.10.22 |
 | B02 · XP híbrida y entrega al PNJ | ✅ Hecha | 0.10.24 |
 | B03 · Motor de recursos y efectos | ✅ Hecha | 0.10.25 |
-| B04 · Catálogo efectivo, selección y elecciones | Pendiente | — |
+| B04 · Catálogo efectivo, selección y elecciones | ✅ Hecha | 0.10.27 |
 | B05 · Compañeros, formas y dispositivos | Pendiente | — |
 | B06 · 14 clases base (1–9) | Pendiente | — |
 | B07 · 41 ramas | Pendiente | — |
@@ -1124,14 +1124,14 @@ El simulador y pruebas se amplían junto a cada fase, no solo en B12. No hacen f
 ### B04 · Catálogo efectivo, selección y elecciones
 
 **Objetivo:** rama modifica juego, no solo nombre.
-- [ ] Catálogo usado por ficha, motor, descanso, simulador y reportes.
-- [ ] Selección directa al 10 con confirmación y validación de clase.
-- [ ] Modificadores fijos al 13/17 y entrenamientos 5/12/18.
-- [ ] Reelección excepcional por cambio sustancial de versión, de un solo uso.
-- [ ] Eliminar anuncio antiguo de especialización al 5.
+- [x] Catálogo usado por ficha, motor, descanso, simulador y reportes. (0.10.27, `characters.effective`)
+- [x] Selección directa al 10 con confirmación y validación de clase. (0.10.27, `/path`)
+- [x] Modificadores fijos al 13/17 y entrenamientos 5/12/18. (0.10.27)
+- [x] Reelección excepcional por cambio sustancial de versión, de un solo uso. (0.10.27, `revision`)
+- [x] Eliminar anuncio antiguo de especialización al 5. (0.10.27; también la mejora del nivel 4)
 **Archivos:** class_build propuesto, class_specializations service propuesto, characters, render, handlers, locales.
 **Pruebas:** dos ramas elegidas concurrentemente, rama ajena, elección repetida, elección pendiente al saltar niveles.
-**Terminado:** la selección altera habilidades y recursos en todas las vistas y no recarga reservas gratuitamente.
+**Terminado:** la selección altera habilidades y recursos en todas las vistas y no recarga reservas gratuitamente. **Hecho en 0.10.27**, probado con una rama sintética completa porque ninguna de las 41 está lista aún: el contenido de cada rama es B07. El simulador aún no modela rama ni entrenamientos (B12).
 
 ### B05 · Compañeros, formas y dispositivos
 

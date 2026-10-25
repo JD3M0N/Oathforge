@@ -20,7 +20,8 @@ from oathforge.engine.combat import Action, EncounterState, valid_targets
 from oathforge.i18n import t
 from oathforge.ai.intent_parser import Intent
 from oathforge.services import (
-    actions, activities, audit, bestiary, characters, combat_service, crafting, exploration, home, inventory, npcs, professions, quests, specializations,
+    actions, activities, audit, bestiary, characters, class_specializations, combat_service, crafting, exploration, home, inventory, npcs,
+    professions, quests, specializations,
 )
 from oathforge.services.events import Outcome, render_event
 
@@ -29,7 +30,7 @@ log = logging.getLogger(__name__)
 # verbs that only show something (no nonce, no state change)
 VIEWS = {"scene", "trv", "trvz", "trvs", "talkm", "talk", "bye", "inv", "hero", "sheet", "jr", "jrm", "jrc", "jrl", "jrs", "jq", "jrb", "jb", "jbi", "jrr",
          "shopm", "shop", "shopg", "sellm", "cbp", "lang", "city", "place", "cls", "clsl", "rep", "prof", "profsw", "profcf", "pg", "crf", "rb", "repf",
-         "mst", "hob", "acts", "rcl", "rcp", "room", "spec", "specf", "tools"}
+         "mst", "hob", "acts", "rcl", "rcp", "room", "spec", "specf", "tools", "path", "pathq", "pathv"}
 
 
 async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -176,6 +177,12 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             text, kb = await render.craft_menu(session, char, lang)
         elif verb == "tools":
             text, kb = await render.tools_view(session, char, lang)
+        elif verb == "path":
+            text, kb = await render.path_view(session, char, lang)
+        elif verb == "pathq":  # the options of one pending choice
+            text, kb = render.path_choice(char, arg, lang) or await render.path_view(session, char, lang)
+        elif verb == "pathv":  # the last question, before a choice that cannot be undone
+            text, kb = render.path_confirm(char, arg, lang) or await render.path_view(session, char, lang)
         elif verb == "spec":
             text, kb = render.specializations_view(char, lang)
         elif verb == "specf":  # the confirmation, with its price
@@ -290,7 +297,7 @@ async def _act(update: Update, context, verb: str, arg: str, n: str, rolled_at: 
 ARRIVALS = {"explore.arrived", "explore.arrived_via"}  # a quiet arrival: nothing else happened on the way
 # buttons that change something (the rest only show a view): they answer the press once they know the result
 ACTS = {"go", "look", "hunt", "rest", "heal", "act", "actc", "actx", "plearn", "craft", "qa", "qturn",
-        "eq", "use", "buy", "sell"}
+        "pathc", "eq", "use", "buy", "sell"}
 IN_PLACE = {"buy", "sell", "eq", "use", "plearn", "craft"}  # menus: the result goes on top of the same menu
 
 
@@ -333,6 +340,14 @@ async def _dispatch(session, char, verb: str, arg: str, r, context) -> Outcome:
         return await activities.select_tool(session, char, arg)
     if verb == "specc":  # take a branch, or come back to a paused one
         return await specializations.choose(session, char, arg)
+    if verb == "pathc":  # "<b|r>:<branch>" or "o:<choice>:<option>": the class path, for good
+        mode, _, rest = arg.partition(":")
+        if mode == "b":
+            return await class_specializations.choose_branch(session, char, rest)
+        if mode == "r":
+            return await class_specializations.reroll_branch(session, char, rest)
+        choice_key, _, option = rest.rpartition(":")
+        return await class_specializations.choose_option(session, char, choice_key, option)
     if verb in ("stash", "take"):  # "<item>:<how many>": move it between the backpack and the chest
         key, _, qty = arg.partition(":")
         n = int(qty) if qty.isdigit() else 1
@@ -388,6 +403,8 @@ async def _after(session, char, lang: str, verb: str, arg: str, context, out: Ou
         return await render.inventory_view(session, char, lang, "gear" if verb == "eq" else "use")
     if verb == "plearn":
         return render.professions_view(char, lang)
+    if verb == "pathc":
+        return await render.path_view(session, char, lang)
     if verb == "craft":
         return await render.craft_menu(session, char, lang)
     if out is not None and refused(out):  # nothing happened: the same view, refreshed in place
