@@ -1,0 +1,22 @@
+# Formas que puede tomar el héroe (Cambiaformas). Sustituyen los ataques y dan una reserva ACOTADA de PV temporales
+# la primera vez que se toman en un combate: alternar no cura. Cifras semilla (B12).
+
+bear:
+  name: {es: Forma de oso, en: Bear form}
+  description: {es: "Aguantas y golpeas fuerte: zarpazos pesados y una piel que encaja los golpes.", en: "You endure and hit hard: heavy claws and a hide that soaks up blows."}
+  icon: "🐻"
+  ac_bonus: 1
+  temp_hp: 6
+  temp_hp_per_level: 3
+  attacks:
+    - {name: {es: Zarpazo, en: Claws}, damage: 1d8, damage_type: slashing, ability: str}
+
+panther:
+  name: {es: Forma de pantera, en: Panther form}
+  description: {es: "Rápida y letal: dos mordiscos veloces, a costa de aguantar menos.", en: "Fast and deadly: quick bites, at the cost of enduring less."}
+  icon: "🐆"
+  ac_bonus: 0
+  temp_hp: 3
+  temp_hp_per_level: 1
+  attacks:
+    - {name: {es: Mordisco, en: Bite}, damage: 1d10, damage_type: piercing, ability: dex}

@@ -10,8 +10,9 @@ from oathforge.content.schemas import ABILITIES
 from oathforge.database.models import Character, CharacterSkill, FactionReputation, ItemInstance, QuestProgress, User
 from oathforge.engine import class_build, gathering, pointbuy, progression
 from oathforge.engine.checks import modifier, proficiency_bonus
-from oathforge.engine.combat import AttackProfile, Combatant
+from oathforge.engine.combat import AttackProfile, Combatant, Shape
 from oathforge.i18n import normalize_lang, t
+from oathforge.services import companions
 from oathforge.services.events import Outcome
 
 NAME_MAX = 24
@@ -162,8 +163,29 @@ def sync_resources(char: Character) -> None:
 
 
 def refill_resources(char: Character) -> None:
-    """A rest gives back every use, branch abilities included."""
+    """A rest gives back every use, branch abilities included, and mends the permanent companion."""
     char.resources = {k: a.uses for k, a in effective(char).abilities.items() if a.kind != "passive"}
+    companions.mend(char)
+
+
+def shapes_for(char: Character) -> dict[str, Shape]:
+    """The forms the hero's abilities let them take, with their attacks already worked out from the hero."""
+    c = get_content()
+    m, pb = mods(char), proficiency_bonus(char.level) + bonus_of(char, "to_hit")
+    out: dict[str, Shape] = {}
+    for a in abilities_of(char).values():
+        if a.kind != "shift" or a.form in (None, "none") or a.form in out:
+            continue
+        form = c.forms[a.form]
+        attacks = [
+            AttackProfile(key=f"{a.form}_{i}", name=fa.name.model_dump(), to_hit=m[fa.ability] + pb,
+                          damage=f"{fa.damage}{m[fa.ability]:+d}", damage_type=fa.damage_type,
+                          ranged=fa.ranged, finesse=fa.ability == "dex")
+            for i, fa in enumerate(form.attacks)
+        ]
+        out[a.form] = Shape(key=a.form, name=form.name.model_dump(), icon=form.icon, ac_bonus=form.ac_bonus,
+                            temp_hp=form.temp_hp + form.temp_hp_per_level * char.level, attacks=attacks)
+    return out
 
 
 # ---------------------------------------------------------------- derived stats
@@ -332,7 +354,7 @@ def combatant_from(char: Character, gear: dict[str, ItemInstance], skills: dict[
         resource=0 if (rd := resource_def(char)) and rd.starts_empty else pool_of(char),
         resource_max=resource_max(char),
         resource_key=cls.resource or "", resource_per_turn=_per_turn(char),
-        resource_on_attack=cls.resource_on_attack,
+        resource_on_attack=cls.resource_on_attack, shapes=shapes_for(char),
         sneak_dice=sneak, extra_attack=any(p.extra_attack for p in passives),
         halve_first_hit=any(p.halve_first_hit for p in passives),
         relentless="relentless" in lineage.traits,

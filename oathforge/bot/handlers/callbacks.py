@@ -562,7 +562,7 @@ def _needs_target(state, me, kind: str, key: str, defs) -> bool:
         return len(valid_targets(state, me, ranged)) > 1
     if kind == "abl":
         a = defs.get(key)
-        if a is None or a.kind not in ("strike", "spell", "save", "curse"):
+        if a is None or a.kind not in ("strike", "spell", "save", "curse", "command"):
             return False
         return len(valid_targets(state, me, ranged=a.kind != "strike")) > 1
     if kind == "obj":

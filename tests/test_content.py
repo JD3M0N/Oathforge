@@ -266,3 +266,51 @@ def test_a_class_branch_pointing_nowhere_is_caught():
     with pytest.raises(ValueError, match="Content validation failed"):
         from oathforge.content.loader import validate_references
         validate_references(broken)
+
+
+def test_entities_and_forms_are_validated():
+    from oathforge.content.loader import _entity_errors
+    from oathforge.content.schemas import ClassAbility, ClassSpecialization, EntityDef
+
+    c = load_content()
+    assert len(c.entities) == 9 and len(c.forms) == 2 and _entity_errors(c) == []
+    text = {"es": "x", "en": "x"}
+
+    def ab(kind, **kw):
+        return ClassAbility(name=text, description=text, level=10, kind=kind, **kw)
+
+    bad = ClassSpecialization(class_key="warrior", name=text, description=text, roles=["dmg"], abilities={
+        "b1": ab("summon", entity="nobody"),
+        "b2": ab("summon", entity="pact_servant"),  # a permanent being is brought by a passive, not summoned
+        "b3": ab("passive", action="none", entity="astral_blade"),  # a passive brings a servant or a beast only
+        "b4": ab("shift", form="dragon"),
+        "b5": ab("strike", form="bear"),
+        "b6": ab("strike", entity="astral_blade"),
+    })
+    errors = _entity_errors(dataclasses.replace(c, class_specializations={**c.class_specializations, "bad": bad}))
+    for needle in ("known entity, not 'nobody'", "brought by a passive", "servant or a companion",
+                   "known form", "only shift takes a form", "only summon, command and a passive"):
+        assert any(needle in e for e in errors), needle
+
+    def entity(**kw):
+        return EntityDef(name=text, description=text, hp=5, **kw)
+
+    broken = {**c.entities,
+              "e1": entity(kind="summon", role="damage", damage="1d4", damage_type="force"),  # no duration
+              "e2": entity(kind="summon", role="damage", duration=3),  # no damage
+              "e3": entity(kind="servant", role="damage", damage="1d4", duration=3),  # permanent but expires
+              "e4": entity(kind="totem", role="guard", damage="1d4"),  # a guard that hits
+              "e5": entity(kind="totem", role="disrupt")}  # nothing to inflict
+    errors = _entity_errors(dataclasses.replace(c, entities=broken))
+    for needle in ("e1: a summon lasts", "e2: a damage entity needs damage", "e3: a permanent being",
+                   "e4: a guard only absorbs", "e5: a disrupt entity needs a status"):
+        assert any(needle in e for e in errors), needle
+
+
+def test_a_typo_in_an_entity_dice_stops_the_game_from_starting():
+    import pytest
+    from oathforge.content.schemas import EntityDef
+
+    text = {"es": "x", "en": "x"}
+    with pytest.raises(ValueError):
+        EntityDef(name=text, description=text, kind="summon", role="damage", hp=5, damage="two dice", duration=2)

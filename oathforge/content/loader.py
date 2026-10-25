@@ -18,7 +18,9 @@ from oathforge.content.schemas import (
     Background,
     ClassSpecialization,
     Continent,
+    EntityDef,
     Faction,
+    FormDef,
     GameClass,
     Item,
     Lineage,
@@ -74,6 +76,8 @@ class Content:
     specializations: dict[str, Specialization] = field(default_factory=dict)  # two branches per mastery
     class_specializations: dict[str, ClassSpecialization] = field(default_factory=dict)  # the 41 class branches
     progression: Progression | None = None  # XP table, milestone gates and class resources
+    entities: dict[str, EntityDef] = field(default_factory=dict)  # summons, servants, beasts, devices
+    forms: dict[str, FormDef] = field(default_factory=dict)  # shapes (Shapeshifter)
     rulebook: dict[str, RuleSection] = field(default_factory=dict)  # /rulebook pages, in order  # outcome -> generic texts when the AI chronicler is not used
 
 
@@ -200,6 +204,8 @@ def load_content(directory: Path = CONTENT_DIR) -> Content:
         specializations=_parse(Specialization, _read(directory, "specializations")),
         class_specializations=_parse(ClassSpecialization, _read(directory, "class_specializations")),
         progression=Progression.model_validate(_read(directory, "progression")),
+        entities=_parse(EntityDef, _read(directory, "entities")),
+        forms=_parse(FormDef, _read(directory, "forms")),
         rulebook=_parse(RuleSection, _read(directory, "rulebook")),
         achievements=_parse(Achievement, _read(directory, "achievements")),
     )
@@ -514,6 +520,7 @@ def _class_progression_errors(c: Content) -> list[str]:
         branches.setdefault(branch.class_key, []).append(key)
         errors += _branch_errors(c, prog, key, branch)
     errors += _unique_ability_errors(c)
+    errors += _entity_errors(c)
     for key in c.classes:
         if c.class_specializations and key not in branches:
             errors.append(f"class {key}: it has no branch to choose at level {prog.specialization_level}")
@@ -571,6 +578,51 @@ def _branch_errors(c: Content, prog, key: str, branch: ClassSpecialization) -> l
         n = sum(1 for m in branch.modifiers.values() if m.level == lvl)
         if n != 2:
             errors.append(f"class branch {key}: ready, but level {lvl} has {n} modifiers, not two")
+    return errors
+
+
+def _every_ability(c: Content):
+    """(where, ability) for every ability anyone can have: classes, branches and what modifiers grant."""
+    for ckey, cls in c.classes.items():
+        for akey, a in cls.abilities.items():
+            yield f"class {ckey} ability {akey}", a
+    for bkey, branch in c.class_specializations.items():
+        for akey, a in branch.abilities.items():
+            yield f"class branch {bkey} ability {akey}", a
+        for mkey, mod in branch.modifiers.items():
+            for akey, a in mod.grants.items():
+                yield f"class branch {bkey} modifier {mkey} grants {akey}", a
+
+
+def _entity_errors(c: Content) -> list[str]:
+    """Summons, commands, convergences and shifts must point at things that exist (roadmap_balance §7)."""
+    errors: list[str] = []
+    for key, e in c.entities.items():
+        if e.role in ("damage", "area") and not e.damage:
+            errors.append(f"entity {key}: a {e.role} entity needs damage")
+        if e.role == "disrupt" and not e.status:
+            errors.append(f"entity {key}: a disrupt entity needs a status")
+        if e.role == "guard" and (e.damage or e.status):
+            errors.append(f"entity {key}: a guard only absorbs, it neither hits nor afflicts")
+        if e.kind in ("servant", "companion") and e.duration is not None:
+            errors.append(f"entity {key}: a permanent being does not expire")
+        if e.kind == "summon" and e.duration is None:
+            errors.append(f"entity {key}: a summon lasts a while, it needs a duration")
+    for where, a in _every_ability(c):
+        if a.kind in ("summon", "command"):
+            if a.entity not in c.entities:
+                errors.append(f"{where}: {a.kind} needs a known entity, not '{a.entity}'")
+            elif a.kind == "summon" and c.entities[a.entity].kind in ("servant", "companion"):
+                errors.append(f"{where}: a permanent being is brought by a passive, not summoned")
+        elif a.kind == "passive" and a.entity is not None:
+            if a.entity not in c.entities or c.entities[a.entity].kind not in ("servant", "companion"):
+                errors.append(f"{where}: a passive with an entity brings a servant or a companion, not '{a.entity}'")
+        elif a.entity is not None:
+            errors.append(f"{where}: only summon, command and a passive take an entity")
+        if a.kind == "shift" and a.form != "none" and a.form not in c.forms:
+            errors.append(f"{where}: shift needs a known form (or 'none'), not '{a.form}'")
+        if a.kind != "shift" and a.form is not None:
+            errors.append(f"{where}: only shift takes a form")
     return errors
 
 

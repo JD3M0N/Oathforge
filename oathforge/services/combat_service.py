@@ -13,7 +13,7 @@ from oathforge.engine import combat as engine
 from oathforge.engine.combat import Action, AttackProfile, Combatant, CombatError, EncounterState, LogEntry
 from oathforge.engine.dice import roll
 from oathforge.i18n import t
-from oathforge.services import bestiary, characters, inventory, quests
+from oathforge.services import bestiary, characters, companions, inventory, quests
 from oathforge.services import achievements
 from oathforge.services.events import Event, Outcome, render_event
 
@@ -36,6 +36,20 @@ def monster_combatant(key: str, cid: str) -> Combatant:
             for i, a in enumerate(m.attacks)
         ],
     )
+
+
+def _bring_helpers(char: Character, player: Combatant, state: EncounterState) -> None:
+    """Everything the hero may call in this fight, at the hero's level; and their permanent companion, if any,
+    already at their side with the health it was left with."""
+    built = characters.abilities_of(char)
+    for key in {a.entity for a in built.values() if a.kind in ("summon", "command") and a.entity}:
+        state.entity_defs[key] = companions.template(key, char)
+    ckey = companions.entity_key(char)
+    if ckey:
+        tpl = companions.template(ckey, char)
+        state.entity_defs[ckey] = tpl
+        ent = engine.spawn(state, player, tpl, hp=companions.start_hp(char, tpl), persistent=True, acts_now=True)
+        ent.name = {lang: companions.display_name(char, lang) for lang in ("es", "en")}
 
 
 def _letter_duplicates(foes: list[Combatant]) -> None:
@@ -69,6 +83,7 @@ async def start_encounter(
     player = await characters.build_combatant(session, char)
     player.consumables = await inventory.combat_items(session, char)
     state = EncounterState(location=char.location, combatants={"p1": player}, hunt=hunt)
+    _bring_helpers(char, player, state)
     for i, key in enumerate(monster_keys, start=1):
         state.combatants[f"m{i}"] = monster_combatant(key, f"m{i}")
     _letter_duplicates([state.combatants[f"m{i}"] for i in range(1, len(monster_keys) + 1)])
@@ -169,6 +184,9 @@ async def _sync_and_maybe_finish(session, char, enc, state: EncounterState, rng,
     char.resources = {k: v for k, v in p.abilities.items()}
     if p.resource_max:  # the bar follows the hero out of the fight
         characters.set_pool(char, p.resource)
+    for ent in state.entities.values():  # the permanent companion is left as the fight left it
+        if ent.persistent and ent.owner == "p1":
+            companions.record(char, 0 if ent.defeated else ent.hp, ent.defeated)
     enc.state = state.model_dump(mode="json")
     if state.status == "active":
         return

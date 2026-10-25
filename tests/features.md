@@ -232,3 +232,27 @@ Recorrido completo, con la cuenta de prueba, en ES y EN. Lo marcado (automático
 - [x] `/path`: rama, elecciones pendientes, ficha de opciones y confirmación definitiva; el botón viejo ya no existe (Telegram, ES).
 - [ ] `/path` en inglés y la tarjeta de subida del 5 con su aviso (Telegram, EN).
 - [ ] Elegir una rama de verdad en el Gremio (pendiente de B07: ninguna rama está lista).
+
+## 0.10-I · Compañeros, formas y dispositivos (B05, v0.10.28)
+
+### Invocaciones y órdenes
+- [x] Un aliado invocado espera al turno siguiente y luego actúa **una vez por turno**, nunca dos aunque haya acción adicional, menú o reintento (automático).
+- [x] Como mucho dos invocaciones a la vez; la tercera se rechaza. Lo ya llamado en el combate no se vuelve a llamar, ni caído: reinvocar no cura (automático).
+- [x] Una orden hace actuar al aliado ahora y no vuelve a actuar al acabar el turno; nombra a la presa y los aliados se ciñen a ella (automático).
+- [x] Convergencia potencia lo que hay, se refresca y no se acumula, y no añade ni una tercera entidad ni un turno extra (automático).
+- [x] El guardián absorbe el golpe en lugar del héroe, se rompe, deja pasar el resto y no vuelve (automático).
+- [x] Un aliado que acosa no encadena a un jefe (automático).
+- [x] Nada actúa si el dueño cayó o el combate acabó (automático).
+- [x] Un aliado puede ganar el combate; guardar y recargar el encuentro da exactamente la misma pelea (automático).
+
+### Formas
+- [x] La forma sustituye los ataques; su reserva de PV temporales se da solo la primera vez (automático).
+- [x] Alternar de forma no cura, no apila reservas y devuelve ataques y CA al salir (automático).
+- [x] La forma sobrevive a un reinicio y morir transformado sigue siendo morir (automático).
+
+### Compañero permanente
+- [x] El servidor o la bestia es siempre el mismo ser, con el nombre del jugador (validado como dato, nunca como instrucción para la IA) (automático).
+- [x] Caído, vuelve a medio PV; herido, sigue herido hasta un descanso largo; no es un objeto (automático).
+- [x] Recorridos completos con una rama prestada: Demonólogo, Invocador y Cambiaformas, sobre el servicio y la base de datos (automático).
+- [x] El panel muestra una línea por aliado, la forma y los textos nuevos sin marcadores sueltos, en ES y EN (automático).
+- [ ] Jugar un combate con un Invocador o un Cambiaformas de verdad en Telegram (pendiente de B07: ninguna rama está lista).

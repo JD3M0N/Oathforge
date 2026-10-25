@@ -125,6 +125,64 @@ class Background(Strict):
     items: dict[str, int] = {}
 
 
+EntityKind = Literal["summon", "servant", "companion", "construct", "turret", "totem"]
+EntityRole = Literal["damage", "area", "guard", "disrupt"]
+
+
+class EntityDef(Strict):
+    """Something that fights beside the hero on its own: a summon, a servant, a beast, a construct, a turret or
+    a totem. It acts by itself, deterministically, once per turn of its owner (roadmap_balance §7).
+
+    Numbers scale with the hero's level when the encounter starts; the entity is never an item and never
+    something that can be sold or duplicated.
+    """
+
+    name: Text
+    description: Text
+    kind: EntityKind
+    role: EntityRole
+    icon: str = "✦"
+    hp: int = Field(ge=1)  # a guard's HP are the damage it takes in the hero's place
+    hp_per_level: int = Field(0, ge=0)
+    to_hit: int = 3  # plus the hero's proficiency
+    damage: str | None = None
+    damage_type: DamageType | None = None
+    ranged: bool = False
+    status: Literal["stunned", "frightened", "vulnerable", "poisoned", "restrained"] | None = None
+    status_turns: int = Field(1, ge=1)
+    period: int = Field(1, ge=1)  # acts every this many turns of its owner
+    duration: int | None = Field(None, ge=1)  # turns of its owner it lasts; None: the whole fight
+
+    @field_validator("damage")
+    @classmethod
+    def _dice(cls, v: str | None) -> str | None:
+        if v is not None:
+            from oathforge.engine.dice import parse
+            parse(v)  # fails on anything that is not dice, so a typo is caught on startup
+        return v
+
+
+class FormAttack(Strict):
+    name: Text
+    damage: str  # dice; the hero's modifier is added when the fight starts
+    damage_type: DamageType
+    ability: Literal["str", "dex"] = "str"
+    ranged: bool = False
+
+
+class FormDef(Strict):
+    """A shape the hero can take (Shapeshifter). It replaces the attacks and adds a bounded reserve of
+    temporary HP the first time it is taken in a fight: switching back and forth never heals."""
+
+    name: Text
+    description: Text
+    icon: str = "🐾"
+    ac_bonus: int = 0
+    temp_hp: int = Field(0, ge=0)
+    temp_hp_per_level: int = Field(0, ge=0)
+    attacks: list[FormAttack] = Field(min_length=1)
+
+
 class ClassAbility(Strict):
     name: Text
     description: Text
@@ -135,7 +193,11 @@ class ClassAbility(Strict):
     # save: target (or the target's whole row) rolls a saving throw against `damage` / `status`
     # curse: `status` on one enemy, no save (Hex) · surge: bonus action that gives the action back
     # heal · hide · passive
-    kind: Literal["strike", "spell", "turn", "buff", "surge", "heal", "hide", "save", "curse", "passive"]
+    # summon: calls `entity` for a few turns (never more than the slot allows) · command: `entity` strikes now,
+    # with `extra_damage` on top, and does not act again this turn · converge: every entity the hero has is
+    # empowered for `boost_turns` · shift: take (or, with form "none", leave) a form
+    kind: Literal["strike", "spell", "turn", "buff", "surge", "heal", "hide", "save", "curse", "passive",
+                  "summon", "command", "converge", "shift"]
     action: Literal["action", "bonus", "none"] = "action"
     uses: int | None = None  # per rest; None = unlimited (classes without a resource bar)
     # classes with their own bar (GameClass.resource) pay with it instead of with uses per rest
@@ -168,6 +230,9 @@ class ClassAbility(Strict):
     crit_range: int | None = None  # e.g. 19: critical on 19-20
     bonus_damage: str | None = None  # once per turn on a melee weapon hit
     bonus_damage_type: DamageType | None = None
+    entity: str | None = None  # summon / command: the template. A passive with it brings the permanent companion
+    form: str | None = None  # shift
+    boost_turns: int = Field(3, ge=1)  # converge
 
 
 class GameClass(Strict):

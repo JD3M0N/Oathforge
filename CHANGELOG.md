@@ -4,6 +4,21 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.28] - 2026-10-25
+
+0.10-I (B05): aliados que combaten solos, formas y compañeros permanentes. La base técnica de las ramas complejas, todavía sin ninguna rama que la use.
+
+### Añadido
+- **Entidades** (`content/entities.yaml`): invocaciones, servidores, bestias, constructos, torretas y tótems. Actúan solas, de forma determinista, **una vez por turno de su dueño**, y nada —acción adicional, menú, reintento— las hace actuar dos veces. Cuatro roles: atacan a la presa marcada o a la más débil, golpean a toda una fila sin tirada, **absorben el daño en lugar del héroe** o acosan con un estado. Una entidad nunca es un objeto: no se compra, no se vende ni se duplica.
+- **Invocar, ordenar, converger**: *invocar* trae a un aliado (como mucho **dos** a la vez, y lo ya llamado en un combate no se vuelve a llamar, ni caído: reinvocar no cura); *ordenar* lo hace actuar ahora, nombra la presa y le cuesta el turno; **Convergencia** potencia lo que hay durante unos turnos, sin añadir una tercera entidad ni un turno.
+- **Formas** (`content/forms.yaml`): el Cambiaformas sustituye sus ataques por los de la forma, con una reserva acotada de PV temporales **solo la primera vez** en un combate. Alternar no cura, no apila reservas y devuelve ataques y CA al salir. Oso y pantera de arranque.
+- **Compañero permanente** (`services/companions.py`): el servidor del pacto o la bestia es siempre el mismo ser, con **el nombre que le pone el jugador** (validado como dato, nunca como instrucción para la IA). Si cae, vuelve en el siguiente combate a la mitad de su vida; herido, sigue herido hasta un descanso largo.
+- El panel de combate muestra **una línea por aliado** y la forma del héroe; la ficha de habilidad explica las cuatro habilidades nuevas, su coste y su enfriamiento.
+- El loader valida que una invocación, una orden o una forma apunten a algo que existe, que una invocación tenga duración y que un ser permanente no caduque.
+
+### Arreglado
+- Los aliados ya no actúan si su dueño cayó o el combate acabó.
+
 ## [0.10.27] - 2026-10-25
 
 0.10-I (B04): el camino de clase. La rama, los entrenamientos y los modificadores ya se eligen y cambian lo que el héroe puede hacer.

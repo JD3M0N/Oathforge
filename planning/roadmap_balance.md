@@ -55,7 +55,7 @@ Hito **0.10-I** del [roadmap general](roadmap.md). Se avanza **fase a fase**: ca
 | B02 · XP híbrida y entrega al PNJ | ✅ Hecha | 0.10.24 |
 | B03 · Motor de recursos y efectos | ✅ Hecha | 0.10.25 |
 | B04 · Catálogo efectivo, selección y elecciones | ✅ Hecha | 0.10.27 |
-| B05 · Compañeros, formas y dispositivos | Pendiente | — |
+| B05 · Compañeros, formas y dispositivos | ✅ Hecha | 0.10.28 |
 | B06 · 14 clases base (1–9) | Pendiente | — |
 | B07 · 41 ramas | Pendiente | — |
 | B08 · Tiempos, descanso, derrota y economía | Pendiente | — |
@@ -1136,14 +1136,14 @@ El simulador y pruebas se amplían junto a cada fase, no solo en B12. No hacen f
 ### B05 · Compañeros, formas y dispositivos
 
 **Objetivo:** base para ramas complejas antes de multiplicar implementaciones.
-- [ ] Auxiliar automático con propietario y frecuencia de acción.
-- [ ] Identidad permanente de servidor y bestia; configuración de constructo.
-- [ ] Dos entidades del Invocador y Convergencia.
-- [ ] Transformación que sustituye acciones sin crear vida.
-- [ ] Logs agregados legibles y comportamiento al huir/derrota.
+- [x] Auxiliar automático con propietario y frecuencia de acción. (0.10.28, `Entity` y `_run_entities`)
+- [x] Identidad permanente de servidor y bestia; configuración de constructo. (0.10.28, `services/companions.py`; el constructo, la torreta y el tótem son plantillas con su tope de uno)
+- [x] Dos entidades del Invocador y Convergencia. (0.10.28)
+- [x] Transformación que sustituye acciones sin crear vida. (0.10.28, `content/forms.yaml`)
+- [x] Logs agregados legibles y comportamiento al huir/derrota. (0.10.28: una línea por acción de aliado; nada actúa si el dueño cae)
 **Archivos:** engine/combat, encounter state, services/combat_service, modelos/versionado, schemas.
 **Pruebas:** objetivos muertos, doble actuación, muerte del dueño, carga desde JSON, límite dos, transformaciones sucesivas.
-**Terminado:** Demonólogo, Invocador y Cambiaformas tienen un recorrido técnico completo en escenarios de prueba.
+**Terminado:** Demonólogo, Invocador y Cambiaformas tienen un recorrido técnico completo en escenarios de prueba. **Hecho en 0.10.28**, con ramas prestadas en las pruebas porque ninguna está lista: lo que falta es escribir las ramas (B07) y el flujo para poner nombre al servidor en Telegram, que se hace con la rama del Demonólogo. El simulador aún no invoca (B12).
 
 ### B06 · Rediseñar 14 clases base y nivel 1–9
 

@@ -155,6 +155,19 @@ def ability_mechanics(a, lang: str) -> list[str]:
         out.append(t(lang, "skill.crit_range", n=a.crit_range))
     if a.bonus_damage:
         out.append(t(lang, "skill.bonus_damage", dice=a.bonus_damage, type=dmg(a.bonus_damage_type)))
+    if a.entity and a.entity in c.entities:
+        e = c.entities[a.entity]
+        out.append(t(lang, "skill.entity", icon=e.icon, name=e.name.get(lang), role=t(lang, "skill.role." + e.role)))
+    if a.kind == "converge":
+        out.append(t(lang, "skill.boost", turns=a.boost_turns))
+    if a.form and a.form in c.forms:
+        out.append(t(lang, "skill.form", icon=c.forms[a.form].icon, name=c.forms[a.form].name.get(lang)))
+    elif a.form == "none":
+        out.append(t(lang, "skill.form_none"))
+    if a.cost:
+        out.append(t(lang, "skill.cost", n=a.cost))
+    if a.cooldown:
+        out.append(t(lang, "skill.cooldown", n=a.cooldown))
     return [escape(line) for line in out]
 
 
@@ -2199,6 +2212,8 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
             continue
         row = t(lang, f"row.{cb_.row}")
         st = " ".join(t(lang, f"status.icon.{s}") for s in cb_.statuses)
+        if cb_.form and cb_.form in cb_.shapes:
+            st = f"{cb_.shapes[cb_.form].icon} {st}".strip()
         temp = f" (+{cb_.temp_hp})" if cb_.temp_hp else ""
         lines.append(f"{icon} <b>{escape(cb_.name[lang])}</b> ❤️ {cb_.hp}/{cb_.max_hp}{temp} "
                      f"{hp_bar(cb_.hp, cb_.max_hp)} 🛡️ {cb_.ac} · {row} {st}".rstrip())
@@ -2206,6 +2221,13 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
             res = c.progression.resources[cb_.resource_key]
             lines.append(f"   🔹 {escape(res.name.get(lang))} {cb_.resource}/{cb_.resource_max} "
                          f"{hp_bar(cb_.resource, cb_.resource_max)}")
+        for ent in (e for e in state.entities.values() if e.owner == cid):  # one line per helper, no more
+            name = escape(ent.name[lang])
+            if ent.defeated:
+                lines.append(f"   💀 <s>{ent.icon} {name}</s>")
+                continue
+            tag = f" ⚡{ent.boost}" if ent.boost else ""
+            lines.append(f"   {ent.icon} <b>{name}</b> ❤️ {ent.hp}/{ent.max_hp}{tag}")
     blocks = combat_blocks(state, state.log, lang, with_end=False)[-PANEL_BLOCKS:]
     if blocks:
         lines += [RULE, *(line for block in blocks for line in block)]
@@ -2237,7 +2259,7 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
 
     if target_menu and target_menu != "powers":
         kind, _, arg = target_menu.partition(":")
-        spell = kind == "abl" and arg in defs and defs[arg].kind in ("spell", "save", "curse")
+        spell = kind == "abl" and arg in defs and defs[arg].kind in ("spell", "save", "curse", "command")
         ranged = any(a.key == arg and a.ranged for a in me.attacks) or kind in ("obj", "itm") or spell
         for foe in valid_targets(state, me, ranged):
             rows.append([btn(f"🎯 {foe.name[lang]} ({foe.hp}/{foe.max_hp})", cb("cb", f"{target_menu}:{foe.id}", n))])

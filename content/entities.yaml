@@ -1,0 +1,116 @@
+# Entidades que combaten junto al héroe: invocaciones, servidores, bestias, constructos, torretas y tótems.
+# Actúan solas, de forma determinista, una vez por turno de su dueño. Nunca son objetos: no se venden ni se duplican.
+# Contrato en planning/roadmap_balance.md §7. Todas las cifras son SEMILLAS para medir (B12).
+#
+# role: damage (ataca a la presa marcada o a la más débil) · area (golpea a toda la fila de su presa, sin tirada) ·
+#       guard (absorbe daño en lugar del héroe; sus PV son lo que aguanta) · disrupt (aplica un estado cada `period` turnos).
+# Se escala con el nivel al empezar el combate: PV = hp + hp_per_level × nivel; ataque = to_hit + competencia.
+
+# --- las cuatro invocaciones del Invocador (repertorio mixto, como mucho dos a la vez) ---
+astral_blade:
+  name: {es: Espada Astral, en: Astral Blade}
+  description: {es: "Una hoja de luz fría que corta a la presa marcada.", en: "A blade of cold light that cuts the marked quarry."}
+  kind: summon
+  role: damage
+  icon: "🗡️"
+  hp: 6
+  hp_per_level: 1
+  to_hit: 4
+  damage: 1d8+2
+  damage_type: force
+  duration: 4
+
+wandering_ember:
+  name: {es: Ascua Errante, en: Wandering Ember}
+  description: {es: "Una brasa viva que desgasta a toda una fila, sin fallar.", en: "A living coal that wears down a whole row, never missing."}
+  kind: summon
+  role: area
+  icon: "🔥"
+  hp: 6
+  hp_per_level: 1
+  damage: 1d4+1
+  damage_type: fire
+  duration: 4
+
+stone_guardian:
+  name: {es: Guardián de Piedra, en: Stone Guardian}
+  description: {es: "Un coloso de roca que recibe los golpes por ti hasta romperse.", en: "A rock colossus that takes the blows for you until it breaks."}
+  kind: summon
+  role: guard
+  icon: "🗿"
+  hp: 10
+  hp_per_level: 3
+  duration: 5
+
+veil_moth:
+  name: {es: Polilla del Velo, en: Veil Moth}
+  description: {es: "Revolotea ante los ojos del rival y lo asusta cada dos turnos.", en: "It flutters before the foe's eyes and frightens it every other turn."}
+  kind: summon
+  role: disrupt
+  icon: "🦋"
+  hp: 4
+  hp_per_level: 1
+  status: frightened
+  status_turns: 1
+  period: 2
+  duration: 5
+
+# --- identidades permanentes: el mismo ser entre combates, con nombre y sin reemplazo ---
+pact_servant:
+  name: {es: Servidor del Pacto, en: Pact Servant}
+  description: {es: "El ser al que te ataste. Siempre es el mismo; evoluciona, no se sustituye.", en: "The being you bound yourself to. Always the same one; it evolves, it is never swapped."}
+  kind: servant
+  role: damage
+  icon: "👹"
+  hp: 12
+  hp_per_level: 3
+  to_hit: 5
+  damage: 1d8+3
+  damage_type: necrotic
+
+wolf_companion:
+  name: {es: Lobo compañero, en: Wolf companion}
+  description: {es: "Tu bestia. No se compra ni se repone: es la misma siempre.", en: "Your beast. It is never bought nor replaced: it is always the same one."}
+  kind: companion
+  role: damage
+  icon: "🐺"
+  hp: 10
+  hp_per_level: 3
+  to_hit: 4
+  damage: 1d6+2
+  damage_type: piercing
+
+# --- dispositivos: se despliegan o se configuran, de uno en uno ---
+guardian_construct:
+  name: {es: Autómata guardián, en: Guardian automaton}
+  description: {es: "Un autómata configurado antes del combate que protege a su dueño.", en: "An automaton set up before the fight that shields its owner."}
+  kind: construct
+  role: guard
+  icon: "🤖"
+  hp: 12
+  hp_per_level: 3
+
+siege_cannon:
+  name: {es: Cañón de asedio, en: Siege cannon}
+  description: {es: "Un arma desplegada que dispara sola.", en: "A deployed weapon that fires on its own."}
+  kind: turret
+  role: damage
+  icon: "🔫"
+  hp: 8
+  hp_per_level: 2
+  to_hit: 4
+  damage: 1d10+1
+  damage_type: piercing
+  ranged: true
+
+ancestral_totem:
+  name: {es: Tótem ancestral, en: Ancestral totem}
+  description: {es: "Una presencia ancestral que asusta a quien agrede a su dueño.", en: "An ancestral presence that frightens whoever strikes its owner."}
+  kind: totem
+  role: disrupt
+  icon: "🪵"
+  hp: 8
+  hp_per_level: 2
+  status: frightened
+  status_turns: 1
+  period: 2

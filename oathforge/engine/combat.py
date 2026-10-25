@@ -18,6 +18,12 @@ NEGATIVE_STATUSES = {"bleeding", "burning", "poisoned", "frightened", "stunned",
 # duration goes down once per turn of whoever carries it (_tick_statuses).
 HARD_CONTROL = ("stunned", "asleep", "restrained", "frightened")
 BOSS_CONTROL_TURNS = 1  # on a boss, hard control lasts this long and the rest becomes `vulnerable`
+# how many of each kind of entity one hero may have at once (roadmap_balance §7): the Summoner keeps two,
+# every other kind of helper is a single one. A being that is already in the fight cannot be called again.
+MAX_BY_KIND = {"summon": 2, "servant": 1, "companion": 1, "construct": 1, "turret": 1, "totem": 1}
+CONVERGENCE_TO_HIT = 2
+CONVERGENCE_DAMAGE = 3
+COMMAND_FLOOR = 1  # an ordered strike never does less than this
 DOT = {"bleeding": "1d4", "burning": "1d6"}
 BLESS_BONUS = 2
 INSPIRATION_DIE = "1d6"
@@ -44,6 +50,68 @@ class AttackProfile(BaseModel):
     ranged: bool = False
     finesse: bool = False
     applies: dict | None = None  # {status, turns, chance}
+
+
+class EntityTemplate(BaseModel):
+    """An entity as the fight needs it: the numbers already scaled to the hero, nothing left to look up."""
+
+    key: str
+    name: dict[str, str]
+    kind: Literal["summon", "servant", "companion", "construct", "turret", "totem"]
+    role: Literal["damage", "area", "guard", "disrupt"]
+    icon: str = "✦"
+    hp: int
+    to_hit: int = 0
+    damage: str | None = None
+    damage_type: str = "force"
+    ranged: bool = False
+    status: str | None = None
+    status_turns: int = 1
+    period: int = 1
+    duration: int | None = None
+
+
+class Entity(BaseModel):
+    """One helper in the fight. It belongs to a combatant, acts once per turn of its owner and is stored
+    with the encounter, so a restart leaves it exactly where it was."""
+
+    id: str
+    owner: str
+    key: str
+    name: dict[str, str]
+    kind: str
+    role: str
+    icon: str = "✦"
+    hp: int
+    max_hp: int
+    to_hit: int = 0
+    damage: str | None = None
+    damage_type: str = "force"
+    ranged: bool = False
+    status: str | None = None
+    status_turns: int = 1
+    period: int = 1
+    ttl: int | None = None  # turns of its owner it still has left; None: the whole fight
+    born: int = 1  # the round it joined: its `period` counts from there
+    acted_round: int = 0  # the last round it acted in, so nothing makes it act twice in one
+    boost: int = 0  # turns of Convergence left
+    defeated: bool = False
+    persistent: bool = False  # a servant or a companion: its state goes back to the character
+
+    @property
+    def active(self) -> bool:
+        return not self.defeated
+
+
+class Shape(BaseModel):
+    """A form the hero can take, ready for the fight."""
+
+    key: str
+    name: dict[str, str]
+    icon: str = "🐾"
+    ac_bonus: int = 0
+    temp_hp: int = 0
+    attacks: list[AttackProfile]
 
 
 class Combatant(BaseModel):
@@ -77,6 +145,12 @@ class Combatant(BaseModel):
     resource_per_turn: int = 0  # put back at the start of its own turn
     resource_on_attack: int = 0  # put back by a basic attack action, once per action
     cooldowns: dict[str, int] = {}  # ability key -> turns of combat left before it can be used again
+    shapes: dict[str, Shape] = {}  # forms the hero can take in this fight
+    form: str | None = None  # the form they are in now
+    form_ac: int = 0  # what the current form added to AC, so leaving it takes it away again
+    base_attacks: list[AttackProfile] = []  # their own attacks, kept while a form replaces them
+    forms_taken: list[str] = []  # forms already taken this fight: their reserve is given only the first time
+    mark: str | None = None  # the quarry their entities concentrate on
     sneak_dice: int = 0
     extra_attack: bool = False
     halve_first_hit: bool = False
@@ -133,6 +207,8 @@ class EncounterState(BaseModel):
     scene_objects: dict[str, SceneObjectState] = {}
     status: Literal["active", "victory", "defeat", "fled"] = "active"
     hunt: bool = False  # started from 🏹 Hunt / 🐾 Track: a victory counts for "hunt" objectives
+    entity_defs: dict[str, EntityTemplate] = {}  # what the hero may summon or command in this fight
+    entities: dict[str, Entity] = {}
     log: list[LogEntry] = Field(default_factory=list)
 
     @property
@@ -383,6 +459,14 @@ def _use_ability(state, actor, action, ability, rng) -> list[LogEntry]:
         logs.append(LogEntry(key="combat.hide", params={
             "actor": actor.id, "roll": res.kept, "total": res.total, "dc": dc, "success": res.success,
         }))
+    elif ability.kind == "summon":
+        logs += _summon(state, actor, ability)
+    elif ability.kind == "command":
+        logs += _command(state, actor, ability, action.target, rng)
+    elif ability.kind == "converge":
+        logs += _converge(state, actor, ability)
+    elif ability.kind == "shift":
+        logs += _shift(state, actor, ability)
     else:
         raise CombatError("combat.err.passive")
     if uses is not None:
@@ -611,10 +695,25 @@ def _apply_damage(state, target: Combatant, amount: int, damage_type: str) -> li
     if target.halve_first_hit and not target.dodge_used and amount > 1:
         amount //= 2
         target.dodge_used = True
+    guarded: list[LogEntry] = []
+    if target.side == "player" and state.entities and amount > 0:
+        guard = next((e for e in state.entities.values()
+                      if e.owner == target.id and e.role == "guard" and e.active), None)
+        if guard is not None:  # its HP are what it can take in the hero's place
+            taken = min(guard.hp, amount)
+            guard.hp -= taken
+            amount -= taken
+            guarded.append(LogEntry(key="combat.guard_absorbs", params={
+                "entity": guard.name, "amount": taken, "left": guard.hp}))
+            if guard.hp <= 0:
+                guard.defeated = True
+                guarded.append(LogEntry(key="combat.entity_breaks", params={"entity": guard.name}))
+            if amount == 0:
+                return guarded
     absorbed = min(target.temp_hp, amount)
     target.temp_hp -= absorbed
     target.hp = max(0, target.hp - (amount - absorbed))
-    logs = [LogEntry(key="combat.damage", params={"target": target.id, "amount": amount, "type": damage_type,
+    logs = guarded + [LogEntry(key="combat.damage", params={"target": target.id, "amount": amount, "type": damage_type,
                                                   "effect": effect, "hp": target.hp, "max_hp": target.max_hp})]
     if absorbed:
         logs.append(LogEntry(key="combat.absorbed", params={"target": target.id, "amount": absorbed}))
@@ -655,6 +754,165 @@ def _heal(c: Combatant, amount: int) -> int:
     return c.hp - before
 
 
+# ---------------------------------------------------------------- entities and forms
+
+def spawn(state: EncounterState, owner: Combatant, tpl: EntityTemplate, *, hp: int | None = None,
+          persistent: bool = False, acts_now: bool = False) -> Entity:
+    """Put a helper in the fight. A summoned one waits for the next turn (nothing acts the turn it arrives);
+    a permanent one, which is there from the start, may act at the end of the hero's first turn."""
+    eid = f"e{len(state.entities) + 1}"
+    ent = Entity(
+        id=eid, owner=owner.id, key=tpl.key, name=tpl.name, kind=tpl.kind, role=tpl.role, icon=tpl.icon,
+        hp=tpl.hp if hp is None else hp, max_hp=tpl.hp, to_hit=tpl.to_hit, damage=tpl.damage,
+        damage_type=tpl.damage_type, ranged=tpl.ranged, status=tpl.status, status_turns=tpl.status_turns,
+        period=tpl.period, ttl=tpl.duration, born=state.round, persistent=persistent,
+        acted_round=0 if acts_now else state.round,
+    )
+    state.entities[eid] = ent
+    return ent
+
+
+def _summon(state, actor, ability) -> list[LogEntry]:
+    tpl = state.entity_defs.get(ability.entity or "")
+    if tpl is None:
+        raise CombatError("combat.err.unknown_ability")
+    # never again what was already called in this fight, alive or not: re-summoning must not be a free heal
+    if any(e.owner == actor.id and e.key == tpl.key for e in state.entities.values()):
+        raise CombatError("combat.err.already_called")
+    here = [e for e in state.entities.values() if e.owner == actor.id and e.kind == tpl.kind and e.active]
+    if len(here) >= MAX_BY_KIND[tpl.kind]:
+        raise CombatError("combat.err.summon_limit")
+    ent = spawn(state, actor, tpl)
+    return [LogEntry(key="combat.summoned", params={"actor": actor.id, "entity": ent.name, "icon": ent.icon,
+                                                    "hp": ent.hp})]
+
+
+def _command(state, actor, ability, target_id, rng) -> list[LogEntry]:
+    ent = next((e for e in state.entities.values()
+                if e.owner == actor.id and e.key == ability.entity and e.active), None)
+    if ent is None:
+        raise CombatError("combat.err.no_entity")
+    if ent.role == "guard":
+        raise CombatError("combat.err.cannot_command")
+    if ent.acted_round >= state.round:  # it already acted this round: an order is not a second turn
+        raise CombatError("combat.err.entity_acted")
+    if target_id:
+        actor.mark = _resolve_target(state, actor, target_id, ranged=True).id
+    ent.acted_round = state.round  # the order is its action: it will not also act as the turn ends
+    logs = [LogEntry(key="combat.command", params={"actor": actor.id, "entity": ent.name, "icon": ent.icon})]
+    return logs + _entity_act(state, ent, actor, rng, bonus=ability.extra_damage)
+
+
+def _converge(state, actor, ability) -> list[LogEntry]:
+    mine = [e for e in state.entities.values() if e.owner == actor.id and e.active]
+    if not mine:
+        raise CombatError("combat.err.no_entity")
+    for e in mine:  # it strengthens what is there; it adds no entity and gives no extra turn
+        e.boost = max(e.boost, ability.boost_turns)
+    return [LogEntry(key="combat.converge", params={"actor": actor.id, "count": len(mine),
+                                                    "turns": ability.boost_turns})]
+
+
+def _entity_target(state, ent: Entity, owner: Combatant) -> Combatant | None:
+    mark = state.combatants.get(owner.mark) if owner.mark else None
+    if mark is not None and mark.active and mark.side != owner.side:
+        return mark
+    pool = valid_targets(state, owner, ent.ranged)
+    return min(pool, key=lambda f: (f.hp, f.id)) if pool else None
+
+
+def _entity_act(state, ent: Entity, owner: Combatant, rng, bonus: str | None = None) -> list[LogEntry]:
+    """What one helper does with its action. Deterministic by role; only the dice are random."""
+    if ent.role == "guard":
+        return []
+    target = _entity_target(state, ent, owner)
+    if target is None:
+        return []
+    boosted = ent.boost > 0
+    extra = (roll(bonus, rng).total if bonus else 0) + (CONVERGENCE_DAMAGE if boosted else 0)
+    logs: list[LogEntry] = []
+    if ent.role == "damage":
+        r = d20(rng)
+        total = r.kept + ent.to_hit + (CONVERGENCE_TO_HIT if boosted else 0)
+        crit = r.kept == 20
+        params = {"entity": ent.name, "icon": ent.icon, "target": target.id, "roll": r.kept, "total": total,
+                  "ac": target.ac}
+        if r.nat1 or not (crit or total >= target.ac):
+            return [LogEntry(key="combat.entity_miss", params=params)]
+        dmg = max(COMMAND_FLOOR, roll(ent.damage, rng, crit).total + extra)
+        logs.append(LogEntry(key="combat.entity_crit" if crit else "combat.entity_hit", params=params))
+        return logs + _apply_damage(state, target, dmg, ent.damage_type)
+    if ent.role == "area":  # a whole row, never missing; each takes its own roll
+        victims = [f for f in state.enemies_of(owner) if f.row == target.row]
+        logs.append(LogEntry(key="combat.entity_area", params={"entity": ent.name, "icon": ent.icon,
+                                                               "count": len(victims)}))
+        for v in victims:
+            if v.active:
+                logs += _apply_damage(state, v, max(COMMAND_FLOOR, roll(ent.damage, rng).total + extra),
+                                      ent.damage_type)
+        return logs
+    # disrupt: an affliction, not damage. On a boss it is capped like any other control (_apply_status)
+    logs.append(LogEntry(key="combat.entity_afflicts", params={"entity": ent.name, "icon": ent.icon,
+                                                               "target": target.id}))
+    return logs + _apply_status(target, ent.status, ent.status_turns + (1 if boosted else 0))
+
+
+def _run_entities(state, owner: Combatant, rng) -> list[LogEntry]:
+    """The owner's helpers act, once each, as the owner's turn ends. A marker keeps anything (a bonus action,
+    a menu, a retried button) from making one act twice in the same round. Nothing acts for an owner who is
+    down or gone, or once the fight is over."""
+    logs: list[LogEntry] = []
+    if not owner.active or state.status != "active":
+        return logs
+    for ent in list(state.entities.values()):
+        if ent.owner != owner.id or ent.defeated or ent.acted_round >= state.round:
+            continue
+        ent.acted_round = state.round
+        if (state.round - ent.born) % ent.period == 0:
+            logs += _entity_act(state, ent, owner, rng)
+        if ent.boost:
+            ent.boost -= 1
+        if ent.ttl is not None:
+            ent.ttl -= 1
+            if ent.ttl <= 0:
+                ent.defeated = True
+                logs.append(LogEntry(key="combat.entity_fades", params={"entity": ent.name}))
+        _check_end(state, logs)
+        if state.status != "active":
+            break
+    return logs
+
+
+def _shift(state, actor: Combatant, ability) -> list[LogEntry]:
+    """Take a form, or (form "none") go back. The form replaces the attacks; its reserve of temporary HP is
+    given only the first time in a fight, so changing shape back and forth never heals (roadmap_balance 7.4)."""
+    if ability.form == "none":
+        if actor.form is None:
+            raise CombatError("combat.err.no_form")
+        actor.attacks, actor.base_attacks = list(actor.base_attacks), []
+        actor.ac -= actor.form_ac
+        actor.form, actor.form_ac = None, 0
+        return [LogEntry(key="combat.unshifted", params={"actor": actor.id})]
+    shape = actor.shapes.get(ability.form or "")
+    if shape is None:
+        raise CombatError("combat.err.unknown_ability")
+    if actor.form == shape.key:
+        raise CombatError("combat.err.already_form")
+    if actor.form is None:
+        actor.base_attacks = list(actor.attacks)
+    else:  # form to form: the old one's armour goes before the new one's comes
+        actor.ac -= actor.form_ac
+    actor.attacks, actor.form, actor.form_ac = list(shape.attacks), shape.key, shape.ac_bonus
+    actor.ac += shape.ac_bonus
+    gained = 0
+    if shape.key not in actor.forms_taken:
+        actor.forms_taken.append(shape.key)
+        gained = max(0, shape.temp_hp - actor.temp_hp)  # a reserve, not a stack on top of another
+        actor.temp_hp += gained
+    return [LogEntry(key="combat.shifted", params={"actor": actor.id, "form": shape.name, "icon": shape.icon,
+                                                   "temp": gained})]
+
+
 # ---------------------------------------------------------------- turn flow
 
 def _begin_turn(state: EncounterState, rng) -> list[LogEntry]:
@@ -693,8 +951,14 @@ def _begin_turn(state: EncounterState, rng) -> list[LogEntry]:
 
 
 def _end_turn(state: EncounterState, rng) -> list[LogEntry]:
-    _tick_statuses(state.current)
-    logs = _advance(state)
+    me = state.current
+    logs: list[LogEntry] = []
+    if me.side == "player" and me.active and state.entities:  # the hero's helpers act once, as the turn ends
+        logs += _run_entities(state, me, rng)
+    _tick_statuses(me)
+    if state.status != "active":
+        return logs
+    logs += _advance(state)
     return logs + _begin_turn(state, rng)
 
 
