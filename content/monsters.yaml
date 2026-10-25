@@ -288,3 +288,273 @@ iron_stag:
   lore:
     es: Un ciervo del bosque que bebió en vetas alteradas por piezas de antiguos reguladores arcanos. Su cuerpo se endureció y su temple cambió; embiste anunciándose con la cabeza gacha.
     en: A forest stag that drank from veins altered by pieces of ancient arcane regulators. Its body hardened and its temper changed; it charges with its head lowered, announcing itself.
+
+ash_smuggler:
+  name: {es: "Contrabandista de ceniza", en: "Ash smuggler"}
+  indefinite: {es: "contrabandista de ceniza", en: "ash smuggler"}
+  icon: 🥷
+  description: {es: "Mueve las cargas del valle sin papeles y sin preguntas. Deja una marca de ceniza en todo lo que toca.", en: "Moves the vale's cargo without papers or questions. He leaves an ash mark on everything he touches."}
+  hp: 75
+  ac: 14
+  dex: 1
+  wis: 1
+  row: front
+  attacks:
+    - {name: {es: "Machete", en: "Cleaver"}, to_hit: 7, damage: 2d6+4, damage_type: slashing}
+  xp: 260
+  gold: "3d10"
+  type: humanoid
+  habitat: {es: "Cruce de los Carreteros", en: "Carters' Crossing"}
+  lore:
+    es: "Mueve las cargas del valle sin papeles y sin preguntas. Deja una marca de ceniza en todo lo que toca."
+    en: "Moves the vale's cargo without papers or questions. He leaves an ash mark on everything he touches."
+
+ash_crossbowman:
+  name: {es: "Ballestero de ceniza", en: "Ash crossbowman"}
+  indefinite: {es: "ballestero de ceniza", en: "ash crossbowman"}
+  icon: 🎯
+  description: {es: "Vigila los caminos desde las rocas. Dispara a quien lleva carga, nunca a quien va vacío.", en: "Watches the roads from the rocks. He shoots whoever carries cargo, never whoever travels empty."}
+  hp: 60
+  ac: 13
+  dex: 2
+  wis: 1
+  row: back
+  attacks:
+    - {name: {es: "Ballesta", en: "Crossbow"}, to_hit: 8, damage: 2d8+3, damage_type: piercing, ranged: true}
+  xp: 280
+  gold: "3d10"
+  type: humanoid
+  habitat: {es: "Cruce de los Carreteros y Cantera de Ceniza", en: "Carters' Crossing and Ash Quarry"}
+  lore:
+    es: "Vigila los caminos desde las rocas. Dispara a quien lleva carga, nunca a quien va vacío."
+    en: "Watches the roads from the rocks. He shoots whoever carries cargo, never whoever travels empty."
+
+quarry_crawler:
+  name: {es: "Reptante de cantera", en: "Quarry crawler"}
+  indefinite: {es: "reptante de cantera", en: "quarry crawler"}
+  icon: 🪨
+  description: {es: "Un mecanismo de extracción que sigue arrastrándose por la cantera aunque nadie le dé órdenes.", en: "An extraction mechanism that keeps crawling through the quarry though nobody gives it orders."}
+  hp: 90
+  ac: 15
+  dex: 0
+  wis: 1
+  row: front
+  attacks:
+    - {name: {es: "Mandíbulas de roca", en: "Rock jaws"}, to_hit: 8, damage: 2d8+3, damage_type: bludgeoning}
+  xp: 340
+  gold: "0"
+  immune: [frightened]
+  type: humanoid
+  habitat: {es: "Cantera de Ceniza", en: "Ash Quarry"}
+  lore:
+    es: "Un mecanismo de extracción que sigue arrastrándose por la cantera aunque nadie le dé órdenes."
+    en: "An extraction mechanism that keeps crawling through the quarry though nobody gives it orders."
+
+antler_wolf:
+  name: {es: "Lobo astado", en: "Antler wolf"}
+  indefinite: {es: "lobo astado", en: "antler wolf"}
+  icon: 🐕
+  description: {es: "Un lobo cuyo hueso del cráneo se ha alargado en astas de metal gris. Caza en jauría y huele el hierro.", en: "A wolf whose skull bone has lengthened into grey metal antlers. He hunts in packs and smells iron."}
+  hp: 85
+  ac: 14
+  dex: 2
+  wis: 1
+  row: front
+  attacks:
+    - {name: {es: "Mordisco", en: "Bite"}, to_hit: 9, damage: 2d8+4, damage_type: piercing}
+  xp: 360
+  gold: "0"
+  type: beast
+  habitat: {es: "Bosque de las Astas", en: "Antler Wood"}
+  lore:
+    es: "Un lobo cuyo hueso del cráneo se ha alargado en astas de metal gris. Caza en jauría y huele el hierro."
+    en: "A wolf whose skull bone has lengthened into grey metal antlers. He hunts in packs and smells iron."
+
+antler_hart:
+  name: {es: "Cervato de hierro", en: "Iron hart"}
+  indefinite: {es: "cervato de hierro", en: "iron hart"}
+  icon: 🫎
+  description: {es: "Hijo menor de la fauna alterada. Embiste sin avisar, pero no resiste más de dos golpes duros seguidos.", en: "A lesser child of the altered fauna. It charges without warning, but cannot take more than two hard blows in a row."}
+  hp: 110
+  ac: 15
+  dex: 1
+  wis: 1
+  row: front
+  attacks:
+    - {name: {es: "Cornada", en: "Gore"}, to_hit: 8, damage: 2d8+4, damage_type: piercing}
+  xp: 450
+  gold: "0"
+  type: beast
+  habitat: {es: "Bosque de las Astas", en: "Antler Wood"}
+  lore:
+    es: "Hijo menor de la fauna alterada. Embiste sin avisar, pero no resiste más de dos golpes duros seguidos."
+    en: "A lesser child of the altered fauna. It charges without warning, but cannot take more than two hard blows in a row."
+
+lumber_brute:
+  name: {es: "Leñador desbocado", en: "Runaway lumberjack"}
+  indefinite: {es: "leñador desbocado", en: "runaway lumberjack"}
+  icon: 🪓
+  description: {es: "Un leñador que quedó atrapado en el aserradero cuando se detuvo el valle, y que ya no distingue entre un tronco y una persona.", en: "A lumberjack trapped in the sawmill when the vale stopped, who no longer tells a log from a person."}
+  hp: 110
+  ac: 14
+  dex: 0
+  wis: 1
+  row: front
+  attacks:
+    - {name: {es: "Hacha de talar", en: "Felling axe"}, to_hit: 9, damage: 2d10+3, damage_type: slashing}
+  xp: 520
+  gold: "4d10"
+  type: humanoid
+  habitat: {es: "Aserradero Silencioso", en: "Silent Sawmill"}
+  lore:
+    es: "Un leñador que quedó atrapado en el aserradero cuando se detuvo el valle, y que ya no distingue entre un tronco y una persona."
+    en: "A lumberjack trapped in the sawmill when the vale stopped, who no longer tells a log from a person."
+
+sawblade_automaton:
+  name: {es: "Autómata de sierra", en: "Sawblade automaton"}
+  indefinite: {es: "autómata de sierra", en: "sawblade automaton"}
+  icon: ⚙️
+  description: {es: "Una sierra de cadena montada en un armazón de bronce. Sigue cortando lo que se mueva.", en: "A chain saw mounted on a bronze frame. It keeps cutting whatever moves."}
+  hp: 105
+  ac: 17
+  dex: 0
+  wis: 1
+  row: front
+  attacks:
+    - {name: {es: "Disco de sierra", en: "Saw disc"}, to_hit: 9, damage: 2d8+6, damage_type: slashing}
+  xp: 560
+  gold: "0"
+  immune: [frightened]
+  type: humanoid
+  habitat: {es: "Aserradero Silencioso", en: "Silent Sawmill"}
+  lore:
+    es: "Una sierra de cadena montada en un armazón de bronce. Sigue cortando lo que se mueva."
+    en: "A chain saw mounted on a bronze frame. It keeps cutting whatever moves."
+
+glass_eel:
+  name: {es: "Anguila de vidrio", en: "Glass eel"}
+  indefinite: {es: "anguila de vidrio", en: "glass eel"}
+  icon: 🐍
+  description: {es: "Una anguila de cuerpo transparente que vive entre las placas de vidrio de la orilla. Cuanto más clara el agua, más cerca está.", en: "An eel with a transparent body that lives between the shore's glass plates. The clearer the water, the closer it is."}
+  hp: 80
+  ac: 16
+  dex: 3
+  wis: 1
+  row: front
+  attacks:
+    - {name: {es: "Descarga", en: "Discharge"}, to_hit: 10, damage: 2d8+5, damage_type: piercing}
+  xp: 600
+  gold: "0"
+  type: beast
+  habitat: {es: "Ribera del Vidrio", en: "Glass Shore"}
+  lore:
+    es: "Una anguila de cuerpo transparente que vive entre las placas de vidrio de la orilla. Cuanto más clara el agua, más cerca está."
+    en: "An eel with a transparent body that lives between the shore's glass plates. The clearer the water, the closer it is."
+
+shard_stalker:
+  name: {es: "Acechador de esquirlas", en: "Shard stalker"}
+  indefinite: {es: "acechador de esquirlas", en: "shard stalker"}
+  icon: 🦎
+  description: {es: "Una criatura de patas largas cubierta de esquirlas que rebotan la luz. Cada herida que recibe le deja un filo nuevo.", en: "A long-legged creature covered in shards that bounce light. Every wound it takes leaves it a new edge."}
+  hp: 105
+  ac: 16
+  dex: 2
+  wis: 1
+  row: front
+  attacks:
+    - {name: {es: "Garras de vidrio", en: "Glass claws"}, to_hit: 10, damage: 2d10+4, damage_type: slashing}
+  xp: 700
+  gold: "0"
+  type: beast
+  habitat: {es: "Ribera del Vidrio", en: "Glass Shore"}
+  lore:
+    es: "Una criatura de patas largas cubierta de esquirlas que rebotan la luz. Cada herida que recibe le deja un filo nuevo."
+    en: "A long-legged creature covered in shards that bounce light. Every wound it takes leaves it a new edge."
+
+regulator_sentinel:
+  name: {es: "Centinela del regulador", en: "Regulator sentinel"}
+  indefinite: {es: "centinela del regulador", en: "regulator sentinel"}
+  icon: 🛡️
+  description: {es: "Guardián del mecanismo. Cuando carga su pulso se queda inmóvil y zumba, y después tarda en recuperarse.", en: "Guardian of the mechanism. When it charges its pulse it stands still and hums, and then takes a while to recover."}
+  hp: 125
+  ac: 18
+  dex: 0
+  wis: 1
+  row: front
+  attacks:
+    - {name: {es: "Puño de bronce", en: "Bronze fist"}, to_hit: 11, damage: 3d8+3, damage_type: bludgeoning}
+  pattern:
+    plate: 15
+    cycle: 3
+    cycle_broken: 2
+    heavy: {name: {es: "Pulso del regulador", en: "Regulator pulse"}, to_hit: 12, damage: 3d8+6, damage_type: force}
+  boss: true
+  xp: 800
+  gold: "0"
+  loot:
+    - {item: regulator_core, chance: 1.0}
+  immune: [frightened]
+  type: humanoid
+  habitat: {es: "Taller del Regulador", en: "Regulator Workshop"}
+  lore:
+    es: "Guardián del mecanismo. Cuando carga su pulso se queda inmóvil y zumba, y después tarda en recuperarse."
+    en: "Guardian of the mechanism. When it charges its pulse it stands still and hums, and then takes a while to recover."
+
+beacon_warden:
+  name: {es: "Guardián de baliza", en: "Beacon warden"}
+  indefinite: {es: "guardián de baliza", en: "beacon warden"}
+  icon: 🕯️
+  description: {es: "Un vigilante de las torres que cree que la baliza sigue encendida. Defiende un fuego que ya no existe.", en: "A tower watchman who believes the beacon is still lit. He defends a fire that no longer exists."}
+  hp: 140
+  ac: 18
+  dex: 1
+  wis: 1
+  row: front
+  attacks:
+    - {name: {es: "Alabarda", en: "Halberd"}, to_hit: 11, damage: 3d10+3, damage_type: slashing}
+  pattern:
+    plate: 20
+    cycle: 2
+    cycle_broken: 2
+    heavy: {name: {es: "Barrido de luz", en: "Sweep of light"}, to_hit: 12, damage: 4d8+5, damage_type: radiant}
+  boss: true
+  xp: 900
+  gold: "6d10"
+  loot:
+    - {item: regulator_core, chance: 0.4}
+  immune: [frightened]
+  type: humanoid
+  habitat: {es: "Alto de las Balizas", en: "Beacon Height"}
+  lore:
+    es: "Un vigilante de las torres que cree que la baliza sigue encendida. Defiende un fuego que ya no existe."
+    en: "A tower watchman who believes the beacon is still lit. He defends a fire that no longer exists."
+
+beacon_keeper:
+  name: {es: "El Custodio de las Balizas", en: "The Beacon Keeper"}
+  indefinite: {es: "el custodio de las balizas", en: "the beacon keeper"}
+  icon: 🔆
+  description: {es: "El último encargado de las balizas del valle. Su luz regula lo que el Taller del Regulador ya no puede: la prueba de quien quiera llamarse veterano.", en: "The last keeper of the vale's beacons. His light regulates what the Regulator Workshop no longer can: the test of whoever wants to call themselves a veteran."}
+  hp: 230
+  ac: 19
+  dex: 2
+  wis: 1
+  row: front
+  attacks:
+    - {name: {es: "Báculo del faro", en: "Lighthouse staff"}, to_hit: 13, damage: 2d8+8, damage_type: bludgeoning}
+  pattern:
+    plate: 50
+    rearm: 25
+    cycle: 2
+    cycle_broken: 1
+    heavy: {name: {es: "Haz de la baliza", en: "Beacon beam"}, to_hit: 14, damage: 5d8+8, damage_type: radiant, ranged: true}
+  boss: true
+  xp: 6000
+  gold: "12d10"
+  loot:
+    - {item: greater_healing_potion, chance: 1.0, qty: 3}
+  immune: [frightened]
+  type: humanoid
+  habitat: {es: "Alto de las Balizas", en: "Beacon Height"}
+  lore:
+    es: "El último encargado de las balizas del valle. Su luz regula lo que el Taller del Regulador ya no puede: la prueba de quien quiera llamarse veterano."
+    en: "The last keeper of the vale's beacons. His light regulates what the Regulator Workshop no longer can: the test of whoever wants to call themselves a veteran."

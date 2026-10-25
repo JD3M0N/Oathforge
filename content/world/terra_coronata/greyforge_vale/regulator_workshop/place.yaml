@@ -1,0 +1,14 @@
+name: {es: "Taller del Regulador", en: "Regulator Workshop"}
+article: {es: el, en: "the"}
+kind: wild
+hunting: true
+description:
+  es: "Una nave de piedra con engranajes del tamaño de carretas, parados a medio giro. En las paredes hay marcas de un mecanismo que regulaba algo mayor que el valle."
+  en: "A stone hall with gears the size of carts, stopped mid-turn. The walls bear marks of a mechanism that regulated something larger than the vale."
+exits:
+  - {to: silent_sawmill, minutes: 30, danger: 2}
+  - {to: glass_shore, minutes: 30, danger: 2}
+  - {to: beacon_height, minutes: 35, danger: 3}
+encounters:
+  - {monsters: [regulator_sentinel], weight: 3}
+  - {monsters: [sawblade_automaton, regulator_sentinel], weight: 2, min_level: 17}

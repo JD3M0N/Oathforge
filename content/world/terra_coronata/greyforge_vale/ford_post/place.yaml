@@ -1,0 +1,12 @@
+name: {es: "Puesto del Vado", en: "Ford Post"}
+article: {es: el, en: "the"}
+kind: wild
+rest_cost: 15
+healer: {cost: 30, heal: 3d8+10}
+description:
+  es: "Una barcaza amarrada, un cobertizo con techo de paja y una hoguera que no se apaga. Es el único refugio del valle: aquí se descansa, se cura y se compran provisiones."
+  en: "A moored barge, a thatched shed and a fire that never goes out. It is the valley's only shelter: here you rest, heal and buy supplies."
+exits:
+  - {to: valley_crossing, minutes: 20, danger: 1}
+  - {to: glass_shore, minutes: 25, danger: 1}
+  - {to: ash_quarry, minutes: 30, danger: 1}

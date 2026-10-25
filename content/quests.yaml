@@ -1861,6 +1861,7 @@ camp_stag:
     - {xp: 2000}
     - {gold: 100}
     - {milestone: iron_stag}
+    - {set_flag: valley_open}
     - {give_item: {greater_healing_potion: 2}}
   stages:
     locked:
@@ -1886,3 +1887,493 @@ camp_stag:
       journal:
         es: "Tamsin te entrega la insignia del gremio sin ceremonia. «Ya no hay más lecciones. El valle está abierto: allí también faltan nombres.»"
         en: "Tamsin hands you the guild's badge without ceremony. \"No more lessons. The vale is open: names are missing there too.\""
+
+reg_arrive:
+  order: 60
+  giver: tamsin
+  after: camp_stag
+  name: {es: "El camino del valle", en: "The Road to the Vale"}
+  summary:
+    es: "La carga que desviaban los falsos pedidos salía de un valle al norte. Tamsin te manda a seguirla hasta el Puesto del Vado."
+    en: "The cargo the forged orders diverted came from a vale to the north. Tamsin sends you to follow it to Ford Post."
+  hint:
+    es: "El valle se abre al terminar «El Ciervo de Hierro»: desde el Camino del Viejo Rey sale la desviación al Cruce de los Carreteros."
+    en: "The vale opens once \"The Iron Stag\" is done: the diversion to Carters' Crossing leaves the Old King's Road."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: visit, target: valley_crossing}
+    - {kind: visit, target: ford_post}
+    - {kind: talk, target: orsa}
+  rewards:
+    - {xp: 600}
+    - {give_item: {greater_healing_potion: 1}}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Tamsin traza una línea hacia el norte."
+        en: "Tamsin draws a line to the north."
+    active:
+      journal:
+        es: "Sigue la carga hasta el Valle de la Fragua Gris: Cruce de los Carreteros, Puesto del Vado y Orsa Vael."
+        en: "Follow the cargo to Greyforge Vale: Carters' Crossing, Ford Post and Orsa Vael."
+      location_text:
+        valley_crossing:
+          es: "Huellas de carros en todas direcciones y faroles apagados. El Puesto del Vado queda al este."
+          en: "Cart tracks in every direction and unlit lanterns. Ford Post lies to the east."
+        ford_post:
+          es: "Una hoguera que no se apaga y una barcaza amarrada. Aquí se descansa y se cura. 🗨️ Habla con Orsa."
+          en: "A fire that never goes out and a moored barge. Here you rest and heal. 🗨️ Talk to Orsa."
+    done:
+      state: completed
+      journal:
+        es: "Orsa te da una taza de caldo y un aviso: «Lo que buscas está en la cantera. Pregunta por Kellan»."
+        en: "Orsa hands you a cup of broth and a warning: \"What you are looking for is at the quarry. Ask for Kellan.\""
+
+reg_cargo:
+  order: 61
+  giver: kellan
+  after: reg_arrive
+  name: {es: "Carga sin papeles", en: "Cargo Without Papers"}
+  summary:
+    es: "Contrabandistas y ballesteros de ceniza cuidan lo que sale del valle. Kellan quiere que los pares antes de que la cantera se quede sin carreteros."
+    en: "Smugglers and ash crossbowmen guard what leaves the vale. Kellan wants them stopped before the quarry runs out of carters."
+  hint:
+    es: "Derrota a cuatro contrabandistas de ceniza y a dos ballesteros de ceniza en el Cruce o en la cantera («🏹 Cazar»)."
+    en: "Defeat four ash smugglers and two ash crossbowmen at the Crossing or the quarry (\"🏹 Hunt\")."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: kill, target: ash_smuggler, count: 4}
+    - {kind: kill, target: ash_crossbowman, count: 2}
+  rewards:
+    - {xp: 900}
+    - {gold: 60}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Kellan tiene cuentas pendientes."
+        en: "Kellan has accounts to settle."
+    active:
+      journal:
+        es: "Despeja el Cruce y la cantera: cuatro contrabandistas y dos ballesteros."
+        en: "Clear the Crossing and the quarry: four smugglers and two crossbowmen."
+    done:
+      state: completed
+      journal:
+        es: "Kellan anota algo en el libro y por primera vez no mira el peso. «Dos carros cruzaron esta semana. Es un comienzo.»"
+        en: "Kellan writes something in the ledger and for once does not look at the weight. \"Two carts crossed this week. It is a start.\""
+
+reg_quarry:
+  order: 62
+  giver: kellan
+  after: reg_cargo
+  name: {es: "Lo que se mueve en la cantera", en: "What Moves in the Quarry"}
+  summary:
+    es: "Algo arrastra la veta por la cantera sin que nadie lo mande. Kellan quiere saber si aún hay cargas dentro."
+    en: "Something drags the seam through the quarry with nobody commanding it. Kellan wants to know if there is still cargo inside."
+  hint:
+    es: "Ve a la Cantera de Ceniza, destruye tres reptantes de cantera y recoge seis de carbón (⚒ Actividades → ⛏️ Minar)."
+    en: "Go to Ash Quarry, destroy three quarry crawlers and gather six coal (⚒ Activities → ⛏️ Mine)."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: visit, target: ash_quarry}
+    - {kind: kill, target: quarry_crawler, count: 3}
+    - {kind: gather, target: coal, count: 6}
+  rewards:
+    - {xp: 1100}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Kellan señala la cantera con el lápiz."
+        en: "Kellan points at the quarry with his pencil."
+    active:
+      journal:
+        es: "Cantera de Ceniza: tres reptantes destruidos y seis de carbón."
+        en: "Ash Quarry: three crawlers destroyed and six coal."
+    done:
+      state: completed
+      journal:
+        es: "Los reptantes dejaron de arrastrar. En el hueco que dejaron hay cajas selladas con el viejo sello del gremio."
+        en: "The crawlers stopped dragging. In the hollow they left there are crates sealed with the guild's old seal."
+
+reg_water:
+  order: 63
+  giver: kellan
+  after: reg_quarry
+  name: {es: "El agua de la cantera", en: "The Quarry's Water"}
+  summary:
+    es: "El agua baja y hay dos formas de arreglarlo: con el capataz o a espaldas de él. Tú decides con quién tratas."
+    en: "The water is dropping and there are two ways to fix it: with the foreman or behind his back. You decide who you deal with."
+  hint:
+    es: "Habla con Kellan en la cantera y elige: ayudarle a restablecer el reparto del agua, o aceptar el trato del contrabandista que la controla."
+    en: "Talk to Kellan at the quarry and choose: help him restore the water rota, or accept the smuggler's deal who controls it."
+  start_stage: locked
+  unlock_stage: active
+  actions:
+    side_with_kellan:
+      label: {es: "💧 Ayudar a Kellan con el reparto", en: "💧 Help Kellan with the rota"}
+      npc: kellan
+      stages: [active]
+      to_stage: done
+      text:
+        es: "Pasas el día cargando barriles junto a los carreteros. Al final, Kellan abre el libro de turnos y escribe tu nombre en él. La Guardia de Plata lo sabrá."
+        en: "You spend the day hauling barrels beside the carters. At the end Kellan opens the shift book and writes your name in it. The Silver Guard will hear of it."
+      effects:
+        - {xp: 1200}
+        - {reputation: {silver_covenant: 10}}
+        - {set_flag: valley_water_kellan}
+    side_with_smuggler:
+      label: {es: "🤝 Aceptar el trato del contrabandista", en: "🤝 Accept the smuggler’s deal"}
+      npc: kellan
+      stages: [active]
+      to_stage: done
+      text:
+        es: "Cierras un trato en voz baja: el agua volverá, pero a un precio que no figurará en ningún libro. Kellan no dice nada, pero deja de mirarte a los ojos."
+        en: "You strike a quiet deal: the water will return, but at a price that will appear in no ledger. Kellan says nothing, but stops meeting your eyes."
+      effects:
+        - {xp: 1200}
+        - {gold: 80}
+        - {reputation: {crimson_syndicate: 10, silver_covenant: -5}}
+        - {set_flag: valley_water_smuggler}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "El agua de la cantera baja cada día."
+        en: "The quarry's water drops every day."
+    active:
+      journal:
+        es: "Decide con Kellan cómo se arregla el agua de la cantera."
+        en: "Decide with Kellan how to fix the quarry's water."
+    done:
+      state: completed
+      journal:
+        es: "El agua volvió a correr. Cómo y a qué precio es algo que el valle recordará."
+        en: "The water ran again. How and at what price is something the vale will remember."
+
+reg_wood:
+  order: 64
+  giver: orsa
+  after: reg_water
+  name: {es: "Astas en el bosque", en: "Antlers in the Wood"}
+  summary:
+    es: "La fauna del Bosque de las Astas creció con el metal de las vetas. Orsa necesita el camino libre hasta el aserradero."
+    en: "The Antler Wood's fauna grew on the metal of the seams. Orsa needs the road to the sawmill clear."
+  hint:
+    es: "Derrota a cuatro lobos astados y a dos cervatos de hierro en el Bosque de las Astas."
+    en: "Defeat four antler wolves and two iron harts in the Antler Wood."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: kill, target: antler_wolf, count: 4}
+    - {kind: kill, target: antler_hart, count: 2}
+  rewards:
+    - {xp: 1400}
+    - {give_item: {heartwood_log: 2}}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Orsa mira hacia el bosque."
+        en: "Orsa looks towards the wood."
+    active:
+      journal:
+        es: "Cuatro lobos astados y dos cervatos de hierro en el Bosque de las Astas."
+        en: "Four antler wolves and two iron harts in the Antler Wood."
+    done:
+      state: completed
+      journal:
+        es: "El camino al aserradero quedó libre. Orsa te paga con dos troncos de corazón de roble que había guardado."
+        en: "The road to the sawmill is clear. Orsa pays you with two heartwood logs she had set aside."
+
+reg_sawmill:
+  order: 65
+  giver: kellan
+  after: reg_wood
+  name: {es: "El aserradero que calló", en: "The Sawmill That Fell Silent"}
+  summary:
+    es: "Nadie ha oído sierras en el Aserradero Silencioso desde antes del invierno. Kellan sospecha que lo que se detuvo se está moviendo otra vez."
+    en: "Nobody has heard saws at the Silent Sawmill since before winter. Kellan suspects what stopped is moving again."
+  hint:
+    es: "Ve al Aserradero Silencioso, derrota a dos leñadores desbocados y a dos autómatas de sierra."
+    en: "Go to the Silent Sawmill, defeat two runaway lumberjacks and two sawblade automatons."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: visit, target: silent_sawmill}
+    - {kind: kill, target: lumber_brute, count: 2}
+    - {kind: kill, target: sawblade_automaton, count: 2}
+  rewards:
+    - {xp: 1800}
+    - {gold: 80}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Kellan escucha el silencio del río."
+        en: "Kellan listens to the river's silence."
+    active:
+      journal:
+        es: "Despeja el Aserradero Silencioso: dos leñadores desbocados y dos autómatas de sierra."
+        en: "Clear the Silent Sawmill: two runaway lumberjacks and two sawblade automatons."
+      location_text:
+        silent_sawmill:
+          es: "Las sierras están quietas y el río represado. Las cadenas se mueven solas cuando no las miras."
+          en: "The saws are still and the river dammed. The chains move by themselves when you are not looking."
+    done:
+      state: completed
+      journal:
+        es: "El río volvió a pasar bajo la rueda. Entre los papeles del despacho hay un nombre repetido: Taller del Regulador."
+        en: "The river passed under the wheel again. Among the papers in the office a name repeats: Regulator Workshop."
+
+reg_glass:
+  order: 66
+  giver: iwen
+  after: reg_sawmill
+  name: {es: "Hierbas y vidrio", en: "Herbs and Glass"}
+  summary:
+    es: "Iwen necesita luz clara para la reparación y sólo la Ribera del Vidrio tiene lo que hace falta: hierbas raras y la anguila que las guarda."
+    en: "Iwen needs clear light for the repair and only the Glass Shore has what is needed: rare herbs and the eel that guards them."
+  hint:
+    es: "Ve a la Ribera del Vidrio, derrota a tres anguilas de vidrio y recoge cuatro hojas de luna (⚒ Actividades → 🌿 Herboristería)."
+    en: "Go to the Glass Shore, defeat three glass eels and gather four moonleaf (⚒ Activities → 🌿 Herbalism)."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: visit, target: glass_shore}
+    - {kind: kill, target: glass_eel, count: 3}
+    - {kind: gather, target: moonleaf, count: 4}
+  rewards:
+    - {xp: 2000}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Iwen espera noticias de la orilla."
+        en: "Iwen waits for news from the shore."
+    active:
+      journal:
+        es: "Ribera del Vidrio: tres anguilas de vidrio y cuatro hojas de luna."
+        en: "Glass Shore: three glass eels and four moonleaf."
+    done:
+      state: completed
+      journal:
+        es: "Iwen examina las hojas a contraluz. «Con esto el taller puede hablar con las torres.»"
+        en: "Iwen examines the leaves against the light. \"With this the workshop can speak to the towers.\""
+
+reg_workshop:
+  order: 67
+  giver: iwen
+  after: reg_glass
+  name: {es: "Los centinelas del taller", en: "The Workshop's Sentinels"}
+  summary:
+    es: "Las balizas se encendían con núcleos de los centinelas del Taller del Regulador. Iwen necesita tres."
+    en: "The beacons were lit with cores from the Regulator Workshop's sentinels. Iwen needs three."
+  hint:
+    es: "Ve al Taller del Regulador y derrota a tres centinelas: cada uno suelta un núcleo de regulador. Cuando apunten (el panel te avisa), defiéndete; cuando recarguen, golpea."
+    en: "Go to the Regulator Workshop and defeat three sentinels: each drops a regulator core. When they aim (the panel warns you), defend; when they reload, strike."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: visit, target: regulator_workshop}
+    - {kind: kill, target: regulator_sentinel, count: 3}
+  rewards:
+    - {xp: 3200}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Iwen enseña el hueco vacío de una baliza."
+        en: "Iwen shows the empty socket of a beacon."
+    active:
+      journal:
+        es: "Taller del Regulador: tres núcleos de regulador, de los centinelas."
+        en: "Regulator Workshop: three regulator cores, from the sentinels."
+      location_text:
+        regulator_workshop:
+          es: "Engranajes del tamaño de carretas parados a medio giro. Algo zumba al fondo de la nave."
+          en: "Gears the size of carts stopped mid-turn. Something hums at the far end of the hall."
+    done:
+      state: completed
+      journal:
+        es: "Tienes tres núcleos tibios en la mochila. Iwen los guarda en un paño sin tocarlos."
+        en: "You have three warm cores in your pack. Iwen wraps them in a cloth without touching them."
+
+reg_repair:
+  order: 68
+  giver: iwen
+  after: reg_workshop
+  name: {es: "Encender la primera baliza", en: "Lighting the First Beacon"}
+  summary:
+    es: "Con los núcleos, la lente y el aceite, la primera baliza puede encenderse. Hay que hacerlo en orden, y a mano."
+    en: "With the cores, the lens and the oil, the first beacon can be lit. It must be done in order, and by hand."
+  hint:
+    es: "Ve al Alto de las Balizas y repara la primera torre siguiendo los tres pasos con Iwen."
+    en: "Go to Beacon Height and repair the first tower following the three steps with Iwen."
+  start_stage: locked
+  unlock_stage: active
+  actions:
+    clean:
+      label: {es: "🔧 Limpiar el engranaje de la torre", en: "🔧 Clean the tower’s gear"}
+      location: beacon_height
+      stages: [active]
+      to_stage: fit
+      requires_item: regulator_core
+      text:
+        es: "Retiras el óxido con un paño y el hueco de la baliza queda limpio. Encajarás el núcleo en cuanto termines."
+        en: "You wipe the rust off with a cloth and the beacon’s socket is clean. You will fit the core as soon as you are done."
+      effects:
+        - {xp: 300}
+    fit:
+      label: {es: "🔩 Encajar el núcleo", en: "🔩 Fit the core"}
+      location: beacon_height
+      stages: [fit]
+      to_stage: light
+      requires_item: regulator_core
+      text:
+        es: "El núcleo entra con un chasquido y el engranaje de la torre gira una vuelta entera, por primera vez en años."
+        en: "The core clicks in and the tower’s gear turns a full revolution, for the first time in years."
+      effects:
+        - {take_item: {regulator_core: 1}}
+        - {xp: 300}
+    light:
+      label: {es: "🔥 Encender la baliza", en: "🔥 Light the beacon"}
+      location: beacon_height
+      stages: [light]
+      to_stage: done
+      text:
+        es: "Una llama blanca sube por la torre y se ve desde Crownreach. Abajo, el viento cambia. Algo grande se mueve en lo alto del Alto: el Custodio ha despertado."
+        en: "A white flame climbs the tower and can be seen from Crownreach. Below, the wind changes. Something big moves on the Height: the Keeper has awakened."
+      effects:
+        - {xp: 1800}
+        - {set_flag: beacon_trial}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Iwen reúne herramientas."
+        en: "Iwen gathers tools."
+    active:
+      journal:
+        es: "En el Alto de las Balizas, limpia el engranaje de la torre (necesitas un núcleo de regulador)."
+        en: "At Beacon Height, clean the tower's gear (you need a regulator core)."
+      location_text:
+        beacon_height:
+          es: "Una hilera de torres de piedra con balizas apagadas. La primera tiene un hueco vacío a la altura de tu pecho."
+          en: "A row of stone towers with unlit beacons. The first has an empty socket at chest height."
+    fit:
+      journal:
+        es: "Encaja el núcleo de regulador en el hueco de la torre."
+        en: "Fit the regulator core into the tower's socket."
+    light:
+      journal:
+        es: "Enciende la baliza."
+        en: "Light the beacon."
+    done:
+      state: completed
+      journal:
+        es: "La baliza ardió. Iwen, desde el Vado, vio la luz por primera vez en su vida. Aún hay algo en lo alto del Alto que quiere probarte."
+        en: "The beacon burned. Iwen, from the Ford, saw the light for the first time in her life. Something on the Height still wants to test you."
+
+reg_warden:
+  order: 69
+  giver: iwen
+  after: reg_repair
+  name: {es: "Los guardianes de la loma", en: "The Hill's Wardens"}
+  summary:
+    es: "Los vigilantes de las torres creen que la baliza sigue encendida y defienden un fuego que ya no existe. Hay que calmarlos antes de la prueba final."
+    en: "The tower watchmen believe the beacon is still lit and defend a fire that no longer exists. They must be quieted before the final test."
+  hint:
+    es: "Derrota a dos guardianes de baliza en el Alto de las Balizas. Su luz avisa antes de barrer: defiéndete y responde."
+    en: "Defeat two beacon wardens at Beacon Height. Their light warns before it sweeps: defend and answer."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  complete_stage: done
+  objectives:
+    - {kind: kill, target: beacon_warden, count: 2}
+  rewards:
+    - {xp: 3600}
+    - {give_item: {greater_healing_potion: 2}}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "Iwen mira hacia lo alto."
+        en: "Iwen looks up the hill."
+    active:
+      journal:
+        es: "Dos guardianes de baliza en el Alto de las Balizas."
+        en: "Two beacon wardens at Beacon Height."
+    done:
+      state: completed
+      journal:
+        es: "Los guardianes callan. Por fin pueden dejar el fuego que defendían."
+        en: "The wardens fall silent. At last they can leave the fire they defended."
+
+reg_trial:
+  order: 70
+  giver: iwen
+  after: reg_warden
+  name: {es: "La prueba de las balizas", en: "The Test of the Beacons"}
+  summary:
+    es: "El Custodio de las Balizas pregunta a quien llega al nivel 20 si de verdad sabe lo que hace. La respuesta no es una frase: es un combate."
+    en: "The Beacon Keeper asks whoever reaches level 20 whether they really know what they are doing. The answer is not a phrase: it is a fight."
+  hint:
+    es: "Alcanza el nivel 20 y llega al Alto de las Balizas con tu técnica final preparada. Descansa antes, lleva pociones y humo. Usa 💡 ¿Qué hago?; cuando se endurece de nuevo, aguanta y vuelve a golpear. Al caer, vuelve con Iwen."
+    en: "Reach level 20 and come to Beacon Height with your final technique ready. Rest first, bring potions and smoke. Use 💡 What do I do?; when it hardens again, hold on and strike once more. When he falls, go back to Iwen."
+  start_stage: locked
+  unlock_stage: active
+  objective_stage: active
+  turn_in_stage: told
+  complete_stage: done
+  objectives:
+    - {kind: kill, target: beacon_keeper}
+  rewards:
+    - {xp: 5000}
+    - {gold: 300}
+    - {give_item: {greater_healing_potion: 3}}
+    - {set_flag: vale_veteran}
+  stages:
+    locked:
+      state: locked
+      journal:
+        es: "La baliza arde y el Custodio espera."
+        en: "The beacon burns and the Keeper waits."
+    active:
+      journal:
+        es: "Derrota al Custodio de las Balizas. Su placa absorbe daño y se endurece una vez más a media vida; avisa su haz de luz y se queda expuesto al recargar."
+        en: "Defeat the Beacon Keeper. His plate soaks damage and hardens once more at half life; he warns before his beam and is exposed as he reloads."
+      location_text:
+        beacon_height:
+          es: "La torre ya arde y, a sus pies, algo enorme se levanta con un báculo de bronce. «Muestra lo que sabes», dice."
+          en: "The tower burns now and at its foot something huge rises with a bronze staff. \"Show what you know,\" it says."
+    told:
+      state: ready
+      journal:
+        es: "El Custodio ha caído. Vuelve al Puesto del Vado con Iwen: lo que has hecho debe contarse."
+        en: "The Keeper is down. Return to Ford Post and Iwen: what you have done must be told."
+    done:
+      state: completed
+      journal:
+        es: "Iwen escribe tu nombre en el libro de las torres, el primero en dos generaciones. «Ya eres veterano del valle. Lo que hagas con ello, es tuyo.»"
+        en: "Iwen writes your name in the towers' book, the first in two generations. \"You are a veteran of the vale now. What you do with it is yours.\""

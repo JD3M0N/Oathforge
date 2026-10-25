@@ -360,3 +360,11 @@ Sin ayudas de beta: todo lleva su tiempo real. Tabla única en `engine/timings.p
 - [ ] En Telegram: examinar los troncos de la Arboleda Antigua, ir a la Hondonada del Ciervo y «🏹 Cazar» lleva al jefe.
 - [ ] En Telegram: el panel avisa «Apunta» antes de la carga y «Recarga» después; 💡 ¿Qué hago? responde distinto con un Guerrero y con un Clérigo.
 - [ ] En Telegram: vencer al Ciervo, entregar a Tamsin y ver el tope subir a 20; probar también derrota, huida con humo y volver a intentarlo.
+
+## 0.10-I · Valle de la Fragua Gris (B11, v0.10.39)
+
+- [x] Pruebas automáticas: grafo con ida y vuelta, puerta cerrada sin la bandera, refugio, cadena de las once misiones, objetivos alcanzables, núcleos suficientes, decisión del agua.
+- [ ] En Telegram (ES/EN): tras entregar al Ciervo aparece «Cruce de los Carreteros» en el Camino del Viejo Rey; viajar, descansar y curarse en el Puesto del Vado.
+- [ ] En Telegram: recorrer los ocho lugares; la recolección da hierro profundo, corazón de roble y seda; el mapa conecta todo.
+- [ ] En Telegram: la decisión de «El agua de la cantera» cambia la reputación y no se puede repetir.
+- [ ] En Telegram: reunir los núcleos, encender la baliza en tres pasos (limpiar, encajar, encender) y vencer al Custodio a nivel 20.

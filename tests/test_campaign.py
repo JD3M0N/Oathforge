@@ -97,7 +97,8 @@ def test_smoke_is_always_obtainable_for_the_escape():
 def test_the_graduation_runs_after_the_collector_and_opens_level_twenty():
     c = get_content()
     path = chain(c)
-    assert path[-5:] == ["camp_collector", "camp_path", "camp_kit", "camp_signs", "camp_stag"]
+    at = path.index("camp_collector")
+    assert path[at:at + 5] == ["camp_collector", "camp_path", "camp_kit", "camp_signs", "camp_stag"]
     stag = c.quests["camp_stag"]
     assert {"milestone": "iron_stag"} in stag.rewards and stag.turn_in_stage and stag.giver == "tamsin"
     assert any(e.to == "stag_hollow" for e in c.locations["elderwood_grove"].exits)

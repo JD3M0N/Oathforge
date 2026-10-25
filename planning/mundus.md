@@ -117,6 +117,17 @@ Ballesta con recarga visible, placa protectora que cualquier clase puede erosion
 4. ¿Conservo **El Viejo Colmillo** (jabalí jefe del prado) como caza opcional y quito su recompensa de 80 de oro?
 5. ¿Empiezo por el motor (los objetivos nuevos, sin texto narrativo final) mientras decides, o espero a la aprobación para todo B09?
 
+## Región 11–20 · Valle de la Fragua Gris (PROVISIONAL, implementada en 0.10.39)
+
+Nombre, historia y PNJ son una propuesta del agente, pendientes de Josue (N02). Cuenca al norte del Camino del Viejo Rey que abastece de materiales a Crownreach; de ella salía la carga que las órdenes falsas desviaban. Las piezas de antiguos reguladores arcanos, al extraerse, alteraron vetas y fauna (el Ciervo fue el primer síntoma).
+
+- **Puerta:** la entrega del Ciervo de Hierro (`valley_open`). Desde el Camino del Viejo Rey sale la desviación al Cruce de los Carreteros.
+- **Lugares:** Cruce de los Carreteros (entrada), Puesto del Vado (refugio: descanso, curandera, tienda), Cantera de Ceniza, Bosque de las Astas, Aserradero Silencioso, Ribera del Vidrio, Taller del Regulador y Alto de las Balizas.
+- **PNJ:** Orsa Vael (barquera, refugio), Kellan Brack (capataz de la cantera) e Iwen Sorrel (guardiana de las balizas).
+- **Arcos:** *Seguir la carga* (11–13), *Lo que sostiene el valle* (13–16, con la decisión del agua), *Las balizas rotas* (16–19, encender la baliza) y *Culminación* (20, la prueba del Custodio de las Balizas).
+- **Contextos de los modificadores:** el 13 se estrena en las astas y la cantera, el 17 en el taller y el Alto; no hay encuentros hechos a medida.
+- **Vida al 20:** el valle sigue abierto para recolectar T1 y cazar; faltan contratos repetibles y desafíos de clase (B12/B14).
+
 ## Próximo
 
 - **Entregar misiones a quien las dio** (prioridad alta del TODO; **MIS-02**).

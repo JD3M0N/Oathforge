@@ -1,0 +1,14 @@
+name: {es: "Alto de las Balizas", en: "Beacon Height"}
+article: {es: el, en: "the"}
+kind: wild
+hunting: true
+description:
+  es: "Una loma pelada con una hilera de torres de piedra, cada una con una baliza apagada. Desde aquí se ve todo el valle y, lejos, las murallas de Crownreach."
+  en: "A bare rise with a row of stone towers, each with an unlit beacon. From here you can see the whole vale and, far off, Crownreach's walls."
+exits:
+  - {to: regulator_workshop, minutes: 35, danger: 3}
+encounters:
+  - {monsters: [beacon_warden], weight: 3}
+  - {monsters: [beacon_warden, regulator_sentinel], weight: 2, min_level: 18}
+fixed_encounters:
+  - {monsters: [beacon_keeper], flag: cleared_beacon_keeper, if_flag: beacon_trial}

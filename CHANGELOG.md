@@ -4,6 +4,29 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.39] - 2026-10-25
+
+0.10-I (B11): **el Valle de la Fragua Gris, de los niveles 11 al 20.** Región provisional (nombre y lore pendientes de que Josue los apruebe) con ocho lugares, doce criaturas, tres PNJ y once misiones hasta la prueba final.
+
+### Añadido
+- **Región** `greyforge_vale`: Cruce de los Carreteros, Puesto del Vado (refugio: descanso, curandera y tienda; no sustituye a Crownreach), Cantera de Ceniza, Bosque de las Astas, Aserradero Silencioso, Ribera del Vidrio, Taller del Regulador y Alto de las Balizas. La puerta es la entrega del Ciervo (`valley_open`) y todo el grafo tiene camino de vuelta a Crownreach. Recursos de T1 (hierro profundo, corazón de roble, seda, piedra en bruto, hojas de luna, musgo de reposo) en la cantera, el bosque y la ribera.
+- **Doce criaturas** de los niveles 11 a 20 (contrabandista y ballestero de ceniza, reptante de cantera, lobo astado, cervato de hierro, leñador desbocado, autómata de sierra, anguila de vidrio, acechador de esquirlas, centinela del regulador, guardián de baliza y **el Custodio de las Balizas**). Centinela, guardián y Custodio usan patrón de jefe (placa, aviso, recarga); el Custodio se endurece de nuevo a media vida.
+- **Tres PNJ** con respaldos de diálogo ES/EN: Orsa Vael (refugio y tienda), Kellan Brack (cantera) e Iwen Sorrel (balizas).
+- **Once misiones** en cuatro actos: *Seguir la carga* (llegar al valle, cargamento sin papeles, la cantera), *Lo que sostiene el valle* (el agua de la cantera con decisión y reputación, las astas, el aserradero, hierbas y vidrio), *Las balizas rotas* (los centinelas del taller, encender la primera baliza en tres pasos, los guardianes de la loma) y *Culminación* (la prueba de las balizas, a nivel 20, con entrega a Iwen).
+- Núcleo de regulador (objeto de misión): lo sueltan siempre los centinelas.
+- Pruebas: grafo conectado con ida y vuelta, puerta cerrada sin la bandera, refugio, cadena de misiones, objetivos alcanzables donde dice el texto, núcleos suficientes para la reparación y la decisión del agua.
+
+### Cambiado
+- El Ciervo de Hierro ahora abre el valle (`valley_open`).
+- La prueba del simulador de «daño por ronda mayor que cero» sólo vale para criaturas de hasta 40 PV.
+
+### Pendiente
+- El nombre y la historia del valle son provisionales (N02); falta tu aprobación.
+- Once misiones regionales, no las 18–24 de la semilla; no hay contratos repetibles ni misiones secundarias.
+- Los contextos de los modificadores 13 y 17 son los combates normales del valle; no hay encuentros hechos a medida.
+- Retratos reales (doce marcadores de posición) y de Orsa, Kellan e Iwen.
+- Balance de las criaturas con el simulador (los pares de centinelas y guardianes son duros); se ajusta en B12.
+
 ## [0.10.38] - 2026-10-25
 
 0.10-I (B10): **el Ciervo de Hierro y la graduación.** Del nivel 10 al hito `iron_stag` (tope 20): elegir rama, recibir una pieza de nivel 10, leer las señales y vencer al jefe con lo que has escogido.

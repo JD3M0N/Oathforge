@@ -1,0 +1,16 @@
+name: {es: "Cruce de los Carreteros", en: "Carters' Crossing"}
+article: {es: el, en: "the"}
+kind: wild
+hunting: true
+description:
+  es: "Un cruce de caminos de tierra apisonada donde los carros de la cantera se juntan con la desviación del Camino del Viejo Rey. Hay postes con faroles apagados y huellas hondas por todas partes."
+  en: "A crossroads of packed earth where the quarry carts meet the diversion from the Old King's Road. There are posts with unlit lanterns and deep ruts everywhere."
+exits:
+  - {to: old_kings_road, minutes: 40, danger: 2, requires_flag: valley_open}
+  - {to: ford_post, minutes: 20, danger: 1}
+  - {to: ash_quarry, minutes: 25, danger: 2}
+  - {to: antler_wood, minutes: 30, danger: 2}
+encounters:
+  - {monsters: [ash_smuggler, ash_smuggler], weight: 3}
+  - {monsters: [ash_smuggler, ash_crossbowman], weight: 3}
+  - {monsters: [ash_crossbowman, ash_crossbowman], weight: 1, min_level: 12}

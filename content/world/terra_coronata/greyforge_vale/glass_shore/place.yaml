@@ -1,0 +1,27 @@
+name: {es: "Ribera del Vidrio", en: "Glass Shore"}
+article: {es: la, en: "the"}
+kind: wild
+hunting: true
+description:
+  es: "Una orilla de arena fundida en placas verdosas que crujen bajo las botas. El agua es clara y fría, y entre las placas crecen hierbas que no se ven en ningún otro sitio."
+  en: "A shore of sand fused into greenish plates that crunch underfoot. The water is clear and cold, and between the plates grow herbs seen nowhere else."
+exits:
+  - {to: ford_post, minutes: 25, danger: 1}
+  - {to: regulator_workshop, minutes: 30, danger: 2}
+encounters:
+  - {monsters: [glass_eel], weight: 3}
+  - {monsters: [shard_stalker], weight: 2, min_level: 15}
+  - {monsters: [glass_eel, shard_stalker], weight: 1, min_level: 17}
+gathering:
+  - skill: herbalism
+    tool: sickle
+    stay_ambush: 0.2
+    resources:
+      - {item: bloodroot, weight: 30}
+      - {item: moonleaf, weight: 40, min_rank: 1}
+      - {item: restmoss, weight: 20, min_rank: 3}
+      - {item: silk_fiber, weight: 12, min_rank: 4}
+  - skill: fishing
+    tool: fishing_rod
+    resources:
+      - {item: river_fish, weight: 80}

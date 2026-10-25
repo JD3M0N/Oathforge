@@ -1,0 +1,22 @@
+name: {es: "Bosque de las Astas", en: "Antler Wood"}
+article: {es: el, en: "the"}
+kind: wild
+hunting: true
+description:
+  es: "Un bosque de robles de ramas retorcidas como cuernas. Las huellas de pezuña están hundidas más de lo que deberían y la corteza está arañada a la altura de un hombre."
+  en: "A wood of oaks whose branches twist like antlers. The hoofprints sink deeper than they should and the bark is scratched at a man's height."
+exits:
+  - {to: valley_crossing, minutes: 30, danger: 2}
+  - {to: silent_sawmill, minutes: 25, danger: 2}
+encounters:
+  - {monsters: [antler_wolf], weight: 3}
+  - {monsters: [antler_wolf, antler_wolf], weight: 2, min_level: 13}
+  - {monsters: [antler_hart], weight: 2, min_level: 14}
+gathering:
+  - skill: woodcutting
+    tool: woodaxe
+    stay_ambush: 0.25
+    resources:
+      - {item: oak_log, weight: 50}
+      - {item: ash_log, weight: 30, min_rank: 2}
+      - {item: heartwood_log, weight: 14, min_rank: 3}

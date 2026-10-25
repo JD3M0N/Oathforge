@@ -644,7 +644,7 @@ async def test_journal_missions_and_bestiary_views(llm, monkeypatch):
     await p.press("jrl|-|-")  # the old log button opens the chronicle
     assert "Alistamiento" in p.last[0] and "Día 1" in p.last[0]
     await p.press("jrb|-|-")
-    assert "0/12" in p.last[0]
+    assert "0/24" in p.last[0]
     await p.press("jrr|-|-")
     assert p.last[0]
 

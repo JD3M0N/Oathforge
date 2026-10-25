@@ -63,7 +63,7 @@ Hito **0.10-I** del [roadmap general](roadmap.md). Se avanza **fase a fase**: ca
 | B08 · Tiempos, descanso, derrota y economía | ✅ Hecha salvo stock crítico y cobertura T0/T1 (pasan a B09) | 0.10.35 |
 | B09 · Campaña hasta el Recaudador | ✅ Hecha (mentor y trama provisionales) | 0.10.36–0.10.37 |
 | B10 · Ciervo y graduación | ✅ Hecha (la región es B11) | 0.10.38 |
-| B11 · Región y aventuras 11–20 | Pendiente | — |
+| B11 · Región y aventuras 11–20 | ✅ Hecha con región provisional y menos misiones de las previstas (11 de 18–24) | 0.10.39 |
 | B12 · Balance integral | Pendiente | — |
 | B13 · Retirar cripta, documentación y reinicio | Pendiente | — |
 | B14 · Candidato y lanzamiento | Pendiente | — |
@@ -1212,11 +1212,11 @@ El simulador y pruebas se amplían junto a cada fase, no solo en B12. No hacen f
 ### B11 · Región y aventuras 11–20
 
 **Objetivo:** que diez niveles nuevos tengan contenido.
-- [ ] Validar lore y nombre de región cercana.
-- [ ] Grafo conectado, viajes directos, refugio y relación con Crownreach.
-- [ ] Cuatro actos, secundarias, criaturas con patrones y fuentes T1.
-- [ ] Contextos para modificadores 13/17 y culminación 20.
-- [ ] Actividades de veterano sin multijugador ni mazmorra.
+- [ ] Validar lore y nombre de región cercana. (propuesta implementada en 0.10.39: pendiente de aprobación de Josue)
+- [x] Grafo conectado, viajes directos, refugio y relación con Crownreach. (0.10.39)
+- [x] Cuatro actos, criaturas con patrones y fuentes T1. (0.10.39; **sin** secundarias ni contratos repetibles)
+- [x] Culminación 20 (la prueba de las balizas, 0.10.39). Contextos de modificadores 13/17: los combates normales del valle; sin encuentros a medida.
+- [x] Actividades de veterano sin multijugador ni mazmorra. (0.10.39: recolección T1 en la cantera, el bosque y la ribera)
 **Archivos:** mundo, NPC, misiones, monstruos, botines, recetas especiales, logros, arte.
 **Pruebas:** rutas, recursos accesibles, contenido según nivel, objetivos alcanzables, regreso a ciudad.
 **Terminado:** recorrido continuo hasta 20 y aventuras donde usar técnica final.
