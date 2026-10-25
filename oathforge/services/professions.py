@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from oathforge.content import get_content
 from oathforge.database.models import Character
 from oathforge.engine import gathering
-from oathforge.services import characters
+from oathforge.services import characters, quests
 from oathforge.services.events import Outcome
 
 SLOTS = 2
@@ -69,14 +69,16 @@ async def learn(session: AsyncSession, char: Character, key: str, replace: str |
     name = c.professions[key].name.model_dump()
     if len(current) < SLOTS:
         _set(char, current + [key], xp_map)
-        return Outcome().add("prof.learned", prof=name, used=len(current) + 1, slots=SLOTS)
+        out = Outcome().add("prof.learned", prof=name, used=len(current) + 1, slots=SLOTS)
+        return out.extend(await quests.on_event(session, char, "learn_profession", key))
     if replace not in current:
         return Outcome.refused("prof.err.slots_full", slots=SLOTS)
     if char.gold < SWAP_COST:
         return Outcome.refused("shop.err.no_gold", price=SWAP_COST)
     char.gold -= SWAP_COST
     _set(char, [key if p == replace else p for p in current], xp_map)
-    return Outcome().add("prof.swapped", prof=name, old=c.professions[replace].name.model_dump(), cost=SWAP_COST)
+    out = Outcome().add("prof.swapped", prof=name, old=c.professions[replace].name.model_dump(), cost=SWAP_COST)
+    return out.extend(await quests.on_event(session, char, "learn_profession", key))
 
 
 def stall_of(key: str) -> str | None:

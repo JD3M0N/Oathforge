@@ -113,7 +113,9 @@ async def equip(session: AsyncSession, char: Character, instance_id: int) -> Out
         if other.equipped_slot == item.slot:
             other.equipped_slot = None
     inst.equipped_slot = item.slot
-    return Outcome().add("inv.equipped", item=item.name.model_dump())
+    from oathforge.services import quests  # quests reads the inventory too
+    return Outcome().add("inv.equipped", item=item.name.model_dump()).extend(
+        await quests.on_event(session, char, "equip", inst.item_key))
 
 
 async def combat_items(session: AsyncSession, char: Character) -> dict[str, int]:
@@ -268,8 +270,9 @@ async def buy(session: AsyncSession, char: Character, npc_key: str, item_key: st
         return Outcome.refused("shop.err.no_gold", price=price)
     char.gold -= price
     await add_item(session, char, item_key, 1)
+    from oathforge.services import quests  # quests reads the inventory too
     return Outcome().add("shop.bought", item=get_content().items[item_key].labelled(), price=price,
-                         gold=char.gold)
+                         gold=char.gold).extend(await quests.on_event(session, char, "buy", item_key))
 
 
 async def committed_tool(session: AsyncSession, char: Character) -> str | None:
@@ -297,4 +300,6 @@ async def sell(session: AsyncSession, char: Character, npc_key: str, instance_id
     else:
         await session.delete(inst)
     char.gold += price
-    return Outcome().add("shop.sold", item=item.labelled(), price=price, gold=char.gold)
+    from oathforge.services import quests  # quests reads the inventory too
+    return Outcome().add("shop.sold", item=item.labelled(), price=price, gold=char.gold).extend(
+        await quests.on_event(session, char, "sell", inst.item_key))

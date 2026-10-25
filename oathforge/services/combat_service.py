@@ -155,6 +155,8 @@ async def act(
                                     f"encounter:{enc.id}:scene:{entry.params['object']}")
     out.events += [log_event(state, e) for e in logs]
     await _sync_and_maybe_finish(session, char, enc, state, rng, out)
+    if state.status == "fled" and any(e.key == "combat.escaped" for e in logs):  # out with a smoke bomb, not on foot
+        out.extend(await quests.on_event(session, char, "smoke", "any"))
     _record(enc, char, state, action, logs)
     return out
 

@@ -17,7 +17,7 @@
 | B06 Catorce clases base, niveles 1–9 | ✅ | 0.10.29–31 |
 | B07 Las 41 ramas | ✅ | 0.10.32–34 |
 | B08 Tiempos, descanso, derrota y economía | ✅ (falta stock crítico y cobertura T0/T1 de herramientas → B09) | 0.10.35 |
-| **B09 Campaña común hasta el Recaudador** | ⏸ propuesta de mentor y trama escrita en `planning/mundus.md`; **espera la aprobación de Josue** antes del texto final | |
+| **B09 Campaña común hasta el Recaudador** | ⏸ propuesta de mentor y trama escrita en `planning/mundus.md`; **espera la aprobación de Josue** antes del texto final; el motor de objetivos nuevos ya está | 0.10.36 (parcial) |
 | B10 Ciervo de Hierro y graduación | ⏳ | |
 | B11 Región cercana 11–20 | ⏳ | |
 | B12 Balance integral | ⏳ | |

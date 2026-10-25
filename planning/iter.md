@@ -22,6 +22,7 @@ Versionado `0.x.y`: **y** (parche) en arreglos y cambios pequeños; **x** (menor
 | 0.8.3 | Planning reorganizado: Possibilium, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md`, `content/officina/` |
 | 0.9.0 | Logros e identidad: 30 logros, dos metalogros, títulos, destacados, objetivos seguidos y reconocimiento retroactivo verificable |
 | 0.9.1 | Hoja de ruta de 0.10 (consolidación) y 0.11 (multijugador): `planning/roadmap.md` |
+| 0.10.36 | 0.10-I (B09, 1.ª parte): nueve tipos de objetivo de misión (equipar, comprar, vender, guardar, sacar, oficio, plano, humo, rama); propuesta del mentor en `mundus.md` |
 | 0.10.35 | 0.10-I (B08): tiempos reales en una tabla (`engine/timings.py`), descanso corto limitado, derrota con tope, pociones a precio normal; sin ayudas de beta |
 | 0.10.34 | 0.10-I (B07, lote C): las nueve ramas de entidades, formas, tótems y tiempo; 41 de 41 listas; seis entidades y dos formas nuevas |
 | 0.10.33 | 0.10-I (B07, lote B): doce ramas más (curación, regeneración, melodías, reacciones y control); 32 de 41 listas; el simulador cura cuando va por debajo de un tercio |

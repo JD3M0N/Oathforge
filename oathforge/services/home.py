@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from oathforge.config import get_settings
 from oathforge.content import get_content
 from oathforge.database.models import Character, ItemInstance
-from oathforge.services import characters, inventory
+from oathforge.services import characters, inventory, quests
 from oathforge.services.events import Outcome
 
 
@@ -85,8 +85,9 @@ async def deposit(session: AsyncSession, char: Character, key: str, qty: int = 1
                                      container=inventory.CHEST, history=[])
                 session.add(stack)
     await session.flush()
-    return Outcome().add("home.deposited", item=c.items[key].labelled(), qty=qty,
-                         used=len(await stored(session, char)), capacity=capacity(char))
+    out = Outcome().add("home.deposited", item=c.items[key].labelled(), qty=qty,
+                        used=len(await stored(session, char)), capacity=capacity(char))
+    return out.extend(await quests.on_event(session, char, "stash", key, qty))
 
 
 async def withdraw(session: AsyncSession, char: Character, key: str, qty: int = 1) -> Outcome:
@@ -113,8 +114,9 @@ async def withdraw(session: AsyncSession, char: Character, key: str, qty: int = 
             session.add(ItemInstance(owner_character_id=char.id, item_key=key, qty=take, history=[]))
     await _merge_backpack_stacks(session, char, key)
     await session.flush()
-    return Outcome().add("home.withdrew", item=c.items[key].labelled(), qty=qty,
-                         used=len(await stored(session, char)), capacity=capacity(char))
+    out = Outcome().add("home.withdrew", item=c.items[key].labelled(), qty=qty,
+                        used=len(await stored(session, char)), capacity=capacity(char))
+    return out.extend(await quests.on_event(session, char, "take", key, qty))
 
 
 async def _merge_backpack_stacks(session: AsyncSession, char: Character, key: str) -> None:

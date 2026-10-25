@@ -110,7 +110,9 @@ def objective_target(obj: QuestObjective) -> dict:
     if obj.target.startswith("furniture:"):  # the bed and the chest of your room, which a starter recipe installs
         return {lang: t(lang, f"home.furniture.{obj.target.split(':')[1]}") for lang in ("es", "en")}
     pool = {"kill": c.monsters, "hunt": c.locations, "talk": c.npcs, "visit": c.locations, "gather": c.items, "skin": c.items,
-            "craft": c.items, "rest": c.locations, "heal": c.locations}[obj.kind]
+            "craft": c.items, "rest": c.locations, "heal": c.locations, "equip": c.items, "stash": c.items,
+            "take": c.items, "buy": c.items, "sell": c.items, "blueprint": c.items,
+            "learn_profession": c.professions}[obj.kind]
     if pool is c.locations:  # «Ve a la Capilla del Alba»
         return pool[obj.target].phrase()
     return pool[obj.target].name.model_dump()
@@ -121,8 +123,16 @@ def objective_key(obj: QuestObjective) -> str:
     return f"quest.objective.{obj.kind}" + ("_any" if obj.target == "any" else "")
 
 
+ANY_TARGET = ("hunt", "rest", "heal", "equip", "stash", "take", "buy", "sell", "smoke", "branch")  # kinds that accept "any"
+
+
 def _matches(obj: QuestObjective, kind: str, target: str) -> bool:
-    return obj.kind == kind and (obj.target == target or (obj.target == "any" and kind in ("hunt", "rest", "heal")))
+    return obj.kind == kind and (obj.target == target or (obj.target == "any" and kind in ANY_TARGET))
+
+
+async def on_event(session: AsyncSession, char: Character, kind: str, target: str, amount: int = 1) -> Outcome:
+    """A fact a service just made true (equipped, bought, stashed, a profession learned...) for the missions."""
+    return await advance(session, char, kind, target, random.Random(), amount)
 
 
 async def advance(session: AsyncSession, char: Character, kind: str, target: str, rng: random.Random,

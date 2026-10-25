@@ -35,6 +35,8 @@ Regla: **el jugador elige adónde ir; el motor hace el recorrido y solo lo inter
 
 Máquinas de estados en `content/quests.yaml`: `stages`, `actions` (botón o texto libre con tirada) y `triggers`. Con `objectives` se completan solas y dan `rewards`; la siguiente se abre con `after` o `unlock_flag`; avance en `quest_progress.counters`. Efectos: `give_item`, `take_item`, `gold`, `xp`, `reputation`, `set_flag`, `npc_memory`, `trust`, `damage`, `world_rumor`.
 
+Objetivos nuevos desde 0.10.36 (los emite el servicio): `equip`, `buy`, `sell`, `stash`, `take`, `learn_profession`, `blueprint`, `smoke` (huida con humo) y `branch`; los seis primeros y `smoke`/`branch` aceptan `target: any`.
+
 Objetivos: `kill`, `talk`, `visit`, `read` (sección del `/rulebook`), `hunt` (victorias de 🏹 Cazar o 🐾 Rastrear en un lugar, de día o de noche), `gather`, `skin`, `craft` (cantidad de un objeto), `rest` y `heal` (aceptan `target: any`).
 
 **Tutorial** (misiones 1–10, sin mazmorras, `tutorial: true`):
@@ -67,6 +69,53 @@ Pacto de Plata y Sindicato Carmesí con reputación −100..100 (precios ±25 %)
 - El mapa y la imagen nunca son fuente de verdad: el grafo de `content/world/` manda.
 - Los ids de lugar son globales y no cambian al mover carpetas; la jerarquía conceptual del GDD no renombra carpetas.
 - Mundo compartido con ecos (rumores) mientras el juego sea individual.
+
+## Propuesta B09 · Los nombres que faltan (PROVISIONAL, espera la aprobación de Josue)
+
+> Nada de esto es canon ni está en `content/`. Es el texto que pide N01 (roadmap_balance §8.2) antes de escribir los actos I–VI. Cuando Josue lo apruebe (o lo corrija) se escribe la campaña en `quests.yaml`/`npcs.yaml`/`monsters.yaml`.
+
+### El mentor (N01)
+
+**Tamsin Harrow, «la Linterna»** (propuesta de nombre; género y edad son corregibles). Exploradora y cartógrafa de campo del Gremio de Aventureros, cuarenta y tantos años, pelo gris recogido, un farol de latón siempre colgado del cinto aunque sea de día.
+- **Pasado:** dirigió durante años las «rutas de la Linterna», las entregas del Gremio por el Camino del Viejo Rey. Hace dos temporadas, una de sus entregas (selladas con una orden que ella creyó legítima) terminó en una emboscada y perdió a dos de su grupo. Desde entonces no sale de Crownreach sin motivo y busca quién falsificó aquella orden. Es la razón humana de toda la campaña: **ella necesita a alguien que no haya sido ya señalado**, un recluta.
+- **Voz:** cálida, irónica, práctica; habla en imperativo suave («mira esto», «prueba así»), cuenta anécdotas cortas de camino, nunca sermonea. Llama «recluta» al jugador hasta que cumple su primera entrega, y luego por su nombre.
+- **Límites:** no combate por el jugador, no regala poder ni resuelve tiradas; da consejos, herramientas básicas y contexto. Al final (acto VI) confía una tarea real: seguir el rastro de las órdenes falsas.
+- **Relación con Vale:** Vale sigue siendo la instructora que alista y entrega el acto I (no se borra). Tamsin toma el relevo al final del acto I; Vale pasa a ser quien rinde cuentas al Gremio y pone el sello a las entregas. Los saludos de Vale dejan de dar «órdenes de aprendizaje» después de la misión 1.
+- **Dónde está:** Gremio de Aventureros (día) y mesa de mapas de la taberna La Corona Rota (noche).
+- **Hechos que recuerda (verificables, nunca inventados por la IA):** primera entrega devuelta, oficio elegido, retirada con humo, Recaudador derrotado y prueba entregada.
+
+### La trama
+
+Órdenes falsas con el sello del Gremio desvían cargamentos de Crownreach y mandan a los reclutas a puntos peligrosos del Camino del Viejo Rey. Quien las firma es **el Recaudador de Ceniza**, un cobrador sin nombre que dirige la red local desde un puesto de peaje abandonado en el camino. Su mercancía son piezas de antiguos reguladores arcanos; moverlas altera vetas y fauna, y de ahí sale lo que acabará siendo el Ciervo de Hierro (B10). La cripta y el relicario dejan de ser el hilo principal (se retiran en B13); **Holt, de la Guardia de Plata, queda como destinatario de la prueba**.
+
+### Actos I–VI (≈ 26 misiones; las del tutorial 1–10 se reaprovechan)
+
+| Acto | Niv. | Misiones (resumen) | Sistemas que enseña |
+|---|---|---|---|
+| I. Tu nombre en el libro | 1–3 | 1 Alistamiento (Vale) · 2 Calles de Crownreach · 3 El mercado · 4 Colmillos en el prado · 5 Raíz de sangre · **nuevo:** Una entrega sospechosa (la orden no cuadra con el libro de Vale) | PNJ, mapa, tiendas, combate, desuello, equipar y comparar botín |
+| II. Un techo ganado | 3–4 | 6 Guiso del cazador · 7 Hierro para la Guardia · 8 Un cuarto propio · **nuevo:** Tablones y clavos (refinar) · Lo que se guarda (cofre: guardar y sacar) · 10a Heridas de guerra (descanso largo y corto) | recolección, refinado, habitación, descanso |
+| III. Las manos de Crownreach | 4–6 | **nuevo:** Elige tu mano (aprender un oficio con su maestro) · tres encargos del oficio elegido (ocho variantes, uno por oficio) · Un componente que falta (comprar) · Lo que sobra (vender el resultado) | oficios, planos, comercio |
+| IV. Lo que falta en los caminos | 6–8 | 9 Alas al anochecer · **nuevo:** Rastros en el barro (rastreo) · Hierbas para Ilva · Una caña y una sartén (pesca/cocina) · Rumor o hecho (contrastar una pista, decisión con reputación) · Pociones para el camino | caza, rastreo, hierbas, aficiones, bestiario, reputación |
+| V. Volver también es vencer | 8–9 | **nuevo:** Prueba en el puesto del camino (recuperar la prueba y salir con humo) · Curar y reponer · Seguir el cargamento | huida con humo, curación, diario |
+| VI. El Recaudador de Ceniza | 9 | **nuevo:** La mesa de Tamsin (investigar con botones: tres pistas) · El Recaudador (combate) · **Entrega** a Tamsin/Holt: hito `ash_collector` | jefe, entrega, puerta del nivel 10 |
+
+Cada acto cierra con una entrega a quien la dio. Las misiones son cortas y agrupan objetivos; el número final se ajusta al tiempo medido (24–32).
+
+### Lo que hay que construir en el motor (objetivos que hoy no existen)
+
+`equip` (equipar un objeto), `learn_profession`, `chest` (depositar/retirar), `use_smoke` (huida con humo y prueba), `choose_branch`, `follow` (seguir un objetivo en el diario), `select_title`, `buy`/`sell` (transacción), `fish`, `cook`, `read_blueprint`. Cada uno nace de un evento del servicio correspondiente, nunca de una frase de la IA. Los ocho oficios reciben tres encargos cada uno con la misma estructura y productos distintos; la fuente de humo, curación y material de misión debe poder recuperarse (§8.5).
+
+### El Recaudador de Ceniza (§9.1)
+
+Ballesta con recarga visible, placa protectora que cualquier clase puede erosionar, disparo fuerte anunciado un turno antes y ventana de ataque tras la descarga; al perder la placa cambia de patrón sin ataques sorpresa. Se equilibra para clase base con equipo T0. Botín: **prueba de falsificación**, oro de preparación y una pieza apropiada. La entrega concede el hito (tope de nivel 10) y la XP; si falta XP, el diario ofrece secundarias y se sube solo al reunirla.
+
+### Preguntas para Josue
+
+1. ¿Te gusta **Tamsin Harrow «la Linterna»** (nombre, género, pasado)? Si no, dime nombre y tono y lo reescribo.
+2. ¿Vale se queda como instructora del acto I y rinde cuentas al Gremio, o prefieres que desaparezca de la campaña?
+3. ¿Aprobada la trama del sello falsificado y el Recaudador como cobrador del peaje del camino?
+4. ¿Conservo **El Viejo Colmillo** (jabalí jefe del prado) como caza opcional y quito su recompensa de 80 de oro?
+5. ¿Empiezo por el motor (los objetivos nuevos, sin texto narrativo final) mientras decides, o espero a la aprobación para todo B09?
 
 ## Próximo
 

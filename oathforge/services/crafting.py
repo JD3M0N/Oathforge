@@ -88,7 +88,7 @@ async def learn_blueprint(session: AsyncSession, char: Character, item_key: str)
     char.crafting = {**(char.crafting or {}), "known": known(char) + [item.teaches]}
     out = Outcome().add("craft.learned", item=name, prof=discipline_name(recipe.profession), rank=recipe.min_rank)
     await achievements.emit(session, char, out, "blueprint", {"recipe": item.teaches}, f"blueprint:{item.teaches}")
-    return out
+    return out.extend(await quests.on_event(session, char, "blueprint", item_key))
 
 
 async def missing(session: AsyncSession, char: Character, recipe: Recipe, qty: int = 1) -> dict[str, int]:

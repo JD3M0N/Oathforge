@@ -459,10 +459,15 @@ def validate_references(c: Content) -> None:
         # a craft objective may also name furniture a starter recipe installs ("furniture:bed")
         furniture = {f"furniture:{r.installs}": None for r in c.recipes.values() if r.installs}
         items, places = ("item", c.items), ("location", {**c.locations, "any": None})
+        any_items = ("item", {**c.items, "any": None})
         pools = {"kill": ("monster", c.monsters), "talk": ("npc", c.npcs), "visit": ("location", c.locations), "hunt": places,
                  "gather": items, "skin": items, "craft": ("item", {**c.items, **furniture}),
                  "rest": places, "heal": places,
-                 "read": ("rulebook section", c.rulebook)}
+                 "read": ("rulebook section", c.rulebook),
+                 "equip": any_items, "stash": any_items, "take": any_items, "buy": any_items, "sell": any_items,
+                 "learn_profession": ("profession", c.professions), "blueprint": items,
+                 "smoke": ("target", {"any": None}),
+                 "branch": ("branch", {**c.class_specializations, "any": None})}
         for obj in quest.objectives:
             need(*pools[obj.kind][:1], obj.target, pools[obj.kind][1], f"{where} objective")
         effect_lists.append((f"{where} rewards", quest.rewards))

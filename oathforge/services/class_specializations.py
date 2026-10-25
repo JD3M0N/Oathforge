@@ -13,7 +13,7 @@ from oathforge.content import get_content
 from oathforge.content.schemas import ClassSpecialization, Modifier
 from oathforge.database.models import Character
 from oathforge.engine import class_build
-from oathforge.services import achievements, characters
+from oathforge.services import achievements, characters, quests
 from oathforge.services.events import Outcome
 
 
@@ -109,7 +109,7 @@ async def _take(session: AsyncSession, char: Character, key: str, branch: ClassS
             out.add("progress.new_ability", ability=a.name.model_dump(), cls=char.class_key, ability_key=akey)
     await achievements.emit(session, char, out, "class_specialized", {"branch": key},
                             f"branch:{key}:{branch.revision}")
-    return out
+    return out.extend(await quests.on_event(session, char, "branch", key))
 
 
 async def choose_option(session: AsyncSession, char: Character, choice_key: str, option: str) -> Outcome:

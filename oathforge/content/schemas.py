@@ -851,7 +851,10 @@ class QuestObjective(Strict):
     # kill: monster · talk: npc · visit: location · gather / skin / craft: item obtained (counts quantity)
     # rest / heal: location, or "any" (a long rest that ends / the chapel healer) · read: rulebook section
     # hunt: location (or "any"): a fight won from 🏹 Hunt or 🐾 Track there, any creature, day or night
-    kind: Literal["kill", "hunt", "talk", "visit", "gather", "skin", "craft", "rest", "heal", "read"]
+    # equip / buy / sell / stash / take: item (or "any") · learn_profession: profession · blueprint: the blueprint item
+    # smoke: a fight left with a smoke bomb ("any") · branch: the class branch taken (or "any")
+    kind: Literal["kill", "hunt", "talk", "visit", "gather", "skin", "craft", "rest", "heal", "read",
+                  "equip", "learn_profession", "stash", "take", "buy", "sell", "smoke", "branch", "blueprint"]
     target: str  # monster, npc, location, item or rulebook section key ("any" for hunt / rest / heal)
     count: int = 1
 

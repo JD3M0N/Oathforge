@@ -4,6 +4,16 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.36] - 2026-10-25
+
+0.10-I (B09, 1.ª parte): **objetivos de misión que nacen de los servicios.** Es el motor de la campaña hasta el Recaudador; el texto del mentor y de los actos queda a la espera de la aprobación de `planning/mundus.md`.
+
+### Añadido
+- Nueve tipos de objetivo: `equip`, `buy`, `sell`, `stash` (guardar en el cofre), `take` (sacar), `learn_profession`, `blueprint`, `smoke` (salir de un combate con una bomba de humo) y `branch` (elegir rama). Cada uno lo emite el servicio correspondiente, nunca una frase de la IA; `equip`, `buy`, `sell`, `stash`, `take`, `smoke` y `branch` aceptan `any`.
+- El cargador valida sus objetivos (objeto, oficio o rama existentes) y hay textos ES/EN para el diario.
+- Prueba de que equipar, comprar, vender, guardar y sacar avanzan una misión.
+- Propuesta provisional del mentor (Tamsin Harrow) y de la trama «Los nombres que faltan» en `planning/mundus.md`, para aprobar antes del texto final.
+
 ## [0.10.35] - 2026-10-25
 
 0.10-I (B08): **tiempos reales, descanso corto y derrota con tope.** Se acaban las ayudas de beta: el descanso y el tutorial llevan su tiempo y las pociones cuestan lo que valen.

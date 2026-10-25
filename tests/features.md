@@ -338,3 +338,9 @@ Sin ayudas de beta: todo lleva su tiempo real. Tabla única en `engine/timings.p
 - [ ] En Telegram: el tutorial entero con tiempos reales (recolectar 4 min, desollar segundos); `oath tutorial-stats` cuadra con lo jugado.
 - [ ] En Telegram: perder un combate con mucho oro cuesta como mucho 15 por nivel; con 0 de oro, nada; Ysolde cura aunque no te alcance.
 - [ ] En Telegram: con el pico en uso, la tienda no te deja venderlo («la estás usando»).
+
+## 0.10-I · Objetivos de misión nuevos (B09, 1.ª parte, v0.10.36)
+
+- [x] Prueba automática: comprar, vender, equipar, guardar y sacar avanzan una misión (y comprar otro objeto no).
+- [ ] En Telegram: una misión de prueba con «Equípate una pieza» se completa al equipar desde el inventario.
+- [ ] En Telegram: salir de un combate con una bomba de humo cuenta como `smoke`; huir a pie no.
