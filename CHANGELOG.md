@@ -4,6 +4,19 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.30] - 2026-10-25
+
+0.10-I (B06, 2.ª parte): los lanzadores. El Clérigo, el Hechicero, el Druida y el Bardo dejan los usos por descanso y pasan a su barra, con habilidades de nivel 1 a 9.
+
+### Añadido
+- **Clérigo, Hechicero y Druida (Maná)**, y **Bardo (Resonancia)**, con cuatro o cinco habilidades nuevas cada uno: *Plegaria sanadora*, *Rayo guía*, *Resguardo sagrado* y *Columna de luz*; *Lanza de hielo*, *Maestría arcana*, *Nova gélida*, *Resguardo arcano* y *Cono de frío*; *Piel de corteza*, *Enjambre punzante*, *Rebrote* y *Tormenta de espinas*; *Susurros disonantes*, *Acorde estremecedor*, *Bis* y *Virtuoso*.
+- La **Resonancia** del Bardo empieza vacía y se construye con su burla, su ataque y cada turno; su estribillo la gasta de golpe.
+
+### Cambiado
+- Los textos de estas cuatro clases hablan del Maná y la Resonancia en lugar de «dos usos por descanso» o «ilimitado».
+- Los nombres de habilidad nuevos llevan las mismas mayúsculas que los antiguos.
+- Quedan solo el Brujo con usos por descanso: es el último de la lista, y se rehace con el siguiente grupo.
+
 ## [0.10.29] - 2026-10-25
 
 0.10-I (B06, 1.ª parte): las clases marciales. Llegan el Bárbaro y el Monje y se rehacen el Guerrero, el Paladín y el Pícaro, todos con su propia barra y habilidades de nivel 1 a 9.

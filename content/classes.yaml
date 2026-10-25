@@ -33,7 +33,7 @@ warrior:
       heal_dice: 1d10
       heal_add: level
     power_strike:
-      name: {es: Golpe poderoso, en: Power Strike}
+      name: {es: Golpe Poderoso, en: Power Strike}
       description:
         es: Un ataque con arma que añade 1d8 de daño contundente. Cuesta 4 de Foco.
         en: A weapon attack that adds 1d8 bludgeoning damage. Costs 4 Focus.
@@ -79,7 +79,7 @@ warrior:
       action: none
       crit_range: 19
     shield_bash:
-      name: {es: Embestida de escudo, en: Shield Bash}
+      name: {es: Embestida de Escudo, en: Shield Bash}
       description:
         es: 'El objetivo tira DES: si falla, recibe 1d6 y queda aturdido un turno. Cuesta 4 de Foco.'
         en: 'The target rolls a DEX save: on a fail it takes 1d6 and is stunned for a turn. Costs 4 Focus.'
@@ -105,7 +105,7 @@ warrior:
       action: none
       extra_attack: true
     veteran_guard:
-      name: {es: Guardia de veterano, en: Veteran's Guard}
+      name: {es: Guardia de Veterano, en: Veteran's Guard}
       description: {es: +1 a la CA., en: +1 AC.}
       details:
         es: Años de combate te enseñaron dónde va el siguiente golpe. Siempre tienes +1 a la CA, sin hacer nada.
@@ -115,7 +115,7 @@ warrior:
       action: none
       ac_bonus: 1
     finishing_blow:
-      name: {es: Golpe de gracia, en: Finishing Blow}
+      name: {es: Golpe de Gracia, en: Finishing Blow}
       description:
         es: Un ataque con arma que añade 3d6 de daño contundente. Cuesta 7 de Foco.
         en: A weapon attack that adds 3d6 bludgeoning damage. Costs 7 Focus.
@@ -145,7 +145,7 @@ barbarian:
   resource_on_attack: 2
   abilities:
     unarmored_defense:
-      name: {es: Defensa sin armadura, en: Unarmored Defense}
+      name: {es: Defensa sin Armadura, en: Unarmored Defense}
       description: {es: +2 a la CA mientras no lleves armadura., en: +2 AC while you wear no armor.}
       details:
         es: 'No necesitas una coraza: tu cuerpo es la coraza. Si no llevas armadura, tienes +2 a la CA siempre, sin gastar acciones.'
@@ -155,7 +155,7 @@ barbarian:
       action: none
       ac_bonus_unarmored: 2
     reckless_strike:
-      name: {es: Golpe temerario, en: Reckless Strike}
+      name: {es: Golpe Temerario, en: Reckless Strike}
       description:
         es: Un ataque con arma que añade 1d10 de daño contundente. Cuesta 3 de Furia.
         en: A weapon attack that adds 1d10 bludgeoning damage. Costs 3 Fury.
@@ -185,7 +185,7 @@ barbarian:
       temp_hp: 1d6
       heal_add: level
     sweeping_blow:
-      name: {es: Golpe de barrido, en: Sweeping Blow}
+      name: {es: Golpe de Barrido, en: Sweeping Blow}
       description:
         es: 'Toda la fila del objetivo tira DES: recibe 1d8 (la mitad si la supera). Cuesta 5 de Furia.'
         en: 'The target''s whole row rolls a DEX save: it takes 1d8 (half on a success). Costs 5 Fury.'
@@ -202,7 +202,7 @@ barbarian:
       area: row
       half_on_save: true
     relentless_assault:
-      name: {es: Asalto implacable, en: Relentless Assault}
+      name: {es: Asalto Implacable, en: Relentless Assault}
       description: {es: Atacas dos veces con tu acción de ataque., en: You attack twice with your attack action.}
       details:
         es: 'Cuando te enciendes no sueltas el arma: golpeas dos veces en la misma acción, cada golpe con su tirada.'
@@ -212,7 +212,7 @@ barbarian:
       action: none
       extra_attack: true
     brutal_instinct:
-      name: {es: Instinto brutal, en: Brutal Instinct}
+      name: {es: Instinto Brutal, en: Brutal Instinct}
       description: {es: Haces crítico con un 19 o un 20., en: You score a critical hit on a 19 or 20.}
       details:
         es: Sabes dónde duele. Tus golpes son críticos también con un 19 natural.
@@ -222,7 +222,7 @@ barbarian:
       action: none
       crit_range: 19
     savage_blow:
-      name: {es: Golpe salvaje, en: Savage Blow}
+      name: {es: Golpe Salvaje, en: Savage Blow}
       description:
         es: Un ataque con arma que añade 3d6 de daño contundente. Cuesta 8 de Furia.
         en: A weapon attack that adds 3d6 bludgeoning damage. Costs 8 Fury.
@@ -236,7 +236,7 @@ barbarian:
       extra_damage: 3d6
       damage_type: bludgeoning
     thunder_stomp:
-      name: {es: Pisotón atronador, en: Thunder Stomp}
+      name: {es: Pisotón Atronador, en: Thunder Stomp}
       description:
         es: 'Toda la fila tira DES: recibe 2d8 y queda aturdida un turno si falla. Cuesta 12 de Furia.'
         en: 'The whole row rolls a DEX save: it takes 2d8 and is stunned for a turn on a fail. Costs 12 Fury.'
@@ -267,7 +267,7 @@ paladin:
   signature: [consecrated_strike]
   abilities:
     consecrated_strike:
-      name: {es: Castigo divino, en: Divine Smite}
+      name: {es: Castigo Divino, en: Divine Smite}
       description:
         es: Un ataque con arma que añade 1d8 de daño radiante. Cuesta 3 de Convicción.
         en: A weapon attack that adds 1d8 radiant damage. Costs 3 Conviction.
@@ -305,7 +305,7 @@ paladin:
         es: Tu fe es una muralla. Siempre activa, sin gastar acciones, te da +1 a la CA y hace que el miedo no te afecte, ni el de los gritos de un espectro ni el de un conjuro.
         en: Your faith is a wall. Always on, with no action needed, it gives you +1 AC and makes you immune to fear, whether from a spectre's wail or a spell.
     divine_favor:
-      name: {es: Favor divino, en: Divine Favor}
+      name: {es: Favor Divino, en: Divine Favor}
       description:
         es: 'Acción adicional: ganas bendición 3 turnos. Cuesta 3 de Convicción.'
         en: 'Bonus action: you gain a blessing for 3 turns. Costs 3 Conviction.'
@@ -330,7 +330,7 @@ paladin:
       action: none
       extra_attack: true
     holy_wrath:
-      name: {es: Cólera sagrada, en: Holy Wrath}
+      name: {es: Cólera Sagrada, en: Holy Wrath}
       description:
         es: Un ataque con arma que añade 2d8 de daño radiante. Cuesta 6 de Convicción.
         en: A weapon attack that adds 2d8 radiant damage. Costs 6 Conviction.
@@ -344,7 +344,7 @@ paladin:
       extra_damage: 2d8
       damage_type: radiant
     cleansing_light:
-      name: {es: Luz purificadora, en: Cleansing Light}
+      name: {es: Luz Purificadora, en: Cleansing Light}
       description:
         es: Los no muertos reciben 2d8 radiante y quedan aturdidos 1 turno. Cuesta 6 de Convicción.
         en: Undead take 2d8 radiant and are stunned for 1 turn. Costs 6 Conviction.
@@ -360,7 +360,7 @@ paladin:
       status: stunned
       targets_type: undead
     sacred_vow:
-      name: {es: Voto sagrado, en: Sacred Vow}
+      name: {es: Voto Sagrado, en: Sacred Vow}
       description: {es: +1 a la CA., en: +1 AC.}
       details:
         es: Un juramento cumplido te protege más que una armadura. Siempre tienes +1 a la CA, sin hacer nada.
@@ -403,14 +403,14 @@ rogue:
         es: 'Acción adicional: Sigilo contra su percepción; si sale, tu próximo ataque tiene ventaja. Cuesta 2 de Energía.'
         en: 'Bonus action: a Stealth check against their perception; if it works, your next attack has advantage. Costs 2 Energy.'
       details:
-        es: 'Te fundes con las sombras sin perder el ritmo. Como acción adicional haces una tirada de Sigilo; si la superas, tu próximo ataque tiene ventaja, y con ventaja llega el Ataque Furtivo. No tiene usos: puedes hacerlo cada turno.'
-        en: 'You melt into the shadows without losing your stride. As a bonus action you make a Stealth roll; if it succeeds, your next attack has advantage, and with advantage comes Sneak Attack. It has no uses: you can do it every turn.'
+        es: 'Te fundes con las sombras sin perder el ritmo. Como acción adicional haces una tirada de Sigilo; si la superas, tu próximo ataque tiene ventaja, y con ventaja llega el Ataque Furtivo. Cuesta un poco de Energía, que vuelve cada turno: puedes hacerlo casi siempre.'
+        en: 'You melt into the shadows without losing your stride. As a bonus action you make a Stealth roll; if it succeeds, your next attack has advantage, and with advantage comes Sneak Attack. It costs a little Energy, which comes back every turn: you can do it almost always.'
       level: 1
       kind: hide
       action: bonus
       cost: 2
     cheap_shot:
-      name: {es: Golpe bajo, en: Cheap Shot}
+      name: {es: Golpe Bajo, en: Cheap Shot}
       description:
         es: Un ataque con arma que añade 1d6 de daño perforante. Cuesta 4 de Energía.
         en: A weapon attack that adds 1d6 piercing damage. Costs 4 Energy.
@@ -449,7 +449,7 @@ rogue:
       action: none
       halve_first_hit: true
     nimble_feet:
-      name: {es: Pies ligeros, en: Nimble Feet}
+      name: {es: Pies Ligeros, en: Nimble Feet}
       description: {es: +1 a la CA., en: +1 AC.}
       details:
         es: No te quedas quieto el tiempo suficiente para que te den. Siempre tienes +1 a la CA, sin hacer nada.
@@ -459,7 +459,7 @@ rogue:
       action: none
       ac_bonus: 1
     cunning_action:
-      name: {es: Acción astuta, en: Cunning Action}
+      name: {es: Acción Astuta, en: Cunning Action}
       description:
         es: 'Acción adicional, tras usar tu acción: recuperas la acción y puedes actuar otra vez. Cuesta 5 de Energía.'
         en: 'Bonus action, after using your action: you get your action back and can act again. Costs 5 Energy.'
@@ -472,7 +472,7 @@ rogue:
       cost: 5
       cooldown: 3
     deadly_edge:
-      name: {es: Filo mortal, en: Deadly Edge}
+      name: {es: Filo Mortal, en: Deadly Edge}
       description:
         es: Un ataque con arma que añade 2d6 de daño perforante. Cuesta 6 de Energía.
         en: A weapon attack that adds 2d6 piercing damage. Costs 6 Energy.
@@ -486,7 +486,7 @@ rogue:
       extra_damage: 2d6
       damage_type: piercing
     killer_instinct:
-      name: {es: Instinto asesino, en: Killer Instinct}
+      name: {es: Instinto Asesino, en: Killer Instinct}
       description: {es: Haces crítico con un 19 o un 20., en: You score a critical hit on a 19 or 20.}
       details:
         es: Ves el punto débil antes de que el rival sepa que lo tiene. Tus golpes son críticos también con un 19 natural.
@@ -514,7 +514,7 @@ monk:
   resource_on_attack: 1
   abilities:
     unarmored_defense:
-      name: {es: Defensa sin armadura, en: Unarmored Defense}
+      name: {es: Defensa sin Armadura, en: Unarmored Defense}
       description: {es: +3 a la CA mientras no lleves armadura., en: +3 AC while you wear no armor.}
       details:
         es: Tu disciplina es tu armadura. Si no llevas armadura, tienes +3 a la CA siempre, sin gastar acciones.
@@ -524,7 +524,7 @@ monk:
       action: none
       ac_bonus_unarmored: 3
     flurry:
-      name: {es: Ráfaga de golpes, en: Flurry of Blows}
+      name: {es: Ráfaga de Golpes, en: Flurry of Blows}
       description:
         es: Un ataque con las vendas que añade 1d6 de daño contundente. Cuesta 4 de Foco.
         en: An attack with your wraps that adds 1d6 bludgeoning damage. Costs 4 Focus.
@@ -537,7 +537,7 @@ monk:
       extra_damage: 1d6
       damage_type: bludgeoning
     stunning_blow:
-      name: {es: Golpe aturdidor, en: Stunning Blow}
+      name: {es: Golpe Aturdidor, en: Stunning Blow}
       description:
         es: 'El objetivo tira SAB: si falla, recibe 1d6 y queda aturdido un turno. Cuesta 5 de Foco.'
         en: 'The target rolls a WIS save: on a fail it takes 1d6 and is stunned for a turn. Costs 5 Focus.'
@@ -553,7 +553,7 @@ monk:
       save: wis
       status: stunned
     deflect_blows:
-      name: {es: Desviar golpes, en: Deflect Blows}
+      name: {es: Desviar Golpes, en: Deflect Blows}
       description:
         es: El primer golpe que recibes en cada ronda hace la mitad de daño.
         en: The first blow you take each round does half damage.
@@ -565,7 +565,7 @@ monk:
       action: none
       halve_first_hit: true
     centering_breath:
-      name: {es: Respiración serena, en: Centering Breath}
+      name: {es: Respiración Serena, en: Centering Breath}
       description:
         es: 'Acción adicional: recuperas 1d8 + tu nivel en PV. Cuesta 4 de Foco.'
         en: 'Bonus action: recover 1d8 + your level in HP. Costs 4 Focus.'
@@ -580,7 +580,7 @@ monk:
       heal_dice: 1d8
       heal_add: level
     flurry_of_blows:
-      name: {es: Mil puños, en: A Thousand Fists}
+      name: {es: Mil Puños, en: A Thousand Fists}
       description: {es: Atacas dos veces con tu acción de ataque., en: You attack twice with your attack action.}
       details:
         es: 'Tus manos no se detienen: golpeas dos veces en la misma acción, cada golpe con su tirada.'
@@ -590,7 +590,7 @@ monk:
       action: none
       extra_attack: true
     iron_body:
-      name: {es: Cuerpo de hierro, en: Iron Body}
+      name: {es: Cuerpo de Hierro, en: Iron Body}
       description: {es: +1 a la CA mientras no lleves armadura., en: +1 AC while you wear no armor.}
       details:
         es: Años de disciplina endurecen la carne. Si no llevas armadura, tienes +1 a la CA más, sin gastar acciones.
@@ -600,7 +600,7 @@ monk:
       action: none
       ac_bonus_unarmored: 1
     crashing_wave:
-      name: {es: Ola arrolladora, en: Crashing Wave}
+      name: {es: Ola Arrolladora, en: Crashing Wave}
       description:
         es: Un ataque con las vendas que añade 2d6 de daño contundente. Cuesta 6 de Foco.
         en: An attack with your wraps that adds 2d6 bludgeoning damage. Costs 6 Focus.
@@ -614,7 +614,7 @@ monk:
       extra_damage: 2d6
       damage_type: bludgeoning
     perfect_focus:
-      name: {es: Foco perfecto, en: Perfect Focus}
+      name: {es: Foco Perfecto, en: Perfect Focus}
       description: {es: Haces crítico con un 19 o un 20., en: You score a critical hit on a 19 or 20.}
       details:
         es: 'Tu atención no falla: tus golpes son críticos también con un 19 natural.'
@@ -640,12 +640,10 @@ cleric:
   abilities:
     sacred_flame:
       name: {es: Llama Sagrada, en: Sacred Flame}
-      description:
-        es: 'Ataque de conjuro a distancia (SAB): 1d8 de daño radiante. Ilimitado.'
-        en: 'Ranged spell attack (WIS): 1d8 radiant damage. Unlimited.'
+      description: {es: 'Ataque de conjuro a distancia (SAB): 1d8 de daño radiante.', en: 'Ranged spell attack (WIS): 1d8 radiant damage.'}
       details:
-        es: 'Una llama de luz cae sobre el enemigo desde lo alto. Es un ataque de conjuro a distancia con tu SAB que hace 1d8 de daño radiante, el doble contra no muertos. No tiene usos: es tu ataque de siempre.'
-        en: 'A flame of light falls on the enemy from above. It is a ranged spell attack with your WIS that deals 1d8 radiant damage, double against undead. It has no uses: it is your everyday attack.'
+        es: 'Una llama de luz cae sobre el enemigo desde lo alto. Es un ataque de conjuro a distancia con tu SAB que hace 1d8 de daño radiante, el doble contra no muertos. No cuesta nada: es tu ataque de siempre.'
+        en: 'A flame of light falls on the enemy from above. It is a ranged spell attack with your WIS that deals 1d8 radiant damage, double against undead. It costs nothing: it is your everyday attack.'
       level: 1
       kind: spell
       damage: 1d8
@@ -654,14 +652,14 @@ cleric:
       name: {es: Palabra Sanadora, en: Healing Word}
       description: {es: 'Acción adicional: recuperas 2d4 + SAB PV.', en: 'Bonus action: recover 2d4 + WIS HP.'}
       details:
-        es: Una palabra de tu fe basta para cerrar heridas. Como acción adicional recuperas 2d4 + SAB PV, y te queda la acción para atacar. Dos usos por descanso.
-        en: A word of your faith is enough to close wounds. As a bonus action you recover 2d4 + WIS HP, and you keep your action to attack. Two uses per rest.
+        es: Una palabra de tu fe basta para cerrar heridas. Como acción adicional recuperas 2d4 + SAB PV, y te queda la acción para atacar. Gasta Maná.
+        en: A word of your faith is enough to close wounds. As a bonus action you recover 2d4 + WIS HP, and you keep your action to attack. It spends Mana.
       level: 1
       kind: heal
       action: bonus
-      uses: 2
       heal_dice: 2d4
       heal_add: casting
+      cost: 3
     turn_undead:
       name: {es: Expulsar No-muertos, en: Turn Undead}
       description:
@@ -672,12 +670,13 @@ cleric:
         en: 'You raise your holy symbol and the dead remember they should lie still. Every undead enemy takes 2d6 radiant damage and is stunned for a turn. Against any other creature it does nothing: use it in the crypt.'
       level: 2
       kind: turn
-      uses: 1
       damage: 2d6
       damage_type: radiant
       status: stunned
       status_turns: 1
       targets_type: undead
+      cost: 5
+      cooldown: 2
     bless:
       name: {es: Bendición, en: Bless}
       description: {es: +2 a tus tiradas de ataque durante 3 turnos., en: +2 to your attack rolls for 3 turns.}
@@ -686,9 +685,10 @@ cleric:
         en: Your god guides your hand. For 3 turns you add +2 to your attack rolls. Use it at the start of a long fight to get the most out of it.
       level: 3
       kind: buff
-      uses: 1
       status: blessed
       status_turns: 3
+      cost: 4
+      cooldown: 3
     divine_strike:
       name: {es: Golpe Divino, en: Divine Strike}
       description:
@@ -702,6 +702,61 @@ cleric:
       action: none
       bonus_damage: 1d8
       bonus_damage_type: radiant
+    mending_prayer:
+      name: {es: Plegaria Sanadora, en: Mending Prayer}
+      description:
+        es: Recuperas 2d8 + tu modificador de conjuro en PV. Cuesta 5 de Maná.
+        en: You recover 2d8 + your spellcasting modifier in HP. Costs 5 Mana.
+      details:
+        es: Una oración larga, de las que cierran heridas de verdad. Usa tu acción entera, así que cúrate cuando el combate te lo permita.
+        en: A long prayer, the kind that really closes wounds. It uses your whole action, so heal when the fight lets you.
+      level: 4
+      kind: heal
+      cost: 5
+      heal_dice: 2d8
+      heal_add: casting
+    guiding_bolt:
+      name: {es: Rayo Guía, en: Guiding Bolt}
+      description:
+        es: 'Ataque de conjuro a distancia: 4d6 de daño radiante. Cuesta 6 de Maná.'
+        en: 'Ranged spell attack: 4d6 radiant damage. Costs 6 Mana.'
+      details:
+        es: Un rayo de luz que el cielo envía por tu mano. Hace el doble contra los no muertos y es tu golpe más fuerte a distancia.
+        en: A bolt of light the sky sends through your hand. It hits twice as hard on undead and is your strongest ranged blow.
+      level: 6
+      kind: spell
+      cost: 6
+      cooldown: 2
+      damage: 4d6
+      damage_type: radiant
+    sanctified_ward:
+      name: {es: Resguardo Sagrado, en: Sanctified Ward}
+      description: {es: +1 a la CA., en: +1 AC.}
+      details:
+        es: Tu fe te rodea como una muralla delgada. Siempre tienes +1 a la CA, sin hacer nada.
+        en: Your faith surrounds you like a thin wall. You always have +1 AC, with no action needed.
+      level: 8
+      kind: passive
+      action: none
+      ac_bonus: 1
+    pillar_of_light:
+      name: {es: Columna de Luz, en: Pillar of Light}
+      description:
+        es: 'Toda la fila tira DES: 4d6 de daño radiante, la mitad si la supera. Cuesta 12 de Maná.'
+        en: 'The whole row rolls a DEX save: 4d6 radiant damage, half on a success. Costs 12 Mana.'
+      details:
+        es: Una columna de luz cae sobre la fila entera. Es el gasto más grande de tu reserva, y vale la pena cuando son varios.
+        en: A pillar of light falls on the whole row. It is the biggest spend of your reserve, and it is worth it when there are several.
+      level: 9
+      kind: save
+      cost: 12
+      cooldown: 3
+      damage: 4d6
+      damage_type: radiant
+      save: dex
+      area: row
+      half_on_save: true
+  resource: mana
 
 sorcerer:
   name: {es: Hechicero, en: Sorcerer}
@@ -720,12 +775,10 @@ sorcerer:
   abilities:
     fire_bolt:
       name: {es: Rayo de Fuego, en: Fire Bolt}
-      description:
-        es: 'Ataque de conjuro a distancia (INT): 1d10 de daño de fuego. Ilimitado.'
-        en: 'Ranged spell attack (INT): 1d10 fire damage. Unlimited.'
+      description: {es: 'Ataque de conjuro a distancia (INT): 1d10 de daño de fuego.', en: 'Ranged spell attack (INT): 1d10 fire damage.'}
       details:
-        es: 'Una chispa en la punta de los dedos que estalla en llamas. Es un ataque de conjuro a distancia con tu INT que hace 1d10 de daño de fuego. No tiene usos: es tu ataque de siempre, también desde la retaguardia.'
-        en: 'A spark at your fingertips that bursts into flame. It is a ranged spell attack with your INT that deals 1d10 fire damage. It has no uses: it is your everyday attack, from the back row too.'
+        es: 'Una chispa en la punta de los dedos que estalla en llamas. Es un ataque de conjuro a distancia con tu INT que hace 1d10 de daño de fuego. No cuesta nada: es tu ataque de siempre, también desde la retaguardia.'
+        en: 'A spark at your fingertips that bursts into flame. It is a ranged spell attack with your INT that deals 1d10 fire damage. It costs nothing: it is your everyday attack, from the back row too.'
       level: 1
       kind: spell
       damage: 1d10
@@ -746,8 +799,8 @@ sorcerer:
         es: Un enemigo hace una salvación de SAB; si falla, se duerme 2 turnos (ventaja contra él; despierta al recibir daño).
         en: One enemy makes a WIS save; on a failure it falls asleep for 2 turns (advantage against it; it wakes when damaged).
       details:
-        es: 'Un susurro y los párpados del enemigo pesan como el plomo. Hace una salvación de SAB; si falla, se duerme 2 turnos: no actúa y tus ataques tienen ventaja, pero despierta si recibe daño. Dos usos por descanso.'
-        en: 'A whisper and the enemy''s eyelids weigh like lead. It makes a WIS save; on a failure it falls asleep for 2 turns: it does not act and your attacks have advantage, but it wakes up if it takes damage. Two uses per rest.'
+        es: 'Un susurro y los párpados del enemigo pesan como el plomo. Hace una salvación de SAB; si falla, se duerme 2 turnos: no actúa y tus ataques tienen ventaja, pero despierta si recibe daño. Gasta Maná.'
+        en: 'A whisper and the enemy''s eyelids weigh like lead. It makes a WIS save; on a failure it falls asleep for 2 turns: it does not act and your attacks have advantage, but it wakes up if it takes damage. It spends Mana.'
       level: 2
       kind: save
       cost: 3
@@ -760,8 +813,8 @@ sorcerer:
         es: 'Toda la fila del objetivo hace una salvación de DES: 3d6 de fuego, la mitad si la supera.'
         en: 'The target''s whole row makes a DEX save: 3d6 fire, half on a success.'
       details:
-        es: 'Una perla de fuego que vuela hasta el enemigo y revienta. Toda su fila hace una salvación de DES: 3d6 de daño de fuego, la mitad si la supera. Ideal contra grupos en primera línea. Un uso por descanso.'
-        en: 'A bead of fire that flies to the enemy and bursts. Its whole row makes a DEX save: 3d6 fire damage, half on a success. Ideal against groups in the front line. One use per rest.'
+        es: 'Una perla de fuego que vuela hasta el enemigo y revienta. Toda su fila hace una salvación de DES: 3d6 de daño de fuego, la mitad si la supera. Ideal contra grupos en primera línea. Gasta Maná.'
+        en: 'A bead of fire that flies to the enemy and bursts. Its whole row makes a DEX save: 3d6 fire damage, half on a success. Ideal against groups in the front line. It spends Mana.'
       level: 3
       kind: save
       cost: 6
@@ -775,14 +828,86 @@ sorcerer:
       name: {es: Proyectil Mágico, en: Magic Missile}
       description: {es: 'Tres dardos que nunca fallan: 3d4+3 de daño de fuerza.', en: 'Three darts that never miss: 3d4+3 force damage.'}
       details:
-        es: 'Tres dardos de luz que buscan su blanco solos. No hay tirada: siempre aciertan y hacen 3d4+3 de daño de fuerza. Perfecto para rematar a un enemigo con CA alta. Dos usos por descanso.'
-        en: 'Three darts of light that find their mark on their own. There is no roll: they always hit and deal 3d4+3 force damage. Perfect to finish off an enemy with high AC. Two uses per rest.'
+        es: 'Tres dardos de luz que buscan su blanco solos. No hay tirada: siempre aciertan y hacen 3d4+3 de daño de fuerza. Perfecto para rematar a un enemigo con CA alta. Gasta Maná.'
+        en: 'Three darts of light that find their mark on their own. There is no roll: they always hit and deal 3d4+3 force damage. Perfect to finish off an enemy with high AC. It spends Mana.'
       level: 5
       kind: spell
       cost: 4
       auto_hit: true
       damage: 3d4+3
       damage_type: force
+    ice_lance:
+      name: {es: Lanza de Hielo, en: Ice Lance}
+      description:
+        es: 'Ataque de conjuro a distancia: 3d6 de daño de frío. Cuesta 4 de Maná.'
+        en: 'Ranged spell attack: 3d6 cold damage. Costs 4 Mana.'
+      details:
+        es: Una lanza de hielo que atraviesa la guardia. Más cara que el rayo de fuego pero mucho más fuerte, para cuando un solo enemigo importa.
+        en: A lance of ice that pierces the guard. Dearer than the fire bolt but much stronger, for when a single enemy matters.
+      level: 4
+      kind: spell
+      cost: 4
+      damage: 3d6
+      damage_type: cold
+    spell_mastery:
+      name: {es: Maestría Arcana, en: Spell Mastery}
+      description: {es: Tus conjuros suman tu modificador de conjuro al daño., en: Your spells add your spellcasting modifier to damage.}
+      details:
+        es: 'Ya no solo lanzas la magia: la moldeas. Tus conjuros suman tu modificador de conjuro al daño.'
+        en: 'You no longer just cast magic: you shape it. Your spells add your spellcasting modifier to damage.'
+      level: 6
+      kind: passive
+      action: none
+      spell_damage_bonus: true
+    frost_nova:
+      name: {es: Nova Gélida, en: Frost Nova}
+      description:
+        es: 'Toda la fila tira DES: 3d6 de frío y queda enredada un turno si falla. Cuesta 8 de Maná.'
+        en: 'The whole row rolls a DEX save: 3d6 cold and restrained for a turn on a fail. Costs 8 Mana.'
+      details:
+        es: Un anillo de frío estalla a tus pies y atrapa a todo lo que toca. Control y daño de área, a un precio alto.
+        en: A ring of cold bursts at your feet and traps everything it touches. Control and area damage, at a high price.
+      level: 7
+      kind: save
+      cost: 8
+      cooldown: 3
+      damage: 3d6
+      damage_type: cold
+      save: dex
+      area: row
+      status: restrained
+    arcane_ward:
+      name: {es: Resguardo Arcano, en: Arcane Ward}
+      description:
+        es: 'Acción adicional: ganas 3d6 + tu modificador de conjuro de PV temporales. Cuesta 6 de Maná.'
+        en: 'Bonus action: you gain 3d6 + your spellcasting modifier in temporary HP. Costs 6 Mana.'
+      details:
+        es: 'Un escudo de magia pura que absorbe golpes antes que tu cuerpo. Es una acción adicional: lánzalo y sigue hechizando.'
+        en: 'A shield of pure magic that soaks up blows before your body does. It is a bonus action: cast it and keep spelling.'
+      level: 8
+      kind: buff
+      action: bonus
+      cost: 6
+      cooldown: 4
+      temp_hp: 3d6
+      heal_add: casting
+    cone_of_cold:
+      name: {es: Cono de Frío, en: Cone of Cold}
+      description:
+        es: 'Toda la fila tira DES: 8d6 de frío, la mitad si la supera. Cuesta 14 de Maná.'
+        en: 'The whole row rolls a DEX save: 8d6 cold, half on a success. Costs 14 Mana.'
+      details:
+        es: 'Tu conjuro más destructivo: un cono de frío absoluto sobre la fila entera. Casi toda tu reserva, y casi siempre decide el combate.'
+        en: 'Your most destructive spell: a cone of absolute cold over the whole row. Nearly all your reserve, and it almost always decides the fight.'
+      level: 9
+      kind: save
+      cost: 14
+      cooldown: 4
+      damage: 8d6
+      damage_type: cold
+      save: dex
+      area: row
+      half_on_save: true
 
 druid:
   name: {es: Druida, en: Druid}
@@ -800,12 +925,10 @@ druid:
   abilities:
     thorn_whip:
       name: {es: Látigo de Espinas, en: Thorn Whip}
-      description:
-        es: 'Ataque de conjuro a distancia (SAB): 1d6 de daño perforante. Ilimitado.'
-        en: 'Ranged spell attack (WIS): 1d6 piercing damage. Unlimited.'
+      description: {es: 'Ataque de conjuro a distancia (SAB): 1d6 de daño perforante.', en: 'Ranged spell attack (WIS): 1d6 piercing damage.'}
       details:
-        es: Un látigo de enredaderas con espinas brota de tu mano. Es un ataque de conjuro a distancia con tu SAB que hace 1d6 de daño perforante. No tiene usos.
-        en: A whip of thorny vines springs from your hand. It is a ranged spell attack with your WIS that deals 1d6 piercing damage. It has no uses.
+        es: Un látigo de enredaderas con espinas brota de tu mano. Es un ataque de conjuro a distancia con tu SAB que hace 1d6 de daño perforante. No cuesta nada.
+        en: A whip of thorny vines springs from your hand. It is a ranged spell attack with your WIS that deals 1d6 piercing damage. It costs nothing.
       level: 1
       kind: spell
       damage: 1d6
@@ -814,44 +937,46 @@ druid:
       name: {es: Curar Heridas, en: Cure Wounds}
       description: {es: Recuperas 1d8 + SAB PV., en: Recover 1d8 + WIS HP.}
       details:
-        es: La savia de la tierra cierra tus heridas. Usas tu acción para recuperar 1d8 + SAB PV. Dos usos por descanso.
-        en: The sap of the earth closes your wounds. You use your action to recover 1d8 + WIS HP. Two uses per rest.
+        es: La savia de la tierra cierra tus heridas. Usas tu acción para recuperar 1d8 + SAB PV. Gasta Maná.
+        en: The sap of the earth closes your wounds. You use your action to recover 1d8 + WIS HP. It spends Mana.
       level: 1
       kind: heal
-      uses: 2
       heal_dice: 1d8
       heal_add: casting
+      cost: 3
     entangle:
       name: {es: Enredar, en: Entangle}
       description:
         es: Toda la fila del objetivo hace una salvación de DES; quien falla queda enredado 2 turnos (ventaja contra él, desventaja en sus ataques).
         en: The target's whole row makes a DEX save; those who fail are entangled for 2 turns (advantage against them, disadvantage on their attacks).
       details:
-        es: 'Las raíces brotan del suelo y atrapan a todo lo que pisa. Toda la fila del objetivo hace una salvación de DES; quien falla queda enredado 2 turnos: tus ataques tienen ventaja contra él y él ataca con desventaja. Un uso por descanso.'
-        en: 'Roots burst from the ground and seize everything on it. The target''s whole row makes a DEX save; whoever fails is restrained for 2 turns: your attacks have advantage against it and it attacks with disadvantage. One use per rest.'
+        es: 'Las raíces brotan del suelo y atrapan a todo lo que pisa. Toda la fila del objetivo hace una salvación de DES; quien falla queda enredado 2 turnos: tus ataques tienen ventaja contra él y él ataca con desventaja. Gasta Maná.'
+        en: 'Roots burst from the ground and seize everything on it. The target''s whole row makes a DEX save; whoever fails is restrained for 2 turns: your attacks have advantage against it and it attacks with disadvantage. It spends Mana.'
       level: 2
       kind: save
-      uses: 1
       area: row
       save: dex
       status: restrained
       status_turns: 2
+      cost: 4
+      cooldown: 2
     wild_shape:
       name: {es: Forma Salvaje, en: Wild Shape}
       description:
         es: 'Acción adicional: adoptas forma de oso y ganas 2d8 + tu nivel en PV temporales.'
         en: 'Bonus action: you take the shape of a bear and gain 2d8 + your level in temporary HP.'
       details:
-        es: 'Tu cuerpo crece y se cubre de pelo: eres un oso. Como acción adicional ganas 2d8 + tu nivel en PV temporales, que se pierden antes que los tuyos. Un uso por descanso.'
-        en: 'Your body grows and is covered in fur: you are a bear. As a bonus action you gain 2d8 + your level in temporary HP, lost before your own. One use per rest.'
+        es: 'Tu cuerpo crece y se cubre de pelo: eres un oso. Como acción adicional ganas 2d8 + tu nivel en PV temporales, que se pierden antes que los tuyos. Gasta Maná.'
+        en: 'Your body grows and is covered in fur: you are a bear. As a bonus action you gain 2d8 + your level in temporary HP, lost before your own. It spends Mana.'
       level: 3
       kind: buff
       action: bonus
-      uses: 1
       temp_hp: 2d8
       heal_add: level
       status: wild_shape
       status_turns: 3
+      cost: 5
+      cooldown: 4
     elemental_fury:
       name: {es: Furia Elemental, en: Elemental Fury}
       description: {es: Sumas tu SAB al daño de tus conjuros., en: You add your WIS to the damage of your spells.}
@@ -862,6 +987,70 @@ druid:
       kind: passive
       action: none
       spell_damage_bonus: true
+    barkskin:
+      name: {es: Piel de Corteza, en: Barkskin}
+      description:
+        es: 'Acción adicional: ganas 2d6 + tu modificador de conjuro de PV temporales. Cuesta 3 de Maná.'
+        en: 'Bonus action: you gain 2d6 + your spellcasting modifier in temporary HP. Costs 3 Mana.'
+      details:
+        es: Tu piel se endurece como la madera vieja. Es una acción adicional barata para encajar el siguiente golpe.
+        en: Your skin hardens like old wood. A cheap bonus action to soak up the next blow.
+      level: 4
+      kind: buff
+      action: bonus
+      cost: 3
+      cooldown: 3
+      temp_hp: 2d6
+      heal_add: casting
+    stinging_swarm:
+      name: {es: Enjambre Punzante, en: Stinging Swarm}
+      description:
+        es: 'Toda la fila tira DES: 3d6 de veneno, la mitad si la supera. Cuesta 6 de Maná.'
+        en: 'The whole row rolls a DEX save: 3d6 poison, half on a success. Costs 6 Mana.'
+      details:
+        es: Una nube de insectos cae sobre la fila entera. No mata de golpe, pero desgasta a todos a la vez.
+        en: A cloud of insects falls on the whole row. It does not kill in one go, but it wears everyone down at once.
+      level: 6
+      kind: save
+      cost: 6
+      cooldown: 2
+      damage: 3d6
+      damage_type: poison
+      save: dex
+      area: row
+      half_on_save: true
+    regrowth:
+      name: {es: Rebrote, en: Regrowth}
+      description:
+        es: Recuperas 4d8 + tu modificador de conjuro en PV. Cuesta 8 de Maná.
+        en: You recover 4d8 + your spellcasting modifier in HP. Costs 8 Mana.
+      details:
+        es: 'La vida brota donde la llamas. Tu mejor curación: usa la acción entera y casi toda la reserva de un buen rato.'
+        en: 'Life springs where you call it. Your best heal: it uses the whole action and most of a good stretch of your reserve.'
+      level: 8
+      kind: heal
+      cost: 8
+      cooldown: 3
+      heal_dice: 4d8
+      heal_add: casting
+    thorn_storm:
+      name: {es: Tormenta de Espinas, en: Thorn Storm}
+      description:
+        es: 'Toda la fila tira DES: 5d6 perforante, la mitad si la supera. Cuesta 12 de Maná.'
+        en: 'The whole row rolls a DEX save: 5d6 piercing, half on a success. Costs 12 Mana.'
+      details:
+        es: 'El bosque entero se alza contra ellos: una tormenta de espinas sobre toda la fila.'
+        en: 'The whole forest rises against them: a storm of thorns over the whole row.'
+      level: 9
+      kind: save
+      cost: 12
+      cooldown: 3
+      damage: 5d6
+      damage_type: piercing
+      save: dex
+      area: row
+      half_on_save: true
+  resource: mana
 
 bard:
   name: {es: Bardo, en: Bard}
@@ -880,11 +1069,11 @@ bard:
     vicious_mockery:
       name: {es: Burla Cruel, en: Vicious Mockery}
       description:
-        es: 'Un enemigo hace una salvación de SAB: si falla, 1d4 de daño psíquico y miedo 1 turno. Ilimitado.'
-        en: 'One enemy makes a WIS save: on a failure, 1d4 psychic damage and fear for 1 turn. Unlimited.'
+        es: 'Un enemigo hace una salvación de SAB: si falla, 1d4 de daño psíquico y miedo 1 turno.'
+        en: 'One enemy makes a WIS save: on a failure, 1d4 psychic damage and fear for 1 turn.'
       details:
-        es: Una burla tan cruel que duele de verdad. El enemigo hace una salvación de SAB; si falla, recibe 1d4 de daño psíquico y queda con miedo un turno (ataca con desventaja). No tiene usos.
-        en: A taunt so cruel it really hurts. The enemy makes a WIS save; on a failure it takes 1d4 psychic damage and is frightened for a turn (it attacks with disadvantage). It has no uses.
+        es: Una burla tan cruel que duele de verdad. El enemigo hace una salvación de SAB; si falla, recibe 1d4 de daño psíquico y queda con miedo un turno (ataca con desventaja). No cuesta nada.
+        en: A taunt so cruel it really hurts. The enemy makes a WIS save; on a failure it takes 1d4 psychic damage and is frightened for a turn (it attacks with disadvantage). It costs nothing.
       level: 1
       kind: save
       save: wis
@@ -892,45 +1081,48 @@ bard:
       damage_type: psychic
       status: frightened
       status_turns: 1
+      generates: 2
     bardic_inspiration:
       name: {es: Inspiración Bárdica, en: Bardic Inspiration}
       description: {es: 'Acción adicional: tu próxima tirada de ataque suma 1d6.', en: 'Bonus action: your next attack roll adds 1d6.'}
       details:
-        es: Una nota que te recuerda por qué luchas. Como acción adicional, tu próxima tirada de ataque suma 1d6. Dos usos por descanso.
-        en: A note that reminds you why you fight. As a bonus action, your next attack roll adds 1d6. Two uses per rest.
+        es: Una nota que te recuerda por qué luchas. Como acción adicional, tu próxima tirada de ataque suma 1d6. Gasta Resonancia.
+        en: A note that reminds you why you fight. As a bonus action, your next attack roll adds 1d6. It spends Resonance.
       level: 1
       kind: buff
       action: bonus
-      uses: 2
       status: inspired
       status_turns: 3
+      cost: 2
+      cooldown: 2
     song_of_healing:
       name: {es: Canción Sanadora, en: Song of Healing}
       description: {es: 'Acción adicional: recuperas 1d4 + CAR PV.', en: 'Bonus action: recover 1d4 + CHA HP.'}
       details:
-        es: Una canción suave que calma el dolor. Como acción adicional recuperas 1d4 + CAR PV, y te queda la acción. Dos usos por descanso.
-        en: A soft song that eases the pain. As a bonus action you recover 1d4 + CHA HP, and you keep your action. Two uses per rest.
+        es: Una canción suave que calma el dolor. Como acción adicional recuperas 1d4 + CAR PV, y te queda la acción. Gasta Resonancia.
+        en: A soft song that eases the pain. As a bonus action you recover 1d4 + CHA HP, and you keep your action. It spends Resonance.
       level: 2
       kind: heal
       action: bonus
-      uses: 2
       heal_dice: 1d4
       heal_add: casting
+      cost: 3
     hypnotic_pattern:
       name: {es: Patrón Hipnótico, en: Hypnotic Pattern}
       description:
         es: Toda la fila del objetivo hace una salvación de SAB; quien falla queda aturdido 1 turno.
         en: The target's whole row makes a WIS save; those who fail are stunned for 1 turn.
       details:
-        es: Luces de colores giran en el aire y nadie puede apartar la mirada. Toda la fila del objetivo hace una salvación de SAB; quien falla queda aturdido un turno. Un uso por descanso.
-        en: Colored lights whirl in the air and no one can look away. The target's whole row makes a WIS save; whoever fails is stunned for a turn. One use per rest.
+        es: Luces de colores giran en el aire y nadie puede apartar la mirada. Toda la fila del objetivo hace una salvación de SAB; quien falla queda aturdido un turno. Gasta Resonancia.
+        en: Colored lights whirl in the air and no one can look away. The target's whole row makes a WIS save; whoever fails is stunned for a turn. It spends Resonance.
       level: 3
       kind: save
-      uses: 1
       area: row
       save: wis
       status: stunned
       status_turns: 1
+      cost: 5
+      cooldown: 3
     cutting_words:
       name: {es: Palabras Cortantes, en: Cutting Words}
       description:
@@ -943,6 +1135,65 @@ bard:
       kind: passive
       action: none
       halve_first_hit: true
+    dissonant_whispers:
+      name: {es: Susurros Disonantes, en: Dissonant Whispers}
+      description:
+        es: 'El objetivo tira SAB: si falla, recibe 3d6 psíquico y queda con miedo un turno. Cuesta 4 de Resonancia.'
+        en: 'The target rolls a WIS save: on a fail it takes 3d6 psychic and is frightened for a turn. Costs 4 Resonance.'
+      details:
+        es: Una melodía que solo oye tu rival y que le roe la cabeza. Daño fuerte a un solo objetivo.
+        en: A tune only your rival hears and that gnaws at its head. Strong damage to a single target.
+      level: 4
+      kind: save
+      cost: 4
+      cooldown: 2
+      damage: 3d6
+      damage_type: psychic
+      save: wis
+      status: frightened
+    shatter_chord:
+      name: {es: Acorde Estremecedor, en: Shattering Chord}
+      description:
+        es: 'Toda la fila tira DES: 3d8 de fuerza, la mitad si la supera. Cuesta 7 de Resonancia.'
+        en: 'The whole row rolls a DEX save: 3d8 force, half on a success. Costs 7 Resonance.'
+      details:
+        es: 'Una nota tan aguda que rompe la piedra. Es tu estribillo: lo que has ido acumulando suena de golpe sobre toda la fila.'
+        en: 'A note so sharp it cracks stone. It is your refrain: everything you built up rings out at once over the whole row.'
+      level: 6
+      kind: save
+      cost: 7
+      cooldown: 2
+      damage: 3d8
+      damage_type: force
+      save: dex
+      area: row
+      half_on_save: true
+    encore:
+      name: {es: Bis, en: Encore}
+      description:
+        es: Recuperas 3d8 + tu modificador de conjuro en PV. Cuesta 8 de Resonancia.
+        en: You recover 3d8 + your spellcasting modifier in HP. Costs 8 Resonance.
+      details:
+        es: 'El público pide otra y tú se la das: una canción que te devuelve a la pelea.'
+        en: 'The audience asks for more and you give it: a song that puts you back in the fight.'
+      level: 8
+      kind: heal
+      cost: 8
+      cooldown: 3
+      heal_dice: 3d8
+      heal_add: casting
+    virtuoso:
+      name: {es: Virtuoso, en: Virtuoso}
+      description: {es: Tus conjuros suman tu modificador de conjuro al daño., en: Your spells add your spellcasting modifier to damage.}
+      details:
+        es: 'Dominas tu arte: cada nota golpea un poco más fuerte. Tus conjuros suman tu modificador de conjuro al daño.'
+        en: 'You have mastered your art: every note hits a little harder. Your spells add your spellcasting modifier to damage.'
+      level: 9
+      kind: passive
+      action: none
+      spell_damage_bonus: true
+  resource: resonance
+  resource_on_attack: 1
 
 warlock:
   name: {es: Brujo, en: Warlock}

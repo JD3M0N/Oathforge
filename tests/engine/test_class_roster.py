@@ -17,7 +17,7 @@ from oathforge.tools import simulate as sim
 
 # B06 lands in three patches (roadmap_balance §14). Classes still on the old model are listed here until their
 # patch arrives; the last one empties this set, and then it can go.
-NOT_YET = {"cleric", "sorcerer", "druid", "bard", "warlock"}
+NOT_YET = {"warlock"}
 CLASSES = sorted(k for k in get_content().classes if k not in NOT_YET)
 BASE_MAX_LEVEL = 9  # the branch starts at 10 (class_specializations.yaml)
 

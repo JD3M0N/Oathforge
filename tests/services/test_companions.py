@@ -182,7 +182,9 @@ async def test_the_summoner_path_from_calling_to_convergence(lend):
         assert (await do(s, char, enc, ability_key="t_blade")).ok  # the call is the turn's action
         blade = next(e for e in state_of(enc).entities.values() if e.key == "astral_blade")
         assert blade.hp == companions.template("astral_blade", char).hp  # scaled to the hero's level
+        await do(s, char, enc, kind="end_turn")  # the sorcerer has a bonus action to spare: end the turn
         assert (await do(s, char, enc, ability_key="t_ember")).ok  # a second one, from a mixed roster
+        await do(s, char, enc, kind="end_turn")
         third = await do(s, char, enc, ability_key="t_guard")  # but never a third
         assert not third.ok and third.error == "combat.err.summon_limit"
         assert len([e for e in state_of(enc).entities.values() if e.active]) == 2

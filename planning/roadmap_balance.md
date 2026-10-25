@@ -56,7 +56,7 @@ Hito **0.10-I** del [roadmap general](roadmap.md). Se avanza **fase a fase**: ca
 | B03 · Motor de recursos y efectos | ✅ Hecha | 0.10.25 |
 | B04 · Catálogo efectivo, selección y elecciones | ✅ Hecha | 0.10.27 |
 | B05 · Compañeros, formas y dispositivos | ✅ Hecha | 0.10.28 |
-| B06 · 14 clases base (1–9) | En curso: 1 de 3 grupos | 0.10.29 |
+| B06 · 14 clases base (1–9) | En curso: 2 de 3 grupos | 0.10.30 |
 | B07 · 41 ramas | Pendiente | — |
 | B08 · Tiempos, descanso, derrota y economía | Pendiente | — |
 | B09 · Campaña hasta el Recaudador | Pendiente | — |
@@ -1148,7 +1148,7 @@ El simulador y pruebas se amplían junto a cada fase, no solo en B12. No hacen f
 ### B06 · Rediseñar 14 clases base y nivel 1–9
 
 **Objetivo:** todas juegan bien antes de especializarse.
-- [ ] Hechicero fusionado y seis clases nuevas. *El renombrado de ids y nombres visibles de Clérigo y Hechicero ya está hecho (0.10.23). Grupo 1 (Guerrero, Bárbaro, Paladín, Pícaro, Monje) hecho en 0.10.29.*
+- [ ] Hechicero fusionado y seis clases nuevas. *El renombrado de ids y nombres visibles de Clérigo y Hechicero ya está hecho (0.10.23). Grupo 1 (Guerrero, Bárbaro, Paladín, Pícaro, Monje) hecho en 0.10.29; grupo 2 (Clérigo, Hechicero, Druida, Bardo) en 0.10.30.*
 - [ ] Kit de inicio y curva por clase.
 - [ ] Equipo recomendado, atributos y recurso descritos.
 - [ ] No anticipar toda la especialización: conservar identidad base.

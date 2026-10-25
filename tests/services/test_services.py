@@ -74,7 +74,8 @@ async def test_create_priest():
         char = await get_char(s, cid)
         gear = await characters.equipped(s, char)
         assert characters.armor_class(char, gear) == 14 + 1 + 2  # scale mail (dex +1), shield
-        assert char.resources == {"sacred_flame": None, "healing_word": 2}
+        assert char.resources == {"sacred_flame": None, "healing_word": None}  # Mana pays, not uses
+        assert characters.resource_max(char) == 4 + 2 * 1
         cb = await characters.build_combatant(s, char)
         assert cb.row == "back" and cb.casting_mod == 3 and cb.spell_to_hit == 3 + 2
         assert cb.bonus_damage is None
@@ -105,7 +106,7 @@ async def test_create_mage_druid_bard():
         char = await get_char(s, cid)
         gear = await characters.equipped(s, char)
         assert characters.armor_class(char, gear) == 11 + 2 + 2  # leather (dex +2), shield
-        assert char.resources == {"thorn_whip": None, "cure_wounds": 2}
+        assert char.resources == {"thorn_whip": None, "cure_wounds": None}
         from oathforge.services.events import Outcome
         characters.grant_xp(char, 1800, Outcome())
         assert {"entangle", "wild_shape"} <= set(char.resources)
@@ -115,7 +116,8 @@ async def test_create_mage_druid_bard():
     _, cid = await new_character(tg_id=3, cls="bard")
     async with session_scope() as s:
         char = await get_char(s, cid)
-        assert char.resources == {"vicious_mockery": None, "bardic_inspiration": 2}
+        assert char.resources == {"vicious_mockery": None, "bardic_inspiration": None}
+        assert characters.pool_of(char) == characters.resource_max(char) == 2  # Resonance, built up in the fight
         cb = await characters.build_combatant(s, char)
         assert cb.casting_mod == 3 and [a.finesse for a in cb.attacks] == [True]
 

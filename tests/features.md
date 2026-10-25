@@ -272,3 +272,14 @@ Guerrero, Bárbaro, Paladín, Pícaro y Monje. Cada clase con su barra, de nivel
 - [x] Las diez clases en el menú de creación, la ficha y `/class_<clase>` sin retrato ni marcadores sueltos (Telegram, EN).
 - [ ] Las mismas pantallas en español.
 - [ ] Un combate completo con Bárbaro (Furia desde cero) y con Paladín (Convicción) (Telegram).
+
+## 0.10-I · Las catorce clases, segundo grupo (B06, v0.10.30)
+
+Clérigo (Maná), Hechicero (Maná), Druida (Maná) y Bardo (Resonancia). Cuatro lanzadores sin un solo uso por descanso.
+
+- [x] Las mismas exigencias que al primer grupo, ahora para las nueve clases: barra propia, técnica distintiva, nada que dependa de una rama, calendario sin un botón nuevo cada nivel, victoria sobre el bandido y sobre la pareja de goblins desde el 5 (automático).
+- [x] La Resonancia del Bardo empieza vacía y se construye con su burla (+2), su ataque y cada turno (automático).
+- [x] Ningún texto de estas clases habla ya de «usos por descanso» ni de «ilimitado»: hablan del Maná o de la Resonancia (automático).
+- [x] Los nombres de habilidad nuevos llevan las mismas mayúsculas que los antiguos («Golpe de Gracia», «Cono de Frío») (a mano).
+- [x] `/class_bard` en español: habilidad, acción y coste de barra («🔹 3») en cada línea (Telegram).
+- [ ] Un combate de Hechicero gastando Maná hasta quedarse en el Rayo de Fuego, y uno de Bardo desde cero (Telegram).
