@@ -21,7 +21,7 @@
 | B10 Ciervo de Hierro y graduación | ✅ (región → B11) | 0.10.38 |
 | B11 Región cercana 11–20 | ✅ región provisional; 11 misiones de las 18–24 previstas, sin secundarias | 0.10.39 |
 | B12 Balance integral | ✅ medición y primeros ajustes (informe en `planning/informe_balance_0.10.md`); ritmo y lanzadores sin resolver | 0.10.40 |
-| B13 Retirar cripta, documentación y reinicio que conserva preferencias | ✅ salvo el ensayo en staging con datos reales | 0.10.41 |
+| B13 Retirar cripta, documentación y reinicio que conserva preferencias | ✅ ensayado en staging con una copia de la base local (2026-10-25); falta solo con datos de producción reales | 0.10.41 |
 | **B14 Candidato de lanzamiento** | ⏳ **siguiente** | |
 
 Decisiones de Josue que siguen vigentes:

@@ -22,6 +22,7 @@ Versionado `0.x.y`: **y** (parche) en arreglos y cambios pequeños; **x** (menor
 | 0.8.3 | Planning reorganizado: Possibilium, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md`, `content/officina/` |
 | 0.9.0 | Logros e identidad: 30 logros, dos metalogros, títulos, destacados, objetivos seguidos y reconocimiento retroactivo verificable |
 | 0.9.1 | Hoja de ruta de 0.10 (consolidación) y 0.11 (multijugador): `planning/roadmap.md` |
+| 0.10.42 | 0.10-I (B13 cerrado, B14 en marcha): ensayo del reinicio en staging con una copia de la base local; primer repaso jugado de `tests/features.md` |
 | 0.10.41 | 0.10-I (B13): se retira la cripta (zona, criaturas, relicario, misiones y logros); reinicio de lanzamiento (`oath launch-reset`, `backup`, `restore`) implementado y ensayado en pruebas |
 | 0.10.40 | 0.10-I (B12): `oath balance`, simulador con políticas/kit/secuencias, tres criaturas de nivel 6–9, informe de balance y primeros ajustes |
 | 0.10.39 | 0.10-I (B11): Valle de la Fragua Gris (8 lugares, 12 criaturas de nivel 11–20, 3 PNJ, 11 misiones hasta la prueba de las balizas); región provisional |

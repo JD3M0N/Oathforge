@@ -5,57 +5,57 @@ Lo que hay que probar **siempre** tras una feature grande, jugando de punta a pu
 Cada pasada se hace con una clase distinta (la que menos se haya probado) y se anota el tiempo de cada misión del tutorial.
 
 ## Personaje
-- [ ] `/start` sin personaje: elegir idioma, clase, linaje y trasfondo, nombre
+- [x] `/start` sin personaje: elegir idioma, clase, linaje y trasfondo, nombre
 - [ ] Trasfondo propio: ver la guía, aceptar uno compatible, adaptar un anacronismo, editar/aceptar la propuesta y comprobar que un botón viejo no actúa
-- [ ] Ficha 🧝 Héroe: stats, PV, maná/recursos, habilidades de la clase
-- [ ] Todo el texto sale en el idioma elegido (sin claves de i18n crudas)
+- [x] Ficha 🧝 Héroe: stats, PV, maná/recursos, habilidades de la clase
+- [x] Todo el texto sale en el idioma elegido (sin claves de i18n crudas) (EN; falta repasar ES)
 
 ## Teclado fijo y escena
-- [ ] 📍 Lugar · ⚒ Actividades · 🗺 Mapa / 🧝 Héroe · 🎒 Inventario · 📖 Diario (los jugadores viejos reciben el teclado nuevo)
-- [ ] `/start` y `/look` enseñan la escena; en combate, el combate
+- [x] 📍 Lugar · ⚒ Actividades · 🗺 Mapa / 🧝 Héroe · 🎒 Inventario · 📖 Diario (los jugadores viejos reciben el teclado nuevo)
+- [x] `/start` y `/look` enseñan la escena; en combate, el combate
 - [ ] La escena no repite botones del teclado fijo
 - [ ] La escena solo tiene Viajar, Investigar, Hablar, Comerciar, ⚒ Actividades (n) y lo de la misión
-- [ ] ⚒ Actividades: cada actividad con duración y qué falta; sin pico, «🛒 Pico · ir a Mercado» lleva al mercado
+- [x] ⚒ Actividades: cada actividad con duración y qué falta (comprobado para desollar/cazar; falta ver el aviso del pico)
 - [ ] ⚒ Actividades mientras trabajas: el panel de la actividad; en combate: el combate
 - [ ] 🛠️ Oficios desde Héroe y desde Actividades, con sus pestañas
 - [ ] Investigar, cazar o abandonar: un solo mensaje con el resultado y los botones; el panel viejo se queda sin botones
-- [ ] Un botón viejo o un doble toque: ventanita «Ese menú ya no vale» y el mensaje pasa a la vista actual, sin gastar nada
+- [ ] Un botón viejo o un doble toque: ventanita «Ese menú ya no vale» y el mensaje pasa a la vista actual, sin gastar nada (pendiente de probar a propósito)
 - [ ] Un rechazo («Necesitas un pico», sin oro): ventanita, sin mensaje nuevo
 - [ ] Pulsar la misma vista dos veces no manda un mensaje repetido
-- [ ] Comprar, equipar, aprender o fabricar: el resultado encima del mismo menú
-- [ ] Una actividad que termina sola trae los botones del lugar en el mismo mensaje
+- [x] Comprar, equipar, aprender o fabricar: el resultado encima del mismo menú (comprado el cuchillo de desollar en Tessa)
+- [x] Una actividad que termina sola trae los botones del lugar en el mismo mensaje (desollar)
 - [ ] Investigar: «🎲 Percepción: 12 + 2 = 14 vs CD 12 · ✅ Éxito»
-- [ ] «Llegas al Mercado», «a la Taberna», «por el Camino del Viejo Rey» (en inglés, «the Old Pass Mine»)
+- [x] «Llegas al Mercado», «a la Taberna», «por el Camino del Viejo Rey» (en inglés, «the Old Pass Mine»)
 - [ ] Informe de un combate de una ronda: «1 ronda»
 - [ ] `/sheet` explica ● ○ · y ★
-- [ ] 🎒 Inventario: resumen con lo puesto y cuántos de cada tipo; pestañas con una línea por objeto e icono
+- [x] 🎒 Inventario: resumen con lo puesto y cuántos de cada tipo; pestañas con una línea por objeto e icono
 - [ ] Equipar desde ⚔️ Equipo y usar desde 🧪 Consumibles vuelven a su pestaña; `/item_` de algo tuyo trae su botón
 - [ ] Botín, recetas y tiendas con el icono de cada objeto
 
 ## Mapa y viaje (0.8.0)
-- [ ] Mapa: dónde estás · 📜 objetivo · esta zona · otras zonas · 🌫️ Sin explorar
-- [ ] Viaje directo a un lugar conocido, también entre zonas, en un toque
+- [x] Mapa: dónde estás · 📜 objetivo · esta zona · otras zonas · 🌫️ Sin explorar
+- [x] Viaje directo a un lugar conocido, también entre zonas, en un toque
 - [ ] El camino no atraviesa salas con combate fijo pendiente
-- [ ] 📜 al objetivo lleva al siguiente paso de cada misión activa sin revelar sitios desconocidos
+- [x] 📜 al objetivo lleva al siguiente paso de cada misión activa sin revelar sitios desconocidos
 - [ ] 📜 respeta la hora: de día no manda a cazar criaturas que solo salen de noche
 - [ ] 📜 aparece también en misiones con decisiones (rumor de Bram, agua de la cantera)
 - [ ] Tramos ⚠️: emboscada con una sola tirada; «▶️ Seguir hacia…» termina el viaje
-- [ ] Al llegar sin más que contar, el mapa se convierte en la escena («Llegas a X…»)
-- [ ] Solo distancias en yardas, sin tiempos
+- [x] Al llegar sin más que contar, el mapa se convierte en la escena («Llegas a X…»)
+- [x] Solo distancias en yardas, sin tiempos
 - [ ] `/map` estando ocupado avisa en vez de enseñar caminos
 
 ## Combate
-- [ ] Ataque básico y habilidades de la clase (maná/recursos se gastan bien)
-- [ ] Informe de batalla: rondas correctas, «🏆 Victoria» una sola vez
-- [ ] Botín y crónica en el mismo mensaje
+- [x] Ataque básico y habilidades de la clase (maná/recursos se gastan bien) (Guerrero: Golpe Poderoso gasta Foco)
+- [x] Informe de batalla: rondas correctas, «🏆 Victoria» una sola vez
+- [x] Botín y crónica en el mismo mensaje (en el resumen 📊; el aviso de +XP/objeto tras la victoria va en mensaje aparte)
 - [ ] Huida
 - [ ] Derrota → heridas graves; Ysolde las cura gratis (beta)
 - [ ] El jefe del tutorial (Viejo Colmillo) es ganable por la clase más frágil
 - [ ] Aviso de poca vida al cazar/rastrear/expedición
 
 ## Actividades
-- [ ] Cazar y rastrear (texto propio del lugar); las misiones de caza cuentan de día y de noche
-- [ ] Beta: en el tutorial las actividades terminan al momento; el descanso largo es instantáneo
+- [x] Cazar y rastrear (texto propio del lugar)
+- [ ] Beta: en el tutorial las actividades terminan al momento; el descanso largo es instantáneo (NO: con 0.10.35 los tiempos son reales incluso en el tutorial, 15s–3min; revisar si la casilla sigue vigente)
 - [ ] Recolectar hierbas, minar
 - [ ] Descanso largo en la taberna
 - [ ] Fabricar (estofado, poción de maná con ala de murciélago)
@@ -64,14 +64,14 @@ Cada pasada se hace con una clase distinta (la que menos se haya probado) y se a
 - [ ] Beta: pociones de vida y de maná a 1 de oro
 
 ## Comercio e inventario
-- [ ] Tienda por categorías; tras comprar sigues en la categoría
+- [x] Tienda por categorías; tras comprar sigues en la categoría
 - [ ] Fichas `/item_…`
 - [ ] Inventario: equipado primero, iconos de hueco en equipar/quitar
 
 ## NPCs y misiones
-- [ ] Aceptar y entregar misiones; al cumplir un objetivo, aviso del siguiente
+- [x] Aceptar y entregar misiones; al cumplir un objetivo, aviso del siguiente
 - [ ] Saludo de regreso (`greeting_return`) tras terminar una misión del NPC
-- [ ] Sin IA: el NPC recuerda la pista de la misión activa
+- [x] Sin IA: el NPC recuerda la pista de la misión activa (Vale señala siempre el siguiente paso)
 - [ ] Las 10 misiones del tutorial se completan sin salir del camino principal; anotar minutos de cada una
 
 ## Diario y reglas
@@ -380,4 +380,4 @@ Sin ayudas de beta: todo lleva su tiempo real. Tabla única en `engine/timings.p
 - [x] Pruebas automáticas: el reinicio borra el juego y deja cuentas, presupuesto de IA, imágenes y auditoría; copia y restauración exactas; mazmorra de pruebas para el motor.
 - [ ] En Telegram (ES/EN): el mapa no ofrece ningún lugar de cripta; el Bosque de los Susurros ya no tiene escalones ocultos; nadie habla del relicario (Mira, Holt, Ysolde, Tessa, Pell, Bram).
 - [ ] En el diario de logros: aparecen «El valle se abre», «Cobrador cobrado» y las tres decisiones; no los de la cripta.
-- [ ] En staging con una copia de producción: `oath launch-reset` en seco, `backup`, `launch-reset --yes`, `restore`, y comparar los conteos de cada tabla.
+- [x] En staging con una copia de la base local (2026-10-25): `oath launch-reset` en seco, `backup`, `launch-reset --yes`, `restore`; las 24 tablas quedan idénticas a la copia. Con una copia de producción real sigue pendiente (B14).

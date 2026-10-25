@@ -1,6 +1,6 @@
 # Reinicio de lanzamiento
 
-> Procedimiento del reinicio que **conserva a las personas y borra la partida** (roadmap_balance §16). No es `oath reset-players` (que borra también las cuentas). Todo lo que está aquí está implementado en la versión 0.10.41 y ensayado en pruebas contra PostgreSQL; el ensayo con una copia de producción está pendiente y se hace antes del lanzamiento (B14). **No se ha ejecutado contra datos reales.**
+> Procedimiento del reinicio que **conserva a las personas y borra la partida** (roadmap_balance §16). No es `oath reset-players` (que borra también las cuentas). Todo lo que está aquí está implementado en la versión 0.10.41 y ensayado en pruebas contra PostgreSQL; el ensayo con una copia de producción real está pendiente y se hace antes del lanzamiento (B14). **No se ha ejecutado contra datos reales**; sí se ensayó el 2026-10-25 con una copia de la base local.
 
 ## Qué se borra y qué se queda
 
@@ -46,3 +46,5 @@ La lista de lo que se queda es `launch.KEEP_TABLES` y `launch.KEEP_SETTINGS` (`o
 ## Ensayo hecho
 
 `tests/services/test_launch.py` (se ejecuta en PostgreSQL si hay una base de pruebas, y en SQLite si no): un ensayo en seco no cambia nada; el reinicio borra el juego y deja cuentas, presupuesto de IA, imágenes y auditoría; ningún orfanato queda tras el reinicio; una cuenta puede crear personaje de nuevo; un volcado pasado por JSON restaura la base exacta tras el reinicio (conteos, fechas y contenido), y una copia de otra versión se rechaza sin tocar nada.
+
+Ensayo en staging (2026-10-25): `pg_dump` de la base local (1 personaje, 46 misiones) → `pg_restore` en `oathforge_staging` → `launch-reset` en seco, `backup`, `launch-reset --yes` (quedan 0 personajes y 0 misiones; se conservan `users`, `media_files` y `action_logs`) → `restore` de la copia previa: las 24 tablas coinciden con la copia.

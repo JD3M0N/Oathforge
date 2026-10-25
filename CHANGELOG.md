@@ -4,6 +4,20 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.42] - 2026-10-25
+
+0.10-I (B13 cerrado, B14 en marcha): **ensayo del reinicio de lanzamiento en staging** y primer repaso jugado de `tests/features.md`.
+
+### Añadido
+- `planning/reinicio_lanzamiento.md`: el ensayo completo (`launch-reset` en seco, `backup`, `launch-reset --yes`, `restore`) hecho en staging contra una copia de la base local, con sus conteos; las 24 tablas coinciden tras la restauración. Queda solo el ensayo con una copia de producción real (B14).
+- `tests/features.md`: marcadas las casillas comprobadas jugando con un Guerrero en inglés (creación de personaje, teclado fijo, escena, mapa, viaje, tienda, diálogo, combate, seis de las diez misiones del tutorial).
+
+### Arreglado
+- Dos pistas de misión en `content/quests.yaml` (ES/EN, *Bloodroot* e *Iron for the Guard*) decían que recolectar o minar en el tutorial «termina al momento»; desde B08 esos tiempos son reales (4 min). El texto ahora dice la duración correcta.
+
+### Cambiado
+- `planning/plan_implementacion_0.10.md`: B13 pasa a "ensayado en staging con una copia de la base local; falta solo con datos de producción reales".
+
 ## [0.10.41] - 2026-10-25
 
 0.10-I (B13): **se retira la cripta y se prepara el reinicio de lanzamiento.** El juego ya no tiene mazmorra ni el hilo del relicario; la campaña es la de Tamsin y el valle. El reinicio que conserva a las personas está implementado y ensayado en pruebas, pero **no se ha ejecutado**.

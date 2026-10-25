@@ -177,8 +177,8 @@ tut_herbs:
     es: La capilla se queda sin raíz de sangre y la Guardia sin pociones. Vale te manda al bosque con la hoz.
     en: The chapel is running out of bloodroot and the Guard out of potions. Vale sends you to the woods with the sickle.
   hint:
-    es: Sal por la plaza al Camino del Viejo Rey y sigue hasta el Bosque de los Susurros (o el Claro de la Raíz Roja). En «⚒ Actividades», pulsa «🌿 Recolectar hierbas» (en el tutorial termina al momento). Los caminos con ⚠️ pueden traer emboscadas.
-    en: Leave through the plaza to the Old King's Road and on to the Whispering Woods (or Redroot Clearing). In "⚒ Activities", press "🌿 Gather herbs" (in the tutorial it is done at once). Roads marked ⚠️ may bring ambushes.
+    es: Sal por la plaza al Camino del Viejo Rey y sigue hasta el Bosque de los Susurros (o el Claro de la Raíz Roja). En «⚒ Actividades», pulsa «🌿 Recolectar hierbas» (4 min, sin peligro). Los caminos con ⚠️ pueden traer emboscadas.
+    en: Leave through the plaza to the Old King's Road and on to the Whispering Woods (or Redroot Clearing). In "⚒ Activities", press "🌿 Gather herbs" (4 min, no danger). Roads marked ⚠️ may bring ambushes.
   start_stage: locked
   unlock_stage: active
   objective_stage: active
@@ -260,8 +260,8 @@ tut_mine:
     es: Los caminos del norte están cortados y la herrera Tessa no tiene hierro. Vale te manda a la mina con el pico.
     en: The northern roads are cut off and Tessa the smith has no iron. Vale sends you to the mine with the pickaxe.
   hint:
-    es: Por el Camino del Viejo Rey llegas a la Mina del Paso Viejo. En «⚒ Actividades», pulsa «⛏️ Minar» (en el tutorial termina al momento). Fuera del tutorial, la «🏕️ Expedición larga» saca más, pero puede haber emboscada.
-    en: The Old King's Road takes you to the Old Pass Mine. In "⚒ Activities", press "⛏️ Mine" (in the tutorial it is done at once). Outside the tutorial, a "🏕️ Long expedition" yields more, but you may be ambushed.
+    es: Por el Camino del Viejo Rey llegas a la Mina del Paso Viejo. En «⚒ Actividades», pulsa «⛏️ Minar» (4 min, sin peligro); la «🏕️ Expedición larga» saca más, pero puede haber emboscada.
+    en: The Old King's Road takes you to the Old Pass Mine. In "⚒ Activities", press "⛏️ Mine" (4 min, no danger); a "🏕️ Long expedition" yields more, but you may be ambushed.
   start_stage: locked
   unlock_stage: active
   objective_stage: active
