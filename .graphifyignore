@@ -1,0 +1,14 @@
+# graphify (gitignore syntax): the graph covers only the code, oathforge/ and tests/.
+# Content, docs and data stay out: they are YAML or Markdown and would cost LLM tokens or add noise.
+# A leading / anchors to the repo root, so oathforge/content/ and oathforge/tools/ stay in.
+/content/
+/planning/
+/migrations/
+/tools/
+/artifacts/
+/.claude/
+/.github/
+/oathforge/i18n/locales/
+*.md
+*.ini
+*.toml

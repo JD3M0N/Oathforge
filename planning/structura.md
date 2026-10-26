@@ -4,7 +4,7 @@ Checklist para que Oathforge aguante el crecimiento (ciudades, clases, objetos) 
 
 ## Estado actual
 
-- **Fase 0** hecha en 0.10.43 (y el plan enlazado desde `CLAUDE.md` en 0.10.44), salvo dos cosas que dependen de Josue: borrar las ramas antiguas de los testers e instalar graphify (los pasos están en la propia fase).
+- **Fase 0** hecha en 0.10.43, con el plan enlazado desde `CLAUDE.md` (0.10.44) y graphify (0.10.45). Solo queda de parte de Josue borrar las ramas antiguas de los testers (los pasos están en la propia fase).
 - Siguiente: **Fase 3** (calidad automática). Las comprobaciones van primero para que los movimientos de las fases 1 y 2 sean seguros.
 - Orden: 0 → 3 → 1 → 2 → 4 → 5.
 
@@ -56,12 +56,11 @@ Decisiones ya tomadas (no se reabren):
 - [x] **`oath validate`**: carga `content/` como al arrancar el bot, sin Telegram ni BD.
 - [x] **`oath content-index`** escribe `content/INDEX.md` con una línea por id (nombre en inglés y archivo). `tests/test_content.py` comprueba que está al día.
 - [x] **Regla de nombres** en `AGENTS.md` («Nombres e idiomas»): la base va en inglés y todo texto visible en es y en. Un test exige ids y rutas de `content/` en ASCII.
-- [ ] **graphify** (pendiente de instalar en la máquina de Josue; `graphify-out/` ya está en `.gitignore` y `AGENTS.md` ya lo menciona):
-  - Instalarlo: `pip install graphifyy` (el paquete lleva dos «y»; el comando es `graphify`), o `uv tool install graphifyy` / `pipx install graphifyy` si tienes uv o pipx.
-  - Registrar la skill: `graphify install`. Después, reiniciar Claude Code.
-  - Generar el grafo solo del código, en Claude Code: `/graphify oathforge` y `/graphify tests`. Nada de `planning/` ni del CHANGELOG, porque indexar documentos pasa por el LLM y cuesta tokens.
-  - Regenerarlo tras cada merge de `main`.
-  - Con unos 150 archivos de código el ahorro es moderado. Lo que más reduce tokens es la Fase 2.
+- [x] **graphify** (0.10.45): instalado con `uv tool install graphifyy` (el paquete lleva dos «y»; el comando es `graphify`, en `~/.local/bin`) y registrado con `graphify install`.
+  - Un solo grafo de `oathforge/` y `tests/` juntos, para que cada test quede unido al código que prueba: 130 archivos, unos 2.660 nodos y 87 comunidades. Sale solo del AST y gasta 0 tokens de IA.
+  - `.graphifyignore` deja fuera `content/`, `planning/`, `migrations/`, `tools/`, los locales y los `.md`. Los patrones llevan `/` delante para no tapar `oathforge/content/` ni `oathforge/tools/`.
+  - Regenerarlo con `/graphify . --update` tras cambios grandes de código o tras cada fase de la 2.
+  - Con este tamaño el ahorro es moderado. Lo que más reduce tokens es la Fase 2.
 
 ## Fase 1 — Contenido modular: «una carpeta por cosa»
 

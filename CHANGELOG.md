@@ -4,6 +4,17 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.45] - 2026-10-25
+
+Structura: grafo del código con graphify.
+
+### Añadido
+- `.graphifyignore`: el grafo de graphify cubre solo `oathforge/` y `tests/`, sin contenido, planificación, locales ni Markdown. Sale del AST y no gasta tokens de IA.
+
+### Cambiado
+- `AGENTS.md`: cómo consultar el grafo (`/graphify query`) y regenerarlo (`/graphify . --update`).
+- `planning/structura.md`: graphify instalado y su grafo generado; de la fase 0 solo queda borrar las ramas antiguas.
+
 ## [0.10.44] - 2026-10-25
 
 Structura: el plan se puede retomar desde cualquier chat.
