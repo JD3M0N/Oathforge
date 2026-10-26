@@ -4,6 +4,15 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.47] - 2026-10-26
+
+Structura, fase 2: el combate del motor partido en un paquete.
+
+### Cambiado
+- `oathforge/engine/combat.py` (1.138 líneas) pasa a `oathforge/engine/combat/`, un módulo por etapa: `state` (constantes, modelos, consultas y fin del combate), `resolve` (salvaciones, ataques, daño, estados y curación), `entities` (invocaciones y formas), `turns` (inicio, flujo de turnos y turno enemigo) y `actions` (el turno del jugador). Las dependencias van en ese orden.
+- `combat/__init__.py` reexporta lo público y los pasos privados que usan los tests del motor; `oath simulate` y `oath balance` dan los mismos números.
+- `oathforge/engine/CLAUDE.md` explica el reparto.
+
 ## [0.10.46] - 2026-10-25
 
 Structura, fase 2: `render.py` partido en un paquete.
