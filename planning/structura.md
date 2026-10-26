@@ -12,8 +12,9 @@ Checklist para que Oathforge aguante el crecimiento (ciudades, clases, objetos) 
   - decidir los rangos de estadísticas de los monstruos por nivel (ver la fase).
 - **Fase 1** hecha en 0.10.54: clases, criaturas, objetos, PNJ y misiones tienen su carpeta, el cargador es genérico (`load_folder`) y los locales van por dominio. El volcado de `load_content()` sale idéntico (comparado con las claves ordenadas), los textos de la interfaz son los mismos y la suite está en verde. Dos cambios de orden menores, en el CHANGELOG.
 - **Fase 4** hecha en 0.10.56: plantillas en `content/_templates/`, `oath new` y ocho skills de protocolo en `.claude/skills/`. Una ficha nueva sale válida (el bot arranca con ella) y lo pendiente lleva `TODO(new)`; un test falla mientras quede alguno. Los tests crean cada tipo en una copia de `content/` y comprueban que `load_content()` la carga. Quedan de la fase solo las herramientas opcionales de más abajo (`/skill-creator`, subagentes, hooks, MCP).
-- Siguiente: **Fase 5** (documentación sin peso muerto: archivar CHANGELOG, anexos de Possibilium y fases cerradas, ADR).
-- Orden: 0 → 2 → 3 → 1 → 4 → 5 (la 2 se adelantó; el resto sigue igual).
+- **Fase 5** hecha en 0.10.57: `planning/archivum/` guarda lo cerrado (CHANGELOG 0.1–0.9, anexos de Possibilium §32, fases B00–B13 de `roadmap_balance.md` y fichas F01/F03/F04 de `roadmap.md`) y no se lee salvo petición (regla en `AGENTS.md` y `ask` en `settings.json`); `planning/decisions/` tiene siete ADR. En cada sitio queda un puntero de una línea y las anclas siguen valiendo. F15 se queda en `roadmap.md` porque la enlazan otros resúmenes.
+- Siguiente: no queda ninguna fase de la serie; solo lo pendiente de Josue de las fases 0 y 3 y las herramientas opcionales.
+- Orden: 0 → 2 → 3 → 1 → 4 → 5 (la 2 se adelantó; el resto sigue igual). Hechas todas.
 - Después de cada merge a `main`: `/graphify . --update`.
 
 ## Cómo continuar (en otro chat)
@@ -165,12 +166,13 @@ Cada tipo de contenido tiene tres piezas que se mantienen juntas:
 - [ ] Context7, con la documentación al día de python-telegram-bot, SQLAlchemy, google-genai y Alembic.
 - [ ] GitHub: con `gh` basta.
 
-## Fase 5 — Documentación sin peso muerto
+## Fase 5 — Documentación sin peso muerto (0.10.57)
 
-- [ ] `CHANGELOG.md`: queda solo la serie actual; las anteriores van al archivo.
-- [ ] `Possibilium.md`: los anexos de §32 pasan a `planning/archivum/`.
-- [ ] `roadmap.md` y `roadmap_balance.md`: las fases cerradas pasan al archivo.
-- [ ] Decisiones de arquitectura (ADR) cortas en `planning/decisions/NNN-title.md`.
+- [x] `CHANGELOG.md`: queda solo la serie 0.10 (152 KB → 84 KB); 0.1–0.9 van a `archivum/CHANGELOG-0.1-0.9.md`. `tools/check_release.py` solo mira la primera entrada, así que no cambia.
+- [x] `Possibilium.md`: los anexos de §32 (505 KB) pasan a `archivum/Possibilium-anexos.md`; en su sitio queda la sección 32 con las anclas `#anexo-*`, y `ars.md` apunta al archivo.
+- [x] `roadmap_balance.md`: B00–B13 pasan a `archivum/roadmap_balance-B00-B13.md` (B14, pendiente, se queda). `roadmap.md`: F01, F03 y F04 (todas sus casillas hechas) pasan a `archivum/roadmap-fichas-cerradas.md` con su ancla.
+- [x] `archivum/README.md` dice qué guarda cada archivo y que no se lee salvo petición; `AGENTS.md` lo añade a «No leas» y `settings.json` lo pone en `ask`.
+- [x] Siete ADR cortas en `planning/decisions/NNN-title.md` (motor y IA, servicios, locks, Gemini, idiomas, carpetas, proyecto en solitario).
 
 ## Verificación de cada fase
 

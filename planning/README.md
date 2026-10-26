@@ -4,7 +4,7 @@ Qué queremos construir y por qué. No es documentación del código (eso está 
 
 | Archivo | Tema |
 |---|---|
-| [Possibilium.md](Possibilium.md) | **Libro principal**: todas las ideas, alternativas y preguntas, con IDs (`CLA-01`, `MIN-01`…); archivo histórico de los PDF en los anexos |
+| [Possibilium.md](Possibilium.md) | **Libro principal**: todas las ideas, alternativas y preguntas, con IDs (`CLA-01`, `MIN-01`…); los anexos históricos están en `archivum/` |
 | [roadmap.md](roadmap.md) | **Plan de 0.10 y 0.11**: 20 fichas de sistema, hitos, puerta de salida y cobertura del TODO |
 | [plan_implementacion_0.10.md](plan_implementacion_0.10.md) | **Plan de trabajo de 0.10-I**: estado por fase (B00–B14), reglas de cada parche, lo que falta y las trampas ya encontradas; empieza una sesión nueva por aquí |
 | [roadmap_balance.md](roadmap_balance.md) | **Contrato de 0.10-I**: 14 clases, 41 ramas elegidas al nivel 10, progresión híbrida de XP e hitos hasta el 20, campaña nueva con dos jefes, región cercana y reinicio de lanzamiento |
@@ -21,6 +21,8 @@ Qué queremos construir y por qué. No es documentación del código (eso está 
 | [narratio.md](narratio.md) | Qué hace Gemini y qué nunca debe hacer |
 | [facies.md](facies.md) | Interfaz en Telegram: escenas, botones y comandos |
 | [ars.md](ars.md) | Dirección audiovisual: arte, música, voces, mapas, prompts y licencias |
+| [archivum/](archivum/README.md) | **Archivo**: lo hecho y cerrado (CHANGELOG 0.1–0.9, anexos de Possibilium, fases cerradas). No se lee salvo que se pida |
+| [decisions/](decisions/README.md) | Decisiones de arquitectura (ADR), una por archivo |
 | [structura.md](structura.md) | Orden del proyecto: carpetas, protocolos, herramientas para agentes y calidad automática |
 
 ## Cómo usarla
@@ -29,4 +31,4 @@ Qué queremos construir y por qué. No es documentación del código (eso está 
 - Estados de una idea: implementado, decidido, propuesta, alternativa, pregunta abierta, histórico (Possibilium §1).
 - Cuando una idea se implementa, pásala a *Estado actual* del resumen, anota la versión en `iter.md` y el cambio en el CHANGELOG.
 - La lista de tareas general está en [`TODO.md`](../TODO.md).
-- Los anexos de Possibilium (texto íntegro de los PDF retirados) son archivo: no hace falta leerlos.
+- Lo cerrado vive en [archivum/](archivum/README.md) (anexos de Possibilium, CHANGELOG antiguo, fases hechas): no hace falta leerlo.

@@ -27,7 +27,8 @@
     ],
     "ask": [
       "Read(./artifacts/**)",
-      "Read(./content/officina/**)"
+      "Read(./content/officina/**)",
+      "Read(./planning/archivum/**)"
     ],
     "deny": [
       "Read(./.venv/**)",

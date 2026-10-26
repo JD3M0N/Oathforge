@@ -51,7 +51,7 @@ Flujo de una acción libre: `leer contexto (tx corta) → Gemini interpreta → 
 - **No releas** un archivo que acabas de editar, ni uno que ya tienes en contexto.
 - **CHANGELOG**: lee solo las primeras entradas (las últimas versiones) para saber qué cambió hace poco.
 - **No leas** salvo que la tarea lo pida:
-  - los anexos de Possibilium (§32, a partir de `<a id="s32">`: texto íntegro de los PDF retirados e instantáneas antiguas);
+  - `planning/archivum/` (lo hecho y cerrado: CHANGELOG 0.1–0.9, anexos de Possibilium §32, fases B00–B13 y fichas F01/F03/F04), salvo que Josue pida todo lo que se ha hecho; el resto de `planning/` es la entrada de trabajo;
   - `artifacts/` (registros locales de partidas, `oathforge/recorder.py`; se apaga con `ARTIFACTS_ENABLED=false`). Si hace falta depurar, abre solo el archivo concreto:
     - `conversations/<día>/<telegram_id>.md`: chat jugador ↔ bot, con los cambios de estado como «⚙️ estado»;
     - `battles/<día>/<id>-<lugar>.md`: un combate turno a turno;
@@ -64,6 +64,8 @@ Flujo de una acción libre: `leer contexto (tx corta) → Gemini interpreta → 
 ## planning/
 
 - `Possibilium.md`: libro de ideas, alternativas y preguntas, con IDs (`CLA-01`, `MIN-01`, `COO-01`…).
+- `archivum/`: lo hecho y cerrado, apartado; no se lee salvo petición. Cuando una fase se cierra del todo, su ficha se mueve allí y queda un puntero de una línea.
+- `decisions/`: decisiones de arquitectura (ADR) cortas, `NNN-title.md`; una nueva sustituye a la anterior, que se marca *sustituida*.
 - Resúmenes por tema con nombre latino: `ordines` (clases), `progressio` (personaje y juramentos), `pugna` (combate y descanso), `opificia` (actividades y oficios), `mercatura` (comercio y equipo), `mundus` (mundo, viaje y misiones), `bestiarium`, `societas` (multijugador), `narratio` (IA), `facies` (interfaz Telegram), `ars` (audiovisual), `structura` (orden del proyecto y herramientas).
 - `iter.md`: la hoja de ruta por versión.
 - Cuando implementes o decidas algo, actualiza el **Estado actual** del resumen latino y, si cambia el plan, `iter.md`. Possibilium solo cambia si cambia una idea o su estado.

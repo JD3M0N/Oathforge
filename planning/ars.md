@@ -253,7 +253,7 @@ Interior of the Broken Crown tavern in Crownreach, broad oak counter on the righ
 
 **Negativo opcional**, solo si el modelo ofrece un campo compatible: `text, letters, watermark, logo, UI, blurry focal subject, malformed anatomy, duplicate limbs, cropped weapon, modern objects`. Para pixel art añadir `anti-aliasing, smooth gradients, inconsistent pixel size`. Si no hay campo negativo, conservar las restricciones esenciales en el prompt normal.
 
-Prompts históricos de la guía (tabernas, bosque, jefe, tabernero, paladín de venganza, Crownreach de noche, mapa mundial, taberna interior): en el [anexo de Possibilium](Possibilium.md#anexo-audio).
+Prompts históricos de la guía (tabernas, bosque, jefe, tabernero, paladín de venganza, Crownreach de noche, mapa mundial, taberna interior): en el [anexo de Possibilium](archivum/Possibilium-anexos.md#anexo-audio).
 
 ## 8. Consistencia de ciudades, NPC y criaturas
 
@@ -491,7 +491,7 @@ Hecho en la v0.8.3:
 
 ## 19. Fuentes y trazabilidad
 
-Repositorio auditado: `main` en `a1a7687` (0.8.0), comprobado de nuevo en 0.8.2. Lecturas: `oathforge/content/media.py`, `oathforge/services/media.py`, handlers, render, `tools/prepare_image.py`, YAML de ciudad/NPC/monstruos e imágenes/prompts/créditos. Guía audiovisual: texto íntegro en el [anexo](Possibilium.md#anexo-audio).
+Repositorio auditado: `main` en `a1a7687` (0.8.0), comprobado de nuevo en 0.8.2. Lecturas: `oathforge/content/media.py`, `oathforge/services/media.py`, handlers, render, `tools/prepare_image.py`, YAML de ciudad/NPC/monstruos e imágenes/prompts/créditos. Guía audiovisual: texto íntegro en el [anexo](archivum/Possibilium-anexos.md#anexo-audio).
 
 Documentación externa consultada el 17-10-2026:
 
