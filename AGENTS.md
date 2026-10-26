@@ -51,7 +51,7 @@ Flujo de una acción libre: `leer contexto (tx corta) → Gemini interpreta → 
 - **No releas** un archivo que acabas de editar, ni uno que ya tienes en contexto.
 - **CHANGELOG**: lee solo las primeras entradas (las últimas versiones) para saber qué cambió hace poco.
 - **No leas** salvo que la tarea lo pida:
-  - `planning/archivum/` (lo hecho y cerrado: CHANGELOG 0.1–0.9, anexos de Possibilium §32, fases B00–B13 y fichas F01/F03/F04), salvo que Josue pida todo lo que se ha hecho; el resto de `planning/` es la entrada de trabajo;
+  - `planning/archivum/` (lo hecho y cerrado: CHANGELOG 0.1–0.9, anexos de Possibilium §32, fases B00–B13, fichas F01/F03/F04 y lo hecho de `TODO.md`), salvo que Josue pida todo lo que se ha hecho; el resto de `planning/` es la entrada de trabajo;
   - `artifacts/` (registros locales de partidas, `oathforge/recorder.py`; se apaga con `ARTIFACTS_ENABLED=false`). Si hace falta depurar, abre solo el archivo concreto:
     - `conversations/<día>/<telegram_id>.md`: chat jugador ↔ bot, con los cambios de estado como «⚙️ estado»;
     - `battles/<día>/<id>-<lugar>.md`: un combate turno a turno;

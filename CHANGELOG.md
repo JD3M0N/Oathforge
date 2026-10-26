@@ -4,6 +4,14 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.58] - 2026-10-26
+
+Lo hecho de `TODO.md` sale al archivo.
+
+### Cambiado
+- `TODO.md` queda solo con lo pendiente; las casillas hechas y la sección «Hecho» están en `planning/archivum/TODO-hecho.md` (archivo, no se lee salvo petición).
+- Dos notas sueltas del final pasan a la sección «Sin clasificar».
+
 ## [0.10.57] - 2026-10-26
 
 Structura, fase 5: la documentación deja de arrastrar lo ya hecho.
