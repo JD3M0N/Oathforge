@@ -4,6 +4,20 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.56] - 2026-10-26
+
+Structura, fase 4: **protocolos.** Crear contenido ya no es copiar una ficha parecida: hay plantillas, un comando que las rellena y una skill por tipo con sus pasos de cierre.
+
+### Añadido
+- `content/_templates/` (el cargador la ignora): una plantilla comentada por tipo (`item`, `monster`, `npc`, `quest`, `zone`, `place`, `class`), el estilo común de los prompts de imagen (`prompts/style.md`, de `ars.md` §5) y el esqueleto de los `.prompt.md`. Cada plantilla es una ficha válida; lo pendiente lleva la marca `TODO(new)`.
+- `oath new <tipo> <id>` (`oathforge/tools/new.py`): crea la carpeta desde la plantilla con `--zone`, `--category`, `--continent`, `--kind`, `--place`, `--giver`, `--to`, `--name` y `--desc`; deja `images/media.yaml` y un `.prompt.md` por imagen ya escrito (estilo + descripción); conecta un lugar nuevo con su hub y añade la ruta de vuelta; un PNJ trae sus 12 respaldos de diálogo. Después valida el contenido y reescribe `content/INDEX.md`.
+- Ocho skills en `.claude/skills/`: `new-item`, `new-monster`, `new-city`, `new-quest`, `new-npc`, `new-class` (clase y rama de clase), `new-image` y `release`, cada una con sus pasos y su lista de cierre.
+- `AGENTS.md`: tabla «quiero crear X → usa la skill Y».
+- Tests (`tests/test_new.py`): cada plantilla, creada en una copia de `content/`, se carga como al arrancar el bot; el prompt lleva el estilo y la descripción; los errores de uso no escriben nada; y ningún `TODO(new)` puede quedar en `content/`.
+
+### Cambiado
+- `content/CLAUDE.md` y `CLAUDE.md` mandan a `oath new` en vez de copiar una ficha.
+
 ## [0.10.55] - 2026-10-26
 
 Registro del hook de ruff.

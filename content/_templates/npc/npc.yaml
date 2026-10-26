@@ -1,0 +1,18 @@
+# PNJ. El id es el nombre de la carpeta. La zona del PNJ es la de su lugar de día.
+# `persona`, `goals`, `secrets` y `knowledge` van en inglés: son para Gemini, que nunca decide resultados.
+name: {es: "TODO(new) __name__", en: "__name__"}
+title: {es: TODO(new), en: TODO(new)}
+schedule: {day: __place__, night: __place__}  # lugares existentes; de noche suele estar en la taberna
+greeting: {es: TODO(new), en: TODO(new)}
+# greeting_return: {es: …, en: …}   # en vez de `greeting` cuando el héroe ya cerró una de sus misiones
+persona: >-
+  TODO(new) Appearance, manner of speaking and attitude towards customers and troublemakers.
+goals: TODO(new)
+secrets: TODO(new)
+knowledge: >-
+  TODO(new) What this character knows about the town, other NPCs and the rumors going around.
+passive_perception: 10
+# steal_gold: 2d6      # lo que se lleva quien los roba
+# faction: pact        # una de content/factions.yaml
+# shop: {items: [healing_potion], buys: true}
+# order: 20            # posición en las listas

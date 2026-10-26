@@ -1,0 +1,22 @@
+# Clase. El id es el nombre de la carpeta. Cifras: SEMILLAS para medir con `oath balance` (el ataque básico es gratis).
+# Una clase con barra propia (`resource`) la define en content/progression.yaml; además necesita sus ramas
+# (specializations.yaml) y la progresión 1-20: ver la skill new-class.
+name: {es: "TODO(new) __name__", en: "__name__"}
+description: {es: TODO(new), en: "__description__"}
+hit_die: 8  # 6, 8, 10 o 12
+primary: str  # característica principal
+array: {str: 15, con: 14, dex: 13, wis: 12, cha: 10, int: 8}  # las seis, cada valor una vez
+skills: [athletics, perception]
+items: {dagger: 1, healing_potion: 1}
+equip: [dagger]
+signature: [__id___strike]  # botón destacado: la primera que el héroe tenga y pueda usar
+# casting: wis               # hechizos y curas; resource: <barra> para clases con barra propia
+abilities:
+  __id___strike:
+    name: {es: "TODO(new) Golpe", en: First Strike}
+    description: {es: TODO(new), en: TODO(new)}
+    level: 1
+    kind: strike  # strike, spell, turn, buff, surge, heal, hide, save, curse, passive, summon, command, converge, shift
+    extra_damage: 1d6
+    damage_type: slashing
+    uses: 2  # por descanso; sin `uses` si la clase tiene barra de recurso

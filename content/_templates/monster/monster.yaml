@@ -1,0 +1,23 @@
+# Criatura. Cifras: SEMILLAS para medir con `oath simulate --level 1-5` (rival previsto por nivel en `oath balance`).
+# Hay que colocarla en la tabla de encuentros de algún lugar (`encounters` de su place.yaml) y darle botín.
+name: {es: "TODO(new) __name__", en: "__name__"}
+indefinite: {es: TODO(new), en: "a __name_lower__"}  # «una rata gigante» / "a giant rat", para textos genéricos
+icon: "🐾"  # único entre criaturas
+description: {es: TODO(new), en: "__description__"}
+hp: 10
+ac: 11
+dex: 0  # modificador
+attacks:
+  - {name: {es: TODO(new) Mordisco, en: Bite}, to_hit: 3, damage: 1d6, damage_type: piercing}
+  # con estado: applies: {status: poisoned, turns: 2, chance: 0.15}  (bleeding, burning, poisoned, frightened, stunned, vulnerable)
+xp: 20
+type: beast  # humanoid, beast o undead
+habitat: {es: TODO(new), en: TODO(new)}
+lore: {es: TODO(new), en: TODO(new)}
+# gold: 1d4
+# loot: [{item: coal, chance: 0.3}]
+# harvest: [{item: raw_hide, chance: 0.5}]   # lo que da desollarla (pide cuchillo)
+# row: back        # arquero o lanzador
+# active: night    # day, night o any
+# resist: [fire]   vulnerable: [radiant]   immune: [stunned]
+# boss: true       # y pattern: {plate: 8, heavy: {…}} para un jefe que avisa

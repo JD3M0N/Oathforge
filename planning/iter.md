@@ -22,6 +22,7 @@ Versionado `0.x.y`: **y** (parche) en arreglos y cambios pequeños; **x** (menor
 | 0.8.3 | Planning reorganizado: Possibilium, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md`, `content/officina/` |
 | 0.9.0 | Logros e identidad: 30 logros, dos metalogros, títulos, destacados, objetivos seguidos y reconocimiento retroactivo verificable |
 | 0.9.1 | Hoja de ruta de 0.10 (consolidación) y 0.11 (multijugador): `planning/roadmap.md` |
+| 0.10.56 | Structura, fase 4: plantillas en `content/_templates/`, `oath new` y las skills de protocolo (`new-item`, `new-monster`, `new-city`, `new-quest`, `new-npc`, `new-class`, `new-image`, `release`) |
 | 0.10.55 | Hook de ruff registrado en `.claude/settings.json` |
 | 0.10.54 | Structura, fase 1: contenido en carpetas (clases, criaturas, objetos, PNJ y misiones), `load_folder` y locales por dominio |
 | 0.10.53 | Structura, fase 3: ruff, import-linter, pyright, pre-commit, CI en GitHub Actions y tests de capas y de coherencia |

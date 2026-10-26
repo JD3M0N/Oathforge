@@ -1,0 +1,25 @@
+# Misión. El id es el nombre del archivo. Efectos de `rewards`: xp, gold, give_item, milestone, set_flag, reputation,
+# trust, npc_memory, world_rumor, profession_xp (oathforge/content/validation/quests.py).
+# Los objetivos se cumplen solos; con `turn_in_stage` hay que entregarla al `giver` (ver quests/ de crownreach).
+order: 100  # posición en el diario
+giver: __giver__
+name: {es: "TODO(new) __name__", en: "__name__"}
+summary: {es: TODO(new), en: "__description__"}
+hint: {es: TODO(new), en: TODO(new)}
+start_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: visit, target: __place__}  # kill, hunt, talk, visit, gather, skin, craft, rest, heal, buy, sell… (esquema)
+rewards:
+  - {xp: 50}
+  # - {gold: 10}
+  # - {give_item: {healing_potion: 1}}
+stages:
+  active:
+    journal: {es: TODO(new), en: TODO(new)}
+  done:
+    state: completed
+    journal: {es: TODO(new), en: TODO(new)}
+# Para encadenarla tras otra: start_stage: locked, unlock_stage: active, after: <misión> (o unlock_flag), y una
+# etapa `locked` con state: locked.

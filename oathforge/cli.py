@@ -35,6 +35,11 @@ COMMANDS = [
         [
             ("validate", "", "Load and cross-check content/ (what the bot does at startup); exit 1 on errors."),
             ("content-index", "", "Rewrite content/INDEX.md: one line per content id with its file."),
+            (
+                "new",
+                "TYPE ID [--zone Z] [--category C] ...",
+                "Create an item, monster, npc, quest, zone, place or class from content/_templates/ (--help).",
+            ),
         ],
     ),
     (
@@ -404,6 +409,12 @@ def main(argv: list[str] | None = None) -> None:
     elif command == "validate":
         validate_content()
     elif command == "content-index":
+        write_content_index()
+    elif command == "new":
+        from oathforge.tools.new import main as new
+
+        new(rest)
+        validate_content()
         write_content_index()
     elif command == "tutorial-stats":
         asyncio.run(tutorial_stats())

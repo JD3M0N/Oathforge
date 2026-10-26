@@ -1,0 +1,20 @@
+# Objeto. La carpeta (items/<categoría>/<id>/) y `type` coinciden: weapon, armor, shield, consumable, tool, quest,
+# material, trinket o blueprint. Lo que decides: nivel y precio (oath balance) y de dónde sale (tienda, botín, receta,
+# recolección o misión): tests/test_coherence.py falla si nada lo da.
+name: {es: "TODO(new) __name__", en: "__name__"}
+icon: "🧱"  # un emoji propio; sin él se usa el del tipo
+description: {es: TODO(new), en: "__description__"}
+type: __category__
+__required__
+value: 0  # oro al vender; compara con objetos del mismo tipo y nivel
+# stackable: true            # materiales y consumibles
+# min_level: 1               # equipo: nivel para llevarlo (el de T1 pide 10)
+# slot: main_hand            # main_hand, ranged, off_hand o body
+# weapon: {damage: 1d6, damage_type: slashing, finesse: false, ranged: false}
+# base_ac: 12                # armadura; dex_cap: 2 limita la Destreza que suma
+# ac_bonus: 1                # escudo
+# heal: 2d4+2                # poción: también se usa en combate
+# effects: [{type: restore_hp, dice: 2d4+2}]
+# combat: {kind: spell, damage: 2d6, damage_type: fire}   # pergamino o bomba, usable desde el combate
+# tool: {skill: mining, min_rank: 1}                      # herramienta de recolección especializada
+# sellable: false

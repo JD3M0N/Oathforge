@@ -1,0 +1,20 @@
+# Lugar. El id es el nombre de la carpeta y es global (único en todo el mundo). Cada ruta ha de tener la vuelta con
+# los mismos minutos, yardas y peligro (tests/test_content.py::test_routes_go_both_ways_alike).
+name: {es: "TODO(new) __name__", en: "__name__"}
+article: {es: "", en: ""}  # «el», «la»… delante del nombre en una frase; vacío si no lleva
+kind: __kind__  # city, wild o dungeon
+description: {es: TODO(new), en: "__description__"}
+night: {es: TODO(new), en: TODO(new)}
+exits:
+  - {to: __to__, minutes: 5}  # danger: 0-3, requires_flag: <flag>, yards: <n> si el terreno es lento
+# hub: true                                   # la plaza de la ciudad: la única salida de la ciudad
+# stations: [anvil]                           # estaciones de oficio (Craft)
+# teaches: blacksmithing                      # oficio que se enseña aquí
+# home: true                                  # da cuarto: cama y baúl
+# rest_cost: 5                                # descanso largo en una posada
+# healer: {cost: 3, heal: 2d4}                # sanador de la capilla
+# hunting: true                               # Cazar y Rastrear
+# encounters: [{monsters: [giant_rat], weight: 3}]
+# night_encounters: []
+# gathering: [{skill: mining, tool: pickaxe, resources: [{item: coal, weight: 3}]}]
+# fixed_encounters: [{monsters: [bandit_captain], flag: bandit_camp_cleared}]

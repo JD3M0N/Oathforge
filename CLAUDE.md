@@ -46,6 +46,7 @@ Si la tarea es ordenar el proyecto («sigue con structura», «la siguiente fase
 .venv\Scripts\alembic upgrade head      # migraciones
 .venv\Scripts\oath validate             # comprobar content/ sin arrancar el bot
 .venv\Scripts\oath content-index        # reescribir content/INDEX.md
+.venv\Scripts\oath new item iron_dagger --category weapon   # crear contenido desde content/_templates/ (también monster, npc, quest, zone, place, class)
 .venv\Scripts\oath simulate --level 1-5   # simulador de combates para el balance
 .venv\Scripts\oath tutorial-stats        # minutos por misión del tutorial y dónde se atasca cada jugador
 .venv\Scripts\oath tgtest send "/start"   # jugar con el bot desde la cuenta de prueba (también press, show)

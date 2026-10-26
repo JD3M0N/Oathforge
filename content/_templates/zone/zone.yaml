@@ -1,0 +1,6 @@
+# Zona: una ciudad, una región salvaje o una mazmorra. Sus lugares son carpetas hermanas con su place.yaml
+# (oath new place <id> --zone __id__), y su PNJ y misiones, npcs/ y quests/.
+name: {es: "TODO(new) __name__", en: "__name__"}
+kind: __kind__  # city, wilds o dungeon
+description: {es: TODO(new), en: "__description__"}
+night: {es: TODO(new), en: TODO(new)}

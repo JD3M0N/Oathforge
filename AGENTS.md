@@ -72,7 +72,20 @@ Flujo de una acción libre: `leer contexto (tx corta) → Gemini interpreta → 
 
 - Imita el código de alrededor: nombres, densidad de comentarios, estilo. Sin abstracciones, capas ni comentarios que el código no necesita. Cambio mínimo que resuelve la tarea.
 - Reutiliza lo que hay: `render.*` para pintar, `services.*` para escribir, `ai/fallbacks.pick` para respaldos, `engine/dice` para tiradas.
-- **Contenido nuevo**: un objeto, misión, criatura o lugar va en YAML. Lo valida `load_content()` al arrancar; si algo no cuadra, el bot no arranca y dice qué es.
+- **Contenido nuevo**: un objeto, misión, criatura o lugar va en YAML. Lo valida `load_content()` al arrancar; si algo no cuadra, el bot no arranca y dice qué es. Se crea con `oath new` (plantillas en `content/_templates/`) y su skill:
+
+| Quiero crear… | Skill | Primer paso |
+|---|---|---|
+| un objeto | `new-item` | `oath new item <id> --category <tipo>` |
+| una criatura o jefe | `new-monster` | `oath new monster <id>` |
+| un PNJ | `new-npc` | `oath new npc <id> --zone <zona>` |
+| una misión | `new-quest` | `oath new quest <id> --zone <zona> [--giver <pnj>]` |
+| una ciudad o zona (con sus lugares) | `new-city` | `oath new zone <id>` y `oath new place <id> --zone <zona>` |
+| una clase o una rama de clase | `new-class` | `oath new class <id>` |
+| una imagen | `new-image` | el `.prompt.md` que dejó `oath new` |
+| cerrar una versión y anunciarla | `release` | pruebas → versión → CHANGELOG → commit |
+
+  Lo que falta por escribir en una ficha nueva lleva la marca `TODO(new)`; `tests/test_content.py` falla mientras quede alguna en `content/`.
 - **Imágenes**: cada imagen integrada lleva `media.yaml` en su carpeta `images/` y `<nombre>.prompt.md` al lado (lo exige `tests/test_content.py`). Las pruebas van en `content/officina/`, que el catálogo no lee.
 - **BD**: cualquier cambio de modelo lleva su migración de Alembic.
 - **Comandos de consola**: un comando nuevo va a su grupo en `COMMANDS` de `oathforge/cli.py`.

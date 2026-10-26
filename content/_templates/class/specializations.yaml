@@ -1,0 +1,10 @@
+# Ramas de clase: una por personaje, elegida al nivel 10 en el Gremio. Una rama con `ready: false` no se puede elegir.
+# Una rama lista tiene su recorrido entero: pasiva y técnica al 10, desarrollo fijo al 15, dos modificadores en el 13
+# y otros dos en el 17 (se elige uno de cada par) y una técnica culminante al 20 (ver content/classes/paladin/).
+# roles: dmg, deff, heal, control; el primero es el principal.
+__id___branch:
+  class_key: __id__
+  name: {es: "TODO(new) Rama", en: First Branch}
+  description: {es: TODO(new), en: TODO(new)}
+  roles: [dmg]
+  ready: false

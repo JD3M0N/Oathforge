@@ -11,7 +11,8 @@ Checklist para que Oathforge aguante el crecimiento (ciudades, clases, objetos) 
   - ver la CI en verde en el primer push y, en GitHub, exigirla para `main`;
   - decidir los rangos de estadísticas de los monstruos por nivel (ver la fase).
 - **Fase 1** hecha en 0.10.54: clases, criaturas, objetos, PNJ y misiones tienen su carpeta, el cargador es genérico (`load_folder`) y los locales van por dominio. El volcado de `load_content()` sale idéntico (comparado con las claves ordenadas), los textos de la interfaz son los mismos y la suite está en verde. Dos cambios de orden menores, en el CHANGELOG.
-- Siguiente: **Fase 4** (protocolos: plantillas, `oath new` y skills). Las plantillas van en `content/_templates/`, que el cargador ya ignora.
+- **Fase 4** hecha en 0.10.56: plantillas en `content/_templates/`, `oath new` y ocho skills de protocolo en `.claude/skills/`. Una ficha nueva sale válida (el bot arranca con ella) y lo pendiente lleva `TODO(new)`; un test falla mientras quede alguno. Los tests crean cada tipo en una copia de `content/` y comprueban que `load_content()` la carga. Quedan de la fase solo las herramientas opcionales de más abajo (`/skill-creator`, subagentes, hooks, MCP).
+- Siguiente: **Fase 5** (documentación sin peso muerto: archivar CHANGELOG, anexos de Possibilium y fases cerradas, ADR).
 - Orden: 0 → 2 → 3 → 1 → 4 → 5 (la 2 se adelantó; el resto sigue igual).
 - Después de cada merge a `main`: `/graphify . --update`.
 
@@ -120,20 +121,25 @@ Cada archivo grande pasa a ser un paquete con un `__init__.py` que reexporta lo 
 - [x] **Coherencia del contenido** (`tests/test_coherence.py`): todo objeto se puede conseguir (tienda, botín, receta, recolección, descubrimiento, misión o equipo inicial), todo monstruo está en una tabla de encuentros, todo PNJ tiene horario, y dentro de un mismo tipo y ranura el equipo de más nivel no es más barato.
   - [ ] **Josue**: los rangos de estadísticas de los monstruos por nivel. Los monstruos no tienen nivel propio; el único dato es el rival previsto de `oath balance` (`STANDARDS`), y en él ni la vida ni la XP suben siempre (el estándar de 17 tiene menos vida que el de 13; la XP del élite de 9 es menor que la del de 5). Hace falta una regla de diseño (bandas de vida, CA y XP por nivel, o un margen) antes de convertirla en test.
 
-## Fase 4 — Protocolos (fichas + prompts listos)
+## Fase 4 — Protocolos (fichas + prompts listos) (0.10.56)
 
 Cada tipo de contenido tiene tres piezas que se mantienen juntas:
 
-1. **Plantilla** en `content/_templates/<type>/` (`item`, `monster`, `npc`, `quest`, `zone`, `place`, `class`), comentada con todos los campos y sus rangos.
-2. **Generador**: `oath new <type> <id> [--zone …] [--category …]` crea la carpeta desde la plantilla, con `images/media.yaml` y un `<name>.prompt.md` ya relleno. El prompt combina el bloque de estilo común (`content/_templates/prompts/style.md`, que sale de `ars.md`) con la descripción de la ficha.
+1. **Plantilla** en `content/_templates/<type>/` (`item`, `monster`, `npc`, `quest`, `zone`, `place`, `class`), comentada con todos los campos y sus rangos. Es una ficha válida: lo que falta lleva `TODO(new)`. Los marcadores `__id__`, `__name__`… los cambia el generador.
+2. **Generador**: `oath new <type> <id> [--zone …] [--category …]` (`oathforge/tools/new.py`) crea la carpeta desde la plantilla, con `images/media.yaml` y un `<name>.prompt.md` ya relleno. El prompt combina el bloque de estilo común (`content/_templates/prompts/style.md`, que sale de `ars.md` §5) con la descripción que se pasa en `--desc`.
+   - Un lugar nuevo se conecta al hub de su zona (o a `--to`) y el generador añade la ruta de vuelta en el otro lugar.
+   - Un PNJ o una misión empiezan en el hub de su zona (o en `--place`); el PNJ trae sus 12 respaldos de diálogo por idioma.
+   - `blueprint` no se genera (necesita una receta especial que enseñar): se escribe a mano.
 3. **Skill de Claude** en `.claude/skills/<protocol>/SKILL.md` con los pasos y una lista de cierre:
-   - [ ] `new-item`: ficha `{es,en}` → nivel y precio (`oath balance`) → de dónde sale (receta, botín, tienda o recompensa) → prompt del icono → `oath validate` → CHANGELOG.
-   - [ ] `new-monster`: ficha → estadísticas según su nivel → dónde aparece y su botín → prompt del retrato → `oath simulate` → bestiario.
-   - [ ] `new-city`: carpeta de la zona y grafo de lugares, PNJ con sus 12 respaldos por idioma, tiendas, misiones, monstruos, imágenes de día y de noche con su prompt, balance del rango de niveles, `tests/features.md` y un recorrido con `oath tgtest`.
-   - [ ] `new-quest`, `new-npc`, `new-class` / `new-specialization` (incluye la progresión 1–20).
-   - [ ] `new-image`: prompt → `tools/prepare_image.py` → `media.yaml` con créditos.
-   - [ ] `release`: versión → CHANGELOG → `iter.md` → anuncio en inglés y su traducción al español con el formato de los canales.
-- [ ] `AGENTS.md` enlaza cada protocolo en una tabla: «quiero crear X → usa la skill Y».
+   - [x] `new-item`: ficha `{es,en}` → nivel y precio (`oath balance`) → de dónde sale (receta, botín, tienda o recompensa) → prompt del icono → `oath validate` → CHANGELOG.
+   - [x] `new-monster`: ficha → estadísticas según su nivel → dónde aparece y su botín → prompt del retrato → `oath simulate` → bestiario.
+   - [x] `new-city`: carpeta de la zona y grafo de lugares, PNJ con sus 12 respaldos por idioma, tiendas, misiones, monstruos, imágenes de día y de noche con su prompt, balance del rango de niveles, `tests/features.md` y un recorrido con `oath tgtest`.
+   - [x] `new-quest`, `new-npc`, `new-class` (una sola skill para la clase y para una rama nueva de una clase, con la progresión 1–20).
+   - [x] `new-image`: prompt → `tools/prepare_image.py` → `media.yaml` con créditos.
+   - [x] `release`: versión → CHANGELOG → `iter.md` → anuncio en inglés y su traducción al español con el formato de los canales.
+- [x] `AGENTS.md` enlaza cada protocolo en una tabla: «quiero crear X → usa la skill Y».
+- [x] `tests/test_new.py`: cada plantilla, creada en una copia de `content/`, carga como el bot; los errores de uso (id repetido, zona desconocida…) no escriben nada; y ningún `TODO(new)` queda en `content/`.
+- No hay skill de zona suelta: `oath new zone` y `oath new place` están dentro de `new-city`.
 
 ## Herramientas recomendadas
 

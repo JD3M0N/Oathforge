@@ -9,7 +9,7 @@
   - `items/<tipo>/<id>/item.yaml` y `items/<tipo>/recipes.yaml` (las recetas de lo que produce ese tipo)
   - `world/<continente>/<zona>/<lugar>/place.yaml`, `npcs/<pnj>/npc.yaml` (+ `dialogue.fallback.yaml`) y `quests/<misión>.yaml`: una ciudad es una carpeta con todo dentro
   - Las carpetas que empiezan por `_` (plantillas) se ignoran. `order: N` al final de una ficha fija su posición en los menús (clases, criaturas, PNJ).
-  - Para crear una, copia una ficha parecida y cambia el id; un id repetido o un error de esquema nombra el archivo.
+  - Para crear una, usa `oath new <tipo> <id>` (plantillas y prompts de imagen en `_templates/`, ver su `README.md` y las skills `new-*`); lo que queda por escribir lleva `TODO(new)` y un test falla mientras quede alguno. Un id repetido o un error de esquema nombra el archivo.
 - **Imágenes**: van en una carpeta `images/` dentro de su nodo, su clase (`classes/<id>/images/`) o su monstruo (`monsters/<id>/images/`), con `media.yaml` (créditos y licencia) y `<nombre>.prompt.md` al lado de cada archivo. `.night` y `.male`/`.female` en el nombre marcan las variantes.
 - **Respaldos de IA** (`fallbacks/`): 12 textos distintos por clave e idioma, sin modificadores de formato y solo con los marcadores permitidos.
 - **No toques ni leas `officina/`**: es el laboratorio de imágenes de Josue.
