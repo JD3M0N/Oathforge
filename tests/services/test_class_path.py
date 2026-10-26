@@ -80,9 +80,9 @@ def branch():
     content.class_specializations.pop(BRANCH, None)
 
 
-async def hero(level: int = 10, location: str = "adventurers_guild") -> int:
+async def hero(level: int = 10, location: str = "adventurers_guild", telegram_id: int = 1) -> int:
     async with session_scope() as s:
-        user = await characters.get_or_create_user(s, 1, "es")
+        user = await characters.get_or_create_user(s, telegram_id, "es")
         char = await characters.create_character(s, user, "Aldric", "human", "soldier", "warrior")
         char.xp = get_content().progression.xp[level - 1]
         char.build = {**characters.build_of(char), characters.MILESTONES: ["ash_collector", "iron_stag"]}
@@ -121,9 +121,7 @@ async def test_the_branch_refuses_everything_that_is_not_allowed(branch):
         char = await get_char(s, low)
         assert (await paths.choose_branch(s, char, BRANCH)).error == "path.err.level"
         assert char.specialization is None
-    async with session_scope() as s:
-        await s.execute(Character.__table__.delete())
-    away = await hero(10, "crownreach_plaza")
+    away = await hero(10, "crownreach_plaza", telegram_id=2)  # one hero per user
     async with session_scope() as s:
         char = await get_char(s, away)
         assert (await paths.choose_branch(s, char, BRANCH)).error == "path.err.not_guild"

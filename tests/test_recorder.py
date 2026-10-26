@@ -13,6 +13,7 @@ from tests.ai.test_client import OpenBudget, ScriptedClient
 @pytest.fixture
 def root(tmp_path, monkeypatch):
     monkeypatch.setattr(get_settings(), "artifacts_dir", tmp_path)
+    monkeypatch.setattr(get_settings(), "artifacts_enabled", True)  # CI turns it off
     return tmp_path
 
 

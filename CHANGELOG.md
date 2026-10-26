@@ -4,6 +4,14 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.59] - 2026-10-26
+
+Primer run de la CI en verde.
+
+### Arreglado
+- `tests/test_recorder.py` activa el registro de `artifacts/` por sí mismo (la CI lo apaga con `ARTIFACTS_ENABLED=false`).
+- `tests/services/test_class_path.py` usa un usuario distinto para el segundo héroe en vez de borrar personajes (SQLite no borra en cascada sus habilidades y reputaciones).
+
 ## [0.10.58] - 2026-10-26
 
 Lo hecho de `TODO.md` sale al archivo.
