@@ -44,11 +44,14 @@ class NullLLM:
 
 async def usage_today(session, user_id: int) -> tuple[int, int]:
     """(calls, tokens) the player has spent today. Read-only; the hero sheet shows it."""
-    row = (await session.execute(
-        select(func.coalesce(func.sum(AiUsage.calls), 0),
-               func.coalesce(func.sum(AiUsage.prompt_tokens + AiUsage.output_tokens), 0))
-        .where(AiUsage.day == date.today(), AiUsage.user_id == user_id)
-    )).one()
+    row = (
+        await session.execute(
+            select(
+                func.coalesce(func.sum(AiUsage.calls), 0),
+                func.coalesce(func.sum(AiUsage.prompt_tokens + AiUsage.output_tokens), 0),
+            ).where(AiUsage.day == date.today(), AiUsage.user_id == user_id)
+        )
+    ).one()
     return int(row[0]), int(row[1])
 
 
@@ -82,8 +85,12 @@ class Budget:
         today = date.today()
         async with session_scope() as session:
             row = await session.scalar(
-                select(AiUsage).where(AiUsage.day == today, AiUsage.model == model,
-                                      AiUsage.user_id.is_(None) if user_id is None else AiUsage.user_id == user_id)
+                select(AiUsage)
+                .where(
+                    AiUsage.day == today,
+                    AiUsage.model == model,
+                    AiUsage.user_id.is_(None) if user_id is None else AiUsage.user_id == user_id,
+                )
                 .with_for_update()
             )
             if row is None:
@@ -132,7 +139,8 @@ class GeminiLLM:
 
     def _model(self, tier: Tier) -> str:
         return {"fast": self.s.gemini_model_fast, "chronicle": self.s.gemini_model_chronicle}.get(
-            tier, self.s.gemini_model_narrative)
+            tier, self.s.gemini_model_narrative
+        )
 
     def _candidates(self, tier: Tier) -> list[str]:
         """Models to try in order: the tier's model, then (narrative only) the fast one if it is different,
@@ -198,14 +206,16 @@ class GeminiLLM:
                     if cooldown > self.s.ai_model_cooldown_seconds:
                         log.warning("gemini model %s out of quota, skipping it for %.0f min", model, cooldown / 60)
                     else:
-                        log.warning("gemini call to %s failed (attempt %d): %s", model, attempt + 1,
-                                    str(e) or type(e).__name__)
+                        log.warning(
+                            "gemini call to %s failed (attempt %d): %s", model, attempt + 1, str(e) or type(e).__name__
+                        )
                     break
             if resp is None:
                 continue
             usage = resp.usage_metadata
             await self.budget.record(
-                user_id, model,
+                user_id,
+                model,
                 getattr(usage, "prompt_token_count", 0) or 0,
                 (getattr(usage, "candidates_token_count", 0) or 0) + (getattr(usage, "thoughts_token_count", 0) or 0),
             )
@@ -218,8 +228,14 @@ class GeminiLLM:
     def _record(tier, model, purpose, system, prompt, response, error, usage, started, user_id) -> None:
         """Debug copy of the call in artifacts/ai/ (error = earlier failed attempt, if any)."""
         recorder.ai_call(
-            tier=tier, model=model, purpose=purpose, system=system, prompt=prompt, response=response,
-            error=error, user_id=user_id,
+            tier=tier,
+            model=model,
+            purpose=purpose,
+            system=system,
+            prompt=prompt,
+            response=response,
+            error=error,
+            user_id=user_id,
             prompt_tokens=getattr(usage, "prompt_token_count", 0) or 0,
             output_tokens=(getattr(usage, "candidates_token_count", 0) or 0)
             + (getattr(usage, "thoughts_token_count", 0) or 0),

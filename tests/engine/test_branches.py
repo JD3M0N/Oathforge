@@ -63,9 +63,8 @@ def test_all_forty_one_branches_are_ready():
     assert not [k for k, b in C.class_specializations.items() if not b.ready]
 
 
-
-
 # ------------------------------------------------------------------ the path is whole
+
 
 @pytest.mark.parametrize("key", READY)
 def test_a_ready_branch_has_its_whole_path(key):
@@ -93,13 +92,14 @@ def test_the_path_arrives_at_its_levels(key):
 
 # ------------------------------------------------------------------ not the same loop twice
 
+
 def test_sibling_branches_do_not_play_the_same_loop():
     by_class = {}
     for key in READY:
         by_class.setdefault(C.class_specializations[key].class_key, []).append(key)
     for cls, keys in by_class.items():
         for i, a in enumerate(keys):
-            for b in keys[i + 1:]:
+            for b in keys[i + 1 :]:
                 assert tags(a) != tags(b), f"{a} and {b} ({cls}) make the same decisions"
 
 
@@ -110,6 +110,7 @@ def test_a_branch_makes_a_decision_its_class_does_not(key):
 
 
 # ------------------------------------------------------------------ the modifiers do something
+
 
 def _modifier_cases():
     for key in READY:
@@ -138,13 +139,24 @@ def test_the_two_options_of_a_level_are_not_the_same(key):
 
 # ------------------------------------------------------------------ the decision, in a fight
 
+
 def arena(key: str, level: int = 20, **foe_kw):
     char, defs = effective(key, level)
     me = characters.combatant_from(char, sim.sim_gear(char), sim.sim_skills(char))
     me.resource = me.resource_max  # a full bar: only the rules can stop the ability
-    foe = Combatant(id="m1", side="enemy", ref="x", name={"es": "x", "en": "x"}, hp=100000, max_hp=100000, ac=1,
-                    dex_mod=-10, xp=1, attacks=[AttackProfile(key="a", name={"es": "x", "en": "x"}, to_hit=-99,
-                                                              damage="1d1", damage_type="slashing")], **foe_kw)
+    foe = Combatant(
+        id="m1",
+        side="enemy",
+        ref="x",
+        name={"es": "x", "en": "x"},
+        hp=100000,
+        max_hp=100000,
+        ac=1,
+        dex_mod=-10,
+        xp=1,
+        attacks=[AttackProfile(key="a", name={"es": "x", "en": "x"}, to_hit=-99, damage="1d1", damage_type="slashing")],
+        **foe_kw,
+    )
     st = EncounterState(location="t", combatants={"p1": me, "m1": foe})
     st.order, st.turn_index = ["p1", "m1"], 0
     return st, me, foe, defs
@@ -190,8 +202,10 @@ def test_a_leech_heals_only_from_real_damage(key, akey):
     assert me.hp > before or foe.hp == foe.max_hp  # it healed, or nothing landed and nothing healed
 
 
-@pytest.mark.parametrize("key", [k for k in READY if any(a.thorns or a.resource_on_hurt for a in
-                                                         C.class_specializations[k].abilities.values())])
+@pytest.mark.parametrize(
+    "key",
+    [k for k in READY if any(a.thorns or a.resource_on_hurt for a in C.class_specializations[k].abilities.values())],
+)
 def test_an_answering_branch_answers_a_real_wound(key):
     st, me, foe, defs = arena(key)
     me.ac = 1
@@ -204,13 +218,31 @@ def test_an_answering_branch_answers_a_real_wound(key):
 
 # ------------------------------------------------------------------ nothing is hopeless
 
+
 def boss(level: int) -> Combatant:
     """A synthetic single enemy that grows with the hero (the real monsters of levels 11-20 are B11)."""
     hp = 40 + 10 * level
-    return Combatant(id="m1", side="enemy", ref="boss", name={"es": "J", "en": "B"}, hp=hp, max_hp=hp,
-                     ac=12 + level // 4, dex_mod=1, xp=1, boss=True,
-                     attacks=[AttackProfile(key="a", name={"es": "x", "en": "x"}, to_hit=3 + level // 2,
-                                            damage=f"2d6+{level // 2 + 1}", damage_type="slashing")])
+    return Combatant(
+        id="m1",
+        side="enemy",
+        ref="boss",
+        name={"es": "J", "en": "B"},
+        hp=hp,
+        max_hp=hp,
+        ac=12 + level // 4,
+        dex_mod=1,
+        xp=1,
+        boss=True,
+        attacks=[
+            AttackProfile(
+                key="a",
+                name={"es": "x", "en": "x"},
+                to_hit=3 + level // 2,
+                damage=f"2d6+{level // 2 + 1}",
+                damage_type="slashing",
+            )
+        ],
+    )
 
 
 def duel(key: str, level: int, seed: int) -> bool:

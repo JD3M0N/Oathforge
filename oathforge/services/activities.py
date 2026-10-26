@@ -54,14 +54,17 @@ def options(char: Character) -> list[tuple[str, str]]:
 def loot_text(items: dict[str, int]) -> dict:
     """{"es": "3 × Mena de hierro, 1 × Carbón", "en": ...}"""
     c = get_content()
-    return {lang: ", ".join(f"{q} × {c.items[k].label(lang)}" for k, q in items.items()) or "—"
-            for lang in ("es", "en")}
+    return {
+        lang: ", ".join(f"{q} × {c.items[k].label(lang)}" for k, q in items.items()) or "—" for lang in ("es", "en")
+    }
 
 
 async def open_activity(session: AsyncSession, char: Character, lock: bool = False) -> WorldActivity | None:
-    stmt = (select(WorldActivity)
-            .where(WorldActivity.character_id == char.id, WorldActivity.status.in_(OPEN))
-            .order_by(WorldActivity.id.desc()))
+    stmt = (
+        select(WorldActivity)
+        .where(WorldActivity.character_id == char.id, WorldActivity.status.in_(OPEN))
+        .order_by(WorldActivity.id.desc())
+    )
     if lock:
         stmt = stmt.with_for_update()
     return await session.scalar(stmt)
@@ -117,13 +120,11 @@ async def select_tool(session: AsyncSession, char: Character, key: str) -> Outco
         return Outcome.refused("tool.err.not_owned", item=item.labelled())
     rank = gathering.rank_for(characters.mastery_xp(char, item.tool.skill))
     if rank < item.tool.min_rank:
-        return Outcome.refused("tool.err.rank", skill=characters.mastery_name(item.tool.skill),
-                               rank=item.tool.min_rank)
+        return Outcome.refused("tool.err.rank", skill=characters.mastery_name(item.tool.skill), rank=item.tool.min_rank)
     crafting = dict(char.crafting or {})
     crafting["tools"] = {**crafting.get("tools", {}), item.tool.skill: key}
     char.crafting = crafting
-    return Outcome().add("tool.chosen", item=item.labelled(),
-                         skill=characters.mastery_name(item.tool.skill))
+    return Outcome().add("tool.chosen", item=item.labelled(), skill=characters.mastery_name(item.tool.skill))
 
 
 def short_rests_left(char: Character) -> int:
@@ -189,8 +190,10 @@ def rules_snapshot(char: Character, gatherable, skill: str, kind: str) -> dict:
     mods = modifiers(char, skill)
     return {
         "v": 1,
-        "resources": [{"item": r.item, "weight": r.weight, "min_rank": r.min_rank}
-                      for r in (gatherable.resources if gatherable else [])],
+        "resources": [
+            {"item": r.item, "weight": r.weight, "min_rank": r.min_rank}
+            for r in (gatherable.resources if gatherable else [])
+        ],
         "rank": gathering.rank_for(characters.mastery_xp(char, skill)),
         "mods": {"time_pct": mods.time_pct, "rare_rel": mods.rare_rel, "extra_chance": mods.extra_chance},
     }
@@ -208,9 +211,11 @@ def modifiers(char: Character, skill: str) -> gathering.Mods:
         return mods
     tool = get_content().items[chosen].tool
     # relative improvements of the same kind add up once, and the engine caps what they can reach
-    return gathering.Mods(time_pct=min(0.5, mods.time_pct + tool.time_pct),
-                          rare_rel=mods.rare_rel + tool.rare_rel,
-                          extra_chance=min(1.0, mods.extra_chance + tool.extra_chance))
+    return gathering.Mods(
+        time_pct=min(0.5, mods.time_pct + tool.time_pct),
+        rare_rel=mods.rare_rel + tool.rare_rel,
+        extra_chance=min(1.0, mods.extra_chance + tool.extra_chance),
+    )
 
 
 def _snapshot_resources(rules: dict):
@@ -218,8 +223,7 @@ def _snapshot_resources(rules: dict):
     return [SimpleNamespace(**r) for r in rules.get("resources", [])]
 
 
-async def start(session: AsyncSession, char: Character, kind: str, skill: str,
-                now: float | None = None) -> Outcome:
+async def start(session: AsyncSession, char: Character, kind: str, skill: str, now: float | None = None) -> Outcome:
     refusal = characters.ensure_free(char) or await check(session, char, kind, skill)
     if refusal:
         return refusal
@@ -248,23 +252,43 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str,
         seconds = gathering.Mods(**rules["mods"]).seconds(seconds)
     elif kind == "track":
         seconds = modifiers(char, "tracking").seconds(seconds)
-    act = WorldActivity(character_id=char.id, location=char.location, kind=kind, skill=skill, started_at=now,
-                        ends_at=now + seconds, status="running", seed=secrets.randbits(48),
-                        result={"tool_checked": tool_checked, **({"tool": tool_for(char, kind, skill)} if tool_checked else {}),
-                                **({"rules": rules} if rules else {}),
-                                **({"monsters": beasts} if kind == "skin" else {})})
+    act = WorldActivity(
+        character_id=char.id,
+        location=char.location,
+        kind=kind,
+        skill=skill,
+        started_at=now,
+        ends_at=now + seconds,
+        status="running",
+        seed=secrets.randbits(48),
+        result={
+            "tool_checked": tool_checked,
+            **({"tool": tool_for(char, kind, skill)} if tool_checked else {}),
+            **({"rules": rules} if rules else {}),
+            **({"monsters": beasts} if kind == "skin" else {}),
+        },
+    )
     session.add(act)
     await session.flush()
     char.state = "busy"
     if kind == "rest":  # paid on lying down; abandoning gives nothing back
         cost = rest_cost(char) or 0
         char.gold -= cost
-        return Outcome().add("activity.started.rest" if cost else "activity.started.rest_free",
-                             place=loc.phrase(), cost=cost, minutes=seconds // 60)
+        return Outcome().add(
+            "activity.started.rest" if cost else "activity.started.rest_free",
+            place=loc.phrase(),
+            cost=cost,
+            minutes=seconds // 60,
+        )
     if kind == "short_rest":
         return Outcome().add("activity.started.short_rest", place=loc.phrase(), minutes=seconds // 60)
-    out = Outcome().add(f"activity.started.{kind}", skill=characters.mastery_name(skill),
-                        place=loc.phrase(), minutes=seconds // 60, seconds=seconds)
+    out = Outcome().add(
+        f"activity.started.{kind}",
+        skill=characters.mastery_name(skill),
+        place=loc.phrase(),
+        minutes=seconds // 60,
+        seconds=seconds,
+    )
     if kind in ("track", "stay") and char.hp * 2 < char.max_hp:  # this may end in a fight
         out.add("explore.low_hp", hp=char.hp, max_hp=char.max_hp)
     return out
@@ -306,8 +330,9 @@ def _finish(act: WorldActivity, outcome: str, items: dict[str, int], xp: int, no
     act.result = {**(act.result or {}), "outcome": outcome, "items": items, "xp": xp, **extra}
 
 
-async def _give(session: AsyncSession, char: Character, items: dict[str, int], out: Outcome,
-                rng: random.Random) -> None:
+async def _give(
+    session: AsyncSession, char: Character, items: dict[str, int], out: Outcome, rng: random.Random
+) -> None:
     """Gathered items: into the bag, and towards "gather" objectives."""
     c = get_content()
     for key, qty in items.items():
@@ -348,8 +373,9 @@ async def claim(session: AsyncSession, char: Character, now: float | None = None
     g = _gathering(loc, act.skill)
     rules = (act.result or {}).get("rules")
     if rules:  # resolved with the rules it started under, not with today's
-        roll = gathering.roll_gather(rng, _snapshot_resources(rules), rules["rank"], act.kind,
-                                     gathering.Mods(**rules["mods"]))
+        roll = gathering.roll_gather(
+            rng, _snapshot_resources(rules), rules["rank"], act.kind, gathering.Mods(**rules["mods"])
+        )
     else:  # an activity from before the snapshot: the old behaviour, with the live table
         rank = gathering.rank_for(characters.mastery_xp(char, act.skill))
         roll = gathering.roll_gather(rng, g.resources if g else [], rank, act.kind)
@@ -392,13 +418,15 @@ async def _claim_track(session, char, act, loc, rng, now) -> Outcome:
     fixed = exploration.pending_fixed_encounter(char)  # a mission's boss is never replaced by a branch
     table = exploration.encounter_table(loc, char.level)
     if fixed or (table and gathering.roll_prey(rng)):
-        monsters = (list(fixed.monsters) if fixed else
-                    list(rng.choices(table, weights=_prey_weights(char, table))[0].monsters))
+        monsters = (
+            list(fixed.monsters) if fixed else list(rng.choices(table, weights=_prey_weights(char, table))[0].monsters)
+        )
         act.status = "awaiting_combat"
         act.result = {**(act.result or {}), "monsters": monsters}
         out = Outcome().add("activity.track_found", monster=get_content().monsters[monsters[0]].name.model_dump())
-        enc, enc_out = await combat_service.start_encounter(session, char, monsters, rng, fixed.flag if fixed else None,
-                                                          hunt=True)
+        enc, enc_out = await combat_service.start_encounter(
+            session, char, monsters, rng, fixed.flag if fixed else None, hunt=True
+        )
         act.encounter_id = enc.id
         return out.extend(enc_out)
     out = Outcome(activity_id=act.id).add("activity.track_tracks")
@@ -408,8 +436,14 @@ async def _claim_track(session, char, act, loc, rng, now) -> Outcome:
     return out
 
 
-async def skin(session: AsyncSession, char: Character, monster_keys: list[str], rng: random.Random,
-               out: Outcome, trophy: bool = False) -> dict[str, int]:
+async def skin(
+    session: AsyncSession,
+    char: Character,
+    monster_keys: list[str],
+    rng: random.Random,
+    out: Outcome,
+    trophy: bool = False,
+) -> dict[str, int]:
     """Skin the defeated beasts that can be skinned (needs a knife). Tracked prey gives a second
     harvest as trophies. Returns what was obtained."""
     c = get_content()
@@ -437,8 +471,9 @@ async def skin(session: AsyncSession, char: Character, monster_keys: list[str], 
     return got
 
 
-async def on_encounter_end(session: AsyncSession, char: Character, status: str, defeated: list[str],
-                           rng: random.Random, out: Outcome) -> None:
+async def on_encounter_end(
+    session: AsyncSession, char: Character, status: str, defeated: list[str], rng: random.Random, out: Outcome
+) -> None:
     """Pay what an ambushed stay or a tracked prey had pending. Called once, when the fight ends."""
     act = await session.scalar(
         select(WorldActivity)
@@ -486,8 +521,9 @@ def remaining_seconds(act: WorldActivity, now: float | None = None) -> int:
 
 async def due(session: AsyncSession, now: float | None = None) -> list[int]:
     """Characters whose running activity is over: they get the result without pressing anything."""
-    rows = await session.scalars(select(WorldActivity.character_id)
-                                 .where(WorldActivity.status == "running", WorldActivity.ends_at <= _now(now)))
+    rows = await session.scalars(
+        select(WorldActivity.character_id).where(WorldActivity.status == "running", WorldActivity.ends_at <= _now(now))
+    )
     return sorted(set(rows))
 
 
@@ -503,6 +539,12 @@ LOST = ("stay_lost", "track_lost")  # the ambush won: the activity did not finis
 
 async def _achievement_activity(session, char, act, out):
     if act.kind not in REST_KINDS and (act.result or {}).get("outcome") not in LOST:
-        await achievements.emit(session, char, out, "activity",
-            {"skill": act.skill, "tool": bool((act.result or {}).get("tool_checked"))}, f"activity:{act.id}:done")
+        await achievements.emit(
+            session,
+            char,
+            out,
+            "activity",
+            {"skill": act.skill, "tool": bool((act.result or {}).get("tool_checked"))},
+            f"activity:{act.id}:done",
+        )
         await achievements.mastery(session, char, out, act.skill, f"activity:{act.id}:done")

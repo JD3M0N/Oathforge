@@ -9,8 +9,19 @@ def mine():
 
 
 def test_rank_curve():
-    assert [gathering.rank_for(x) for x in (0, 79, 80, 239, 240, 500, 899, 900, 1499, 1500, 99999)] == \
-        [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5]
+    assert [gathering.rank_for(x) for x in (0, 79, 80, 239, 240, 500, 899, 900, 1499, 1500, 99999)] == [
+        0,
+        0,
+        1,
+        1,
+        2,
+        3,
+        3,
+        4,
+        4,
+        5,
+        5,
+    ]
     assert gathering.next_threshold(0) == 80 and gathering.next_threshold(1500) is None
 
 

@@ -24,8 +24,7 @@ async def claim(
 ) -> ActionLog | None:
     """Insert the audit row. Returns None if ``key`` was already used."""
     row = ActionLog(
-        idempotency_key=key, user_id=user_id, character_id=character_id,
-        verb=verb, payload=payload or {}, result={},
+        idempotency_key=key, user_id=user_id, character_id=character_id, verb=verb, payload=payload or {}, result={}
     )
     if key is not None:
         existing = await session.scalar(select(ActionLog.id).where(ActionLog.idempotency_key == key))
@@ -40,5 +39,6 @@ async def claim(
 
 
 async def log(session: AsyncSession, *, user_id, character_id, verb: str, payload=None, result=None) -> None:
-    session.add(ActionLog(user_id=user_id, character_id=character_id, verb=verb,
-                          payload=payload or {}, result=result or {}))
+    session.add(
+        ActionLog(user_id=user_id, character_id=character_id, verb=verb, payload=payload or {}, result=result or {})
+    )

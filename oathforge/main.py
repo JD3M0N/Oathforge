@@ -18,8 +18,29 @@ from oathforge.i18n import t
 log = logging.getLogger("oathforge")
 
 # Telegram's "/" menu; each needs a cmd.<name> description in every locale.
-MENU_COMMANDS = ("start", "look", "activities", "map", "hero", "sheet", "inventory", "journal", "achievements", "quests", "classes",
-                 "report", "path", "professions", "recipes", "room", "masteries", "hobbies", "rulebook", "settings", "help")
+MENU_COMMANDS = (
+    "start",
+    "look",
+    "activities",
+    "map",
+    "hero",
+    "sheet",
+    "inventory",
+    "journal",
+    "achievements",
+    "quests",
+    "classes",
+    "report",
+    "path",
+    "professions",
+    "recipes",
+    "room",
+    "masteries",
+    "hobbies",
+    "rulebook",
+    "settings",
+    "help",
+)
 
 
 async def on_error(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -56,8 +77,7 @@ async def post_init(app: Application) -> None:
     init_engine()
     for lang in ("es", "en"):
         await app.bot.set_my_commands(
-            [BotCommand(cmd, t(lang, f"cmd.{cmd}")) for cmd in MENU_COMMANDS],
-            language_code=lang,
+            [BotCommand(cmd, t(lang, f"cmd.{cmd}")) for cmd in MENU_COMMANDS], language_code=lang
         )
 
 
@@ -72,9 +92,17 @@ def build_app() -> Application:
     get_content()  # validate content before accepting players
 
     # Uploading a portrait can take longer than python-telegram-bot's 5 s default.
-    app = (Application.builder().token(settings.bot_token)
-           .connect_timeout(15).read_timeout(30).write_timeout(30).media_write_timeout(60)
-           .post_init(post_init).post_shutdown(post_shutdown).build())
+    app = (
+        Application.builder()
+        .token(settings.bot_token)
+        .connect_timeout(15)
+        .read_timeout(30)
+        .write_timeout(30)
+        .media_write_timeout(60)
+        .post_init(post_init)
+        .post_shutdown(post_shutdown)
+        .build()
+    )
     app.bot_data["llm"] = build_llm(settings)
     app.add_handler(TypeHandler(Update, record_update), group=-1)
     # One group: the creation conversation gets first pick of text/buttons while it is active.

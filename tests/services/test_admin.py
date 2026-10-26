@@ -4,7 +4,14 @@ import pytest
 from sqlalchemy import func, select
 
 from oathforge.database.models import (
-    ActionLog, Character, CombatAction, Encounter, ItemInstance, NpcMemory, Party, User,
+    ActionLog,
+    Character,
+    CombatAction,
+    Encounter,
+    ItemInstance,
+    NpcMemory,
+    Party,
+    User,
 )
 from oathforge.database.session import session_scope
 from oathforge.services import admin, characters
@@ -33,13 +40,15 @@ async def test_delete_player_cascades_and_spares_the_others():
         theirs = Encounter(character_id=brenna.id, party_id=party.id, location="toll_post", state={})
         s.add_all([mine, theirs])
         await s.flush()
-        s.add_all([
-            CombatAction(encounter_id=mine.id, round=1, actor="p1", action={}, result=[]),
-            NpcMemory(npc_key="bram", character_id=aldric.id, text="owes me"),
-            ItemInstance(owner_character_id=aldric.id, item_key="iron_ingot"),
-            ItemInstance(owner_character_id=brenna.id, item_key="iron_sword", crafted_by=aldric.id),
-            ActionLog(user_id=aldric.user_id, character_id=aldric.id, verb="test"),
-        ])
+        s.add_all(
+            [
+                CombatAction(encounter_id=mine.id, round=1, actor="p1", action={}, result=[]),
+                NpcMemory(npc_key="bram", character_id=aldric.id, text="owes me"),
+                ItemInstance(owner_character_id=aldric.id, item_key="iron_ingot"),
+                ItemInstance(owner_character_id=brenna.id, item_key="iron_sword", crafted_by=aldric.id),
+                ActionLog(user_id=aldric.user_id, character_id=aldric.id, verb="test"),
+            ]
+        )
         aldric_id, aldric_user, brenna_id, theirs_id = aldric.id, aldric.user_id, brenna.id, theirs.id
 
     async with session_scope() as s:
@@ -54,8 +63,11 @@ async def test_delete_player_cascades_and_spares_the_others():
         assert await count(s, CombatAction) == 0 and await count(s, NpcMemory) == 0 and await count(s, Party) == 0
         log = await s.scalar(select(ActionLog))  # the audit log stays, anonymised (SET NULL)
         assert log.user_id is None and log.character_id is None
-        sword = await s.scalar(select(ItemInstance).where(ItemInstance.owner_character_id == brenna_id,
-                                                          ItemInstance.item_key == "iron_sword"))
+        sword = await s.scalar(
+            select(ItemInstance).where(
+                ItemInstance.owner_character_id == brenna_id, ItemInstance.item_key == "iron_sword"
+            )
+        )
         assert sword.crafted_by is None  # Brenna keeps it
         assert (await s.get(Encounter, theirs_id)).party_id is None
         assert await count(s, User, User.id == aldric_user) == 0

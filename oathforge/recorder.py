@@ -47,6 +47,7 @@ def _safe(fn):
         except Exception:  # never let debugging break the game
             log.debug("recorder.%s failed", fn.__name__, exc_info=True)
             return None
+
     return wrapper
 
 
@@ -88,6 +89,7 @@ def _transcript(telegram_id: int) -> Path:
 
 # ---------------------------------------------------------------- conversation
 
+
 @_safe
 def incoming(telegram_id: int, name: str, text: str, *, button: bool = False) -> None:
     shown = f"`[botón {text}]`" if button else text
@@ -106,11 +108,30 @@ def outgoing(telegram_id: int, text: str, buttons: list[str] | None = None, *, e
 
 # ---------------------------------------------------------------- game
 
+
 @_safe
-def action(*, user_id: int, character_id: int | None, text: str, intent: dict | None,
-           ok: bool, events: list[str], narration: str | None = None) -> None:
-    _event("action", {"user_id": user_id, "character_id": character_id, "text": text, "intent": intent,
-                      "ok": ok, "events": events, "narration": narration})
+def action(
+    *,
+    user_id: int,
+    character_id: int | None,
+    text: str,
+    intent: dict | None,
+    ok: bool,
+    events: list[str],
+    narration: str | None = None,
+) -> None:
+    _event(
+        "action",
+        {
+            "user_id": user_id,
+            "character_id": character_id,
+            "text": text,
+            "intent": intent,
+            "ok": ok,
+            "events": events,
+            "narration": narration,
+        },
+    )
 
 
 def _battle_paths(enc_id: int, location: str) -> tuple[Path, Path]:
@@ -120,8 +141,16 @@ def _battle_paths(enc_id: int, location: str) -> tuple[Path, Path]:
 
 
 @_safe
-def battle(enc_id: int, location: str, *, character: str, actor_action: dict | None,
-           lines: list[str], raw: list[dict], state: dict) -> None:
+def battle(
+    enc_id: int,
+    location: str,
+    *,
+    character: str,
+    actor_action: dict | None,
+    lines: list[str],
+    raw: list[dict],
+    state: dict,
+) -> None:
     """Append one step (the start or a player action) of an encounter."""
     lines = [plain(line) for line in lines]
     md, js = _battle_paths(enc_id, location)
@@ -131,9 +160,11 @@ def battle(enc_id: int, location: str, *, character: str, actor_action: dict | N
     head = f"## [{_clock()}] {what} → ronda {state.get('round')}"
     _append(md, head + "\n" + "".join(f"- {line}\n" for line in lines) + "\n")
 
-    data = json.loads(js.read_text(encoding="utf-8")) if js.exists() else {
-        "encounter_id": enc_id, "location": location, "character": character, "version": __version__, "steps": [],
-    }
+    data = (
+        json.loads(js.read_text(encoding="utf-8"))
+        if js.exists()
+        else {"encounter_id": enc_id, "location": location, "character": character, "version": __version__, "steps": []}
+    )
     data["steps"].append({"ts": datetime.now().isoformat(timespec="seconds"), "action": actor_action, "log": raw})
     data["state"] = state
     data["status"] = state.get("status")
@@ -141,26 +172,64 @@ def battle(enc_id: int, location: str, *, character: str, actor_action: dict | N
 
     if state.get("status") != "active":
         hp = {c["name"]["es"]: f"{c['hp']}/{c['max_hp']}" for c in state.get("combatants", {}).values()}
-        _append(md, f"## Resultado: **{state.get('status')}** en {state.get('round')} rondas\n\n"
-                    + "".join(f"- {k}: {v} PV\n" for k, v in hp.items()) + "\n")
-    _event("battle", {"encounter_id": enc_id, "action": actor_action, "status": state.get("status"),
-                      "lines": lines})
+        _append(
+            md,
+            f"## Resultado: **{state.get('status')}** en {state.get('round')} rondas\n\n"
+            + "".join(f"- {k}: {v} PV\n" for k, v in hp.items())
+            + "\n",
+        )
+    _event("battle", {"encounter_id": enc_id, "action": actor_action, "status": state.get("status"), "lines": lines})
 
 
 # ---------------------------------------------------------------- AI
 
+
 @_safe
-def ai_call(*, tier: str, model: str | None, purpose: str, system: str, prompt: str, response: str | None,
-            error: str | None, prompt_tokens: int, output_tokens: int, latency_ms: int,
-            user_id: int | None) -> None:
+def ai_call(
+    *,
+    tier: str,
+    model: str | None,
+    purpose: str,
+    system: str,
+    prompt: str,
+    response: str | None,
+    error: str | None,
+    prompt_tokens: int,
+    output_tokens: int,
+    latency_ms: int,
+    user_id: int | None,
+) -> None:
     stamp = datetime.now().strftime("%H%M%S-%f")
-    _write_json(_root() / "ai" / _day() / f"{stamp}-{tier}-{purpose}.json", {
-        "version": __version__, "tier": tier, "model": model, "purpose": purpose, "user_id": user_id,
-        "latency_ms": latency_ms, "prompt_tokens": prompt_tokens, "output_tokens": output_tokens,
-        "error": error, "system": system, "prompt": prompt, "response": response,
-    })
-    _event("ai", {"tier": tier, "model": model, "purpose": purpose, "user_id": user_id, "ok": response is not None,
-                  "error": error, "latency_ms": latency_ms, "tokens": prompt_tokens + output_tokens})
+    _write_json(
+        _root() / "ai" / _day() / f"{stamp}-{tier}-{purpose}.json",
+        {
+            "version": __version__,
+            "tier": tier,
+            "model": model,
+            "purpose": purpose,
+            "user_id": user_id,
+            "latency_ms": latency_ms,
+            "prompt_tokens": prompt_tokens,
+            "output_tokens": output_tokens,
+            "error": error,
+            "system": system,
+            "prompt": prompt,
+            "response": response,
+        },
+    )
+    _event(
+        "ai",
+        {
+            "tier": tier,
+            "model": model,
+            "purpose": purpose,
+            "user_id": user_id,
+            "ok": response is not None,
+            "error": error,
+            "latency_ms": latency_ms,
+            "tokens": prompt_tokens + output_tokens,
+        },
+    )
 
 
 # ---------------------------------------------------------------- state changes
@@ -169,13 +238,27 @@ def ai_call(*, tier: str, model: str | None, purpose: str, system: str, prompt: 
 # relations...) as a diff, whatever code path made it. Rows are snapshotted when
 # loaded and compared after commit; rolled-back changes are never recorded.
 
-_TRACKED = ("characters", "item_instances", "character_skills", "quest_progress", "npc_relationships",
-            "npc_memories", "faction_reputation", "action_logs", "world_facts")
+_TRACKED = (
+    "characters",
+    "item_instances",
+    "character_skills",
+    "quest_progress",
+    "npc_relationships",
+    "npc_memories",
+    "faction_reputation",
+    "action_logs",
+    "world_facts",
+)
 _INSERT_ONLY = {"npc_memories", "action_logs", "world_facts"}  # append-only logs: record new rows only
 _SKIP = {"version", "created_at", "updated_at", "history", "recent"}
 _LABEL = ("name", "item_key", "skill", "quest_key", "npc_key", "faction_key", "verb", "key")
-_NOUN = {"item_instances": "objeto", "character_skills": "habilidad", "quest_progress": "misión",
-         "npc_relationships": "relación", "faction_reputation": "reputación"}
+_NOUN = {
+    "item_instances": "objeto",
+    "character_skills": "habilidad",
+    "quest_progress": "misión",
+    "npc_relationships": "relación",
+    "faction_reputation": "reputación",
+}
 _known: dict[tuple, dict] = {}  # (table, pk) -> last committed values seen
 _telegram: dict[int, int] = {}  # users.id -> telegram_id
 
@@ -225,8 +308,10 @@ def _describe(table: str, op: str, row: dict, diff: dict) -> str:
     if table == "item_instances" and op != "update":
         return f"{'+' if op == 'insert' else '−'}{label} ×{row.get('qty')}"
     if op == "insert" and table == "characters":
-        return (f"personaje creado: {label} ({row.get('class_key')}, {row.get('gender')}, {row.get('lineage')}, {row.get('background')}) "
-                f"PV {row.get('hp')}/{row.get('max_hp')}, oro {row.get('gold')}, en {row.get('location')}")
+        return (
+            f"personaje creado: {label} ({row.get('class_key')}, {row.get('gender')}, {row.get('lineage')}, {row.get('background')}) "
+            f"PV {row.get('hp')}/{row.get('max_hp')}, oro {row.get('gold')}, en {row.get('location')}"
+        )
     noun = _NOUN.get(table, table)
     if op == "delete":
         return f"{noun} {label} borrado"
@@ -294,8 +379,18 @@ def _after_commit(session) -> None:
                 continue
         char_id, tg = _owner(table, row)
         text = _describe(table, op, row, diff)
-        _event("state", {"telegram_id": tg, "character_id": char_id, "table": table, "op": op,
-                         "row_id": row.get("id"), "diff": diff if op == "update" else row, "text": text})
+        _event(
+            "state",
+            {
+                "telegram_id": tg,
+                "character_id": char_id,
+                "table": table,
+                "op": op,
+                "row_id": row.get("id"),
+                "diff": diff if op == "update" else row,
+                "text": text,
+            },
+        )
         quiet = table == "character_skills" and op == "insert" and not row.get("proficient")
         if tg is not None and not quiet:  # untrained skills at creation: events only
             lines.setdefault(tg, []).append(text)
@@ -308,6 +403,7 @@ def _after_rollback(session) -> None:
 
 
 # ---------------------------------------------------------------- logs and boot
+
 
 class _LogHandler(logging.Handler):
     """Warnings and errors from any logger (Gemini retries, invalid JSON...) into logs/<day>.log."""
@@ -355,16 +451,32 @@ def _boot(settings) -> None:
     import subprocess
 
     try:
-        commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True,
-                                timeout=5, cwd=Path(__file__).parent).stdout.strip() or None
+        commit = (
+            subprocess.run(
+                ["git", "rev-parse", "--short", "HEAD"],
+                capture_output=True,
+                text=True,
+                timeout=5,
+                cwd=Path(__file__).parent,
+            ).stdout.strip()
+            or None
+        )
     except Exception:
         commit = None
-    _event("boot", {"commit": commit, "model_fast": settings.gemini_model_fast,
-                    "model_narrative": settings.gemini_model_narrative, "ai_enabled": bool(settings.gemini_api_key),
-                    "database": str(settings.database_url).split("@")[-1]})
+    _event(
+        "boot",
+        {
+            "commit": commit,
+            "model_fast": settings.gemini_model_fast,
+            "model_narrative": settings.gemini_model_narrative,
+            "ai_enabled": bool(settings.gemini_api_key),
+            "database": str(settings.database_url).split("@")[-1],
+        },
+    )
 
 
 # ---------------------------------------------------------------- errors
+
 
 @_safe
 def error(where: str, exc: BaseException | None) -> None:

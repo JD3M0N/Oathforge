@@ -11,6 +11,7 @@ pytestmark = pytest.mark.usefixtures("database")
 
 # ---------------------------------------------------------------- creation
 
+
 async def test_create_character_sets_everything_up():
     _, cid = await new_character()
     async with session_scope() as s:
@@ -44,6 +45,7 @@ async def test_create_warrior():
         assert cb.row == "front" and cb.crit_range == 20
         assert [(a.key, a.damage_type) for a in cb.attacks] == [("main", "bludgeoning"), ("ranged", "slashing")]
         from oathforge.services.events import Outcome
+
         characters.grant_xp(char, 1000, Outcome())
         assert char.level == 4 and "action_surge" in char.resources
         assert (await characters.build_combatant(s, char)).crit_range == 19
@@ -61,6 +63,7 @@ async def test_create_priest():
         assert cb.row == "back" and cb.casting_mod == 3 and cb.spell_to_hit == 3 + 2
         assert cb.bonus_damage is None
         from oathforge.services.events import Outcome
+
         characters.grant_xp(char, 1800, Outcome())
         assert {"turn_undead", "bless"} <= set(char.resources)
         cb = await characters.build_combatant(s, char)
@@ -89,6 +92,7 @@ async def test_create_mage_druid_bard():
         assert characters.armor_class(char, gear) == 11 + 2 + 2  # leather (dex +2), shield
         assert char.resources == {"thorn_whip": None, "cure_wounds": None}
         from oathforge.services.events import Outcome
+
         characters.grant_xp(char, 1800, Outcome())
         assert {"entangle", "wild_shape"} <= set(char.resources)
         cb = await characters.build_combatant(s, char)
@@ -112,6 +116,7 @@ async def test_create_warlock():
         cb = await characters.build_combatant(s, char)
         assert cb.row == "back" and cb.casting_mod == 3 and cb.spell_dc == 8 + 3 + 2 and cb.spell_damage_bonus == 0
         from oathforge.services.events import Outcome
+
         characters.grant_xp(char, 1800, Outcome())
         assert {"shadow_armor", "void_whispers"} <= set(char.resources) and "agonizing_blast" not in char.resources
         cb = await characters.build_combatant(s, char)

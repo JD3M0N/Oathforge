@@ -6,11 +6,20 @@ from oathforge.engine.dice import d20, roll
 from oathforge.engine.combat.entities import _run_entities
 from oathforge.engine.combat.resolve import _apply_damage, _attack
 from oathforge.engine.combat.state import (
-    Combatant, DOT, EncounterState, LogEntry, SKIP_TURN, _append, _check_end, gain_resource, valid_targets,
+    Combatant,
+    DOT,
+    EncounterState,
+    LogEntry,
+    SKIP_TURN,
+    _append,
+    _check_end,
+    gain_resource,
+    valid_targets,
 )
 
 
 # ---------------------------------------------------------------- setup
+
 
 def start(state: EncounterState, rng: random.Random) -> list[LogEntry]:
     """Roll initiative, then let enemies act until it is a player's turn."""
@@ -29,9 +38,11 @@ def start(state: EncounterState, rng: random.Random) -> list[LogEntry]:
         reverse=True,
     )
     state.turn_index = 0
-    logs = [LogEntry(key="combat.round", params={"round": 0}),  # round 0: who goes first
-            LogEntry(key="combat.initiative", params={"order": list(state.order), "rolls": rolls}),
-            LogEntry(key="combat.round", params={"round": state.round})]
+    logs = [
+        LogEntry(key="combat.round", params={"round": 0}),  # round 0: who goes first
+        LogEntry(key="combat.initiative", params={"order": list(state.order), "rolls": rolls}),
+        LogEntry(key="combat.round", params={"round": state.round}),
+    ]
     logs += _begin_turn(state, rng)
     logs += _run_enemies(state, rng)
     _append(state, logs)
@@ -39,6 +50,7 @@ def start(state: EncounterState, rng: random.Random) -> list[LogEntry]:
 
 
 # ---------------------------------------------------------------- turn flow
+
 
 def _begin_turn(state: EncounterState, rng) -> list[LogEntry]:
     """Start-of-turn effects for the current combatant. Skips turns as needed."""
@@ -51,9 +63,17 @@ def _begin_turn(state: EncounterState, rng) -> list[LogEntry]:
             if c.cooldowns:  # cooldowns are counted in turns of combat, never in real seconds
                 c.cooldowns = {k: v - 1 for k, v in c.cooldowns.items() if v > 1}
             if gain_resource(c, c.resource_per_turn):
-                logs.append(LogEntry(key="combat.resource_gained", params={
-                    "actor": c.id, "resource": c.resource_key, "amount": c.resource_per_turn,
-                    "left": c.resource}))
+                logs.append(
+                    LogEntry(
+                        key="combat.resource_gained",
+                        params={
+                            "actor": c.id,
+                            "resource": c.resource_key,
+                            "amount": c.resource_per_turn,
+                            "left": c.resource,
+                        },
+                    )
+                )
             for status, expr in DOT.items():
                 if status in c.statuses and c.active:
                     dmg = roll(expr, rng).total

@@ -51,12 +51,7 @@ class CheckResult:
 
 
 def check(
-    rng: random.Random,
-    skill: str,
-    bonus: int,
-    dc: int,
-    advantage: bool = False,
-    disadvantage: bool = False,
+    rng: random.Random, skill: str, bonus: int, dc: int, advantage: bool = False, disadvantage: bool = False
 ) -> CheckResult:
     r = d20(rng, advantage, disadvantage)
     return CheckResult(skill, r.rolls, r.kept, bonus, dc)

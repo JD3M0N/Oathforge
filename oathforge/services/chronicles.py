@@ -50,11 +50,16 @@ def day_start() -> float:
 
 
 async def chronicles_today(session: AsyncSession, char_id: int) -> int:
-    return int(await session.scalar(
-        select(func.count(WorldActivity.id))
-        .where(WorldActivity.character_id == char_id, WorldActivity.chronicle_ai.is_(True),
-               WorldActivity.resolved_at >= day_start())
-    ) or 0)
+    return int(
+        await session.scalar(
+            select(func.count(WorldActivity.id)).where(
+                WorldActivity.character_id == char_id,
+                WorldActivity.chronicle_ai.is_(True),
+                WorldActivity.resolved_at >= day_start(),
+            )
+        )
+        or 0
+    )
 
 
 def _values(act: WorldActivity, char: Character, lang: str) -> dict:
@@ -65,15 +70,24 @@ def _values(act: WorldActivity, char: Character, lang: str) -> dict:
         "name": char.name,
         "place": c.locations[act.location].name.get(lang),
         "loot": activities.loot_text(res["items"])[lang] if res.get("items") else t(lang, "chronicle.no_loot"),
-        "monster": ((c.monsters[monster].indefinite or c.monsters[monster].name).get(lang) if monster in c.monsters
-                    else t(lang, "chronicle.creature")),
+        "monster": (
+            (c.monsters[monster].indefinite or c.monsters[monster].name).get(lang)
+            if monster in c.monsters
+            else t(lang, "chronicle.creature")
+        ),
     }
 
 
 def generic(act: WorldActivity, char: Character, lang: str) -> str:
     """A hand-written text for this outcome, picked by the activity's seed."""
-    return fallbacks.pick("chronicles", (act.result or {}).get("outcome", "gather"), lang, seed=act.seed,
-                          context=act.skill, **_values(act, char, lang))
+    return fallbacks.pick(
+        "chronicles",
+        (act.result or {}).get("outcome", "gather"),
+        lang,
+        seed=act.seed,
+        context=act.skill,
+        **_values(act, char, lang),
+    )
 
 
 def _facts(act: WorldActivity, char: Character) -> list[str]:
@@ -93,8 +107,10 @@ def _facts(act: WorldActivity, char: Character) -> list[str]:
 
 def _hero(char: Character, lang: str) -> str:
     c = get_content()
-    return (f"{char.name}, {c.lineages[char.lineage].name.get(lang)} {c.classes[char.class_key].name.get(lang)} "
-            f"(level {char.level}), {characters.background_name(char, lang)}")
+    return (
+        f"{char.name}, {c.lineages[char.lineage].name.get(lang)} {c.classes[char.class_key].name.get(lang)} "
+        f"(level {char.level}), {characters.background_name(char, lang)}"
+    )
 
 
 async def tell(llm: LLM, activity_id: int, lang: str) -> Chronicle | None:
@@ -117,8 +133,9 @@ async def tell(llm: LLM, activity_id: int, lang: str) -> Chronicle | None:
         kind = activities.describe(act, "en")
     text = None
     if used < limit:
-        text = await chronicler.write(llm, lang=lang, hero=hero, place=place, activity=kind, facts=facts,
-                                      user_id=user_id)
+        text = await chronicler.write(
+            llm, lang=lang, hero=hero, place=place, activity=kind, facts=facts, user_id=user_id
+        )
     async with session_scope() as session:
         act = await session.scalar(select(WorldActivity).where(WorldActivity.id == activity_id).with_for_update())
         char = await session.get(Character, act.character_id)

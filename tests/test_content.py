@@ -109,8 +109,10 @@ def test_night_variant_and_duplicate_ids(tmp_path):
     assert [a.night for a in world.media.zone_images("crownreach", night=True)] == [True]
     assert [a.night for a in world.media.zone_images("crownreach", night=False)] == [False]
 
-    shutil.copytree(tmp_path / "world/terra_coronata/crownreach/crownreach_market",
-                    tmp_path / "world/terra_coronata/thornwood/crownreach_market")
+    shutil.copytree(
+        tmp_path / "world/terra_coronata/crownreach/crownreach_market",
+        tmp_path / "world/terra_coronata/thornwood/crownreach_market",
+    )
     with pytest.raises(ValueError, match="duplicate location 'crownreach_market'"):
         load_world(tmp_path)
 
@@ -133,7 +135,9 @@ def test_class_portraits_and_unknown_class_folder(tmp_path):
         for gender in ("male", "female"):
             got = [a.key for a in c.media.class_images(cls, gender)]
             assert got == ([] if cls in pending_art else [portrait.format(cls, gender)]), cls
-    assert [a.key for a in c.media.class_images("warlock")] == [portrait.format("warlock", "female")]  # no gender: first
+    assert [a.key for a in c.media.class_images("warlock")] == [
+        portrait.format("warlock", "female")
+    ]  # no gender: first
 
     shutil.copytree(CONTENT_DIR / "classes", tmp_path / "classes")
     (tmp_path / "classes/necromancer").mkdir()
@@ -182,6 +186,7 @@ def test_routes_go_both_ways_alike():
 
 def test_city_graph_rules():
     from oathforge.content.validation.world import _city_graph_errors
+
     c = load_content()
     assert _city_graph_errors(c) == []
     plaza, tavern = c.locations["crownreach_plaza"], c.locations["broken_crown_tavern"]
@@ -264,13 +269,15 @@ def test_a_class_branch_pointing_nowhere_is_caught():
     # a class the roadmap still owes: its branches load, but none may be ready before the class exists
     owed = ClassSpecialization(class_key="dragonrider", name=text, description=text, roles=["dmg"], ready=True)
     prog = c.progression.model_copy(update={"future_classes": ["dragonrider"]})
-    broken = dataclasses.replace(c, progression=prog, class_specializations={
-        **c.class_specializations, "stray": stray, "owed": owed})
+    broken = dataclasses.replace(
+        c, progression=prog, class_specializations={**c.class_specializations, "stray": stray, "owed": owed}
+    )
     errors = _class_progression_errors(broken)
     assert any("unknown class 'nobody'" in e for e in errors)
     assert any("it cannot be ready" in e for e in errors)
     with pytest.raises(ValueError, match="Content validation failed"):
         from oathforge.content.validation import validate_references
+
         validate_references(broken)
 
 
@@ -285,31 +292,50 @@ def test_entities_and_forms_are_validated():
     def ab(kind, **kw):
         return ClassAbility(name=text, description=text, level=10, kind=kind, **kw)
 
-    bad = ClassSpecialization(class_key="warrior", name=text, description=text, roles=["dmg"], abilities={
-        "b1": ab("summon", entity="nobody"),
-        "b2": ab("summon", entity="pact_servant"),  # a permanent being is brought by a passive, not summoned
-        "b3": ab("passive", action="none", entity="astral_blade"),  # a passive brings a servant or a beast only
-        "b4": ab("shift", form="dragon"),
-        "b5": ab("strike", form="bear"),
-        "b6": ab("strike", entity="astral_blade"),
-    })
+    bad = ClassSpecialization(
+        class_key="warrior",
+        name=text,
+        description=text,
+        roles=["dmg"],
+        abilities={
+            "b1": ab("summon", entity="nobody"),
+            "b2": ab("summon", entity="pact_servant"),  # a permanent being is brought by a passive, not summoned
+            "b3": ab("passive", action="none", entity="astral_blade"),  # a passive brings a servant or a beast only
+            "b4": ab("shift", form="dragon"),
+            "b5": ab("strike", form="bear"),
+            "b6": ab("strike", entity="astral_blade"),
+        },
+    )
     errors = _entity_errors(dataclasses.replace(c, class_specializations={**c.class_specializations, "bad": bad}))
-    for needle in ("known entity, not 'nobody'", "brought by a passive", "servant or a companion",
-                   "known form", "only shift takes a form", "only summon, command and a passive"):
+    for needle in (
+        "known entity, not 'nobody'",
+        "brought by a passive",
+        "servant or a companion",
+        "known form",
+        "only shift takes a form",
+        "only summon, command and a passive",
+    ):
         assert any(needle in e for e in errors), needle
 
     def entity(**kw):
         return EntityDef(name=text, description=text, hp=5, **kw)
 
-    broken = {**c.entities,
-              "e1": entity(kind="summon", role="damage", damage="1d4", damage_type="force"),  # no duration
-              "e2": entity(kind="summon", role="damage", duration=3),  # no damage
-              "e3": entity(kind="servant", role="damage", damage="1d4", duration=3),  # permanent but expires
-              "e4": entity(kind="totem", role="guard", damage="1d4"),  # a guard that hits
-              "e5": entity(kind="totem", role="disrupt")}  # nothing to inflict
+    broken = {
+        **c.entities,
+        "e1": entity(kind="summon", role="damage", damage="1d4", damage_type="force"),  # no duration
+        "e2": entity(kind="summon", role="damage", duration=3),  # no damage
+        "e3": entity(kind="servant", role="damage", damage="1d4", duration=3),  # permanent but expires
+        "e4": entity(kind="totem", role="guard", damage="1d4"),  # a guard that hits
+        "e5": entity(kind="totem", role="disrupt"),
+    }  # nothing to inflict
     errors = _entity_errors(dataclasses.replace(c, entities=broken))
-    for needle in ("e1: a summon lasts", "e2: a damage entity needs damage", "e3: a permanent being",
-                   "e4: a guard only absorbs", "e5: a disrupt entity needs a status"):
+    for needle in (
+        "e1: a summon lasts",
+        "e2: a damage entity needs damage",
+        "e3: a permanent being",
+        "e4: a guard only absorbs",
+        "e5: a disrupt entity needs a status",
+    ):
         assert any(needle in e for e in errors), needle
 
 
@@ -327,8 +353,9 @@ def test_content_index_is_up_to_date():
     from oathforge.config import CONTENT_DIR
     from oathforge.content.index import build_index
 
-    assert (CONTENT_DIR / "INDEX.md").read_text(encoding="utf-8") == build_index(load_content(), CONTENT_DIR), \
+    assert (CONTENT_DIR / "INDEX.md").read_text(encoding="utf-8") == build_index(load_content(), CONTENT_DIR), (
         "content/INDEX.md is stale: run `oath content-index`"
+    )
 
 
 def test_ids_and_paths_are_plain_english_ascii():
@@ -337,8 +364,15 @@ def test_ids_and_paths_are_plain_english_ascii():
     from oathforge.content.index import FLAT_FILES, WORLD_KINDS
 
     c = load_content()
-    bad = [f"{kind}:{key}" for kind in (*WORLD_KINDS, *FLAT_FILES) for key in getattr(c, kind)
-           if not re.fullmatch(r"[a-z0-9_]+", key)]
-    bad += [p.relative_to(CONTENT_DIR).as_posix() for p in CONTENT_DIR.rglob("*")
-            if "officina" not in p.parts and not re.fullmatch(r"[A-Za-z0-9_.-]+", p.name)]
+    bad = [
+        f"{kind}:{key}"
+        for kind in (*WORLD_KINDS, *FLAT_FILES)
+        for key in getattr(c, kind)
+        if not re.fullmatch(r"[a-z0-9_]+", key)
+    ]
+    bad += [
+        p.relative_to(CONTENT_DIR).as_posix()
+        for p in CONTENT_DIR.rglob("*")
+        if "officina" not in p.parts and not re.fullmatch(r"[A-Za-z0-9_.-]+", p.name)
+    ]
     assert not bad, bad

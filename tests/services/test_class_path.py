@@ -35,20 +35,35 @@ def finished_branch(**over) -> ClassSpecialization:
     """A complete 10-20 path for the warrior: a passive and a technique at 10, two modifiers at 13 and 17
     (one tunes an ability, one grants a new one) and a culminating technique at 20."""
     data = dict(
-        class_key="warrior", name=text("Test Oath"), description=text("x"), roles=["dmg"], ready=True,
+        class_key="warrior",
+        name=text("Test Oath"),
+        description=text("x"),
+        roles=["dmg"],
+        ready=True,
         abilities={
             "test_hide": ability(10, "passive", action="none", ac_bonus=1),
             "test_strike": ability(10, "strike", extra_damage="1d6", damage_type="slashing", cost=2),
             "test_finale": ability(20, "strike", extra_damage="3d6", damage_type="slashing", cost=4),
         },
         modifiers={
-            "swift": Modifier(level=13, name=text("Swift"), description=text("cheaper"),
-                              patches={"second_wind": AbilityPatch(cost=-1)}),
-            "wide": Modifier(level=13, name=text("Wide"), description=text("wider"),
-                             patches={"test_strike": AbilityPatch(cooldown=2)}),
-            "sharp": Modifier(level=17, name=text("Sharp"), description=text("new"),
-                              grants={"test_extra": ability(17, "strike", extra_damage="1d4",
-                                                            damage_type="slashing", cost=1)}),
+            "swift": Modifier(
+                level=13,
+                name=text("Swift"),
+                description=text("cheaper"),
+                patches={"second_wind": AbilityPatch(cost=-1)},
+            ),
+            "wide": Modifier(
+                level=13,
+                name=text("Wide"),
+                description=text("wider"),
+                patches={"test_strike": AbilityPatch(cooldown=2)},
+            ),
+            "sharp": Modifier(
+                level=17,
+                name=text("Sharp"),
+                description=text("new"),
+                grants={"test_extra": ability(17, "strike", extra_damage="1d4", damage_type="slashing", cost=1)},
+            ),
             "calm": Modifier(level=17, name=text("Calm"), description=text("calm")),
         },
     )
@@ -84,6 +99,7 @@ def guild() -> str:
 
 
 # ------------------------------------------------------------- the branch
+
 
 async def test_the_branch_is_chosen_at_ten_in_the_guild_and_changes_the_catalogue(branch):
     cid = await hero(10, guild())
@@ -147,6 +163,7 @@ async def test_choosing_a_branch_recharges_nothing(branch):
 
 # ----------------------------------------------------------- trainings
 
+
 async def test_the_training_of_level_five_is_offered_and_applied():
     cid = await hero(5)
     prog = get_content().progression
@@ -205,6 +222,7 @@ async def test_levelling_up_keeps_the_training_hit_points():
 
 # ----------------------------------------------------------- modifiers
 
+
 async def test_a_modifier_tunes_an_ability_and_a_second_one_grants_a_new_one(branch):
     cid = await hero(17, guild())
     async with session_scope() as s:
@@ -239,11 +257,14 @@ async def test_two_taps_on_the_same_choice_apply_it_once(branch):
     async with session_scope() as s:  # and it is the same after a reload
         char = await get_char(s, cid)
         assert characters.taken_of(char)["modifier:13"] == "swift"
-        assert characters.abilities_of(char)["second_wind"].cost == \
-            get_content().classes["warrior"].abilities["second_wind"].cost - 1
+        assert (
+            characters.abilities_of(char)["second_wind"].cost
+            == get_content().classes["warrior"].abilities["second_wind"].cost - 1
+        )
 
 
 # --------------------------------------------------- every view, one catalogue
+
 
 async def test_sheet_engine_and_rest_see_the_same_abilities(branch):
     cid = await hero(13, guild())
@@ -253,6 +274,7 @@ async def test_sheet_engine_and_rest_see_the_same_abilities(branch):
         await paths.choose_option(s, char, "modifier:13", "wide")
         from oathforge.bot import render
         from oathforge.i18n import t
+
         engine = set(combat_service.ability_defs(char))
         assert engine == set(characters.abilities_of(char))
         assert "test_strike" in engine
@@ -267,6 +289,7 @@ async def test_sheet_engine_and_rest_see_the_same_abilities(branch):
 
 
 # ------------------------------------------------------------- the reroll
+
 
 async def test_a_substantial_change_gives_one_free_second_choice(branch):
     cid = await hero(13, guild())
@@ -310,6 +333,7 @@ async def test_two_choices_at_once_leave_one_applied(branch, is_postgres):
 
 
 # --------------------------------------------------------- pure catalogue
+
 
 def test_a_patch_never_makes_a_cost_negative_or_a_duration_zero():
     base = ability(1, "buff", status="blessed", status_turns=1, cost=1, cooldown=1)

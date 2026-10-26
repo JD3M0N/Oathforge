@@ -16,8 +16,11 @@ from tests.engine.test_combat import ABILITIES, encounter, player
 
 
 def stag_state(seed=0, **hero):
-    st = encounter(player(hp=500, max_hp=500, ac=1, **hero), combat_service.monster_combatant("iron_stag", "m1"),
-                   rng=random.Random(seed))
+    st = encounter(
+        player(hp=500, max_hp=500, ac=1, **hero),
+        combat_service.monster_combatant("iron_stag", "m1"),
+        rng=random.Random(seed),
+    )
     return st, st.combatants["m1"]
 
 
@@ -51,6 +54,7 @@ def test_the_help_names_what_the_fight_asks_for_without_revealing_the_dice():
 
 def test_the_help_renders_in_both_languages():
     from oathforge.bot import render
+
     st, stag = stag_state()
     stag.pattern_state = "aiming"
     for lang in ("es", "en"):

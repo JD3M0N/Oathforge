@@ -8,32 +8,50 @@ import textwrap
 
 # (group, [(command, arguments, one-line description)]); every command here must be handled in main().
 COMMANDS = [
-    ("Bot", [
-        ("bot", "", "Start the bot (Ctrl+C to stop it)."),
-        ("stop", "", "Stop the running bot."),
-        ("restart", "", "Restart the bot: stop it if running and start it in the background."),
-    ]),
-    ("Players", [
-        ("delete-player", "[id|name] [--yes]", "Delete one player; without a name, list them."),
-        ("reset-players", "[--yes]", "Delete every player (stop the bot first)."),
-        ("launch-reset", "[--yes] [--backup FILE]", "Wipe the game, keep accounts and quotas; takes a backup first (stop the bot)."),
-        ("backup", "FILE", "Write the whole database to a JSON file."),
-        ("restore", "FILE [--yes]", "Replace the whole database with a backup (stop the bot)."),
-    ]),
-    ("Content", [
-        ("validate", "", "Load and cross-check content/ (what the bot does at startup); exit 1 on errors."),
-        ("content-index", "", "Rewrite content/INDEX.md: one line per content id with its file."),
-    ]),
-    ("Testing", [
-        ("tgtest", "send|press|show|login", "Play the bot from the Telegram test account."),
-        ("simulate", "[--level 1-5]", "Simulate fights for balance (--help)."),
-        ("balance", "[--n 16] [--quick]", "Balance report of the campaign: classes, branches, policies, pace."),
-        ("achievements-backfill", "[--apply] [--character-id ID] [--after-id ID]", "Preview (default) or apply achievements earned before v0.9."),
-        ("tutorial-stats", "", "How long each player takes per tutorial mission and where they get stuck."),
-    ]),
-    ("Help", [
-        ("help", "", "Show this help."),
-    ]),
+    (
+        "Bot",
+        [
+            ("bot", "", "Start the bot (Ctrl+C to stop it)."),
+            ("stop", "", "Stop the running bot."),
+            ("restart", "", "Restart the bot: stop it if running and start it in the background."),
+        ],
+    ),
+    (
+        "Players",
+        [
+            ("delete-player", "[id|name] [--yes]", "Delete one player; without a name, list them."),
+            ("reset-players", "[--yes]", "Delete every player (stop the bot first)."),
+            (
+                "launch-reset",
+                "[--yes] [--backup FILE]",
+                "Wipe the game, keep accounts and quotas; takes a backup first (stop the bot).",
+            ),
+            ("backup", "FILE", "Write the whole database to a JSON file."),
+            ("restore", "FILE [--yes]", "Replace the whole database with a backup (stop the bot)."),
+        ],
+    ),
+    (
+        "Content",
+        [
+            ("validate", "", "Load and cross-check content/ (what the bot does at startup); exit 1 on errors."),
+            ("content-index", "", "Rewrite content/INDEX.md: one line per content id with its file."),
+        ],
+    ),
+    (
+        "Testing",
+        [
+            ("tgtest", "send|press|show|login", "Play the bot from the Telegram test account."),
+            ("simulate", "[--level 1-5]", "Simulate fights for balance (--help)."),
+            ("balance", "[--n 16] [--quick]", "Balance report of the campaign: classes, branches, policies, pace."),
+            (
+                "achievements-backfill",
+                "[--apply] [--character-id ID] [--after-id ID]",
+                "Preview (default) or apply achievements earned before v0.9.",
+            ),
+            ("tutorial-stats", "", "How long each player takes per tutorial mission and where they get stuck."),
+        ],
+    ),
+    ("Help", [("help", "", "Show this help.")]),
 ]
 FOOTER = "Commands that delete only show what they would delete until you add --yes."
 COLUMN = 36  # where descriptions start
@@ -174,7 +192,11 @@ async def launch_reset(confirm: bool, backup_path: str | None) -> None:
             if not confirm:
                 print("nothing changed; repeat with --yes (a backup is written first)")
                 return
-            target = Path(backup_path) if backup_path else _backup_dir() / f"before-launch-{time.strftime('%Y%m%d-%H%M%S')}.json"
+            target = (
+                Path(backup_path)
+                if backup_path
+                else _backup_dir() / f"before-launch-{time.strftime('%Y%m%d-%H%M%S')}.json"
+            )
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_text(launch.to_json(await launch.dump(session)), encoding="utf-8")
             print(f"backup {target}")
@@ -266,8 +288,15 @@ async def tutorial_stats() -> None:
     print("\nPer player:")
     for r in runs:
         total = sum(r.minutes.values())
-        where = "finished" if r.done else (f"on '{quests[r.current].name.en}' for {r.waiting:.0f} min"
-                                            if r.current else "no active tutorial mission")
+        where = (
+            "finished"
+            if r.done
+            else (
+                f"on '{quests[r.current].name.en}' for {r.waiting:.0f} min"
+                if r.current
+                else "no active tutorial mission"
+            )
+        )
         print(f"  {r.name:20} level {r.level}  {len(r.minutes)}/{len(tut)} missions in {total:.0f} min · {where}")
 
 
@@ -280,8 +309,10 @@ def validate_content() -> None:
     except Exception as exc:  # pydantic, YAML or cross-reference errors: all say what is wrong
         print(f"content/ is invalid:\n{exc}")
         sys.exit(1)
-    print(f"content/ ok: {len(c.items)} items, {len(c.monsters)} monsters, {len(c.locations)} places, "
-          f"{len(c.npcs)} NPCs, {len(c.quests)} quests, {len(c.classes)} classes")
+    print(
+        f"content/ ok: {len(c.items)} items, {len(c.monsters)} monsters, {len(c.locations)} places, "
+        f"{len(c.npcs)} NPCs, {len(c.quests)} quests, {len(c.classes)} classes"
+    )
 
 
 def write_content_index() -> None:
@@ -330,8 +361,13 @@ def restart_bot() -> None:
     else:
         kwargs["start_new_session"] = True
     with open(log, "ab") as out:
-        proc = subprocess.Popen([sys.executable, "-m", "oathforge", "bot"], stdout=out, stderr=subprocess.STDOUT,
-                                stdin=subprocess.DEVNULL, **kwargs)
+        proc = subprocess.Popen(
+            [sys.executable, "-m", "oathforge", "bot"],
+            stdout=out,
+            stderr=subprocess.STDOUT,
+            stdin=subprocess.DEVNULL,
+            **kwargs,
+        )
     print(f"bot started in the background (PID {proc.pid}); output in {log}")
 
 

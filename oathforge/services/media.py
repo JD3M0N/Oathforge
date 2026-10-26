@@ -15,8 +15,15 @@ async def get_file_id(session: AsyncSession, bot_id: int, asset: MediaAsset) -> 
 async def remember(session: AsyncSession, bot_id: int, asset: MediaAsset, file_id: str, file_unique_id: str) -> None:
     row = await session.get(MediaFile, (bot_id, asset.key))
     if row is None:
-        session.add(MediaFile(bot_id=bot_id, asset_key=asset.key, checksum=asset.checksum,
-                              file_id=file_id, file_unique_id=file_unique_id))
+        session.add(
+            MediaFile(
+                bot_id=bot_id,
+                asset_key=asset.key,
+                checksum=asset.checksum,
+                file_id=file_id,
+                file_unique_id=file_unique_id,
+            )
+        )
     else:
         row.checksum, row.file_id, row.file_unique_id = asset.checksum, file_id, file_unique_id
 

@@ -136,6 +136,7 @@ async def test_custom_background_is_reviewed_and_picks_two_skills(llm):
     assert char.background == "custom" and char.custom_background["skills"] == ["perception", "survival"]
     async with session_scope() as s:
         from oathforge.services import characters
+
         skills = await characters.skills_of(s, await s.get(Character, char.id))
     proficient = {k for k, row in skills.items() if row.proficient}
     assert {"perception", "survival"} <= proficient and "arcana" not in proficient
@@ -152,8 +153,14 @@ async def test_custom_background_adaptation_must_be_confirmed_and_can_be_edited(
     await creation.ask_custom(p.update(data="cc|bgc"), p.ctx)
     original = "Modelo de OnlyFans\nGanaba dinero con mi cuenta de OnlyFans hasta que las deudas me obligaron a huir."
     adapted = "Ofrecía compañía íntima a clientes adultos hasta que las deudas me obligaron a abandonar la ciudad."
-    llm.json_queue.append({"status": "adapted", "reason": "Sustituí la plataforma moderna.",
-                           "title": "Compañera de alcoba", "story": adapted})
+    llm.json_queue.append(
+        {
+            "status": "adapted",
+            "reason": "Sustituí la plataforma moderna.",
+            "title": "Compañera de alcoba",
+            "story": adapted,
+        }
+    )
     assert await creation.got_custom_text(p.update(message=original), p.ctx) == creation.CUSTOM_REVIEW
     assert adapted in p.last[0] and "OnlyFans" not in p.last[0]
     assert "custom" not in p.ctx.user_data["new"]
@@ -162,8 +169,14 @@ async def test_custom_background_adaptation_must_be_confirmed_and_can_be_edited(
 
     assert await creation.got_custom_proposal(p.update(data=edit), p.ctx) == creation.CUSTOM_TEXT
     assert "Envía el trasfondo completo" in p.last[0] and "custom_proposal" not in p.ctx.user_data
-    llm.json_queue.append({"status": "adapted", "reason": "Sustituí la plataforma moderna.",
-                           "title": "Compañera de alcoba", "story": adapted})
+    llm.json_queue.append(
+        {
+            "status": "adapted",
+            "reason": "Sustituí la plataforma moderna.",
+            "title": "Compañera de alcoba",
+            "story": adapted,
+        }
+    )
     assert await creation.got_custom_text(p.update(message=original), p.ctx) == creation.CUSTOM_REVIEW
     accept = p.find("cc", "bga:")
     assert await creation.got_custom_proposal(p.update(data=accept), p.ctx) == creation.CUSTOM_SKILLS

@@ -15,6 +15,7 @@ pytestmark = pytest.mark.usefixtures("database")
 
 # ---------------------------------------------------------------- hunting and bestiary
 
+
 @pytest.mark.parametrize("night", [False, True])
 async def test_the_meadow_has_boars_day_and_night(monkeypatch, night):
     """«Tusks in the Meadow» does not depend on the hour either."""
@@ -34,6 +35,7 @@ async def test_a_single_objective_says_what_comes_next():
 
 async def test_a_quest_giver_repeats_the_hint_when_the_ai_is_down(llm):
     from oathforge.services import actions
+
     user_id, cid = await new_character()
     async with session_scope() as s:
         char = await get_char(s, cid)
@@ -79,6 +81,7 @@ async def test_hunt_only_where_there_is_prey_and_boss_first():
 
 async def test_bestiary_records_seen_and_killed():
     from oathforge.services import bestiary
+
     _, cid = await new_character()
     async with session_scope() as s:
         char = await get_char(s, cid)
@@ -110,6 +113,7 @@ async def test_tutorial_runs_time_each_mission():
     from datetime import datetime, timedelta, timezone
 
     from oathforge.services import admin
+
     _, cid = await new_character()
     rng = random.Random(0)
     async with session_scope() as s:

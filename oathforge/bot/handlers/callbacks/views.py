@@ -4,7 +4,15 @@ from telegram import Update
 
 from oathforge.bot import render
 from oathforge.bot.handlers.common import (
-    answer, current_view, edit_or_send, load, offer_keyboard, rng, send, send_outcome, send_photos,
+    answer,
+    current_view,
+    edit_or_send,
+    load,
+    offer_keyboard,
+    rng,
+    send,
+    send_outcome,
+    send_photos,
 )
 from oathforge.content import get_content
 from oathforge.database.session import session_scope
@@ -75,8 +83,9 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
             talked = await quests.on_talk(session, char, arg, rng())  # "talk to Bram" objectives
             text, kb = await render.conversation(session, char, arg, lang)
         elif verb in ("trv", "trvz", "trvs") and not in_combat:
-            text, kb = await render.map_view(session, char, lang, arg if verb == "trvz" else None,
-                                             street=arg if verb == "trvs" else None)
+            text, kb = await render.map_view(
+                session, char, lang, arg if verb == "trvz" else None, street=arg if verb == "trvs" else None
+            )
         elif verb == "acts" and not in_combat:
             text, kb = await render.activities_view(session, char, lang)
         elif verb == "talkm" and not in_combat:

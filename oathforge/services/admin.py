@@ -23,8 +23,11 @@ class Player:
 
 
 def _query():
-    return (select(User.id, User.telegram_id, Character.name, Character.class_key, Character.level)
-            .outerjoin(Character, Character.user_id == User.id).order_by(User.id))
+    return (
+        select(User.id, User.telegram_id, Character.name, Character.class_key, Character.level)
+        .outerjoin(Character, Character.user_id == User.id)
+        .order_by(User.id)
+    )
 
 
 async def list_players(session: AsyncSession) -> list[Player]:
@@ -73,6 +76,7 @@ async def delete_player(session: AsyncSession, user_id: int) -> dict[str, int]:
 @dataclass
 class TutorialRun:
     """One character through the tutorial: real minutes per mission and where it stands now."""
+
     name: str
     level: int
     minutes: dict[str, float]  # finished tutorial missions -> real minutes it took (from the previous one)
@@ -92,8 +96,10 @@ async def tutorial_runs(session: AsyncSession, now: datetime | None = None) -> l
     tut = [k for k, q in sorted(get_content().quests.items(), key=lambda kv: kv[1].order) if q.tutorial]
     runs = []
     for char in (await session.scalars(select(Character).order_by(Character.id))).all():
-        rows = {p.quest_key: p for p in (await session.scalars(
-            select(QuestProgress).where(QuestProgress.character_id == char.id))).all()}
+        rows = {
+            p.quest_key: p
+            for p in (await session.scalars(select(QuestProgress).where(QuestProgress.character_id == char.id))).all()
+        }
         last, minutes, current = _aware(char.created_at), {}, None
         for k in tut:
             p = rows.get(k)

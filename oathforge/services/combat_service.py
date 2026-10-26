@@ -25,19 +25,49 @@ def ability_defs(char: Character) -> dict:
 def monster_combatant(key: str, cid: str) -> Combatant:
     m = get_content().monsters[key]
     return Combatant(
-        id=cid, side="enemy", ref=key, name=m.name.model_dump(), hp=m.hp, max_hp=m.hp, ac=m.ac, row=m.row,
-        dex_mod=m.dex, wis_mod=m.wis, passive_perception=10 + m.wis, immune=list(m.immune), cowardly=m.cowardly, xp=m.xp,
-        boss=m.boss, plate=m.pattern.plate if m.pattern else 0, plate_max=m.pattern.plate if m.pattern else 0,
+        id=cid,
+        side="enemy",
+        ref=key,
+        name=m.name.model_dump(),
+        hp=m.hp,
+        max_hp=m.hp,
+        ac=m.ac,
+        row=m.row,
+        dex_mod=m.dex,
+        wis_mod=m.wis,
+        passive_perception=10 + m.wis,
+        immune=list(m.immune),
+        cowardly=m.cowardly,
+        xp=m.xp,
+        boss=m.boss,
+        plate=m.pattern.plate if m.pattern else 0,
+        plate_max=m.pattern.plate if m.pattern else 0,
         rearm=m.pattern.rearm if m.pattern else 0,
         pattern={"cycle": m.pattern.cycle, "cycle_broken": m.pattern.cycle_broken} if m.pattern else None,
-        heavy=AttackProfile(key="heavy", name=m.pattern.heavy.name.model_dump(), to_hit=m.pattern.heavy.to_hit,
-                            damage=m.pattern.heavy.damage, damage_type=m.pattern.heavy.damage_type,
-                            ranged=m.pattern.heavy.ranged) if m.pattern else None,
-        creature_type=m.type, resist=list(m.resist), weak_to=list(m.vulnerable), immune_damage=list(m.immune_damage),
+        heavy=AttackProfile(
+            key="heavy",
+            name=m.pattern.heavy.name.model_dump(),
+            to_hit=m.pattern.heavy.to_hit,
+            damage=m.pattern.heavy.damage,
+            damage_type=m.pattern.heavy.damage_type,
+            ranged=m.pattern.heavy.ranged,
+        )
+        if m.pattern
+        else None,
+        creature_type=m.type,
+        resist=list(m.resist),
+        weak_to=list(m.vulnerable),
+        immune_damage=list(m.immune_damage),
         attacks=[
-            AttackProfile(key=f"a{i}", name=a.name.model_dump(), to_hit=a.to_hit, damage=a.damage,
-                          damage_type=a.damage_type, ranged=a.ranged,
-                          applies=a.applies.model_dump() if a.applies else None)
+            AttackProfile(
+                key=f"a{i}",
+                name=a.name.model_dump(),
+                to_hit=a.to_hit,
+                damage=a.damage,
+                damage_type=a.damage_type,
+                ranged=a.ranged,
+                applies=a.applies.model_dump() if a.applies else None,
+            )
             for i, a in enumerate(m.attacks)
         ],
     )
@@ -71,17 +101,23 @@ def _letter_duplicates(foes: list[Combatant]) -> None:
 
 
 async def active_encounter(session: AsyncSession, char: Character, lock: bool = False) -> Encounter | None:
-    stmt = (select(Encounter)
-            .where(Encounter.character_id == char.id, Encounter.status == "active")
-            .order_by(Encounter.id.desc()))
+    stmt = (
+        select(Encounter)
+        .where(Encounter.character_id == char.id, Encounter.status == "active")
+        .order_by(Encounter.id.desc())
+    )
     if lock:
         stmt = stmt.with_for_update()
     return await session.scalar(stmt)
 
 
 async def start_encounter(
-    session: AsyncSession, char: Character, monster_keys: list[str], rng: random.Random,
-    fixed_flag: str | None = None, hunt: bool = False,
+    session: AsyncSession,
+    char: Character,
+    monster_keys: list[str],
+    rng: random.Random,
+    fixed_flag: str | None = None,
+    hunt: bool = False,
 ) -> tuple[Encounter, Outcome]:
     c = get_content()
     loc = c.locations[char.location]
@@ -94,14 +130,24 @@ async def start_encounter(
     _letter_duplicates([state.combatants[f"m{i}"] for i in range(1, len(monster_keys) + 1)])
     for okey, obj in loc.scene_objects.items():
         state.scene_objects[okey] = engine.SceneObjectState(
-            key=okey, skill=obj.skill, tier=obj.tier, damage=obj.effect.damage,
-            damage_type=obj.effect.damage_type, targets=obj.effect.targets,
+            key=okey,
+            skill=obj.skill,
+            tier=obj.tier,
+            damage=obj.effect.damage,
+            damage_type=obj.effect.damage_type,
+            targets=obj.effect.targets,
             status=obj.effect.status.model_dump() if obj.effect.status else None,
         )
     logs = engine.start(state, rng)
-    enc = Encounter(character_id=char.id, location=char.location, status="active",
-                    state=state.model_dump(mode="json"), fixed_flag=fixed_flag)
+    enc = Encounter(
+        character_id=char.id,
+        location=char.location,
+        status="active",
+        state=state.model_dump(mode="json"),
+        fixed_flag=fixed_flag,
+    )
     from oathforge.services.exploration import is_night
+
     enc.achievement_metrics = achievements.encounter_metrics(char, monster_keys, fixed_flag, hunt, is_night())
     session.add(enc)
     await session.flush()
@@ -109,23 +155,31 @@ async def start_encounter(
     char.state = "in_combat"
     bestiary.see(char, monster_keys)
 
-    session.add(CombatAction(encounter_id=enc.id, round=1, actor="start", action={},
-                             result=[entry.model_dump(mode="json") for entry in logs]))
+    session.add(
+        CombatAction(
+            encounter_id=enc.id,
+            round=1,
+            actor="start",
+            action={},
+            result=[entry.model_dump(mode="json") for entry in logs],
+        )
+    )
     _count(char, logs)
     out = Outcome(encounter_id=enc.id)
     for key in dict.fromkeys(monster_keys):
         await achievements.emit(session, char, out, "seen", {"monster": key}, f"encounter:{enc.id}:seen:{key}")
-    out.add("combat.start", enemies=_names_list([state.combatants[k] for k in state.combatants if k != "p1"]),
-            links=" ".join(f"/monster_{k}" for k in dict.fromkeys(monster_keys)))
+    out.add(
+        "combat.start",
+        enemies=_names_list([state.combatants[k] for k in state.combatants if k != "p1"]),
+        links=" ".join(f"/monster_{k}" for k in dict.fromkeys(monster_keys)),
+    )
     out.events += [log_event(state, e) for e in logs]
     await _sync_and_maybe_finish(session, char, enc, state, rng, out)
     _record(enc, char, state, None, logs)
     return enc, out
 
 
-async def act(
-    session: AsyncSession, char: Character, enc: Encounter, action: Action, rng: random.Random
-) -> Outcome:
+async def act(session: AsyncSession, char: Character, enc: Encounter, action: Action, rng: random.Random) -> Outcome:
     state = EncounterState.model_validate(enc.state)
     if action.kind == "heal_item":
         if state.current.id != "p1" or state.current.action_used:
@@ -147,17 +201,29 @@ async def act(
         return Outcome.refused(e.key)
     if action.kind == "item" and not await inventory.remove_item(session, char, action.ability, 1):
         raise RuntimeError(f"combat item {action.ability} vanished")  # rolls the transaction back
-    session.add(CombatAction(encounter_id=enc.id, round=state.round, actor="p1",
-                             action=action.model_dump(mode="json"),
-                             result=[entry.model_dump(mode="json") for entry in logs]))
+    session.add(
+        CombatAction(
+            encounter_id=enc.id,
+            round=state.round,
+            actor="p1",
+            action=action.model_dump(mode="json"),
+            result=[entry.model_dump(mode="json") for entry in logs],
+        )
+    )
     _count(char, logs)
     if enc.achievement_metrics is not None and action.kind in ("heal_item", "item"):
         enc.achievement_metrics = {**enc.achievement_metrics, "consumed": enc.achievement_metrics["consumed"] + 1}
     out = Outcome(encounter_id=enc.id)
     for entry in logs:
         if entry.key == "combat.interact" and entry.params.get("success"):
-            await achievements.emit(session, char, out, "scene", {"key": entry.params["object"]},
-                                    f"encounter:{enc.id}:scene:{entry.params['object']}")
+            await achievements.emit(
+                session,
+                char,
+                out,
+                "scene",
+                {"key": entry.params["object"]},
+                f"encounter:{enc.id}:scene:{entry.params['object']}",
+            )
     out.events += [log_event(state, e) for e in logs]
     await _sync_and_maybe_finish(session, char, enc, state, rng, out)
     if state.status == "fled" and any(e.key == "combat.escaped" for e in logs):  # out with a smoke bomb, not on foot
@@ -173,19 +239,24 @@ def _count(char: Character, logs: list[LogEntry]) -> None:
     characters.bump_stats(char, dodges=dodges, crits=crits)
 
 
-def _record(enc: Encounter, char: Character, state: EncounterState, action: Action | None,
-            logs: list[LogEntry]) -> None:
+def _record(
+    enc: Encounter, char: Character, state: EncounterState, action: Action | None, logs: list[LogEntry]
+) -> None:
     """Debug copy of the encounter in artifacts/battles/ (full log, not the 30-entry window)."""
     recorder.battle(
-        enc.id, enc.location, character=f"{char.name} ({char.class_key} {char.level})",
+        enc.id,
+        enc.location,
+        character=f"{char.name} ({char.class_key} {char.level})",
         actor_action=action.model_dump(exclude_none=True) if action else None,
         lines=[render_event(log_event(state, e), "es") for e in logs],
-        raw=[e.model_dump(mode="json") for e in logs], state=state.model_dump(mode="json"),
+        raw=[e.model_dump(mode="json") for e in logs],
+        state=state.model_dump(mode="json"),
     )
 
 
 async def _sync_and_maybe_finish(session, char, enc, state: EncounterState, rng, out: Outcome) -> None:
     from oathforge.services import activities  # activities starts encounters too
+
     p = state.combatants["p1"]
     char.hp = p.hp
     char.resources = {k: v for k, v in p.abilities.items()}
@@ -205,11 +276,23 @@ async def _sync_and_maybe_finish(session, char, enc, state: EncounterState, rng,
     metrics = enc.achievement_metrics or {}
     if metrics:
         enc.achievement_metrics = {**metrics, "final_hp": p.hp, "status": state.status}
-    await achievements.emit(session, char, out, "combat",
-        {"status": state.status, "eligible": metrics.get("eligible", False), "hp": p.hp,
-         "consumed": metrics.get("consumed", -1), "enemies": len(metrics.get("monsters", [])),
-         "location": enc.location, "period": metrics.get("period", "unknown"),
-         "hunt": metrics.get("hunt", False)}, f"encounter:{enc.id}:end")
+    await achievements.emit(
+        session,
+        char,
+        out,
+        "combat",
+        {
+            "status": state.status,
+            "eligible": metrics.get("eligible", False),
+            "hp": p.hp,
+            "consumed": metrics.get("consumed", -1),
+            "enemies": len(metrics.get("monsters", [])),
+            "location": enc.location,
+            "period": metrics.get("period", "unknown"),
+            "hunt": metrics.get("hunt", False),
+        },
+        f"encounter:{enc.id}:end",
+    )
     char.state = "idle"
     characters.bump_stats(char, **{f"battles_{state.status}": 1})
     c = get_content()
@@ -220,8 +303,9 @@ async def _sync_and_maybe_finish(session, char, enc, state: EncounterState, rng,
         for key in dict.fromkeys(cb.ref for cb in defeated):
             await achievements.emit(session, char, out, "kill", {"monster": key}, f"encounter:{enc.id}:kill:{key}")
             if char.bestiary[key]["killed"] >= bestiary.KILLS_FOR_SECRETS:
-                await achievements.emit(session, char, out, "secrets", {"monster": key},
-                                        f"encounter:{enc.id}:secrets:{key}")
+                await achievements.emit(
+                    session, char, out, "secrets", {"monster": key}, f"encounter:{enc.id}:secrets:{key}"
+                )
         before_level = char.level
         characters.grant_xp(char, sum(cb.xp for cb in defeated), out)
         await achievements.levels(session, char, out, before_level)
@@ -249,11 +333,19 @@ async def _sync_and_maybe_finish(session, char, enc, state: EncounterState, rng,
     defeated_refs = [cb.ref for cb in state.combatants.values() if cb.side == "enemy" and cb.defeated]
     await activities.on_encounter_end(session, char, state.status, defeated_refs, rng, out)
     # rewards and penalties, kept for the battle report
-    session.add(CombatAction(encounter_id=enc.id, round=state.round, actor="end", action={},
-                             result=[{"key": e.key, "params": e.params} for e in out.events[first:]]))
+    session.add(
+        CombatAction(
+            encounter_id=enc.id,
+            round=state.round,
+            actor="end",
+            action={},
+            result=[{"key": e.key, "params": e.params} for e in out.events[first:]],
+        )
+    )
 
 
 # ---------------------------------------------------------------- rendering helpers
+
 
 def _both(key: str, **params) -> dict:
     return {lang: t(lang, key, **params) for lang in ("es", "en")}
@@ -320,15 +412,18 @@ def log_event(state: EncounterState, entry: LogEntry) -> Event:
                 d, mod = dice[i]
                 return f"{name} {total} (🎲 {d}{mod:+d})" if mod else f"{name} {total} (🎲 {d})"
             return f"{name} {total}"
+
         p["order"] = {lang: " · ".join(one(i, lang) for i in order) for lang in ("es", "en")}
     return Event(entry.key, p)
 
 
 # ---------------------------------------------------------------- battle report
 
+
 @dataclass
 class BattleReport:
     """A finished encounter replayed from its CombatAction rows: every round, totals and rewards."""
+
     encounter_id: int
     location: str
     status: str
@@ -346,8 +441,9 @@ async def battle_report(session: AsyncSession, char: Character, encounter_id: in
     enc = await session.scalar(stmt.order_by(Encounter.id.desc()).limit(1))
     if enc is None:
         return None
-    rows = (await session.scalars(select(CombatAction).where(CombatAction.encounter_id == enc.id)
-                                  .order_by(CombatAction.id))).all()
+    rows = (
+        await session.scalars(select(CombatAction).where(CombatAction.encounter_id == enc.id).order_by(CombatAction.id))
+    ).all()
     entries: list[LogEntry] = []
     rewards: list[Event] = []
     for row in rows:
@@ -370,8 +466,17 @@ async def battle_report(session: AsyncSession, char: Character, encounter_id: in
 
 def battle_stats(state: EncounterState, entries: list[LogEntry]) -> dict:
     """Totals seen from the player's side: damage, accuracy, crits, healing and who fell."""
-    stats = {"dealt": 0, "received": 0, "attacks": 0, "hits": 0, "crits": 0, "enemy_attacks": 0, "enemy_hits": 0,
-             "healed": 0, "defeated": {}}
+    stats = {
+        "dealt": 0,
+        "received": 0,
+        "attacks": 0,
+        "hits": 0,
+        "crits": 0,
+        "enemy_attacks": 0,
+        "enemy_hits": 0,
+        "healed": 0,
+        "defeated": {},
+    }
     for e in entries:
         p = e.params
         mine = p.get("actor") == "p1"

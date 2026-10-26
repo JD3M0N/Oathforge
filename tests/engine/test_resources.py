@@ -12,23 +12,41 @@ from oathforge.content import get_content
 from oathforge.engine import combat as cb
 from oathforge.engine.combat import Action, AttackProfile, Combatant, CombatError, EncounterState
 
-SWORD = AttackProfile(key="main", name={"es": "Espada", "en": "Sword"}, to_hit=99, damage="1d1",
-                      damage_type="slashing")
+SWORD = AttackProfile(key="main", name={"es": "Espada", "en": "Sword"}, to_hit=99, damage="1d1", damage_type="slashing")
 ABILITIES = {k: a for cls in get_content().classes.values() for k, a in cls.abilities.items()}
 
 
 def hero(**kw) -> Combatant:
-    base = dict(id="p1", side="player", ref="1", name={"es": "Aldric", "en": "Aldric"}, hp=20, max_hp=20, ac=16,
-                attacks=[SWORD], resource=5, resource_max=10, resource_key="focus")
+    base = dict(
+        id="p1",
+        side="player",
+        ref="1",
+        name={"es": "Aldric", "en": "Aldric"},
+        hp=20,
+        max_hp=20,
+        ac=16,
+        attacks=[SWORD],
+        resource=5,
+        resource_max=10,
+        resource_key="focus",
+    )
     base.update(kw)
     return Combatant(**base)
 
 
 def dummy(cid="m1", **kw) -> Combatant:
-    base = dict(id=cid, side="enemy", ref="bandit", name={"es": "Bandido", "en": "Bandit"}, hp=500, max_hp=500,
-                ac=99, dex_mod=-10,  # it never hits back and never dies: the test is about the bar
-                attacks=[AttackProfile(key="a", name={"es": "x", "en": "x"}, to_hit=-99, damage="1d1",
-                                       damage_type="slashing")], xp=1)
+    base = dict(
+        id=cid,
+        side="enemy",
+        ref="bandit",
+        name={"es": "Bandido", "en": "Bandit"},
+        hp=500,
+        max_hp=500,
+        ac=99,
+        dex_mod=-10,  # it never hits back and never dies: the test is about the bar
+        attacks=[AttackProfile(key="a", name={"es": "x", "en": "x"}, to_hit=-99, damage="1d1", damage_type="slashing")],
+        xp=1,
+    )
     base.update(kw)
     return Combatant(**base)
 
@@ -45,6 +63,7 @@ def act(st, action, rng=None):
 
 
 # ------------------------------------------------------------- paying for it
+
 
 def test_a_power_costs_once_and_only_once():
     me = hero(abilities={"second_wind": None}, hp=5)
@@ -99,6 +118,7 @@ def test_a_class_without_a_bar_keeps_paying_with_uses():
 
 # ---------------------------------------------------------------- cooldowns
 
+
 def test_a_cooldown_is_counted_in_turns_and_blocks_meanwhile():
     me = hero(abilities={"second_wind": None}, resource=10, hp=1)
     st = encounter(me, dummy())
@@ -136,6 +156,7 @@ def test_a_power_you_cannot_pay_for_is_not_offered():
 
 # ----------------------------------------------------------- turn and regen
 
+
 def test_the_bar_fills_a_little_at_the_start_of_its_own_turn():
     me = hero(resource=0, resource_per_turn=2)
     st = encounter(me, dummy())
@@ -153,6 +174,7 @@ def test_the_bar_survives_being_stored_and_read_back():
 
 
 # --------------------------------------------------------------- boss control
+
 
 def test_hard_control_does_not_chain_a_boss_and_says_so():
     boss = dummy(boss=True)
@@ -187,6 +209,7 @@ def test_a_status_refreshes_and_never_stacks():
 
 # ---------------------------------------------- the acceptance case of B03
 
+
 @pytest.mark.parametrize("class_key,level", [("warrior", 1), ("warrior", 5), ("sorcerer", 3), ("sorcerer", 5)])
 def test_a_focus_fighter_and_a_mana_caster_get_through_several_fights(class_key, level):
     """roadmap_balance B03: several fights in a row without a broken economy. The bar runs down and
@@ -199,10 +222,20 @@ def test_a_focus_fighter_and_a_mana_caster_get_through_several_fights(class_key,
     seen_spent = False
     for fight in range(4):
         # a foe that really hits back: otherwise a level-1 warrior never needs its heal
-        foe = Combatant(id=f"m{fight}", side="enemy", ref="bandit", name={"es": "Bandido", "en": "Bandit"},
-                        hp=22, max_hp=22, ac=11, dex_mod=-10, xp=1,
-                        attacks=[AttackProfile(key="a", name={"es": "x", "en": "x"}, to_hit=6, damage="1d6+2",
-                                               damage_type="slashing")])
+        foe = Combatant(
+            id=f"m{fight}",
+            side="enemy",
+            ref="bandit",
+            name={"es": "Bandido", "en": "Bandit"},
+            hp=22,
+            max_hp=22,
+            ac=11,
+            dex_mod=-10,
+            xp=1,
+            attacks=[
+                AttackProfile(key="a", name={"es": "x", "en": "x"}, to_hit=6, damage="1d6+2", damage_type="slashing")
+            ],
+        )
         st = EncounterState(location="test", combatants={"p1": me, foe.id: foe})
         cb.start(st, random.Random(fight))
         # fights in a row, with no full rest in between: this is what wears the bar down

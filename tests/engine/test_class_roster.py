@@ -21,6 +21,7 @@ BASE_MAX_LEVEL = 9  # the branch starts at 10 (class_specializations.yaml)
 
 # ------------------------------------------------------------- what every class must have
 
+
 @pytest.mark.parametrize("key", CLASSES)
 def test_a_class_has_its_own_bar_and_a_featured_technique_from_level_one(key):
     c = get_content()
@@ -65,6 +66,7 @@ def test_starting_gear_equips_and_gives_a_free_attack(key):
     char = sim.sim_character(key, 1, "human", "soldier")
     gear = sim.sim_gear(char)
     from oathforge.services import characters
+
     attacks = characters.attack_profiles(char, gear)
     assert attacks and all(a.damage for a in attacks)  # never a class with nothing to hit with
 
@@ -85,6 +87,7 @@ def test_the_bar_of_a_class_that_builds_up_can_actually_be_built(key):
 
 # ----------------------------------------------------------------- the introductory fights
 
+
 @pytest.mark.parametrize("level", [1, 3, 5, 9])
 @pytest.mark.parametrize("key", CLASSES)
 def test_every_class_beats_a_bandit(key, level):
@@ -96,8 +99,9 @@ def test_every_class_beats_a_bandit(key, level):
 @pytest.mark.parametrize("level", [5, 9])
 @pytest.mark.parametrize("key", CLASSES)
 def test_every_class_handles_a_pair_from_level_five(key, level):
-    rows = sim.simulate([key], ["goblin_scout+goblin_scout"], [level], n=40, seed=11, lineage="human",
-                        background="soldier")
+    rows = sim.simulate(
+        [key], ["goblin_scout+goblin_scout"], [level], n=40, seed=11, lineage="human", background="soldier"
+    )
     assert rows[0]["win_pct"] >= 85, f"{key} L{level}: {rows[0]['win_pct']}% against a pair of goblins"
 
 
@@ -110,9 +114,20 @@ def test_several_fights_in_a_row_without_a_full_rest(key, level):
     starts_empty = c.progression.resources[c.classes[key].resource].starts_empty
     rng = random.Random(21)
     for n in range(3):
-        foe = Combatant(id="m1", side="enemy", ref="x", name={"es": "x", "en": "x"}, hp=20, max_hp=20, ac=11,
-                        dex_mod=0, xp=1, attacks=[AttackProfile(key="a", name={"es": "x", "en": "x"}, to_hit=4,
-                                                                damage="1d6+1", damage_type="slashing")])
+        foe = Combatant(
+            id="m1",
+            side="enemy",
+            ref="x",
+            name={"es": "x", "en": "x"},
+            hp=20,
+            max_hp=20,
+            ac=11,
+            dex_mod=0,
+            xp=1,
+            attacks=[
+                AttackProfile(key="a", name={"es": "x", "en": "x"}, to_hit=4, damage="1d6+1", damage_type="slashing")
+            ],
+        )
         state = EncounterState(location="simulation", combatants={"p1": me, "m1": foe})
         me.defeated = me.fled = False
         me.resource = 0 if starts_empty else me.resource  # a new fight: that kind of bar starts empty
@@ -131,10 +146,20 @@ def test_several_fights_in_a_row_without_a_full_rest(key, level):
 
 # -------------------------------------------------------------------- engine pieces of B06
 
+
 def dummy(**kw) -> Combatant:
-    base = dict(id="m1", side="enemy", ref="x", name={"es": "x", "en": "x"}, hp=400, max_hp=400, ac=1, dex_mod=-10,
-                xp=1, attacks=[AttackProfile(key="a", name={"es": "x", "en": "x"}, to_hit=-99, damage="1d1",
-                                             damage_type="slashing")])
+    base = dict(
+        id="m1",
+        side="enemy",
+        ref="x",
+        name={"es": "x", "en": "x"},
+        hp=400,
+        max_hp=400,
+        ac=1,
+        dex_mod=-10,
+        xp=1,
+        attacks=[AttackProfile(key="a", name={"es": "x", "en": "x"}, to_hit=-99, damage="1d1", damage_type="slashing")],
+    )
     base.update(kw)
     return Combatant(**base)
 
@@ -145,31 +170,52 @@ def test_a_ranged_strike_uses_the_bow_and_a_melee_one_the_blade():
     t = Text(es="x", en="x")
 
     def ab(**kw):
-        return ClassAbility(name=t, description=t, level=1, kind="strike", extra_damage="1d4",
-                            damage_type="piercing", **kw)
+        return ClassAbility(
+            name=t, description=t, level=1, kind="strike", extra_damage="1d4", damage_type="piercing", **kw
+        )
 
-    sword = AttackProfile(key="main", name={"es": "Espada", "en": "Sword"}, to_hit=99, damage="1d1",
-                          damage_type="slashing")
-    bow = AttackProfile(key="ranged", name={"es": "Arco", "en": "Bow"}, to_hit=99, damage="1d1",
-                        damage_type="piercing", ranged=True)
+    sword = AttackProfile(
+        key="main", name={"es": "Espada", "en": "Sword"}, to_hit=99, damage="1d1", damage_type="slashing"
+    )
+    bow = AttackProfile(
+        key="ranged", name={"es": "Arco", "en": "Bow"}, to_hit=99, damage="1d1", damage_type="piercing", ranged=True
+    )
     defs = {"shot": ab(ranged=True), "cut": ab()}
-    me = Combatant(id="p1", side="player", ref="1", name={"es": "H", "en": "H"}, hp=20, max_hp=20, ac=12,
-                   attacks=[sword, bow], abilities={"shot": None, "cut": None}, row="back")
+    me = Combatant(
+        id="p1",
+        side="player",
+        ref="1",
+        name={"es": "H", "en": "H"},
+        hp=20,
+        max_hp=20,
+        ac=12,
+        attacks=[sword, bow],
+        abilities={"shot": None, "cut": None},
+        row="back",
+    )
     state = EncounterState(location="t", combatants={"p1": me, "m1": dummy()})
     state.order, state.turn_index = ["p1", "m1"], 0
     used = []
     for key in ("shot", "cut"):
         me.action_used = False
-        logs = cb.player_act(state, "p1", cb.Action(kind="ability", ability=key, target="m1"),
-                             random.Random(2), defs)
+        logs = cb.player_act(state, "p1", cb.Action(kind="ability", ability=key, target="m1"), random.Random(2), defs)
         used.append(next(e.params["weapon"] for e in logs if e.key in ("combat.hit", "combat.crit"))["en"])
     assert used == ["Bow", "Sword"]
 
 
 def test_a_marked_quarry_takes_an_extra_die_from_every_hit_of_its_hunter():
-    me = Combatant(id="p1", side="player", ref="1", name={"es": "H", "en": "H"}, hp=20, max_hp=20, ac=12,
-                   attacks=[AttackProfile(key="main", name={"es": "E", "en": "S"}, to_hit=99, damage="1d1",
-                                          damage_type="slashing")])
+    me = Combatant(
+        id="p1",
+        side="player",
+        ref="1",
+        name={"es": "H", "en": "H"},
+        hp=20,
+        max_hp=20,
+        ac=12,
+        attacks=[
+            AttackProfile(key="main", name={"es": "E", "en": "S"}, to_hit=99, damage="1d1", damage_type="slashing")
+        ],
+    )
     foe = dummy()
     state = EncounterState(location="t", combatants={"p1": me, "m1": foe})
     state.order, state.turn_index = ["p1", "m1"], 0

@@ -83,8 +83,9 @@ async def test_the_chest_moves_items_without_copying_them():
         assert (await home.deposit(s, char, "iron_ore", 4)).ok
         assert await inventory.count(s, char, "iron_ore") == 6
         assert await inventory.count(s, char, "iron_ore", container=inventory.CHEST) == 4
-        total = await s.scalar(select(ItemInstance.qty).where(ItemInstance.item_key == "iron_ore",
-                                                              ItemInstance.container == "chest"))
+        total = await s.scalar(
+            select(ItemInstance.qty).where(ItemInstance.item_key == "iron_ore", ItemInstance.container == "chest")
+        )
         assert total == 4  # one row in the chest, not a copy of the stack
         assert (await home.withdraw(s, char, "iron_ore", 10)).error == "home.err.not_stored"
         assert (await home.withdraw(s, char, "iron_ore", 4)).ok

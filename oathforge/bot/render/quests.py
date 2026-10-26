@@ -14,8 +14,7 @@ from oathforge.services import achievements, activities, characters, chronicle_l
 from oathforge.bot.render.common import ACTIVITY_ICON, MAX_MESSAGE, RULE, _go_button, journal_tabs
 
 
-QUEST_ICONS = {"locked": "🔒", "available": "❔", "active": "📜", "ready": "✅",
-               "completed": "✅", "failed": "❌"}
+QUEST_ICONS = {"locked": "🔒", "available": "❔", "active": "📜", "ready": "✅", "completed": "✅", "failed": "❌"}
 
 
 def _objective_line(obj, done: int, lang: str) -> str:
@@ -34,16 +33,27 @@ async def journal(session: AsyncSession, char: Character, lang: str) -> tuple[st
     rows: list[list] = []
     act = await activities.open_activity(session, char)
     if act is not None:
-        lines.append(f"{ACTIVITY_ICON.get(act.skill, '⏳')} " + t(lang, "journal.now_activity",
-                     what=escape(activities.describe(act, lang)), minutes=activities.remaining_minutes(act)))
+        lines.append(
+            f"{ACTIVITY_ICON.get(act.skill, '⏳')} "
+            + t(
+                lang,
+                "journal.now_activity",
+                what=escape(activities.describe(act, lang)),
+                minutes=activities.remaining_minutes(act),
+            )
+        )
         rows.append([btn(t(lang, "btn.see_activity"), cb("acts"))])
     trip_to = exploration.trip(char) if char.state == "idle" else None
     if trip_to:  # an ambush stopped the trip halfway: carry on from here too
         lines.append(t(lang, "journal.now_trip", place=escape(c.locations[trip_to].phrase()[lang])))
-        rows.append([btn(t(lang, "btn.continue_trip", place=c.locations[trip_to].phrase()[lang]),
-                         cb("go", trip_to, n))])
-    current = [(k, q, p) for k, q, p in await quests.journal(session, char)
-               if quests.stage_of(q, p)[1] in ("active", "available", "ready")]
+        rows.append(
+            [btn(t(lang, "btn.continue_trip", place=c.locations[trip_to].phrase()[lang]), cb("go", trip_to, n))]
+        )
+    current = [
+        (k, q, p)
+        for k, q, p in await quests.journal(session, char)
+        if quests.stage_of(q, p)[1] in ("active", "available", "ready")
+    ]
     if current:
         lines.append("")
         lines.append(f"<b>{t(lang, 'journal.current')}</b>")
@@ -53,8 +63,14 @@ async def journal(session: AsyncSession, char: Character, lang: str) -> tuple[st
             lines.append(f"<i>{escape(quest.stages[stage].journal.get(lang))}</i>")
             lines += [_objective_line(o, done, lang) for o, done in quests.objective_progress(quest, prog)]
             if state == "ready" and quest.giver:  # it is done; somebody is owed the news
-                lines.append(t(lang, "quest.ready", quest=escape(quest.name.get(lang)),
-                               npc=escape(c.npcs[quest.giver].name.get(lang))))
+                lines.append(
+                    t(
+                        lang,
+                        "quest.ready",
+                        quest=escape(quest.name.get(lang)),
+                        npc=escape(c.npcs[quest.giver].name.get(lang)),
+                    )
+                )
             rows.append([btn(f"{QUEST_ICONS[state]} {quest.name.get(lang)}", cb("jq", key))])
     else:
         lines += ["", f"<i>{t(lang, 'journal.no_current')}</i>"]
@@ -63,8 +79,14 @@ async def journal(session: AsyncSession, char: Character, lang: str) -> tuple[st
     if goals:
         lines += ["", t(lang, "map.objective")]
         for quest, route in goals:
-            lines.append(t(lang, "map.objective_line", quest=escape(quest.get(lang, quest.get("en"))),
-                           place=escape(c.locations[route.to].name.get(lang))))
+            lines.append(
+                t(
+                    lang,
+                    "map.objective_line",
+                    quest=escape(quest.get(lang, quest.get("en"))),
+                    place=escape(c.locations[route.to].name.get(lang)),
+                )
+            )
             rows.append(_go_button(route, lang, n, "📜"))
     elif not current:
         rows += _giver_buttons(char, lang, n)
@@ -102,8 +124,9 @@ async def missions(session: AsyncSession, char: Character, lang: str) -> tuple[s
     finished = [(k, q, p) for k, q, p in entries if quests.stage_of(q, p)[1] in FINISHED]
     if finished:
         lines += ["", f"<b>{t(lang, 'journal.log_title', n=len(finished))}</b>"]
-        rows += [[btn(f"{QUEST_ICONS[quests.stage_of(q, p)[1]]} {q.name.get(lang)}", cb("jq", k))]
-                 for k, q, p in finished]
+        rows += [
+            [btn(f"{QUEST_ICONS[quests.stage_of(q, p)[1]]} {q.name.get(lang)}", cb("jq", k))] for k, q, p in finished
+        ]
     return "\n".join(lines), markup(rows + journal_tabs("jrm", lang))
 
 
@@ -120,27 +143,47 @@ async def stats_view(session: AsyncSession, char: Character, lang: str) -> tuple
     cities = {c.locations[p].zone for p in places if c.zones[c.locations[p].zone].kind == "city"}
     kills = {k: v.get("killed", 0) for k, v in (char.bestiary or {}).items() if v.get("killed")}
     top = sorted(kills.items(), key=lambda kv: -kv[1])[:3]
-    lines = [t(lang, "stats.title"), RULE,
-             t(lang, "stats.distance", yards=fmt_int(int(st.get("yards", 0)), lang)),
-             t(lang, "stats.places", places=len(places), cities=len(cities)),
-             t(lang, "stats.battles", won=st.get("battles_victory", 0), lost=st.get("battles_defeat", 0),
-               fled=st.get("battles_fled", 0)),
-             t(lang, "stats.kills", n=sum(kills.values()))]
+    lines = [
+        t(lang, "stats.title"),
+        RULE,
+        t(lang, "stats.distance", yards=fmt_int(int(st.get("yards", 0)), lang)),
+        t(lang, "stats.places", places=len(places), cities=len(cities)),
+        t(
+            lang,
+            "stats.battles",
+            won=st.get("battles_victory", 0),
+            lost=st.get("battles_defeat", 0),
+            fled=st.get("battles_fled", 0),
+        ),
+        t(lang, "stats.kills", n=sum(kills.values())),
+    ]
     if top:
-        lines.append("      " + escape(", ".join(f"{c.monsters[k].name.get(lang)} ×{n}" for k, n in top if k in c.monsters)))
-    lines += [t(lang, "stats.dodges", n=st.get("dodges", 0)), t(lang, "stats.crits", n=st.get("crits", 0)),
-              t(lang, "stats.activities", n=st.get("activities", 0)), "", f"<i>{t(lang, 'stats.since')}</i>"]
+        lines.append(
+            "      " + escape(", ".join(f"{c.monsters[k].name.get(lang)} ×{n}" for k, n in top if k in c.monsters))
+        )
+    lines += [
+        t(lang, "stats.dodges", n=st.get("dodges", 0)),
+        t(lang, "stats.crits", n=st.get("crits", 0)),
+        t(lang, "stats.activities", n=st.get("activities", 0)),
+        "",
+        f"<i>{t(lang, 'stats.since')}</i>",
+    ]
     # Counted from the chronicle: every one of these is a fact the engine recorded.
     counted = await chronicle_log.counts(session, char)
     ach = await achievements.snapshot(session, char)
-    lines += ["", t(lang, "stats.chronicle_title"), RULE,
-              t(lang, "stats.quests", n=counted["quests"]),
-              t(lang, "stats.crafts", n=counted["crafts"], recipes=counted["recipes"]),
-              t(lang, "stats.discoveries", n=counted["discoveries"]),
-              t(lang, "stats.monsters_known", n=counted["monsters_known"], killed=counted["species_killed"]),
-              t(lang, "stats.levels", n=counted["levels"]),
-              t(lang, "stats.achievements", n=ach["count"], points=ach["points"]),
-              "", f"<i>{t(lang, 'stats.since_chronicle')}</i>"]
+    lines += [
+        "",
+        t(lang, "stats.chronicle_title"),
+        RULE,
+        t(lang, "stats.quests", n=counted["quests"]),
+        t(lang, "stats.crafts", n=counted["crafts"], recipes=counted["recipes"]),
+        t(lang, "stats.discoveries", n=counted["discoveries"]),
+        t(lang, "stats.monsters_known", n=counted["monsters_known"], killed=counted["species_killed"]),
+        t(lang, "stats.levels", n=counted["levels"]),
+        t(lang, "stats.achievements", n=ach["count"], points=ach["points"]),
+        "",
+        f"<i>{t(lang, 'stats.since_chronicle')}</i>",
+    ]
     return "\n".join(lines)[:MAX_MESSAGE], markup(journal_tabs("jrs", lang))
 
 
@@ -148,9 +191,11 @@ def _fact_line(fact, lang: str) -> str | None:
     """One chronicle entry, named from the content. An unknown id leaves the entry out."""
     c = get_content()
     data = fact.data or {}
+
     def named(pool, key):
         entry = pool.get(data.get(key))
         return escape(entry.name.get(lang)) if entry is not None else None
+
     if fact.kind in ("seen", "kill", "secrets"):
         what = named(c.monsters, "monster")
     elif fact.kind in ("quest", "quest_start"):
@@ -184,8 +229,9 @@ def _fact_line(fact, lang: str) -> str | None:
     return t(lang, f"book.{fact.kind}", what=what, rank=data.get("rank", 0))
 
 
-async def chronicle(session: AsyncSession, char: Character, lang: str,
-                    page: str = "0") -> tuple[str, InlineKeyboardMarkup]:
+async def chronicle(
+    session: AsyncSession, char: Character, lang: str, page: str = "0"
+) -> tuple[str, InlineKeyboardMarkup]:
     """The journal's chronicle: the facts the engine recorded, newest first. No AI: every line is an event."""
     number = int(page) if str(page).lstrip("-").isdigit() else 0
     facts, more, first_day = await chronicle_log.page(session, char, number)
@@ -209,8 +255,9 @@ async def chronicle(session: AsyncSession, char: Character, lang: str,
     if not facts:
         lines.append(f"<i>{t(lang, 'book.empty')}</i>")
     rows = []
-    nav = ([btn("◀", cb("jrc", str(number - 1)))] if number else []) + \
-          ([btn("▶", cb("jrc", str(number + 1)))] if more else [])
+    nav = ([btn("◀", cb("jrc", str(number - 1)))] if number else []) + (
+        [btn("▶", cb("jrc", str(number + 1)))] if more else []
+    )
     if nav:
         rows.append(nav)
     return "\n".join(lines)[:MAX_MESSAGE], markup(rows + journal_tabs("jrc", lang))
@@ -225,8 +272,11 @@ async def mission(session: AsyncSession, char: Character, key: str, lang: str) -
     quest, prog = entry
     stage, state = quests.stage_of(quest, prog)
     if state == "locked":
-        lines = [f"🔒 <b>{t(lang, 'journal.locked_name')}</b>", "",
-                 f"<i>{escape(quest.stages[stage].journal.get(lang))}</i>"]
+        lines = [
+            f"🔒 <b>{t(lang, 'journal.locked_name')}</b>",
+            "",
+            f"<i>{escape(quest.stages[stage].journal.get(lang))}</i>",
+        ]
         if quest.after:
             lines += ["", t(lang, "journal.unlocks_after", quest=escape(c.quests[quest.after].name.get(lang)))]
         return "\n".join(lines), back
@@ -250,7 +300,7 @@ def _rewards_line(effects: list[dict], lang: str) -> str:
     c = get_content()
     parts = []
     for eff in effects:
-        (kind, arg), = eff.items()
+        ((kind, arg),) = eff.items()
         if kind == "xp":
             parts.append(f"✨ {arg} XP")
         elif kind == "gold":

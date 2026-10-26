@@ -24,6 +24,7 @@ def _build(char: Character) -> dict:
 def entity_key(char: Character) -> str | None:
     """Which servant or beast the hero's abilities bring along, if any."""
     from oathforge.services import characters  # a late import: characters needs this module to mend on rest
+
     for a in characters.abilities_of(char).values():
         if a.kind == "passive" and a.entity:
             return a.entity
@@ -80,10 +81,20 @@ def template(key: str, char: Character) -> EntityTemplate:
     d = get_content().entities[key]
     bonus = char.level // 3
     return EntityTemplate(
-        key=key, name=d.name.model_dump(), kind=d.kind, role=d.role, icon=d.icon,
-        hp=d.hp + d.hp_per_level * char.level, to_hit=d.to_hit + proficiency_bonus(char.level),
-        damage=scale_dice(d.damage, bonus) if d.damage else None, damage_type=d.damage_type or "force",
-        ranged=d.ranged, status=d.status, status_turns=d.status_turns, period=d.period, duration=d.duration,
+        key=key,
+        name=d.name.model_dump(),
+        kind=d.kind,
+        role=d.role,
+        icon=d.icon,
+        hp=d.hp + d.hp_per_level * char.level,
+        to_hit=d.to_hit + proficiency_bonus(char.level),
+        damage=scale_dice(d.damage, bonus) if d.damage else None,
+        damage_type=d.damage_type or "force",
+        ranged=d.ranged,
+        status=d.status,
+        status_turns=d.status_turns,
+        period=d.period,
+        duration=d.duration,
     )
 
 

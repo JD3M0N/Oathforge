@@ -34,8 +34,9 @@ async def get_char(s, char_id) -> Character:
 
 
 async def activity(s, char_id) -> WorldActivity:
-    return await s.scalar(select(WorldActivity).where(WorldActivity.character_id == char_id)
-                          .order_by(WorldActivity.id.desc()))
+    return await s.scalar(
+        select(WorldActivity).where(WorldActivity.character_id == char_id).order_by(WorldActivity.id.desc())
+    )
 
 
 async def fight_to_the_end(s, char, seed=0) -> Outcome:
@@ -228,6 +229,7 @@ async def test_skinning_needs_a_knife(monkeypatch):
 
 # ---------------------------------------------------------------- chronicles
 
+
 async def _done_activity(cid) -> int:
     now = time.time()
     async with session_scope() as s:
@@ -270,8 +272,17 @@ async def test_every_outcome_has_a_readable_generic_chronicle():
     async with session_scope() as s:
         act = await s.get(WorldActivity, act_id)
         char = await get_char(s, cid)
-        for outcome in ("gather", "stay_ok", "stay_won", "stay_fled", "stay_lost",
-                        "track_tracks", "track_won", "track_fled", "track_lost"):
+        for outcome in (
+            "gather",
+            "stay_ok",
+            "stay_won",
+            "stay_fled",
+            "stay_lost",
+            "track_tracks",
+            "track_won",
+            "track_fled",
+            "track_lost",
+        ):
             act.result = {**act.result, "outcome": outcome, "monster": "boar"}
             for lang in ("es", "en"):
                 text = chronicles.generic(act, char, lang)
@@ -312,20 +323,29 @@ async def test_saved_fallback_survives_catalog_change_without_repaying(llm, monk
     assert not first.ai
     async with session_scope() as session:
         char = await get_char(session, cid)
-        before = (char.gold, char.xp, char.hp,
-                  sorted((item.item_key, item.qty) for item in await inventory.items_of(session, char)))
+        before = (
+            char.gold,
+            char.xp,
+            char.hp,
+            sorted((item.item_key, item.qty) for item in await inventory.items_of(session, char)),
+        )
     monkeypatch.setattr(fallbacks, "pick", lambda *args, **kwargs: pytest.fail("must keep stored chronicle"))
     count = len(llm.prompts)
     second = await chronicles.tell(llm, activity_id, "es")
     assert second.text == first.text and len(llm.prompts) == count
     async with session_scope() as session:
         char = await get_char(session, cid)
-        after = (char.gold, char.xp, char.hp,
-                 sorted((item.item_key, item.qty) for item in await inventory.items_of(session, char)))
+        after = (
+            char.gold,
+            char.xp,
+            char.hp,
+            sorted((item.item_key, item.qty) for item in await inventory.items_of(session, char)),
+        )
         assert before == after
 
 
 # ---------------------------------------------------------------- mission objectives for every activity
+
 
 @pytest.fixture
 def errands(monkeypatch):
@@ -333,18 +353,29 @@ def errands(monkeypatch):
     from oathforge.content import get_content
     from oathforge.content.schemas import Quest
 
-    quest = Quest.model_validate({
-        "order": 99, "giver": "bram", "name": {"es": "Recados", "en": "Errands"},
-        "summary": {"es": "-", "en": "-"}, "start_stage": "active", "objective_stage": "active",
-        "complete_stage": "done", "rewards": [{"xp": 10}],
-        "objectives": [{"kind": "gather", "target": "iron_ore", "count": 50},
-                       {"kind": "skin", "target": "boar_hide", "count": 50},
-                       {"kind": "craft", "target": "healing_potion"},
-                       {"kind": "heal", "target": "any"},
-                       {"kind": "rest", "target": "broken_crown_tavern"}],
-        "stages": {"active": {"journal": {"es": "-", "en": "-"}},
-                   "done": {"state": "completed", "journal": {"es": "Hecho.", "en": "Done."}}},
-    })
+    quest = Quest.model_validate(
+        {
+            "order": 99,
+            "giver": "bram",
+            "name": {"es": "Recados", "en": "Errands"},
+            "summary": {"es": "-", "en": "-"},
+            "start_stage": "active",
+            "objective_stage": "active",
+            "complete_stage": "done",
+            "rewards": [{"xp": 10}],
+            "objectives": [
+                {"kind": "gather", "target": "iron_ore", "count": 50},
+                {"kind": "skin", "target": "boar_hide", "count": 50},
+                {"kind": "craft", "target": "healing_potion"},
+                {"kind": "heal", "target": "any"},
+                {"kind": "rest", "target": "broken_crown_tavern"},
+            ],
+            "stages": {
+                "active": {"journal": {"es": "-", "en": "-"}},
+                "done": {"state": "completed", "journal": {"es": "Hecho.", "en": "Done."}},
+            },
+        }
+    )
     monkeypatch.setitem(get_content().quests, "errands", quest)
     return quest
 
@@ -366,8 +397,12 @@ async def test_an_activity_is_paid_by_the_rules_it_started_under():
         assert rules["rank"] == 5
         assert {"iron_ore", "coal", "copper_ore", "rough_gem"} <= {r["item"] for r in rules["resources"]}
         content = get_content()  # the mine is rewritten while the character is down there
-        thin = SimpleNamespace(skill="mining", tool="pickaxe", stay_ambush=0.0,
-                               resources=[SimpleNamespace(item="coal", weight=1, min_rank=0)])
+        thin = SimpleNamespace(
+            skill="mining",
+            tool="pickaxe",
+            stay_ambush=0.0,
+            resources=[SimpleNamespace(item="coal", weight=1, min_rank=0)],
+        )
         old = content.locations["ironvein_mine"].gathering
         object.__setattr__(content.locations["ironvein_mine"], "gathering", [thin])
         try:
@@ -434,6 +469,7 @@ async def test_completing_item_objectives_caps_the_count(errands):
 async def _activate(s, char, qkey):
     from oathforge.content import get_content
     from oathforge.services import quests
+
     quest = get_content().quests[qkey]
     p = (await quests.ensure_progress(s, char))[qkey]
     p.stage, p.state, p.counters = quest.objective_stage, "active", {}
@@ -463,7 +499,6 @@ async def test_fishing_levels_the_fishing_hobby():
         assert characters.mastery_xp(char, "fishing") == gathering.GATHER_XP
 
 
-
 async def test_skinning_waits_for_skin_and_is_lost_when_leaving(monkeypatch):
     monkeypatch.setattr(exploration, "is_night", lambda now=None: False)  # boars
     cid = await new_character(location="tusk_meadow", tools=("skinning_knife",))
@@ -473,7 +508,9 @@ async def test_skinning_waits_for_skin_and_is_lost_when_leaving(monkeypatch):
         char.hp = char.max_hp = 300
         await combat_service.start_encounter(s, char, ["boar"], random.Random(0))
         out = await fight_to_the_end(s, char)
-        assert "activity.can_skin" in [e.key for e in out.events] and "activity.skinned" not in [e.key for e in out.events]
+        assert "activity.can_skin" in [e.key for e in out.events] and "activity.skinned" not in [
+            e.key for e in out.events
+        ]
         assert await inventory.count(s, char, "boar_hide") == 0
         out = await activities.start(s, char, "skin", "skinning", now)
         act = await activity(s, cid)
@@ -492,6 +529,7 @@ async def test_skinning_waits_for_skin_and_is_lost_when_leaving(monkeypatch):
 
 
 # ---------------------------------------------------------------- rest
+
 
 async def test_long_rest_takes_its_time_and_pays_when_it_ends():
     cid = await new_character(location="broken_crown_tavern", tools=())
@@ -518,7 +556,9 @@ async def test_a_cancelled_rest_gives_nothing_back():
         gold = char.gold
         assert (await activities.cancel(s, char, now + 600)).ok
         assert char.hp == 1 and char.gold == gold and "injured" in char.conditions and char.state == "idle"
-        assert (await activities.claim(s, char, now + timings.REST_SECONDS)).error == "activity.err.none"  # no double claim
+        assert (
+            await activities.claim(s, char, now + timings.REST_SECONDS)
+        ).error == "activity.err.none"  # no double claim
 
 
 async def test_a_short_rest_is_partial_limited_and_a_long_rest_gives_the_uses_back():
@@ -543,13 +583,15 @@ async def test_a_short_rest_is_partial_limited_and_a_long_rest_gives_the_uses_ba
 async def test_the_tool_in_use_cannot_be_sold_until_the_job_ends():
     from oathforge.content import get_content
     from oathforge.database.models import ItemInstance
+
     shop = next(k for k, n in get_content().npcs.items() if n.shop and n.shop.buys)
     cid = await new_character()
     now = time.time()
     async with session_scope() as s:
         char = await get_char(s, cid)
-        pick = await s.scalar(select(ItemInstance).where(ItemInstance.owner_character_id == char.id,
-                                                         ItemInstance.item_key == "pickaxe"))
+        pick = await s.scalar(
+            select(ItemInstance).where(ItemInstance.owner_character_id == char.id, ItemInstance.item_key == "pickaxe")
+        )
         assert (await activities.start(s, char, "gather", "mining", now)).ok
         assert (await inventory.sell(s, char, shop, pick.id, 0)).error == "shop.err.tool_in_use"
         assert await inventory.count(s, char, "pickaxe") == 1
@@ -594,6 +636,7 @@ async def test_a_short_rest_is_refused_when_it_would_give_nothing():
 
 async def test_a_hunt_victory_counts_for_hunt_missions_day_or_night(monkeypatch):
     from oathforge.services import quests
+
     for night in (False, True):
         monkeypatch.setattr(exploration, "is_night", lambda now=None, night=night: night)
         cid = await new_character(tg_id=10 + night, location="ironvein_mine", tools=())
@@ -607,6 +650,7 @@ async def test_a_hunt_victory_counts_for_hunt_missions_day_or_night(monkeypatch)
 
 
 # ---------------------------------------------------------------- 📜 objective routes
+
 
 async def test_objective_respects_the_hour(monkeypatch):
     """Bats show up in the meadow only at night: by day the 📜 never sends you there for them."""
@@ -623,15 +667,36 @@ async def test_objective_covers_missions_with_choices(monkeypatch):
     """A mission without counted objectives: its actions and its boss still give the 📜 a place."""
     from oathforge.content import get_content
     from oathforge.content.schemas import Quest
+
     monkeypatch.setattr(exploration, "is_night", lambda now=None: False)
     text = {"es": "-", "en": "-"}
-    quest = Quest.model_validate({
-        "order": 99, "name": text, "summary": text, "start_stage": "first",
-        "stages": {"first": {"journal": text}, "second": {"journal": text}, "fight": {"journal": text},
-                   "done": {"state": "completed", "journal": text}},
-        "actions": {"go": {"label": text, "text": text, "location": "whispering_woods", "stages": ["first"], "to_stage": "second"},
-                    "talk": {"label": text, "text": text, "npc": "holt", "stages": ["second"], "to_stage": "fight"}},
-        "triggers": [{"event": "defeat", "target": "test_warden", "stages": ["fight"], "to_stage": "done", "text": text}]})
+    quest = Quest.model_validate(
+        {
+            "order": 99,
+            "name": text,
+            "summary": text,
+            "start_stage": "first",
+            "stages": {
+                "first": {"journal": text},
+                "second": {"journal": text},
+                "fight": {"journal": text},
+                "done": {"state": "completed", "journal": text},
+            },
+            "actions": {
+                "go": {
+                    "label": text,
+                    "text": text,
+                    "location": "whispering_woods",
+                    "stages": ["first"],
+                    "to_stage": "second",
+                },
+                "talk": {"label": text, "text": text, "npc": "holt", "stages": ["second"], "to_stage": "fight"},
+            },
+            "triggers": [
+                {"event": "defeat", "target": "test_warden", "stages": ["fight"], "to_stage": "done", "text": text}
+            ],
+        }
+    )
     char = Character(level=3, flags={"ruins_unlocked": True}, location="crownreach_plaza")
     assert exploration._stage_spots(char, quest, "first") == {"whispering_woods"}
     assert exploration._stage_spots(char, quest, "second") >= {"crownreach_plaza"}  # Holt
@@ -642,6 +707,7 @@ async def test_objective_covers_missions_with_choices(monkeypatch):
 
 # ---------------------------------------------------------------- mana potion
 
+
 async def test_mana_potion_restores_a_spent_spell_of_a_class_that_has_uses():
     """No shipped class counts uses per rest any more (every one has a bar), but content may still define one,
     so the old path stays covered with a made-up class: a cleric whose spells have uses and no bar."""
@@ -649,8 +715,10 @@ async def test_mana_potion_restores_a_spent_spell_of_a_class_that_has_uses():
 
     content = get_content()
     old = content.classes["cleric"]
-    abilities = {k: a.model_copy(update={"cost": 0, "cooldown": 0, "uses": 2 if a.kind in ("heal", "turn") else None})
-                 for k, a in old.abilities.items()}
+    abilities = {
+        k: a.model_copy(update={"cost": 0, "cooldown": 0, "uses": 2 if a.kind in ("heal", "turn") else None})
+        for k, a in old.abilities.items()
+    }
     content.classes["old_school"] = old.model_copy(update={"resource": None, "abilities": abilities})
     try:
         cid = await new_character(cls="old_school", tools=("mana_potion",))
@@ -658,8 +726,9 @@ async def test_mana_potion_restores_a_spent_spell_of_a_class_that_has_uses():
             char = await get_char(s, cid)
             char.level, char.resources = 3, {"healing_word": 0, "turn_undead": 0}
             assert set(inventory.spell_choices(char, content.items["mana_potion"])) == {"healing_word", "turn_undead"}
-            out = await inventory.use_item_outside_combat(s, char, "mana_potion", random.Random(0),
-                                                         ability="turn_undead")
+            out = await inventory.use_item_outside_combat(
+                s, char, "mana_potion", random.Random(0), ability="turn_undead"
+            )
             assert out.ok and char.resources == {"healing_word": 0, "turn_undead": 1}
     finally:
         content.classes.pop("old_school", None)
@@ -670,6 +739,7 @@ async def test_the_bar_of_a_class_that_has_one_has_no_spell_to_choose():
     async with session_scope() as s:
         char = await get_char(s, cid)
         from oathforge.content import get_content
+
         assert inventory.spell_choices(char, get_content().items["mana_potion"]) == []
 
 

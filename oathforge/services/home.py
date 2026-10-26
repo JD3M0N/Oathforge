@@ -81,12 +81,18 @@ async def deposit(session: AsyncSession, char: Character, key: str, qty: int = 1
             if stack is not None:
                 stack.qty += take
             else:
-                stack = ItemInstance(owner_character_id=char.id, item_key=key, qty=take,
-                                     container=inventory.CHEST, history=[])
+                stack = ItemInstance(
+                    owner_character_id=char.id, item_key=key, qty=take, container=inventory.CHEST, history=[]
+                )
                 session.add(stack)
     await session.flush()
-    out = Outcome().add("home.deposited", item=c.items[key].labelled(), qty=qty,
-                        used=len(await stored(session, char)), capacity=capacity(char))
+    out = Outcome().add(
+        "home.deposited",
+        item=c.items[key].labelled(),
+        qty=qty,
+        used=len(await stored(session, char)),
+        capacity=capacity(char),
+    )
     return out.extend(await quests.on_event(session, char, "stash", key, qty))
 
 
@@ -97,8 +103,9 @@ async def withdraw(session: AsyncSession, char: Character, key: str, qty: int = 
     c = get_content()
     if key not in c.items:
         return Outcome.refused("inv.err.not_found")
-    rows = [i for i in await inventory.items_of(session, char, lock=True, container=inventory.CHEST)
-            if i.item_key == key]
+    rows = [
+        i for i in await inventory.items_of(session, char, lock=True, container=inventory.CHEST) if i.item_key == key
+    ]
     if sum(i.qty for i in rows) < qty:
         return Outcome.refused("home.err.not_stored", item=c.items[key].labelled())
     left = qty
@@ -114,8 +121,13 @@ async def withdraw(session: AsyncSession, char: Character, key: str, qty: int = 
             session.add(ItemInstance(owner_character_id=char.id, item_key=key, qty=take, history=[]))
     await _merge_backpack_stacks(session, char, key)
     await session.flush()
-    out = Outcome().add("home.withdrew", item=c.items[key].labelled(), qty=qty,
-                        used=len(await stored(session, char)), capacity=capacity(char))
+    out = Outcome().add(
+        "home.withdrew",
+        item=c.items[key].labelled(),
+        qty=qty,
+        used=len(await stored(session, char)),
+        capacity=capacity(char),
+    )
     return out.extend(await quests.on_event(session, char, "take", key, qty))
 
 

@@ -24,14 +24,27 @@ def hp_bar(hp: int, max_hp: int, width: int = 8) -> str:
 
 # level-up events leave the bullet list and get a card of their own (level_up_cards)
 LEVEL_KEYS = {"progress.level_up", "progress.new_ability", "progress.path_open", "progress.choice"}
-ABILITY_ICON = {"strike": "⚔️", "spell": "🔮", "turn": "☀️", "buff": "🎶", "surge": "💢", "heal": "💚",
-                "hide": "🥷", "save": "🌀", "curse": "🕯️", "passive": "🌟"}
+ABILITY_ICON = {
+    "strike": "⚔️",
+    "spell": "🔮",
+    "turn": "☀️",
+    "buff": "🎶",
+    "surge": "💢",
+    "heal": "💚",
+    "hide": "🥷",
+    "save": "🌀",
+    "curse": "🕯️",
+    "passive": "🌟",
+}
 
 
 def panel_only(key: str) -> bool:
     """Blow-by-blow combat logs: the combat panel (sent right after) already shows them."""
-    return key.startswith("combat.") and key not in ("combat.start", "combat.defeat_penalty", "combat.defeat_penalty_free") \
+    return (
+        key.startswith("combat.")
+        and key not in ("combat.start", "combat.defeat_penalty", "combat.defeat_penalty_free")
         and not key.startswith("combat.err.")
+    )
 
 
 def outcome_text(outcome: Outcome, lang: str, narration: str | None = None) -> str:
@@ -48,15 +61,22 @@ def outcome_text(outcome: Outcome, lang: str, narration: str | None = None) -> s
 
 def status_line(char: Character, lang: str) -> str:
     night = exploration.is_night()
-    tod = t(lang, "scene.night" if night else "scene.day", clock=exploration.clock(),
-            minutes=exploration.until_switch())
+    tod = t(
+        lang, "scene.night" if night else "scene.day", clock=exploration.clock(), minutes=exploration.until_switch()
+    )
     injured = " · " + t(lang, "sheet.injured") if char.conditions.get("injured") else ""
     return t(lang, "scene.status", time=tod, hp=char.hp, max_hp=char.max_hp, gold=char.gold) + injured
 
 
 SKINNING_TOOL = activities.SKINNING_KNIFE
-MASTERY_ICON = {"mining": "⛏️", "woodcutting": "🪓", "herbalism": "🌿", "skinning": "🔪", "fishing": "🎣",
-                "tracking": "🐾"}
+MASTERY_ICON = {
+    "mining": "⛏️",
+    "woodcutting": "🪓",
+    "herbalism": "🌿",
+    "skinning": "🔪",
+    "fishing": "🎣",
+    "tracking": "🐾",
+}
 
 
 ACTIVITY_ICON = {**MASTERY_ICON, "rest": "🛏️"}
@@ -69,7 +89,7 @@ def discipline_icon(key: str) -> str:
 
 
 def discipline_label(key: str, lang: str) -> str:
-    """"⛏️ Minería" or "⚒️ Herrería": refining belongs to a mastery, crafting to a profession."""
+    """ "⛏️ Minería" or "⚒️ Herrería": refining belongs to a mastery, crafting to a profession."""
     prof = get_content().professions.get(key)
     name = prof.name.get(lang) if prof is not None else t(lang, f"mastery.name.{key}")
     return f"{discipline_icon(key)} {name}"
@@ -129,14 +149,28 @@ def _gear_line(inst, lang: str) -> str:
     return f"{SLOT_ICONS.get(inst.equipped_slot, '•')} {escape(item.name.get(lang))}{detail}"
 
 
-JOURNAL_TABS = (("jr", "now"), ("jrm", "missions"), ("jrc", "chronicle"), ("ach", "achievements"),
-                ("jrb", "bestiary"), ("jrr", "rumors"), ("jrs", "stats"))
+JOURNAL_TABS = (
+    ("jr", "now"),
+    ("jrm", "missions"),
+    ("jrc", "chronicle"),
+    ("ach", "achievements"),
+    ("jrb", "bestiary"),
+    ("jrr", "rumors"),
+    ("jrs", "stats"),
+)
 
 
 def journal_tabs(active: str, lang: str) -> list[list]:
     """The same bar on every tab, the current one between dots, as the inventory does."""
-    return grid([btn(("• " if verb == active else "") + t(lang, f"journal.tab.{key}") + (" •" if verb == active else ""),
-                     cb(verb)) for verb, key in JOURNAL_TABS]) + [[btn(t(lang, "btn.back"), cb("scene"))]]
+    return grid(
+        [
+            btn(
+                ("• " if verb == active else "") + t(lang, f"journal.tab.{key}") + (" •" if verb == active else ""),
+                cb(verb),
+            )
+            for verb, key in JOURNAL_TABS
+        ]
+    ) + [[btn(t(lang, "btn.back"), cb("scene"))]]
 
 
 RULE_NUMBER = re.compile(r"\{(\w+)\}")
@@ -150,28 +184,46 @@ def rule_numbers(lang: str = "es") -> dict:
     skins = [m.skin_seconds for m in c.monsters.values() if m.skin_seconds]
     settings = get_settings()
     return {
-        "dc_trivial": DC_TIERS["trivial"], "dc_easy": DC_TIERS["easy"], "dc_medium": DC_TIERS["medium"],
-        "dc_hard": DC_TIERS["hard"], "dc_very_hard": DC_TIERS["very_hard"],
-        "max_level": len(c.progression.xp), "branch_level": c.progression.specialization_level,
+        "dc_trivial": DC_TIERS["trivial"],
+        "dc_easy": DC_TIERS["easy"],
+        "dc_medium": DC_TIERS["medium"],
+        "dc_hard": DC_TIERS["hard"],
+        "dc_very_hard": DC_TIERS["very_hard"],
+        "max_level": len(c.progression.xp),
+        "branch_level": c.progression.specialization_level,
         "training_levels": ", ".join(str(n) for n in c.progression.training_levels),
-        "points": pointbuy.BUDGET, "flee_dc_base": combat.FLEE_DC_BASE, "flee_dc_step": combat.FLEE_DC_PER_FOE,
-        "defeat_gold_pct": characters.DEFEAT_GOLD_PCT, "rest_gold": min(rest_costs) if rest_costs else 0,
-        "skin_s": min(skins) if skins else 0, "skin_s_max": max(skins) if skins else 0,
+        "points": pointbuy.BUDGET,
+        "flee_dc_base": combat.FLEE_DC_BASE,
+        "flee_dc_step": combat.FLEE_DC_PER_FOE,
+        "defeat_gold_pct": characters.DEFEAT_GOLD_PCT,
+        "rest_gold": min(rest_costs) if rest_costs else 0,
+        "skin_s": min(skins) if skins else 0,
+        "skin_s_max": max(skins) if skins else 0,
         "trip_base": round(exploration.ENCOUNTER_CHANCE_PER_DANGER * 100),
         "trip_step": round(exploration.TRIP_EXTRA_PER_STRETCH * 100),
         "trip_cap": round(exploration.TRIP_CHANCE_CAP * 100),
-        "gather_min": timings.GATHER_SECONDS // 60, "stay_min": timings.STAY_SECONDS // 60,
-        "track_min": timings.TRACK_SECONDS // 60, "rest_min": timings.REST_SECONDS // 60,
-        "short_rest_min": timings.SHORT_REST_SECONDS // 60, "short_rests": timings.SHORT_RESTS_PER_LONG,
-        "short_rest_pct": round(timings.SHORT_REST_HP_PCT * 100), "heal_gold": min((loc.healer.cost for loc in c.locations.values() if loc.healer), default=0),
+        "gather_min": timings.GATHER_SECONDS // 60,
+        "stay_min": timings.STAY_SECONDS // 60,
+        "track_min": timings.TRACK_SECONDS // 60,
+        "rest_min": timings.REST_SECONDS // 60,
+        "short_rest_min": timings.SHORT_REST_SECONDS // 60,
+        "short_rests": timings.SHORT_RESTS_PER_LONG,
+        "short_rest_pct": round(timings.SHORT_REST_HP_PCT * 100),
+        "heal_gold": min((loc.healer.cost for loc in c.locations.values() if loc.healer), default=0),
         "defeat_gold_cap": characters.DEFEAT_GOLD_CAP_PER_LEVEL,
-        "gather_units": "{}–{}".format(*gathering.GATHER_UNITS), "stay_units": "{}–{}".format(*gathering.STAY_UNITS),
+        "gather_units": "{}–{}".format(*gathering.GATHER_UNITS),
+        "stay_units": "{}–{}".format(*gathering.STAY_UNITS),
         "ambush": f"{round(min(ambush) * 100)}–{round(max(ambush) * 100)} %" if ambush else "—",
-        "prey_pct": round(gathering.TRACK_PREY_CHANCE * 100), "bonus_pct": round(gathering.BONUS_PER_RANK * 100),
-        "bonus_cap": round(gathering.BONUS_CAP * 100), "max_rank": gathering.MAX_RANK,
-        "slots": professions.SLOTS, "swap_cost": professions.SWAP_COST,
-        "chest_slots": settings.chest_slots, "chest_upgrade": settings.chest_slots_per_upgrade,
-        "spec_rank": specializations.MIN_RANK, "spec_cost": settings.spec_switch_cost,
+        "prey_pct": round(gathering.TRACK_PREY_CHANCE * 100),
+        "bonus_pct": round(gathering.BONUS_PER_RANK * 100),
+        "bonus_cap": round(gathering.BONUS_CAP * 100),
+        "max_rank": gathering.MAX_RANK,
+        "slots": professions.SLOTS,
+        "swap_cost": professions.SWAP_COST,
+        "chest_slots": settings.chest_slots,
+        "chest_upgrade": settings.chest_slots_per_upgrade,
+        "spec_rank": specializations.MIN_RANK,
+        "spec_cost": settings.spec_switch_cost,
         "craft_batch": settings.craft_batch_max,
     }
 

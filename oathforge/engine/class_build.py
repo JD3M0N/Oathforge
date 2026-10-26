@@ -13,9 +13,7 @@ the maximum (§4.1).
 from dataclasses import dataclass, field
 from typing import Iterable, Mapping
 
-from oathforge.content.schemas import (
-    ClassAbility, ClassSpecialization, GameClass, Modifier, Progression, ResourceDef,
-)
+from oathforge.content.schemas import ClassAbility, ClassSpecialization, GameClass, Modifier, Progression, ResourceDef
 
 TRAINING = "training"
 MODIFIER = "modifier"
@@ -52,6 +50,7 @@ class Build:
 
 
 # ------------------------------------------------------------------ levels
+
 
 def level_for_xp(xp: int, prog: Progression) -> int:
     """The level the hero's experience alone would give them."""
@@ -92,14 +91,17 @@ def blocked_by(xp: int, milestones: Iterable[str], prog: Progression) -> str | N
 
 # --------------------------------------------------------------- resources
 
+
 def resource_max(res: ResourceDef, level: int) -> int:
     return res.base + res.per_level * level
 
 
 # ----------------------------------------------------------------- choices
 
-def pending_choices(level: int, taken: Mapping[str, str], prog: Progression,
-                    specialized: bool = True) -> tuple[Choice, ...]:
+
+def pending_choices(
+    level: int, taken: Mapping[str, str], prog: Progression, specialized: bool = True
+) -> tuple[Choice, ...]:
     """Choices the hero has reached and not made yet. They queue up: skipping several levels at
     once never loses the training of level 5 (§4.4). Modifiers need a branch first."""
     choices = [Choice(TRAINING, lvl) for lvl in prog.training_levels if lvl <= level]
@@ -109,6 +111,7 @@ def pending_choices(level: int, taken: Mapping[str, str], prog: Progression,
 
 
 # ------------------------------------------------------------------- build
+
 
 def training_bonuses(taken: Mapping[str, str], prog: Progression) -> dict[str, int]:
     """The summed numbers of every training package the hero has taken. Unknown ids add nothing."""
@@ -157,9 +160,17 @@ def _at_level(ability: ClassAbility, level: int) -> ClassAbility:
     return ability.model_copy(update={"damage": ability.damage_tiers[max(reached)]}) if reached else ability
 
 
-def build_for(class_key: str, cls: GameClass, level: int, prog: Progression, *,
-              specialization: str | None = None, branch: ClassSpecialization | None = None,
-              taken: Mapping[str, str] | None = None, resource: ResourceDef | None = None) -> Build:
+def build_for(
+    class_key: str,
+    cls: GameClass,
+    level: int,
+    prog: Progression,
+    *,
+    specialization: str | None = None,
+    branch: ClassSpecialization | None = None,
+    taken: Mapping[str, str] | None = None,
+    resource: ResourceDef | None = None,
+) -> Build:
     """The hero's effective catalogue: class, branch, modifiers and trainings, all in one place.
 
     ``branch`` must belong to ``class_key``; a branch that is not ready, or a level below the one where

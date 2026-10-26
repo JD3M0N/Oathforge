@@ -6,8 +6,16 @@ import json
 import pytest
 from sqlalchemy import func, select
 
-from oathforge.database.models import (ActionLog, AiUsage, Character, ItemInstance, MediaFile, QuestProgress, User,
-                                       WorldFact)
+from oathforge.database.models import (
+    ActionLog,
+    AiUsage,
+    Character,
+    ItemInstance,
+    MediaFile,
+    QuestProgress,
+    User,
+    WorldFact,
+)
 from oathforge.database.session import session_scope
 from oathforge.services import characters, inventory, launch, quests
 
@@ -53,7 +61,9 @@ async def test_the_reset_wipes_the_game_and_keeps_accounts_quota_and_audit():
         assert report.applied and report.orphans == []
         after = report.after
         assert after["characters"] == after["item_instances"] == after["quest_progress"] == after["world_facts"] == 0
-        assert after["users"] == 2 and after["ai_usage"] == 2 and after["media_files"] == 1 and after["action_logs"] == 2
+        assert (
+            after["users"] == 2 and after["ai_usage"] == 2 and after["media_files"] == 1 and after["action_logs"] == 2
+        )
         users = (await s.scalars(select(User).order_by(User.telegram_id))).all()
         assert [u.language for u in users] == ["en", "en"]
         assert users[0].settings == {"manual_rolls": True} and users[1].settings == {"manual_rolls": False}

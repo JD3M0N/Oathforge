@@ -38,6 +38,7 @@ async def get_char(s, char_id) -> Character:
 
 # ------------------------------------------------------- the hybrid level
 
+
 async def test_all_the_xp_in_the_world_does_not_open_the_tenth_level():
     cid = await new_character()
     async with session_scope() as s:
@@ -104,6 +105,7 @@ async def test_the_gate_survives_a_reload():
 
 
 # ------------------------------------------------------ handing a mission in
+
 
 async def ready_tusk(s, char, rng) -> None:
     """Take the character to the point where Old Tusk is down and Bram is owed the news."""

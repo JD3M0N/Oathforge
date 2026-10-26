@@ -5,8 +5,18 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 
-NEGATIVE_STATUSES = {"bleeding", "burning", "poisoned", "frightened", "stunned", "vulnerable", "asleep", "restrained", "hexed",
-                     "marked"}
+NEGATIVE_STATUSES = {
+    "bleeding",
+    "burning",
+    "poisoned",
+    "frightened",
+    "stunned",
+    "vulnerable",
+    "asleep",
+    "restrained",
+    "hexed",
+    "marked",
+}
 # A status refreshes, it never stacks: applying it again keeps the longer of the two durations, and the
 # duration goes down once per turn of whoever carries it (_tick_statuses).
 HARD_CONTROL = ("stunned", "asleep", "restrained", "frightened")
@@ -241,6 +251,7 @@ class Action(BaseModel):
 
 
 # ---------------------------------------------------------------- queries
+
 
 def melee_targets(state: EncounterState, attacker: Combatant) -> list[Combatant]:
     foes = state.enemies_of(attacker)

@@ -4,7 +4,13 @@ from telegram import Update
 
 from oathforge.bot import render
 from oathforge.bot.handlers.common import (
-    answer, current_view, edit_or_send, load, rng, send_activity_result, send_outcome,
+    answer,
+    current_view,
+    edit_or_send,
+    load,
+    rng,
+    send_activity_result,
+    send_outcome,
 )
 from oathforge.content import get_content
 from oathforge.database.session import session_scope
@@ -58,8 +64,17 @@ async def _combat(update: Update, context, arg: str, n: str) -> None:
                 await edit_or_send(update, text, kb)
                 return
 
-        if await audit.claim(session, f"{user.telegram_id}:{n}", user_id=user.id, character_id=char.id,
-                             verb="combat", payload={"arg": arg}) is None:
+        if (
+            await audit.claim(
+                session,
+                f"{user.telegram_id}:{n}",
+                user_id=user.id,
+                character_id=char.id,
+                verb="combat",
+                payload={"arg": arg},
+            )
+            is None
+        ):
             text, kb = render.combat_panel(char, enc.state, lang, version=enc.version)
             await edit_or_send(update, text, kb)
             return
@@ -83,8 +98,12 @@ async def _combat(update: Update, context, arg: str, n: str) -> None:
         text, kb = render.combat_panel(char, enc.state, lang, version=enc.version)
         finished = enc.status != "active"
         # rewards / quest updates appear after the panel; per-hit logs already live in the panel
-        summary = Outcome(events=[e for e in out.events if not e.key.startswith("combat.")
-                                  or e.key.startswith("combat.defeat_penalty")], activity_id=out.activity_id)
+        summary = Outcome(
+            events=[
+                e for e in out.events if not e.key.startswith("combat.") or e.key.startswith("combat.defeat_penalty")
+            ],
+            activity_id=out.activity_id,
+        )
         error = out.error
         telegram_id = user.telegram_id
 
@@ -116,6 +135,10 @@ def _needs_target(state, me, kind: str, key: str, defs) -> bool:
         return obj is not None and obj.targets == "one" and len(state.enemies_of(me)) > 1
     if kind == "itm":
         item = get_content().items.get(key)
-        return (item is not None and item.combat is not None and item.combat.kind in ("spell", "save")
-                and len(state.enemies_of(me)) > 1)
+        return (
+            item is not None
+            and item.combat is not None
+            and item.combat.kind in ("spell", "save")
+            and len(state.enemies_of(me)) > 1
+        )
     return False

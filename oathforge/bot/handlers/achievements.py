@@ -1,4 +1,5 @@
 """Private achievement interaction and post-commit notification delivery."""
+
 import logging
 from html import escape
 from sqlalchemy import select
@@ -29,8 +30,9 @@ async def handle(update, context, arg="-", mutation=False, nonce="-"):
                     error, arg = "achievements.invalid", "-"
                 else:
                     operation, key = parts[:2]
-                    result = await achievements.preference(session, char, operation, key, nonce,
-                                                           parts[2] if len(parts) == 3 else None)
+                    result = await achievements.preference(
+                        session, char, operation, key, nonce, parts[2] if len(parts) == 3 else None
+                    )
                     arg = f"d:{key}" if key != "-" else "-"
                     if result.error == "achievements.full":
                         arg = f"replace:{operation}:{key}"
@@ -61,8 +63,12 @@ async def deliver(bot, telegram_id, chat_id):
     text = t(lang, "achievements.announcement", count=len(names)) + "\n" + " · ".join(names)
     delivered = False
     try:
-        await bot.send_message(chat_id=chat_id, text=text, parse_mode=ParseMode.HTML,
-                               reply_markup=markup([[btn(t(lang, "achievements.open"), cb("ach", "l:earned:0"))]]))
+        await bot.send_message(
+            chat_id=chat_id,
+            text=text,
+            parse_mode=ParseMode.HTML,
+            reply_markup=markup([[btn(t(lang, "achievements.open"), cb("ach", "l:earned:0"))]]),
+        )
         delivered = True
     except Exception:
         log.warning("Achievement notification remains pending for character %s", char_id, exc_info=True)
@@ -73,6 +79,9 @@ async def deliver(bot, telegram_id, chat_id):
 
 async def deliver_update(update, context):
     """Registered in main.py after every other handler: any private update may announce pending feats."""
-    if (update.effective_chat is not None and getattr(update.effective_chat, "type", None) == "private"
-            and update.effective_user is not None):
+    if (
+        update.effective_chat is not None
+        and getattr(update.effective_chat, "type", None) == "private"
+        and update.effective_user is not None
+    ):
         await deliver(context.bot, update.effective_user.id, update.effective_chat.id)

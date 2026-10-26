@@ -1,4 +1,5 @@
 """Fallback coverage, fact routing and graceful degradation without game effects."""
+
 import copy
 import random
 from types import SimpleNamespace
@@ -38,8 +39,20 @@ def test_every_variant_renders_in_both_languages():
                         assert text.startswith("🎲")
 
 
-@pytest.mark.parametrize("damage", ["missing_case", "missing_npc", "duplicate", "blank", "unknown_field",
-                                    "broken_field", "different_fields", "unknown_category", "unknown_key"])
+@pytest.mark.parametrize(
+    "damage",
+    [
+        "missing_case",
+        "missing_npc",
+        "duplicate",
+        "blank",
+        "unknown_field",
+        "broken_field",
+        "different_fields",
+        "unknown_category",
+        "unknown_key",
+    ],
+)
 def test_invalid_fallback_catalog_rejected(damage):
     content = copy.deepcopy(get_content())
     variants = content.fallbacks["narration"]["default"]
@@ -65,24 +78,27 @@ def test_invalid_fallback_catalog_rejected(damage):
         validate_references(content)
 
 
-@pytest.mark.parametrize("intent,events,in_combat,expected", [
-    ("attack", [("combat.end.victory", {})], True, "victory"),
-    ("attack", [("combat.end.defeat", {})], True, "defeat"),
-    ("flee", [("combat.end.fled", {})], True, "fled"),
-    ("flee", [("combat.flee", {"success": False})], True, "combat"),
-    ("attack", [("combat.attack", {})], True, "combat"),
-    ("narrate_only", [("freetext.no_effect", {})], True, "no_effect"),
-    ("ooc_question", [("freetext.ooc", {})], False, "no_effect"),
-    ("move", [("combat.start", {})], False, "combat"),
-    ("move", [("travel.arrive", {})], False, "travel"),
-    ("rest", [("activity.started.rest", {})], False, "rest"),
-    ("use_item", [("text", {})], False, "use_item"),
-    ("quest_action", [("text", {})], False, "quest"),
-    ("quest_action", [("check.result", {"result": "❌"})], False, "failure"),
-    ("skill_check", [("check.result", {"result": "✅"})], False, "success"),
-    ("steal", [("steal.success", {}), ("steal.suspected", {})], False, "steal_success"),
-    ("steal", [("check.result", {"result": "❌"}), ("steal.caught", {})], False, "steal_failure"),
-])
+@pytest.mark.parametrize(
+    "intent,events,in_combat,expected",
+    [
+        ("attack", [("combat.end.victory", {})], True, "victory"),
+        ("attack", [("combat.end.defeat", {})], True, "defeat"),
+        ("flee", [("combat.end.fled", {})], True, "fled"),
+        ("flee", [("combat.flee", {"success": False})], True, "combat"),
+        ("attack", [("combat.attack", {})], True, "combat"),
+        ("narrate_only", [("freetext.no_effect", {})], True, "no_effect"),
+        ("ooc_question", [("freetext.ooc", {})], False, "no_effect"),
+        ("move", [("combat.start", {})], False, "combat"),
+        ("move", [("travel.arrive", {})], False, "travel"),
+        ("rest", [("activity.started.rest", {})], False, "rest"),
+        ("use_item", [("text", {})], False, "use_item"),
+        ("quest_action", [("text", {})], False, "quest"),
+        ("quest_action", [("check.result", {"result": "❌"})], False, "failure"),
+        ("skill_check", [("check.result", {"result": "✅"})], False, "success"),
+        ("steal", [("steal.success", {}), ("steal.suspected", {})], False, "steal_success"),
+        ("steal", [("check.result", {"result": "❌"}), ("steal.caught", {})], False, "steal_failure"),
+    ],
+)
 def test_narration_matches_facts(intent, events, in_combat, expected):
     out = Outcome()
     for key, params in events:
@@ -100,21 +116,25 @@ def test_context_and_default_fallbacks():
     specific = fallbacks.pick("chronicles", "gather", "es", seed=4, context="mining", **values)
     assert specific == get_content().chronicles["gather.mining"][4].es.format(**values)
     assert fallbacks.pick("chronicles", "gather", "es", seed=4, context="unknown", **values) == (
-        fallbacks.pick("chronicles", "gather", "es", seed=4, **values))
+        fallbacks.pick("chronicles", "gather", "es", seed=4, **values)
+    )
     assert fallbacks.pick("dialogue", "unknown", "en", seed=3, npc="Someone", name="Aldric") == (
-        fallbacks.pick("dialogue", "default", "en", seed=3, npc="Someone", name="Aldric"))
+        fallbacks.pick("dialogue", "default", "en", seed=3, npc="Someone", name="Aldric")
+    )
 
 
 def test_unseeded_selection_uses_random_choice(monkeypatch):
     monkeypatch.setattr(fallbacks.random, "choice", lambda seq: seq[-1])
     assert fallbacks.pick("narration", "rest", "en", place="Town") == (
-        get_content().fallbacks["narration"]["rest"][-1].en.format(place="Town"))
+        get_content().fallbacks["narration"]["rest"][-1].en.format(place="Town")
+    )
 
 
 @pytest.mark.parametrize("lang", ["es", "en"])
 def test_empty_loot_and_unknown_monster_have_readable_values(lang):
-    activity = SimpleNamespace(location=get_content().start_location, skill="mining", seed=0,
-                               result={"outcome": "stay_fled", "items": {}})
+    activity = SimpleNamespace(
+        location=get_content().start_location, skill="mining", seed=0, result={"outcome": "stay_fled", "items": {}}
+    )
     text = chronicles.generic(activity, SimpleNamespace(name="Aldric"), lang)
     assert ("ningún material" if lang == "es" else "no materials") in text
     assert ("la criatura" if lang == "es" else "the creature") in text
@@ -144,8 +164,12 @@ async def test_unavailable_ai_changes_no_player_or_npc_state(mode, llm, monkeypa
     for lang in ("es", "en"):
         notice = render(out, lang)[0]
         assert notice.count("🎲") == 1
-        assert notice in [v.get(lang) for v in get_content().fallbacks["freetext"][
-            "budget_exhausted" if mode in ("personal", "global") else "unavailable"]]
+        assert notice in [
+            v.get(lang)
+            for v in get_content().fallbacks["freetext"][
+                "budget_exhausted" if mode in ("personal", "global") else "unavailable"
+            ]
+        ]
     if mode in ("personal", "global"):
         assert not llm.prompts
         assert result.outcome.error == "ai.budget_exhausted"

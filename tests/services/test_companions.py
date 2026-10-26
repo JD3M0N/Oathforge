@@ -30,7 +30,11 @@ def ability(level, kind, **kw) -> ClassAbility:
 
 def branch(class_key: str, abilities: dict, key: str = "t") -> ClassSpecialization:
     return ClassSpecialization(
-        class_key=class_key, name=text("Test"), description=text("x"), roles=["dmg"], ready=True,
+        class_key=class_key,
+        name=text("Test"),
+        description=text("x"),
+        roles=["dmg"],
+        ready=True,
         abilities={"t_passive": ability(10, "passive", action="none"), "t_final": ability(20, "strike"), **abilities},
         modifiers={f"m{n}{i}": Modifier(level=n, name=text(), description=text()) for n in (13, 17) for i in (1, 2)},
     )
@@ -78,8 +82,9 @@ async def begin(s, char, foes=("old_tusk",), seed=3):
 
 
 async def do(s, char, enc, kind="ability", ability_key=None, target=None, seed=1) -> Outcome:
-    return await combat_service.act(s, char, enc, Action(kind=kind, ability=ability_key, target=target),
-                                    random.Random(seed))
+    return await combat_service.act(
+        s, char, enc, Action(kind=kind, ability=ability_key, target=target), random.Random(seed)
+    )
 
 
 def state_of(enc) -> EncounterState:
@@ -87,6 +92,7 @@ def state_of(enc) -> EncounterState:
 
 
 # ----------------------------------------------------------- names
+
 
 def test_a_companion_name_is_data_and_has_to_look_like_a_name():
     good = ["Zorak", "Mira-Lu", "D'Arc", "Bola de Nieve"]
@@ -96,6 +102,7 @@ def test_a_companion_name_is_data_and_has_to_look_like_a_name():
 
 
 # ------------------------------------------------------- Demonologist
+
 
 async def test_the_servant_is_the_same_being_with_the_name_the_player_gave_it(lend):
     key = lend("t_pact", branch("warlock", {"t_servant": ability(10, "passive", action="none", entity="pact_servant")}))
@@ -158,6 +165,7 @@ async def test_the_servant_is_not_an_item(lend):
     async with session_scope() as s:
         char = await get_char(s, cid)
         from oathforge.services import inventory
+
         assert not any("servant" in k for k in get_content().items)  # nothing to buy
         assert await inventory.count(s, char, "pact_servant") == 0
 
@@ -197,9 +205,12 @@ async def test_the_summoner_path_from_calling_to_convergence(lend):
 
 # ----------------------------------------------------- Shapeshifter
 
+
 async def test_the_shapeshifter_path_through_the_service(lend):
-    shape = {"t_bear": ability(10, "shift", form="bear", action="bonus"),
-             "t_back": ability(10, "shift", form="none", action="bonus")}
+    shape = {
+        "t_bear": ability(10, "shift", form="bear", action="bonus"),
+        "t_back": ability(10, "shift", form="none", action="bonus"),
+    }
     key = lend("t_shape", branch("druid", shape))
     cid = await hero("druid", key)
     async with session_scope() as s:
@@ -210,7 +221,10 @@ async def test_the_shapeshifter_path_through_the_service(lend):
         me = state_of(enc).combatants["p1"]
         assert me.form == "bear" and me.temp_hp > 0
         bear_reserve = me.temp_hp
-        assert bear_reserve <= get_content().forms["bear"].temp_hp + get_content().forms["bear"].temp_hp_per_level * char.level
+        assert (
+            bear_reserve
+            <= get_content().forms["bear"].temp_hp + get_content().forms["bear"].temp_hp_per_level * char.level
+        )
     async with session_scope() as s:  # a reload in the middle keeps the form
         enc = await s.scalar(select(Encounter).where(Encounter.character_id == cid, Encounter.status == "active"))
         assert state_of(enc).combatants["p1"].form == "bear"
@@ -218,13 +232,16 @@ async def test_the_shapeshifter_path_through_the_service(lend):
 
 # ------------------------------------------------------------- what the player sees
 
+
 @pytest.mark.parametrize("lang", ["es", "en"])
 async def test_the_panel_shows_each_helper_the_form_and_the_new_log_lines(lend, lang):
     from oathforge.bot import render
     from oathforge.services.events import render_event
 
-    shape = {"t_bear": ability(10, "shift", form="bear", action="bonus"),
-             "t_blade": ability(10, "summon", entity="astral_blade")}
+    shape = {
+        "t_bear": ability(10, "shift", form="bear", action="bonus"),
+        "t_blade": ability(10, "summon", entity="astral_blade"),
+    }
     key = lend("t_view", branch("druid", shape))
     cid = await hero("druid", key)
     async with session_scope() as s:

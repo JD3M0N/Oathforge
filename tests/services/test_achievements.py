@@ -1,4 +1,5 @@
 """Achievement transaction, ownership and delivery regression tests."""
+
 import asyncio
 import random
 from types import SimpleNamespace
@@ -8,8 +9,15 @@ import pytest
 from sqlalchemy import select, func
 from oathforge.content import get_content
 from oathforge.database.session import session_scope
-from oathforge.database.models import (Character, QuestProgress, AchievementUnlock, AchievementProgress,
-    HeroFact, AchievementNotification, AchievementPreferences)
+from oathforge.database.models import (
+    Character,
+    QuestProgress,
+    AchievementUnlock,
+    AchievementProgress,
+    HeroFact,
+    AchievementNotification,
+    AchievementPreferences,
+)
 from oathforge.services import achievements as a, characters, combat_service, quests, exploration, activities, inventory
 from oathforge.services.events import Outcome
 from oathforge.engine.combat import EncounterState
@@ -17,17 +25,21 @@ from oathforge.bot import achievement_views
 
 pytestmark = pytest.mark.usefixtures("database")
 
+
 async def hero(tg_id=1):
     async with session_scope() as s:
         user = await characters.get_or_create_user(s, tg_id, "es")
         char = await characters.create_character(s, user, "Aldric", "human", "soldier", "paladin")
         return char.id
 
+
 async def load(s, cid):
     return await s.scalar(select(Character).where(Character.id == cid).with_for_update())
 
+
 def event(cid, identity, kind, **data):
     return a.GameplayEvent(identity, cid, kind, data, identity)
+
 
 async def test_thousand_replays_and_rollback():
     cid = await hero()
@@ -48,23 +60,36 @@ async def test_thousand_replays_and_rollback():
         char = await load(s, cid)
         assert (await a.snapshot(s, char))["count"] == 1
         assert await a.apply_events(s, char, [e]) == []
-        assert await s.scalar(select(HeroFact.id).where(
-            HeroFact.event_id == "combat:rollback")) is None
+        assert await s.scalar(select(HeroFact.id).where(HeroFact.event_id == "combat:rollback")) is None
+
 
 async def test_sequence_distinct_and_batching():
     cid = await hero()
     async with session_scope() as s:
         char = await load(s, cid)
-        await a.apply_events(s, char, [event(cid, "v1", "combat", status="victory", eligible=True, enemies=2, hp=2, consumed=0)])
-        assert not await s.scalar(select(AchievementUnlock.id).where(AchievementUnlock.achievement_key == "back_on_feet"))
-        await a.apply_events(s, char, [event(cid, "d1", "combat", status="defeat"),
-                                      event(cid, "v2", "combat", status="victory", eligible=True, enemies=2, hp=1, consumed=1)])
+        await a.apply_events(
+            s, char, [event(cid, "v1", "combat", status="victory", eligible=True, enemies=2, hp=2, consumed=0)]
+        )
+        assert not await s.scalar(
+            select(AchievementUnlock.id).where(AchievementUnlock.achievement_key == "back_on_feet")
+        )
+        await a.apply_events(
+            s,
+            char,
+            [
+                event(cid, "d1", "combat", status="defeat"),
+                event(cid, "v2", "combat", status="victory", eligible=True, enemies=2, hp=1, consumed=1),
+            ],
+        )
         assert await s.scalar(select(AchievementUnlock.id).where(AchievementUnlock.achievement_key == "back_on_feet"))
         for i in range(5):
             await a.apply_events(s, char, [event(cid, f"recipe:{i}", "craft", recipe="iron_ingot")])
-        row = await s.scalar(select(AchievementProgress).where(AchievementProgress.achievement_key == "craft_repertoire"))
+        row = await s.scalar(
+            select(AchievementProgress).where(AchievementProgress.achievement_key == "craft_repertoire")
+        )
         assert row.state["values"] == ["iron_ingot"]
         assert await s.scalar(select(func.count()).select_from(AchievementNotification)) == 1
+
 
 async def test_backfill_proves_only_saved_facts():
     cid = await hero()
@@ -86,6 +111,7 @@ async def test_backfill_proves_only_saved_facts():
         await a.snapshot(s, char)
         assert await s.scalar(select(func.count()).select_from(HeroFact)) == before
 
+
 async def test_preferences_limits_replacement_ownership_and_language():
     cid, other = await hero(), await hero(2)
     async with session_scope() as s:
@@ -104,21 +130,33 @@ async def test_preferences_limits_replacement_ownership_and_language():
         assert "Cobrador cobrado" in achievement_views.identity(snap, "es")[0]
         assert "Collector Collected" in achievement_views.identity(snap, "en")[0]
         other_char = await load(s, other)
-        assert (await a.preference(s, other_char, "title", "collector_collected", "theft")).error == "achievements.invalid"
+        assert (
+            await a.preference(s, other_char, "title", "collector_collected", "theft")
+        ).error == "achievements.invalid"
         with pytest.raises(ValueError):
             await a.apply_events(s, other_char, [event(cid, "wrong", "seen", monster="boar")])
         await a.apply_events(s, char, [event(cid, "rank", "mastery", skill="mining", rank=3)])
         assert "experienced" not in (await s.get(AchievementPreferences, cid)).tracked
         assert (await a.preference(s, char, "title", "-", "remove-title")).ok
         assert (await s.get(AchievementPreferences, cid)).title is None
-        await a.apply_events(s, char, [event(cid, "seen", "seen", monster="boar"),
-            event(cid, "crafted", "craft", recipe="iron_ingot"),
-            event(cid, "won", "combat", status="victory")])
+        await a.apply_events(
+            s,
+            char,
+            [
+                event(cid, "seen", "seen", monster="boar"),
+                event(cid, "crafted", "craft", recipe="iron_ingot"),
+                event(cid, "won", "combat", status="victory"),
+            ],
+        )
         for key in ("field_notes", "handmade"):
             assert (await a.preference(s, char, "feature", key, f"feature-{key}")).ok
         assert (await a.preference(s, char, "feature", "first_victory", "feature-full")).error == "achievements.full"
         assert (await a.preference(s, char, "feature", "first_victory", "feature-replace", "handmade")).ok
-        assert (await s.get(AchievementPreferences, cid)).featured == ["collector_collected", "field_notes", "first_victory"]
+        assert (await s.get(AchievementPreferences, cid)).featured == [
+            "collector_collected",
+            "field_notes",
+            "first_victory",
+        ]
 
 
 async def test_notification_failure_restart_and_lease():
@@ -135,6 +173,7 @@ async def test_notification_failure_restart_and_lease():
         assert (await s.scalar(select(AchievementNotification))).status == "sending"
         await a.finish_notification(s, cid, renewed[0], False)
     from oathforge.bot.handlers.achievements import deliver
+
     bot = SimpleNamespace(send_message=AsyncMock(side_effect=RuntimeError("offline")))
     await deliver(bot, 1, 1)
     async with session_scope() as s:
@@ -147,14 +186,21 @@ async def test_notification_failure_restart_and_lease():
         assert (await s.scalar(select(AchievementNotification))).status == "sent"
         assert await s.scalar(select(func.count()).select_from(AchievementUnlock)) == 1
 
+
 async def test_menus_are_bilingual_bounded_and_hide_conditions():
     cid = await hero()
     async with session_scope() as s:
         char = await load(s, cid)
         snap = await a.snapshot(s, char)
         for lang in ("es", "en"):
-            for arg in ("-", "categories", "l:pending:0", "l:pending:999", "l:pending:bad",
-                        *[f'd:{e["key"]}' for e in snap["entries"]]):
+            for arg in (
+                "-",
+                "categories",
+                "l:pending:0",
+                "l:pending:999",
+                "l:pending:bad",
+                *[f"d:{e['key']}" for e in snap["entries"]],
+            ):
                 text, keyboard = achievement_views.view(snap, lang, arg)
                 assert len(text) < 4096
                 assert all(len(b.callback_data.encode()) <= 64 for row in keyboard.inline_keyboard for b in row)
@@ -163,6 +209,7 @@ async def test_menus_are_bilingual_bounded_and_hide_conditions():
         await a.preference(s, char, "reveal", "quiet_deal", "reveal")
         text, _ = achievement_views.view(await a.snapshot(s, char), "en", "d:quiet_deal")
         assert "Accept the smuggler" in text
+
 
 async def test_meta_the_tutorial_and_the_collector():
     cid = await hero()
@@ -174,28 +221,36 @@ async def test_meta_the_tutorial_and_the_collector():
             events.append(event(cid, f"visit:{place}", "visit", location=place))
         for quest in cat["long_road"].condition.values:
             events.append(event(cid, f"quest:{quest}", "quest", quest=quest))
-        events += [event(cid, "boss", "kill", monster="ash_collector"),
-                   event(cid, "collector_complete", "quest", quest="camp_collector")]
+        events += [
+            event(cid, "boss", "kill", monster="ash_collector"),
+            event(cid, "collector_complete", "quest", quest="camp_collector"),
+        ]
         granted = await a.apply_events(s, char, events)
         assert "warden_crownreach" in granted
         assert not {"facts_first", "tall_tale", "quiet_deal"} & set(granted)
+
 
 async def test_concurrent_events_and_notification_claim(is_postgres):
     if not is_postgres:
         pytest.skip("requires PostgreSQL row locks")
     cid = await hero()
+
     async def grant():
         async with session_scope() as s:
             char = await load(s, cid)
             return await a.apply_events(s, char, [event(cid, "same", "craft", recipe="iron_ingot")])
+
     results = await asyncio.gather(grant(), grant())
     assert sum(len(r) for r in results) == 1
+
     async def claim():
         async with session_scope() as s:
             return await a.claim_notification(s, cid)
+
     assert sum(r is not None for r in await asyncio.gather(claim(), claim())) == 1
 
-@pytest.mark.parametrize("hp,consumed,old", [(0,0,False),(1,0,False),(2,1,False),(1,0,True)])
+
+@pytest.mark.parametrize("hp,consumed,old", [(0, 0, False), (1, 0, False), (2, 1, False), (1, 0, True)])
 async def test_encounter_metrics_before_rewards_and_legacy(hp, consumed, old):
     cid = await hero()
     async with session_scope() as s:
@@ -219,6 +274,7 @@ async def test_encounter_metrics_before_rewards_and_legacy(hp, consumed, old):
         assert ("last_breath" in keys) == (hp == 1 and not old)
         assert ("no_reserves" in keys) == (consumed == 0 and not old)
 
+
 async def test_gather_tool_cancel_and_restart():
     cid = await hero()
     async with session_scope() as s:
@@ -227,7 +283,9 @@ async def test_gather_tool_cancel_and_restart():
         await inventory.add_item(s, char, "pickaxe")
         await activities.start(s, char, "gather", "mining", now=0)
         await activities.cancel(s, char, now=1)
-        assert not await s.scalar(select(AchievementUnlock.id).where(AchievementUnlock.achievement_key == "trade_tools"))
+        assert not await s.scalar(
+            select(AchievementUnlock.id).where(AchievementUnlock.achievement_key == "trade_tools")
+        )
         await activities.start(s, char, "gather", "mining", now=2)
     async with session_scope() as s:
         char = await load(s, cid)
@@ -235,10 +293,15 @@ async def test_gather_tool_cancel_and_restart():
         assert await s.scalar(select(AchievementUnlock.id).where(AchievementUnlock.achievement_key == "trade_tools"))
         assert not (await activities.claim(s, char, now=1001)).ok
 
-@pytest.mark.parametrize("quest,action,npc,expected", [
-    ("camp_rumor", "check", "bram", "facts_first"), ("camp_rumor", "believe", "bram", "tall_tale"),
-    ("reg_water", "side_with_smuggler", "kellan", "quiet_deal"),
-])
+
+@pytest.mark.parametrize(
+    "quest,action,npc,expected",
+    [
+        ("camp_rumor", "check", "bram", "facts_first"),
+        ("camp_rumor", "believe", "bram", "tall_tale"),
+        ("reg_water", "side_with_smuggler", "kellan", "quiet_deal"),
+    ],
+)
 async def test_written_decisions_are_actual_transitions(quest, action, npc, expected):
     cid = await hero()
     async with session_scope() as s:
@@ -252,8 +315,10 @@ async def test_written_decisions_are_actual_transitions(quest, action, npc, expe
         assert sum(k in out.achievement_unlocks for k in ("facts_first", "tall_tale", "quiet_deal")) == 1
         assert not (await quests.perform(s, char, f"{quest}.{action}", [npc], random.Random(1))).ok
 
+
 async def test_missed_discovery_and_known_city_do_not_count(monkeypatch):
     from oathforge.services import world_map
+
     cid = await hero()
     async with session_scope() as s:
         char = await load(s, cid)
@@ -261,12 +326,20 @@ async def test_missed_discovery_and_known_city_do_not_count(monkeypatch):
         await a.backfill_character(s, char)
         assert not await s.scalar(select(AchievementUnlock.id).where(AchievementUnlock.achievement_key == "know_city"))
         char.location = "whispering_woods"
-        monkeypatch.setattr(exploration, "check", lambda rng, skill, bonus, dc: SimpleNamespace(skill=skill, kept=1, bonus=0, dc=dc, total=1, success=False))
+        monkeypatch.setattr(
+            exploration,
+            "check",
+            lambda rng, skill, bonus, dc: SimpleNamespace(skill=skill, kept=1, bonus=0, dc=dc, total=1, success=False),
+        )
         await exploration.investigate(s, char, random.Random(0))
-        assert not await s.scalar(select(AchievementProgress.id).where(AchievementProgress.achievement_key == "no_stone"))
+        assert not await s.scalar(
+            select(AchievementProgress.id).where(AchievementProgress.achievement_key == "no_stone")
+        )
+
 
 async def test_consumable_rejection_and_success_update_metrics():
     from oathforge.engine.combat import Action
+
     cid = await hero()
     async with session_scope() as s:
         char = await load(s, cid)
@@ -279,8 +352,10 @@ async def test_consumable_rejection_and_success_update_metrics():
         assert out.ok
         assert enc.achievement_metrics["consumed"] == 1
 
+
 async def test_delete_character_removes_achievements():
     from oathforge.services.admin import delete_player
+
     cid = await hero()
     async with session_scope() as s:
         char = await load(s, cid)
@@ -288,12 +363,19 @@ async def test_delete_character_removes_achievements():
         await a.preference(s, char, "feature", "handmade", "feature")
         counts = await delete_player(s, char.user_id)
         assert counts["achievement_unlocks"] == 1
-        for model in (AchievementProgress, AchievementUnlock, HeroFact,
-                      AchievementNotification, AchievementPreferences):
+        for model in (
+            AchievementProgress,
+            AchievementUnlock,
+            HeroFact,
+            AchievementNotification,
+            AchievementPreferences,
+        ):
             assert await s.scalar(select(func.count()).select_from(model)) == 0
+
 
 async def test_facts_come_from_the_action_without_audit_rows():
     from oathforge.database.models import ActionLog
+
     cid = await hero()
     async with session_scope() as s:
         char = await load(s, cid)
@@ -302,7 +384,7 @@ async def test_facts_come_from_the_action_without_audit_rows():
         await a.emit(s, char, out, "craft", {"recipe": next(iter(get_content().recipes))})
         assert "handmade" in out.achievement_unlocks
         assert not await s.scalar(select(func.count(ActionLog.id)))
-        char.masteries = {**(char.masteries or {}), "mining": 10 ** 6}
+        char.masteries = {**(char.masteries or {}), "mining": 10**6}
         await a.mastery(s, char, out, "mining")
         assert "experienced" in out.achievement_unlocks
 
@@ -310,6 +392,7 @@ async def test_facts_come_from_the_action_without_audit_rows():
 async def test_chronicle_keeps_notable_facts_once_and_pages_them():
     """The book is written from facts: a first time is an entry, a repeat only a number."""
     from oathforge.services import chronicle_log
+
     cid = await hero(tg_id=81)
     async with session_scope() as s:
         char = await load(s, cid)
@@ -375,7 +458,7 @@ async def test_lost_activity_does_not_count_as_finished():
 
 
 async def test_only_the_title_can_be_taken_off():
-    """"-" means «no title»; it is not an achievement you can feature or track."""
+    """ "-" means «no title»; it is not an achievement you can feature or track."""
     cid = await hero(tg_id=84)
     async with session_scope() as s:
         char = await load(s, cid)
@@ -388,6 +471,7 @@ async def test_only_the_title_can_be_taken_off():
 
 async def test_the_equipped_title_reaches_the_narrator():
     from oathforge.services.actions import describe_character
+
     cid = await hero(tg_id=85)
     async with session_scope() as s:
         char = await load(s, cid)

@@ -52,7 +52,7 @@ def test_unknown_milestones_and_the_top_of_the_table():
     p = prog()
     assert cb.cap_for(["made_up"], p) == p.base_cap
     assert cb.xp_to_next(p.xp[-1], p) is None
-    assert cb.eligible_level(10 ** 9, [ASH, STAG], p) == len(p.xp)
+    assert cb.eligible_level(10**9, [ASH, STAG], p) == len(p.xp)
 
 
 def test_choices_queue_up_and_are_not_lost():
@@ -61,8 +61,9 @@ def test_choices_queue_up_and_are_not_lost():
     assert [c.key for c in cb.pending_choices(13, {}, p)] == ["training:5", "training:12", "modifier:13"]
     # jumping from 4 to 13 in one go still owes the training of level 5
     assert [c.key for c in cb.pending_choices(13, {"modifier:13": "a"}, p)] == ["training:5", "training:12"]
-    assert cb.pending_choices(20, {}, p, specialized=False) == \
-        tuple(cb.Choice(cb.TRAINING, lvl) for lvl in p.training_levels)  # no branch, no modifiers
+    assert cb.pending_choices(20, {}, p, specialized=False) == tuple(
+        cb.Choice(cb.TRAINING, lvl) for lvl in p.training_levels
+    )  # no branch, no modifiers
 
 
 def test_a_resource_grows_with_the_level():
@@ -85,18 +86,29 @@ def test_the_build_only_shows_what_the_level_reached():
 def test_a_branch_of_another_class_is_refused():
     c, p = get_content(), prog()
     with pytest.raises(ValueError):
-        cb.build_for("paladin", c.classes["paladin"], 10, p,
-                     specialization="pyromancer", branch=c.class_specializations["pyromancer"])
+        cb.build_for(
+            "paladin",
+            c.classes["paladin"],
+            10,
+            p,
+            specialization="pyromancer",
+            branch=c.class_specializations["pyromancer"],
+        )
 
 
 def test_a_branch_that_is_not_ready_or_comes_too_early_does_not_apply():
     c, p = get_content(), prog()
     unfinished = c.class_specializations["avenger"].model_copy(update={"ready": False})  # whatever the content says
-    assert cb.build_for("paladin", c.classes["paladin"], 10, p,
-                        specialization="avenger", branch=unfinished).specialization is None  # not ready yet
+    assert (
+        cb.build_for("paladin", c.classes["paladin"], 10, p, specialization="avenger", branch=unfinished).specialization
+        is None
+    )  # not ready yet
     ready = unfinished.model_copy(update={"ready": True})
-    assert cb.build_for("paladin", c.classes["paladin"], 10, p,
-                        specialization="avenger", branch=ready).specialization == "avenger"
-    early = cb.build_for("paladin", c.classes["paladin"], p.specialization_level - 1, p,
-                         specialization="avenger", branch=ready)
+    assert (
+        cb.build_for("paladin", c.classes["paladin"], 10, p, specialization="avenger", branch=ready).specialization
+        == "avenger"
+    )
+    early = cb.build_for(
+        "paladin", c.classes["paladin"], p.specialization_level - 1, p, specialization="avenger", branch=ready
+    )
     assert early.specialization is None and not any(ch.kind == cb.MODIFIER for ch in early.pending)

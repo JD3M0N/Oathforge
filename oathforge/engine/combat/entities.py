@@ -3,23 +3,56 @@
 from oathforge.engine.dice import d20, roll
 from oathforge.engine.combat.resolve import _apply_damage, _apply_status, _resolve_target
 from oathforge.engine.combat.state import (
-    COMMAND_FLOOR, CONVERGENCE_DAMAGE, CONVERGENCE_TO_HIT, CombatError, Combatant, EncounterState, Entity,
-    EntityTemplate, LogEntry, MAX_BY_KIND, _check_end, valid_targets,
+    COMMAND_FLOOR,
+    CONVERGENCE_DAMAGE,
+    CONVERGENCE_TO_HIT,
+    CombatError,
+    Combatant,
+    EncounterState,
+    Entity,
+    EntityTemplate,
+    LogEntry,
+    MAX_BY_KIND,
+    _check_end,
+    valid_targets,
 )
 
 
 # ---------------------------------------------------------------- entities and forms
 
-def spawn(state: EncounterState, owner: Combatant, tpl: EntityTemplate, *, hp: int | None = None,
-          persistent: bool = False, acts_now: bool = False) -> Entity:
+
+def spawn(
+    state: EncounterState,
+    owner: Combatant,
+    tpl: EntityTemplate,
+    *,
+    hp: int | None = None,
+    persistent: bool = False,
+    acts_now: bool = False,
+) -> Entity:
     """Put a helper in the fight. A summoned one waits for the next turn (nothing acts the turn it arrives);
     a permanent one, which is there from the start, may act at the end of the hero's first turn."""
     eid = f"e{len(state.entities) + 1}"
     ent = Entity(
-        id=eid, owner=owner.id, key=tpl.key, name=tpl.name, kind=tpl.kind, role=tpl.role, icon=tpl.icon,
-        hp=tpl.hp if hp is None else hp, max_hp=tpl.hp, to_hit=tpl.to_hit, damage=tpl.damage,
-        damage_type=tpl.damage_type, ranged=tpl.ranged, status=tpl.status, status_turns=tpl.status_turns,
-        period=tpl.period, ttl=tpl.duration, born=state.round, persistent=persistent,
+        id=eid,
+        owner=owner.id,
+        key=tpl.key,
+        name=tpl.name,
+        kind=tpl.kind,
+        role=tpl.role,
+        icon=tpl.icon,
+        hp=tpl.hp if hp is None else hp,
+        max_hp=tpl.hp,
+        to_hit=tpl.to_hit,
+        damage=tpl.damage,
+        damage_type=tpl.damage_type,
+        ranged=tpl.ranged,
+        status=tpl.status,
+        status_turns=tpl.status_turns,
+        period=tpl.period,
+        ttl=tpl.duration,
+        born=state.round,
+        persistent=persistent,
         acted_round=0 if acts_now else state.round,
     )
     state.entities[eid] = ent
@@ -37,13 +70,15 @@ def _summon(state, actor, ability) -> list[LogEntry]:
     if len(here) >= MAX_BY_KIND[tpl.kind]:
         raise CombatError("combat.err.summon_limit")
     ent = spawn(state, actor, tpl)
-    return [LogEntry(key="combat.summoned", params={"actor": actor.id, "entity": ent.name, "icon": ent.icon,
-                                                    "hp": ent.hp})]
+    return [
+        LogEntry(key="combat.summoned", params={"actor": actor.id, "entity": ent.name, "icon": ent.icon, "hp": ent.hp})
+    ]
 
 
 def _command(state, actor, ability, target_id, rng) -> list[LogEntry]:
-    ent = next((e for e in state.entities.values()
-                if e.owner == actor.id and e.key == ability.entity and e.active), None)
+    ent = next(
+        (e for e in state.entities.values() if e.owner == actor.id and e.key == ability.entity and e.active), None
+    )
     if ent is None:
         raise CombatError("combat.err.no_entity")
     if ent.role == "guard":
@@ -63,8 +98,9 @@ def _converge(state, actor, ability) -> list[LogEntry]:
         raise CombatError("combat.err.no_entity")
     for e in mine:  # it strengthens what is there; it adds no entity and gives no extra turn
         e.boost = max(e.boost, ability.boost_turns)
-    return [LogEntry(key="combat.converge", params={"actor": actor.id, "count": len(mine),
-                                                    "turns": ability.boost_turns})]
+    return [
+        LogEntry(key="combat.converge", params={"actor": actor.id, "count": len(mine), "turns": ability.boost_turns})
+    ]
 
 
 def _entity_target(state, ent: Entity, owner: Combatant) -> Combatant | None:
@@ -89,8 +125,14 @@ def _entity_act(state, ent: Entity, owner: Combatant, rng, bonus: str | None = N
         r = d20(rng)
         total = r.kept + ent.to_hit + (CONVERGENCE_TO_HIT if boosted else 0)
         crit = r.kept == 20
-        params = {"entity": ent.name, "icon": ent.icon, "target": target.id, "roll": r.kept, "total": total,
-                  "ac": target.ac}
+        params = {
+            "entity": ent.name,
+            "icon": ent.icon,
+            "target": target.id,
+            "roll": r.kept,
+            "total": total,
+            "ac": target.ac,
+        }
         if r.nat1 or not (crit or total >= target.ac):
             return [LogEntry(key="combat.entity_miss", params=params)]
         dmg = max(COMMAND_FLOOR, roll(ent.damage, rng, crit).total + extra)
@@ -98,16 +140,19 @@ def _entity_act(state, ent: Entity, owner: Combatant, rng, bonus: str | None = N
         return logs + _apply_damage(state, target, dmg, ent.damage_type)
     if ent.role == "area":  # a whole row, never missing; each takes its own roll
         victims = [f for f in state.enemies_of(owner) if f.row == target.row]
-        logs.append(LogEntry(key="combat.entity_area", params={"entity": ent.name, "icon": ent.icon,
-                                                               "count": len(victims)}))
+        logs.append(
+            LogEntry(key="combat.entity_area", params={"entity": ent.name, "icon": ent.icon, "count": len(victims)})
+        )
         for v in victims:
             if v.active:
-                logs += _apply_damage(state, v, max(COMMAND_FLOOR, roll(ent.damage, rng).total + extra),
-                                      ent.damage_type)
+                logs += _apply_damage(
+                    state, v, max(COMMAND_FLOOR, roll(ent.damage, rng).total + extra), ent.damage_type
+                )
         return logs
     # disrupt: an affliction, not damage. On a boss it is capped like any other control (_apply_status)
-    logs.append(LogEntry(key="combat.entity_afflicts", params={"entity": ent.name, "icon": ent.icon,
-                                                               "target": target.id}))
+    logs.append(
+        LogEntry(key="combat.entity_afflicts", params={"entity": ent.name, "icon": ent.icon, "target": target.id})
+    )
     return logs + _apply_status(target, ent.status, ent.status_turns + (1 if boosted else 0))
 
 
@@ -163,5 +208,8 @@ def _shift(state, actor: Combatant, ability) -> list[LogEntry]:
         actor.forms_taken.append(shape.key)
         gained = max(0, shape.temp_hp - actor.temp_hp)  # a reserve, not a stack on top of another
         actor.temp_hp += gained
-    return [LogEntry(key="combat.shifted", params={"actor": actor.id, "form": shape.name, "icon": shape.icon,
-                                                   "temp": gained})]
+    return [
+        LogEntry(
+            key="combat.shifted", params={"actor": actor.id, "form": shape.name, "icon": shape.icon, "temp": gained}
+        )
+    ]

@@ -1,4 +1,5 @@
 """Pure condition and content validation boundaries."""
+
 from dataclasses import replace
 import pytest
 from pydantic import ValidationError
@@ -6,6 +7,7 @@ from oathforge.content import get_content
 from oathforge.content.achievement_schemas import AchievementCondition as C, Achievement, validate_catalog
 from oathforge.content.loader import _read_file
 from oathforge.engine.achievements import advance, progress
+
 
 def test_counter_threshold_any_and_sequence_boundaries():
     counter = C(kind="counter", event="craft", target=2)
@@ -26,6 +28,7 @@ def test_counter_threshold_any_and_sequence_boundaries():
     assert progress(condition, state) == (1, 2)
     assert progress(condition, advance(condition, state, "combat", {"status": "victory", "eligible": True})) == (2, 2)
 
+
 def test_distinct_ignores_duplicates_and_unrelated_values():
     condition = C(kind="distinct", event="visit", field="location", values=["a", "b"], target=2)
     state = {}
@@ -34,17 +37,22 @@ def test_distinct_ignores_duplicates_and_unrelated_values():
     assert progress(condition, state) == (1, 2)
     assert progress(condition, advance(condition, state, "visit", {"location": "b"})) == (2, 2)
 
-@pytest.mark.parametrize("condition", [
-    {"kind": "python", "event": "craft"},
-    {"kind": "event", "event": "narrator_claim"},
-    {"kind": "event", "event": "craft", "match": {"gold": 100}},
-    {"kind": "distinct", "event": "craft", "field": "recipe", "values": ["a"], "target": 2},
-    {"kind": "all", "children": []},
-    {"kind": "threshold", "event": "mastery"},
-])
+
+@pytest.mark.parametrize(
+    "condition",
+    [
+        {"kind": "python", "event": "craft"},
+        {"kind": "event", "event": "narrator_claim"},
+        {"kind": "event", "event": "craft", "match": {"gold": 100}},
+        {"kind": "distinct", "event": "craft", "field": "recipe", "values": ["a"], "target": 2},
+        {"kind": "all", "children": []},
+        {"kind": "threshold", "event": "mastery"},
+    ],
+)
 def test_invalid_conditions_rejected(condition):
     with pytest.raises(ValidationError):
         C.model_validate(condition)
+
 
 def test_catalog_references_cycles_and_bilingual_text(tmp_path):
     content = get_content()
@@ -59,8 +67,9 @@ def test_catalog_references_cycles_and_bilingual_text(tmp_path):
         validate_catalog(replace(content, achievements={**content.achievements, "handmade": bad}))
     raw["condition"] = {"kind": "event", "event": "unlock", "match": {"key": "handmade"}}
     with pytest.raises(ValueError, match="cyclic"):
-        validate_catalog(replace(content, achievements={**content.achievements,
-                                                        "handmade": Achievement.model_validate(raw)}))
+        validate_catalog(
+            replace(content, achievements={**content.achievements, "handmade": Achievement.model_validate(raw)})
+        )
     raw["name"]["es"] = "{missing}"
     with pytest.raises(ValidationError, match="placeholders"):
         Achievement.model_validate(raw)

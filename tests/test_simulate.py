@@ -14,8 +14,7 @@ from oathforge.tools import simulate as sim
 
 def test_every_class_fights_every_monster_to_the_end():
     c = get_content()
-    rows = sim.simulate(list(c.classes), list(c.monsters), [1, 5], n=3, seed=0, lineage="human",
-                        background="soldier")
+    rows = sim.simulate(list(c.classes), list(c.monsters), [1, 5], n=3, seed=0, lineage="human", background="soldier")
     assert len(rows) == 2 * len(c.classes) * len(c.monsters)
     for r in rows:
         assert 0 <= r["win_pct"] <= 100 and 0 <= r["avg_hp_left_pct"] <= 100
@@ -25,8 +24,9 @@ def test_every_class_fights_every_monster_to_the_end():
 
 
 def test_same_seed_same_numbers():
-    run = lambda seed: sim.simulate(["sorcerer"], ["bandit_captain"], [2], n=20, seed=seed, lineage="elf",
-                                    background="criminal")
+    run = lambda seed: sim.simulate(
+        ["sorcerer"], ["bandit_captain"], [2], n=20, seed=seed, lineage="elf", background="criminal"
+    )
     assert run(7) == run(7)
     assert run(7) != run(8)
 

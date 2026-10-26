@@ -76,8 +76,14 @@ class Player:
         return [b.callback_data for row in getattr(kb, "inline_keyboard", ()) for b in row]
 
     def find(self, verb, arg=None):
-        for data in (d for text_, kb in reversed(self.chat.sent) if kb
-                     for row in getattr(kb, "inline_keyboard", ()) for b in row for d in [b.callback_data]):
+        for data in (
+            d
+            for text_, kb in reversed(self.chat.sent)
+            if kb
+            for row in getattr(kb, "inline_keyboard", ())
+            for b in row
+            for d in [b.callback_data]
+        ):
             v, a, _ = parse(data)
             if v == verb and (arg is None or a == arg or a.startswith(arg)):
                 return data

@@ -50,6 +50,7 @@ async def test_level_up():
     async with session_scope() as s:
         char = await get_char(s, cid)
         from oathforge.services.events import Outcome
+
         out = Outcome()
         characters.grant_xp(char, 500, out)
         assert char.level == 3 and char.max_hp > 12

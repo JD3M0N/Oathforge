@@ -28,13 +28,18 @@ BACKPACK = None  # ItemInstance.container: what you carry · "chest": what waits
 CHEST = "chest"
 
 
-async def items_of(session: AsyncSession, char: Character, lock: bool = False,
-                   container: str | None = BACKPACK) -> list[ItemInstance]:
+async def items_of(
+    session: AsyncSession, char: Character, lock: bool = False, container: str | None = BACKPACK
+) -> list[ItemInstance]:
     """What the character has in one container: the backpack by default, or the room's chest."""
-    stmt = (select(ItemInstance)
-            .where(ItemInstance.owner_character_id == char.id, ItemInstance.container.is_(None)
-                   if container is None else ItemInstance.container == container)
-            .order_by(ItemInstance.id))
+    stmt = (
+        select(ItemInstance)
+        .where(
+            ItemInstance.owner_character_id == char.id,
+            ItemInstance.container.is_(None) if container is None else ItemInstance.container == container,
+        )
+        .order_by(ItemInstance.id)
+    )
     if lock:
         stmt = stmt.with_for_update()
     return list(await session.scalars(stmt))
@@ -44,14 +49,20 @@ async def count(session: AsyncSession, char: Character, key: str, container: str
     return sum(i.qty for i in await items_of(session, char, container=container) if i.item_key == key)
 
 
-async def add_item(session: AsyncSession, char: Character, key: str, qty: int = 1,
-                   crafted_by: int | None = None) -> None:
+async def add_item(
+    session: AsyncSession, char: Character, key: str, qty: int = 1, crafted_by: int | None = None
+) -> None:
     item = get_content().items[key]
     if item.stackable:
-        stmt = (select(ItemInstance)
-                .where(ItemInstance.owner_character_id == char.id, ItemInstance.item_key == key,
-                       ItemInstance.container.is_(None))
-                .with_for_update())
+        stmt = (
+            select(ItemInstance)
+            .where(
+                ItemInstance.owner_character_id == char.id,
+                ItemInstance.item_key == key,
+                ItemInstance.container.is_(None),
+            )
+            .with_for_update()
+        )
         existing = await session.scalar(stmt)
         if existing:
             existing.qty += qty
@@ -59,18 +70,22 @@ async def add_item(session: AsyncSession, char: Character, key: str, qty: int = 
         session.add(ItemInstance(owner_character_id=char.id, item_key=key, qty=qty, history=[]))
     else:
         for _ in range(qty):
-            session.add(ItemInstance(owner_character_id=char.id, item_key=key, qty=1, crafted_by=crafted_by,
-                                     history=[]))
+            session.add(
+                ItemInstance(owner_character_id=char.id, item_key=key, qty=1, crafted_by=crafted_by, history=[])
+            )
     await session.flush()
 
 
 async def remove_item(session: AsyncSession, char: Character, key: str, qty: int = 1) -> bool:
     """Remove ``qty`` of ``key``. All-or-nothing; returns False if not enough."""
-    stmt = (select(ItemInstance)
-            .where(ItemInstance.owner_character_id == char.id, ItemInstance.item_key == key,
-                   ItemInstance.container.is_(None))
-            .order_by(ItemInstance.equipped_slot.is_not(None), ItemInstance.id)
-            .with_for_update())
+    stmt = (
+        select(ItemInstance)
+        .where(
+            ItemInstance.owner_character_id == char.id, ItemInstance.item_key == key, ItemInstance.container.is_(None)
+        )
+        .order_by(ItemInstance.equipped_slot.is_not(None), ItemInstance.id)
+        .with_for_update()
+    )
     rows = list(await session.scalars(stmt))
     if sum(r.qty for r in rows) < qty:
         return False
@@ -89,8 +104,9 @@ async def remove_item(session: AsyncSession, char: Character, key: str, qty: int
 async def _own_instance(session: AsyncSession, char: Character, instance_id: int) -> ItemInstance | None:
     return await session.scalar(
         select(ItemInstance)
-        .where(ItemInstance.id == instance_id, ItemInstance.owner_character_id == char.id,
-               ItemInstance.container.is_(None))
+        .where(
+            ItemInstance.id == instance_id, ItemInstance.owner_character_id == char.id, ItemInstance.container.is_(None)
+        )
         .with_for_update()
     )
 
@@ -114,8 +130,12 @@ async def equip(session: AsyncSession, char: Character, instance_id: int) -> Out
             other.equipped_slot = None
     inst.equipped_slot = item.slot
     from oathforge.services import quests  # quests reads the inventory too
-    return Outcome().add("inv.equipped", item=item.name.model_dump()).extend(
-        await quests.on_event(session, char, "equip", inst.item_key))
+
+    return (
+        Outcome()
+        .add("inv.equipped", item=item.name.model_dump())
+        .extend(await quests.on_event(session, char, "equip", inst.item_key))
+    )
 
 
 async def combat_items(session: AsyncSession, char: Character) -> dict[str, int]:
@@ -173,9 +193,13 @@ def restore_pool(char: Character, amount: int, out: Outcome) -> None:
     res = characters.resource_def(char)
     before = characters.pool_of(char)
     characters.set_pool(char, before + amount)
-    out.add("inv.pool_restored", resource=res.name.model_dump(),
-            amount=characters.pool_of(char) - before,
-            left=characters.pool_of(char), max=characters.resource_max(char))
+    out.add(
+        "inv.pool_restored",
+        resource=res.name.model_dump(),
+        amount=characters.pool_of(char) - before,
+        left=characters.pool_of(char),
+        max=characters.resource_max(char),
+    )
 
 
 def restore_use(char: Character, key: str, amount: int, out: Outcome) -> None:
@@ -195,14 +219,23 @@ def _refusal(char: Character, effect, now: float) -> str | None:
         return "inv.err.no_spent_spell" if not spent_abilities(char, spells_only=True) else None
     if (char.cooldowns or {}).get("short_rest", 0) > now:
         return "inv.err.cooldown"
-    if char.hp >= hp_cap(char) and not spent_abilities(char, spells_only=False) and (
-            characters.pool_of(char) >= characters.resource_max(char)):
+    if (
+        char.hp >= hp_cap(char)
+        and not spent_abilities(char, spells_only=False)
+        and (characters.pool_of(char) >= characters.resource_max(char))
+    ):
         return "inv.err.no_need"
     return None
 
 
-async def use_item_outside_combat(session: AsyncSession, char: Character, key: str, rng: random.Random,
-                                  now: float | None = None, ability: str | None = None) -> Outcome:
+async def use_item_outside_combat(
+    session: AsyncSession,
+    char: Character,
+    key: str,
+    rng: random.Random,
+    now: float | None = None,
+    ability: str | None = None,
+) -> Outcome:
     """Use a consumable. ``ability``: which spent spell a mana potion brings back (default: the most spent)."""
     item = get_content().items.get(key)
     effects = effects_of(item) if item else []
@@ -249,6 +282,7 @@ async def use_item_outside_combat(session: AsyncSession, char: Character, key: s
 
 # ---------------------------------------------------------------- shops
 
+
 def buy_price(item_key: str, reputation: int) -> int:
     """Shops charge up to 25% more or less depending on reputation (-100..100)."""
     base = get_content().items[item_key].value
@@ -271,14 +305,21 @@ async def buy(session: AsyncSession, char: Character, npc_key: str, item_key: st
     char.gold -= price
     await add_item(session, char, item_key, 1)
     from oathforge.services import quests  # quests reads the inventory too
-    return Outcome().add("shop.bought", item=get_content().items[item_key].labelled(), price=price,
-                         gold=char.gold).extend(await quests.on_event(session, char, "buy", item_key))
+
+    return (
+        Outcome()
+        .add("shop.bought", item=get_content().items[item_key].labelled(), price=price, gold=char.gold)
+        .extend(await quests.on_event(session, char, "buy", item_key))
+    )
 
 
 async def committed_tool(session: AsyncSession, char: Character) -> str | None:
     """The tool the running activity was started with (activities.start stores it): not for sale until it ends."""
-    act = await session.scalar(select(WorldActivity).where(
-        WorldActivity.character_id == char.id, WorldActivity.status.in_(("running", "awaiting_combat"))))
+    act = await session.scalar(
+        select(WorldActivity).where(
+            WorldActivity.character_id == char.id, WorldActivity.status.in_(("running", "awaiting_combat"))
+        )
+    )
     return (act.result or {}).get("tool") if act else None
 
 
@@ -301,5 +342,9 @@ async def sell(session: AsyncSession, char: Character, npc_key: str, instance_id
         await session.delete(inst)
     char.gold += price
     from oathforge.services import quests  # quests reads the inventory too
-    return Outcome().add("shop.sold", item=item.labelled(), price=price, gold=char.gold).extend(
-        await quests.on_event(session, char, "sell", inst.item_key))
+
+    return (
+        Outcome()
+        .add("shop.sold", item=item.labelled(), price=price, gold=char.gold)
+        .extend(await quests.on_event(session, char, "sell", inst.item_key))
+    )

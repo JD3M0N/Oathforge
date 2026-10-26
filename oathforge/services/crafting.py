@@ -66,9 +66,13 @@ def recipes_here(char: Character, open_quests: set[str] = frozenset()) -> dict[s
     c = get_content()
     stations = set(c.locations[char.location].stations)
     mine = disciplines(char)
-    return {k: r for k, r in c.recipes.items()
-            if station_of(r) in stations and knows(char, k)
-            and (r.quest in open_quests if r.quest is not None else r.profession in mine)}
+    return {
+        k: r
+        for k, r in c.recipes.items()
+        if station_of(r) in stations
+        and knows(char, k)
+        and (r.quest in open_quests if r.quest is not None else r.profession in mine)
+    }
 
 
 async def learn_blueprint(session: AsyncSession, char: Character, item_key: str) -> Outcome:
@@ -102,8 +106,9 @@ async def missing(session: AsyncSession, char: Character, recipe: Recipe, qty: i
     return out
 
 
-async def craft(session: AsyncSession, char: Character, recipe_key: str, rng: random.Random | None = None,
-                qty: int = 1) -> Outcome:
+async def craft(
+    session: AsyncSession, char: Character, recipe_key: str, rng: random.Random | None = None, qty: int = 1
+) -> Outcome:
     """Make ``qty`` batches of a recipe: all of them or none, in this one transaction."""
     if refusal := characters.ensure_free(char):
         return refusal
@@ -126,8 +131,9 @@ async def craft(session: AsyncSession, char: Character, recipe_key: str, rng: ra
         return Outcome.refused("craft.err.not_your_profession", prof=name)
     station = station_of(recipe)
     if station not in c.locations[char.location].stations:
-        return Outcome.refused("craft.err.no_station", station={lang: t(lang, f"station.{station}")
-                                                               for lang in ("es", "en")})
+        return Outcome.refused(
+            "craft.err.no_station", station={lang: t(lang, f"station.{station}") for lang in ("es", "en")}
+        )
     rank = rank_in(char, recipe.profession)
     if rank < recipe.min_rank:
         return Outcome.refused("craft.err.rank", prof=name, rank=recipe.min_rank)

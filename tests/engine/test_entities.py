@@ -11,9 +11,7 @@ import pytest
 
 from oathforge.content.schemas import ClassAbility, Text
 from oathforge.engine import combat as cb
-from oathforge.engine.combat import (
-    Action, AttackProfile, Combatant, CombatError, EncounterState, EntityTemplate, Shape,
-)
+from oathforge.engine.combat import Action, AttackProfile, Combatant, CombatError, EncounterState, EntityTemplate, Shape
 
 CLAW = AttackProfile(key="main", name={"es": "Garra", "en": "Claw"}, to_hit=99, damage="1d1", damage_type="slashing")
 
@@ -27,8 +25,17 @@ def ability(kind: str, **kw) -> ClassAbility:
 
 
 def template(key="blade", kind="summon", role="damage", **kw) -> EntityTemplate:
-    base = dict(key=key, name={"es": key, "en": key}, kind=kind, role=role, hp=10, to_hit=99, damage="1d4",
-                damage_type="force", duration=4)
+    base = dict(
+        key=key,
+        name={"es": key, "en": key},
+        kind=kind,
+        role=role,
+        hp=10,
+        to_hit=99,
+        damage="1d4",
+        damage_type="force",
+        duration=4,
+    )
     base.update(kw)
     return EntityTemplate(**base)
 
@@ -55,42 +62,79 @@ TEMPLATES = {
     "totem": template("totem", kind="totem", role="disrupt", damage=None, status="frightened", duration=None),
 }
 SHAPES = {
-    "bear": Shape(key="bear", name={"es": "Oso", "en": "Bear"}, icon="🐻", ac_bonus=2, temp_hp=8,
-                  attacks=[AttackProfile(key="bear_0", name={"es": "Zarpazo", "en": "Claws"}, to_hit=99,
-                                         damage="1d1", damage_type="slashing")]),
-    "panther": Shape(key="panther", name={"es": "Pantera", "en": "Panther"}, icon="🐆", ac_bonus=0, temp_hp=3,
-                     attacks=[AttackProfile(key="panther_0", name={"es": "Mordisco", "en": "Bite"}, to_hit=99,
-                                            damage="1d1", damage_type="piercing")]),
+    "bear": Shape(
+        key="bear",
+        name={"es": "Oso", "en": "Bear"},
+        icon="🐻",
+        ac_bonus=2,
+        temp_hp=8,
+        attacks=[
+            AttackProfile(
+                key="bear_0", name={"es": "Zarpazo", "en": "Claws"}, to_hit=99, damage="1d1", damage_type="slashing"
+            )
+        ],
+    ),
+    "panther": Shape(
+        key="panther",
+        name={"es": "Pantera", "en": "Panther"},
+        icon="🐆",
+        ac_bonus=0,
+        temp_hp=3,
+        attacks=[
+            AttackProfile(
+                key="panther_0", name={"es": "Mordisco", "en": "Bite"}, to_hit=99, damage="1d1", damage_type="piercing"
+            )
+        ],
+    ),
 }
 
 
 def hero(**kw) -> Combatant:
-    base = dict(id="p1", side="player", ref="1", name={"es": "Aldric", "en": "Aldric"}, hp=30, max_hp=30, ac=14,
-                attacks=[CLAW], abilities={k: None for k in DEFS}, shapes=SHAPES)
+    base = dict(
+        id="p1",
+        side="player",
+        ref="1",
+        name={"es": "Aldric", "en": "Aldric"},
+        hp=30,
+        max_hp=30,
+        ac=14,
+        attacks=[CLAW],
+        abilities={k: None for k in DEFS},
+        shapes=SHAPES,
+    )
     base.update(kw)
     return Combatant(**base)
 
 
 def foe(cid="m1", **kw) -> Combatant:
-    base = dict(id=cid, side="enemy", ref="x", name={"es": "Bandido", "en": "Bandit"}, hp=400, max_hp=400, ac=5,
-                dex_mod=-10, xp=1, attacks=[AttackProfile(key="a", name={"es": "x", "en": "x"}, to_hit=-99,
-                                                          damage="1d1", damage_type="slashing")])
+    base = dict(
+        id=cid,
+        side="enemy",
+        ref="x",
+        name={"es": "Bandido", "en": "Bandit"},
+        hp=400,
+        max_hp=400,
+        ac=5,
+        dex_mod=-10,
+        xp=1,
+        attacks=[AttackProfile(key="a", name={"es": "x", "en": "x"}, to_hit=-99, damage="1d1", damage_type="slashing")],
+    )
     base.update(kw)
     return Combatant(**base)
 
 
 def fight(*enemies, **hero_kw) -> tuple[EncounterState, Combatant]:
     me = hero(**hero_kw)
-    st = EncounterState(location="test", combatants={"p1": me, **{e.id: e for e in enemies}},
-                        entity_defs=dict(TEMPLATES))
+    st = EncounterState(
+        location="test", combatants={"p1": me, **{e.id: e for e in enemies}}, entity_defs=dict(TEMPLATES)
+    )
     st.order = list(st.combatants)
     st.turn_index = 0
     return st, me
 
 
 def act(st, key, target=None, rng=None):
-    return cb.player_act(st, "p1", Action(kind="ability", ability=key, target=target),
-                         rng or random.Random(1), DEFS)
+    return cb.player_act(st, "p1", Action(kind="ability", ability=key, target=target), rng or random.Random(1), DEFS)
 
 
 def end_turn(st, rng=None):
@@ -102,6 +146,7 @@ def strikes(logs) -> list[str]:
 
 
 # ----------------------------------------------------------- summoning
+
 
 def test_a_summoned_helper_waits_for_the_next_turn():
     st, me = fight(foe())
@@ -163,6 +208,7 @@ def test_other_kinds_are_one_each_and_permanent_ones_do_not_expire():
 
 # ------------------------------------------------------------- one action each
 
+
 def test_a_bonus_action_or_a_retry_never_makes_a_helper_act_twice():
     st, me = fight(foe())
     cb.spawn(st, me, TEMPLATES["blade"], acts_now=True)
@@ -181,6 +227,7 @@ def test_consulting_a_menu_or_ending_the_turn_twice_in_a_row_does_not_double_the
 
 
 # --------------------------------------------------------------------- orders
+
 
 def test_an_order_makes_it_act_now_and_not_again_as_the_turn_ends():
     st, me = fight(foe())
@@ -211,6 +258,7 @@ def test_a_guard_takes_no_orders_and_a_missing_helper_cannot_be_ordered():
 
 
 # ----------------------------------------------------------------- convergence
+
 
 def test_convergence_empowers_what_is_there_and_adds_nothing():
     st, me = fight(foe())
@@ -252,6 +300,7 @@ def test_a_boosted_helper_hits_harder_and_the_boost_runs_out():
 
 # --------------------------------------------------------------------- guards
 
+
 def test_a_guard_takes_the_blow_in_the_heros_place():
     st, me = fight(foe())
     guard = cb.spawn(st, me, TEMPLATES["guard"], acts_now=True)
@@ -273,6 +322,7 @@ def test_a_guard_that_breaks_lets_the_rest_through_and_does_not_come_back():
 
 
 # ---------------------------------------------------------- afflicting helpers
+
 
 def test_an_afflicting_helper_cannot_chain_a_boss():
     boss = foe("m1", boss=True)
@@ -296,6 +346,7 @@ def test_the_afflicting_helper_acts_on_its_own_rhythm():
 
 # ----------------------------------------------------------------- area
 
+
 def test_an_area_helper_hits_the_whole_row_without_a_roll():
     a, b, c = foe("m1", row="front"), foe("m2", row="front"), foe("m3", row="back")
     st, me = fight(a, b, c)
@@ -305,6 +356,7 @@ def test_an_area_helper_hits_the_whole_row_without_a_roll():
 
 
 # -------------------------------------------------------- owner and the end
+
 
 def test_helpers_do_not_act_after_their_owner_is_down():
     st, me = fight(foe())
@@ -338,6 +390,7 @@ def test_the_whole_state_survives_being_stored_and_gives_the_same_fight():
 
 
 # ------------------------------------------------------------------- shapes
+
 
 def test_a_form_replaces_the_attacks_and_gives_its_reserve_once():
     st, me = fight(foe())

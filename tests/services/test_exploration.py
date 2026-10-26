@@ -15,6 +15,7 @@ pytestmark = pytest.mark.usefixtures("database")
 
 # ---------------------------------------------------------------- exploration
 
+
 @pytest.mark.usefixtures("ruins")
 async def test_travel_only_along_routes():
     _, cid = await new_character()

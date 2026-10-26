@@ -50,6 +50,7 @@ def _bot() -> str:
 
 # ---------------------------------------------------------------- printing
 
+
 def render(msg, edited: bool = False) -> str:
     head = f"#{msg.id}" + (" (editado)" if edited else "")
     kind = ""
@@ -66,6 +67,7 @@ def render(msg, edited: bool = False) -> str:
 
 
 # ---------------------------------------------------------------- talking to the bot
+
 
 async def _collect(client, bot_entity, act, quiet: float, timeout: float) -> None:
     """Run ``act`` and print every new or edited bot message until it goes quiet."""

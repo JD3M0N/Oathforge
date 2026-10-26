@@ -16,8 +16,11 @@ def sources_of(key: str) -> set[str]:
         out.add("creature")
     if any(n.shop and key in n.shop.items for n in c.npcs.values()):
         out.add("shop")
-    if any(key in (eff.get("give_item") or {}) for q in c.quests.values()
-           for eff in [*q.rewards, *(e for a in q.actions.values() for e in a.effects)]):
+    if any(
+        key in (eff.get("give_item") or {})
+        for q in c.quests.values()
+        for eff in [*q.rewards, *(e for a in q.actions.values() for e in a.effects)]
+    ):
         out.add("quest")
     return out
 
@@ -59,8 +62,7 @@ def test_crafting_never_turns_coins_into_more_coins():
 def test_t1_combat_gear_asks_for_a_level_the_crafter_may_not_have():
     """The deal of T1: a low-level artisan forges it, and nobody wears it before its time."""
     c = get_content()
-    gear = [o for k, r in c.recipes.items() if r.tier for o in r.outputs
-            if c.items[o].slot or c.items[o].heal]
+    gear = [o for k, r in c.recipes.items() if r.tier for o in r.outputs if c.items[o].slot or c.items[o].heal]
     assert gear, "T1 should have something to wear or drink"
     assert all(c.items[o].min_level > 1 for o in gear), [o for o in gear if c.items[o].min_level == 1]
     # and nothing that is used by rank (tools, furniture, materials) carries a level

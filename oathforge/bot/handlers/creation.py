@@ -74,8 +74,10 @@ async def got_gender(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     new["gender"] = key
     c = get_content()
     lines = [t(lang, "create.ask_lineage", name=escape(new["name"])), ""]
-    lines += [f"{lin.icon} <b>{lin.name.get(lang)}</b>: {lin.description.get(lang)} <i>{lin.trait_text.get(lang)}</i>"
-              for lin in c.lineages.values()]
+    lines += [
+        f"{lin.icon} <b>{lin.name.get(lang)}</b>: {lin.description.get(lang)} <i>{lin.trait_text.get(lang)}</i>"
+        for lin in c.lineages.values()
+    ]
     rows = [[btn(f"{lin.icon} {lin.name.get(lang)}", cb("cc", f"lin:{k}"))] for k, lin in c.lineages.items()]
     await edit_or_send(update, "\n".join(lines), markup(rows))
     return LINEAGE
@@ -107,8 +109,11 @@ def background_step(lang: str, everything: bool = False):
         basic = {k: bg for k, bg in listed.items() if bg.basic}
         rows = [[btn(f"{bg.icon} {bg.name.get(lang)}", cb("cc", f"bg:{k}"))] for k, bg in basic.items()]
         rows.append([btn(t(lang, "create.bg_more", n=len(listed)), cb("cc", "bgl:all"))])
-        lines += [f"{bg.icon} <b>{escape(bg.name.get(lang))}</b>: {escape(bg.description.get(lang))}\n"
-                  f"<i>{render.background_line(bg, lang)}</i>\n" for bg in basic.values()]
+        lines += [
+            f"{bg.icon} <b>{escape(bg.name.get(lang))}</b>: {escape(bg.description.get(lang))}\n"
+            f"<i>{render.background_line(bg, lang)}</i>\n"
+            for bg in basic.values()
+        ]
     if any(bg.custom for bg in c.backgrounds.values()):
         rows.append([btn(t(lang, "create.custom_btn"), cb("cc", "bgc"))])
     return "\n".join(lines), markup(rows)
@@ -145,13 +150,18 @@ async def got_background(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 def class_step(lang: str):
     c = get_content()
     lines = [t(lang, "create.ask_class"), ""]
-    lines += [f"{CLASS_ICONS.get(k, '•')} <b>{cl.name.get(lang)}</b> · 🎲 d{cl.hit_die}: {cl.description.get(lang)}"
-              for k, cl in c.classes.items()]
-    rows = [[btn(f"{CLASS_ICONS.get(k, '•')} {cl.name.get(lang)}", cb("cc", f"cls:{k}"))] for k, cl in c.classes.items()]
+    lines += [
+        f"{CLASS_ICONS.get(k, '•')} <b>{cl.name.get(lang)}</b> · 🎲 d{cl.hit_die}: {cl.description.get(lang)}"
+        for k, cl in c.classes.items()
+    ]
+    rows = [
+        [btn(f"{CLASS_ICONS.get(k, '•')} {cl.name.get(lang)}", cb("cc", f"cls:{k}"))] for k, cl in c.classes.items()
+    ]
     return "\n".join(lines), markup(rows)
 
 
 # ---------------------------------------------------------------- a background of your own
+
 
 async def ask_custom(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     q = update.callback_query
@@ -165,8 +175,11 @@ async def ask_custom(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data["new"].pop("custom", None)
     guide = escape(get_content().world_guide.summary.get(lang))
     kb = markup([[btn(t(lang, "create.custom_back"), cb("cc", "bgl:basic"))]])
-    await edit_or_send(update, t(lang, "create.custom_ask", title_max=moderation.TITLE_MAX,
-                                 story_max=moderation.STORY_MAX, world=guide), kb)
+    await edit_or_send(
+        update,
+        t(lang, "create.custom_ask", title_max=moderation.TITLE_MAX, story_max=moderation.STORY_MAX, world=guide),
+        kb,
+    )
     return CUSTOM_TEXT
 
 
@@ -180,8 +193,17 @@ async def got_custom_text(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     back = markup([[btn(t(lang, "create.custom_back"), cb("cc", "bgl:basic"))]])
     parts = moderation.split_background(update.message.text or "")
     if parts is None:
-        await send(update, t(lang, "create.custom_bad", title_max=moderation.TITLE_MAX,
-                             story_min=moderation.STORY_MIN, story_max=moderation.STORY_MAX), back)
+        await send(
+            update,
+            t(
+                lang,
+                "create.custom_bad",
+                title_max=moderation.TITLE_MAX,
+                story_min=moderation.STORY_MIN,
+                story_max=moderation.STORY_MAX,
+            ),
+            back,
+        )
         return CUSTOM_TEXT
     title, story = parts
     context.user_data["custom_draft"] = (title, story)
@@ -210,18 +232,32 @@ async def _review_custom(update: Update, context: ContextTypes.DEFAULT_TYPE, tit
     if lineage is None:
         return BACKGROUND
     lineage_context = f"{lineage.name.get(lang)}: {lineage.description.get(lang)}"
-    review = await moderation.review_background(context.bot_data["llm"], lang=lang, title=title, story=story,
-                                                world_context=c.world_guide.context(lang),
-                                                lineage_context=lineage_context,
-                                                user_id=user_id)
+    review = await moderation.review_background(
+        context.bot_data["llm"],
+        lang=lang,
+        title=title,
+        story=story,
+        world_context=c.world_guide.context(lang),
+        lineage_context=lineage_context,
+        user_id=user_id,
+    )
     async with session_scope() as session:
-        await audit.log(session, user_id=user_id, character_id=None, verb="background_review",
-                        result={"status": review.status if review else "unavailable"})
+        await audit.log(
+            session,
+            user_id=user_id,
+            character_id=None,
+            verb="background_review",
+            result={"status": review.status if review else "unavailable"},
+        )
     if context.user_data.get("custom_review_token") != token:
         return _custom_state(context)
     if review is None:
-        retry = markup([[btn(t(lang, "create.custom_retry"), cb("cc", f"bgr:{token}"))],
-                        [btn(t(lang, "create.custom_back"), cb("cc", "bgl:basic"))]])
+        retry = markup(
+            [
+                [btn(t(lang, "create.custom_retry"), cb("cc", f"bgr:{token}"))],
+                [btn(t(lang, "create.custom_back"), cb("cc", "bgl:basic"))],
+            ]
+        )
         await send(update, t(lang, "create.custom_unavailable"), retry)
         return CUSTOM_TEXT
     if review.status == "rejected":
@@ -230,7 +266,10 @@ async def _review_custom(update: Update, context: ContextTypes.DEFAULT_TYPE, tit
         return CUSTOM_TEXT
     if review.status == "adapted":
         context.user_data["custom_proposal"] = {
-            "token": token, "title": review.title, "story": review.story, "reason": review.reason,
+            "token": token,
+            "title": review.title,
+            "story": review.story,
+            "reason": review.reason,
         }
         await send(update, *_custom_proposal_panel(context.user_data["custom_proposal"], lang))
         return CUSTOM_REVIEW
@@ -256,12 +295,21 @@ async def retry_custom(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
 
 
 def _custom_proposal_panel(proposal: dict, lang: str):
-    text = t(lang, "create.custom_proposal", reason=escape(proposal["reason"] or "…"),
-             title=escape(proposal["title"]), story=escape(proposal["story"]))
+    text = t(
+        lang,
+        "create.custom_proposal",
+        reason=escape(proposal["reason"] or "…"),
+        title=escape(proposal["title"]),
+        story=escape(proposal["story"]),
+    )
     token = proposal["token"]
-    rows = [[btn(t(lang, "create.custom_accept"), cb("cc", f"bga:{token}")),
-             btn(t(lang, "create.custom_edit"), cb("cc", f"bge:{token}"))],
-            [btn(t(lang, "create.custom_back"), cb("cc", "bgl:basic"))]]
+    rows = [
+        [
+            btn(t(lang, "create.custom_accept"), cb("cc", f"bga:{token}")),
+            btn(t(lang, "create.custom_edit"), cb("cc", f"bge:{token}")),
+        ],
+        [btn(t(lang, "create.custom_back"), cb("cc", "bgl:basic"))],
+    ]
     return text, markup(rows)
 
 
@@ -280,9 +328,7 @@ async def got_custom_proposal(update: Update, context: ContextTypes.DEFAULT_TYPE
         kb = markup([[btn(t(lang, "create.custom_back"), cb("cc", "bgl:basic"))]])
         await edit_or_send(update, t(lang, "create.custom_edit_prompt"), kb)
         return CUSTOM_TEXT
-    context.user_data["new"]["custom"] = {
-        "title": proposal["title"], "story": proposal["story"], "skills": [],
-    }
+    context.user_data["new"]["custom"] = {"title": proposal["title"], "story": proposal["story"], "skills": []}
     context.user_data.pop("custom_proposal", None)
     context.user_data.pop("custom_draft", None)
     await edit_or_send(update, *custom_skills_panel(context.user_data["new"], lang))
@@ -293,10 +339,16 @@ def custom_skills_panel(new: dict, lang: str):
     c = get_content()
     custom = new["custom"]
     chosen = custom["skills"]
-    lines = [t(lang, "create.custom_ok", title=escape(custom["title"])), f"<i>{escape(custom['story'])}</i>", "",
-             t(lang, "create.custom_skills", n=characters.CUSTOM_SKILLS, chosen=len(chosen))]
-    buttons = [btn(("✅ " if key in chosen else f"{c.abilities[s.ability].icon} ") + s.name.get(lang),
-                   cb("cc", f"sk:{key}")) for key, s in c.skills.items()]
+    lines = [
+        t(lang, "create.custom_ok", title=escape(custom["title"])),
+        f"<i>{escape(custom['story'])}</i>",
+        "",
+        t(lang, "create.custom_skills", n=characters.CUSTOM_SKILLS, chosen=len(chosen)),
+    ]
+    buttons = [
+        btn(("✅ " if key in chosen else f"{c.abilities[s.ability].icon} ") + s.name.get(lang), cb("cc", f"sk:{key}"))
+        for key, s in c.skills.items()
+    ]
     rows = grid(buttons)
     if len(chosen) == characters.CUSTOM_SKILLS:
         rows.append([btn(t(lang, "btn.continue"), cb("cc", "sk:ok"))])
@@ -360,8 +412,10 @@ def abilities_panel(new: dict, lang: str):
     lin = c.lineages[new["lineage"]]
     scores = new["scores"]
     final = characters.starting_scores(new["class"], new["lineage"], scores)
-    lines = [t(lang, "create.ask_abilities", cls=cls.name.get(lang), left=pointbuy.left(scores),
-               budget=pointbuy.BUDGET), ""]
+    lines = [
+        t(lang, "create.ask_abilities", cls=cls.name.get(lang), left=pointbuy.left(scores), budget=pointbuy.BUDGET),
+        "",
+    ]
     rows = []
     for a, info in c.abilities.items():
         bonus = lin.bonuses.get(a, 0)
@@ -369,13 +423,21 @@ def abilities_panel(new: dict, lang: str):
         star = " ★" if a == cls.primary else ""
         lines.append(f"<b>{attribute(a, final[a], lang)}</b>{star}{extra}")
         lines.append(f"<i>{escape(info.effect.get(lang))}</i>")
-        rows.append([btn("➖", cb("cc", f"ab:{a}:-")),
-                     btn(f"{info.icon} {info.short.get(lang)} {scores[a]}", cb("cc", f"ab:{a}:i")),
-                     btn("➕", cb("cc", f"ab:{a}:+"))])
+        rows.append(
+            [
+                btn("➖", cb("cc", f"ab:{a}:-")),
+                btn(f"{info.icon} {info.short.get(lang)} {scores[a]}", cb("cc", f"ab:{a}:i")),
+                btn("➕", cb("cc", f"ab:{a}:+")),
+            ]
+        )
     hp = max_hp(cls.hit_die, modifier(final["con"]), 1)
     lines += ["", t(lang, "create.ability_hp", hp=hp)]
-    rows.append([btn(t(lang, "btn.recommended", cls=cls.name.get(lang)), cb("cc", "ab:rec")),
-                 btn(t(lang, "btn.reset_points"), cb("cc", "ab:reset"))])
+    rows.append(
+        [
+            btn(t(lang, "btn.recommended", cls=cls.name.get(lang)), cb("cc", "ab:rec")),
+            btn(t(lang, "btn.reset_points"), cb("cc", "ab:reset")),
+        ]
+    )
     rows.append([btn(t(lang, "btn.continue"), cb("cc", "ab:ok"))])
     return "\n".join(lines), markup(rows)
 
@@ -422,14 +484,21 @@ async def _summary(update: Update, new: dict, lang: str) -> int:
     cls = c.classes[new["class"]]
     scores = characters.starting_scores(new["class"], new["lineage"], new["scores"])
     stats = [attribute(a, scores[a], lang) for a in c.abilities]
-    stats = "\n".join(" · ".join(stats[i:i + 3]) for i in range(0, len(stats), 3))
+    stats = "\n".join(" · ".join(stats[i : i + 3]) for i in range(0, len(stats), 3))
     hp = max_hp(cls.hit_die, modifier(scores["con"]), 1)
     lin, bg = c.lineages[new["lineage"]], c.backgrounds[new["background"]]
     bg_name = escape(new["custom"]["title"]) if bg.custom else bg.name.get(lang)
-    text = t(lang, "create.summary", name=escape(new["name"]),
-             gender=t(lang, f"create.gender_btn.{new['gender']}"),
-             lineage=f"{lin.icon} {lin.name.get(lang)}".strip(), background=f"{bg.icon} {bg_name}".strip(),
-             cls=f"{CLASS_ICONS.get(new['class'], '')} {cls.name.get(lang)}".strip(), stats=stats, hp=hp)
+    text = t(
+        lang,
+        "create.summary",
+        name=escape(new["name"]),
+        gender=t(lang, f"create.gender_btn.{new['gender']}"),
+        lineage=f"{lin.icon} {lin.name.get(lang)}".strip(),
+        background=f"{bg.icon} {bg_name}".strip(),
+        cls=f"{CLASS_ICONS.get(new['class'], '')} {cls.name.get(lang)}".strip(),
+        stats=stats,
+        hp=hp,
+    )
     rows = [[btn(t(lang, "btn.confirm"), cb("cc", "ok")), btn(t(lang, "btn.restart"), cb("cc", "redo"))]]
     await edit_or_send(update, text, markup(rows))
     return CONFIRM
@@ -450,9 +519,17 @@ async def confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     async with session_scope() as session:
         user, char = await load(session, update, lock=True)
         if char is None:
-            char = await characters.create_character(session, user, new["name"], new["lineage"],
-                                                     new["background"], new["class"], new["gender"],
-                                                     scores=new.get("scores"), custom=new.get("custom"))
+            char = await characters.create_character(
+                session,
+                user,
+                new["name"],
+                new["lineage"],
+                new["background"],
+                new["class"],
+                new["gender"],
+                scores=new.get("scores"),
+                custom=new.get("custom"),
+            )
             await audit.log(session, user_id=user.id, character_id=char.id, verb="create", payload=new)
         text, kb = await current_view(session, char, lang)
         await edit_or_send(update, t(lang, "create.done", name=escape(new["name"])))
@@ -478,16 +555,24 @@ def handler() -> ConversationHandler:
             NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, got_name)],
             GENDER: [CallbackQueryHandler(got_gender, pattern=r"^cc\|gen:")],
             LINEAGE: [CallbackQueryHandler(got_lineage, pattern=r"^cc\|lin:")],
-            BACKGROUND: [CallbackQueryHandler(got_background, pattern=r"^cc\|bg:"),
-                         CallbackQueryHandler(more_backgrounds, pattern=r"^cc\|bgl:"),
-                         CallbackQueryHandler(ask_custom, pattern=r"^cc\|bgc")],
-            CUSTOM_TEXT: [MessageHandler(filters.TEXT & ~filters.COMMAND, got_custom_text),
-                          CallbackQueryHandler(retry_custom, pattern=r"^cc\|bgr:"),
-                          CallbackQueryHandler(more_backgrounds, pattern=r"^cc\|bgl:")],
-            CUSTOM_REVIEW: [CallbackQueryHandler(got_custom_proposal, pattern=r"^cc\|bg[ae]:"),
-                            CallbackQueryHandler(more_backgrounds, pattern=r"^cc\|bgl:")],
-            CUSTOM_SKILLS: [CallbackQueryHandler(got_custom_skill, pattern=r"^cc\|sk:"),
-                            CallbackQueryHandler(more_backgrounds, pattern=r"^cc\|bgl:")],
+            BACKGROUND: [
+                CallbackQueryHandler(got_background, pattern=r"^cc\|bg:"),
+                CallbackQueryHandler(more_backgrounds, pattern=r"^cc\|bgl:"),
+                CallbackQueryHandler(ask_custom, pattern=r"^cc\|bgc"),
+            ],
+            CUSTOM_TEXT: [
+                MessageHandler(filters.TEXT & ~filters.COMMAND, got_custom_text),
+                CallbackQueryHandler(retry_custom, pattern=r"^cc\|bgr:"),
+                CallbackQueryHandler(more_backgrounds, pattern=r"^cc\|bgl:"),
+            ],
+            CUSTOM_REVIEW: [
+                CallbackQueryHandler(got_custom_proposal, pattern=r"^cc\|bg[ae]:"),
+                CallbackQueryHandler(more_backgrounds, pattern=r"^cc\|bgl:"),
+            ],
+            CUSTOM_SKILLS: [
+                CallbackQueryHandler(got_custom_skill, pattern=r"^cc\|sk:"),
+                CallbackQueryHandler(more_backgrounds, pattern=r"^cc\|bgl:"),
+            ],
             CLASS: [CallbackQueryHandler(got_class, pattern=r"^cc\|cls:")],
             ABILITIES: [CallbackQueryHandler(got_ability, pattern=r"^cc\|ab:")],
             CONFIRM: [CallbackQueryHandler(confirm, pattern=r"^cc\|(ok|redo)")],

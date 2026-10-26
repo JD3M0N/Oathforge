@@ -2,14 +2,27 @@
 
 from oathforge.content import get_content
 
-TRADES = ["alchemy", "blacksmithing", "carpentry", "leatherworking", "jewelcrafting", "scribing", "engineering", "tailoring"]
+TRADES = [
+    "alchemy",
+    "blacksmithing",
+    "carpentry",
+    "leatherworking",
+    "jewelcrafting",
+    "scribing",
+    "engineering",
+    "tailoring",
+]
 
 
 def chain(c, start="tut_chapel"):
     """The missions that open one after another from ``start`` through `after`."""
     out, cur = [], start
     while True:
-        nxt = [k for k, q in c.quests.items() if q.after == cur and (not k.startswith("camp_trade_") or k == "camp_trade_pick") and k != "old_tusk"]
+        nxt = [
+            k
+            for k, q in c.quests.items()
+            if q.after == cur and (not k.startswith("camp_trade_") or k == "camp_trade_pick") and k != "old_tusk"
+        ]
         if not nxt:
             return out
         out.append(nxt[0])
@@ -57,6 +70,7 @@ def test_every_trade_has_a_mission_a_master_at_their_stall_and_enough_material()
 def can_make(c, item, count, have, rank_xp, prof):
     """Whether ``count`` of ``item`` can be crafted from ``have`` (with refined intermediates) at that trade rank."""
     from oathforge.engine.gathering import rank_for
+
     rank = rank_for(rank_xp)
 
     def make(item, n):
@@ -84,7 +98,9 @@ def test_the_rumour_mission_offers_a_real_choice_with_reputation_on_both_sides()
     c = get_content()
     acts = c.quests["camp_rumor"].actions
     assert set(acts) == {"believe", "check"}
-    reps = {k: next(e["reputation"]["silver_covenant"] for e in a.effects if "reputation" in e) for k, a in acts.items()}
+    reps = {
+        k: next(e["reputation"]["silver_covenant"] for e in a.effects if "reputation" in e) for k, a in acts.items()
+    }
     assert reps["believe"] < 0 < reps["check"]
 
 
@@ -98,7 +114,7 @@ def test_the_graduation_runs_after_the_collector_and_opens_level_twenty():
     c = get_content()
     path = chain(c)
     at = path.index("camp_collector")
-    assert path[at:at + 5] == ["camp_collector", "camp_path", "camp_kit", "camp_signs", "camp_stag"]
+    assert path[at : at + 5] == ["camp_collector", "camp_path", "camp_kit", "camp_signs", "camp_stag"]
     stag = c.quests["camp_stag"]
     assert {"milestone": "iron_stag"} in stag.rewards and stag.turn_in_stage and stag.giver == "tamsin"
     assert any(e.to == "stag_hollow" for e in c.locations["elderwood_grove"].exits)

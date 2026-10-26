@@ -17,7 +17,14 @@ from oathforge.i18n import t
 from oathforge.services import achievements, characters, chronicles, class_specializations, npcs, specializations
 from oathforge.services.events import Outcome, render_event
 from oathforge.bot.render.common import (
-    ABILITY_ICON, LEVEL_KEYS, MAX_MESSAGE, RULE, RULE_NUMBER, _gear_line, hp_bar, rule_numbers,
+    ABILITY_ICON,
+    LEVEL_KEYS,
+    MAX_MESSAGE,
+    RULE,
+    RULE_NUMBER,
+    _gear_line,
+    hp_bar,
+    rule_numbers,
 )
 from oathforge.bot.render.crafting import hobby_lines, mastery_lines, professions_line, specializations_view
 
@@ -38,8 +45,10 @@ def ability_block(a, lang: str, prefix: str = "", key: str | None = None) -> lis
     """Name, tags and description of a class ability, as in the level-up card and /class_<key>."""
     icon = ABILITY_ICON.get(a.kind, "✨")
     link = f" · /skill_{key}" if key else ""
-    return [f"{prefix}{icon} <b>{escape(a.name.get(lang))}</b> · {ability_tags(a, lang)}",
-            f"      <i>{escape(a.description.get(lang))}</i>{link}"]
+    return [
+        f"{prefix}{icon} <b>{escape(a.name.get(lang))}</b> · {ability_tags(a, lang)}",
+        f"      <i>{escape(a.description.get(lang))}</i>{link}",
+    ]
 
 
 def ability_mechanics(a, lang: str) -> list[str]:
@@ -64,9 +73,13 @@ def ability_mechanics(a, lang: str) -> list[str]:
     if a.heal_per_level:
         out.append(t(lang, "skill.heal_per_level", n=a.heal_per_level))
     if a.heal_dice:
-        out.append(t(lang, "skill.heal_dice", dice=a.heal_dice) + (t(lang, f"skill.plus_{a.heal_add}") if a.heal_add else ""))
+        out.append(
+            t(lang, "skill.heal_dice", dice=a.heal_dice) + (t(lang, f"skill.plus_{a.heal_add}") if a.heal_add else "")
+        )
     if a.temp_hp:
-        out.append(t(lang, "skill.temp_hp", dice=a.temp_hp) + (t(lang, f"skill.plus_{a.heal_add}") if a.heal_add else ""))
+        out.append(
+            t(lang, "skill.temp_hp", dice=a.temp_hp) + (t(lang, f"skill.plus_{a.heal_add}") if a.heal_add else "")
+        )
     if a.status:
         out.append(t(lang, "skill.status", status=t(lang, "status." + a.status), turns=a.status_turns))
     if a.ac_bonus:
@@ -78,8 +91,15 @@ def ability_mechanics(a, lang: str) -> list[str]:
     if a.spell_damage_bonus:
         out.append(t(lang, "skill.spell_damage_bonus"))
     if a.sneak_dice:
-        out.append(t(lang, "skill.sneak", list=" · ".join(
-            t(lang, "skill.sneak_level", n=n, level=lvl) for lvl, n in sorted(a.sneak_dice.items()))))
+        out.append(
+            t(
+                lang,
+                "skill.sneak",
+                list=" · ".join(
+                    t(lang, "skill.sneak_level", n=n, level=lvl) for lvl, n in sorted(a.sneak_dice.items())
+                ),
+            )
+        )
     if a.extra_attack:
         out.append(t(lang, "skill.extra_attack"))
     if a.halve_first_hit:
@@ -117,11 +137,15 @@ def ability_mechanics(a, lang: str) -> list[str]:
 def ability_owners(key: str) -> list[tuple[str, object, int, str]]:
     """Who gives an ability: (icon, name, level, class key). A class, or a branch of one."""
     c = get_content()
-    owners = [(CLASS_ICONS.get(ck, "•"), cl.name, cl.abilities[key].level, ck)
-              for ck, cl in c.classes.items() if key in cl.abilities]
+    owners = [
+        (CLASS_ICONS.get(ck, "•"), cl.name, cl.abilities[key].level, ck)
+        for ck, cl in c.classes.items()
+        if key in cl.abilities
+    ]
     for branch in c.class_specializations.values():
         found = branch.abilities.get(key) or next(
-            (m.grants[key] for m in branch.modifiers.values() if key in m.grants), None)
+            (m.grants[key] for m in branch.modifiers.values() if key in m.grants), None
+        )
         if found is not None:
             owners.append(("🧭", branch.name, found.level, branch.class_key))
     return owners
@@ -134,12 +158,19 @@ def skill_page(key: str, lang: str, char: Character | None = None) -> tuple[str,
     if not owners or a is None:
         text, kb = classes_list(lang)
         return t(lang, "skill.unknown") + "\n\n" + text, kb
-    lines = [f"{ABILITY_ICON.get(a.kind, '✨')} <b>{escape(a.name.get(lang))}</b>",
-             " · ".join(f"{icon} {escape(name.get(lang))} ({t(lang, 'classes.level', level=level)})"
-                        for icon, name, level, _ in owners),
-             ability_tags(a, lang), RULE,
-             f"<i>{escape((a.details or a.description).get(lang))}</i>", "",
-             f"<b>{t(lang, 'skill.mechanics')}</b>", *(f"• {line}" for line in ability_mechanics(a, lang))]
+    lines = [
+        f"{ABILITY_ICON.get(a.kind, '✨')} <b>{escape(a.name.get(lang))}</b>",
+        " · ".join(
+            f"{icon} {escape(name.get(lang))} ({t(lang, 'classes.level', level=level)})"
+            for icon, name, level, _ in owners
+        ),
+        ability_tags(a, lang),
+        RULE,
+        f"<i>{escape((a.details or a.description).get(lang))}</i>",
+        "",
+        f"<b>{t(lang, 'skill.mechanics')}</b>",
+        *(f"• {line}" for line in ability_mechanics(a, lang)),
+    ]
     mine = next((lvl for _, _, lvl, ck in owners if char is not None and ck == char.class_key), None)
     if mine is not None:
         lines += ["", t(lang, "skill.yours" if mine <= char.level else "skill.locked", level=mine)]
@@ -166,9 +197,17 @@ def level_up_cards(outcome: Outcome, lang: str) -> list[str]:
         if ev.key != "progress.level_up":
             continue
         p = ev.params
-        lines = [t(lang, "level_card.title", level=p["level"]), RULE,
-                 t(lang, "level_card.hp", prev=p.get("prev_max_hp", p["max_hp"]), max_hp=p["max_hp"],
-                   gain=p["max_hp"] - p.get("prev_max_hp", p["max_hp"]))]
+        lines = [
+            t(lang, "level_card.title", level=p["level"]),
+            RULE,
+            t(
+                lang,
+                "level_card.hp",
+                prev=p.get("prev_max_hp", p["max_hp"]),
+                max_hp=p["max_hp"],
+                gain=p["max_hp"] - p.get("prev_max_hp", p["max_hp"]),
+            ),
+        ]
         cls_key = p.get("cls")
         for e in pending:
             if e.key == "progress.new_ability":
@@ -198,8 +237,9 @@ def _branch_path_lines(branch, lang: str) -> list[str]:
     prog = get_content().progression
     lines = []
     for key, a in sorted(branch.abilities.items(), key=lambda kv: kv[1].level):
-        lines.append(f"• {t(lang, 'classes.level', level=a.level)} · {escape(a.name.get(lang))}"
-                     f" ({ability_tags(a, lang)})")
+        lines.append(
+            f"• {t(lang, 'classes.level', level=a.level)} · {escape(a.name.get(lang))} ({ability_tags(a, lang)})"
+        )
     for lvl in prog.modifier_levels:
         names = " / ".join(escape(m.name.get(lang)) for m in branch.modifiers.values() if m.level == lvl)
         if names:
@@ -214,15 +254,23 @@ async def path_view(session: AsyncSession, char: Character, lang: str) -> tuple[
     lines, rows, n = [t(lang, "path.title"), RULE], [], nonce()
     mine = c.class_specializations.get(char.specialization or "")
     if mine is not None:
-        lines += [t(lang, "path.yours", branch=escape(mine.name.get(lang)), roles=_roles(mine, lang)),
-                  f"<i>{escape(mine.description.get(lang))}</i>"]
+        lines += [
+            t(lang, "path.yours", branch=escape(mine.name.get(lang)), roles=_roles(mine, lang)),
+            f"<i>{escape(mine.description.get(lang))}</i>",
+        ]
         if class_specializations.reroll_available(char):
             lines += ["", t(lang, "path.reroll_hint")]
-            rows += [[btn(f"🔁 {b.name.get(lang)}", cb("pathv", f"r:{k}", n))]
-                     for k, b in class_specializations.branches(char).items() if b.ready and k != char.specialization]
+            rows += [
+                [btn(f"🔁 {b.name.get(lang)}", cb("pathv", f"r:{k}", n))]
+                for k, b in class_specializations.branches(char).items()
+                if b.ready and k != char.specialization
+            ]
     elif class_specializations.open_for(char):
-        lines += [t(lang, "path.open", level=prog.specialization_level),
-                  t(lang, "path.open_where" if not c.locations[char.location].home else "path.open_here"), ""]
+        lines += [
+            t(lang, "path.open", level=prog.specialization_level),
+            t(lang, "path.open_where" if not c.locations[char.location].home else "path.open_here"),
+            "",
+        ]
         for k, b in class_specializations.branches(char).items():
             lines.append(f"{'🧭' if b.ready else '🔒'} <b>{escape(b.name.get(lang))}</b> · {_roles(b, lang)}")
             lines.append(f"<i>{escape(b.description.get(lang))}</i>")
@@ -240,7 +288,7 @@ async def path_view(session: AsyncSession, char: Character, lang: str) -> tuple[
     taken = characters.taken_of(char)
     if taken:
         lines += ["", f"<b>{t(lang, 'path.taken')}</b>"]
-        for key, option in sorted(taken.items(), key=lambda kv: int(kv[0].partition(':')[2] or 0)):
+        for key, option in sorted(taken.items(), key=lambda kv: int(kv[0].partition(":")[2] or 0)):
             kind, _, lvl = key.partition(":")
             src = prog.trainings.get(option) if kind == "training" else (mine.modifiers.get(option) if mine else None)
             if src is not None:
@@ -272,9 +320,20 @@ def path_confirm(char: Character, arg: str, lang: str) -> tuple[str, InlineKeybo
         branch = c.class_specializations.get(rest)
         if branch is None:
             return None
-        lines = [t(lang, "path.confirm_branch" if mode == "b" else "path.confirm_reroll",
-                   branch=escape(branch.name.get(lang))), RULE, f"<i>{escape(branch.description.get(lang))}</i>",
-                 _roles(branch, lang), "", *_branch_path_lines(branch, lang), "", t(lang, "path.final")]
+        lines = [
+            t(
+                lang,
+                "path.confirm_branch" if mode == "b" else "path.confirm_reroll",
+                branch=escape(branch.name.get(lang)),
+            ),
+            RULE,
+            f"<i>{escape(branch.description.get(lang))}</i>",
+            _roles(branch, lang),
+            "",
+            *_branch_path_lines(branch, lang),
+            "",
+            t(lang, "path.final"),
+        ]
         go = cb("pathc", f"{mode}:{rest}", n)
     else:
         choice_key, _, option = rest.rpartition(":")
@@ -282,10 +341,17 @@ def path_confirm(char: Character, arg: str, lang: str) -> tuple[str, InlineKeybo
         picked = class_specializations.options(char, choice).get(option) if choice else None
         if picked is None:
             return None
-        lines = [t(lang, "path.confirm_pick", name=escape(picked.name.get(lang))), RULE,
-                 f"<i>{escape(picked.description.get(lang))}</i>", "", t(lang, "path.final")]
+        lines = [
+            t(lang, "path.confirm_pick", name=escape(picked.name.get(lang))),
+            RULE,
+            f"<i>{escape(picked.description.get(lang))}</i>",
+            "",
+            t(lang, "path.final"),
+        ]
         go = cb("pathc", f"o:{choice_key}:{option}", n)
-    return "\n".join(lines)[:MAX_MESSAGE], markup([[btn(t(lang, "btn.confirm"), go), btn(t(lang, "btn.back"), cb("path"))]])
+    return "\n".join(lines)[:MAX_MESSAGE], markup(
+        [[btn(t(lang, "btn.confirm"), go), btn(t(lang, "btn.back"), cb("path"))]]
+    )
 
 
 def spec_confirm(char: Character, key: str, lang: str) -> tuple[str, InlineKeyboardMarkup]:
@@ -298,18 +364,34 @@ def spec_confirm(char: Character, key: str, lang: str) -> tuple[str, InlineKeybo
     cost = specializations.price(char, key)
     if not cost:  # the first branch of a discipline is free: no confirmation to collect
         return specializations_view(char, lang)
-    text = t(lang, "spec.confirm", spec=escape(spec.name.get(lang)),
-             skill=escape(characters.mastery_name(spec.skill)[lang]), cost=cost, gold=char.gold,
-             old=escape(c.specializations[old].name.get(lang)))
+    text = t(
+        lang,
+        "spec.confirm",
+        spec=escape(spec.name.get(lang)),
+        skill=escape(characters.mastery_name(spec.skill)[lang]),
+        cost=cost,
+        gold=char.gold,
+        old=escape(c.specializations[old].name.get(lang)),
+    )
     rows = [[btn(t(lang, "btn.confirm"), cb("specc", key, nonce())), btn(t(lang, "btn.back"), cb("spec"))]]
     return text, markup(rows)
 
 
 # ---------------------------------------------------------------- character sheet
 
+
 def rep_label(value: int, lang: str) -> str:
-    tier = ("hated" if value <= -50 else "hostile" if value <= -10 else "neutral" if value < 10
-            else "friendly" if value < 50 else "honored")
+    tier = (
+        "hated"
+        if value <= -50
+        else "hostile"
+        if value <= -10
+        else "neutral"
+        if value < 10
+        else "friendly"
+        if value < 50
+        else "honored"
+    )
     return t(lang, f"sheet.rep.{tier}")
 
 
@@ -328,19 +410,27 @@ def _sheet_top(c, cls, char: Character, gear: dict, lang: str) -> list[str]:
     if char.level < len(table):
         lo, hi = table[char.level - 1], table[char.level]
         cur = min(char.xp - lo, hi - lo)  # waiting at a gate the bar is full, never over its own total
-        lines.append(t(lang, "sheet.xp", cur=cur, need=hi - lo, level=char.level + 1, xp=char.xp,
-                       bar=hp_bar(cur, hi - lo)))
+        lines.append(
+            t(lang, "sheet.xp", cur=cur, need=hi - lo, level=char.level + 1, xp=char.xp, bar=hp_bar(cur, hi - lo))
+        )
     else:
         lines.append(t(lang, "sheet.xp_max", xp=char.xp))
     if gate := characters.level_gate(char):  # the XP is there; a mission is not (roadmap_balance §4.2)
-        lines.append(t(lang, "sheet.level_gate",
-                       milestone=escape(c.progression.milestones[gate].name.get(lang))))
+        lines.append(t(lang, "sheet.level_gate", milestone=escape(c.progression.milestones[gate].name.get(lang))))
     if res := characters.resource_def(char):
-        lines.append(t(lang, "sheet.resource", resource=escape(res.name.get(lang)),
-                       cur=characters.pool_of(char), max=characters.resource_max(char),
-                       bar=hp_bar(characters.pool_of(char), characters.resource_max(char))))
-    lines.append(t(lang, "sheet.vitals", ac=characters.armor_class(char, gear), pb=proficiency_bonus(char.level),
-                   gold=char.gold))
+        lines.append(
+            t(
+                lang,
+                "sheet.resource",
+                resource=escape(res.name.get(lang)),
+                cur=characters.pool_of(char),
+                max=characters.resource_max(char),
+                bar=hp_bar(characters.pool_of(char), characters.resource_max(char)),
+            )
+        )
+    lines.append(
+        t(lang, "sheet.vitals", ac=characters.armor_class(char, gear), pb=proficiency_bonus(char.level), gold=char.gold)
+    )
     if char.conditions.get("injured"):
         lines.append(t(lang, "sheet.injured"))
     return lines
@@ -361,15 +451,18 @@ def _sheet_attributes(c, cls, char: Character, lang: str) -> list[str]:
     for a in c.abilities:
         star = "★" if a == cls.primary else " "
         cells.append(attribute(a, char.abilities[a], lang, aligned=True) + star)
-    pairs = ["  ".join(cells[i:i + 2]) for i in range(0, len(cells), 2)]
+    pairs = ["  ".join(cells[i : i + 2]) for i in range(0, len(cells), 2)]
     return ["", f"<b>{t(lang, 'sheet.attributes')}</b>", "<code>" + escape("\n".join(pairs)) + "</code>"]
 
 
 def _sheet_gear(gear: dict, lang: str) -> list[str]:
     order = ("main_hand", "ranged", "off_hand", "body")
     worn = [gear[slot] for slot in order if slot in gear]
-    return ["", f"<b>{t(lang, 'sheet.gear')}</b>",
-            *([_gear_line(inst, lang) for inst in worn] or [f"<i>{t(lang, 'sheet.no_gear')}</i>"])]
+    return [
+        "",
+        f"<b>{t(lang, 'sheet.gear')}</b>",
+        *([_gear_line(inst, lang) for inst in worn] or [f"<i>{t(lang, 'sheet.no_gear')}</i>"]),
+    ]
 
 
 def _uses(char: Character, key: str, a) -> str:
@@ -385,23 +478,30 @@ async def hero(session: AsyncSession, char: Character, lang: str) -> tuple[str, 
     gear = await characters.equipped(session, char)
     lines = _sheet_top(c, cls, char, gear, lang) + _sheet_attributes(c, cls, char, lang) + _sheet_gear(gear, lang)
     lines += achievement_views.identity(ach, lang)
-    unlocked = [escape(a.name.get(lang)) + _uses(char, key, a)
-                for key, a in characters.effective(char).abilities.items()]
+    unlocked = [
+        escape(a.name.get(lang)) + _uses(char, key, a) for key, a in characters.effective(char).abilities.items()
+    ]
     if unlocked:
         lines += ["", f"<b>{t(lang, 'sheet.abilities')}</b>", "✨ " + " · ".join(unlocked)]
     owed = len(class_specializations.pending(char)) + (1 if class_specializations.open_for(char) else 0)
-    kb = markup([[btn(t(lang, "achievements.open"), cb("ach"))],
-                 [btn(t(lang, "btn.path", n=owed) if owed else t(lang, "btn.path_plain"), cb("path"))],
-                 [btn(t(lang, "btn.full_sheet"), cb("sheet")), btn(t(lang, "btn.professions"), cb("prof"))],
-                 [btn(t(lang, "btn.inventory"), cb("inv")), btn(t(lang, "btn.journal"), cb("jr"))],
-                 [btn(t(lang, "btn.back"), cb("scene"))]])
+    kb = markup(
+        [
+            [btn(t(lang, "achievements.open"), cb("ach"))],
+            [btn(t(lang, "btn.path", n=owed) if owed else t(lang, "btn.path_plain"), cb("path"))],
+            [btn(t(lang, "btn.full_sheet"), cb("sheet")), btn(t(lang, "btn.professions"), cb("prof"))],
+            [btn(t(lang, "btn.inventory"), cb("inv")), btn(t(lang, "btn.journal"), cb("jr"))],
+            [btn(t(lang, "btn.back"), cb("scene"))],
+        ]
+    )
     return "\n".join(lines)[:MAX_MESSAGE], kb
 
 
 def portrait_caption(char: Character, lang: str) -> str:
     """Caption for the class portrait sent before the full sheet."""
     cls = get_content().classes[char.class_key]
-    return f"🦸 <b>{escape(char.name)}</b> · {escape(t(lang, 'sheet.identity', level=char.level, cls=cls.name.get(lang)))}"
+    return (
+        f"🦸 <b>{escape(char.name)}</b> · {escape(t(lang, 'sheet.identity', level=char.level, cls=cls.name.get(lang)))}"
+    )
 
 
 async def sheet(session: AsyncSession, char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
@@ -416,8 +516,9 @@ async def sheet(session: AsyncSession, char: Character, lang: str) -> tuple[str,
     if title:
         extra.insert(0, f"🏅 <b>{escape(title)}</b>")
     if char.specialization in c.class_specializations:
-        extra.insert(0, t(lang, "sheet.specialization",
-                          name=escape(c.class_specializations[char.specialization].name.get(lang))))
+        extra.insert(
+            0, t(lang, "sheet.specialization", name=escape(c.class_specializations[char.specialization].name.get(lang)))
+        )
     lines[2:2] = extra
     lines.append(t(lang, "sheet.hit_die", die=cls.hit_die))
     lines.append(t(lang, "sheet.class_link", cmd=f"/class_{char.class_key}"))
@@ -426,13 +527,33 @@ async def sheet(session: AsyncSession, char: Character, lang: str) -> tuple[str,
     # combat numbers: attacks, spellcasting, passive perception, immunities
     lines += ["", f"<b>{t(lang, 'sheet.combat')}</b>"]
     for a in characters.attack_profiles(char, gear):
-        lines.append(("🏹 " if a.ranged else "🗡️ ") + escape(t(
-            lang, "sheet.attack", name=a.name[lang], to_hit=f"{a.to_hit:+d}", damage=a.damage,
-            type=t(lang, "dmg." + a.damage_type))))
+        lines.append(
+            ("🏹 " if a.ranged else "🗡️ ")
+            + escape(
+                t(
+                    lang,
+                    "sheet.attack",
+                    name=a.name[lang],
+                    to_hit=f"{a.to_hit:+d}",
+                    damage=a.damage,
+                    type=t(lang, "dmg." + a.damage_type),
+                )
+            )
+        )
     if cls.casting:
         _, to_hit, dc = characters.spell_stats(char)
-        lines.append("🔮 " + escape(t(lang, "sheet.spellcasting", ability=c.abilities[cls.casting].name.get(lang),
-                                      to_hit=f"{to_hit:+d}", dc=dc)))
+        lines.append(
+            "🔮 "
+            + escape(
+                t(
+                    lang,
+                    "sheet.spellcasting",
+                    ability=c.abilities[cls.casting].name.get(lang),
+                    to_hit=f"{to_hit:+d}",
+                    dc=dc,
+                )
+            )
+        )
     lines.append(t(lang, "sheet.passive_perception", value=10 + characters.skill_bonus(char, skills, "perception")))
     immune = characters.immunities(char)
     if immune:
@@ -446,16 +567,20 @@ async def sheet(session: AsyncSession, char: Character, lang: str) -> tuple[str,
         row = skills.get(key)
         mark = "●" if row and row.proficient else "○" if row and row.xp else "·"
         rank = "★" * skill_rank(row.xp) if row else ""
-        lines.append(f"{mark} {escape(skill.name.get(lang))} "
-                     f"<b>{characters.skill_bonus(char, skills, key):+d}</b> {rank}".rstrip())
+        lines.append(
+            f"{mark} {escape(skill.name.get(lang))} "
+            f"<b>{characters.skill_bonus(char, skills, key):+d}</b> {rank}".rstrip()
+        )
 
     # class abilities: unlocked with uses, locked ones show the level they unlock at
     lines += ["", f"<b>{t(lang, 'sheet.abilities')}</b>"]
     built = characters.effective(char).abilities
     for key, a in {**cls.abilities, **built}.items():  # what you have, then what is still locked
         if key in built:
-            lines.append(f"✨ <b>{escape(a.name.get(lang))}</b>{_uses(char, key, a)}: {escape(a.description.get(lang))}"
-                         f" /skill_{key}")
+            lines.append(
+                f"✨ <b>{escape(a.name.get(lang))}</b>{_uses(char, key, a)}: {escape(a.description.get(lang))}"
+                f" /skill_{key}"
+            )
         else:
             lines.append(f"🔒 <i>{t(lang, 'sheet.locked', level=a.level, name=escape(a.name.get(lang)))}</i>")
 
@@ -467,13 +592,24 @@ async def sheet(session: AsyncSession, char: Character, lang: str) -> tuple[str,
             lines.append(f"• {escape(c.factions[fac].name.get(lang))}: {value:+d} · {rep_label(value, lang)}")
 
     # origins
-    lines += ["", f"<b>{t(lang, 'sheet.origins')}</b>",
-              f"🧬 <i>{escape(c.lineages[char.lineage].trait_text.get(lang))}</i>",
-              f"📖 <i>{escape(characters.background_story(char, lang))}</i>"]
+    lines += [
+        "",
+        f"<b>{t(lang, 'sheet.origins')}</b>",
+        f"🧬 <i>{escape(c.lineages[char.lineage].trait_text.get(lang))}</i>",
+        f"📖 <i>{escape(characters.background_story(char, lang))}</i>",
+    ]
 
     # professions and gathering masteries
-    lines += ["", professions_line(char, lang), "", f"<b>{t(lang, 'sheet.hobbies')}</b>", *hobby_lines(char, lang),
-              "", f"<b>{t(lang, 'sheet.masteries')}</b>", *mastery_lines(char, lang)]
+    lines += [
+        "",
+        professions_line(char, lang),
+        "",
+        f"<b>{t(lang, 'sheet.hobbies')}</b>",
+        *hobby_lines(char, lang),
+        "",
+        f"<b>{t(lang, 'sheet.masteries')}</b>",
+        *mastery_lines(char, lang),
+    ]
 
     # today's AI budget and expedition chronicles
     limit = get_settings().ai_user_daily_calls
@@ -485,9 +621,13 @@ async def sheet(session: AsyncSession, char: Character, lang: str) -> tuple[str,
     cleft = max(0, climit - cused)
     lines.append(t(lang, "sheet.chronicles", used=cused, limit=climit, left=cleft, bar=hp_bar(cleft, climit)))
 
-    kb = markup([[btn(t(lang, "btn.hero_summary"), cb("hero"))],
-                 [btn(t(lang, "btn.inventory"), cb("inv")), btn(t(lang, "btn.journal"), cb("jr"))],
-                 [btn(t(lang, "btn.back"), cb("scene"))]])
+    kb = markup(
+        [
+            [btn(t(lang, "btn.hero_summary"), cb("hero"))],
+            [btn(t(lang, "btn.inventory"), cb("inv")), btn(t(lang, "btn.journal"), cb("jr"))],
+            [btn(t(lang, "btn.back"), cb("scene"))],
+        ]
+    )
     return "\n".join(lines)[:MAX_MESSAGE], kb
 
 
@@ -505,27 +645,38 @@ def rulebook(lang: str, key: str | None = None) -> tuple[str, InlineKeyboardMark
     lines = [f"{sec.icon} <b>{escape(sec.title.get(lang))}</b>", RULE, escape(body)]
     if key == "abilities":  # the six abilities and what each is for, straight from abilities.yaml
         lines.append("")
-        lines += [f"{a.icon} <b>{escape(a.name.get(lang))}</b>: {escape(a.effect.get(lang))}" for a in c.abilities.values()]
+        lines += [
+            f"{a.icon} <b>{escape(a.name.get(lang))}</b>: {escape(a.effect.get(lang))}" for a in c.abilities.values()
+        ]
     i = keys.index(key)
-    nav = [btn(f"◀ {c.rulebook[keys[i - 1]].icon}", cb("rb", keys[i - 1])) if i > 0 else None,
-           btn(t(lang, "rulebook.index"), cb("rb", "index")),
-           btn(f"{c.rulebook[keys[i + 1]].icon} ▶", cb("rb", keys[i + 1])) if i + 1 < len(keys) else None]
+    nav = [
+        btn(f"◀ {c.rulebook[keys[i - 1]].icon}", cb("rb", keys[i - 1])) if i > 0 else None,
+        btn(t(lang, "rulebook.index"), cb("rb", "index")),
+        btn(f"{c.rulebook[keys[i + 1]].icon} ▶", cb("rb", keys[i + 1])) if i + 1 < len(keys) else None,
+    ]
     return "\n".join(lines)[:MAX_MESSAGE], markup([[b for b in nav if b]])
 
 
 # ---------------------------------------------------------------- lineages and backgrounds
+
 
 def lineages_list(lang: str) -> str:
     """/lineage: every lineage with its bonuses, skills and trait."""
     c = get_content()
     lines = [t(lang, "lineages.title"), RULE]
     for lin in c.lineages.values():
-        bonuses = " · ".join(f"{c.abilities[a].icon} {c.abilities[a].short.get(lang)} {n:+d}"
-                             for a, n in lin.bonuses.items())
-        lines += [f"{lin.icon} <b>{escape(lin.name.get(lang))}</b>", f"<i>{escape(lin.description.get(lang))}</i>",
-                  t(lang, "lineages.bonuses", list=bonuses)]
+        bonuses = " · ".join(
+            f"{c.abilities[a].icon} {c.abilities[a].short.get(lang)} {n:+d}" for a, n in lin.bonuses.items()
+        )
+        lines += [
+            f"{lin.icon} <b>{escape(lin.name.get(lang))}</b>",
+            f"<i>{escape(lin.description.get(lang))}</i>",
+            t(lang, "lineages.bonuses", list=bonuses),
+        ]
         if lin.skills:
-            lines.append(t(lang, "classes.skills", list=escape(", ".join(c.skills[s].name.get(lang) for s in lin.skills))))
+            lines.append(
+                t(lang, "classes.skills", list=escape(", ".join(c.skills[s].name.get(lang) for s in lin.skills)))
+            )
         lines += [f"✨ {escape(lin.trait_text.get(lang))}", ""]
     return "\n".join(lines).rstrip()[:MAX_MESSAGE]
 
@@ -535,8 +686,9 @@ def background_line(bg, lang: str) -> str:
     c = get_content()
     parts = ["🎓 " + ", ".join(c.skills[s].name.get(lang) for s in bg.skills), f"💰 {bg.gold}"]
     if bg.items:
-        parts.append("🎒 " + ", ".join(c.items[i].name.get(lang) + (f" ×{n}" if n > 1 else "")
-                                       for i, n in bg.items.items()))
+        parts.append(
+            "🎒 " + ", ".join(c.items[i].name.get(lang) + (f" ×{n}" if n > 1 else "") for i, n in bg.items.items())
+        )
     return escape(" · ".join(parts))
 
 
@@ -547,17 +699,34 @@ def backgrounds_list(lang: str) -> str:
     for bg in c.backgrounds.values():
         if bg.custom:
             continue
-        lines += [f"{bg.icon} <b>{escape(bg.name.get(lang))}</b>", f"<i>{escape(bg.description.get(lang))}</i>",
-                  background_line(bg, lang), ""]
+        lines += [
+            f"{bg.icon} <b>{escape(bg.name.get(lang))}</b>",
+            f"<i>{escape(bg.description.get(lang))}</i>",
+            background_line(bg, lang),
+            "",
+        ]
     lines.append(t(lang, "backgrounds.custom"))
     return "\n".join(lines).rstrip()[:MAX_MESSAGE]
 
 
 # ---------------------------------------------------------------- classes
 
-CLASS_ICONS = {"paladin": "🛡️", "rogue": "🗡️", "warrior": "⚔️", "cleric": "✝️", "sorcerer": "🔮", "druid": "🌿",
-               "bard": "🎻", "warlock": "🕯️", "barbarian": "🪓", "monk": "🥋", "ranger": "🏹", "artificer": "⚙️",
-               "shaman": "🌊", "death_knight": "💀"}
+CLASS_ICONS = {
+    "paladin": "🛡️",
+    "rogue": "🗡️",
+    "warrior": "⚔️",
+    "cleric": "✝️",
+    "sorcerer": "🔮",
+    "druid": "🌿",
+    "bard": "🎻",
+    "warlock": "🕯️",
+    "barbarian": "🪓",
+    "monk": "🥋",
+    "ranger": "🏹",
+    "artificer": "⚙️",
+    "shaman": "🌊",
+    "death_knight": "💀",
+}
 
 
 def classes_list(lang: str) -> tuple[str, InlineKeyboardMarkup]:
@@ -565,8 +734,11 @@ def classes_list(lang: str) -> tuple[str, InlineKeyboardMarkup]:
     c = get_content()
     lines = [t(lang, "classes.title"), RULE]
     for key, cl in c.classes.items():
-        lines += [f"{CLASS_ICONS.get(key, '•')} <b>{escape(cl.name.get(lang))}</b> · 🎲 d{cl.hit_die} · /class_{key}",
-                  f"<i>{escape(cl.description.get(lang))}</i>", ""]
+        lines += [
+            f"{CLASS_ICONS.get(key, '•')} <b>{escape(cl.name.get(lang))}</b> · 🎲 d{cl.hit_die} · /class_{key}",
+            f"<i>{escape(cl.description.get(lang))}</i>",
+            "",
+        ]
     lines.append(f"<i>{t(lang, 'classes.hint')}</i>")
     buttons = [btn(f"{CLASS_ICONS.get(key, '•')} {cl.name.get(lang)}", cb("cls", key)) for key, cl in c.classes.items()]
     return "\n".join(lines)[:MAX_MESSAGE], markup(grid(buttons))
@@ -583,10 +755,13 @@ def class_page(key: str, lang: str, char: Character | None = None) -> tuple[str,
         return t(lang, "classes.unknown") + "\n\n" + text, kb
     cl = c.classes[key]
     mine = char is not None and char.class_key == key
-    lines = [f"{CLASS_ICONS.get(key, '•')} <b>{escape(cl.name.get(lang))}</b>",
-             f"<i>{escape(cl.description.get(lang))}</i>", RULE,
-             t(lang, "classes.hit_die", die=cl.hit_die, hp=cl.hit_die),
-             t(lang, "classes.primary", ability=escape(c.abilities[cl.primary].name.get(lang)))]
+    lines = [
+        f"{CLASS_ICONS.get(key, '•')} <b>{escape(cl.name.get(lang))}</b>",
+        f"<i>{escape(cl.description.get(lang))}</i>",
+        RULE,
+        t(lang, "classes.hit_die", die=cl.hit_die, hp=cl.hit_die),
+        t(lang, "classes.primary", ability=escape(c.abilities[cl.primary].name.get(lang))),
+    ]
     if cl.casting:
         lines.append(t(lang, "classes.casting", ability=escape(c.abilities[cl.casting].name.get(lang))))
     lines.append(t(lang, "classes.skills", list=escape(", ".join(c.skills[s].name.get(lang) for s in cl.skills))))
@@ -596,11 +771,17 @@ def class_page(key: str, lang: str, char: Character | None = None) -> tuple[str,
     lines += [RULE, f"<b>{t(lang, 'classes.abilities')}</b>"]
     for akey, a in sorted(cl.abilities.items(), key=lambda kv: kv[1].level):
         mark = ("✅ " if a.level <= char.level else "🔒 ") if mine else ""
-        lines += ["", *ability_block(a, lang, prefix=f"{mark}<b>{t(lang, 'classes.level', level=a.level)}</b> · ", key=akey)]
+        lines += [
+            "",
+            *ability_block(a, lang, prefix=f"{mark}<b>{t(lang, 'classes.level', level=a.level)}</b> · ", key=akey),
+        ]
     mine_branches = [b for b in c.class_specializations.values() if b.class_key == key]
     if mine_branches:
-        lines += [RULE, t(lang, "classes.specializations", level=c.progression.specialization_level),
-                  " · ".join(escape(b.name.get(lang)) for b in mine_branches)]
+        lines += [
+            RULE,
+            t(lang, "classes.specializations", level=c.progression.specialization_level),
+            " · ".join(escape(b.name.get(lang)) for b in mine_branches),
+        ]
 
     rows = [[btn(t(lang, "btn.classes"), cb("clsl"))]]
     if mine:

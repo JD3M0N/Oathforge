@@ -35,7 +35,7 @@ def btn(text: str, data: str) -> InlineKeyboardButton:
 
 
 def grid(buttons: list[InlineKeyboardButton], cols: int = 2) -> list[list[InlineKeyboardButton]]:
-    return [buttons[i:i + cols] for i in range(0, len(buttons), cols)]
+    return [buttons[i : i + cols] for i in range(0, len(buttons), cols)]
 
 
 def markup(rows: list[list[InlineKeyboardButton]]) -> InlineKeyboardMarkup:
@@ -45,8 +45,12 @@ def markup(rows: list[list[InlineKeyboardButton]]) -> InlineKeyboardMarkup:
 def fixed_keyboard(lang: str) -> ReplyKeyboardMarkup:
     """📍 Place · ⚒ Activities · 🗺 Map / 🧝 Hero · 🎒 Inventory · 📖 Journal, always under the chat."""
     labels = [KeyboardButton(t(lang, f"kb.{k}")) for k in FIXED]
-    return ReplyKeyboardMarkup([labels[:3], labels[3:]], resize_keyboard=True, is_persistent=True,
-                               input_field_placeholder=t(lang, "kb.placeholder"))
+    return ReplyKeyboardMarkup(
+        [labels[:3], labels[3:]],
+        resize_keyboard=True,
+        is_persistent=True,
+        input_field_placeholder=t(lang, "kb.placeholder"),
+    )
 
 
 def fixed_key(text: str) -> str | None:

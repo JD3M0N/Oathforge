@@ -24,4 +24,4 @@ def skill_gain(tier: str, recent_repeats: int) -> int:
     """XP for a successful check. Trivial checks teach nothing; repeating the
     same thing in a short window halves the gain each time."""
     base = SKILL_GAIN.get(tier, 0)
-    return int(base * 0.5 ** recent_repeats)
+    return int(base * 0.5**recent_repeats)

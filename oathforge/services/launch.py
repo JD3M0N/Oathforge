@@ -54,8 +54,11 @@ async def orphans(session: AsyncSession) -> list[str]:
     for table in Base.metadata.sorted_tables:
         for fk in table.foreign_keys:
             parent = fk.column.table
-            stmt = (select(func.count()).select_from(table)
-                    .where(fk.parent.is_not(None), fk.parent.not_in(select(fk.column))))
+            stmt = (
+                select(func.count())
+                .select_from(table)
+                .where(fk.parent.is_not(None), fk.parent.not_in(select(fk.column)))
+            )
             n = await session.scalar(stmt)
             if n:
                 found.append(f"{table.name}.{fk.parent.name} -> {parent.name}: {n}")
@@ -133,10 +136,13 @@ async def restore(session: AsyncSession, data: dict) -> dict[str, int]:
         for table in tables:
             pk = list(table.primary_key.columns)
             if len(pk) == 1 and pk[0].autoincrement is not False and pk[0].type.python_type is int:
-                await session.execute(text(
-                    f"SELECT setval(pg_get_serial_sequence('\"{table.name}\"', '{pk[0].name}'), "
-                    f"COALESCE((SELECT MAX(\"{pk[0].name}\") FROM \"{table.name}\"), 1), "
-                    f"(SELECT MAX(\"{pk[0].name}\") FROM \"{table.name}\") IS NOT NULL)"))
+                await session.execute(
+                    text(
+                        f"SELECT setval(pg_get_serial_sequence('\"{table.name}\"', '{pk[0].name}'), "
+                        f'COALESCE((SELECT MAX("{pk[0].name}") FROM "{table.name}"), 1), '
+                        f'(SELECT MAX("{pk[0].name}") FROM "{table.name}") IS NOT NULL)'
+                    )
+                )
     return out
 
 

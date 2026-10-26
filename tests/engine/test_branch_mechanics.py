@@ -23,16 +23,37 @@ def ab(kind="strike", **kw) -> ClassAbility:
 
 
 def hero(**kw) -> Combatant:
-    base = dict(id="p1", side="player", ref="1", name={"es": "H", "en": "H"}, hp=30, max_hp=30, ac=1,
-                attacks=[SWORD], resource=20, resource_max=20, resource_key="focus")
+    base = dict(
+        id="p1",
+        side="player",
+        ref="1",
+        name={"es": "H", "en": "H"},
+        hp=30,
+        max_hp=30,
+        ac=1,
+        attacks=[SWORD],
+        resource=20,
+        resource_max=20,
+        resource_key="focus",
+    )
     base.update(kw)
     return Combatant(**base)
 
 
 def foe(**kw) -> Combatant:
     """It never hits back unless a test gives it a real attack: otherwise the end of the turn muddies the figures."""
-    base = dict(id="m1", side="enemy", ref="x", name={"es": "x", "en": "x"}, hp=300, max_hp=300, ac=1, dex_mod=-10,
-                xp=1, attacks=[HARMLESS])
+    base = dict(
+        id="m1",
+        side="enemy",
+        ref="x",
+        name={"es": "x", "en": "x"},
+        hp=300,
+        max_hp=300,
+        ac=1,
+        dex_mod=-10,
+        xp=1,
+        attacks=[HARMLESS],
+    )
     base.update(kw)
     return Combatant(**base)
 
@@ -53,6 +74,7 @@ def keys(logs):
 
 # ------------------------------------------------------------------ spend a status
 
+
 def test_a_strike_spends_the_status_it_finds_and_hurts_more():
     defs = {"smite": ab(extra_damage="1d1", damage_type="radiant", consumes="marked", consume_damage="10d1")}
     me, target = hero(abilities={"smite": None}), foe()
@@ -72,10 +94,10 @@ def test_without_the_status_it_is_only_what_it_is():
 
 
 def test_a_spell_and_a_save_can_spend_a_status_too():
-    defs = {"burst": ab("spell", damage="1d1", damage_type="fire", auto_hit=True, consumes="burning",
-                        consume_damage="8d1"),
-            "wave": ab("save", damage="1d1", damage_type="cold", save="dex", consumes="restrained",
-                       consume_damage="8d1")}
+    defs = {
+        "burst": ab("spell", damage="1d1", damage_type="fire", auto_hit=True, consumes="burning", consume_damage="8d1"),
+        "wave": ab("save", damage="1d1", damage_type="cold", save="dex", consumes="restrained", consume_damage="8d1"),
+    }
     me = hero(abilities={"burst": None, "wave": None})
     target = foe()
     st = fight(me, target)
@@ -87,6 +109,7 @@ def test_a_spell_and_a_save_can_spend_a_status_too():
 
 
 # ------------------------------------------------------------------------ leech
+
 
 def test_a_leech_heals_a_share_of_the_real_damage_and_no_more():
     defs = {"drain": ab(extra_damage="9d1", damage_type="necrotic", leech_pct=50)}
@@ -111,6 +134,7 @@ def test_a_leech_never_heals_past_the_maximum_and_never_on_a_miss():
 
 
 # --------------------------------------------------------------------- thorns
+
 
 def test_a_hurt_hero_with_thorns_hits_back_once_per_attack():
     me = hero(thorns="6d1", thorns_type="radiant", ac=1)
@@ -148,6 +172,7 @@ def test_being_hurt_fills_the_bar_up_to_its_top():
 
 # ------------------------------------------------------------------- cooldowns
 
+
 def test_cutting_cooldowns_takes_turns_off_the_others_but_not_itself():
     defs = {"rewind": ab("buff", reduces_cooldowns=2, cooldown=4)}
     me = hero(abilities={"rewind": None, "big": None}, cooldowns={"big": 3, "small": 1})
@@ -158,6 +183,7 @@ def test_cutting_cooldowns_takes_turns_off_the_others_but_not_itself():
 
 
 # ----------------------------------------------------------------------- heal
+
 
 def test_a_heal_that_really_heals_leaves_a_barrier():
     defs = {"mend": ab("heal", heal_dice="5d1", temp_hp="4d1")}
@@ -177,6 +203,7 @@ def test_a_heal_at_full_life_is_refused_so_it_cannot_farm_barriers():
 
 
 # ---------------------------------------------------------------------- patches
+
 
 def test_a_patch_replaces_dice_only_where_there_are_dice():
     base = ab(extra_damage="1d8", consumes="marked", consume_damage="2d8")

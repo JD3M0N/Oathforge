@@ -24,8 +24,7 @@ def left(scores: dict[str, int]) -> int:
 
 
 def valid(scores: dict[str, int]) -> bool:
-    return (sorted(scores) == sorted(ABILITIES) and all(s in COST for s in scores.values())
-            and spent(scores) <= BUDGET)
+    return sorted(scores) == sorted(ABILITIES) and all(s in COST for s in scores.values()) and spent(scores) <= BUDGET
 
 
 def can_raise(scores: dict[str, int], ability: str) -> bool:
@@ -39,7 +38,10 @@ def can_lower(scores: dict[str, int], ability: str) -> bool:
 
 def change(scores: dict[str, int], ability: str, delta: int) -> dict[str, int]:
     """A copy with one step up (+1) or down (-1); unchanged when the step is not allowed."""
-    if ability not in ABILITIES or (delta > 0 and not can_raise(scores, ability)) or (
-            delta < 0 and not can_lower(scores, ability)):
+    if (
+        ability not in ABILITIES
+        or (delta > 0 and not can_raise(scores, ability))
+        or (delta < 0 and not can_lower(scores, ability))
+    ):
         return dict(scores)
     return {**scores, ability: scores[ability] + (1 if delta > 0 else -1)}

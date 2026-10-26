@@ -8,22 +8,47 @@ from oathforge.engine.combat import Action, AttackProfile, Combatant, CombatErro
 
 _CLASSES = get_content().classes
 ABILITIES = {k: a for cls in _CLASSES.values() for k, a in cls.abilities.items()}
-SWORD = AttackProfile(key="main", name={"es": "Espada", "en": "Sword"}, to_hit=5, damage="1d8+3", damage_type="slashing")
-BOW = AttackProfile(key="ranged", name={"es": "Arco", "en": "Bow"}, to_hit=5, damage="1d6+3", damage_type="piercing", ranged=True)
-DAGGER = AttackProfile(key="main", name={"es": "Daga", "en": "Dagger"}, to_hit=5, damage="1d4+3", damage_type="piercing", finesse=True)
+SWORD = AttackProfile(
+    key="main", name={"es": "Espada", "en": "Sword"}, to_hit=5, damage="1d8+3", damage_type="slashing"
+)
+BOW = AttackProfile(
+    key="ranged", name={"es": "Arco", "en": "Bow"}, to_hit=5, damage="1d6+3", damage_type="piercing", ranged=True
+)
+DAGGER = AttackProfile(
+    key="main", name={"es": "Daga", "en": "Dagger"}, to_hit=5, damage="1d4+3", damage_type="piercing", finesse=True
+)
 
 
 def player(**kw) -> Combatant:
-    base = dict(id="p1", side="player", ref="1", name={"es": "Aldric", "en": "Aldric"}, hp=20, max_hp=20, ac=16,
-                dex_mod=0, attacks=[SWORD], skill_bonus={"athletics": 5, "stealth": 5})
+    base = dict(
+        id="p1",
+        side="player",
+        ref="1",
+        name={"es": "Aldric", "en": "Aldric"},
+        hp=20,
+        max_hp=20,
+        ac=16,
+        dex_mod=0,
+        attacks=[SWORD],
+        skill_bonus={"athletics": 5, "stealth": 5},
+    )
     base.update(kw)
     return Combatant(**base)
 
 
 def monster(cid="m1", **kw) -> Combatant:
-    base = dict(id=cid, side="enemy", ref="bandit", name={"es": "Bandido", "en": "Bandit"}, hp=11, max_hp=11, ac=12,
-                dex_mod=1, attacks=[AttackProfile(key="a", name={"es": "x", "en": "x"}, to_hit=3, damage="1d6+1",
-                                                  damage_type="slashing")], xp=25)
+    base = dict(
+        id=cid,
+        side="enemy",
+        ref="bandit",
+        name={"es": "Bandido", "en": "Bandit"},
+        hp=11,
+        max_hp=11,
+        ac=12,
+        dex_mod=1,
+        attacks=[AttackProfile(key="a", name={"es": "x", "en": "x"}, to_hit=3, damage="1d6+1", damage_type="slashing")],
+        xp=25,
+    )
     base.update(kw)
     return Combatant(**base)
 
@@ -68,6 +93,7 @@ def test_same_seed_same_outcome():
         st = encounter(player(), monster("m1"), monster("m2"), rng=rng)
         play_until_done(st, rng)
         return st.model_dump()
+
     assert run() == run()
 
 
@@ -180,10 +206,21 @@ def test_interact_scene_object_all_enemies():
     rng = random.Random(0)
     st = EncounterState(
         location="t",
-        combatants={"p1": player(skill_bonus={"athletics": 30}), "m1": monster("m1", hp=50, max_hp=50),
-                    "m2": monster("m2", hp=50, max_hp=50)},
-        scene_objects={"nest": cb.SceneObjectState(key="nest", skill="athletics", tier="easy", damage="1d4",
-                                                    targets="all_enemies", status={"status": "poisoned", "turns": 2})},
+        combatants={
+            "p1": player(skill_bonus={"athletics": 30}),
+            "m1": monster("m1", hp=50, max_hp=50),
+            "m2": monster("m2", hp=50, max_hp=50),
+        },
+        scene_objects={
+            "nest": cb.SceneObjectState(
+                key="nest",
+                skill="athletics",
+                tier="easy",
+                damage="1d4",
+                targets="all_enemies",
+                status={"status": "poisoned", "turns": 2},
+            )
+        },
     )
     cb.start(st, rng)
     cb.player_act(st, "p1", Action(kind="interact", object="nest"), rng, ABILITIES)
@@ -213,6 +250,7 @@ def test_state_roundtrips_through_json():
 
 
 # ---------------------------------------------------------------- v0.2.0: damage types, warrior, cleric
+
 
 class FixedRng(random.Random):
     """Every die shows ``value`` (capped at the die size)."""
@@ -245,8 +283,9 @@ def test_damage_types_weak_resist_immune():
 
 def test_extra_radiant_damage_is_applied_separately():
     st = started(player(abilities={"consecrated_strike": 1}), monster(hp=100, max_hp=100, ac=1, weak_to=["radiant"]))
-    logs = cb.player_act(st, "p1", Action(kind="ability", ability="consecrated_strike", target="m1"),
-                         FixedRng(4), ABILITIES)
+    logs = cb.player_act(
+        st, "p1", Action(kind="ability", ability="consecrated_strike", target="m1"), FixedRng(4), ABILITIES
+    )
     dmg = [e.params for e in logs if e.key == "combat.damage" and e.params["target"] == "m1"]
     assert [(d["type"], d["amount"], d["effect"]) for d in dmg] == [("slashing", 4 + 3, ""), ("radiant", 8, "weak")]
 
@@ -293,9 +332,11 @@ def test_sacred_flame_uses_spell_bonus_and_reaches_back_row():
 
 
 def test_turn_undead_only_hits_undead():
-    st = started(player(abilities={"turn_undead": 1}),
-                 monster("m1", hp=50, max_hp=50, creature_type="undead", weak_to=["radiant"]),
-                 monster("m2", hp=50, max_hp=50))
+    st = started(
+        player(abilities={"turn_undead": 1}),
+        monster("m1", hp=50, max_hp=50, creature_type="undead", weak_to=["radiant"]),
+        monster("m2", hp=50, max_hp=50),
+    )
     logs = cb.player_act(st, "p1", Action(kind="ability", ability="turn_undead"), FixedRng(3), ABILITIES)
     assert st.combatants["m1"].hp == 50 - 12 and st.combatants["m2"].hp == 50
     assert any(e.key == "combat.status" and e.params["status"] == "stunned" for e in logs)
@@ -325,6 +366,7 @@ def test_divine_strike_once_per_turn():
 
 # ---------------------------------------------------------------- v0.4.0: sorcerer, druid, bard
 
+
 def test_save_fails_below_dc_and_succeeds_at_dc():
     for value, slept in ((12, True), (13, False)):
         st = started(player(spell_dc=13, abilities={"sleep": 2}), monster(hp=100, max_hp=100))
@@ -336,11 +378,15 @@ def test_save_fails_below_dc_and_succeeds_at_dc():
 
 def test_fireball_hits_the_targets_row_and_halves_on_save():
     def cast(value):
-        st = started(player(spell_dc=13, abilities={"fireball": 1}),
-                     monster("m1", hp=50, max_hp=50), monster("m2", hp=50, max_hp=50),
-                     monster("m3", hp=50, max_hp=50, row="back"))
+        st = started(
+            player(spell_dc=13, abilities={"fireball": 1}),
+            monster("m1", hp=50, max_hp=50),
+            monster("m2", hp=50, max_hp=50),
+            monster("m3", hp=50, max_hp=50, row="back"),
+        )
         cb.player_act(st, "p1", Action(kind="ability", ability="fireball", target="m2"), FixedRng(value), ABILITIES)
         return [st.combatants[m].hp for m in ("m1", "m2", "m3")]
+
     assert cast(5) == [50 - 15, 50 - 15, 50]  # failed save: 3d6 = 15
     assert cast(15) == [50 - 9, 50 - 9, 50]  # saved (15 + 1 >= 13): half of 18
 
@@ -387,21 +433,25 @@ def test_magic_missile_never_misses_and_spell_damage_bonus():
     logs = cb.player_act(st, "p1", Action(kind="ability", ability="magic_missile", target="m1"), FixedRng(1), ABILITIES)
     assert not any(e.key == "combat.miss" and e.params["actor"] == "p1" for e in logs)
     assert st.combatants["m1"].hp == 100 - 6
-    st = started(player(spell_to_hit=5, spell_damage_bonus=3, abilities={"thorn_whip": None}),
-                 monster(hp=100, max_hp=100, ac=1))
+    st = started(
+        player(spell_to_hit=5, spell_damage_bonus=3, abilities={"thorn_whip": None}), monster(hp=100, max_hp=100, ac=1)
+    )
     cb.player_act(st, "p1", Action(kind="ability", ability="thorn_whip", target="m1"), FixedRng(2), ABILITIES)
     assert st.combatants["m1"].hp == 100 - (2 + 3)
 
 
 def test_vicious_mockery_frightens_but_undead_are_immune():
-    st = started(player(spell_dc=13, abilities={"vicious_mockery": None}),
-                 monster(hp=100, max_hp=100, immune=["frightened"]))
-    logs = cb.player_act(st, "p1", Action(kind="ability", ability="vicious_mockery", target="m1"),
-                         FixedRng(2), ABILITIES)
+    st = started(
+        player(spell_dc=13, abilities={"vicious_mockery": None}), monster(hp=100, max_hp=100, immune=["frightened"])
+    )
+    logs = cb.player_act(
+        st, "p1", Action(kind="ability", ability="vicious_mockery", target="m1"), FixedRng(2), ABILITIES
+    )
     assert st.combatants["m1"].hp == 100 - 2 and any(e.key == "combat.immune" for e in logs)
 
 
 # ---------------------------------------------------------------- v0.4.4: warlock
+
 
 def test_hex_curses_without_save_and_uses_the_bonus_action():
     st = started(player(abilities={"hex": 2}), monster(hp=100, max_hp=100))
@@ -417,8 +467,10 @@ def test_hits_on_a_hexed_target_add_necrotic_damage():
     logs = cb.player_act(st, "p1", Action(kind="attack", weapon="main", target="m1"), FixedRng(2), ABILITIES)
     assert any(e.key == "combat.damage" and e.params["type"] == "necrotic" and e.params["amount"] == 2 for e in logs)
     assert st.combatants["m1"].hp == 100 - (2 + 3) - 2
-    st = started(player(spell_to_hit=5, abilities={"eldritch_blast": None}),
-                 monster(hp=100, max_hp=100, ac=1, statuses={"hexed": 3}))
+    st = started(
+        player(spell_to_hit=5, abilities={"eldritch_blast": None}),
+        monster(hp=100, max_hp=100, ac=1, statuses={"hexed": 3}),
+    )
     cb.player_act(st, "p1", Action(kind="ability", ability="eldritch_blast", target="m1"), FixedRng(2), ABILITIES)
     assert st.combatants["m1"].hp == 100 - 2 - 2
 
@@ -454,8 +506,11 @@ def test_smoke_bomb_escapes_without_a_roll():
 
 
 def test_fire_bomb_burns_the_row_on_a_failed_save():
-    st = encounter(player(consumables={"fire_bomb": 1}), monster(hp=99, max_hp=99, dex_mod=-10),
-                   monster("m2", hp=99, max_hp=99, dex_mod=-10))
+    st = encounter(
+        player(consumables={"fire_bomb": 1}),
+        monster(hp=99, max_hp=99, dex_mod=-10),
+        monster("m2", hp=99, max_hp=99, dex_mod=-10),
+    )
     use(st, "fire_bomb", target="m1")
     for m in ("m1", "m2"):
         assert st.combatants[m].hp < 99

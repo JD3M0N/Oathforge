@@ -60,8 +60,9 @@ async def learn(session: AsyncSession, char: Character, key: str, replace: str |
     if here is None:
         return Outcome.refused("prof.err.not_guild")
     if here != key:
-        return Outcome.refused("prof.err.elsewhere", prof=c.professions[key].name.model_dump(),
-                               place=_stall_phrase(key))
+        return Outcome.refused(
+            "prof.err.elsewhere", prof=c.professions[key].name.model_dump(), place=_stall_phrase(key)
+        )
     current = active(char)
     if key in current:
         return Outcome.refused("prof.err.already", prof=c.professions[key].name.model_dump())
@@ -115,7 +116,13 @@ def announce_techniques(key: str, before: int, after: int, out: Outcome) -> None
     for tech_key, tech in prof.techniques.items():
         if not before < tech.rank <= after:
             continue
-        made = [c.items[next(iter(r.outputs))].name for r in c.recipes.values()
-                if r.technique == tech_key and r.profession == key]
-        out.add("prof.technique", technique=tech.name.model_dump(),
-                items={lang: ", ".join(m.get(lang) for m in made) for lang in ("es", "en")})
+        made = [
+            c.items[next(iter(r.outputs))].name
+            for r in c.recipes.values()
+            if r.technique == tech_key and r.profession == key
+        ]
+        out.add(
+            "prof.technique",
+            technique=tech.name.model_dump(),
+            items={lang: ", ".join(m.get(lang) for m in made) for lang in ("es", "en")},
+        )

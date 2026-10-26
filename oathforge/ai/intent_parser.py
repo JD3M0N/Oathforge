@@ -9,8 +9,21 @@ from oathforge.ai.client import LLM
 from oathforge.ai.prompts import INTENT_SYSTEM
 
 IntentType = Literal[
-    "move", "talk", "attack", "use_item", "skill_check", "inspect", "steal", "rest", "quest_action",
-    "environment_interaction", "ability", "defend", "flee", "ooc_question", "narrate_only",
+    "move",
+    "talk",
+    "attack",
+    "use_item",
+    "skill_check",
+    "inspect",
+    "steal",
+    "rest",
+    "quest_action",
+    "environment_interaction",
+    "ability",
+    "defend",
+    "flee",
+    "ooc_question",
+    "narrate_only",
 ]
 TierName = Literal["trivial", "easy", "medium", "hard", "very_hard"]
 
@@ -72,9 +85,30 @@ class ActionContext:
         return "\n".join(parts)
 
 
-COMBAT_TYPES = {"attack", "ability", "use_item", "defend", "flee", "environment_interaction", "ooc_question", "narrate_only"}
-EXPLORE_TYPES = {"move", "talk", "attack", "use_item", "skill_check", "inspect", "steal", "rest", "quest_action",
-                 "environment_interaction", "ooc_question", "narrate_only"}
+COMBAT_TYPES = {
+    "attack",
+    "ability",
+    "use_item",
+    "defend",
+    "flee",
+    "environment_interaction",
+    "ooc_question",
+    "narrate_only",
+}
+EXPLORE_TYPES = {
+    "move",
+    "talk",
+    "attack",
+    "use_item",
+    "skill_check",
+    "inspect",
+    "steal",
+    "rest",
+    "quest_action",
+    "environment_interaction",
+    "ooc_question",
+    "narrate_only",
+}
 
 
 def validate(intent: Intent, ctx: ActionContext) -> Intent:
@@ -83,7 +117,10 @@ def validate(intent: Intent, ctx: ActionContext) -> Intent:
     if intent.type not in allowed:
         return Intent(type="narrate_only", approach=intent.approach)
     pools = {
-        "move": ctx.exits, "talk": ctx.npcs, "steal": ctx.npcs, "use_item": ctx.items,
+        "move": ctx.exits,
+        "talk": ctx.npcs,
+        "steal": ctx.npcs,
+        "use_item": ctx.items,
         "quest_action": ctx.quest_actions,
     }
     if ctx.in_combat:

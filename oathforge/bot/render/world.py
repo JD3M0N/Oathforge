@@ -16,8 +16,10 @@ from oathforge.bot.render.crafting import activity_entries, activity_panel
 
 # ---------------------------------------------------------------- scene
 
-async def scene(session: AsyncSession, char: Character, lang: str,
-                started: str | None = None, compact: bool = False) -> tuple[str, InlineKeyboardMarkup]:
+
+async def scene(
+    session: AsyncSession, char: Character, lang: str, started: str | None = None, compact: bool = False
+) -> tuple[str, InlineKeyboardMarkup]:
     """Where you are and who is around; what you can do with your hands lives in ⚒ Activities.
     ``compact``: only the heading and the status line, under the result of an action."""
     c = get_content()
@@ -32,7 +34,9 @@ async def scene(session: AsyncSession, char: Character, lang: str,
             lines += ["", f"<i>{escape(extra[lang])}</i>"]
         if present:
             lines += ["", t(lang, "scene.people")]
-            lines += [f"• {escape(c.npcs[k].name.get(lang))} <i>({escape(c.npcs[k].title.get(lang))})</i>" for k in present]
+            lines += [
+                f"• {escape(c.npcs[k].name.get(lang))} <i>({escape(c.npcs[k].title.get(lang))})</i>" for k in present
+            ]
         lines += ["", f"<i>{t(lang, 'scene.hint')}</i>"]
 
     n = nonce()
@@ -51,8 +55,9 @@ async def scene(session: AsyncSession, char: Character, lang: str,
     rows = grid(buttons)
     trip_to = exploration.trip(char) if char.state == "idle" else None
     if trip_to:  # an ambush stopped the trip halfway: carry on in one tap
-        rows.insert(0, [btn(t(lang, "btn.continue_trip", place=c.locations[trip_to].phrase()[lang]),
-                            cb("go", trip_to, n))])
+        rows.insert(
+            0, [btn(t(lang, "btn.continue_trip", place=c.locations[trip_to].phrase()[lang]), cb("go", trip_to, n))]
+        )
     for qkey, quest in await quests.ready_to_turn_in(session, char, present):
         rows.append([btn(t(lang, "btn.turn_in", quest=quest.name.get(lang)), cb("qturn", qkey, n))])
     for a in await quests.available_actions(session, char, present):
@@ -71,7 +76,9 @@ async def activities_view(session: AsyncSession, char: Character, lang: str) -> 
     head = t(lang, "acts.title", place=escape(loc.name.get(lang))) + "\n" + status_line(char, lang)
     parts = [head, *(line for line, _ in entries)] if entries else [head, t(lang, "acts.none")]
     if loc.teaches is not None:
-        parts.append(f"<i>{t(lang, 'acts.guild', prof=escape(get_content().professions[loc.teaches].name.get(lang)))}</i>")
+        parts.append(
+            f"<i>{t(lang, 'acts.guild', prof=escape(get_content().professions[loc.teaches].name.get(lang)))}</i>"
+        )
     rows = grid([b for _, b in entries if b is not None])
     last = [btn(t(lang, "btn.professions"), cb("prof"))]
     if loc.home:
@@ -97,26 +104,36 @@ async def room_view(session: AsyncSession, char: Character, lang: str) -> tuple[
     lines.append(t(lang, "home.chest", used=len(stored), capacity=home.capacity(char)))
     lines.append("")
     if stored:
-        lines += [t(lang, "home.line", item=escape(c.items[i.item_key].label(lang)), qty=i.qty, key=i.item_key)
-                  for i in stored]
+        lines += [
+            t(lang, "home.line", item=escape(c.items[i.item_key].label(lang)), qty=i.qty, key=i.item_key)
+            for i in stored
+        ]
     else:
         lines.append(t(lang, "home.chest_empty"))
     if home.at_home(char):
         bag = [i for i in await inventory.items_of(session, char) if not i.equipped_slot]
         if bag:
             lines += ["", t(lang, "home.bag_title")]
-            lines += [t(lang, "home.bag_line", item=escape(c.items[i.item_key].label(lang)), qty=i.qty,
-                         key=i.item_key) for i in bag]
+            lines += [
+                t(lang, "home.bag_line", item=escape(c.items[i.item_key].label(lang)), qty=i.qty, key=i.item_key)
+                for i in bag
+            ]
     return "\n".join(lines)[:MAX_MESSAGE], markup([[btn(t(lang, "btn.back"), cb("scene"))]])
 
 
 def settings_view(user, lang: str) -> tuple[str, InlineKeyboardMarkup]:
     """⚙️ Settings: language and manual rolls (off by default; the die is decoration)."""
     on = actions.manual_rolls(user)
-    text = t(lang, "settings.text", language=t(lang, "settings.language_name"),
-             rolls=t(lang, "roll.on" if on else "roll.off"))
-    rows = [[btn("🇪🇸 Español", cb("setl", "es")), btn("🇬🇧 English", cb("setl", "en"))],
-            [btn(t(lang, "btn.roll_off" if on else "btn.roll_on"), cb("rollset", "off" if on else "on"))]]
+    text = t(
+        lang,
+        "settings.text",
+        language=t(lang, "settings.language_name"),
+        rolls=t(lang, "roll.on" if on else "roll.off"),
+    )
+    rows = [
+        [btn("🇪🇸 Español", cb("setl", "es")), btn("🇬🇧 English", cb("setl", "en"))],
+        [btn(t(lang, "btn.roll_off" if on else "btn.roll_on"), cb("rollset", "off" if on else "on"))],
+    ]
     return text, markup(rows)
 
 
@@ -154,8 +171,11 @@ def _route_lines(char: Character, route: world_map.Route, lang: str) -> list[str
         tags.append(t(lang, "map.gate"))
     if world_map.cleared(char, route.to):
         tags.append(t(lang, "map.cleared"))
-    lines = [f"• <b>{escape(loc.name.get(lang))}</b> · " + " · ".join(tags) + (" " + "⚠️" * route.danger
-                                                                              if route.danger else "")]
+    lines = [
+        f"• <b>{escape(loc.name.get(lang))}</b> · "
+        + " · ".join(tags)
+        + (" " + "⚠️" * route.danger if route.danger else "")
+    ]
     todo = _place_activities(route.to, lang)
     if todo:
         lines.append(f"      {todo}")
@@ -172,8 +192,9 @@ def _street_of(place: str) -> str | None:
     return exits[0].to if len(exits) == 1 else None
 
 
-async def map_view(session: AsyncSession, char: Character, lang: str, zone: str | None = None,
-                   street: str | None = None) -> tuple[str, InlineKeyboardMarkup]:
+async def map_view(
+    session: AsyncSession, char: Character, lang: str, zone: str | None = None, street: str | None = None
+) -> tuple[str, InlineKeyboardMarkup]:
     """/map and «Travel»: where you are, what there is to do, and every place you can go in one tap (the engine
     walks the way). First your missions, then this zone, then the other zones you know (``zone`` opens one)."""
     c = get_content()
@@ -199,8 +220,10 @@ async def map_view(session: AsyncSession, char: Character, lang: str, zone: str 
         rows.append([btn(t(lang, "btn.back"), cb("trv"))])
         return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
 
-    lines = [t(lang, "map.title", zone=escape(zone_here.name.get(lang)), kind=t(lang, f"map.kind.{zone_here.kind}")),
-             t(lang, "map.here", place=escape(here.phrase()[lang]))]
+    lines = [
+        t(lang, "map.title", zone=escape(zone_here.name.get(lang)), kind=t(lang, f"map.kind.{zone_here.kind}")),
+        t(lang, "map.here", place=escape(here.phrase()[lang])),
+    ]
     todo = _place_activities(char.location, lang)
     lines.append(f"      {todo}" if todo else f"      <i>{t(lang, 'map.nothing')}</i>")
     lines.append(RULE)
@@ -210,8 +233,14 @@ async def map_view(session: AsyncSession, char: Character, lang: str, zone: str 
     if goals:
         lines.append(t(lang, "map.objective"))
         for quest, r in goals:
-            lines.append(t(lang, "map.objective_line", quest=escape(quest.get(lang, quest.get("en"))),
-                           place=escape(c.locations[r.to].name.get(lang))))
+            lines.append(
+                t(
+                    lang,
+                    "map.objective_line",
+                    quest=escape(quest.get(lang, quest.get("en"))),
+                    place=escape(c.locations[r.to].name.get(lang)),
+                )
+            )
             rows.append(_go_button(r, lang, n, "📜"))
         lines.append("")
 
@@ -239,8 +268,14 @@ async def map_view(session: AsyncSession, char: Character, lang: str, zone: str 
             rows += [_go_button(r, lang, n) for r in zroutes]
         else:
             lines.append("      " + " · ".join(escape(c.locations[r.to].name.get(lang)) for r in zroutes))
-            rows.append([btn(t(lang, "btn.zone", icon=ZONE_ICON[z.kind], zone=z.name.get(lang), n=len(zroutes)),
-                             cb("trvz", key))])
+            rows.append(
+                [
+                    btn(
+                        t(lang, "btn.zone", icon=ZONE_ICON[z.kind], zone=z.name.get(lang), n=len(zroutes)),
+                        cb("trvz", key),
+                    )
+                ]
+            )
     far = world_map.beyond(char)
     if far:
         lines += ["", t(lang, "map.beyond")]
@@ -261,8 +296,9 @@ def talk_menu(char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
     return t(lang, "talk.title"), markup(rows)
 
 
-async def conversation(session: AsyncSession, char: Character, npc_key: str, lang: str,
-                       line: str | None = None) -> tuple[str, InlineKeyboardMarkup]:
+async def conversation(
+    session: AsyncSession, char: Character, npc_key: str, lang: str, line: str | None = None
+) -> tuple[str, InlineKeyboardMarkup]:
     c = get_content()
     npc = c.npcs[npc_key]
     text = [f"💬 <b>{escape(npc.name.get(lang))}</b>, {escape(npc.title.get(lang))}", ""]
@@ -273,10 +309,14 @@ async def conversation(session: AsyncSession, char: Character, npc_key: str, lan
     text += ["", f"<i>{t(lang, 'talk.hint', npc=escape(npc.name.get(lang)))}</i>"]
     n = nonce()
     present = exploration.npcs_present(char.location)
-    rows = [[btn(t(lang, "btn.turn_in", quest=q.name.get(lang)), cb("qturn", qkey, n))]
-            for qkey, q in await quests.ready_to_turn_in(session, char, present, npc=npc_key)]
-    rows += [[btn(a.action.label.get(lang), cb("qa", a.ref, n))]
-             for a in await quests.available_actions(session, char, present, npc=npc_key)]
+    rows = [
+        [btn(t(lang, "btn.turn_in", quest=q.name.get(lang)), cb("qturn", qkey, n))]
+        for qkey, q in await quests.ready_to_turn_in(session, char, present, npc=npc_key)
+    ]
+    rows += [
+        [btn(a.action.label.get(lang), cb("qa", a.ref, n))]
+        for a in await quests.available_actions(session, char, present, npc=npc_key)
+    ]
     if npc.shop:
         rows.append([btn(t(lang, "btn.shop"), cb("shop", npc_key))])
     rows.append([btn(t(lang, "btn.leave"), cb("bye"))])
@@ -285,6 +325,7 @@ async def conversation(session: AsyncSession, char: Character, npc_key: str, lan
 
 # ---------------------------------------------------------------- bestiary
 
+
 def bestiary_list(char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup]:
     c = get_content()
     known = bestiary.known(char)
@@ -292,8 +333,7 @@ def bestiary_list(char: Character, lang: str) -> tuple[str, InlineKeyboardMarkup
     rows = []
     for key, entry in known:
         m = c.monsters[key]
-        rows.append([btn(f"{creature_icon(m)} {m.name.get(lang)} · ⚔️ {entry.get('killed', 0)}",
-                         cb("jb", key))])
+        rows.append([btn(f"{creature_icon(m)} {m.name.get(lang)} · ⚔️ {entry.get('killed', 0)}", cb("jb", key))])
     lines.append(f"<i>{t(lang, 'bestiary.hint' if known else 'bestiary.empty')}</i>")
     return "\n".join(lines), markup(rows + journal_tabs("jrb", lang))
 
@@ -307,27 +347,34 @@ def bestiary_entry(char: Character, key: str, lang: str) -> tuple[str, InlineKey
     if key not in c.monsters or level == 0:
         return t(lang, "bestiary.unknown"), back
     m = c.monsters[key]
-    lines = [f"{creature_icon(m)} <b>{escape(m.name.get(lang))}</b>",
-             f"<i>{t(lang, 'creature.' + m.type)} · {t(lang, 'bestiary.active.' + m.active)}</i>",
-             RULE, escape(m.description.get(lang))]
+    lines = [
+        f"{creature_icon(m)} <b>{escape(m.name.get(lang))}</b>",
+        f"<i>{t(lang, 'creature.' + m.type)} · {t(lang, 'bestiary.active.' + m.active)}</i>",
+        RULE,
+        escape(m.description.get(lang)),
+    ]
     if m.lore:
         lines += ["", escape(m.lore.get(lang))]
     if m.habitat:
         lines += ["", t(lang, "bestiary.habitat", place=escape(m.habitat.get(lang)))]
     lines.append(t(lang, "bestiary.record", seen=entry.get("seen", 0), killed=entry.get("killed", 0)))
     if level >= 2:
-        lines += ["", f"<b>{t(lang, 'bestiary.stats')}</b>",
-                  t(lang, "bestiary.hp_ac", hp=m.hp, ac=m.ac)]
+        lines += ["", f"<b>{t(lang, 'bestiary.stats')}</b>", t(lang, "bestiary.hp_ac", hp=m.hp, ac=m.ac)]
         for a in m.attacks:
             icon = "🏹" if a.ranged else "🗡️"
-            lines.append(f"{icon} {escape(a.name.get(lang))}: {a.to_hit:+d} · {a.damage} "
-                         f"{escape(t(lang, 'dmg.' + a.damage_type))}")
+            lines.append(
+                f"{icon} {escape(a.name.get(lang))}: {a.to_hit:+d} · {a.damage} "
+                f"{escape(t(lang, 'dmg.' + a.damage_type))}"
+            )
     else:
         lines += ["", f"🔒 <i>{t(lang, 'bestiary.locked_stats')}</i>"]
     if level >= 3:
         lines += ["", f"<b>{t(lang, 'bestiary.secrets')}</b>"]
-        for field, label in (("vulnerable", "bestiary.vulnerable"), ("resist", "bestiary.resist"),
-                             ("immune_damage", "bestiary.immune")):
+        for field, label in (
+            ("vulnerable", "bestiary.vulnerable"),
+            ("resist", "bestiary.resist"),
+            ("immune_damage", "bestiary.immune"),
+        ):
             values = getattr(m, field)
             if values:
                 lines.append(t(lang, label, list=", ".join(t(lang, "dmg." + v) for v in values)))
@@ -352,5 +399,7 @@ def creature_caption(key: str, lang: str) -> str:
 async def rumors(session: AsyncSession, lang: str) -> tuple[str, InlineKeyboardMarkup]:
     lines = [f"<b>{t(lang, 'journal.rumors')}</b>", ""]
     found = await npcs.recent_rumors(session, limit=8)
-    lines += [f"• <i>{escape(r.get(lang, r.get('en', '')))}</i>" for r in found] or [f"<i>{t(lang, 'journal.no_rumors')}</i>"]
+    lines += [f"• <i>{escape(r.get(lang, r.get('en', '')))}</i>" for r in found] or [
+        f"<i>{t(lang, 'journal.no_rumors')}</i>"
+    ]
     return "\n".join(lines)[:MAX_MESSAGE], markup(journal_tabs("jrr", lang))

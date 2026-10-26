@@ -91,6 +91,7 @@ async def test_all_views_render(lang):
         check(render.combat_panel(char, enc.state, lang, target_menu="atk:main"))
         check(render.combat_panel(char, enc.state, lang, target_menu="obj:iron_chandelier"))
         from oathforge.engine.combat import Action
+
         rng = random.Random(4)
         for _ in range(60):
             if enc.status != "active":
@@ -109,16 +110,44 @@ async def test_all_views_render(lang):
         assert "🛡️" in text  # AC next to each combatant
         # a crit with its damage indented below it, a miss, and a new round as a separator
         from oathforge.engine.combat import EncounterState, LogEntry
+
         state = EncounterState.model_validate(enc.state)
-        entries = [LogEntry(key="combat.round", params={"round": 2}),
-                   LogEntry(key="combat.crit", params={"actor": "p1", "target": "m1", "weapon": {"es": "Espada", "en": "Sword"},
-                                                       "roll": 20, "total": 25, "ac": 13, "adv": False, "dis": False,
-                                                       "crit": True, "sneak": 0}),
-                   LogEntry(key="combat.damage", params={"target": "m1", "amount": 14, "type": "slashing",
-                                                         "effect": "", "hp": 0, "max_hp": 30}),
-                   LogEntry(key="combat.defeated", params={"target": "m1"}),
-                   LogEntry(key="combat.miss", params={"actor": "m2", "target": "p1", "weapon": {"es": "Garra", "en": "Claw"},
-                                                       "roll": 3, "total": 7, "ac": 18, "adv": False, "dis": False})]
+        entries = [
+            LogEntry(key="combat.round", params={"round": 2}),
+            LogEntry(
+                key="combat.crit",
+                params={
+                    "actor": "p1",
+                    "target": "m1",
+                    "weapon": {"es": "Espada", "en": "Sword"},
+                    "roll": 20,
+                    "total": 25,
+                    "ac": 13,
+                    "adv": False,
+                    "dis": False,
+                    "crit": True,
+                    "sneak": 0,
+                },
+            ),
+            LogEntry(
+                key="combat.damage",
+                params={"target": "m1", "amount": 14, "type": "slashing", "effect": "", "hp": 0, "max_hp": 30},
+            ),
+            LogEntry(key="combat.defeated", params={"target": "m1"}),
+            LogEntry(
+                key="combat.miss",
+                params={
+                    "actor": "m2",
+                    "target": "p1",
+                    "weapon": {"es": "Garra", "en": "Claw"},
+                    "roll": 3,
+                    "total": 7,
+                    "ac": 18,
+                    "adv": False,
+                    "dis": False,
+                },
+            ),
+        ]
         blocks = render.combat_blocks(state, entries, lang)
         assert len(blocks) == 3
         assert blocks[0][0].startswith("<i>") and "2" in blocks[0][0]
@@ -273,7 +302,9 @@ async def test_map_offers_the_mission_goal():
         assert goals and all(r.to != "crownreach_chapel" for _, r in goals)
         text, kb = await render.map_view(s, char, "es")
         assert "Tu objetivo" in text
-        assert any(b.text.startswith("📜") and b.callback_data.startswith("go|") for row in kb.inline_keyboard for b in row)
+        assert any(
+            b.text.startswith("📜") and b.callback_data.startswith("go|") for row in kb.inline_keyboard for b in row
+        )
 
 
 def test_places_take_their_article_and_spanish_contracts_it():

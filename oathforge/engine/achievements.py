@@ -10,8 +10,10 @@ def event_types(condition) -> set[str]:
 def advance(condition, previous: dict, event: str, data: dict) -> dict:
     state = deepcopy(previous)
     if condition.kind in ("all", "any"):
-        state["children"] = [advance(c, s, event, data) for c, s in zip(
-            condition.children, state.get("children", [{} for _ in condition.children]))]
+        state["children"] = [
+            advance(c, s, event, data)
+            for c, s in zip(condition.children, state.get("children", [{} for _ in condition.children]))
+        ]
         return state
     if condition.kind == "sequence":
         index = state.get("index", 0)

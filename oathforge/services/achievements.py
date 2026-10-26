@@ -1,4 +1,5 @@
 """Transactional achievement progress, evidence, preferences and delivery leases."""
+
 from collections import defaultdict, deque
 from dataclasses import dataclass, field
 import hashlib
@@ -10,9 +11,14 @@ from sqlalchemy import select
 from oathforge.content import get_content
 from oathforge.content.achievement_schemas import DECISION_FLAGS, EDITION, FLAG_EVENTS
 from oathforge.database.models import (
-    Character, QuestProgress, FactionReputation,
-    AchievementProgress, AchievementUnlock, HeroFact,
-    AchievementPreferences, AchievementNotification,
+    Character,
+    QuestProgress,
+    FactionReputation,
+    AchievementProgress,
+    AchievementUnlock,
+    HeroFact,
+    AchievementPreferences,
+    AchievementNotification,
 )
 from oathforge.engine.achievements import advance, progress, event_types
 from oathforge.engine import gathering
@@ -26,8 +32,15 @@ CHALLENGE_LEVELS = range(3, 6)
 # What the chronicle keeps. Everything else is recorded for the stats but never shown as an entry.
 NOTABLE_ALWAYS = {"quest", "decision", "unlock", "level", "discovery", "secrets"}
 # Worth one entry the first time each value happens: the field of the data that makes it unique.
-NOTABLE_FIRST = {"visit": ("location",), "craft": ("recipe",), "seen": ("monster",), "kill": ("monster",),
-                 "quest_start": ("quest",), "profession": ("key", "rank"), "mastery": ("skill", "rank")}
+NOTABLE_FIRST = {
+    "visit": ("location",),
+    "craft": ("recipe",),
+    "seen": ("monster",),
+    "kill": ("monster",),
+    "quest_start": ("quest",),
+    "profession": ("key", "rank"),
+    "mastery": ("skill", "rank"),
+}
 
 
 def fact_marks(kind: str, data: dict) -> tuple[bool, str | None]:
@@ -53,6 +66,7 @@ class GameplayEvent:
     schema_version: int = 1
     retroactive: bool = False
 
+
 _catalog = None
 _index = {}
 
@@ -71,10 +85,20 @@ def event_index():
 
 def encounter_metrics(char, monster_keys, fixed_flag, hunt, night) -> dict:
     """Saved on the encounter at its start, so challenges never depend on the battle report."""
-    eligible = (fixed_flag is None and char.level in CHALLENGE_LEVELS
-                and CHALLENGE_ENCOUNTERS.get(char.location) == sorted(monster_keys))
-    return {"version": 1, "initial_level": char.level, "monsters": list(monster_keys), "eligible": eligible,
-            "consumed": 0, "period": "night" if night else "day", "hunt": hunt}
+    eligible = (
+        fixed_flag is None
+        and char.level in CHALLENGE_LEVELS
+        and CHALLENGE_ENCOUNTERS.get(char.location) == sorted(monster_keys)
+    )
+    return {
+        "version": 1,
+        "initial_level": char.level,
+        "monsters": list(monster_keys),
+        "eligible": eligible,
+        "consumed": 0,
+        "period": "night" if night else "day",
+        "hunt": hunt,
+    }
 
 
 async def apply_events(session, character, events):
@@ -87,20 +111,46 @@ async def apply_events(session, character, events):
     if not events:
         return []
     from oathforge.services.exploration import game_day  # exploration emits facts; the clock comes back deferred
+
     today = game_day()
     # The character lock serializes writers, so one lookup covers the whole batch.
-    seen = set(await session.scalars(select(HeroFact.event_id).where(
-        HeroFact.character_id == character.id,
-        HeroFact.event_id.in_([event.event_id for event in events]))))
+    seen = set(
+        await session.scalars(
+            select(HeroFact.event_id).where(
+                HeroFact.character_id == character.id, HeroFact.event_id.in_([event.event_id for event in events])
+            )
+        )
+    )
     tags = {tag for tag in (fact_marks(e.kind, e.data)[1] for e in events) if tag}
-    known_tags = set(await session.scalars(select(HeroFact.tag).where(
-        HeroFact.character_id == character.id, HeroFact.tag.in_(tags)))) if tags else set()
-    rows = {r.achievement_key: r for r in (await session.scalars(
-        select(AchievementProgress).where(AchievementProgress.character_id == character.id,
-                                          AchievementProgress.edition == EDITION))).all()}
-    unlocked = {r.achievement_key for r in (await session.scalars(
-        select(AchievementUnlock).where(AchievementUnlock.character_id == character.id,
-                                        AchievementUnlock.edition == EDITION))).all()}
+    known_tags = (
+        set(
+            await session.scalars(
+                select(HeroFact.tag).where(HeroFact.character_id == character.id, HeroFact.tag.in_(tags))
+            )
+        )
+        if tags
+        else set()
+    )
+    rows = {
+        r.achievement_key: r
+        for r in (
+            await session.scalars(
+                select(AchievementProgress).where(
+                    AchievementProgress.character_id == character.id, AchievementProgress.edition == EDITION
+                )
+            )
+        ).all()
+    }
+    unlocked = {
+        r.achievement_key
+        for r in (
+            await session.scalars(
+                select(AchievementUnlock).where(
+                    AchievementUnlock.character_id == character.id, AchievementUnlock.edition == EDITION
+                )
+            )
+        ).all()
+    }
     granted = []
     queue = deque(events)
     while queue:
@@ -112,9 +162,18 @@ async def apply_events(session, character, events):
         if tag:
             notable = tag not in known_tags
             known_tags.add(tag)
-        session.add(HeroFact(character_id=character.id, event_id=event.event_id, kind=event.kind,
-                             data=event.data, tag=tag, game_day=today, notable=notable,
-                             retroactive=event.retroactive))
+        session.add(
+            HeroFact(
+                character_id=character.id,
+                event_id=event.event_id,
+                kind=event.kind,
+                data=event.data,
+                tag=tag,
+                game_day=today,
+                notable=notable,
+                retroactive=event.retroactive,
+            )
+        )
         for key in index.get(event.kind, ()):
             if key in unlocked:
                 continue
@@ -125,8 +184,9 @@ async def apply_events(session, character, events):
             if state == old:
                 continue
             if row is None:
-                row = AchievementProgress(character_id=character.id, achievement_key=key,
-                                          edition=definition.edition, state=state)
+                row = AchievementProgress(
+                    character_id=character.id, achievement_key=key, edition=definition.edition, state=state
+                )
                 session.add(row)
                 rows[key] = row
             else:
@@ -134,15 +194,36 @@ async def apply_events(session, character, events):
             value, target = progress(definition.condition, state)
             if value < target:
                 continue
-            evidence = {"event_id": event.event_id, "kind": event.kind, "source": event.source,
-                        "schema_version": event.schema_version, "data": event.data, "progress": state}
-            session.add(AchievementUnlock(character_id=character.id, achievement_key=key,
-                edition=definition.edition, points=definition.points, evidence=evidence,
-                retroactive=event.retroactive))
+            evidence = {
+                "event_id": event.event_id,
+                "kind": event.kind,
+                "source": event.source,
+                "schema_version": event.schema_version,
+                "data": event.data,
+                "progress": state,
+            }
+            session.add(
+                AchievementUnlock(
+                    character_id=character.id,
+                    achievement_key=key,
+                    edition=definition.edition,
+                    points=definition.points,
+                    evidence=evidence,
+                    retroactive=event.retroactive,
+                )
+            )
             granted.append(key)
             unlocked.add(key)
-            queue.append(GameplayEvent(f"unlock:{EDITION}:{key}", character.id, "unlock", {"key": key},
-                                       event.source, retroactive=event.retroactive))
+            queue.append(
+                GameplayEvent(
+                    f"unlock:{EDITION}:{key}",
+                    character.id,
+                    "unlock",
+                    {"key": key},
+                    event.source,
+                    retroactive=event.retroactive,
+                )
+            )
     if granted:
         prefs = await session.get(AchievementPreferences, character.id)
         if prefs:
@@ -182,19 +263,29 @@ async def profession(session, char, out, key: str):
 async def mastery(session, char, out, skill, source=None):
     """The current rank of a field mastery, after it grew."""
     if skill in gathering.MASTERIES:
-        await emit(session, char, out, "mastery",
-                   {"skill": skill, "rank": gathering.rank_for((char.masteries or {}).get(skill, 0))}, source)
+        await emit(
+            session,
+            char,
+            out,
+            "mastery",
+            {"skill": skill, "rank": gathering.rank_for((char.masteries or {}).get(skill, 0))},
+            source,
+        )
 
 
 async def backfill_character(session, char):
     """Only facts the saved state proves; never infer historical challenges or decisions."""
     from oathforge.services.bestiary import KILLS_FOR_SECRETS
+
     c = get_content()
     events = []
+
     def fact(kind, data):
         digest = hashlib.sha256(json.dumps(data, sort_keys=True).encode()).hexdigest()[:24]
-        events.append(GameplayEvent(f"state:{EDITION}:{kind}:{digest}", char.id, kind, data,
-                                   "saved_state", retroactive=True))
+        events.append(
+            GameplayEvent(f"state:{EDITION}:{kind}:{digest}", char.id, kind, data, "saved_state", retroactive=True)
+        )
+
     for place in (char.flags or {}).get("stats", {}).get("places", []):
         if place in c.locations:
             # Having been there proves it: a place outside the city was reached from the city.
@@ -229,8 +320,9 @@ async def backfill_character(session, char):
     for key, quest in c.quests.items():
         if key in completed or any(old in completed for old in quest.legacy_done):
             fact("quest", {"quest": key})
-    for row in (await session.scalars(select(FactionReputation).where(
-            FactionReputation.character_id == char.id))).all():
+    for row in (
+        await session.scalars(select(FactionReputation).where(FactionReputation.character_id == char.id))
+    ).all():
         fact("reputation", {"faction": row.faction_key, "value": row.value})
     return await apply_events(session, char, events)
 
@@ -243,32 +335,65 @@ async def equipped_title(session, char):
     definition = get_content().achievements.get(prefs.title)
     if definition is None or definition.title is None:
         return None
-    unlocked = await session.scalar(select(AchievementUnlock.id).where(
-        AchievementUnlock.character_id == char.id, AchievementUnlock.achievement_key == prefs.title,
-        AchievementUnlock.edition == EDITION))
+    unlocked = await session.scalar(
+        select(AchievementUnlock.id).where(
+            AchievementUnlock.character_id == char.id,
+            AchievementUnlock.achievement_key == prefs.title,
+            AchievementUnlock.edition == EDITION,
+        )
+    )
     return definition.title if unlocked else None
 
 
 async def snapshot(session, character):
     catalog = get_content().achievements
-    rows = {r.achievement_key: r for r in (await session.scalars(select(AchievementProgress).where(
-        AchievementProgress.character_id == character.id, AchievementProgress.edition == EDITION))).all()}
-    unlocks = {r.achievement_key: r for r in (await session.scalars(select(AchievementUnlock).where(
-        AchievementUnlock.character_id == character.id, AchievementUnlock.edition == EDITION))).all()}
+    rows = {
+        r.achievement_key: r
+        for r in (
+            await session.scalars(
+                select(AchievementProgress).where(
+                    AchievementProgress.character_id == character.id, AchievementProgress.edition == EDITION
+                )
+            )
+        ).all()
+    }
+    unlocks = {
+        r.achievement_key: r
+        for r in (
+            await session.scalars(
+                select(AchievementUnlock).where(
+                    AchievementUnlock.character_id == character.id, AchievementUnlock.edition == EDITION
+                )
+            )
+        ).all()
+    }
     prefs = await session.get(AchievementPreferences, character.id)
-    preferences = {"title": prefs.title if prefs else None,
-                   **{k: list(getattr(prefs, k)) if prefs else [] for k in ("featured", "tracked", "revealed")}}
+    preferences = {
+        "title": prefs.title if prefs else None,
+        **{k: list(getattr(prefs, k)) if prefs else [] for k in ("featured", "tracked", "revealed")},
+    }
     entries = []
     for key, definition in catalog.items():
         unlock = unlocks.get(key)
         if definition.visibility == "hidden" and unlock is None:
             continue
         current, target = progress(definition.condition, rows[key].state if key in rows else {})
-        entries.append({"key": key, "definition": definition, "current": current, "target": target,
-                        "unlock": unlock, "revealed": bool(unlock) or definition.visibility == "public"
-                        or key in preferences["revealed"]})
-    return {"entries": entries, "preferences": preferences, "count": len(unlocks),
-            "points": sum(u.points for u in unlocks.values())}
+        entries.append(
+            {
+                "key": key,
+                "definition": definition,
+                "current": current,
+                "target": target,
+                "unlock": unlock,
+                "revealed": bool(unlock) or definition.visibility == "public" or key in preferences["revealed"],
+            }
+        )
+    return {
+        "entries": entries,
+        "preferences": preferences,
+        "count": len(unlocks),
+        "points": sum(u.points for u in unlocks.values()),
+    }
 
 
 async def preference(session, char, operation, key, nonce, replace=None):
@@ -276,13 +401,25 @@ async def preference(session, char, operation, key, nonce, replace=None):
     out = Outcome()
     if not nonce or nonce == "-":
         return Outcome.refused("achievements.invalid")
-    if await audit.claim(session, f"achievement:{char.user_id}:{nonce}", user_id=char.user_id,
-                         character_id=char.id, verb="achievement_preference") is None:
+    if (
+        await audit.claim(
+            session,
+            f"achievement:{char.user_id}:{nonce}",
+            user_id=char.user_id,
+            character_id=char.id,
+            verb="achievement_preference",
+        )
+        is None
+    ):
         return Outcome.refused("achievements.stale")
     definition = get_content().achievements.get(key)
-    unlock = await session.scalar(select(AchievementUnlock.id).where(
-        AchievementUnlock.character_id == char.id, AchievementUnlock.achievement_key == key,
-        AchievementUnlock.edition == EDITION))
+    unlock = await session.scalar(
+        select(AchievementUnlock.id).where(
+            AchievementUnlock.character_id == char.id,
+            AchievementUnlock.achievement_key == key,
+            AchievementUnlock.edition == EDITION,
+        )
+    )
     if key == "-" and operation != "title":  # "-" only means "take off the title"
         return Outcome.refused("achievements.invalid")
     if key != "-" and (definition is None or (definition.visibility == "hidden" and unlock is None)):
@@ -325,9 +462,14 @@ async def preference(session, char, operation, key, nonce, replace=None):
 async def claim_notification(session, character_id, now=None):
     now = time.time() if now is None else now
     await session.scalar(select(Character.id).where(Character.id == character_id).with_for_update())
-    rows = (await session.scalars(select(AchievementNotification).where(
-        AchievementNotification.character_id == character_id,
-        AchievementNotification.status != "sent").order_by(AchievementNotification.id).with_for_update())).all()
+    rows = (
+        await session.scalars(
+            select(AchievementNotification)
+            .where(AchievementNotification.character_id == character_id, AchievementNotification.status != "sent")
+            .order_by(AchievementNotification.id)
+            .with_for_update()
+        )
+    ).all()
     if not rows or any(r.status == "sending" and r.lease_until > now for r in rows):
         return None
     token = uuid.uuid4().hex
@@ -338,9 +480,15 @@ async def claim_notification(session, character_id, now=None):
 
 async def finish_notification(session, character_id, token, delivered):
     await session.scalar(select(Character.id).where(Character.id == character_id).with_for_update())
-    rows = (await session.scalars(select(AchievementNotification).where(
-        AchievementNotification.character_id == character_id, AchievementNotification.token == token,
-        AchievementNotification.status == "sending"))).all()
+    rows = (
+        await session.scalars(
+            select(AchievementNotification).where(
+                AchievementNotification.character_id == character_id,
+                AchievementNotification.token == token,
+                AchievementNotification.status == "sending",
+            )
+        )
+    ).all()
     for row in rows:
         row.status = "sent" if delivered else "pending"
         row.token, row.lease_until = None, 0

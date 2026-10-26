@@ -16,6 +16,7 @@ pytestmark = pytest.mark.usefixtures("database")
 
 # ---------------------------------------------------------------- inventory & shops
 
+
 async def test_potion_heals_and_is_consumed():
     _, cid = await new_character()
     async with session_scope() as s:
@@ -30,7 +31,11 @@ async def test_potion_heals_and_is_consumed():
 
 async def test_buy_sell_and_reputation_prices():
     _, cid = await new_character()
-    assert inventory.buy_price("chain_mail", 100) < inventory.buy_price("chain_mail", 0) < inventory.buy_price("chain_mail", -100)
+    assert (
+        inventory.buy_price("chain_mail", 100)
+        < inventory.buy_price("chain_mail", 0)
+        < inventory.buy_price("chain_mail", -100)
+    )
     async with session_scope() as s:
         char = await get_char(s, cid)
         char.gold = 3
@@ -85,12 +90,16 @@ async def test_concurrent_potion_double_spend(is_postgres):
     results = await asyncio.gather(spend(), spend())
     assert sorted(results) == [False, True]
     async with session_scope() as s:
-        n = await s.scalar(select(func.count()).select_from(ItemInstance)
-                           .where(ItemInstance.owner_character_id == cid, ItemInstance.item_key == "healing_potion"))
+        n = await s.scalar(
+            select(func.count())
+            .select_from(ItemInstance)
+            .where(ItemInstance.owner_character_id == cid, ItemInstance.item_key == "healing_potion")
+        )
         assert n == 0
 
 
 # ---------------------------------------------------------------- idempotency
+
 
 async def test_duplicate_nonce_is_rejected():
     uid, cid = await new_character()

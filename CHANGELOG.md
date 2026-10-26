@@ -4,6 +4,16 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.52] - 2026-10-26
+
+Structura, fase 3: todo el código pasa por ruff format. Solo formatea; no cambia nada más.
+
+### Añadido
+- `pyproject.toml`: configuración de ruff (líneas de 120, Python 3.12, sin `migrations/versions`, `content/` ni `artifacts/`) y ruff en las dependencias de desarrollo.
+
+### Cambiado
+- `ruff format` sobre `oathforge/`, `tests/`, `migrations/env.py` y los hooks: 122 archivos. El árbol sintáctico de cada archivo es idéntico al de antes (solo cambian espacios dentro de los docstrings).
+
 ## [0.10.51] - 2026-10-26
 
 Structura, fase 2 cerrada: límite de tamaño y graphify tras cada merge.

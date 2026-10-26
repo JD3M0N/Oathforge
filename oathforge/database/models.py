@@ -174,8 +174,13 @@ class WorldActivity(Base):
 
     __tablename__ = "world_activities"
     __table_args__ = (
-        Index("uq_open_activity_per_character", "character_id", unique=True,
-              postgresql_where=text(OPEN_ACTIVITY), sqlite_where=text(OPEN_ACTIVITY)),
+        Index(
+            "uq_open_activity_per_character",
+            "character_id",
+            unique=True,
+            postgresql_where=text(OPEN_ACTIVITY),
+            sqlite_where=text(OPEN_ACTIVITY),
+        ),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)

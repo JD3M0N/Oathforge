@@ -44,8 +44,9 @@ class OpenBudget:
 
 def make_llm(*outcomes) -> tuple[GeminiLLM, ScriptedClient]:
     client = ScriptedClient(*outcomes)
-    llm = GeminiLLM(Settings(gemini_model_fast=FAST, gemini_model_narrative=NARRATIVE, gemini_model_fallback=""),
-                    client=client)
+    llm = GeminiLLM(
+        Settings(gemini_model_fast=FAST, gemini_model_narrative=NARRATIVE, gemini_model_fallback=""), client=client
+    )
     llm.budget = OpenBudget()
     return llm, client
 
@@ -99,9 +100,15 @@ async def test_timeouts_are_not_retried():
 
 async def test_the_backup_model_is_used_last_for_every_tier():
     client = ScriptedClient(api_error(503), api_error(503), "from backup")
-    llm = GeminiLLM(Settings(gemini_model_fast=FAST, gemini_model_narrative=NARRATIVE, gemini_model_chronicle=FAST,
-                             gemini_model_fallback="backup"),
-                    client=client)
+    llm = GeminiLLM(
+        Settings(
+            gemini_model_fast=FAST,
+            gemini_model_narrative=NARRATIVE,
+            gemini_model_chronicle=FAST,
+            gemini_model_fallback="backup",
+        ),
+        client=client,
+    )
     llm.budget = OpenBudget()
     assert await llm.text(tier="narrative", system="s", prompt="p", user_id=None) == "from backup"
     assert client.calls == [NARRATIVE, FAST, "backup"]
@@ -113,9 +120,12 @@ async def test_the_backup_model_is_used_last_for_every_tier():
 
 async def test_one_model_for_everything_goes_generic_while_it_cools_down():
     client = ScriptedClient(TimeoutError(), "never used")
-    llm = GeminiLLM(Settings(gemini_model_fast=FAST, gemini_model_narrative=FAST, gemini_model_chronicle=FAST,
-                             gemini_model_fallback=""),
-                    client=client)
+    llm = GeminiLLM(
+        Settings(
+            gemini_model_fast=FAST, gemini_model_narrative=FAST, gemini_model_chronicle=FAST, gemini_model_fallback=""
+        ),
+        client=client,
+    )
     llm.budget = OpenBudget()
     assert await llm.text(tier="narrative", system="s", prompt="p", user_id=None) is None
     for tier in ("fast", "narrative", "chronicle"):  # no call, no wait: the caller uses its generic text
@@ -125,10 +135,20 @@ async def test_one_model_for_everything_goes_generic_while_it_cools_down():
 
 def quota_error(per_day: bool, delay: str) -> errors.APIError:
     quota = "GenerateRequestsPerDayPerProjectPerModel-FreeTier" if per_day else "GenerateRequestsPerMinute"
-    return errors.APIError(429, {"error": {"code": 429, "message": "quota", "status": "RESOURCE_EXHAUSTED", "details": [
-        {"@type": "type.googleapis.com/google.rpc.QuotaFailure", "violations": [{"quotaId": quota}]},
-        {"@type": "type.googleapis.com/google.rpc.RetryInfo", "retryDelay": delay},
-    ]}})
+    return errors.APIError(
+        429,
+        {
+            "error": {
+                "code": 429,
+                "message": "quota",
+                "status": "RESOURCE_EXHAUSTED",
+                "details": [
+                    {"@type": "type.googleapis.com/google.rpc.QuotaFailure", "violations": [{"quotaId": quota}]},
+                    {"@type": "type.googleapis.com/google.rpc.RetryInfo", "retryDelay": delay},
+                ],
+            }
+        },
+    )
 
 
 def test_cooldown_follows_google_retry_delay():

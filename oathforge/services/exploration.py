@@ -56,9 +56,13 @@ def free_check_key(skill: str, location: str) -> str:
 def open_discoveries(char: Character) -> dict:
     """Secrets here not found yet and not already tried today."""
     loc = get_content().locations[char.location]
-    return {k: d for k, d in loc.discoveries.items()
-            if not char.flags.get(d.sets_flag) and (not d.requires_flag or char.flags.get(d.requires_flag))
-            and not tried(char, f"discover:{k}")}
+    return {
+        k: d
+        for k, d in loc.discoveries.items()
+        if not char.flags.get(d.sets_flag)
+        and (not d.requires_flag or char.flags.get(d.requires_flag))
+        and not tried(char, f"discover:{k}")
+    }
 
 
 DAWN, DUSK = 6, 20  # game hours: night is from DUSK to DAWN
@@ -129,8 +133,11 @@ def _ambush_stop(char: Character, route: world_map.Route, rng: random.Random):
     """Where on the way the ambush happens, or None: a dangerous road with creatures at its end, weighted by
     danger. A place whose own fight is waiting (a boss's lair) keeps that fight instead."""
     c = get_content()
-    spots = [(i, s) for i, s in enumerate(route.stretches)
-             if s.danger and encounter_table(c.locations[s.to], char.level) and not world_map.blocks_passage(char, s.to)]
+    spots = [
+        (i, s)
+        for i, s in enumerate(route.stretches)
+        if s.danger and encounter_table(c.locations[s.to], char.level) and not world_map.blocks_passage(char, s.to)
+    ]
     chance = trip_chance(route)
     if not spots or not chance or rng.random() >= chance:
         return None
@@ -157,7 +164,7 @@ async def travel(session: AsyncSession, char: Character, dest: str, rng: random.
     characters.drop_pending_skin(char)
 
     stop = None if rolled else _ambush_stop(char, route, rng)
-    walked = route.stretches[:stop[0] + 1] if stop else route.stretches
+    walked = route.stretches[: stop[0] + 1] if stop else route.stretches
     end = walked[-1].to if walked else dest
     yards = sum(s.yards for s in walked) if walked else route.yards
     characters.bump_stats(char, yards=yards)
@@ -167,8 +174,13 @@ async def travel(session: AsyncSession, char: Character, dest: str, rng: random.
     await achievements.emit(session, char, out, "visit", {"location": char.location, "outside": False})
     for place in passed + [end]:
         characters.visited(char, place)
-        await achievements.emit(session, char, out, "visit",
-                                {"location": place, "outside": origin_city and c.locations[place].zone != "crownreach"})
+        await achievements.emit(
+            session,
+            char,
+            out,
+            "visit",
+            {"location": place, "outside": origin_city and c.locations[place].zone != "crownreach"},
+        )
     char.location = end
     if stop:
         out.add("explore.trip_stopped", place=c.locations[end].phrase(), dest=c.locations[dest].phrase(), yards=yards)
@@ -202,7 +214,9 @@ async def hunt(session: AsyncSession, char: Character, rng: random.Random) -> Ou
         return Outcome.refused("explore.err.no_hunting")
     fixed = pending_fixed_encounter(char)
     if fixed:
-        _, enc_out = await combat_service.start_encounter(session, char, list(fixed.monsters), rng, fixed.flag, hunt=True)
+        _, enc_out = await combat_service.start_encounter(
+            session, char, list(fixed.monsters), rng, fixed.flag, hunt=True
+        )
         return Outcome().add("explore.hunt_boss").extend(enc_out)
     table = encounter_table(loc, char.level)
     entry = rng.choices(table, weights=[e.weight for e in table])[0]
@@ -225,8 +239,11 @@ async def investigate(session: AsyncSession, char: Character, rng: random.Random
         return refusal
     c = get_content()
     loc = c.locations[char.location]
-    pending = {k: d for k, d in loc.discoveries.items()
-               if not char.flags.get(d.sets_flag) and (not d.requires_flag or char.flags.get(d.requires_flag))}
+    pending = {
+        k: d
+        for k, d in loc.discoveries.items()
+        if not char.flags.get(d.sets_flag) and (not d.requires_flag or char.flags.get(d.requires_flag))
+    }
     out = Outcome()
     if not pending:
         return out.add("explore.nothing_more")
@@ -245,8 +262,9 @@ async def investigate(session: AsyncSession, char: Character, rng: random.Random
         found = True
         out.text(disc.text)
         char.flags = {**char.flags, disc.sets_flag: True}
-        await achievements.emit(session, char, out, "discovery", {"key": f"{char.location}:{key}"},
-                                f"discovery:{char.location}:{key}")
+        await achievements.emit(
+            session, char, out, "discovery", {"key": f"{char.location}:{key}"}, f"discovery:{char.location}:{key}"
+        )
         if disc.sets_flag in FLAG_EVENTS:
             await achievements.emit(session, char, out, "flag", {"key": disc.sets_flag}, f"flag:{disc.sets_flag}")
         for item, qty in disc.gives.items():
@@ -264,8 +282,9 @@ async def investigate(session: AsyncSession, char: Character, rng: random.Random
     return out
 
 
-async def check_skill(session: AsyncSession, char: Character, skill: str, tier: str,
-                      rng: random.Random) -> tuple[Outcome, bool]:
+async def check_skill(
+    session: AsyncSession, char: Character, skill: str, tier: str, rng: random.Random
+) -> tuple[Outcome, bool]:
     """A free-form skill check requested through the AI interpreter; one attempt per skill and place a day."""
     if refusal := characters.ensure_free(char):
         return refusal, False
@@ -288,8 +307,11 @@ SHORT_RESTS = "short_rests"  # char.flags: short rests taken since the last long
 
 def short_rest_helps(char: Character) -> bool:
     """Whether a short rest would give anything back (HP below the injury cap, a spent bar or use)."""
-    return (char.hp < inventory.hp_cap(char) or inventory.spent_abilities(char, spells_only=False)
-            or characters.pool_of(char) < characters.resource_max(char))
+    return (
+        char.hp < inventory.hp_cap(char)
+        or inventory.spent_abilities(char, spells_only=False)
+        or characters.pool_of(char) < characters.resource_max(char)
+    )
 
 
 def short_rested(char: Character) -> Outcome:
@@ -348,9 +370,13 @@ async def cure_wounds(session: AsyncSession, char: Character, rng: random.Random
 def _fixed_here(char: Character, loc: Location, monster: str) -> bool:
     """A fixed fight with this monster still waits here for this character."""
     flags = char.flags or {}
-    return any(monster in f.monsters and not flags.get(f.flag)
-               and (not f.if_flag or flags.get(f.if_flag)) and not (f.unless_flag and flags.get(f.unless_flag))
-               for f in loc.fixed_encounters)
+    return any(
+        monster in f.monsters
+        and not flags.get(f.flag)
+        and (not f.if_flag or flags.get(f.if_flag))
+        and not (f.unless_flag and flags.get(f.unless_flag))
+        for f in loc.fixed_encounters
+    )
 
 
 def _npc_spot(npc: str) -> set[str]:
@@ -363,17 +389,25 @@ def _objective_spots(char: Character, kind: str, target: str) -> set[str]:
     A creature counts only where it shows up at this hour and level, or where its fixed fight still waits."""
     c = get_content()
     if target == "any":  # anywhere it can be done: a hunting ground, an inn, a healer
-        return {k for k, loc in c.locations.items()
-                if {"hunt": loc.hunting, "rest": loc.rest_cost is not None, "heal": loc.healer is not None}.get(kind)}
+        return {
+            k
+            for k, loc in c.locations.items()
+            if {"hunt": loc.hunting, "rest": loc.rest_cost is not None, "heal": loc.healer is not None}.get(kind)
+        }
     if kind in ("visit", "hunt", "rest", "heal"):
         return {target}
     if kind == "talk":
         return _npc_spot(target)
     if kind == "kill":
-        return {k for k, loc in c.locations.items()
-                if any(target in e.monsters for e in encounter_table(loc, char.level)) or _fixed_here(char, loc, target)}
+        return {
+            k
+            for k, loc in c.locations.items()
+            if any(target in e.monsters for e in encounter_table(loc, char.level)) or _fixed_here(char, loc, target)
+        }
     if kind == "gather":
-        return {k for k, loc in c.locations.items() if any(r.item == target for g in loc.gathering for r in g.resources)}
+        return {
+            k for k, loc in c.locations.items() if any(r.item == target for g in loc.gathering for r in g.resources)
+        }
     if kind == "craft":
         return {k for k, loc in c.locations.items() if loc.stations}
     return set()
@@ -395,7 +429,9 @@ def _stage_spots(char: Character, quest, stage: str) -> set[str]:
     return spots
 
 
-async def objective_routes(session: AsyncSession, char: Character, limit: int = 2) -> list[tuple[dict, world_map.Route]]:
+async def objective_routes(
+    session: AsyncSession, char: Character, limit: int = 2
+) -> list[tuple[dict, world_map.Route]]:
     """The nearest known place for the next step of each open mission: (mission name, route). Only places
     the character could go to from the map anyway, so it never gives a secret away."""
     prog = await quests.progress(session, char)

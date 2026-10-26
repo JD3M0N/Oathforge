@@ -29,7 +29,11 @@ async def test_mining_buttons_collect_and_chronicle(llm):
     await p.press(p.find("act", "gather:mining"))
     assert len(p.chat.sent) == sent + 1  # the Activities message becomes "you start working"
     assert "Te pones a trabajar" in p.last[0] and "Minería" in p.last[0]
-    assert f"Termina en {timings.GATHER_SECONDS // 60} min" in p.last[0] and "actx" in str(p.buttons()) and "Recoger" not in str(p.last[1])
+    assert (
+        f"Termina en {timings.GATHER_SECONDS // 60} min" in p.last[0]
+        and "actx" in str(p.buttons())
+        and "Recoger" not in str(p.last[1])
+    )
     await p.press(p.find("actc"))  # 🔄 Refresh before the end: just the panel again, no error
     assert "Termina en" in p.last[0] and "Aún no ha terminado" not in p.chat.sent[-2][0]
     await p.press("trv|-|-")  # an old travel button: the travel menu is not offered while busy

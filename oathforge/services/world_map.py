@@ -59,8 +59,10 @@ def hub_of(zone: str) -> str | None:
 
 
 def _adjacent(char: Character, origin: str) -> list[Route]:
-    return [Route(e.to, e.minutes, yards(e), e.danger, (), (Stretch(origin, e.to, e.minutes, yards(e), e.danger),))
-            for e in open_exits(char, origin)]
+    return [
+        Route(e.to, e.minutes, yards(e), e.danger, (), (Stretch(origin, e.to, e.minutes, yards(e), e.danger),))
+        for e in open_exits(char, origin)
+    ]
 
 
 def blocks_passage(char: Character, loc_key: str):
@@ -114,8 +116,14 @@ def _plan_all(char: Character, origin: str) -> dict[str, Route]:
             if e.to not in targets and e.to not in through:
                 continue
             step = Stretch(here, e.to, e.minutes, yards(e), e.danger)
-            nxt = Route(e.to, minutes + e.minutes, route.yards + yards(e), max(route.danger, e.danger),
-                        route.via + ((here,) if here != origin else ()), route.stretches + (step,))
+            nxt = Route(
+                e.to,
+                minutes + e.minutes,
+                route.yards + yards(e),
+                max(route.danger, e.danger),
+                route.via + ((here,) if here != origin else ()),
+                route.stretches + (step,),
+            )
             if e.to not in best or nxt.minutes < best[e.to].minutes:
                 best[e.to] = nxt
                 heapq.heappush(queue, (nxt.minutes, e.to))
@@ -136,8 +144,13 @@ def shortest_routes(char: Character, origin: str) -> dict[str, Route]:
         for e in open_exits(char, here):
             if c.locations[e.to].zone != zone:
                 continue
-            nxt = Route(e.to, minutes + e.minutes, route.yards + yards(e), max(route.danger, e.danger),
-                        route.via + ((here,) if here != origin else ()))
+            nxt = Route(
+                e.to,
+                minutes + e.minutes,
+                route.yards + yards(e),
+                max(route.danger, e.danger),
+                route.via + ((here,) if here != origin else ()),
+            )
             if e.to not in best or nxt.minutes < best[e.to].minutes:
                 best[e.to] = nxt
                 heapq.heappush(queue, (nxt.minutes, e.to))

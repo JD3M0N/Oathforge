@@ -2,12 +2,24 @@
 
 from oathforge.engine.dice import d20, roll
 from oathforge.engine.combat.state import (
-    AttackProfile, BLESS_BONUS, BOSS_CONTROL_TURNS, CombatError, Combatant, HARD_CONTROL, HEX_DIE, INSPIRATION_DIE,
-    LogEntry, MARK_DIE, NEGATIVE_STATUSES, gain_resource, valid_targets,
+    AttackProfile,
+    BLESS_BONUS,
+    BOSS_CONTROL_TURNS,
+    CombatError,
+    Combatant,
+    HARD_CONTROL,
+    HEX_DIE,
+    INSPIRATION_DIE,
+    LogEntry,
+    MARK_DIE,
+    NEGATIVE_STATUSES,
+    gain_resource,
+    valid_targets,
 )
 
 
 # ---------------------------------------------------------------- core resolution
+
 
 def _save(target: Combatant, ability: str, dc: int, rng) -> tuple[bool, list[LogEntry]]:
     """Saving throw of ``target`` (dex or wis) against ``dc``. Returns (saved, logs)."""
@@ -15,9 +27,12 @@ def _save(target: Combatant, ability: str, dc: int, rng) -> tuple[bool, list[Log
     r = d20(rng)
     total = r.kept + mod
     saved = not r.nat1 and (r.kept == 20 or total >= dc)
-    return saved, [LogEntry(key="combat.save", params={
-        "target": target.id, "save": ability, "roll": r.kept, "total": total, "dc": dc, "success": saved,
-    })]
+    return saved, [
+        LogEntry(
+            key="combat.save",
+            params={"target": target.id, "save": ability, "roll": r.kept, "total": total, "dc": dc, "success": saved},
+        )
+    ]
 
 
 def _resolve_target(state, actor, target_id, ranged) -> Combatant:
@@ -40,8 +55,7 @@ def _attack(state, attacker, target, profile: AttackProfile, rng, extra, weapon:
         or "frightened" in attacker.statuses
         or "restrained" in attacker.statuses
         or "defending" in target.statuses
-        or (profile.ranged and attacker.row == "front"
-            and any(f.row == "front" for f in state.enemies_of(attacker)))
+        or (profile.ranged and attacker.row == "front" and any(f.row == "front" for f in state.enemies_of(attacker)))
     )
     attacker.statuses.pop("hidden", None)
     r = d20(rng, adv, dis)
@@ -50,8 +64,14 @@ def _attack(state, attacker, target, profile: AttackProfile, rng, extra, weapon:
         total += roll(INSPIRATION_DIE, rng).total
     hit = not r.nat1 and (r.kept >= attacker.crit_range or total >= target.ac)
     params = {
-        "actor": attacker.id, "target": target.id, "weapon": profile.name,
-        "roll": r.kept, "total": total, "ac": target.ac, "adv": adv and not dis, "dis": dis and not adv,
+        "actor": attacker.id,
+        "target": target.id,
+        "weapon": profile.name,
+        "roll": r.kept,
+        "total": total,
+        "ac": target.ac,
+        "adv": adv and not dis,
+        "dis": dis and not adv,
     }
     if len(r.rolls) > 1:  # advantage or disadvantage: both dice, and which one counts
         params["rolls"] = list(r.rolls)
@@ -73,7 +93,8 @@ def _attack(state, attacker, target, profile: AttackProfile, rng, extra, weapon:
         extras.append((roll(MARK_DIE, rng, crit).total, "piercing"))
     sneak = 0
     if (
-        attacker.sneak_dice and not attacker.sneak_used
+        attacker.sneak_dice
+        and not attacker.sneak_used
         and (profile.finesse or profile.ranged)
         and ((adv and not dis) or any(s in NEGATIVE_STATUSES for s in target.statuses))
     ):
@@ -103,9 +124,17 @@ def _answer_blow(state, attacker: Combatant, target: Combatant, hurt_before: int
         return []
     logs: list[LogEntry] = []
     if gain_resource(target, target.resource_on_hurt):
-        logs.append(LogEntry(key="combat.resource_gained", params={
-            "actor": target.id, "resource": target.resource_key, "amount": target.resource_on_hurt,
-            "left": target.resource}))
+        logs.append(
+            LogEntry(
+                key="combat.resource_gained",
+                params={
+                    "actor": target.id,
+                    "resource": target.resource_key,
+                    "amount": target.resource_on_hurt,
+                    "left": target.resource,
+                },
+            )
+        )
     if target.thorns and attacker.active and attacker.side != target.side:
         logs.append(LogEntry(key="combat.thorns", params={"actor": target.id, "target": attacker.id}))
         logs += _apply_damage(state, attacker, roll(target.thorns, rng).total, target.thorns_type)
@@ -130,21 +159,24 @@ def _apply_damage(state, target: Combatant, amount: int, damage_type: str) -> li
         worn = min(target.plate, amount)
         target.plate -= worn
         amount -= worn
-        guarded.append(LogEntry(key="combat.plate_hit", params={"target": target.id, "amount": worn,
-                                                                "left": target.plate}))
+        guarded.append(
+            LogEntry(key="combat.plate_hit", params={"target": target.id, "amount": worn, "left": target.plate})
+        )
         if target.plate == 0:
             guarded.append(LogEntry(key="combat.plate_broken", params={"target": target.id}))
         if amount == 0:
             return guarded
     if target.side == "player" and state.entities and amount > 0:
-        guard = next((e for e in state.entities.values()
-                      if e.owner == target.id and e.role == "guard" and e.active), None)
+        guard = next(
+            (e for e in state.entities.values() if e.owner == target.id and e.role == "guard" and e.active), None
+        )
         if guard is not None:  # its HP are what it can take in the hero's place
             taken = min(guard.hp, amount)
             guard.hp -= taken
             amount -= taken
-            guarded.append(LogEntry(key="combat.guard_absorbs", params={
-                "entity": guard.name, "amount": taken, "left": guard.hp}))
+            guarded.append(
+                LogEntry(key="combat.guard_absorbs", params={"entity": guard.name, "amount": taken, "left": guard.hp})
+            )
             if guard.hp <= 0:
                 guard.defeated = True
                 guarded.append(LogEntry(key="combat.entity_breaks", params={"entity": guard.name}))
@@ -153,8 +185,19 @@ def _apply_damage(state, target: Combatant, amount: int, damage_type: str) -> li
     absorbed = min(target.temp_hp, amount)
     target.temp_hp -= absorbed
     target.hp = max(0, target.hp - (amount - absorbed))
-    logs = guarded + [LogEntry(key="combat.damage", params={"target": target.id, "amount": amount, "type": damage_type,
-                                                  "effect": effect, "hp": target.hp, "max_hp": target.max_hp})]
+    logs = guarded + [
+        LogEntry(
+            key="combat.damage",
+            params={
+                "target": target.id,
+                "amount": amount,
+                "type": damage_type,
+                "effect": effect,
+                "hp": target.hp,
+                "max_hp": target.max_hp,
+            },
+        )
+    ]
     if absorbed:
         logs.append(LogEntry(key="combat.absorbed", params={"target": target.id, "amount": absorbed}))
     if amount > 0 and target.hp > 0 and target.statuses.pop("asleep", None):
@@ -184,8 +227,12 @@ def _apply_status(target: Combatant, status: str, turns: int) -> list[LogEntry]:
     logs = []
     if target.boss and status in HARD_CONTROL and turns > BOSS_CONTROL_TURNS:
         spill, turns = turns - BOSS_CONTROL_TURNS, BOSS_CONTROL_TURNS
-        logs.append(LogEntry(key="combat.boss_resists", params={
-            "target": target.id, "status": status, "turns": turns, "spill": spill}))
+        logs.append(
+            LogEntry(
+                key="combat.boss_resists",
+                params={"target": target.id, "status": status, "turns": turns, "spill": spill},
+            )
+        )
         target.statuses["vulnerable"] = max(spill, target.statuses.get("vulnerable", 0))
     target.statuses[status] = max(turns, target.statuses.get(status, 0))
     return logs + [LogEntry(key="combat.status", params={"target": target.id, "status": status, "turns": turns})]

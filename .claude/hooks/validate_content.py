@@ -20,8 +20,9 @@ def main() -> int:
     path = Path(path).resolve()
     if path.suffix not in (".yaml", ".yml") or not path.is_relative_to(CONTENT) or "officina" in path.parts:
         return 0
-    run = lambda cmd: subprocess.run([sys.executable, "-m", "oathforge", cmd], cwd=ROOT,
-                                     capture_output=True, text=True, encoding="utf-8")
+    run = lambda cmd: subprocess.run(
+        [sys.executable, "-m", "oathforge", cmd], cwd=ROOT, capture_output=True, text=True, encoding="utf-8"
+    )
     result = run("validate")
     if result.returncode != 0:
         print(result.stdout + result.stderr, file=sys.stderr)

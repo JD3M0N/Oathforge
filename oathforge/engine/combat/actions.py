@@ -7,20 +7,28 @@ from oathforge.engine.dice import roll
 from oathforge.engine.combat.entities import _command, _converge, _shift, _summon
 from oathforge.engine.combat.resolve import _apply_damage, _apply_status, _attack, _heal, _resolve_target, _save
 from oathforge.engine.combat.state import (
-    Action, AttackProfile, CombatError, Combatant, EncounterState, FLEE_DC_BASE, FLEE_DC_PER_FOE, LogEntry, _append,
-    _check_end, available_bonus_actions, gain_resource, valid_targets,
+    Action,
+    AttackProfile,
+    CombatError,
+    Combatant,
+    EncounterState,
+    FLEE_DC_BASE,
+    FLEE_DC_PER_FOE,
+    LogEntry,
+    _append,
+    _check_end,
+    available_bonus_actions,
+    gain_resource,
+    valid_targets,
 )
 from oathforge.engine.combat.turns import _end_turn, _run_enemies
 
 
 # ---------------------------------------------------------------- player turn
 
+
 def player_act(
-    state: EncounterState,
-    actor_id: str,
-    action: Action,
-    rng: random.Random,
-    ability_defs: dict,
+    state: EncounterState, actor_id: str, action: Action, rng: random.Random, ability_defs: dict
 ) -> list[LogEntry]:
     """Apply one player action. ``ability_defs`` maps ability key -> ClassAbility."""
     if state.status != "active":
@@ -80,8 +88,10 @@ def player_act(
         actor.action_used = True
 
     _check_end(state, logs)
-    if state.status == "active" and actor.action_used and (
-        not actor.active or not available_bonus_actions(state, actor, ability_defs)
+    if (
+        state.status == "active"
+        and actor.action_used
+        and (not actor.active or not available_bonus_actions(state, actor, ability_defs))
     ):
         logs += _end_turn(state, rng)
         logs += _run_enemies(state, rng)
@@ -107,9 +117,17 @@ def _player_attack(state, actor, weapon_key, target_id, rng, extra) -> list[LogE
             nxt = target if target.active else followups[0]
             logs += _attack(state, actor, nxt, profile, rng, None)
     if gain_resource(actor, actor.resource_on_attack):  # once per action, not per swing
-        logs.append(LogEntry(key="combat.resource_gained", params={
-            "actor": actor.id, "resource": actor.resource_key, "amount": actor.resource_on_attack,
-            "left": actor.resource}))
+        logs.append(
+            LogEntry(
+                key="combat.resource_gained",
+                params={
+                    "actor": actor.id,
+                    "resource": actor.resource_key,
+                    "amount": actor.resource_on_attack,
+                    "left": actor.resource,
+                },
+            )
+        )
     return logs
 
 
@@ -134,13 +152,21 @@ def _use_ability(state, actor, action, ability, rng) -> list[LogEntry]:
             raise CombatError("combat.err.no_weapon")
         logs.append(LogEntry(key="combat.ability", params={"actor": actor.id, "ability": action.ability}))
         logs += _player_attack(
-            state, actor, profile.key, action.target, rng,
-            extra=(ability.extra_damage, ability.damage_type),
+            state, actor, profile.key, action.target, rng, extra=(ability.extra_damage, ability.damage_type)
         )
     elif ability.kind in ("spell", "save"):
         logs.append(LogEntry(key="combat.ability", params={"actor": actor.id, "ability": action.ability}))
-        logs += _cast(state, actor, ability, action.ability, action.target, rng,
-                      to_hit=actor.spell_to_hit, dc=actor.spell_dc, dmg_bonus=actor.spell_damage_bonus)
+        logs += _cast(
+            state,
+            actor,
+            ability,
+            action.ability,
+            action.target,
+            rng,
+            to_hit=actor.spell_to_hit,
+            dc=actor.spell_dc,
+            dmg_bonus=actor.spell_damage_bonus,
+        )
     elif ability.kind == "curse":
         target = _resolve_target(state, actor, action.target, ranged=True)
         logs.append(LogEntry(key="combat.ability", params={"actor": actor.id, "ability": action.ability}))
@@ -172,9 +198,12 @@ def _use_ability(state, actor, action, ability, rng) -> list[LogEntry]:
         res = check(rng, "stealth", actor.skill_bonus.get("stealth", 0), dc)
         if res.success:
             actor.statuses["hidden"] = 99
-        logs.append(LogEntry(key="combat.hide", params={
-            "actor": actor.id, "roll": res.kept, "total": res.total, "dc": dc, "success": res.success,
-        }))
+        logs.append(
+            LogEntry(
+                key="combat.hide",
+                params={"actor": actor.id, "roll": res.kept, "total": res.total, "dc": dc, "success": res.success},
+            )
+        )
     elif ability.kind == "summon":
         logs += _summon(state, actor, ability)
     elif ability.kind == "command":
@@ -187,28 +216,34 @@ def _use_ability(state, actor, action, ability, rng) -> list[LogEntry]:
         raise CombatError("combat.err.passive")
     if quarry is not None and ability.consume_damage and quarry.active and ability.consumes in quarry.statuses:
         del quarry.statuses[ability.consumes]  # spent: it no longer ticks, and it hurts now
-        logs.append(LogEntry(key="combat.consumed", params={"actor": actor.id, "target": quarry.id,
-                                                            "status": ability.consumes}))
-        logs += _apply_damage(state, quarry, roll(ability.consume_damage, rng).total,
-                              ability.damage_type or "force")
+        logs.append(
+            LogEntry(key="combat.consumed", params={"actor": actor.id, "target": quarry.id, "status": ability.consumes})
+        )
+        logs += _apply_damage(state, quarry, roll(ability.consume_damage, rng).total, ability.damage_type or "force")
     if ability.leech_pct:
         dealt = sum(foes_before[i] - max(0, state.combatants[i].hp) for i in foes_before)
         gained = _heal(actor, dealt * ability.leech_pct // 100)
         if gained:
             logs.append(LogEntry(key="combat.leech", params={"actor": actor.id, "amount": gained}))
     if ability.reduces_cooldowns and actor.cooldowns:  # the ability's own cooldown is set below, so it is not cut
-        actor.cooldowns = {k: v - ability.reduces_cooldowns for k, v in actor.cooldowns.items()
-                           if v - ability.reduces_cooldowns > 0}
-        logs.append(LogEntry(key="combat.cooldowns_cut", params={"actor": actor.id,
-                                                                 "turns": ability.reduces_cooldowns}))
+        actor.cooldowns = {
+            k: v - ability.reduces_cooldowns for k, v in actor.cooldowns.items() if v - ability.reduces_cooldowns > 0
+        }
+        logs.append(
+            LogEntry(key="combat.cooldowns_cut", params={"actor": actor.id, "turns": ability.reduces_cooldowns})
+        )
     if uses is not None:
         actor.abilities[action.ability] = uses - 1
     if actor.resource_max:  # paid once, whatever the ability did
         spent = min(ability.cost, actor.resource)
         actor.resource -= spent
         if spent:
-            logs.append(LogEntry(key="combat.resource_spent", params={
-                "actor": actor.id, "resource": actor.resource_key, "amount": spent, "left": actor.resource}))
+            logs.append(
+                LogEntry(
+                    key="combat.resource_spent",
+                    params={"actor": actor.id, "resource": actor.resource_key, "amount": spent, "left": actor.resource},
+                )
+            )
         gain_resource(actor, ability.generates)
     if ability.cooldown:
         actor.cooldowns = {**actor.cooldowns, action.ability: ability.cooldown}
@@ -231,14 +266,25 @@ def _use_item(state, actor, action, item, rng) -> list[LogEntry]:
         actor.fled = True
         logs.append(LogEntry(key="combat.escaped", params={"actor": actor.id}))
     else:
-        logs += _cast(state, actor, item, action.ability, action.target, rng,
-                      to_hit=item.attack_bonus, dc=item.save_dc, dmg_bonus=0, name=action.item_name)
+        logs += _cast(
+            state,
+            actor,
+            item,
+            action.ability,
+            action.target,
+            rng,
+            to_hit=item.attack_bonus,
+            dc=item.save_dc,
+            dmg_bonus=0,
+            name=action.item_name,
+        )
     _spend(actor, action.ability)
     return logs
 
 
-def _cast(state, actor, ability, key, target_id, rng, to_hit: int, dc: int, dmg_bonus: int,
-          name: dict | None = None) -> list[LogEntry]:
+def _cast(
+    state, actor, ability, key, target_id, rng, to_hit: int, dc: int, dmg_bonus: int, name: dict | None = None
+) -> list[LogEntry]:
     """Resolve a spell, save, heal or buff; class abilities and combat items share it."""
     logs: list[LogEntry] = []
     if ability.kind == "spell":
@@ -248,8 +294,14 @@ def _cast(state, actor, ability, key, target_id, rng, to_hit: int, dc: int, dmg_
         if ability.auto_hit:
             logs += _apply_damage(state, target, roll(damage, rng).total, dtype)
         else:
-            profile = AttackProfile(key=key, name=name if name is not None else ability.name.model_dump(),
-                                    to_hit=to_hit, damage=damage, damage_type=dtype, ranged=True)
+            profile = AttackProfile(
+                key=key,
+                name=name if name is not None else ability.name.model_dump(),
+                to_hit=to_hit,
+                damage=damage,
+                damage_type=dtype,
+                ranged=True,
+            )
             logs += _attack(state, actor, target, profile, rng, None, weapon=False)
     elif ability.kind == "save":
         target = _resolve_target(state, actor, target_id, ranged=True)
@@ -267,9 +319,12 @@ def _cast(state, actor, ability, key, target_id, rng, to_hit: int, dc: int, dmg_
         if ability.status:
             # +1: the turn it is cast ticks once, so the effect covers N later turns
             actor.statuses[ability.status] = ability.status_turns + 1
-            logs.append(LogEntry(key="combat.buff", params={
-                "actor": actor.id, "ability": key, "status": ability.status, "turns": ability.status_turns,
-            }))
+            logs.append(
+                LogEntry(
+                    key="combat.buff",
+                    params={"actor": actor.id, "ability": key, "status": ability.status, "turns": ability.status_turns},
+                )
+            )
         if ability.temp_hp:
             amount = roll(ability.temp_hp, rng).total + _heal_add(actor, ability)
             actor.temp_hp = max(actor.temp_hp, amount)
@@ -295,9 +350,12 @@ def _flee(state, actor, rng) -> list[LogEntry]:
     res = check(rng, skill, actor.skill_bonus.get(skill, 0), dc)
     if res.success:
         actor.fled = True
-    return [LogEntry(key="combat.flee", params={
-        "actor": actor.id, "roll": res.kept, "total": res.total, "dc": dc, "success": res.success,
-    })]
+    return [
+        LogEntry(
+            key="combat.flee",
+            params={"actor": actor.id, "roll": res.kept, "total": res.total, "dc": dc, "success": res.success},
+        )
+    ]
 
 
 def _interact(state, actor, action, rng) -> list[LogEntry]:
@@ -306,10 +364,20 @@ def _interact(state, actor, action, rng) -> list[LogEntry]:
         raise CombatError("combat.err.no_object")
     dc = dc_for(obj.tier)
     res = check(rng, obj.skill, actor.skill_bonus.get(obj.skill, 0), dc)
-    logs = [LogEntry(key="combat.interact", params={
-        "actor": actor.id, "object": obj.key, "skill": obj.skill,
-        "roll": res.kept, "total": res.total, "dc": dc, "success": res.success,
-    })]
+    logs = [
+        LogEntry(
+            key="combat.interact",
+            params={
+                "actor": actor.id,
+                "object": obj.key,
+                "skill": obj.skill,
+                "roll": res.kept,
+                "total": res.total,
+                "dc": dc,
+                "success": res.success,
+            },
+        )
+    ]
     if not res.success:
         return logs
     del state.scene_objects[obj.key]

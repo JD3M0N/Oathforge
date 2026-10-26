@@ -22,6 +22,7 @@ DEFEAT_GOLD_CAP_PER_LEVEL = 15  # ...but never more than this per level: a small
 
 # ---------------------------------------------------------------- users
 
+
 async def get_or_create_user(session: AsyncSession, telegram_id: int, language_code: str | None) -> User:
     user = await session.scalar(select(User).where(User.telegram_id == telegram_id))
     if user is None:
@@ -39,12 +40,19 @@ async def get_character(session: AsyncSession, user_id: int, lock: bool = False)
 
 
 def add_check(out: Outcome, res) -> Outcome:
-    """"🎲 Supervivencia: 2 + 1 = 3 vs CD 13 · ❌ Fallo": the d20, the bonus, the total, the DC and the verdict."""
+    """ "🎲 Supervivencia: 2 + 1 = 3 vs CD 13 · ❌ Fallo": the d20, the bonus, the total, the DC and the verdict."""
     sign = "−" if res.bonus < 0 else "+"
     verdict = "check.success" if res.success else "check.failure"
-    return out.add("check.result", skill=get_content().skills[res.skill].name.model_dump(), roll=res.kept,
-                   bonus=f"{sign} {abs(res.bonus)}", total=res.total, dc=res.dc, result="✅" if res.success else "❌",
-                   verdict={lang: t(lang, verdict) for lang in ("es", "en")})
+    return out.add(
+        "check.result",
+        skill=get_content().skills[res.skill].name.model_dump(),
+        roll=res.kept,
+        bonus=f"{sign} {abs(res.bonus)}",
+        total=res.total,
+        dc=res.dc,
+        result="✅" if res.success else "❌",
+        verdict={lang: t(lang, verdict) for lang in ("es", "en")},
+    )
 
 
 def ensure_free(char: Character) -> Outcome | None:
@@ -84,8 +92,13 @@ def background_story(char: Character, lang: str) -> str:
 def valid_custom(custom: dict | None) -> bool:
     c = get_content()
     skills = (custom or {}).get("skills") or []
-    return (bool(custom) and bool(custom.get("title")) and bool(custom.get("story"))
-            and len(set(skills)) == CUSTOM_SKILLS == len(skills) and all(s in c.skills for s in skills))
+    return (
+        bool(custom)
+        and bool(custom.get("title"))
+        and bool(custom.get("story"))
+        and len(set(skills)) == CUSTOM_SKILLS == len(skills)
+        and all(s in c.skills for s in skills)
+    )
 
 
 def starting_scores(class_key: str, lineage_key: str, base: dict[str, int] | None = None) -> dict[str, int]:
@@ -98,8 +111,15 @@ def starting_scores(class_key: str, lineage_key: str, base: dict[str, int] | Non
 
 
 async def create_character(
-    session: AsyncSession, user: User, name: str, lineage: str, background: str, class_key: str,
-    gender: str | None = None, scores: dict[str, int] | None = None, custom: dict | None = None,
+    session: AsyncSession,
+    user: User,
+    name: str,
+    lineage: str,
+    background: str,
+    class_key: str,
+    gender: str | None = None,
+    scores: dict[str, int] | None = None,
+    custom: dict | None = None,
 ) -> Character:
     """custom: the player-written background ({"title", "story", "skills"}) when the background is a custom one."""
     c = get_content()
@@ -110,10 +130,24 @@ async def create_character(
     scores = starting_scores(class_key, lineage, scores)
     hp = progression.max_hp(cls.hit_die, modifier(scores["con"]), 1)
     char = Character(
-        user_id=user.id, name=name.strip()[:NAME_MAX], lineage=lineage, background=background,
-        class_key=class_key, gender=gender, abilities=scores, level=1, xp=0, hp=hp, max_hp=hp, gold=bg.gold,
-        location=c.start_location, state="idle", flags={}, conditions={},
-        resources=full_resources(class_key, 1), custom_background=custom,
+        user_id=user.id,
+        name=name.strip()[:NAME_MAX],
+        lineage=lineage,
+        background=background,
+        class_key=class_key,
+        gender=gender,
+        abilities=scores,
+        level=1,
+        xp=0,
+        hp=hp,
+        max_hp=hp,
+        gold=bg.gold,
+        location=c.start_location,
+        state="idle",
+        flags={},
+        conditions={},
+        resources=full_resources(class_key, 1),
+        custom_background=custom,
     )
     session.add(char)
     await session.flush()
@@ -133,13 +167,21 @@ async def create_character(
         else:
             for i in range(qty):
                 slot = item.slot if key in cls.equip and i == 0 else None
-                session.add(ItemInstance(owner_character_id=char.id, item_key=key, qty=1, equipped_slot=slot, history=[]))
+                session.add(
+                    ItemInstance(owner_character_id=char.id, item_key=key, qty=1, equipped_slot=slot, history=[])
+                )
 
     for faction in c.factions:
         session.add(FactionReputation(character_id=char.id, faction_key=faction, value=0))
     for qkey, quest in c.quests.items():
-        session.add(QuestProgress(character_id=char.id, quest_key=qkey, stage=quest.start_stage,
-                                  state=quest.stages[quest.start_stage].state))
+        session.add(
+            QuestProgress(
+                character_id=char.id,
+                quest_key=qkey,
+                stage=quest.start_stage,
+                state=quest.stages[quest.start_stage].state,
+            )
+        )
     await session.flush()
     return char
 
@@ -179,17 +221,30 @@ def shapes_for(char: Character) -> dict[str, Shape]:
             continue
         form = c.forms[a.form]
         attacks = [
-            AttackProfile(key=f"{a.form}_{i}", name=fa.name.model_dump(), to_hit=m[fa.ability] + pb,
-                          damage=f"{fa.damage}{m[fa.ability]:+d}", damage_type=fa.damage_type,
-                          ranged=fa.ranged, finesse=fa.ability == "dex")
+            AttackProfile(
+                key=f"{a.form}_{i}",
+                name=fa.name.model_dump(),
+                to_hit=m[fa.ability] + pb,
+                damage=f"{fa.damage}{m[fa.ability]:+d}",
+                damage_type=fa.damage_type,
+                ranged=fa.ranged,
+                finesse=fa.ability == "dex",
+            )
             for i, fa in enumerate(form.attacks)
         ]
-        out[a.form] = Shape(key=a.form, name=form.name.model_dump(), icon=form.icon, ac_bonus=form.ac_bonus,
-                            temp_hp=form.temp_hp + form.temp_hp_per_level * char.level, attacks=attacks)
+        out[a.form] = Shape(
+            key=a.form,
+            name=form.name.model_dump(),
+            icon=form.icon,
+            ac_bonus=form.ac_bonus,
+            temp_hp=form.temp_hp + form.temp_hp_per_level * char.level,
+            attacks=attacks,
+        )
     return out
 
 
 # ---------------------------------------------------------------- derived stats
+
 
 def mods(char: Character) -> dict[str, int]:
     return {a: modifier(char.abilities[a]) for a in ABILITIES}
@@ -233,9 +288,14 @@ def effective(char: Character) -> class_build.Build:
     c = get_content()
     prog = c.progression
     return class_build.build_for(
-        char.class_key, c.classes[char.class_key], char.level, prog,
-        specialization=char.specialization, branch=c.class_specializations.get(char.specialization or ""),
-        taken=taken_of(char), resource=resource_def(char),
+        char.class_key,
+        c.classes[char.class_key],
+        char.level,
+        prog,
+        specialization=char.specialization,
+        branch=c.class_specializations.get(char.specialization or ""),
+        taken=taken_of(char),
+        resource=resource_def(char),
     )
 
 
@@ -313,15 +373,29 @@ def attack_profiles(char: Character, gear: dict[str, ItemInstance]) -> list[Atta
             if p.attack_with and not w.ranged:
                 ability = max(ability, m[p.attack_with])
         sign = "+" if ability >= 0 else "-"
-        out.append(AttackProfile(
-            key="main" if slot == "main_hand" else "ranged", name=item.name.model_dump(),
-            to_hit=ability + pb, damage=f"{w.damage}{sign}{abs(ability)}", damage_type=w.damage_type,
-            ranged=w.ranged, finesse=w.finesse,
-        ))
+        out.append(
+            AttackProfile(
+                key="main" if slot == "main_hand" else "ranged",
+                name=item.name.model_dump(),
+                to_hit=ability + pb,
+                damage=f"{w.damage}{sign}{abs(ability)}",
+                damage_type=w.damage_type,
+                ranged=w.ranged,
+                finesse=w.finesse,
+            )
+        )
     if not any(not a.ranged for a in out):
         sign = "+" if m["str"] >= 0 else "-"
-        out.insert(0, AttackProfile(key="main", name={"es": "Puños", "en": "Fists"}, to_hit=m["str"] + pb,
-                                    damage=f"1{sign}{abs(m['str'])}", damage_type="bludgeoning"))
+        out.insert(
+            0,
+            AttackProfile(
+                key="main",
+                name={"es": "Puños", "en": "Fists"},
+                to_hit=m["str"] + pb,
+                damage=f"1{sign}{abs(m['str'])}",
+                damage_type="bludgeoning",
+            ),
+        )
     return out
 
 
@@ -334,8 +408,9 @@ def _per_turn(char: Character) -> int:
     return res.per_turn if res else 0
 
 
-def combatant_from(char: Character, gear: dict[str, ItemInstance], skills: dict[str, CharacterSkill],
-                   cid: str = "p1") -> Combatant:
+def combatant_from(
+    char: Character, gear: dict[str, ItemInstance], skills: dict[str, CharacterSkill], cid: str = "p1"
+) -> Combatant:
     """The player's combat stats from already loaded gear and skills (no database; also used by the simulator)."""
     c = get_content()
     passives = class_passives(char)
@@ -349,21 +424,35 @@ def combatant_from(char: Character, gear: dict[str, ItemInstance], skills: dict[
     casting_mod, spell_to_hit, spell_dc = spell_stats(char)
     bonus = next((p for p in passives if p.bonus_damage), None)
     return Combatant(
-        id=cid, side="player", ref=str(char.id), name={"es": char.name, "en": char.name},
-        hp=char.hp, max_hp=char.max_hp, ac=armor_class(char, gear),
+        id=cid,
+        side="player",
+        ref=str(char.id),
+        name={"es": char.name, "en": char.name},
+        hp=char.hp,
+        max_hp=char.max_hp,
+        ac=armor_class(char, gear),
         row="front" if cls.primary == "str" else "back",
-        dex_mod=mods(char)["dex"], passive_perception=10 + skill_bonus(char, skills, "perception"),
-        attacks=attack_profiles(char, gear), immune=immunities(char), level=char.level,
-        skill_bonus=all_skill_bonuses(char, skills), abilities=dict(char.resources),
+        dex_mod=mods(char)["dex"],
+        passive_perception=10 + skill_bonus(char, skills, "perception"),
+        attacks=attack_profiles(char, gear),
+        immune=immunities(char),
+        level=char.level,
+        skill_bonus=all_skill_bonuses(char, skills),
+        abilities=dict(char.resources),
         resource=0 if (rd := resource_def(char)) and rd.starts_empty else pool_of(char),
         resource_max=resource_max(char),
-        resource_key=cls.resource or "", resource_per_turn=_per_turn(char),
-        resource_on_attack=cls.resource_on_attack, shapes=shapes_for(char),
-        sneak_dice=sneak, extra_attack=any(p.extra_attack for p in passives),
+        resource_key=cls.resource or "",
+        resource_per_turn=_per_turn(char),
+        resource_on_attack=cls.resource_on_attack,
+        shapes=shapes_for(char),
+        sneak_dice=sneak,
+        extra_attack=any(p.extra_attack for p in passives),
         halve_first_hit=any(p.halve_first_hit for p in passives),
         relentless="relentless" in lineage.traits,
         crit_range=min([p.crit_range for p in passives if p.crit_range] or [20]),
-        casting_mod=casting_mod, spell_to_hit=spell_to_hit, spell_dc=spell_dc,
+        casting_mod=casting_mod,
+        spell_to_hit=spell_to_hit,
+        spell_dc=spell_dc,
         spell_damage_bonus=casting_mod if any(p.spell_damage_bonus for p in passives) else 0,
         thorns=next((p.thorns for p in passives if p.thorns), None),
         thorns_type=next((p.bonus_damage_type or "radiant" for p in passives if p.thorns), "radiant"),
@@ -485,8 +574,7 @@ def apply_levels(char: Character, out: Outcome) -> None:
         for key, ability in built.abilities.items():
             if ability.level == char.level:
                 out.add("progress.new_ability", ability=ability.name.model_dump(), cls=char.class_key, ability_key=key)
-        out.add("progress.level_up", level=char.level, max_hp=char.max_hp, prev_max_hp=old_max,
-                cls=char.class_key)
+        out.add("progress.level_up", level=char.level, max_hp=char.max_hp, prev_max_hp=old_max, cls=char.class_key)
         if char.level == prog.specialization_level:
             out.add("progress.path_open")
         for choice in built.pending:
@@ -558,13 +646,17 @@ def grant_mastery(char: Character, skill: str, amount: int, out: Outcome) -> Non
     hobby = hobby_of(skill)
     if hobby is not None:
         profs = char.professions or {}
-        char.professions = {"active": list(profs.get("active", [])), "xp": {**profs.get("xp", {}), hobby: before + amount}}
+        char.professions = {
+            "active": list(profs.get("active", [])),
+            "xp": {**profs.get("xp", {}), hobby: before + amount},
+        }
         name = get_content().professions[hobby].name.model_dump()
         out.add("prof.xp", prof=name, amount=amount)
         rank = gathering.rank_for(before + amount)
         if rank > gathering.rank_for(before):
             out.add("prof.rank", prof=name, rank=rank)
             from oathforge.services import professions  # its techniques, like any other discipline
+
             professions.announce_techniques(hobby, gathering.rank_for(before), rank, out)
         return
     char.masteries = {**(char.masteries or {}), skill: before + amount}
@@ -606,4 +698,8 @@ async def defeat_penalty(char: Character, out: Outcome) -> None:
     char.flags = {k: v for k, v in (char.flags or {}).items() if k != "trip"}  # exploration.TRIP: the trip ends here
     char.state = "idle"
     char.conditions = {**char.conditions, "injured": True}
-    out.add("combat.defeat_penalty" if lost else "combat.defeat_penalty_free", gold=lost, place=c.locations[c.respawn_location].phrase())
+    out.add(
+        "combat.defeat_penalty" if lost else "combat.defeat_penalty_free",
+        gold=lost,
+        place=c.locations[c.respawn_location].phrase(),
+    )

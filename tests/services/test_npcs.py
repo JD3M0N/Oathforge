@@ -15,6 +15,7 @@ pytestmark = pytest.mark.usefixtures("database")
 
 # ---------------------------------------------------------------- npcs
 
+
 async def test_steal_memory_and_trust():
     _, cid = await new_character()
     async with session_scope() as s:
@@ -45,6 +46,7 @@ async def test_recall_limit_and_order():
 
 
 # ---------------------------------------------------------------- media
+
 
 async def test_media_file_id_cache_per_bot_and_checksum():
     from dataclasses import replace

@@ -4,8 +4,16 @@ from collections import deque
 
 from oathforge.content import get_content
 
-VALE = ["valley_crossing", "ford_post", "ash_quarry", "antler_wood", "silent_sawmill", "glass_shore",
-        "regulator_workshop", "beacon_height"]
+VALE = [
+    "valley_crossing",
+    "ford_post",
+    "ash_quarry",
+    "antler_wood",
+    "silent_sawmill",
+    "glass_shore",
+    "regulator_workshop",
+    "beacon_height",
+]
 FLAGS = {"valley_open"}
 
 
@@ -35,7 +43,9 @@ def test_the_vale_has_a_refuge_that_does_not_replace_the_city():
     post = c.locations["ford_post"]
     assert post.rest_cost is not None and post.healer is not None
     assert "orsa" in [k for k, n in c.npcs.items() if n.shop and post.name and "ford_post" in n.schedule.values()]
-    assert c.locations["ford_post"].zone == "greyforge_vale" and not c.locations["ford_post"].stations  # no crafting there
+    assert (
+        c.locations["ford_post"].zone == "greyforge_vale" and not c.locations["ford_post"].stations
+    )  # no crafting there
 
 
 def test_the_regional_missions_chain_from_the_graduation_to_the_test():
@@ -53,7 +63,9 @@ def test_the_regional_missions_chain_from_the_graduation_to_the_test():
 
 def test_every_objective_of_the_vale_can_be_met_where_the_text_sends_you():
     c = get_content()
-    fighting = {m for p in VALE for t in (c.locations[p].encounters + c.locations[p].night_encounters) for m in t.monsters}
+    fighting = {
+        m for p in VALE for t in (c.locations[p].encounters + c.locations[p].night_encounters) for m in t.monsters
+    }
     fighting |= {m for p in VALE for f in c.locations[p].fixed_encounters for m in f.monsters}
     gatherable = {r.item for p in VALE for g in c.locations[p].gathering for r in g.resources}
     for key, q in c.quests.items():
@@ -80,8 +92,16 @@ def test_the_repair_has_the_cores_it_asks_for_and_the_final_fight_waits_for_it()
 
 def test_creatures_grow_with_the_levels_they_live_at():
     c = get_content()
-    order = ["ash_smuggler", "quarry_crawler", "antler_hart", "sawblade_automaton", "shard_stalker", "regulator_sentinel",
-             "beacon_warden", "beacon_keeper"]
+    order = [
+        "ash_smuggler",
+        "quarry_crawler",
+        "antler_hart",
+        "sawblade_automaton",
+        "shard_stalker",
+        "regulator_sentinel",
+        "beacon_warden",
+        "beacon_keeper",
+    ]
     hps = [c.monsters[m].hp for m in order]
     xps = [c.monsters[m].xp for m in order]
     assert xps == sorted(xps) and hps[0] < hps[-1]

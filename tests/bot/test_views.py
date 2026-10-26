@@ -93,8 +93,7 @@ async def test_full_sheet_without_portrait_shows_spellcasting(llm, monkeypatch):
 
 
 async def test_journal_missions_and_bestiary_views(llm, monkeypatch):
-    monkeypatch.setattr(exploration, "npcs_present",
-                        lambda loc, now=None: {"adventurers_guild": ["vale"]}.get(loc, []))
+    monkeypatch.setattr(exploration, "npcs_present", lambda loc, now=None: {"adventurers_guild": ["vale"]}.get(loc, []))
     p = Player(llm, tg_id=62)
     await create(p)
     assert any("ve al gremio" in t_ for t_, _ in p.chat.sent[-2:])  # the plaza points at the guild hall
@@ -190,5 +189,8 @@ async def test_journal_statistics(llm):
 
 def test_every_class_ability_has_its_long_text():
     from oathforge.content import get_content
-    missing = [f"{k}.{a}" for k, cl in get_content().classes.items() for a, ab in cl.abilities.items() if not ab.details]
+
+    missing = [
+        f"{k}.{a}" for k, cl in get_content().classes.items() for a, ab in cl.abilities.items() if not ab.details
+    ]
     assert missing == []

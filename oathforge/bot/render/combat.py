@@ -43,8 +43,13 @@ def combat_help_text(state: EncounterState, me, defs: dict, lang: str) -> str:
     lines = []
     for key, roles in combat_help.hints(state, me, defs):
         names = {role: ", ".join(defs[k].name.get(lang) for k in keys[:2]) for role, keys in roles.items() if keys}
-        lines.append(t(lang, f"chelp.{key}", **{role: names.get(role, t(lang, "chelp.none")) for role in
-                                              ("heal", "guard", "damage", "control")}))
+        lines.append(
+            t(
+                lang,
+                f"chelp.{key}",
+                **{role: names.get(role, t(lang, "chelp.none")) for role in ("heal", "guard", "damage", "control")},
+            )
+        )
     return "\n".join(lines)
 
 
@@ -55,8 +60,19 @@ def combat_token(version: int | None, turn_index: int) -> str:
 
 PANEL_BLOCKS = 6  # recent actions shown under the combatants
 # results that belong to the action above them (damage of a hit, saves of a spell...): drawn indented under it
-FOLLOW_UPS = {"combat.plate_hit", "combat.plate_broken", "combat.damage", "combat.absorbed", "combat.defeated", "combat.relentless", "combat.wake",
-              "combat.status", "combat.immune", "combat.save", "combat.temp_hp"}
+FOLLOW_UPS = {
+    "combat.plate_hit",
+    "combat.plate_broken",
+    "combat.damage",
+    "combat.absorbed",
+    "combat.defeated",
+    "combat.relentless",
+    "combat.wake",
+    "combat.status",
+    "combat.immune",
+    "combat.save",
+    "combat.temp_hp",
+}
 
 
 def combat_blocks(state: EncounterState, entries: list, lang: str, with_end: bool = True) -> list[list[str]]:
@@ -87,15 +103,20 @@ def report_page(report: "combat_service.BattleReport | None", page: int, lang: s
     lines = [t(lang, "report.title", place=escape(place))]
     if page == 0:
         s = report.stats
-        lines += [f"{REPORT_ICON.get(report.status, '⚔️')} <b>{t(lang, 'report.result.' + report.status)}</b> · "
-                  + t(lang, "report.rounds", n=report.state.round), RULE,
-                  t(lang, "report.dealt", dealt=s["dealt"], hits=s["hits"], attacks=s["attacks"], crits=s["crits"]),
-                  t(lang, "report.received", received=s["received"], hits=s["enemy_hits"], attacks=s["enemy_attacks"])]
+        lines += [
+            f"{REPORT_ICON.get(report.status, '⚔️')} <b>{t(lang, 'report.result.' + report.status)}</b> · "
+            + t(lang, "report.rounds", n=report.state.round),
+            RULE,
+            t(lang, "report.dealt", dealt=s["dealt"], hits=s["hits"], attacks=s["attacks"], crits=s["crits"]),
+            t(lang, "report.received", received=s["received"], hits=s["enemy_hits"], attacks=s["enemy_attacks"]),
+        ]
         if s["healed"]:
             lines.append(t(lang, "report.healed", amount=s["healed"]))
         if s["defeated"]:
-            names = ", ".join((c.monsters[k].name.get(lang) if k in c.monsters else k) + (f" ×{n}" if n > 1 else "")
-                              for k, n in s["defeated"].items())
+            names = ", ".join(
+                (c.monsters[k].name.get(lang) if k in c.monsters else k) + (f" ×{n}" if n > 1 else "")
+                for k, n in s["defeated"].items()
+            )
             lines.append(t(lang, "report.defeated", list=escape(names)))
         shown = [ev for ev in report.rewards if ev.key not in ("progress.path_open", "progress.choice")]
         if shown:
@@ -104,17 +125,23 @@ def report_page(report: "combat_service.BattleReport | None", page: int, lang: s
             lines += ["", f"<i>{t(lang, 'report.hint')}</i>"]
     else:
         number, entries = report.rounds[page - 1]
-        lines += [f"<b>{t(lang, 'report.round', n=number, page=page, pages=pages)}</b>", RULE,
-                  *(line for block in combat_blocks(report.state, entries, lang) for line in block)]
+        lines += [
+            f"<b>{t(lang, 'report.round', n=number, page=page, pages=pages)}</b>",
+            RULE,
+            *(line for block in combat_blocks(report.state, entries, lang) for line in block),
+        ]
 
     def go(p: int) -> str:
         return cb("rep", f"{report.encounter_id}:{p}")
+
     def round_of(p: int) -> int:  # page p shows report.rounds[p - 1]; round 0 is the initiative
         return report.rounds[p - 1][0]
+
     nav = []
     if page > 0:
-        nav.append(btn(t(lang, "btn.round_prev", n=round_of(page - 1)) if page > 1 else t(lang, "btn.summary"),
-                       go(page - 1)))
+        nav.append(
+            btn(t(lang, "btn.round_prev", n=round_of(page - 1)) if page > 1 else t(lang, "btn.summary"), go(page - 1))
+        )
     if page < pages:
         nav.append(btn(t(lang, "btn.round_next", n=round_of(page + 1)), go(page + 1)))
     rows = [nav] if nav else []
@@ -135,8 +162,11 @@ def full_report(report: "combat_service.BattleReport | None", lang: str) -> list
     messages, lines = [], [t(lang, "report.full_title", place=escape(place)), RULE]
     for number, entries in report.rounds:
         title = t(lang, "combat.round_zero") if number == 0 else t(lang, "combat.round", round=number)
-        block = [f"<b>{title}</b>", *(line for b in combat_blocks(report.state, entries, lang) for line in b
-                                      if not line.startswith("<i>")), ""]
+        block = [
+            f"<b>{title}</b>",
+            *(line for b in combat_blocks(report.state, entries, lang) for line in b if not line.startswith("<i>")),
+            "",
+        ]
         if sum(len(x) + 1 for x in lines + block) > MAX_MESSAGE:
             messages.append("\n".join(lines).rstrip())
             lines = []
@@ -145,8 +175,9 @@ def full_report(report: "combat_service.BattleReport | None", lang: str) -> list
     return [m[:MAX_MESSAGE] for m in messages]
 
 
-def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str | None = None,
-                 version: int | None = None) -> tuple[str, InlineKeyboardMarkup]:
+def combat_panel(
+    char: Character, enc_state: dict, lang: str, target_menu: str | None = None, version: int | None = None
+) -> tuple[str, InlineKeyboardMarkup]:
     c = get_content()
     state = EncounterState.model_validate(enc_state)
     lines = [t(lang, "combat.panel_title", round=state.round), RULE]
@@ -164,17 +195,33 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
         if cb_.form and cb_.form in cb_.shapes:
             st = f"{cb_.shapes[cb_.form].icon} {st}".strip()
         temp = f" (+{cb_.temp_hp})" if cb_.temp_hp else ""
-        lines.append(f"{icon} <b>{escape(cb_.name[lang])}</b> ❤️ {cb_.hp}/{cb_.max_hp}{temp} "
-                     f"{hp_bar(cb_.hp, cb_.max_hp)} 🛡️ {cb_.ac} · {row} {st}".rstrip())
+        lines.append(
+            f"{icon} <b>{escape(cb_.name[lang])}</b> ❤️ {cb_.hp}/{cb_.max_hp}{temp} "
+            f"{hp_bar(cb_.hp, cb_.max_hp)} 🛡️ {cb_.ac} · {row} {st}".rstrip()
+        )
         if cb_.plate_max:  # the boss's protection and what it is about to do
-            lines.append("   " + (t(lang, "combat.plate_line", plate=cb_.plate, max=cb_.plate_max,
-                                   bar=hp_bar(cb_.plate, cb_.plate_max)) if cb_.plate else t(lang, "combat.plate_gone")))
+            lines.append(
+                "   "
+                + (
+                    t(
+                        lang,
+                        "combat.plate_line",
+                        plate=cb_.plate,
+                        max=cb_.plate_max,
+                        bar=hp_bar(cb_.plate, cb_.plate_max),
+                    )
+                    if cb_.plate
+                    else t(lang, "combat.plate_gone")
+                )
+            )
         if cb_.pattern_state != "ready":
             lines.append("   " + t(lang, f"combat.intent_{cb_.pattern_state}"))
         if cb_.resource_max:  # one main bar, and nothing else in the header (roadmap_balance N15)
             res = c.progression.resources[cb_.resource_key]
-            lines.append(f"   🔹 {escape(res.name.get(lang))} {cb_.resource}/{cb_.resource_max} "
-                         f"{hp_bar(cb_.resource, cb_.resource_max)}")
+            lines.append(
+                f"   🔹 {escape(res.name.get(lang))} {cb_.resource}/{cb_.resource_max} "
+                f"{hp_bar(cb_.resource, cb_.resource_max)}"
+            )
         for ent in (e for e in state.entities.values() if e.owner == cid):  # one line per helper, no more
             name = escape(ent.name[lang])
             if ent.defeated:
@@ -191,8 +238,9 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
         lines += [RULE, f"<b>{t(lang, 'combat.end.' + state.status)}</b>"]
         beasts = characters.pending_skin(char) if state.status == "victory" else []
         if beasts:
-            rows.append([btn(t(lang, "btn.skin", seconds=activities.skin_seconds(beasts)),
-                             cb("act", "skin:skinning", nonce()))])
+            rows.append(
+                [btn(t(lang, "btn.skin", seconds=activities.skin_seconds(beasts)), cb("act", "skin:skinning", nonce()))]
+            )
         rows.append([btn(t(lang, "btn.summary_report"), cb("rep")), btn(t(lang, "btn.full_report"), cb("repf"))])
         rows.append([btn(t(lang, "btn.continue"), cb("scene"))])
         return "\n".join(lines)[:MAX_MESSAGE], markup(rows)
@@ -213,8 +261,14 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
 
     if target_menu and target_menu != "powers":
         kind, _, arg = target_menu.partition(":")
-        spell = kind == "abl" and arg in defs and (defs[arg].kind in ("spell", "save", "curse", "command")
-                                                   or (defs[arg].kind == "strike" and defs[arg].ranged))
+        spell = (
+            kind == "abl"
+            and arg in defs
+            and (
+                defs[arg].kind in ("spell", "save", "curse", "command")
+                or (defs[arg].kind == "strike" and defs[arg].ranged)
+            )
+        )
         ranged = any(a.key == arg and a.ranged for a in me.attacks) or kind in ("obj", "itm") or spell
         for foe in valid_targets(state, me, ranged):
             rows.append([btn(f"🎯 {foe.name[lang]} ({foe.hp}/{foe.max_hp})", cb("cb", f"{target_menu}:{foe.id}", n))])
@@ -242,8 +296,9 @@ def combat_panel(char: Character, enc_state: dict, lang: str, target_menu: str |
         buttons.append(btn(t(lang, "btn.defend"), cb("cb", "def", n)))
         if me.consumables.get("healing_potion", 0) > 0:
             buttons.append(btn(t(lang, "btn.potion"), cb("cb", "pot", n)))
-        if any(q > 0 and c.items.get(k) is not None and c.items[k].combat is not None
-               for k, q in me.consumables.items()):
+        if any(
+            q > 0 and c.items.get(k) is not None and c.items[k].combat is not None for k, q in me.consumables.items()
+        ):
             buttons.append(btn(t(lang, "btn.items"), cb("cb", "itms", n)))
         for okey in state.scene_objects:
             obj = c.locations[state.location].scene_objects.get(okey)

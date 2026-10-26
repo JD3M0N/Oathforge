@@ -100,15 +100,13 @@ async def reroll_branch(session: AsyncSession, char: Character, key: str) -> Out
 
 async def _take(session: AsyncSession, char: Character, key: str, branch: ClassSpecialization) -> Outcome:
     char.specialization = key
-    char.build = {**characters.build_of(char), "v": characters.BUILD_VERSION,
-                  characters.BRANCH_REV: branch.revision}
+    char.build = {**characters.build_of(char), "v": characters.BUILD_VERSION, characters.BRANCH_REV: branch.revision}
     out = Outcome().add("path.chosen", branch=branch.name.model_dump())
     _finish(char)
     for akey, a in branch.abilities.items():
         if a.level <= char.level:
             out.add("progress.new_ability", ability=a.name.model_dump(), cls=char.class_key, ability_key=akey)
-    await achievements.emit(session, char, out, "class_specialized", {"branch": key},
-                            f"branch:{key}:{branch.revision}")
+    await achievements.emit(session, char, out, "class_specialized", {"branch": key}, f"branch:{key}:{branch.revision}")
     return out.extend(await quests.on_event(session, char, "branch", key))
 
 
@@ -124,8 +122,11 @@ async def choose_option(session: AsyncSession, char: Character, choice_key: str,
     if option not in picks:
         return Outcome.refused("path.err.unknown")
     build = characters.build_of(char)
-    char.build = {**build, "v": characters.BUILD_VERSION,
-                  characters.CHOICES: {**build.get(characters.CHOICES, {}), choice_key: option}}
+    char.build = {
+        **build,
+        "v": characters.BUILD_VERSION,
+        characters.CHOICES: {**build.get(characters.CHOICES, {}), choice_key: option},
+    }
     picked = picks[option]
     out = Outcome().add("path.picked", kind=choice.kind, level=choice.level, name=picked.name.model_dump())
     _finish(char)
@@ -133,7 +134,12 @@ async def choose_option(session: AsyncSession, char: Character, choice_key: str,
         for akey, a in picked.grants.items():
             if a.level <= char.level:
                 out.add("progress.new_ability", ability=a.name.model_dump(), cls=char.class_key, ability_key=akey)
-    await achievements.emit(session, char, out, "class_choice", {"kind": choice.kind, "level": choice.level,
-                                                                  "option": option},
-                            f"choice:{choice_key}")
+    await achievements.emit(
+        session,
+        char,
+        out,
+        "class_choice",
+        {"kind": choice.kind, "level": choice.level, "option": option},
+        f"choice:{choice_key}",
+    )
     return out

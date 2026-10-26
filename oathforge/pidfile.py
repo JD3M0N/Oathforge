@@ -43,10 +43,15 @@ BOT_COMMAND = r"""(oath|oathforge)(\.exe)?["']?\s+bot\b|-m\s+oathforge\s+bot\b""
 def find_running() -> list[int]:
     """Bots running without a PID file (started before v0.7.27, or by hand): by their command line."""
     import re
+
     me = os.getpid()
     if sys.platform == "win32":
-        cmd = ["powershell", "-NoProfile", "-Command",
-               "Get-CimInstance Win32_Process | ForEach-Object { \"$($_.ProcessId)`t$($_.CommandLine)\" }"]
+        cmd = [
+            "powershell",
+            "-NoProfile",
+            "-Command",
+            'Get-CimInstance Win32_Process | ForEach-Object { "$($_.ProcessId)`t$($_.CommandLine)" }',
+        ]
     else:
         cmd = ["ps", "-eo", "pid=,args="]
     try:

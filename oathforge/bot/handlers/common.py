@@ -75,8 +75,9 @@ async def load(session: AsyncSession, update: Update, lock: bool = False) -> tup
     return user, char
 
 
-async def current_view(session: AsyncSession, char: Character, lang: str,
-                       compact: bool = False) -> tuple[str, InlineKeyboardMarkup]:
+async def current_view(
+    session: AsyncSession, char: Character, lang: str, compact: bool = False
+) -> tuple[str, InlineKeyboardMarkup]:
     """The combat panel if fighting, otherwise the scene (``compact``: only its heading, under a result)."""
     enc = await combat_service.active_encounter(session, char)
     if enc is not None:
@@ -103,8 +104,9 @@ def _record(update: Update, text: str, kb: InlineKeyboardMarkup | None, edited: 
 
 
 async def send(update: Update, text: str, kb: InlineKeyboardMarkup | None = None) -> None:
-    await update.effective_chat.send_message(text, parse_mode=ParseMode.HTML, reply_markup=kb,
-                                             disable_web_page_preview=True)
+    await update.effective_chat.send_message(
+        text, parse_mode=ParseMode.HTML, reply_markup=kb, disable_web_page_preview=True
+    )
     _record(update, text, kb, edited=False)
 
 
@@ -144,8 +146,14 @@ async def drop_buttons(update: Update) -> None:
             pass
 
 
-async def send_result(update: Update, outcome: Outcome, lang: str, view: str, kb: InlineKeyboardMarkup | None,
-                      narration: str | None = None) -> None:
+async def send_result(
+    update: Update,
+    outcome: Outcome,
+    lang: str,
+    view: str,
+    kb: InlineKeyboardMarkup | None,
+    narration: str | None = None,
+) -> None:
     """What happened and the buttons to carry on, in one message: the result, each level gained as a card of
     its own, and the view (usually the scene's heading) at the end of the last one."""
     messages = [m for m in [render.outcome_text(outcome, lang, narration), *render.level_up_cards(outcome, lang)] if m]
@@ -186,8 +194,14 @@ class BotChat:
         return await self.bot.send_message(self.id, text, **kwargs)
 
 
-async def send_activity_result(chat, telegram_id: int, llm, outcome: Outcome, lang: str,
-                               view: tuple[str, InlineKeyboardMarkup | None] | None = None) -> None:
+async def send_activity_result(
+    chat,
+    telegram_id: int,
+    llm,
+    outcome: Outcome,
+    lang: str,
+    view: tuple[str, InlineKeyboardMarkup | None] | None = None,
+) -> None:
     """What a finished activity gave, with its chronicle, in one message; level-ups as their own cards.
     ``view``: the buttons to carry on (the scene's heading), at the end of the last message."""
     if outcome.activity_id:
@@ -197,8 +211,9 @@ async def send_activity_result(chat, telegram_id: int, llm, outcome: Outcome, la
             title = render.activity_title(act, lang) if act else None
         async with keep_typing(chat):
             ch = await chronicles.tell(llm, outcome.activity_id, lang)
-        text = render.activity_result(outcome, skill, lang, ch.text if ch else None,
-                                      chronicles.footer(ch, lang) if ch else None, title)
+        text = render.activity_result(
+            outcome, skill, lang, ch.text if ch else None, chronicles.footer(ch, lang) if ch else None, title
+        )
     else:
         text = render.outcome_text(outcome, lang)
     messages = [m for m in [text, *render.level_up_cards(outcome, lang)] if m]
@@ -212,8 +227,9 @@ async def send_activity_result(chat, telegram_id: int, llm, outcome: Outcome, la
     for i, message in enumerate(messages):
         last = kb if i == len(messages) - 1 else None
         await chat.send_message(message, parse_mode=ParseMode.HTML, reply_markup=last, disable_web_page_preview=True)
-        recorder.outgoing(telegram_id, message, [b.text for row in last.inline_keyboard for b in row] if last else [],
-                          edited=False)
+        recorder.outgoing(
+            telegram_id, message, [b.text for row in last.inline_keyboard for b in row] if last else [], edited=False
+        )
 
 
 async def finish_due_activities(context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -242,6 +258,7 @@ async def _finish_one(context: ContextTypes.DEFAULT_TYPE, char_id: int) -> None:
     chat = BotChat(context.bot, telegram_id)
     await send_activity_result(chat, telegram_id, context.bot_data["llm"], out, lang, view)
     from oathforge.bot.handlers.achievements import deliver
+
     await deliver(context.bot, user.telegram_id, user.telegram_id)
 
 
@@ -249,8 +266,7 @@ async def edit_or_send(update: Update, text: str, kb: InlineKeyboardMarkup | Non
     q = update.callback_query
     if q is not None and q.message is not None:
         try:
-            await q.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=kb,
-                                      disable_web_page_preview=True)
+            await q.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=kb, disable_web_page_preview=True)
             _record(update, text, kb, edited=True)
             return
         except BadRequest as e:
@@ -261,8 +277,9 @@ async def edit_or_send(update: Update, text: str, kb: InlineKeyboardMarkup | Non
     await send(update, text, kb)
 
 
-async def send_photos(session: AsyncSession, update: Update, context: ContextTypes.DEFAULT_TYPE,
-                      assets: list[MediaAsset], caption: str) -> None:
+async def send_photos(
+    session: AsyncSession, update: Update, context: ContextTypes.DEFAULT_TYPE, assets: list[MediaAsset], caption: str
+) -> None:
     """One photo, or an album of up to 10, reusing cached file_ids; caches the new ones."""
     bot_id, chat = context.bot.id, update.effective_chat
     assets = assets[:MAX_ALBUM]
@@ -296,6 +313,7 @@ async def _send_photos(chat: Chat, assets: list[MediaAsset], ids: list[str | Non
     photos = [fid or a.path.read_bytes() for a, fid in zip(assets, ids)]
     if len(photos) == 1:
         return [await chat.send_photo(photos[0], caption=caption, parse_mode=ParseMode.HTML)]
-    album = [InputMediaPhoto(p, caption=caption if i == 0 else None, parse_mode=ParseMode.HTML)
-             for i, p in enumerate(photos)]
+    album = [
+        InputMediaPhoto(p, caption=caption if i == 0 else None, parse_mode=ParseMode.HTML) for i, p in enumerate(photos)
+    ]
     return list(await chat.send_media_group(album))

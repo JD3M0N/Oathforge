@@ -17,8 +17,12 @@ def usable(state: EncounterState, me, defs: dict) -> dict[str, list[str]]:
         a = defs.get(key)
         if a is None or (uses is not None and uses <= 0) or not affordable(me, key, a) or key in me.cooldowns:
             continue
-        for role, kinds in (("heal", HEAL_KINDS), ("guard", GUARD_KINDS), ("control", CONTROL_KINDS),
-                            ("damage", DAMAGE_KINDS)):
+        for role, kinds in (
+            ("heal", HEAL_KINDS),
+            ("guard", GUARD_KINDS),
+            ("control", CONTROL_KINDS),
+            ("damage", DAMAGE_KINDS),
+        ):
             if a.kind in kinds:
                 roles[role].append(key)
                 break

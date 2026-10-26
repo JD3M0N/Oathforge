@@ -61,8 +61,9 @@ async def ensure_progress(session: AsyncSession, char: Character) -> dict[str, Q
         if qkey not in prog:
             veteran = any(old in prog and prog[old].state == "completed" for old in quest.legacy_done)
             stage = quest.complete_stage if veteran and quest.complete_stage else quest.start_stage
-            row = QuestProgress(character_id=char.id, quest_key=qkey, stage=stage,
-                                state=quest.stages[stage].state, counters={})
+            row = QuestProgress(
+                character_id=char.id, quest_key=qkey, stage=stage, state=quest.stages[stage].state, counters={}
+            )
             session.add(row)
             prog[qkey] = row
     await session.flush()
@@ -97,8 +98,9 @@ async def refresh(session: AsyncSession, char: Character, out: Outcome) -> None:
 def objective_progress(quest: Quest, p: QuestProgress | None) -> list[tuple[QuestObjective, int]]:
     counters = (p.counters if p is not None else None) or {}
     done = p is not None and p.state == "completed"
-    return [(o, o.count if done else min(o.count, int(counters.get(str(i), 0))))
-            for i, o in enumerate(quest.objectives)]
+    return [
+        (o, o.count if done else min(o.count, int(counters.get(str(i), 0)))) for i, o in enumerate(quest.objectives)
+    ]
 
 
 ANYWHERE = {"es": "cualquier sitio", "en": "anywhere"}
@@ -112,10 +114,24 @@ def objective_target(obj: QuestObjective) -> dict:
         return c.rulebook[obj.target].title.model_dump()
     if obj.target.startswith("furniture:"):  # the bed and the chest of your room, which a starter recipe installs
         return {lang: t(lang, f"home.furniture.{obj.target.split(':')[1]}") for lang in ("es", "en")}
-    pool = {"kill": c.monsters, "hunt": c.locations, "talk": c.npcs, "visit": c.locations, "gather": c.items, "skin": c.items,
-            "craft": c.items, "rest": c.locations, "heal": c.locations, "equip": c.items, "stash": c.items,
-            "take": c.items, "buy": c.items, "sell": c.items, "blueprint": c.items,
-            "learn_profession": c.professions}[obj.kind]
+    pool = {
+        "kill": c.monsters,
+        "hunt": c.locations,
+        "talk": c.npcs,
+        "visit": c.locations,
+        "gather": c.items,
+        "skin": c.items,
+        "craft": c.items,
+        "rest": c.locations,
+        "heal": c.locations,
+        "equip": c.items,
+        "stash": c.items,
+        "take": c.items,
+        "buy": c.items,
+        "sell": c.items,
+        "blueprint": c.items,
+        "learn_profession": c.professions,
+    }[obj.kind]
     if pool is c.locations:  # «Ve a la Capilla del Alba»
         return pool[obj.target].phrase()
     return pool[obj.target].name.model_dump()
@@ -126,7 +142,20 @@ def objective_key(obj: QuestObjective) -> str:
     return f"quest.objective.{obj.kind}" + ("_any" if obj.target == "any" else "")
 
 
-ANY_TARGET = ("hunt", "rest", "heal", "short_rest", "learn_profession", "equip", "stash", "take", "buy", "sell", "smoke", "branch")  # kinds that accept "any"
+ANY_TARGET = (
+    "hunt",
+    "rest",
+    "heal",
+    "short_rest",
+    "learn_profession",
+    "equip",
+    "stash",
+    "take",
+    "buy",
+    "sell",
+    "smoke",
+    "branch",
+)  # kinds that accept "any"
 
 
 def _matches(obj: QuestObjective, kind: str, target: str) -> bool:
@@ -138,8 +167,9 @@ async def on_event(session: AsyncSession, char: Character, kind: str, target: st
     return await advance(session, char, kind, target, random.Random(), amount)
 
 
-async def advance(session: AsyncSession, char: Character, kind: str, target: str, rng: random.Random,
-                  amount: int = 1) -> Outcome:
+async def advance(
+    session: AsyncSession, char: Character, kind: str, target: str, rng: random.Random, amount: int = 1
+) -> Outcome:
     """Count a kill / talk / visit (or `amount` items gathered, skinned or crafted, a rest, a heal) towards
     active missions; completing one gives its rewards."""
     out = Outcome()
@@ -166,19 +196,27 @@ async def advance(session: AsyncSession, char: Character, kind: str, target: str
                 await apply_effects(session, char, quest.rewards, out, rng)
                 await _set_stage(session, char, quest, p, quest.complete_stage, out)
         elif hit[0].count > 1 and hit[1] < hit[0].count:
-            out.add("quest.progress", quest=quest.name.model_dump(), target=objective_target(hit[0]),
-                    n=hit[1], count=hit[0].count)
+            out.add(
+                "quest.progress",
+                quest=quest.name.model_dump(),
+                target=objective_target(hit[0]),
+                n=hit[1],
+                count=hit[0].count,
+            )
         else:  # that objective is done but the mission is not: say what comes next
             nxt = next(o for i, o in enumerate(quest.objectives) if int(counters.get(str(i), 0)) < o.count)
-            out.add("quest.next", quest=quest.name.model_dump(),
-                    step={lang: t(lang, objective_key(nxt), target=objective_target(nxt)[lang])
-                          for lang in ("es", "en")})
+            out.add(
+                "quest.next",
+                quest=quest.name.model_dump(),
+                step={lang: t(lang, objective_key(nxt), target=objective_target(nxt)[lang]) for lang in ("es", "en")},
+            )
     await refresh(session, char, out)
     return out
 
 
-async def ready_to_turn_in(session: AsyncSession, char: Character, present_npcs: list[str],
-                           npc: str | None = None) -> list[tuple[str, Quest]]:
+async def ready_to_turn_in(
+    session: AsyncSession, char: Character, present_npcs: list[str], npc: str | None = None
+) -> list[tuple[str, Quest]]:
     """Missions whose objectives are met and that are waiting to be handed to their giver here."""
     prog = await progress(session, char)
     out = []
@@ -194,8 +232,9 @@ async def ready_to_turn_in(session: AsyncSession, char: Character, present_npcs:
     return out
 
 
-async def turn_in(session: AsyncSession, char: Character, quest_key: str, present_npcs: list[str],
-                  rng: random.Random) -> Outcome:
+async def turn_in(
+    session: AsyncSession, char: Character, quest_key: str, present_npcs: list[str], rng: random.Random
+) -> Outcome:
     """Hand a finished mission to the one who gave it: rewards, milestone and the next mission, all in
     the same transaction. Pressing twice or using an old menu never pays again (roadmap_balance §8.1)."""
     if refusal := characters.ensure_free(char):
@@ -209,8 +248,7 @@ async def turn_in(session: AsyncSession, char: Character, quest_key: str, presen
     if quest.giver is None or quest.giver not in present_npcs:
         return Outcome.refused("quest.err.giver_away")
     out = Outcome().text(quest.stages[quest.complete_stage].journal)
-    out.add("quest.turned_in", quest=quest.name.model_dump(),
-            npc=get_content().npcs[quest.giver].name.model_dump())
+    out.add("quest.turned_in", quest=quest.name.model_dump(), npc=get_content().npcs[quest.giver].name.model_dump())
     await apply_effects(session, char, quest.rewards, out, rng)
     await _set_stage(session, char, quest, p, quest.complete_stage, out)
     await refresh(session, char, out)
@@ -245,8 +283,9 @@ async def on_read(session: AsyncSession, char: Character, section: str, rng: ran
     return await advance(session, char, "read", section, rng)
 
 
-async def on_items(session: AsyncSession, char: Character, kind: str, items: dict[str, int],
-                   rng: random.Random) -> Outcome:
+async def on_items(
+    session: AsyncSession, char: Character, kind: str, items: dict[str, int], rng: random.Random
+) -> Outcome:
     """Items gathered, skinned or crafted (kind) count towards objectives, by quantity."""
     out = Outcome()
     for key, qty in items.items():
@@ -342,18 +381,19 @@ async def _set_stage(session, char, quest: Quest, p: QuestProgress, stage: str, 
     key = {"completed": "quest.completed", "failed": "quest.failed"}.get(p.state, "quest.updated")
     out.add(key, quest=quest.name.model_dump())
     if p.state == "completed":
-        await achievements.emit(session, char, out, "quest", {"quest": p.quest_key},
-                                f"quest:{p.quest_key}:completed")
+        await achievements.emit(session, char, out, "quest", {"quest": p.quest_key}, f"quest:{p.quest_key}:completed")
     elif p.state == "active":
-        await achievements.emit(session, char, out, "quest_start", {"quest": p.quest_key},
-                                f"quest:{p.quest_key}:started")
+        await achievements.emit(
+            session, char, out, "quest_start", {"quest": p.quest_key}, f"quest:{p.quest_key}:started"
+        )
 
 
-async def apply_effects(session: AsyncSession, char: Character, effects: list[dict], out: Outcome,
-                        rng: random.Random) -> None:
+async def apply_effects(
+    session: AsyncSession, char: Character, effects: list[dict], out: Outcome, rng: random.Random
+) -> None:
     c = get_content()
     for eff in effects:
-        (kind, arg), = eff.items()
+        ((kind, arg),) = eff.items()
         if kind == "give_item":
             for item, qty in arg.items():
                 await inventory.add_item(session, char, item, qty)
@@ -386,8 +426,9 @@ async def apply_effects(session: AsyncSession, char: Character, effects: list[di
             if arg in DECISION_FLAGS:  # a written decision leaves its mark
                 await achievements.emit(session, char, out, "decision", {"key": DECISION_FLAGS[arg]}, f"decision:{arg}")
         elif kind == "npc_memory":
-            await npcs.remember(session, arg["npc"], char, arg["text"].format(name=char.name),
-                                int(arg.get("importance", 3)))
+            await npcs.remember(
+                session, arg["npc"], char, arg["text"].format(name=char.name), int(arg.get("importance", 3))
+            )
         elif kind == "trust":
             await npcs.adjust_trust(session, arg["npc"], char, int(arg["delta"]))
         elif kind == "damage":

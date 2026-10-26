@@ -27,6 +27,7 @@ def _view(builder):
                 await offer_keyboard(update, user, lang)
                 text, kb = await builder(session, char, lang)
         await send(update, text, kb)
+
     return handle
 
 
@@ -168,13 +169,13 @@ async def room(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def stash(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """/stash_<item> [n] and /take_<item> [n]: move things between the backpack and the chest."""
     from oathforge.bot.handlers import callbacks  # callbacks imports the views from here
+
     text = (update.message.text or "").strip() if update.message else ""
     m = STASH_LINK.match(text) or TAKE_LINK.match(text)
     if m is None:
         return
     verb = "stash" if text.startswith("/stash_") else "take"
-    await callbacks._act(update, context, verb, f"{m.group(1)}:{m.group(2) or 1}",
-                         f"msg{update.message.message_id}")
+    await callbacks._act(update, context, verb, f"{m.group(1)}:{m.group(2) or 1}", f"msg{update.message.message_id}")
 
 
 RECIPE_LINK = re.compile(r"^/r_([a-z0-9_]+?)(?:@\w+)?$")
@@ -209,6 +210,7 @@ async def recipe(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def craft(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """/craft_<recipe> [n]: make it without opening a menu; without a number, its card."""
     from oathforge.bot.handlers import callbacks  # callbacks imports the views from here
+
     m = CRAFT_LINK.match((update.message.text or "").strip()) if update.message else None
     if m is None:
         return
@@ -216,13 +218,13 @@ async def craft(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await recipe(update, context)
         return
     # one craft per message: pressing the same message again never makes a second batch
-    await callbacks._act(update, context, "craft", f"{m.group(1)}:{m.group(2)}",
-                         f"msg{update.message.message_id}")
+    await callbacks._act(update, context, "craft", f"{m.group(1)}:{m.group(2)}", f"msg{update.message.message_id}")
 
 
 async def skin(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """/skin: skin the beasts you just killed (a few seconds), like the "🔪 Skin" button."""
     from oathforge.bot.handlers import callbacks  # callbacks imports the views from here
+
     await callbacks._act(update, context, "act", "skin:skinning", nonce())
 
 
@@ -285,13 +287,19 @@ async def help_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     async with session_scope() as session:
         user, _ = await load(session, update)
         lang = user.language
-    await send(update, f'{t(lang, "help.text")}\n\n{t(lang, "help.version", version=__version__)}')
+    await send(update, f"{t(lang, 'help.text')}\n\n{t(lang, 'help.version', version=__version__)}")
 
 
 async def fixed_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """A press on the fixed keyboard: the same view as its command (never free text for the AI)."""
-    views = {"place": current_view, "activities": _activities, "hero": render.hero, "map": _map, "inventory": render.inventory_view,
-             "journal": render.journal}  # 📍: the scene, like /start or /look (the combat panel if fighting)
+    views = {
+        "place": current_view,
+        "activities": _activities,
+        "hero": render.hero,
+        "map": _map,
+        "inventory": render.inventory_view,
+        "journal": render.journal,
+    }  # 📍: the scene, like /start or /look (the combat panel if fighting)
     await _view(views[fixed_key(update.message.text)])(update, context)
 
 

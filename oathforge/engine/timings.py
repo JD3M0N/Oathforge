@@ -15,5 +15,10 @@ SHORT_REST_POOL_PCT = 0.5  # of a class bar
 SHORT_REST_USES = 1  # of the most spent limited ability, for classes without a bar
 SHORT_RESTS_PER_LONG = 2  # a long rest gives them back; without it the third one is refused
 
-SECONDS = {"gather": GATHER_SECONDS, "stay": STAY_SECONDS, "track": TRACK_SECONDS, "rest": REST_SECONDS,
-           "short_rest": SHORT_REST_SECONDS}
+SECONDS = {
+    "gather": GATHER_SECONDS,
+    "stay": STAY_SECONDS,
+    "track": TRACK_SECONDS,
+    "rest": REST_SECONDS,
+    "short_rest": SHORT_REST_SECONDS,
+}

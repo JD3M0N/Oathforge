@@ -44,6 +44,7 @@ async def test_combat_through_buttons(llm):
     await p.press(p.find("rep", f"{enc.id}:2"))
     assert "Round 1" in p.last[0]
     from oathforge.bot.handlers import commands
+
     report = next(h for h in commands.handlers() if "report" in getattr(h, "commands", ()))
     await report.callback(p.update(message="/report"), p.ctx)
     assert "Battle summary" in p.last[0]

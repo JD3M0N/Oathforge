@@ -37,8 +37,9 @@ def effects(char: Character, skill: str):
     spec = get_content().specializations.get(key) if key else None
     if spec is None:
         return gathering.Mods()
-    return gathering.Mods(time_pct=spec.effects.time_pct, rare_rel=spec.effects.rare_rel,
-                          extra_chance=spec.effects.extra_chance)
+    return gathering.Mods(
+        time_pct=spec.effects.time_pct, rare_rel=spec.effects.rare_rel, extra_chance=spec.effects.extra_chance
+    )
 
 
 def price(char: Character, key: str) -> int:
@@ -71,8 +72,9 @@ async def choose(session: AsyncSession, char: Character, key: str) -> Outcome:
     crafting["spec"] = {**crafting.get("spec", {}), spec.skill: key}
     crafting["spec_learned"] = sorted({*learned(char), key})
     char.crafting = crafting
-    out = Outcome().add("spec.chosen", spec=spec.name.model_dump(),
-                        skill=characters.mastery_name(spec.skill), cost=cost)
+    out = Outcome().add(
+        "spec.chosen", spec=spec.name.model_dump(), skill=characters.mastery_name(spec.skill), cost=cost
+    )
     if paused:
         out.add("spec.paused", spec=c.specializations[paused].name.model_dump())
     return out

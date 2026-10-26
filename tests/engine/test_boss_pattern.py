@@ -7,12 +7,15 @@ from oathforge.engine.combat import Action, AttackProfile
 
 from tests.engine.test_combat import ABILITIES, encounter, monster, player
 
-HEAVY = AttackProfile(key="heavy", name={"es": "Descarga", "en": "Volley"}, to_hit=30, damage="1d4", damage_type="piercing",
-                      ranged=True)
+HEAVY = AttackProfile(
+    key="heavy", name={"es": "Descarga", "en": "Volley"}, to_hit=30, damage="1d4", damage_type="piercing", ranged=True
+)
 
 
 def boss(**kw):
-    base = dict(hp=60, max_hp=60, plate=10, plate_max=10, pattern={"cycle": 2, "cycle_broken": 1}, heavy=HEAVY, boss=True)
+    base = dict(
+        hp=60, max_hp=60, plate=10, plate_max=10, pattern={"cycle": 2, "cycle_broken": 1}, heavy=HEAVY, boss=True
+    )
     base.update(kw)
     return monster("m1", **base)
 

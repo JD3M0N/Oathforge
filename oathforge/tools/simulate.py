@@ -36,6 +36,7 @@ HELPERS = ("summon", "converge", "command", "shift")  # abilities of the helpers
 
 # ---------------------------------------------------------------- the simulated hero
 
+
 def default_choices(class_key: str, level: int, branch: str | None, picks: dict | None = None) -> dict:
     """What a player would have picked by `level`: the offensive training at 5 and 18, the resilient one at 12, and
     the first option of every modifier. `picks` overrides any of them ({"modifier:13": "heavy_verdict"})."""
@@ -51,8 +52,9 @@ def default_choices(class_key: str, level: int, branch: str | None, picks: dict 
     return {**out, **(picks or {})}
 
 
-def sim_character(class_key: str, level: int, lineage: str, background: str, branch: str | None = None,
-                  picks: dict | None = None) -> Character:
+def sim_character(
+    class_key: str, level: int, lineage: str, background: str, branch: str | None = None, picks: dict | None = None
+) -> Character:
     """A transient character as ``create_character`` + ``grant_xp`` would leave it (never saved), with the
     trainings, the branch and the modifiers a player would have chosen by that level."""
     c = get_content()
@@ -62,9 +64,24 @@ def sim_character(class_key: str, level: int, lineage: str, background: str, bra
     scores = characters.starting_scores(class_key, lineage)  # no ability boost on the way: the trainings replaced it
     hp = progression.max_hp(cls.hit_die, modifier(scores["con"]), level)
     char = Character(
-        id=0, name="Sim", lineage=lineage, background=background, class_key=class_key, abilities=scores,
-        level=level, xp=0, hp=hp, max_hp=hp, gold=0, location=c.start_location, state="idle", flags={},
-        conditions={}, resources=characters.full_resources(class_key, level), bestiary={}, checks_tried={},
+        id=0,
+        name="Sim",
+        lineage=lineage,
+        background=background,
+        class_key=class_key,
+        abilities=scores,
+        level=level,
+        xp=0,
+        hp=hp,
+        max_hp=hp,
+        gold=0,
+        location=c.start_location,
+        state="idle",
+        flags={},
+        conditions={},
+        resources=characters.full_resources(class_key, level),
+        bestiary={},
+        checks_tried={},
         specialization=branch if level >= c.progression.specialization_level else None,
         build={"v": characters.BUILD_VERSION, characters.CHOICES: default_choices(class_key, level, branch, picks)},
         pools={},
@@ -74,7 +91,9 @@ def sim_character(class_key: str, level: int, lineage: str, background: str, bra
     return char
 
 
-T1_BODY = {"str": "steel_breastplate"}  # the piece the guild lends at level 10 (camp_kit): heavy for the strong, boiled leather for the rest
+T1_BODY = {
+    "str": "steel_breastplate"
+}  # the piece the guild lends at level 10 (camp_kit): heavy for the strong, boiled leather for the rest
 T1_BODY_DEFAULT = "hardened_leather"
 
 
@@ -95,18 +114,23 @@ def sim_gear(char: Character, kit: str = "t0") -> dict[str, ItemInstance]:
 
 def sim_skills(char: Character) -> dict[str, CharacterSkill]:
     c = get_content()
-    proficient = (set(c.classes[char.class_key].skills) | set(c.backgrounds[char.background].skills)
-                  | set(c.lineages[char.lineage].skills))
+    proficient = (
+        set(c.classes[char.class_key].skills)
+        | set(c.backgrounds[char.background].skills)
+        | set(c.lineages[char.lineage].skills)
+    )
     return {s: CharacterSkill(skill=s, proficient=s in proficient, xp=0, recent=[]) for s in c.skills}
 
 
-def hero(class_key: str, level: int, lineage: str, background: str, branch: str | None = None,
-         picks: dict | None = None) -> tuple[Combatant, dict]:
+def hero(
+    class_key: str, level: int, lineage: str, background: str, branch: str | None = None, picks: dict | None = None
+) -> tuple[Combatant, dict]:
     char = sim_character(class_key, level, lineage, background, branch, picks)
     return characters.combatant_from(char, sim_gear(char), sim_skills(char)), combat_service.ability_defs(char)
 
 
 # ---------------------------------------------------------------- the player's policy
+
 
 def _try(state: EncounterState, action: Action, rng: random.Random, defs: dict) -> bool:
     try:
@@ -178,16 +202,18 @@ def _worth_it(me: Combatant, key: str, a, weapon) -> bool:
     return weapon is None or dice.parse(a.damage).average + me.spell_damage_bonus >= dice.parse(weapon.damage).average
 
 
-def _main(state: EncounterState, me: Combatant, rng: random.Random, defs: dict, use_abilities: bool,
-          informed: bool = True) -> None:
+def _main(
+    state: EncounterState, me: Combatant, rng: random.Random, defs: dict, use_abilities: bool, informed: bool = True
+) -> None:
     weapon = _weapon(me)
     if informed and me.consumables.get("healing_potion", 0) > 0 and me.hp * 5 < 2 * me.max_hp:  # a potion when low
         dose = "4d4+4" if me.level >= 10 else "2d4+2"
         if _try(state, Action(kind="heal_item", heal_amount=dice.roll(dose, rng).total), rng, defs):
             return
     aiming = [f for f in state.enemies_of(me) if f.pattern_state == "aiming" and f.heavy]
-    if informed and aiming and (me.hp <= 2.5 * dice.parse(aiming[0].heavy.damage).average
-                                or me.hp * 5 < 3 * me.max_hp):  # the signal says: guard
+    if (
+        informed and aiming and (me.hp <= 2.5 * dice.parse(aiming[0].heavy.damage).average or me.hp * 5 < 3 * me.max_hp)
+    ):  # the signal says: guard
         if _try(state, Action(kind="defend"), rng, defs):
             return
     if use_abilities:
@@ -195,32 +221,46 @@ def _main(state: EncounterState, me: Combatant, rng: random.Random, defs: dict, 
         # for the window: the plate gone or the boss reloading (exposed)
         patterned = [f for f in state.enemies_of(me) if f.pattern]
         saving = SAVE_FOR_WINDOW and informed and any(f.plate > 0 and f.pattern_state != "reloading" for f in patterned)
-        options = [k for k, a in defs.items()
-                   if a.action == "action" and _usable(me, k, defs) and a.kind in ACTION_PRIORITY
-                   and _worth_it(me, k, a, weapon) and _helpers_ok(state, me, a)
-                   and (a.kind != "heal" or me.hp * 3 < me.max_hp)
-                   and not (saving and a.kind in ("strike", "spell", "save", "curse") and (a.cost or me.abilities.get(k) is not None))]
+        options = [
+            k
+            for k, a in defs.items()
+            if a.action == "action"
+            and _usable(me, k, defs)
+            and a.kind in ACTION_PRIORITY
+            and _worth_it(me, k, a, weapon)
+            and _helpers_ok(state, me, a)
+            and (a.kind != "heal" or me.hp * 3 < me.max_hp)
+            and not (
+                saving
+                and a.kind in ("strike", "spell", "save", "curse")
+                and (a.cost or me.abilities.get(k) is not None)
+            )
+        ]
         # the dearest first: what the bar pays for, then what has limited uses, then the free ones
-        options.sort(key=lambda k: (ACTION_PRIORITY.index(defs[k].kind), -defs[k].cost,
-                                    me.abilities[k] is None))
+        options.sort(key=lambda k: (ACTION_PRIORITY.index(defs[k].kind), -defs[k].cost, me.abilities[k] is None))
         for key in options:
             a = defs[key]
             if a.kind == "buff" and a.status in me.statuses:
                 continue
             if a.kind == "curse" and all(a.status in f.statuses for f in state.enemies_of(me)):
                 continue
-            if _try(state, Action(kind="ability", ability=key,
-                                  target=_target(state, me, a.kind != "strike" or a.ranged)),
-                    rng, defs):
+            if _try(
+                state,
+                Action(kind="ability", ability=key, target=_target(state, me, a.kind != "strike" or a.ranged)),
+                rng,
+                defs,
+            ):
                 return
-    if weapon and _try(state, Action(kind="attack", weapon=weapon.key, target=_target(state, me, weapon.ranged)),
-                       rng, defs):
+    if weapon and _try(
+        state, Action(kind="attack", weapon=weapon.key, target=_target(state, me, weapon.ranged)), rng, defs
+    ):
         return
     _try(state, Action(kind="defend"), rng, defs)
 
 
-def play_turn(state: EncounterState, rng: random.Random, defs: dict, use_abilities: bool = True,
-              informed: bool = True) -> None:
+def play_turn(
+    state: EncounterState, rng: random.Random, defs: dict, use_abilities: bool = True, informed: bool = True
+) -> None:
     """One player turn: bonus action first, then the action (twice with Action Surge), then end the turn."""
     me = state.combatants["p1"]
     rnd = state.round
@@ -238,6 +278,7 @@ def play_turn(state: EncounterState, rng: random.Random, defs: dict, use_abiliti
 
 # ---------------------------------------------------------------- fights and stats
 
+
 @dataclass
 class Fight:
     status: str  # victory | defeat | fled | timeout
@@ -252,6 +293,7 @@ class Fight:
 def _bring_helpers(state: EncounterState, player: Combatant, char: Character) -> None:
     """What the hero may call in the fight, like combat_service does at the start of a real one."""
     from oathforge.services import companions
+
     for a in characters.abilities_of(char).values():
         if a.kind in ("summon", "command") and a.entity:
             state.entity_defs[a.entity] = companions.template(a.entity, char)
@@ -260,9 +302,19 @@ def _bring_helpers(state: EncounterState, player: Combatant, char: Character) ->
             combat.spawn(state, player, tpl, persistent=True, acts_now=True)
 
 
-def fight(class_key: str, level: int, monsters: list[str], seed: int, lineage: str, background: str,
-          use_abilities: bool = True, branch: str | None = None, policy: str = "informed", kit: str = "t0",
-          carry: dict | None = None) -> Fight:
+def fight(
+    class_key: str,
+    level: int,
+    monsters: list[str],
+    seed: int,
+    lineage: str,
+    background: str,
+    use_abilities: bool = True,
+    branch: str | None = None,
+    policy: str = "informed",
+    kit: str = "t0",
+    carry: dict | None = None,
+) -> Fight:
     """One fight. ``policy``: "basic" ignores the boss's signals and the potions, "informed" answers them.
     ``kit``: "t0" start gear, "t1" adds the level-10 piece. ``carry``: the hero as a previous fight left him."""
     rng = random.Random(seed)
@@ -289,8 +341,12 @@ def fight(class_key: str, level: int, monsters: list[str], seed: int, lineage: s
         hp_left=max(0, me.hp) / me.max_hp,
         damage_dealt=sum(f.max_hp - max(0, f.hp) + f.plate_max - f.plate for f in foes),
         damage_taken=me.max_hp - max(0, me.hp),
-        ended={"hp": max(0, me.hp), "abilities": dict(me.abilities), "resource": me.resource,
-               "potions": me.consumables.get("healing_potion", 0)},
+        ended={
+            "hp": max(0, me.hp),
+            "abilities": dict(me.abilities),
+            "resource": me.resource,
+            "potions": me.consumables.get("healing_potion", 0),
+        },
         potions_used=(stock if policy == "informed" else 0) - me.consumables.get("healing_potion", 0),
     )
 
@@ -298,11 +354,21 @@ def fight(class_key: str, level: int, monsters: list[str], seed: int, lineage: s
 SHORT_RESTS_BETWEEN = 2  # the campaign's allowance between two long rests (engine/timings.py)
 
 
-def sequence(class_key: str, level: int, groups: list[list[str]], seed: int, lineage: str, background: str,
-             branch: str | None = None, policy: str = "informed", kit: str = "t0") -> list[Fight]:
+def sequence(
+    class_key: str,
+    level: int,
+    groups: list[list[str]],
+    seed: int,
+    lineage: str,
+    background: str,
+    branch: str | None = None,
+    policy: str = "informed",
+    kit: str = "t0",
+) -> list[Fight]:
     """Fights back to back. The informed hero takes a short rest (30% of his HP, half of his bar, one use) when he is
     under 60% and has rests left; the basic one never rests. Stops at the first defeat."""
     from oathforge.engine import timings
+
     out: list[Fight] = []
     carry, rests = None, SHORT_RESTS_BETWEEN
     for i, keys in enumerate(groups):
@@ -335,23 +401,42 @@ def summarize(fights: list[Fight]) -> dict:
     }
 
 
-def simulate(classes: list[str], monsters: list[str], levels: list[int], n: int, seed: int, lineage: str,
-             background: str, use_abilities: bool = True, branch: str | None = None, policy: str = "informed",
-             kit: str = "t0") -> list[dict]:
+def simulate(
+    classes: list[str],
+    monsters: list[str],
+    levels: list[int],
+    n: int,
+    seed: int,
+    lineage: str,
+    background: str,
+    use_abilities: bool = True,
+    branch: str | None = None,
+    policy: str = "informed",
+    kit: str = "t0",
+) -> list[dict]:
     """One row per class x enemy group x level; ``monsters`` entries are keys joined with ``+``."""
     rows = []
     for level in levels:
         for cls in classes:
             for group in monsters:
                 keys = group.split("+")
-                fights = [fight(cls, level, keys, seed + i, lineage, background, use_abilities, branch, policy, kit)
-                          for i in range(n)]
-                rows.append({"class": cls if not branch else f"{cls}/{branch}", "enemies": group, "level": level,
-                             **summarize(fights)})
+                fights = [
+                    fight(cls, level, keys, seed + i, lineage, background, use_abilities, branch, policy, kit)
+                    for i in range(n)
+                ]
+                rows.append(
+                    {
+                        "class": cls if not branch else f"{cls}/{branch}",
+                        "enemies": group,
+                        "level": level,
+                        **summarize(fights),
+                    }
+                )
     return rows
 
 
 # ---------------------------------------------------------------- console
+
 
 def _levels(text: str) -> list[int]:
     lo, _, hi = text.partition("-")
@@ -359,13 +444,23 @@ def _levels(text: str) -> list[int]:
 
 
 def _table(rows: list[dict]) -> str:
-    cols = ["level", "class", "enemies", "win_pct", "avg_rounds", "avg_hp_left_pct", "dmg_per_round",
-            "hp_lost_per_round", "timeout_pct"]
+    cols = [
+        "level",
+        "class",
+        "enemies",
+        "win_pct",
+        "avg_rounds",
+        "avg_hp_left_pct",
+        "dmg_per_round",
+        "hp_lost_per_round",
+        "timeout_pct",
+    ]
     head = ["lvl", "class", "enemies", "win%", "rounds", "hp left%", "dmg/rnd", "hp lost/rnd", "timeout%"]
     cells = [head] + [[str(r[c]) for c in cols] for r in rows]
     widths = [max(len(row[i]) for row in cells) for i in range(len(cols))]
-    lines = ["  ".join(v.ljust(w) if i < 3 else v.rjust(w) for i, (v, w) in enumerate(zip(row, widths)))
-             for row in cells]
+    lines = [
+        "  ".join(v.ljust(w) if i < 3 else v.rjust(w) for i, (v, w) in enumerate(zip(row, widths))) for row in cells
+    ]
     lines.insert(1, "  ".join("-" * w for w in widths))
     return "\n".join(lines)
 
@@ -388,22 +483,30 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--n", type=int, default=200, help="fights per class x enemy x level (200)")
     parser.add_argument("--level", default="1", help="level or range, e.g. 3 or 1-5 (1)")
     parser.add_argument("--classes", default=",".join(c.classes), help="comma-separated class keys (all)")
-    parser.add_argument("--monsters", default=",".join(c.monsters),
-                        help="comma-separated monster keys; join with + for a group, e.g. bandit+bandit (all)")
+    parser.add_argument(
+        "--monsters",
+        default=",".join(c.monsters),
+        help="comma-separated monster keys; join with + for a group, e.g. bandit+bandit (all)",
+    )
     parser.add_argument("--lineage", default=next(iter(c.lineages)))
     parser.add_argument("--background", default=next(iter(c.backgrounds)))
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--branch", default=None, help="a class branch to play (from level 10), e.g. avenger")
     parser.add_argument("--no-abilities", action="store_true", help="weapon attacks only")
-    parser.add_argument("--policy", choices=("basic", "informed"), default="informed",
-                        help="informed answers the boss's signals and drinks potions; basic does not")
+    parser.add_argument(
+        "--policy",
+        choices=("basic", "informed"),
+        default="informed",
+        help="informed answers the boss's signals and drinks potions; basic does not",
+    )
     parser.add_argument("--kit", choices=("t0", "t1"), default="t0", help="t1: the level-10 piece of the campaign")
     parser.add_argument("--no-save", action="store_true", help="don't write artifacts/simulations/")
     args = parser.parse_args(argv)
 
     classes, monsters = args.classes.split(","), args.monsters.split(",")
     unknown = [k for k in classes if k not in c.classes] + [
-        k for g in monsters for k in g.split("+") if k not in c.monsters]
+        k for g in monsters for k in g.split("+") if k not in c.monsters
+    ]
     if unknown:
         parser.error(f"unknown class or monster: {', '.join(unknown)}")
     if args.branch and args.branch not in c.class_specializations:
@@ -411,8 +514,19 @@ def main(argv: list[str] | None = None) -> None:
     if args.branch:
         classes = [c.class_specializations[args.branch].class_key]
     levels = _levels(args.level)
-    rows = simulate(classes, monsters, levels, args.n, args.seed, args.lineage, args.background,
-                    not args.no_abilities, args.branch, args.policy, args.kit)
+    rows = simulate(
+        classes,
+        monsters,
+        levels,
+        args.n,
+        args.seed,
+        args.lineage,
+        args.background,
+        not args.no_abilities,
+        args.branch,
+        args.policy,
+        args.kit,
+    )
     print(_table(rows))
     if not args.no_save:
         params = {k: v for k, v in vars(args).items() if k != "no_save"}

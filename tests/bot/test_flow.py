@@ -27,9 +27,11 @@ def test_rate_limit_window():
 
 
 async def test_full_flow(llm, monkeypatch):
-    monkeypatch.setattr(exploration, "npcs_present",
-                        lambda loc, now=None: {"broken_crown_tavern": ["bram", "mira"],
-                                               "crownreach_plaza": ["holt"]}.get(loc, []))
+    monkeypatch.setattr(
+        exploration,
+        "npcs_present",
+        lambda loc, now=None: {"broken_crown_tavern": ["bram", "mira"], "crownreach_plaza": ["holt"]}.get(loc, []),
+    )
     p = Player(llm)
     await create(p)
     assert "Plaza de Crownreach" in p.last[0]
@@ -67,8 +69,9 @@ async def test_full_flow(llm, monkeypatch):
     await p.press("talkm|-|-")
     await p.press(p.find("talk", "bram"))
     assert p.ctx.user_data["talk"] == "bram"
-    llm.json_queue.append({"line": "¿Qué te sirvo?", "memory_note": "Aldric is new in town.", "importance": 2,
-                           "trust_delta": 1})
+    llm.json_queue.append(
+        {"line": "¿Qué te sirvo?", "memory_note": "Aldric is new in town.", "importance": 2, "trust_delta": 1}
+    )
     await p.say("Hola, ¿qué se cuenta?")
     assert "¿Qué te sirvo?" in p.last[0]
     await p.press("bye|-|-")
@@ -195,11 +198,22 @@ async def test_fixed_keyboard_after_creation_and_its_buttons(llm):
     await create(p)
     fixed = [kb for _, kb in p.chat.sent if isinstance(kb, ReplyKeyboardMarkup)]
     assert len(fixed) == 1 and fixed[0].is_persistent
-    assert [b.text for row in fixed[0].keyboard for b in row] == ["📍 Lugar", "⚒ Actividades", "🗺 Mapa", "🧝 Héroe",
-                                                                   "🎒 Inventario", "📖 Diario"]
-    for label, expect in (("🎒 Inventario", "Inventario"), ("📖 Diario", "Diario de aventuras"),
-                          ("⚒ Actividades", "Actividades"),
-                          ("🗺 Mapa", "Mapa"), ("🧝 Héroe", "Aldric"), ("📍 Lugar", "Plaza de Crownreach")):
+    assert [b.text for row in fixed[0].keyboard for b in row] == [
+        "📍 Lugar",
+        "⚒ Actividades",
+        "🗺 Mapa",
+        "🧝 Héroe",
+        "🎒 Inventario",
+        "📖 Diario",
+    ]
+    for label, expect in (
+        ("🎒 Inventario", "Inventario"),
+        ("📖 Diario", "Diario de aventuras"),
+        ("⚒ Actividades", "Actividades"),
+        ("🗺 Mapa", "Mapa"),
+        ("🧝 Héroe", "Aldric"),
+        ("📍 Lugar", "Plaza de Crownreach"),
+    ):
         await commands.fixed_button(p.update(message=label), p.ctx)
         assert expect in p.last[0]
     assert len([kb for _, kb in p.chat.sent if isinstance(kb, ReplyKeyboardMarkup)]) == 1  # sent once
@@ -250,8 +264,10 @@ async def test_achievement_delivery_ignores_groups(monkeypatch):
     from oathforge.bot.handlers import achievements
 
     calls = []
+
     async def fake(bot, telegram_id, chat_id):
         calls.append(chat_id)
+
     monkeypatch.setattr(achievements, "deliver", fake)
     user = SimpleNamespace(id=7)
     for kind in ("group", "private"):

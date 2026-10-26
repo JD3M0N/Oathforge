@@ -35,9 +35,15 @@ async def do_roll(update: Update, context) -> None:
         return
     from oathforge.bot.handlers.text import show_free_text  # text imports this module
 
-    result = await actions.execute_free_text(context.bot_data["llm"], pending["user_id"], pending["text"],
-                                             Intent.model_validate(pending["intent"]), False, rng(),
-                                             location=pending["location"])
+    result = await actions.execute_free_text(
+        context.bot_data["llm"],
+        pending["user_id"],
+        pending["text"],
+        Intent.model_validate(pending["intent"]),
+        False,
+        rng(),
+        location=pending["location"],
+    )
     await show_free_text(update, context, result)
 
 

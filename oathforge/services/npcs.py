@@ -25,10 +25,15 @@ def _clamp(v: int, lo_hi: tuple[int, int]) -> int:
 
 # ---------------------------------------------------------------- memory
 
-async def remember(session: AsyncSession, npc_key: str, char: Character, text: str, importance: int,
-                   kind: str = "episodic") -> None:
-    session.add(NpcMemory(npc_key=npc_key, character_id=char.id, kind=kind, text=text[:500],
-                          importance=max(1, min(5, importance))))
+
+async def remember(
+    session: AsyncSession, npc_key: str, char: Character, text: str, importance: int, kind: str = "episodic"
+) -> None:
+    session.add(
+        NpcMemory(
+            npc_key=npc_key, character_id=char.id, kind=kind, text=text[:500], importance=max(1, min(5, importance))
+        )
+    )
 
 
 async def recall(session: AsyncSession, npc_key: str, char: Character, limit: int = MEMORY_LIMIT) -> list[NpcMemory]:
@@ -62,6 +67,7 @@ async def adjust_trust(session: AsyncSession, npc_key: str, char: Character, del
 
 # ---------------------------------------------------------------- reputation
 
+
 async def reputations(session: AsyncSession, char: Character) -> dict[str, int]:
     rows = await session.scalars(select(FactionReputation).where(FactionReputation.character_id == char.id))
     return {r.faction_key: r.value for r in rows}
@@ -83,21 +89,28 @@ async def adjust_reputation(session: AsyncSession, char: Character, faction: str
         row = FactionReputation(character_id=char.id, faction_key=faction, value=0)
         session.add(row)
     row.value = _clamp(row.value + delta, REP_RANGE)
-    out.add("rep.changed", faction=get_content().factions[faction].name.model_dump(),
-            delta=f"{delta:+d}", value=row.value)
+    out.add(
+        "rep.changed", faction=get_content().factions[faction].name.model_dump(), delta=f"{delta:+d}", value=row.value
+    )
     await achievements.emit(session, char, out, "reputation", {"faction": faction, "value": row.value})
 
 
 # ---------------------------------------------------------------- rumors
 
+
 async def add_rumor(session: AsyncSession, text: dict, source: str, tags: list[str]) -> None:
-    session.add(WorldFact(key=f"rumor:{uuid.uuid4().hex[:12]}", value={"text": text},
-                          tags=["rumor", *tags], source=source))
+    session.add(
+        WorldFact(key=f"rumor:{uuid.uuid4().hex[:12]}", value={"text": text}, tags=["rumor", *tags], source=source)
+    )
 
 
 async def recent_rumors(session: AsyncSession, limit: int = 3, exclude_character: int | None = None) -> list[dict]:
-    rows = await session.scalars(select(WorldFact).where(WorldFact.key.like("rumor:%"))
-                                 .order_by(WorldFact.created_at.desc(), WorldFact.id.desc()).limit(limit * 3))
+    rows = await session.scalars(
+        select(WorldFact)
+        .where(WorldFact.key.like("rumor:%"))
+        .order_by(WorldFact.created_at.desc(), WorldFact.id.desc())
+        .limit(limit * 3)
+    )
     out = []
     for r in rows:
         if exclude_character is not None and f"character:{exclude_character}" in (r.tags or []):
@@ -109,6 +122,7 @@ async def recent_rumors(session: AsyncSession, limit: int = 3, exclude_character
 
 
 # ---------------------------------------------------------------- theft
+
 
 async def steal(session: AsyncSession, char: Character, npc_key: str, rng: random.Random) -> Outcome:
     """Sleight of Hand vs the NPC's passive perception.
@@ -131,8 +145,13 @@ async def steal(session: AsyncSession, char: Character, npc_key: str, rng: rando
         char.gold += gold
         out.add("steal.success", npc=name, gold=gold)
         if res.margin < 5:
-            await remember(session, npc_key, char,
-                           f"Coins went missing from my purse right after {char.name} stood next to me. I suspect them.", 4)
+            await remember(
+                session,
+                npc_key,
+                char,
+                f"Coins went missing from my purse right after {char.name} stood next to me. I suspect them.",
+                4,
+            )
             await adjust_trust(session, npc_key, char, -1)
             out.add("steal.suspected", npc=name)
         await characters.practice(session, char, "sleight_of_hand", "medium", f"steal:{npc_key}", out)

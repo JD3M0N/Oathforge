@@ -57,4 +57,6 @@ def test_the_pace_model_walks_the_campaign_in_order_and_levels_never_go_down():
     rows = balance.pace()
     assert rows[0]["quest"].startswith("tut_") and rows[-1]["quest"] == "reg_trial"
     levels = [r["level_by_xp"] for r in rows]
-    assert levels == sorted(levels) and all(b >= a for a, b in zip([r["xp_total"] for r in rows], [r["xp_total"] for r in rows][1:]))
+    assert levels == sorted(levels) and all(
+        b >= a for a, b in zip([r["xp_total"] for r in rows], [r["xp_total"] for r in rows][1:])
+    )

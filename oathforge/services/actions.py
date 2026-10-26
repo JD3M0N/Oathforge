@@ -22,7 +22,15 @@ from oathforge.engine.checks import clamp_tier
 from oathforge.i18n import t
 from oathforge.engine.combat import Action, EncounterState
 from oathforge.services import (
-    achievements, activities, audit, characters, combat_service, exploration, inventory, npcs, quests,
+    achievements,
+    activities,
+    audit,
+    characters,
+    combat_service,
+    exploration,
+    inventory,
+    npcs,
+    quests,
     world_map,
 )
 from oathforge.services.events import Outcome, facts
@@ -39,6 +47,7 @@ class FreeTextResult:
 
 
 # ---------------------------------------------------------------- manual rolls (/roll)
+
 
 def manual_rolls(user: User) -> bool:
     return bool((user.settings or {}).get("manual_rolls"))
@@ -66,7 +75,9 @@ async def intent_roll(session: AsyncSession, char: Character, intent: Intent, in
     if intent.type in ("skill_check", "environment_interaction"):
         if intent.skill not in get_content().skills:
             return None
-        return None if exploration.tried(char, exploration.free_check_key(intent.skill, char.location)) else intent.skill
+        return (
+            None if exploration.tried(char, exploration.free_check_key(intent.skill, char.location)) else intent.skill
+        )
     if intent.type == "inspect":
         return await button_roll(session, char, "look", "")
     if intent.type == "quest_action":
@@ -85,8 +96,10 @@ def describe_character(char: Character, backstory: bool = False, title=None) -> 
     ``title``: the equipped title, so NPCs and the narrator may use it. It is data, never something they grant."""
     c = get_content()
     who = {"male": "man, ", "female": "woman, "}.get(char.gender or "", "")
-    text = (f"{char.name}, {who}level {char.level} {c.lineages[char.lineage].name.en} "
-            f"{c.classes[char.class_key].name.en}, HP {char.hp}/{char.max_hp}")
+    text = (
+        f"{char.name}, {who}level {char.level} {c.lineages[char.lineage].name.en} "
+        f"{c.classes[char.class_key].name.en}, HP {char.hp}/{char.max_hp}"
+    )
     if title is not None:
         text += f', known as "{title.en}"'
     if backstory and char.custom_background:
@@ -99,16 +112,20 @@ async def build_context(session: AsyncSession, char: Character, lang: str) -> Ac
     c = get_content()
     loc = c.locations[char.location]
     title = await achievements.equipped_title(session, char)
-    ctx = ActionContext(lang=lang, character=describe_character(char, title=title), location=loc.name.en,
-                        scene=loc.description.en, skills={k: s.name.en for k, s in c.skills.items()})
+    ctx = ActionContext(
+        lang=lang,
+        character=describe_character(char, title=title),
+        location=loc.name.en,
+        scene=loc.description.en,
+        skills={k: s.name.en for k, s in c.skills.items()},
+    )
     for inst in await inventory.items_of(session, char):
         ctx.items[inst.item_key] = c.items[inst.item_key].name.en
     enc = await combat_service.active_encounter(session, char)
     if enc is not None:
         state = EncounterState.model_validate(enc.state)
         ctx.in_combat = True
-        ctx.enemies = {cb.id: f"{cb.name['en']} (HP {cb.hp}/{cb.max_hp}, {cb.row} row)"
-                       for cb in state.side("enemy")}
+        ctx.enemies = {cb.id: f"{cb.name['en']} (HP {cb.hp}/{cb.max_hp}, {cb.row} row)" for cb in state.side("enemy")}
         p = state.combatants["p1"]
         ctx.weapons = {a.key: a.name["en"] for a in p.attacks}
         defs = combat_service.ability_defs(char)
@@ -130,8 +147,10 @@ async def handle_free_text(llm: LLM, user_id: int, text: str, rng: random.Random
             return FreeTextResult(Outcome.refused("start.need_character"))
         lang = user.language
         if not await Budget(get_settings()).allow(user_id):
-            return FreeTextResult(Outcome(ok=False, error="ai.budget_exhausted"),
-                                  fallbacks.pick("freetext", "budget_exhausted", lang, name=char.name))
+            return FreeTextResult(
+                Outcome(ok=False, error="ai.budget_exhausted"),
+                fallbacks.pick("freetext", "budget_exhausted", lang, name=char.name),
+            )
         ctx = await build_context(session, char, lang)
         manual = manual_rolls(user)
         name = char.name
@@ -150,8 +169,9 @@ async def handle_free_text(llm: LLM, user_id: int, text: str, rng: random.Random
     return await execute_free_text(llm, user_id, text, intent, ctx.in_combat, rng)
 
 
-async def execute_free_text(llm: LLM, user_id: int, text: str, intent: Intent, in_combat: bool,
-                            rng: random.Random, location: str | None = None) -> FreeTextResult:
+async def execute_free_text(
+    llm: LLM, user_id: int, text: str, intent: Intent, in_combat: bool, rng: random.Random, location: str | None = None
+) -> FreeTextResult:
     """Resolve an interpreted action and narrate it (also after a deferred /roll)."""
     async with session_scope() as session:
         user, char = await _load(session, user_id, lock=True)
@@ -162,21 +182,33 @@ async def execute_free_text(llm: LLM, user_id: int, text: str, intent: Intent, i
         if (enc is not None) != in_combat or (location is not None and char.location != location):
             return FreeTextResult(Outcome.refused("freetext.stale"), intent=intent)
         outcome = await resolve(session, char, enc, intent, rng)
-        await audit.log(session, user_id=user_id, character_id=char.id, verb=f"free:{intent.type}",
-                        payload={"text": text[:600], "intent": intent.model_dump()},
-                        result={"ok": outcome.ok, "events": [e.key for e in outcome.events]})
+        await audit.log(
+            session,
+            user_id=user_id,
+            character_id=char.id,
+            verb=f"free:{intent.type}",
+            payload={"text": text[:600], "intent": intent.model_dump()},
+            result={"ok": outcome.ok, "events": [e.key for e in outcome.events]},
+        )
         scene = get_content().locations[char.location].name.en
         place = get_content().locations[char.location].name.get(lang)
         who = describe_character(char, backstory=True, title=await achievements.equipped_title(session, char))
         char_id, name = char.id, char.name
 
-    narration = await narrator.narrate(llm, lang=lang, scene=scene, character=who, player_text=text,
-                                       facts=facts(outcome), user_id=user_id)
+    narration = await narrator.narrate(
+        llm, lang=lang, scene=scene, character=who, player_text=text, facts=facts(outcome), user_id=user_id
+    )
     if narration is None and outcome.ok and outcome.events:
-        narration = fallbacks.pick("narration", narration_key(intent, outcome, in_combat), lang,
-                                   name=name, place=place)
-    recorder.action(user_id=user_id, character_id=char_id, text=text, intent=intent.model_dump(),
-                    ok=outcome.ok, events=[e.key for e in outcome.events], narration=narration)
+        narration = fallbacks.pick("narration", narration_key(intent, outcome, in_combat), lang, name=name, place=place)
+    recorder.action(
+        user_id=user_id,
+        character_id=char_id,
+        text=text,
+        intent=intent.model_dump(),
+        ok=outcome.ok,
+        events=[e.key for e in outcome.events],
+        narration=narration,
+    )
     return FreeTextResult(outcome, narration, intent=intent)
 
 
@@ -197,12 +229,13 @@ def narration_key(intent: Intent, outcome: Outcome, in_combat: bool) -> str:
     results = [e.params.get("result") for e in outcome.events if e.key == "check.result"]
     if results:
         return "success" if results[-1] == "✅" else "failure"
-    return {"move": "travel", "rest": "rest", "use_item": "use_item",
-            "quest_action": "quest"}.get(intent.type, "default")
+    return {"move": "travel", "rest": "rest", "use_item": "use_item", "quest_action": "quest"}.get(
+        intent.type, "default"
+    )
 
 
 def _combat_item_action(intent: Intent) -> Action:
-    """"I throw the fire bomb": a scroll or bomb when the target is one, else a healing potion."""
+    """ "I throw the fire bomb": a scroll or bomb when the target is one, else a healing potion."""
     item = get_content().items.get(intent.target or "")
     if item is not None and item.combat is not None:
         return Action(kind="item", ability=intent.target)
@@ -250,21 +283,22 @@ async def resolve(session: AsyncSession, char: Character, enc, intent: Intent, r
 
 # ---------------------------------------------------------------- conversation
 
+
 async def _ai_down_reason(user_id: int) -> str:
     """Which notice fits when the AI gave nothing: the game's daily budget, or no confirmed cause."""
     return "unavailable" if await Budget(get_settings()).allow(user_id) else "budget_exhausted"
 
 
-def _dialogue_fallback(npc_key: str, lang: str, npc: str, name: str, reason: str,
-                       hint: dict | None = None) -> tuple[str, Outcome]:
+def _dialogue_fallback(
+    npc_key: str, lang: str, npc: str, name: str, reason: str, hint: dict | None = None
+) -> tuple[str, Outcome]:
     """The NPC's line when the AI is out: a quest giver repeats what to do next, the rest say a generic line."""
     if hint:
         line = t(lang, "talk.quest_hint", npc=npc, hint=hint[lang])
     else:
         line = fallbacks.pick("dialogue", npc_key, lang, npc=npc, name=name)
     seed = random.randrange(2**32)
-    notice = {language: fallbacks.pick("freetext", reason, language, seed=seed, name=name)
-              for language in ("es", "en")}
+    notice = {language: fallbacks.pick("freetext", reason, language, seed=seed, name=name) for language in ("es", "en")}
     return line, Outcome().text(notice)
 
 
@@ -290,8 +324,16 @@ async def talk(llm: LLM, user_id: int, npc_key: str, text: str) -> tuple[str, Ou
         who = describe_character(char, title=await achievements.equipped_title(session, char))
 
     reply = await npc_dialogue.reply(
-        llm, npc=npc, lang=lang, player=who, player_text=text, trust=trust, reputation=rep,
-        memories=memories, rumors=rumors, time_of_day="night" if exploration.is_night() else "day",
+        llm,
+        npc=npc,
+        lang=lang,
+        player=who,
+        player_text=text,
+        trust=trust,
+        reputation=rep,
+        memories=memories,
+        rumors=rumors,
+        time_of_day="night" if exploration.is_night() else "day",
         user_id=user_id,
     )
     out = Outcome()
@@ -304,9 +346,17 @@ async def talk(llm: LLM, user_id: int, npc_key: str, text: str) -> tuple[str, Ou
             await npcs.remember(session, npc_key, char, reply.memory_note.strip(), reply.importance)
         if reply.trust_delta:
             new_trust = await npcs.adjust_trust(session, npc_key, char, reply.trust_delta)
-            out.add("talk.trust_up" if reply.trust_delta > 0 else "talk.trust_down",
-                    npc=npc.name.model_dump(), trust=new_trust)
-        await audit.log(session, user_id=user_id, character_id=char.id, verb="talk",
-                        payload={"npc": npc_key, "text": text[:600]},
-                        result={"line": reply.line[:1000], "memory": reply.memory_note, "trust": reply.trust_delta})
+            out.add(
+                "talk.trust_up" if reply.trust_delta > 0 else "talk.trust_down",
+                npc=npc.name.model_dump(),
+                trust=new_trust,
+            )
+        await audit.log(
+            session,
+            user_id=user_id,
+            character_id=char.id,
+            verb="talk",
+            payload={"npc": npc_key, "text": text[:600]},
+            result={"line": reply.line[:1000], "memory": reply.memory_note, "trust": reply.trust_delta},
+        )
     return reply.line, out

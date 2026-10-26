@@ -30,12 +30,25 @@ def test_conversation_transcript(root):
 
 def test_battle_steps_accumulate(root):
     state = {"round": 1, "status": "active", "combatants": {}}
-    recorder.battle(7, "toll_post", character="Edda", actor_action=None,
-                    lines=["<b>Edda</b> 15"], raw=[{"key": "combat.initiative"}], state=state)
-    end = {"round": 2, "status": "victory",
-           "combatants": {"p1": {"name": {"es": "Edda"}, "hp": 9, "max_hp": 12}}}
-    recorder.battle(7, "toll_post", character="Edda", actor_action={"kind": "attack"},
-                    lines=["Edda golpea"], raw=[{"key": "combat.hit"}], state=end)
+    recorder.battle(
+        7,
+        "toll_post",
+        character="Edda",
+        actor_action=None,
+        lines=["<b>Edda</b> 15"],
+        raw=[{"key": "combat.initiative"}],
+        state=state,
+    )
+    end = {"round": 2, "status": "victory", "combatants": {"p1": {"name": {"es": "Edda"}, "hp": 9, "max_hp": 12}}}
+    recorder.battle(
+        7,
+        "toll_post",
+        character="Edda",
+        actor_action={"kind": "attack"},
+        lines=["Edda golpea"],
+        raw=[{"key": "combat.hit"}],
+        state=end,
+    )
     md = next((root / "battles").glob("*/7-toll_post.md")).read_text(encoding="utf-8")
     assert "- Edda 15" in md and "victory" in md and "Edda: 9/12" in md
     data = json.loads(next((root / "battles").glob("*/7-toll_post.json")).read_text(encoding="utf-8"))
@@ -43,8 +56,9 @@ def test_battle_steps_accumulate(root):
 
 
 async def test_gemini_calls_are_recorded(root):
-    llm = GeminiLLM(Settings(gemini_model_fast="fast", gemini_model_narrative="narr"),
-                    client=ScriptedClient("Una sombra se mueve."))
+    llm = GeminiLLM(
+        Settings(gemini_model_fast="fast", gemini_model_narrative="narr"), client=ScriptedClient("Una sombra se mueve.")
+    )
     llm.budget = OpenBudget()
     assert await llm.text(tier="narrative", system="sys", prompt="hola", user_id=1) == "Una sombra se mueve."
     (call,) = list((root / "ai").glob("*/*-narrative-text.json"))
@@ -83,8 +97,9 @@ async def test_state_changes_are_recorded(root, database):
             char.gold = 999
             raise RuntimeError("rolled back")
 
-    events = [json.loads(e) for f in (root / "events").glob("*.jsonl")
-              for e in f.read_text(encoding="utf-8").splitlines()]
+    events = [
+        json.loads(e) for f in (root / "events").glob("*.jsonl") for e in f.read_text(encoding="utf-8").splitlines()
+    ]
     state = [e for e in events if e["kind"] == "state" and e["character_id"] == cid]
     assert any(e["op"] == "insert" and e["table"] == "characters" for e in state)
     assert any(e["table"] == "item_instances" for e in state)
@@ -92,7 +107,12 @@ async def test_state_changes_are_recorded(root, database):
     assert [g["diff"]["gold"] for g in gold] == [[15, 10]]  # the rolled-back 999 never shows
     assert any(e["kind"] == "boot" for e in events)
     md = next((root / "conversations").glob("*/77.md")).read_text(encoding="utf-8")
-    assert "personaje creado: Edda" in md and "gold 15→10" in md and "+met_tessa" in md and '▶ buy {"item": "potion"}' in md
+    assert (
+        "personaje creado: Edda" in md
+        and "gold 15→10" in md
+        and "+met_tessa" in md
+        and '▶ buy {"item": "potion"}' in md
+    )
 
 
 def test_warnings_go_to_logs(root):

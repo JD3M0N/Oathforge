@@ -16,7 +16,6 @@ pytestmark = pytest.mark.usefixtures("database")
 # ---------------------------------------------------------------- quest
 
 
-
 async def open_rumor(s, char) -> None:
     prog = (await quests.progress(s, char, lock=True))["camp_rumor"]
     prog.stage, prog.state = "active", "active"
@@ -55,6 +54,7 @@ async def test_quest_action_needs_npc_present_and_location():
 
 
 # ---------------------------------------------------------------- missions
+
 
 async def test_mission_chain_talk_then_hunt():
     _, cid = await new_character()
@@ -102,13 +102,31 @@ async def test_mission_chain_talk_then_hunt():
 
 async def test_mission_unlocks_by_flag_and_counts_only_when_active(monkeypatch):
     from oathforge.content.schemas import Quest
-    monkeypatch.setitem(get_content().quests, "flagged", Quest.model_validate({
-        "order": 99, "giver": "bram", "name": {"es": "Con bandera", "en": "Flagged"}, "summary": {"es": "-", "en": "-"},
-        "start_stage": "locked", "unlock_stage": "active", "unlock_flag": "test_flag", "objective_stage": "active",
-        "complete_stage": "done", "rewards": [{"xp": 10}], "objectives": [{"kind": "kill", "target": "bandit", "count": 3}],
-        "stages": {"locked": {"state": "locked", "journal": {"es": "-", "en": "-"}},
-                   "active": {"journal": {"es": "-", "en": "-"}},
-                   "done": {"state": "completed", "journal": {"es": "-", "en": "-"}}}}))
+
+    monkeypatch.setitem(
+        get_content().quests,
+        "flagged",
+        Quest.model_validate(
+            {
+                "order": 99,
+                "giver": "bram",
+                "name": {"es": "Con bandera", "en": "Flagged"},
+                "summary": {"es": "-", "en": "-"},
+                "start_stage": "locked",
+                "unlock_stage": "active",
+                "unlock_flag": "test_flag",
+                "objective_stage": "active",
+                "complete_stage": "done",
+                "rewards": [{"xp": 10}],
+                "objectives": [{"kind": "kill", "target": "bandit", "count": 3}],
+                "stages": {
+                    "locked": {"state": "locked", "journal": {"es": "-", "en": "-"}},
+                    "active": {"journal": {"es": "-", "en": "-"}},
+                    "done": {"state": "completed", "journal": {"es": "-", "en": "-"}},
+                },
+            }
+        ),
+    )
     _, cid = await new_character()
     rng = random.Random(1)
     async with session_scope() as s:
@@ -200,7 +218,8 @@ async def test_ensure_progress_adds_missions_to_old_characters():
         char = await get_char(s, cid)
         journal = await quests.journal(s, char)
         assert [k for k, _, p in journal if p is None] == [
-            k for k, _ in quests.ordered_quests() if k != "camp_collector"]
+            k for k, _ in quests.ordered_quests() if k != "camp_collector"
+        ]
         await quests.refresh(s, char, Outcome())
         prog = await quests.progress(s, char)
         assert set(prog) == set(get_content().quests) and prog["tut_muster"].state == "active"

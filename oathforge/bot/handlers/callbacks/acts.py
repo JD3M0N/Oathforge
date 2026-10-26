@@ -4,16 +4,35 @@ from telegram import Update
 
 from oathforge.bot import render
 from oathforge.bot.handlers.common import (
-    answer, current_view, drop_buttons, edit_or_send, load, rng, send, send_activity_result, send_chronicle,
-    send_outcome, send_result,
+    answer,
+    current_view,
+    drop_buttons,
+    edit_or_send,
+    load,
+    rng,
+    send,
+    send_activity_result,
+    send_chronicle,
+    send_outcome,
+    send_result,
 )
 from oathforge.bot.keyboards import btn, cb, markup
 from oathforge.content import get_content
 from oathforge.database.session import session_scope
 from oathforge.i18n import t
 from oathforge.services import (
-    actions, activities, audit, class_specializations, crafting, exploration, home, inventory, npcs, professions,
-    quests, specializations,
+    actions,
+    activities,
+    audit,
+    class_specializations,
+    crafting,
+    exploration,
+    home,
+    inventory,
+    npcs,
+    professions,
+    quests,
+    specializations,
 )
 from oathforge.services.events import Outcome, render_event
 
@@ -40,12 +59,27 @@ async def _act(update: Update, context, verb: str, arg: str, n: str, rolled_at: 
         elif rolled_at is None and n != "-" and verb in ROLL_VERBS and actions.manual_rolls(user):
             skill = await actions.button_roll(session, char, verb, arg)
             if skill:
-                context.user_data["pending_roll"] = {"type": "button", "verb": verb, "arg": arg, "n": n,
-                                                     "location": char.location}
+                context.user_data["pending_roll"] = {
+                    "type": "button",
+                    "verb": verb,
+                    "arg": arg,
+                    "n": n,
+                    "location": char.location,
+                }
                 early = roll_prompt(skill, lang)
         if early is None:
-            if n == "-" or await audit.claim(session, f"{user.telegram_id}:{n}", user_id=user.id,
-                                             character_id=char.id, verb=verb, payload={"arg": arg}) is None:
+            if (
+                n == "-"
+                or await audit.claim(
+                    session,
+                    f"{user.telegram_id}:{n}",
+                    user_id=user.id,
+                    character_id=char.id,
+                    verb=verb,
+                    payload={"arg": arg},
+                )
+                is None
+            ):
                 text, kb = await current_view(session, char, lang)
                 stale = True
             else:
@@ -80,7 +114,7 @@ async def _act(update: Update, context, verb: str, arg: str, n: str, rolled_at: 
     elif verb == "go" and out.ok and out.events and all(e.key in ARRIVALS for e in out.events):
         await edit_or_send(update, f"{render.outcome_text(out, lang)}\n\n{text}", kb)  # the map turns into the place
     elif verb in IN_PLACE and not render.level_up_cards(out, lang):  # a menu: the result on top, same message
-        await edit_or_send(update, f"{render.outcome_text(out, lang)}\n\n{text}"[:render.MAX_MESSAGE], kb)
+        await edit_or_send(update, f"{render.outcome_text(out, lang)}\n\n{text}"[: render.MAX_MESSAGE], kb)
     elif out.activity_id or in_combat:  # a chronicle or a fight follows: their own messages
         await drop_buttons(update)
         if out.events:
@@ -94,8 +128,25 @@ async def _act(update: Update, context, verb: str, arg: str, n: str, rolled_at: 
 
 ARRIVALS = {"explore.arrived", "explore.arrived_via"}  # a quiet arrival: nothing else happened on the way
 # buttons that change something (the rest only show a view): they answer the press once they know the result
-ACTS = {"go", "look", "hunt", "rest", "heal", "act", "actc", "actx", "plearn", "craft", "qa", "qturn",
-        "pathc", "eq", "use", "buy", "sell"}
+ACTS = {
+    "go",
+    "look",
+    "hunt",
+    "rest",
+    "heal",
+    "act",
+    "actc",
+    "actx",
+    "plearn",
+    "craft",
+    "qa",
+    "qturn",
+    "pathc",
+    "eq",
+    "use",
+    "buy",
+    "sell",
+}
 IN_PLACE = {"buy", "sell", "eq", "use", "plearn", "craft"}  # menus: the result goes on top of the same menu
 
 
