@@ -8,4 +8,4 @@
 - **Respaldos de IA** (`fallbacks/`): 12 textos distintos por clave e idioma, sin modificadores de formato y solo con los marcadores permitidos.
 - **No toques ni leas `officina/`**: es el laboratorio de imágenes de Josue.
 - Al editar un `.yaml` aquí, un hook ejecuta `oath validate` y reescribe `INDEX.md`. Si devuelve errores, arréglalos antes de seguir. Antes del commit: `.venv\Scripts\python -m pytest tests/test_content.py -q`.
-- Lo que valida cada campo está en `oathforge/content/schemas.py`, y las referencias cruzadas, en `validate_references` de `oathforge/content/loader.py`.
+- Lo que valida cada campo está en `oathforge/content/schemas/<dominio>.py`, y las referencias cruzadas, en `oathforge/content/validation/<dominio>.py` (`validate_references` las corre todas).

@@ -181,7 +181,7 @@ def test_routes_go_both_ways_alike():
 
 
 def test_city_graph_rules():
-    from oathforge.content.loader import _city_graph_errors
+    from oathforge.content.validation.world import _city_graph_errors
     c = load_content()
     assert _city_graph_errors(c) == []
     plaza, tavern = c.locations["crownreach_plaza"], c.locations["broken_crown_tavern"]
@@ -255,7 +255,7 @@ def test_broken_progression_is_rejected():
 def test_a_class_branch_pointing_nowhere_is_caught():
     import pytest
 
-    from oathforge.content.loader import _class_progression_errors
+    from oathforge.content.validation.classes import _class_progression_errors
     from oathforge.content.schemas import ClassSpecialization
 
     c = load_content()
@@ -270,12 +270,12 @@ def test_a_class_branch_pointing_nowhere_is_caught():
     assert any("unknown class 'nobody'" in e for e in errors)
     assert any("it cannot be ready" in e for e in errors)
     with pytest.raises(ValueError, match="Content validation failed"):
-        from oathforge.content.loader import validate_references
+        from oathforge.content.validation import validate_references
         validate_references(broken)
 
 
 def test_entities_and_forms_are_validated():
-    from oathforge.content.loader import _entity_errors
+    from oathforge.content.validation.classes import _entity_errors
     from oathforge.content.schemas import ClassAbility, ClassSpecialization, EntityDef
 
     c = load_content()

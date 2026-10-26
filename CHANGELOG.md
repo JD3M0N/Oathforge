@@ -4,6 +4,15 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.49] - 2026-10-26
+
+Structura, fase 2: la validación del contenido sale del loader.
+
+### Cambiado
+- `oathforge/content/loader.py` se queda con la lectura (216 líneas). Las referencias cruzadas pasan a `oathforge/content/validation/`, una función por dominio: `classes`, `world`, `items`, `crafting`, `fallbacks` y `quests`. `validate_references` las corre todas y falla con todos los errores a la vez.
+- Los errores son los mismos que antes (comprobado rompiendo el contenido de once maneras); solo cambia el orden en que se listan.
+- `content/CLAUDE.md` y los tests que usaban las funciones de validación apuntan a `validation/`.
+
 ## [0.10.48] - 2026-10-26
 
 Structura, fase 2: los esquemas del contenido partidos por dominio.
