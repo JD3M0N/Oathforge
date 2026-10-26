@@ -73,6 +73,7 @@ class EntityDef(Strict):
     def _dice(cls, v: str | None) -> str | None:
         if v is not None:
             from oathforge.engine.dice import parse
+
             parse(v)  # fails on anything that is not dice, so a typo is caught on startup
         return v
 
@@ -111,8 +112,22 @@ class ClassAbility(Strict):
     # summon: calls `entity` for a few turns (never more than the slot allows) · command: `entity` strikes now,
     # with `extra_damage` on top, and does not act again this turn · converge: every entity the hero has is
     # empowered for `boost_turns` · shift: take (or, with form "none", leave) a form
-    kind: Literal["strike", "spell", "turn", "buff", "surge", "heal", "hide", "save", "curse", "passive",
-                  "summon", "command", "converge", "shift"]
+    kind: Literal[
+        "strike",
+        "spell",
+        "turn",
+        "buff",
+        "surge",
+        "heal",
+        "hide",
+        "save",
+        "curse",
+        "passive",
+        "summon",
+        "command",
+        "converge",
+        "shift",
+    ]
     action: Literal["action", "bonus", "none"] = "action"
     uses: int | None = None  # per rest; None = unlimited (classes without a resource bar)
     # classes with their own bar (GameClass.resource) pay with it instead of with uses per rest
@@ -128,10 +143,24 @@ class ClassAbility(Strict):
     heal_per_level: int | None = None
     heal_dice: str | None = None
     heal_add: Literal["level", "casting"] | None = None
-    status: Literal[
-        "blessed", "stunned", "frightened", "asleep", "restrained", "inspired", "wild_shape", "hexed", "marked",
-        "vulnerable", "poisoned", "burning", "bleeding",
-    ] | None = None
+    status: (
+        Literal[
+            "blessed",
+            "stunned",
+            "frightened",
+            "asleep",
+            "restrained",
+            "inspired",
+            "wild_shape",
+            "hexed",
+            "marked",
+            "vulnerable",
+            "poisoned",
+            "burning",
+            "bleeding",
+        ]
+        | None
+    ) = None
     status_turns: int = 1
     targets_type: CreatureType | None = None
     save: Literal["dex", "wis"] | None = None  # the target's saving throw (kind: save)
@@ -154,8 +183,21 @@ class ClassAbility(Strict):
     attack_with: Literal["str", "dex", "int", "wis", "cha"] | None = None
     # spend a status the target carries for extra damage (a mark, a burn, a seal): keeping it ticking is the other
     # choice. The status goes away and `consume_damage` is added; without it the ability is just what it is.
-    consumes: Literal["marked", "hexed", "burning", "bleeding", "poisoned", "vulnerable", "restrained", "frightened",
-                      "stunned", "asleep"] | None = None
+    consumes: (
+        Literal[
+            "marked",
+            "hexed",
+            "burning",
+            "bleeding",
+            "poisoned",
+            "vulnerable",
+            "restrained",
+            "frightened",
+            "stunned",
+            "asleep",
+        ]
+        | None
+    ) = None
     consume_damage: str | None = None
     leech_pct: int = Field(0, ge=0, le=100)  # heal this share of the real damage this ability dealt
     reduces_cooldowns: int = Field(0, ge=0)  # take this many turns off every OTHER cooldown of the hero

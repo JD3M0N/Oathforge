@@ -6,10 +6,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from telegram import InlineKeyboardMarkup
 
 from oathforge.bot.keyboards import btn, cb, grid, markup, nonce
-from oathforge.content import get_content
-from oathforge.database.models import Character
-from oathforge.i18n import t
-from oathforge.services import characters, crafting, exploration, inventory, npcs
 from oathforge.bot.render.common import (
     MAX_MESSAGE,
     RULE,
@@ -20,7 +16,10 @@ from oathforge.bot.render.common import (
     discipline_label,
     item_stats,
 )
-
+from oathforge.content import get_content
+from oathforge.database.models import Character
+from oathforge.i18n import t
+from oathforge.services import characters, crafting, exploration, inventory, npcs
 
 # ---------------------------------------------------------------- shop
 

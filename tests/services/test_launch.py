@@ -6,16 +6,7 @@ import json
 import pytest
 from sqlalchemy import func, select
 
-from oathforge.database.models import (
-    ActionLog,
-    AiUsage,
-    Character,
-    ItemInstance,
-    MediaFile,
-    QuestProgress,
-    User,
-    WorldFact,
-)
+from oathforge.database.models import ActionLog, AiUsage, Character, ItemInstance, MediaFile, User, WorldFact
 from oathforge.database.session import session_scope
 from oathforge.services import characters, inventory, launch, quests
 

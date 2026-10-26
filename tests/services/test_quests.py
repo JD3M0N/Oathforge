@@ -6,8 +6,8 @@ import pytest
 
 from oathforge.content import get_content
 from oathforge.database.session import session_scope
-from oathforge.services.events import Outcome
 from oathforge.services import characters, inventory, npcs, quests
+from oathforge.services.events import Outcome
 from tests.services.helpers import get_char, new_character
 
 pytestmark = pytest.mark.usefixtures("database")

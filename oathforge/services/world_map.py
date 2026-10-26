@@ -102,7 +102,6 @@ def _reachable(char: Character, origin: str) -> set[str]:
 
 def _plan_all(char: Character, origin: str) -> dict[str, Route]:
     """Shortest route (in minutes) from ``origin`` to every place it may go, through known safe places."""
-    c = get_content()
     through = {k for k in known(char) if blocks_passage(char, k) is None}
     targets = _reachable(char, origin)
     best: dict[str, Route] = {origin: Route(origin, 0, 0)}

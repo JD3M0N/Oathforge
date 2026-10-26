@@ -7,7 +7,6 @@ from telegram.error import NetworkError
 from telegram.ext import Application, ContextTypes, TypeHandler
 
 from oathforge import __version__, pidfile, recorder
-
 from oathforge.ai.client import build_llm
 from oathforge.bot.handlers import achievements, callbacks, commands, common, creation, text
 from oathforge.config import get_settings

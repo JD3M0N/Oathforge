@@ -12,8 +12,7 @@ from oathforge.content.schemas import EncounterEntry, Exit, Location
 from oathforge.database.models import Character
 from oathforge.engine import timings
 from oathforge.engine.checks import check, dc_for
-from oathforge.services import characters, combat_service, inventory, quests, world_map
-from oathforge.services import achievements
+from oathforge.services import achievements, characters, combat_service, inventory, quests, world_map
 from oathforge.services.events import Outcome
 
 GAME_DAY_SECONDS = 4 * 3600  # one in-game day every four real hours
@@ -309,7 +308,7 @@ def short_rest_helps(char: Character) -> bool:
     """Whether a short rest would give anything back (HP below the injury cap, a spent bar or use)."""
     return (
         char.hp < inventory.hp_cap(char)
-        or inventory.spent_abilities(char, spells_only=False)
+        or bool(inventory.spent_abilities(char, spells_only=False))
         or characters.pool_of(char) < characters.resource_max(char)
     )
 

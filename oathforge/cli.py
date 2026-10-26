@@ -1,10 +1,10 @@
 """Console commands: ``oath help`` (also ``oathforge help`` or ``python -m oathforge help``)."""
 
 import asyncio
-from pathlib import Path
 import shutil
 import sys
 import textwrap
+from pathlib import Path
 
 # (group, [(command, arguments, one-line description)]); every command here must be handled in main().
 COMMANDS = [

@@ -2,8 +2,8 @@ import random
 
 import pytest
 
-from oathforge.database.session import session_scope
 from oathforge.content import get_content
+from oathforge.database.session import session_scope
 from oathforge.services import characters, exploration, world_map
 from tests.services.helpers import get_char, new_character
 

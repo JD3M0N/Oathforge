@@ -567,7 +567,7 @@ async def test_a_short_rest_is_partial_limited_and_a_long_rest_gives_the_uses_ba
     async with session_scope() as s:
         char = await get_char(s, cid)
         char.hp, char.conditions = 1, {"injured": True}
-        for n in range(timings.SHORT_RESTS_PER_LONG):
+        for _ in range(timings.SHORT_RESTS_PER_LONG):
             assert (await activities.start(s, char, "short_rest", "rest", now)).ok
             assert (await activity(s, cid)).ends_at - now == timings.SHORT_REST_SECONDS
             before = char.hp
@@ -665,7 +665,6 @@ async def test_objective_respects_the_hour(monkeypatch):
 @pytest.mark.usefixtures("ruins")
 async def test_objective_covers_missions_with_choices(monkeypatch):
     """A mission without counted objectives: its actions and its boss still give the 📜 a place."""
-    from oathforge.content import get_content
     from oathforge.content.schemas import Quest
 
     monkeypatch.setattr(exploration, "is_night", lambda now=None: False)

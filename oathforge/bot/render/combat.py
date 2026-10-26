@@ -5,6 +5,7 @@ from html import escape
 from telegram import InlineKeyboardMarkup
 
 from oathforge.bot.keyboards import btn, cb, grid, markup, nonce
+from oathforge.bot.render.common import MAX_MESSAGE, REPORT_ICON, RULE, hp_bar
 from oathforge.content import get_content
 from oathforge.database.models import Character
 from oathforge.engine import combat_help
@@ -12,7 +13,6 @@ from oathforge.engine.combat import EncounterState, affordable, available_bonus_
 from oathforge.i18n import t
 from oathforge.services import activities, characters, combat_service
 from oathforge.services.events import render_event
-from oathforge.bot.render.common import MAX_MESSAGE, REPORT_ICON, RULE, hp_bar
 
 
 def combat_powers(state: EncounterState, me, defs: dict, lang: str) -> list[tuple[str, str]]:

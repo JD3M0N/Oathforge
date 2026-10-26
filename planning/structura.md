@@ -6,7 +6,12 @@ Checklist para que Oathforge aguante el crecimiento (ciudades, clases, objetos) 
 
 - **Fase 0** hecha en 0.10.43, con el plan enlazado desde `CLAUDE.md` (0.10.44) y graphify (0.10.45). Solo queda de parte de Josue borrar las ramas antiguas de los testers (los pasos están en la propia fase).
 - **Fase 2** hecha en 0.10.46–0.10.51, adelantada a petición de Josue: los cinco archivos grandes de código y los dos de tests son paquetes, y `tests/test_sizes.py` vigila el tamaño. Se verificó con la suite completa, el volcado de `load_content()` idéntico, los mismos números en `oath simulate` y `oath balance` y los mismos errores de validación sobre contenido roto a propósito.
-- Siguiente: **Fase 3** (calidad automática), y después la 1 (contenido en carpetas).
+- **Fase 3** hecha en 0.10.52–0.10.53: ruff (con un commit que solo formatea), import-linter, pyright, pre-commit, CI y tests de capas y de coherencia. Quedan de parte de Josue:
+  - registrar el hook de ruff en `.claude/settings.json` (el agente no puede tocar sus propios permisos ni hooks; el texto está en la fase);
+  - instalar pre-commit una vez y, si quiere, `git config blame.ignoreRevsFile .git-blame-ignore-revs`;
+  - ver la CI en verde en el primer push y, en GitHub, exigirla para `main`;
+  - decidir los rangos de estadísticas de los monstruos por nivel (ver la fase).
+- Siguiente: **Fase 1** (contenido en carpetas).
 - Orden: 0 → 2 → 3 → 1 → 4 → 5 (la 2 se adelantó; el resto sigue igual).
 - Después de cada merge a `main`: `/graphify . --update`.
 
@@ -54,7 +59,7 @@ Decisiones ya tomadas (no se reabren):
   - `ask` para leer `artifacts/` y `content/officina/`: se pueden abrir, pero solo cuando se pide.
   - `deny` para `.venv/`, `.env` y `.telegram/` (secretos).
 - [x] **Hook `PostToolUse`** (`.claude/hooks/validate_content.py`): al editar un `content/*.yaml` ejecuta `oath validate` y, si hay errores, se los devuelve al agente. Si todo va bien, reescribe `content/INDEX.md`.
-- [ ] Hook de `ruff` sobre `*.py`: se añade en la Fase 3, junto con ruff.
+- [x] Hook de `ruff` sobre `*.py`: `.claude/hooks/ruff_python.py` (0.10.53). Falta registrarlo en `.claude/settings.json` (ver la Fase 3).
 - [x] **`oath validate`**: carga `content/` como al arrancar el bot, sin Telegram ni BD.
 - [x] **`oath content-index`** escribe `content/INDEX.md` con una línea por id (nombre en inglés y archivo). `tests/test_content.py` comprueba que está al día.
 - [x] **Regla de nombres** en `AGENTS.md` («Nombres e idiomas»): la base va en inglés y todo texto visible en es y en. Un test exige ids y rutas de `content/` en ASCII.
@@ -92,18 +97,26 @@ Cada archivo grande pasa a ser un paquete con un `__init__.py` que reexporta lo 
 - [x] **Límite de tamaño** (0.10.51): `tests/test_sizes.py` falla si un `.py` de `oathforge/` o `tests/` pasa de 800 líneas o un YAML de 40 KB. Las excepciones (`classes`, `class_specializations`, `quests`, `fallbacks/chronicles` y los locales) esperan a la fase 1, y el test avisa cuando una ya cabe.
 - [x] Un commit por archivo partido. `git mv` no guarda nada en git (los renombres se deducen al comparar), así que la historia de un trozo se sigue con `git log --follow` o `git blame -C -C` sobre el archivo antiguo.
 
-## Fase 3 — Calidad automática
+## Fase 3 — Calidad automática (0.10.52–0.10.53)
 
-- [ ] **ruff** (lint + formato) en `pyproject.toml`. Primero se pasa una vez sobre todo el código, en un commit que solo formatea. Después, el hook de Claude sobre `*.py`.
-- [ ] **import-linter**, que comprueba por código las invariantes 2 y 6: `engine` no importa `database`, `bot`, `ai` ni `services`; `bot` no escribe modelos; solo `ai/client.py` importa `google.genai`.
-- [ ] **pyright** en modo básico para `engine/` y `services/`.
-- [ ] **pre-commit**: ruff, `oath validate` si el commit toca `content/`, y un script que comprueba que la versión subió y que el CHANGELOG tiene su entrada.
-- [ ] **CI en GitHub Actions** en cada push a `josue-development` y a `main`:
+- [x] **ruff** (lint + formato) en `pyproject.toml`: líneas de 120, reglas `E F W I UP B` (sin `E501`, que es cosa del formateador, ni `B905`), y `skip-magic-trailing-comma` para mantener el estilo compacto.
+  - [x] 0.10.52: un commit que **solo formatea** (122 archivos, el árbol sintáctico idéntico al de antes). Está en `.git-blame-ignore-revs`.
+  - [x] 0.10.53: los arreglos del linter (imports sin usar u ordenados, variables muertas, nombres ambiguos, `lambda` asignadas).
+  - [x] Hook de Claude `.claude/hooks/ruff_python.py`: al editar un `.py` lo arregla y formatea, y devuelve lo que quede (exit 2). **Josue**: registrarlo en `.claude/settings.json`, junto al de contenido, dentro de `hooks.PostToolUse[0].hooks`:
+    ```json
+    {"type": "command", "command": "\"$CLAUDE_PROJECT_DIR/.venv/Scripts/python.exe\" \"$CLAUDE_PROJECT_DIR/.claude/hooks/ruff_python.py\"", "timeout": 30, "statusMessage": "ruff on the edited .py"}
+    ```
+    y, si quiere, permitir en `permissions.allow` `Bash(.venv/Scripts/python -m ruff *)`, `Bash(.venv/Scripts/lint-imports)` y `Bash(.venv/Scripts/pyright)` (y sus versiones `PowerShell(...)`).
+- [x] **import-linter** (`lint-imports`, contratos en `pyproject.toml`): `engine` no importa `database`, `services`, `bot`, `ai`, `telegram`, `sqlalchemy` ni `google`; `services`, `content` y `database` no suben a `bot` ni a `telegram`; solo `ai/client.py` importa `google`.
+  - [x] «`bot` no escribe modelos» no se ve en los imports (el bot lee modelos y abre transacciones): lo comprueba `tests/test_layers.py` sobre el árbol sintáctico. Al hacerlo aparecieron dos escrituras directas de `user.language`, que pasan a `characters.set_language`.
+- [x] **pyright** en modo básico para `engine/` y `services/`: 74 errores, todos de valores que pueden ser `None`. `Content.progression` pasa a ser obligatorio; el resto se arregla con comprobaciones explícitas (un registro borrado entre dos transacciones devuelve `None` o «sin efecto») o con `assert` donde la validación del contenido ya lo garantiza. `oath simulate` y `oath balance` dan los mismos números.
+- [x] **pre-commit** (`.pre-commit-config.yaml`, hooks locales con el `.venv`): ruff, `oath validate` si el commit toca `content/`, `tools/check_release.py` (la versión subió y el CHANGELOG empieza por su entrada) y el asunto `vX.Y.Z: ` en la fase `commit-msg`. **Josue**: instalarlo una vez con `.venv\Scripts\pre-commit install --hook-type pre-commit --hook-type commit-msg`.
+- [x] **CI en GitHub Actions** (`.github/workflows/ci.yml`) en cada push a `josue-development` y a `main`, y en los PR a `main`:
   - ruff, import-linter y pyright;
-  - pytest con SQLite y con Postgres como servicio;
-  - `oath simulate --level 1-5`.
-  - Antes de llevar nada a `main` tiene que estar en verde.
-- [ ] **Coherencia del contenido**: todo objeto se puede conseguir, todo monstruo aparece en algún lugar, todo PNJ está colocado, y precios y estadísticas están dentro del rango de su nivel.
+  - `oath validate` y pytest con SQLite y con Postgres como servicio;
+  - Antes de llevar nada a `main` tiene que estar en verde. **Josue**: comprobar el primer run tras el push y, si quiere, exigirlo en el ruleset de `main`.
+- [x] **Coherencia del contenido** (`tests/test_coherence.py`): todo objeto se puede conseguir (tienda, botín, receta, recolección, descubrimiento, misión o equipo inicial), todo monstruo está en una tabla de encuentros, todo PNJ tiene horario, y dentro de un mismo tipo y ranura el equipo de más nivel no es más barato.
+  - [ ] **Josue**: los rangos de estadísticas de los monstruos por nivel. Los monstruos no tienen nivel propio; el único dato es el rival previsto de `oath balance` (`STANDARDS`), y en él ni la vida ni la XP suben siempre (el estándar de 17 tiene menos vida que el de 13; la XP del élite de 9 es menor que la del de 5). Hace falta una regla de diseño (bandas de vida, CA y XP por nivel, o un margen) antes de convertirla en test.
 
 ## Fase 4 — Protocolos (fichas + prompts listos)
 

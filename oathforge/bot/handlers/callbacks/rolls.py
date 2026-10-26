@@ -5,14 +5,13 @@ import logging
 
 from telegram import Update
 
+from oathforge.ai.intent_parser import Intent
 from oathforge.bot import render
+from oathforge.bot.handlers.callbacks.acts import _act
 from oathforge.bot.handlers.common import edit_or_send, load, rng
 from oathforge.database.session import session_scope
 from oathforge.i18n import t
-from oathforge.ai.intent_parser import Intent
 from oathforge.services import actions, characters
-from oathforge.bot.handlers.callbacks.acts import _act
-
 
 log = logging.getLogger(__name__)
 DICE_SECONDS = 3.5  # Telegram's dice animation, before the engine's d20 appears
@@ -51,8 +50,8 @@ async def settings(update: Update, context, new_lang: str | None = None) -> None
     """⚙️ Settings: language and manual rolls (also /settings)."""
     async with session_scope() as session:
         user, _ = await load(session, update)
-        if new_lang in ("es", "en"):
-            user.language = new_lang
+        if new_lang is not None:
+            characters.set_language(user, new_lang)
         lang = context.user_data["lang"] = user.language
         text, kb = render.settings_view(user, lang)
     await edit_or_send(update, text, kb)

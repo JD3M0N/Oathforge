@@ -1,9 +1,9 @@
 import asyncio
 import logging
-from html import escape
 import random
 import time
 from contextlib import asynccontextmanager
+from html import escape
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -14,11 +14,9 @@ from telegram.ext import ContextTypes
 
 from oathforge import recorder
 from oathforge.bot import render
+from oathforge.bot.keyboards import FIXED, KEYBOARD_VERSION, fixed_keyboard
 from oathforge.content.media import MediaAsset
-from oathforge.database.models import Character, User
-from oathforge.bot.keyboards import FIXED, KEYBOARD_VERSION, btn, cb, fixed_keyboard, markup, nonce
-from oathforge.content import get_content
-from oathforge.database.models import WorldActivity
+from oathforge.database.models import Character, User, WorldActivity
 from oathforge.database.session import session_scope
 from oathforge.i18n import t
 from oathforge.services import activities, characters, chronicles, combat_service, media

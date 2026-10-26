@@ -28,7 +28,6 @@ def effective(branch: str, level: int, picks: dict | None = None):
 def tags(branch: str) -> set[str]:
     """The verbs of a branch: what it applies, spends, answers, heals, shields and reaches."""
     b = C.class_specializations[branch]
-    cls = C.classes[b.class_key]
     found = set()
     for a in [*b.abilities.values(), *(g for m in b.modifiers.values() for g in m.grants.values())]:
         if a.consumes:
@@ -114,7 +113,7 @@ def test_a_branch_makes_a_decision_its_class_does_not(key):
 
 def _modifier_cases():
     for key in READY:
-        for mkey, m in C.class_specializations[key].modifiers.items():
+        for mkey in C.class_specializations[key].modifiers:
             yield pytest.param(key, mkey, id=f"{key}.{mkey}")
 
 

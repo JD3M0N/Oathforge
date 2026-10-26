@@ -66,7 +66,7 @@ def test_t1_combat_gear_asks_for_a_level_the_crafter_may_not_have():
     assert gear, "T1 should have something to wear or drink"
     assert all(c.items[o].min_level > 1 for o in gear), [o for o in gear if c.items[o].min_level == 1]
     # and nothing that is used by rank (tools, furniture, materials) carries a level
-    for key, r in c.recipes.items():
+    for r in c.recipes.values():
         for out_key in r.outputs:
             item = c.items[out_key]
             if item.tool or item.type == "material":

@@ -2,8 +2,8 @@
 
 from types import SimpleNamespace
 
-from telegram.ext import ConversationHandler
 from sqlalchemy import select
+from telegram.ext import ConversationHandler
 
 from oathforge.bot.handlers import callbacks, creation, text
 from oathforge.bot.keyboards import parse

@@ -4,13 +4,11 @@ import random
 from html.parser import HTMLParser
 
 import pytest
-from sqlalchemy import select
 
 from oathforge.bot import render
 from oathforge.content import get_content
-from oathforge.i18n import t
-from oathforge.database.models import Character
 from oathforge.database.session import session_scope
+from oathforge.i18n import t
 from oathforge.services import characters, combat_service, exploration, quests
 
 pytestmark = pytest.mark.usefixtures("database")

@@ -36,7 +36,6 @@ from oathforge.services import (
 )
 from oathforge.services.events import Outcome, render_event
 
-
 ROLL_VERBS = {"look", "qa"}  # button actions that can wait for the manual 🎲 button
 
 
@@ -84,7 +83,6 @@ async def _act(update: Update, context, verb: str, arg: str, n: str, rolled_at: 
                 stale = True
             else:
                 stale = False
-                char_id = char.id
                 out = await _dispatch(session, char, verb, arg, r, context)
                 text, kb = await _after(session, char, lang, verb, arg, context, out)
                 telegram_id = user.telegram_id

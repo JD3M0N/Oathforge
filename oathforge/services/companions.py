@@ -10,8 +10,8 @@ State lives in ``Character.build["companion"]``: {"name": …, "hp": left or Non
 from oathforge.content import get_content
 from oathforge.database.models import Character
 from oathforge.engine import dice
-from oathforge.engine.combat import EntityTemplate
 from oathforge.engine.checks import proficiency_bonus
+from oathforge.engine.combat import EntityTemplate
 
 KEY = "companion"
 NAME_MAX = 20

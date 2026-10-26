@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import Field, field_validator
 
-from oathforge.content.schemas.common import Station, Strict, T1_MIN_RANK, Text
+from oathforge.content.schemas.common import T1_MIN_RANK, Station, Strict, Text
 
 
 class SpecEffects(Strict):

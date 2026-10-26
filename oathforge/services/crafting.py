@@ -15,8 +15,7 @@ from oathforge.content.schemas import Recipe, Station
 from oathforge.database.models import Character
 from oathforge.engine import gathering
 from oathforge.i18n import t
-from oathforge.services import characters, home, inventory, professions, quests
-from oathforge.services import achievements
+from oathforge.services import achievements, characters, home, inventory, professions, quests
 from oathforge.services.events import Outcome
 
 LOW_RANK_GAP = 2  # a recipe this many ranks below yours gives half XP
@@ -57,7 +56,7 @@ def knows(char: Character, recipe_key: str) -> bool:
     return not recipe.special or recipe_key in known(char)
 
 
-def recipes_here(char: Character, open_quests: set[str] = frozenset()) -> dict[str, Recipe]:
+def recipes_here(char: Character, open_quests: set[str] | frozenset[str] = frozenset()) -> dict[str, Recipe]:
     """Recipes you may work on where you stand: your disciplines and this place's stations.
 
     A starter recipe (``quest``) joins them only while that mission is running: it asks for no trade, so it

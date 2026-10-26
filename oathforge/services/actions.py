@@ -19,8 +19,8 @@ from oathforge.content import get_content
 from oathforge.database.models import Character, User
 from oathforge.database.session import session_scope
 from oathforge.engine.checks import clamp_tier
-from oathforge.i18n import t
 from oathforge.engine.combat import Action, EncounterState
+from oathforge.i18n import t
 from oathforge.services import (
     achievements,
     activities,
@@ -55,7 +55,6 @@ def manual_rolls(user: User) -> bool:
 
 async def button_roll(session: AsyncSession, char: Character, verb: str, arg: str) -> str | None:
     """Skill a button action will roll, if any: investigating with secrets left, quest actions with a check."""
-    c = get_content()
     if char.state == "in_combat":
         return None
     if verb == "look":
@@ -143,7 +142,7 @@ async def build_context(session: AsyncSession, char: Character, lang: str) -> Ac
 async def handle_free_text(llm: LLM, user_id: int, text: str, rng: random.Random) -> FreeTextResult:
     async with session_scope() as session:
         user, char = await _load(session, user_id)
-        if char is None:
+        if user is None or char is None:
             return FreeTextResult(Outcome.refused("start.need_character"))
         lang = user.language
         if not await Budget(get_settings()).allow(user_id):
@@ -163,8 +162,8 @@ async def handle_free_text(llm: LLM, user_id: int, text: str, rng: random.Random
     if manual:
         async with session_scope() as session:
             _, char = await _load(session, user_id)
-            skill = await intent_roll(session, char, intent, ctx.in_combat)
-            if skill:
+            skill = await intent_roll(session, char, intent, ctx.in_combat) if char is not None else None
+            if skill and char is not None:
                 return FreeTextResult(intent=intent, roll_skill=skill, location=char.location)
     return await execute_free_text(llm, user_id, text, intent, ctx.in_combat, rng)
 
@@ -175,7 +174,7 @@ async def execute_free_text(
     """Resolve an interpreted action and narrate it (also after a deferred /roll)."""
     async with session_scope() as session:
         user, char = await _load(session, user_id, lock=True)
-        if char is None:
+        if user is None or char is None:
             return FreeTextResult(Outcome.refused("start.need_character"))
         lang = user.language
         enc = await combat_service.active_encounter(session, char, lock=True)
@@ -259,23 +258,28 @@ async def resolve(session: AsyncSession, char: Character, enc, intent: Intent, r
         return await combat_service.act(session, char, enc, action(), rng)
 
     present = exploration.npcs_present(char.location)
+    if kind in ("move", "use_item", "quest_action") and not intent.target:
+        return Outcome().add("freetext.no_effect")
+    if kind in ("skill_check", "environment_interaction") and not intent.skill:
+        return Outcome().add("freetext.no_effect")
+    target, skill = intent.target or "", intent.skill or ""
     if kind == "move":
-        return await exploration.travel(session, char, intent.target, rng)
+        return await exploration.travel(session, char, target, rng)
     if kind == "use_item":
-        return await inventory.use_item_outside_combat(session, char, intent.target, rng)
+        return await inventory.use_item_outside_combat(session, char, target, rng)
     if kind in ("skill_check", "environment_interaction"):
-        out, _ = await exploration.check_skill(session, char, intent.skill, clamp_tier(intent.tier), rng)
+        out, _ = await exploration.check_skill(session, char, skill, clamp_tier(intent.tier), rng)
         return out
     if kind == "inspect":
         return await exploration.investigate(session, char, rng)
     if kind == "steal":
-        if intent.target not in present:
+        if target not in present:
             return Outcome.refused("freetext.not_here")
-        return await npcs.steal(session, char, intent.target, rng)
+        return await npcs.steal(session, char, target, rng)
     if kind == "rest":
         return await activities.start(session, char, "rest", "rest")
     if kind == "quest_action":
-        return await quests.perform(session, char, intent.target, present, rng)
+        return await quests.perform(session, char, target, present, rng)
     if kind == "ooc_question":
         return Outcome().add("freetext.ooc")
     return Outcome().add("freetext.no_effect")
@@ -307,7 +311,7 @@ async def talk(llm: LLM, user_id: int, npc_key: str, text: str) -> tuple[str, Ou
     npc = c.npcs.get(npc_key)
     async with session_scope() as session:
         user, char = await _load(session, user_id)
-        if char is None:
+        if user is None or char is None:
             return "", Outcome.refused("start.need_character")
         lang = user.language
         if npc is None or npc_key not in exploration.npcs_present(char.location):
@@ -342,6 +346,8 @@ async def talk(llm: LLM, user_id: int, npc_key: str, text: str) -> tuple[str, Ou
 
     async with session_scope() as session:
         _, char = await _load(session, user_id, lock=True)
+        if char is None:  # deleted while the NPC was answering
+            return reply.line, out
         if reply.memory_note.strip():
             await npcs.remember(session, npc_key, char, reply.memory_note.strip(), reply.importance)
         if reply.trust_delta:

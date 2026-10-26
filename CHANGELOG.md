@@ -4,6 +4,32 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.53] - 2026-10-26
+
+Structura, fase 3: **la calidad se comprueba sola.** Linter, contratos de imports, tipos, pre-commit y CI.
+
+### Añadido
+- **ruff** como linter (reglas `E F W I UP B`) y su hook de Claude, `.claude/hooks/ruff_python.py`: al editar un `.py` lo arregla y formatea, y devuelve al agente lo que no puede arreglar solo.
+- **import-linter** (`lint-imports`): el motor no importa base de datos, servicios, bot, IA, Telegram ni SQL; servicios, contenido y base de datos no suben a Telegram; solo `ai/client.py` habla con Gemini.
+- **pyright** en modo básico para `engine/` y `services/`.
+- **pre-commit** (`.pre-commit-config.yaml`): ruff, `oath validate` si el commit toca `content/`, y `tools/check_release.py`, que exige versión nueva, su entrada en el CHANGELOG y el asunto `vX.Y.Z: `.
+- **CI** en GitHub Actions (`.github/workflows/ci.yml`): ruff, import-linter, pyright, `oath validate` y pytest con SQLite y con Postgres, en cada push a `josue-development` y a `main`.
+- `tests/test_layers.py`: el bot no escribe modelos (invariante 2).
+- `tests/test_coherence.py`: todo objeto se puede conseguir, todo monstruo vive en algún lugar, todo PNJ está colocado y el equipo de más nivel no es más barato.
+- `.git-blame-ignore-revs` con el commit que solo formateó (0.10.52).
+
+### Cambiado
+- `Content.progression` es obligatorio (el loader siempre lo carga).
+- `pyproject.toml`: las herramientas nuevas en las dependencias de desarrollo y su configuración.
+- `AGENTS.md`, `CLAUDE.md` y los `CLAUDE.md` de `tests/` y `engine/`: cómo correr cada comprobación.
+- `planning/structura.md`: fase 3 hecha; lo que queda de parte de Josue y la siguiente, la 1.
+
+### Arreglado
+- El bot cambiaba `user.language` por su cuenta; ahora lo hace `characters.set_language`.
+- Una acción libre de mover, usar o completar una misión sin objetivo, o una prueba sin habilidad, ya no falla: no tiene efecto.
+- Si un personaje o una actividad desaparecen mientras la IA escribe (una crónica, una respuesta de PNJ), el servicio lo nota en vez de fallar.
+- Imports sin usar, variables muertas y nombres ambiguos que señaló el linter.
+
 ## [0.10.52] - 2026-10-26
 
 Structura, fase 3: todo el código pasa por ruff format. Solo formatea; no cambia nada más.

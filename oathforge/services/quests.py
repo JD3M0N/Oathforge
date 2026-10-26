@@ -13,13 +13,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from oathforge.content import get_content
 from oathforge.content.achievement_schemas import DECISION_FLAGS, FLAG_EVENTS
-from oathforge.i18n import t
 from oathforge.content.schemas import Quest, QuestAction, QuestObjective
 from oathforge.database.models import Character, QuestProgress
 from oathforge.engine.checks import check, dc_for
 from oathforge.engine.dice import roll
-from oathforge.services import characters, inventory, npcs
-from oathforge.services import achievements
+from oathforge.i18n import t
+from oathforge.services import achievements, characters, inventory, npcs
 from oathforge.services.events import Outcome
 
 
@@ -192,6 +191,7 @@ async def advance(
                 out.text(quest.stages[quest.turn_in_stage].journal)
                 await _set_stage(session, char, quest, p, quest.turn_in_stage, out)
             else:
+                assert quest.complete_stage is not None  # content validation: objectives need a complete_stage
                 out.text(quest.stages[quest.complete_stage].journal)
                 await apply_effects(session, char, quest.rewards, out, rng)
                 await _set_stage(session, char, quest, p, quest.complete_stage, out)

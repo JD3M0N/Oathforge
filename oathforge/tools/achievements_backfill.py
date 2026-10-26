@@ -2,9 +2,11 @@
 
 import argparse
 import asyncio
+
 from sqlalchemy import select
-from oathforge.database.session import init_engine, dispose_engine, session_scope
+
 from oathforge.database.models import Character
+from oathforge.database.session import dispose_engine, init_engine, session_scope
 from oathforge.services.achievements import backfill_character
 
 

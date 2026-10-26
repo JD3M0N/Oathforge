@@ -19,7 +19,6 @@ from oathforge.i18n import t
 from oathforge.services import audit, combat_service
 from oathforge.services.events import Outcome
 
-
 NEEDS_TARGET = {"atk", "abl", "obj", "itm"}
 
 

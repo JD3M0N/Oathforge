@@ -69,6 +69,14 @@ def set_setting(user: User, key: str, value) -> None:
     user.settings = {**(user.settings or {}), key: value}
 
 
+def set_language(user: User, lang: str) -> bool:
+    """The interface language, es or en; anything else is ignored. True if it was valid."""
+    if lang not in ("es", "en"):
+        return False
+    user.language = lang
+    return True
+
+
 def valid_name(name: str) -> bool:
     name = name.strip()
     return 2 <= len(name) <= NAME_MAX and all(ch.isalpha() or ch in " '-" for ch in name)
@@ -126,7 +134,7 @@ async def create_character(
     cls, bg, lin = c.classes[class_key], c.backgrounds[background], c.lineages[lineage]
     if bg.custom != valid_custom(custom):
         raise ValueError("a custom background needs a title, a story and exactly 2 known skills")
-    custom = {k: custom[k] for k in ("title", "story", "skills")} if bg.custom else None
+    custom = {k: custom[k] for k in ("title", "story", "skills")} if bg.custom and custom else None
     scores = starting_scores(class_key, lineage, scores)
     hp = progression.max_hp(cls.hit_die, modifier(scores["con"]), 1)
     char = Character(
@@ -274,7 +282,7 @@ async def equipped(session: AsyncSession, char: Character) -> dict[str, ItemInst
     rows = await session.scalars(
         select(ItemInstance).where(ItemInstance.owner_character_id == char.id, ItemInstance.equipped_slot.is_not(None))
     )
-    return {r.equipped_slot: r for r in rows}
+    return {r.equipped_slot: r for r in rows if r.equipped_slot}
 
 
 def taken_of(char: Character) -> dict[str, str]:
@@ -368,6 +376,8 @@ def attack_profiles(char: Character, gear: dict[str, ItemInstance]) -> list[Atta
             continue
         item = c.items[inst.item_key]
         w = item.weapon
+        if w is None:
+            continue
         ability = m["dex"] if w.ranged else (max(m["str"], m["dex"]) if w.finesse else m["str"])
         for p in class_passives(char):  # a trait that lets the hero fight with another ability (Hexblade: CHA)
             if p.attack_with and not w.ranged:

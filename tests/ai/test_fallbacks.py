@@ -12,8 +12,8 @@ from oathforge.ai.client import NullLLM
 from oathforge.ai.intent_parser import Intent
 from oathforge.config import get_settings
 from oathforge.content import get_content, load_content
-from oathforge.content.validation import validate_references
 from oathforge.content.schemas import CHRONICLE_KEYS, Text
+from oathforge.content.validation import validate_references
 from oathforge.database.models import Character, NpcMemory, NpcRelationship
 from oathforge.database.session import session_scope
 from oathforge.services import actions, characters, chronicles, exploration

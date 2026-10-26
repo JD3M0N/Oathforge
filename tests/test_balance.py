@@ -1,7 +1,8 @@
 """The balance tooling (B12): reproducible cells, honest intervals and a report that names what it cannot measure."""
 
 from oathforge.content import get_content
-from oathforge.tools import balance, simulate as sim
+from oathforge.tools import balance
+from oathforge.tools import simulate as sim
 
 
 def test_wilson_interval_does_not_call_a_small_sample_certain():

@@ -1,7 +1,7 @@
 """Character creation, its help pages, and the class and skill pages."""
 
-from telegram.ext import ConversationHandler
 import pytest
+from telegram.ext import ConversationHandler
 
 from oathforge.bot.handlers import creation
 from oathforge.database.models import Character

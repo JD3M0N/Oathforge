@@ -15,7 +15,13 @@ if TYPE_CHECKING:
 
 
 def validate_references(c: "Content") -> None:
-    errors = [*class_errors(c), *world_errors(c), *item_errors(c), *crafting_errors(c), *fallback_errors(c),
-              *quest_errors(c)]
+    errors = [
+        *class_errors(c),
+        *world_errors(c),
+        *item_errors(c),
+        *crafting_errors(c),
+        *fallback_errors(c),
+        *quest_errors(c),
+    ]
     if errors:
         raise ValueError("Content validation failed:\n  " + "\n  ".join(errors))

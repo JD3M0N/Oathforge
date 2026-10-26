@@ -143,8 +143,9 @@ async def test_free_text_combat_and_injection(llm):
 
 
 async def test_stale_combat_button_never_acts_twice(llm):
-    from oathforge.database.models import CombatAction
     from sqlalchemy import func
+
+    from oathforge.database.models import CombatAction
 
     p = Player(llm, tg_id=61, lang="en")
     await create(p, cls="warrior")

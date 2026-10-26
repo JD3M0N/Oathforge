@@ -82,7 +82,7 @@ def test_every_objective_of_the_vale_can_be_met_where_the_text_sends_you():
 
 def test_the_repair_has_the_cores_it_asks_for_and_the_final_fight_waits_for_it():
     c = get_content()
-    assert any(l.item == "regulator_core" and l.chance == 1.0 for l in c.monsters["regulator_sentinel"].loot)
+    assert any(drop.item == "regulator_core" and drop.chance == 1.0 for drop in c.monsters["regulator_sentinel"].loot)
     sentinels = [o.count for o in c.quests["reg_workshop"].objectives if o.target == "regulator_sentinel"]
     assert sentinels and sentinels[0] >= 1  # the repair needs one core, the workshop gives three
     fixed = next(f for f in c.locations["beacon_height"].fixed_encounters)

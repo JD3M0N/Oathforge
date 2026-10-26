@@ -205,7 +205,10 @@ def pace() -> list[dict]:
     """Walk the missions in order doing only what they ask: where does the XP stand against the level table?"""
     c = get_content()
     table = c.progression.xp
-    cap = lambda xp: sum(1 for t in table if xp >= t)
+
+    def cap(xp: int) -> int:
+        return sum(1 for t in table if xp >= t)
+
     xp, minutes, rows = 0, 0.0, []
     from oathforge.services import quests as q
 
@@ -333,7 +336,7 @@ def report(res: list[dict], seqs: list[dict], n: int, seed: int) -> str:
         if r["kind"] in ("standard", "elite"):
             by_role[role_of(r["branch"])].append(r["rounds"])
     means = {k: sum(v) / len(v) for k, v in by_role.items()}
-    for role, v in sorted(by_role.items()):
+    for role in sorted(by_role):
         L.append(f"| {role} | {len({r['branch'] for r in br if role_of(r['branch']) == role})} | {means[role]:.2f} |")
     # 6. defects
     L += ["", "## Defectos que el informe encuentra", ""]

@@ -113,7 +113,7 @@ def test_several_fights_in_a_row_without_a_full_rest(key, level):
     me, defs = sim.hero(key, level, "human", "soldier")
     starts_empty = c.progression.resources[c.classes[key].resource].starts_empty
     rng = random.Random(21)
-    for n in range(3):
+    for _ in range(3):
         foe = Combatant(
             id="m1",
             side="enemy",

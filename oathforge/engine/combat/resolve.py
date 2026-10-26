@@ -1,22 +1,21 @@
 """Core resolution: saves, attacks, damage, statuses and healing."""
 
-from oathforge.engine.dice import d20, roll
 from oathforge.engine.combat.state import (
-    AttackProfile,
     BLESS_BONUS,
     BOSS_CONTROL_TURNS,
-    CombatError,
-    Combatant,
     HARD_CONTROL,
     HEX_DIE,
     INSPIRATION_DIE,
-    LogEntry,
     MARK_DIE,
     NEGATIVE_STATUSES,
+    AttackProfile,
+    Combatant,
+    CombatError,
+    LogEntry,
     gain_resource,
     valid_targets,
 )
-
+from oathforge.engine.dice import d20, roll
 
 # ---------------------------------------------------------------- core resolution
 

@@ -191,6 +191,8 @@ def spell_choices(char: Character, item) -> list[str]:
 
 def restore_pool(char: Character, amount: int, out: Outcome) -> None:
     res = characters.resource_def(char)
+    if res is None:  # a class without a bar has nothing to fill
+        return
     before = characters.pool_of(char)
     characters.set_pool(char, before + amount)
     out.add(
@@ -239,7 +241,7 @@ async def use_item_outside_combat(
     """Use a consumable. ``ability``: which spent spell a mana potion brings back (default: the most spent)."""
     item = get_content().items.get(key)
     effects = effects_of(item) if item else []
-    if not effects:
+    if item is None or not effects:
         return Outcome.refused("inv.err.not_usable")
     if char.level < item.min_level:
         return Outcome.refused("inv.err.level", level=item.min_level)
@@ -250,7 +252,7 @@ async def use_item_outside_combat(
         if reason == "inv.err.cooldown":
             ready = (char.cooldowns or {}).get("short_rest", now)
             return Outcome.refused(reason, minutes=math.ceil((ready - now) / 60))
-        return Outcome.refused(reason)
+        return Outcome.refused(reason or "inv.err.not_usable")
     if not await remove_item(session, char, key, 1):
         return Outcome.refused("inv.err.not_found")
     out = Outcome()

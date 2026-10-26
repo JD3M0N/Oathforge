@@ -15,4 +15,6 @@
 - Los tests siguen la forma del código, un archivo por dominio. Lo compartido va en `helpers.py` de su carpeta (`tests/bot/helpers.py`: `Player`, `Chat`, `create`…; `tests/services/helpers.py`: `new_character`, `get_char`, `fight`), y `tests/bot/conftest.py` quita el límite de frecuencia a todos los tests de handlers.
 - Para cambiar algo de un paquete partido con `monkeypatch`, parchea el submódulo donde vive el nombre (`callbacks.router.rate_ok`, `callbacks.rolls.DICE_SECONDS`): parchear el paquete no lo cambia.
 - `test_sizes.py` vigila que ningún `.py` pase de 800 líneas ni ningún YAML de 40 KB.
+- `test_layers.py`: el bot no asigna atributos de modelos ni llama a `session.add/delete/merge` (invariante 2). Si falla, mueve la escritura a un servicio.
+- `test_coherence.py`: todo objeto tiene una fuente (tienda, botín, receta, recolección, descubrimiento, misión o equipo inicial), todo monstruo está en una tabla de encuentros, todo PNJ tiene horario y el equipo de más nivel no es más barato.
 - Un cambio de economía, permisos o concurrencia necesita su test; uno de texto, no.

@@ -17,14 +17,21 @@ class WorldGuide(Strict):
     backgrounds: Text
 
     def context(self, lang: str) -> str:
-        return "\n".join((
-            self.summary.get(lang), self.setting.get(lang), self.society.get(lang),
-            self.technology.get(lang), self.magic.get(lang), self.backgrounds.get(lang),
-        ))
+        return "\n".join(
+            (
+                self.summary.get(lang),
+                self.setting.get(lang),
+                self.society.get(lang),
+                self.technology.get(lang),
+                self.magic.get(lang),
+                self.backgrounds.get(lang),
+            )
+        )
 
 
 class Article(Strict):
     """The article before a place's name in a sentence; empty where the language uses none ("Crownreach Market")."""
+
     es: str = ""
     en: str = ""
 
@@ -125,12 +132,15 @@ class Location(Strict):
     def phrase(self) -> dict:
         """The name inside a sentence, with its article: {"es": "el Mercado de Crownreach", "en": "Crownreach Market"}.
         The translator joins «a el» into «al» and «de el» into «del»."""
-        return {lang: f"{getattr(self.article, lang) if self.article else ''} {self.name.get(lang)}".strip()
-                for lang in ("es", "en")}
+        return {
+            lang: f"{getattr(self.article, lang) if self.article else ''} {self.name.get(lang)}".strip()
+            for lang in ("es", "en")
+        }
 
 
 class RuleSection(Strict):
     """A page of /rulebook (content/rulebook.yaml)."""
+
     icon: str
     title: Text
     body: Text  # plain text: it is escaped; /commands in it stay tappable

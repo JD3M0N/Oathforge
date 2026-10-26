@@ -45,7 +45,7 @@ class Report:
 
 
 async def counts(session: AsyncSession) -> dict[str, int]:
-    return {t.name: await session.scalar(select(func.count()).select_from(t)) for t in Base.metadata.sorted_tables}
+    return {t.name: await session.scalar(select(func.count()).select_from(t)) or 0 for t in Base.metadata.sorted_tables}
 
 
 async def orphans(session: AsyncSession) -> list[str]:
@@ -132,7 +132,9 @@ async def restore(session: AsyncSession, data: dict) -> dict[str, int]:
         if clean:
             await session.execute(insert(table), clean)
         out[table.name] = len(clean)
-    if session.bind.dialect.name == "postgresql":  # inserted ids must not collide with the next ones
+    if (
+        session.bind is not None and session.bind.dialect.name == "postgresql"
+    ):  # inserted ids must not collide with the next ones
         for table in tables:
             pk = list(table.primary_key.columns)
             if len(pk) == 1 and pk[0].autoincrement is not False and pk[0].type.python_type is int:

@@ -1,0 +1,35 @@
+# Checks before each commit. Once per clone:
+#   .venv\Scripts\pre-commit install --hook-type pre-commit --hook-type commit-msg
+# Every hook runs the project's own .venv, so the versions are the ones in pyproject.toml and nothing is downloaded.
+# The path is a Windows one (Josue works on Windows); CI runs the same tools by itself.
+default_stages: [pre-commit]
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff check
+        entry: '''.venv\Scripts\python.exe'' -m ruff check --fix'
+        language: system
+        types: [python]
+      - id: ruff-format
+        name: ruff format
+        entry: '''.venv\Scripts\python.exe'' -m ruff format'
+        language: system
+        types: [python]
+      - id: oath-validate
+        name: oath validate (content/ changed)
+        entry: '''.venv\Scripts\python.exe'' -m oathforge validate'
+        language: system
+        files: ^content/
+        pass_filenames: false
+      - id: version-bumped
+        name: version bumped and CHANGELOG entry
+        entry: '''.venv\Scripts\python.exe'' tools/check_release.py'
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: subject-version
+        name: subject starts with vX.Y.Z
+        entry: '''.venv\Scripts\python.exe'' tools/check_release.py --msg'
+        language: system
+        stages: [commit-msg]

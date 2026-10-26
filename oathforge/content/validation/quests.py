@@ -8,8 +8,18 @@ if TYPE_CHECKING:
     from oathforge.content.loader import Content
 
 EFFECT_KINDS = {
-    "give_item", "take_item", "gold", "reputation", "set_flag", "xp", "milestone",
-    "npc_memory", "trust", "damage", "world_rumor", "profession_xp",
+    "give_item",
+    "take_item",
+    "gold",
+    "reputation",
+    "set_flag",
+    "xp",
+    "milestone",
+    "npc_memory",
+    "trust",
+    "damage",
+    "world_rumor",
+    "profession_xp",
 }
 
 
@@ -62,15 +72,28 @@ def quest_errors(c: "Content") -> list[str]:
         furniture = {f"furniture:{r.installs}": None for r in c.recipes.values() if r.installs}
         items, places = ("item", c.items), ("location", {**c.locations, "any": None})
         any_items = ("item", {**c.items, "any": None})
-        pools = {"kill": ("monster", c.monsters), "talk": ("npc", c.npcs), "visit": ("location", c.locations), "hunt": places,
-                 "gather": items, "skin": items, "craft": ("item", {**c.items, **furniture}),
-                 "rest": places, "heal": places,
-                 "read": ("rulebook section", c.rulebook),
-                 "equip": any_items, "stash": any_items, "take": any_items, "buy": any_items, "sell": any_items,
-                 "learn_profession": ("profession", {**c.professions, "any": None}), "blueprint": items,
-                 "short_rest": ("target", {"any": None}),
-                 "smoke": ("target", {"any": None}),
-                 "branch": ("branch", {**c.class_specializations, "any": None})}
+        pools = {
+            "kill": ("monster", c.monsters),
+            "talk": ("npc", c.npcs),
+            "visit": ("location", c.locations),
+            "hunt": places,
+            "gather": items,
+            "skin": items,
+            "craft": ("item", {**c.items, **furniture}),
+            "rest": places,
+            "heal": places,
+            "read": ("rulebook section", c.rulebook),
+            "equip": any_items,
+            "stash": any_items,
+            "take": any_items,
+            "buy": any_items,
+            "sell": any_items,
+            "learn_profession": ("profession", {**c.professions, "any": None}),
+            "blueprint": items,
+            "short_rest": ("target", {"any": None}),
+            "smoke": ("target", {"any": None}),
+            "branch": ("branch", {**c.class_specializations, "any": None}),
+        }
         for obj in quest.objectives:
             need(*pools[obj.kind][:1], obj.target, pools[obj.kind][1], f"{where} objective")
         effect_lists.append((f"{where} rewards", quest.rewards))
@@ -87,7 +110,7 @@ def _validate_effect(c: "Content", eff: dict, where: str, errors: list[str]) -> 
     if len(eff) != 1:
         errors.append(f"{where}: effect must have exactly one key: {eff}")
         return
-    (kind, arg), = eff.items()
+    ((kind, arg),) = eff.items()
     if kind not in EFFECT_KINDS:
         errors.append(f"{where}: unknown effect '{kind}'")
     elif kind in ("give_item", "take_item"):

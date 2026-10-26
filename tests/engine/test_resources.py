@@ -178,7 +178,7 @@ def test_the_bar_survives_being_stored_and_read_back():
 
 def test_hard_control_does_not_chain_a_boss_and_says_so():
     boss = dummy(boss=True)
-    st = encounter(hero(), boss)
+    encounter(hero(), boss)
     logs = cb._apply_status(boss, "stunned", 3)
     assert boss.statuses["stunned"] == cb.BOSS_CONTROL_TURNS
     assert boss.statuses["vulnerable"] == 3 - cb.BOSS_CONTROL_TURNS  # what was cut is not lost

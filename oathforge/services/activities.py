@@ -23,8 +23,7 @@ from oathforge.content.schemas import Gathering, Location
 from oathforge.database.models import Character, WorldActivity
 from oathforge.engine import gathering, timings
 from oathforge.i18n import t
-from oathforge.services import characters, combat_service, exploration, inventory, quests, specializations
-from oathforge.services import achievements
+from oathforge.services import achievements, characters, combat_service, exploration, inventory, quests, specializations
 from oathforge.services.events import Outcome
 
 KINDS = ("gather", "stay", "track", "rest", "short_rest", "skin")
@@ -171,7 +170,6 @@ async def check(session: AsyncSession, char: Character, kind: str, skill: str) -
 
 async def availability(session: AsyncSession, char: Character) -> list[tuple[str, str, Outcome | None]]:
     """Every timed activity of this place, (kind, mastery, refusal or None): gather, stay, track, skin, rest."""
-    loc = get_content().locations[char.location]
     kinds = options(char)
     if characters.pending_skin(char):
         kinds.append(("skin", "skinning"))
@@ -210,6 +208,8 @@ def modifiers(char: Character, skill: str) -> gathering.Mods:
     if chosen is None:
         return mods
     tool = get_content().items[chosen].tool
+    if tool is None:
+        return mods
     # relative improvements of the same kind add up once, and the engine caps what they can reach
     return gathering.Mods(
         time_pct=min(0.5, mods.time_pct + tool.time_pct),
@@ -241,7 +241,7 @@ async def start(session: AsyncSession, char: Character, kind: str, skill: str, n
         g = _gathering(loc, skill)
     if await open_activity(session, char, lock=True):
         return Outcome.refused("activity.err.busy")
-    tool_checked = kind == "skin" or (kind in ("gather", "stay") and bool(g.tool))
+    tool_checked = kind == "skin" or (kind in ("gather", "stay") and g is not None and bool(g.tool))
     now = _now(now)
     characters.drop_pending_skin(char)  # skinning now, or something else: the carcasses are left behind
     rules = rules_snapshot(char, g, skill, kind) if kind in ("gather", "stay") else None

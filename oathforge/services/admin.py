@@ -5,7 +5,7 @@ The cascade is done by hand from ``Base.metadata``: SQLite ignores ``ondelete`` 
 """
 
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from sqlalchemy import delete, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -92,7 +92,7 @@ async def tutorial_runs(session: AsyncSession, now: datetime | None = None) -> l
     from oathforge.content import get_content
     from oathforge.database.models import Character, QuestProgress
 
-    now = now or datetime.now(timezone.utc)
+    now = now or datetime.now(UTC)
     tut = [k for k, q in sorted(get_content().quests.items(), key=lambda kv: kv[1].order) if q.tutorial]
     runs = []
     for char in (await session.scalars(select(Character).order_by(Character.id))).all():
@@ -117,4 +117,4 @@ async def tutorial_runs(session: AsyncSession, now: datetime | None = None) -> l
 
 
 def _aware(dt: datetime) -> datetime:
-    return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+    return dt if dt.tzinfo else dt.replace(tzinfo=UTC)

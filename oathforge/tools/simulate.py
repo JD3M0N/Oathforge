@@ -14,7 +14,7 @@ import json
 import random
 import sys
 import time
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from pathlib import Path
 
 from oathforge.config import get_settings
@@ -22,7 +22,7 @@ from oathforge.content import get_content
 from oathforge.database.models import Character, CharacterSkill, ItemInstance
 from oathforge.engine import combat, dice, progression
 from oathforge.engine.checks import modifier
-from oathforge.engine.combat import Action, CombatError, Combatant, EncounterState
+from oathforge.engine.combat import Action, Combatant, CombatError, EncounterState
 from oathforge.services import characters, combat_service
 
 MAX_ROUNDS = 50

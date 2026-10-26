@@ -1,22 +1,21 @@
 """Entities and forms: summons, commands, convergence, helpers acting on their own and shapeshifting."""
 
-from oathforge.engine.dice import d20, roll
 from oathforge.engine.combat.resolve import _apply_damage, _apply_status, _resolve_target
 from oathforge.engine.combat.state import (
     COMMAND_FLOOR,
     CONVERGENCE_DAMAGE,
     CONVERGENCE_TO_HIT,
-    CombatError,
+    MAX_BY_KIND,
     Combatant,
+    CombatError,
     EncounterState,
     Entity,
     EntityTemplate,
     LogEntry,
-    MAX_BY_KIND,
     _check_end,
     valid_targets,
 )
-
+from oathforge.engine.dice import d20, roll
 
 # ---------------------------------------------------------------- entities and forms
 
@@ -122,6 +121,7 @@ def _entity_act(state, ent: Entity, owner: Combatant, rng, bonus: str | None = N
     extra = (roll(bonus, rng).total if bonus else 0) + (CONVERGENCE_DAMAGE if boosted else 0)
     logs: list[LogEntry] = []
     if ent.role == "damage":
+        assert ent.damage is not None  # content validation: damage and area entities have damage
         r = d20(rng)
         total = r.kept + ent.to_hit + (CONVERGENCE_TO_HIT if boosted else 0)
         crit = r.kept == 20
@@ -139,6 +139,7 @@ def _entity_act(state, ent: Entity, owner: Combatant, rng, bonus: str | None = N
         logs.append(LogEntry(key="combat.entity_crit" if crit else "combat.entity_hit", params=params))
         return logs + _apply_damage(state, target, dmg, ent.damage_type)
     if ent.role == "area":  # a whole row, never missing; each takes its own roll
+        assert ent.damage is not None  # content validation: damage and area entities have damage
         victims = [f for f in state.enemies_of(owner) if f.row == target.row]
         logs.append(
             LogEntry(key="combat.entity_area", params={"entity": ent.name, "icon": ent.icon, "count": len(victims)})
@@ -153,6 +154,7 @@ def _entity_act(state, ent: Entity, owner: Combatant, rng, bonus: str | None = N
     logs.append(
         LogEntry(key="combat.entity_afflicts", params={"entity": ent.name, "icon": ent.icon, "target": target.id})
     )
+    assert ent.status is not None  # content validation: a disrupt entity has a status
     return logs + _apply_status(target, ent.status, ent.status_turns + (1 if boosted else 0))
 
 

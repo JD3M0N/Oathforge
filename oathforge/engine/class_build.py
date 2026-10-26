@@ -10,8 +10,8 @@ are needed**. The effective level is the lowest of what XP allows, what the mile
 the maximum (§4.1).
 """
 
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, field
-from typing import Iterable, Mapping
 
 from oathforge.content.schemas import ClassAbility, ClassSpecialization, GameClass, Modifier, Progression, ResourceDef
 
@@ -143,10 +143,10 @@ def _patched(ability: ClassAbility, patch) -> ClassAbility:
         "cooldown": max(0, ability.cooldown + patch.cooldown),
         "status_turns": max(1, ability.status_turns + patch.status_turns),
     }
-    for field in ("damage", "extra_damage", "consume_damage", "heal_dice", "temp_hp"):
-        value = getattr(patch, field)
-        if value is not None and getattr(ability, field) is not None:
-            update[field] = value
+    for name in ("damage", "extra_damage", "consume_damage", "heal_dice", "temp_hp"):
+        value = getattr(patch, name)
+        if value is not None and getattr(ability, name) is not None:
+            update[name] = value
     if patch.leech_pct is not None and ability.leech_pct:
         update["leech_pct"] = patch.leech_pct
     return ability.model_copy(update=update)

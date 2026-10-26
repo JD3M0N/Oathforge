@@ -7,6 +7,7 @@ from pathlib import Path
 import yaml
 
 from oathforge.config import CONTENT_DIR
+from oathforge.content.achievement_schemas import Achievement, validate_catalog
 from oathforge.content.media import MediaCatalog, scan_images
 from oathforge.content.schemas import (
     AbilityInfo,
@@ -33,7 +34,6 @@ from oathforge.content.schemas import (
     WorldGuide,
     Zone,
 )
-from oathforge.content.achievement_schemas import Achievement, validate_catalog
 from oathforge.content.validation import validate_references
 
 
@@ -56,6 +56,7 @@ class Content:
     start_location: str
     respawn_location: str
     world_guide: WorldGuide
+    progression: Progression  # XP table, milestone gates and class resources
     achievements: dict[str, Achievement] = field(default_factory=dict)
     chronicles: dict[str, list[Text]] = field(default_factory=dict)  # = fallbacks["chronicles"]
     # generic texts when Gemini is down or out of budget: content/fallbacks/<category>.yaml -> key -> texts
@@ -64,15 +65,18 @@ class Content:
     recipes: dict[str, Recipe] = field(default_factory=dict)
     specializations: dict[str, Specialization] = field(default_factory=dict)  # two branches per mastery
     class_specializations: dict[str, ClassSpecialization] = field(default_factory=dict)  # the 41 class branches
-    progression: Progression | None = None  # XP table, milestone gates and class resources
     entities: dict[str, EntityDef] = field(default_factory=dict)  # summons, servants, beasts, devices
     forms: dict[str, FormDef] = field(default_factory=dict)  # shapes (Shapeshifter)
-    rulebook: dict[str, RuleSection] = field(default_factory=dict)  # /rulebook pages, in order  # outcome -> generic texts when the AI chronicler is not used
+    rulebook: dict[str, RuleSection] = field(
+        default_factory=dict
+    )  # /rulebook pages, in order  # outcome -> generic texts when the AI chronicler is not used
 
 
 def _read_fallbacks(directory: Path) -> dict[str, dict[str, list[Text]]]:
-    return {path.stem: {k: [Text.model_validate(v) for v in vs] for k, vs in _read_file(path).items()}
-            for path in sorted((directory / "fallbacks").glob("*.yaml"))}
+    return {
+        path.stem: {k: [Text.model_validate(v) for v in vs] for k, vs in _read_file(path).items()}
+        for path in sorted((directory / "fallbacks").glob("*.yaml"))
+    }
 
 
 def _read(directory: Path, name: str) -> dict:

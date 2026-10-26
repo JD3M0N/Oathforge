@@ -10,8 +10,7 @@ from oathforge.content import get_content
 from oathforge.database.models import Character, FactionReputation, NpcMemory, NpcRelationship, WorldFact
 from oathforge.engine.checks import check
 from oathforge.engine.dice import roll
-from oathforge.services import characters
-from oathforge.services import achievements
+from oathforge.services import achievements, characters
 from oathforge.services.events import Outcome
 
 MEMORY_LIMIT = 5

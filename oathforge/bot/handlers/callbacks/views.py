@@ -17,7 +17,7 @@ from oathforge.bot.handlers.common import (
 from oathforge.content import get_content
 from oathforge.database.session import session_scope
 from oathforge.i18n import t
-from oathforge.services import bestiary, combat_service, exploration, quests
+from oathforge.services import bestiary, characters, combat_service, exploration, quests
 
 
 async def _view(update: Update, context, verb: str, arg: str) -> None:
@@ -26,8 +26,8 @@ async def _view(update: Update, context, verb: str, arg: str) -> None:
         lang = user.language
         context.user_data["lang"] = lang
         if verb == "lang":
-            if arg in ("es", "en"):
-                user.language = lang = context.user_data["lang"] = arg
+            if characters.set_language(user, arg):
+                lang = context.user_data["lang"] = arg
             if char is None:
                 await edit_or_send(update, t(lang, "lang.changed"))
                 return

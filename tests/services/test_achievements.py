@@ -6,22 +6,23 @@ from types import SimpleNamespace
 from unittest.mock import AsyncMock
 
 import pytest
-from sqlalchemy import select, func
+from sqlalchemy import func, select
+
+from oathforge.bot import achievement_views
 from oathforge.content import get_content
-from oathforge.database.session import session_scope
 from oathforge.database.models import (
-    Character,
-    QuestProgress,
-    AchievementUnlock,
-    AchievementProgress,
-    HeroFact,
     AchievementNotification,
     AchievementPreferences,
+    AchievementProgress,
+    AchievementUnlock,
+    Character,
+    HeroFact,
 )
-from oathforge.services import achievements as a, characters, combat_service, quests, exploration, activities, inventory
-from oathforge.services.events import Outcome
+from oathforge.database.session import session_scope
 from oathforge.engine.combat import EncounterState
-from oathforge.bot import achievement_views
+from oathforge.services import achievements as a
+from oathforge.services import activities, characters, combat_service, exploration, inventory, quests
+from oathforge.services.events import Outcome
 
 pytestmark = pytest.mark.usefixtures("database")
 

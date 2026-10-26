@@ -1,10 +1,13 @@
 """Pure condition and content validation boundaries."""
 
 from dataclasses import replace
+
 import pytest
 from pydantic import ValidationError
+
 from oathforge.content import get_content
-from oathforge.content.achievement_schemas import AchievementCondition as C, Achievement, validate_catalog
+from oathforge.content.achievement_schemas import Achievement, validate_catalog
+from oathforge.content.achievement_schemas import AchievementCondition as C
 from oathforge.content.loader import _read_file
 from oathforge.engine.achievements import advance, progress
 

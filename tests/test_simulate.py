@@ -24,9 +24,11 @@ def test_every_class_fights_every_monster_to_the_end():
 
 
 def test_same_seed_same_numbers():
-    run = lambda seed: sim.simulate(
-        ["sorcerer"], ["bandit_captain"], [2], n=20, seed=seed, lineage="elf", background="criminal"
-    )
+    def run(seed: int):
+        return sim.simulate(
+            ["sorcerer"], ["bandit_captain"], [2], n=20, seed=seed, lineage="elf", background="criminal"
+        )
+
     assert run(7) == run(7)
     assert run(7) != run(8)
 

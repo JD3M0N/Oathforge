@@ -15,7 +15,8 @@ from oathforge.content.schemas import AbilityPatch, ClassAbility, ClassSpecializ
 from oathforge.database.models import Character
 from oathforge.database.session import session_scope
 from oathforge.engine import class_build
-from oathforge.services import characters, class_specializations as paths, combat_service
+from oathforge.services import characters, combat_service
+from oathforge.services import class_specializations as paths
 from oathforge.services.events import Outcome
 
 pytestmark = pytest.mark.usefixtures("database")

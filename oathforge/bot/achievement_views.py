@@ -1,6 +1,7 @@
 """Achievement menus with localized text and stable callback IDs."""
 
 from html import escape
+
 from oathforge.bot.keyboards import btn, cb, markup, nonce
 from oathforge.i18n import t
 

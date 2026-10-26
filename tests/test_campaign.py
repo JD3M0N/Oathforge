@@ -50,7 +50,7 @@ def test_the_collector_can_be_reached_and_is_a_telegraphing_boss():
     assert flag_set_by  # the table of Tamsin is what makes him appear
     boss = c.monsters["ash_collector"]
     assert boss.boss and boss.pattern and boss.pattern.plate > 0 and boss.pattern.heavy.ranged
-    assert any(l.item == "forgery_proof" and l.chance == 1.0 for l in boss.loot)
+    assert any(drop.item == "forgery_proof" and drop.chance == 1.0 for drop in boss.loot)
 
 
 def test_every_trade_has_a_mission_a_master_at_their_stall_and_enough_material():

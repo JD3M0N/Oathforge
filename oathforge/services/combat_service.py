@@ -13,8 +13,7 @@ from oathforge.engine import combat as engine
 from oathforge.engine.combat import Action, AttackProfile, Combatant, CombatError, EncounterState, LogEntry
 from oathforge.engine.dice import roll
 from oathforge.i18n import t
-from oathforge.services import bestiary, characters, companions, inventory, quests
-from oathforge.services import achievements
+from oathforge.services import achievements, bestiary, characters, companions, inventory, quests
 from oathforge.services.events import Event, Outcome, render_event
 
 
@@ -199,7 +198,7 @@ async def act(session: AsyncSession, char: Character, enc: Encounter, action: Ac
         logs = engine.player_act(state, "p1", action, rng, defs)
     except CombatError as e:
         return Outcome.refused(e.key)
-    if action.kind == "item" and not await inventory.remove_item(session, char, action.ability, 1):
+    if action.kind == "item" and not await inventory.remove_item(session, char, action.ability or "", 1):
         raise RuntimeError(f"combat item {action.ability} vanished")  # rolls the transaction back
     session.add(
         CombatAction(
@@ -490,13 +489,13 @@ def battle_stats(state: EncounterState, entries: list[LogEntry]) -> dict:
                 stats["enemy_attacks"] += 1
                 stats["enemy_hits"] += hit
         elif e.key == "combat.damage":
-            target = state.combatants.get(p.get("target"))
+            target = state.combatants.get(p.get("target", ""))
             if target is not None:
                 stats["received" if target.side == "player" else "dealt"] += p.get("amount", 0)
         elif e.key in ("combat.heal", "combat.potion") and mine:
             stats["healed"] += p.get("amount", 0)
         elif e.key == "combat.defeated":
-            target = state.combatants.get(p.get("target"))
+            target = state.combatants.get(p.get("target", ""))
             if target is not None and target.side == "enemy":
                 stats["defeated"][target.ref or target.id] = stats["defeated"].get(target.ref or target.id, 0) + 1
     return stats

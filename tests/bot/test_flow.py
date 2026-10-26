@@ -2,10 +2,10 @@
 
 from types import SimpleNamespace
 
-from telegram.ext import ConversationHandler
 import pytest
 from sqlalchemy import select
 from telegram import ReplyKeyboardMarkup
+from telegram.ext import ConversationHandler
 
 from oathforge.bot.handlers import callbacks, commands, creation
 from oathforge.database.models import Character
@@ -248,6 +248,7 @@ async def test_network_errors_are_not_shown_to_the_player():
 
 def test_achievements_command_is_english_only_and_announced_after_every_update(monkeypatch):
     from telegram.ext import TypeHandler
+
     from oathforge import main
     from oathforge.bot.handlers import achievements, commands
 
@@ -261,6 +262,7 @@ def test_achievements_command_is_english_only_and_announced_after_every_update(m
 
 async def test_achievement_delivery_ignores_groups(monkeypatch):
     from types import SimpleNamespace
+
     from oathforge.bot.handlers import achievements
 
     calls = []

@@ -6,13 +6,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from telegram import InlineKeyboardMarkup
 
 from oathforge.bot.keyboards import btn, cb, grid, markup, nonce
+from oathforge.bot.render.common import MAX_MESSAGE, RULE, _go_button, creature_icon, journal_tabs, status_line
+from oathforge.bot.render.crafting import activity_entries, activity_panel
 from oathforge.content import get_content
 from oathforge.database.models import Character
 from oathforge.i18n import t
 from oathforge.services import actions, activities, bestiary, exploration, home, inventory, npcs, quests, world_map
-from oathforge.bot.render.common import MAX_MESSAGE, RULE, _go_button, creature_icon, journal_tabs, status_line
-from oathforge.bot.render.crafting import activity_entries, activity_panel
-
 
 # ---------------------------------------------------------------- scene
 
@@ -381,7 +380,7 @@ def bestiary_entry(char: Character, key: str, lang: str) -> tuple[str, InlineKey
         if m.immune:
             lines.append(t(lang, "bestiary.immune_status", list=", ".join(t(lang, "status." + s) for s in m.immune)))
         lines.append(t(lang, "bestiary.xp", xp=m.xp))
-        loot = [c.items[l.item].name.get(lang) for l in m.loot]
+        loot = [c.items[drop.item].name.get(lang) for drop in m.loot]
         if loot:
             lines.append(t(lang, "bestiary.loot", list=escape(", ".join(loot))))
     elif level == 2:

@@ -1,6 +1,7 @@
 """Hunting tables, the bestiary, prices and level gates."""
 
 import random
+from datetime import UTC
 
 import pytest
 
@@ -110,7 +111,7 @@ async def test_two_enemies_of_the_same_kind_get_letters():
 
 
 async def test_tutorial_runs_time_each_mission():
-    from datetime import datetime, timedelta, timezone
+    from datetime import datetime, timedelta
 
     from oathforge.services import admin
 
@@ -121,7 +122,7 @@ async def test_tutorial_runs_time_each_mission():
         await quests.on_talk(s, char, "vale", rng)
         await quests.on_read(s, char, "activities", rng)
     async with session_scope() as s:
-        runs = await admin.tutorial_runs(s, now=datetime.now(timezone.utc) + timedelta(minutes=30))
+        runs = await admin.tutorial_runs(s, now=datetime.now(UTC) + timedelta(minutes=30))
         run = next(r for r in runs if r.name == "Aldric")
         assert list(run.minutes) == ["tut_muster"] and run.current == "tut_town" and not run.done
         assert 29 < run.waiting < 31  # stuck on the second mission for half an hour

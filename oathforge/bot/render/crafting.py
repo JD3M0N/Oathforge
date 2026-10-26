@@ -6,22 +6,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from telegram import InlineKeyboardMarkup
 
 from oathforge.bot.keyboards import btn, cb, grid, markup, nonce
-from oathforge.config import get_settings
-from oathforge.content import get_content
-from oathforge.database.models import Character
-from oathforge.engine import gathering, timings
-from oathforge.i18n import t
-from oathforge.services import (
-    activities,
-    characters,
-    crafting,
-    exploration,
-    inventory,
-    professions,
-    quests,
-    specializations,
-)
-from oathforge.services.events import Outcome, render_event
 from oathforge.bot.render.common import (
     ACTIVITY_ICON,
     LEVEL_KEYS,
@@ -38,7 +22,22 @@ from oathforge.bot.render.common import (
     panel_only,
     rule_numbers,
 )
-
+from oathforge.config import get_settings
+from oathforge.content import get_content
+from oathforge.database.models import Character
+from oathforge.engine import gathering, timings
+from oathforge.i18n import t
+from oathforge.services import (
+    activities,
+    characters,
+    crafting,
+    exploration,
+    inventory,
+    professions,
+    quests,
+    specializations,
+)
+from oathforge.services.events import Outcome, render_event
 
 END_RESULT = {"won": "victory", "fled": "fled", "lost": "defeat"}
 

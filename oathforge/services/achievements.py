@@ -1,29 +1,30 @@
 """Transactional achievement progress, evidence, preferences and delivery leases."""
 
-from collections import defaultdict, deque
-from dataclasses import dataclass, field
 import hashlib
 import json
 import time
 import uuid
+from collections import defaultdict, deque
+from dataclasses import dataclass, field
 
 from sqlalchemy import select
+
 from oathforge.content import get_content
 from oathforge.content.achievement_schemas import DECISION_FLAGS, EDITION, FLAG_EVENTS
 from oathforge.database.models import (
-    Character,
-    QuestProgress,
-    FactionReputation,
+    AchievementNotification,
+    AchievementPreferences,
     AchievementProgress,
     AchievementUnlock,
+    Character,
+    FactionReputation,
     HeroFact,
-    AchievementPreferences,
-    AchievementNotification,
+    QuestProgress,
 )
-from oathforge.engine.achievements import advance, progress, event_types
 from oathforge.engine import gathering
-from oathforge.services.events import Outcome
+from oathforge.engine.achievements import advance, event_types, progress
 from oathforge.services import audit
+from oathforge.services.events import Outcome
 
 # Challenge achievements (last_breath, against_many, no_reserves) only count these non-fixed encounters.
 CHALLENGE_ENCOUNTERS = {"whispering_woods": ["grey_wolf", "grey_wolf"], "ironvein_mine": ["cave_bat", "cave_bat"]}
@@ -426,7 +427,7 @@ async def preference(session, char, operation, key, nonce, replace=None):
         return Outcome.refused("achievements.invalid")
     if operation in ("title", "feature") and key != "-" and unlock is None:
         return Outcome.refused("achievements.invalid")
-    if operation == "title" and key != "-" and definition.title is None:
+    if operation == "title" and key != "-" and (definition is None or definition.title is None):
         return Outcome.refused("achievements.invalid")
     if operation == "track" and (definition is None or unlock is not None):
         return Outcome.refused("achievements.invalid")

@@ -4,7 +4,6 @@ import warnings
 from html import escape
 
 from telegram import Update
-from telegram.warnings import PTBUserWarning
 from telegram.ext import (
     CallbackQueryHandler,
     CommandHandler,
@@ -13,10 +12,11 @@ from telegram.ext import (
     MessageHandler,
     filters,
 )
+from telegram.warnings import PTBUserWarning
 
 from oathforge.ai import moderation
-from oathforge.bot.handlers.common import current_view, edit_or_send, load, offer_keyboard, rate_ok, send
 from oathforge.bot import render
+from oathforge.bot.handlers.common import current_view, edit_or_send, load, offer_keyboard, rate_ok, send
 from oathforge.bot.keyboards import btn, cb, grid, markup, nonce
 from oathforge.bot.render import CLASS_ICONS, attribute
 from oathforge.content import get_content

@@ -92,7 +92,14 @@ Flujo de una acción libre: `leer contexto (tx corta) → Gemini interpreta → 
 .venv\Scripts\python -m pytest -q                  # suite completa antes del commit
 .venv\Scripts\oath simulate --level 1-5            # balance de combate
 .venv\Scripts\oath tgtest send "/start"            # de punta a punta con la cuenta de prueba (en Git Bash, MSYS_NO_PATHCONV=1)
+.venv\Scripts\python -m ruff check . --fix; .venv\Scripts\python -m ruff format .   # estilo (también el hook .claude/hooks/ruff_python.py al editar)
+.venv\Scripts\lint-imports                        # invariantes por imports: engine puro, solo ai/client.py habla con Gemini
+.venv\Scripts\pyright                             # tipos de engine/ y services/
 ```
+
+- **Calidad automática** (`planning/structura.md`, fase 3): ruff (líneas de 120), import-linter y pyright se configuran en `pyproject.toml`. `tests/test_layers.py` comprueba que el bot no escribe modelos y `tests/test_coherence.py`, que todo objeto se puede conseguir, todo monstruo vive en algún lugar y todo PNJ está colocado.
+- **pre-commit** (`.pre-commit-config.yaml`, se instala una vez: `.venv\Scripts\pre-commit install --hook-type pre-commit --hook-type commit-msg`): ruff, `oath validate` si el commit toca `content/`, que la versión subió con su entrada en el CHANGELOG y que el asunto empieza por `vX.Y.Z: ` (`tools/check_release.py`).
+- **CI** (`.github/workflows/ci.yml`) en cada push a `josue-development` y a `main`: ruff, import-linter, pyright y pytest con SQLite y con Postgres. **Nada va a `main` sin la CI en verde.**
 
 - Postgres si `TEST_DATABASE_URL` conecta; si no, SQLite. Las pruebas de concurrencia solo corren con Postgres.
 - `tgtest` usa una cuenta de prueba con Telethon: `TG_TEST_API_ID`, `TG_TEST_API_HASH` y `TG_TEST_BOT` en `.env`, login con `oath tgtest login <teléfono>` (ver `oathforge/tools/tgtest.py`).
@@ -105,6 +112,7 @@ Flujo de una acción libre: `leer contexto (tx corta) → Gemini interpreta → 
 
 - La versión vive solo en `oathforge/__init__.py`. Cada commit con cambios la sube: **parche** para arreglos y cambios pequeños, **menor** para una feature grande; `1.0.0` reservado.
 - En el mismo commit: la entrada en `CHANGELOG.md` (Añadido / Cambiado / Arreglado / Eliminado) y, si cambia el plan, `planning/iter.md`.
-- Asunto `vX.Y.Z: resumen corto`; cuerpo con la misma lista que el CHANGELOG.
+- Asunto `vX.Y.Z: resumen corto`; cuerpo con la misma lista que el CHANGELOG. El hook de pre-commit lo comprueba.
+- Un commit que solo formatea va a `.git-blame-ignore-revs`, para que `git blame` lo salte.
 - **`README.md` raíz**: es la presentación del juego, simple y sin estado de versión. No lo actualices con cada cambio: se rehace al final, cuando Josue lo pida.
 - Cada versión se anuncia en los canales [inglés](https://t.me/OathForge) y [español](https://t.me/OathForge_es) con el mismo formato (título `🛡 Oathforge vX.Y.Z: …`, bloques con emoji y viñetas); el de español es la traducción del inglés.

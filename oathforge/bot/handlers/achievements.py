@@ -2,16 +2,18 @@
 
 import logging
 from html import escape
+
 from sqlalchemy import select
 from telegram.constants import ParseMode
+
 from oathforge.bot import render
 from oathforge.bot.handlers.common import edit_or_send, load
 from oathforge.bot.keyboards import btn, cb, markup
+from oathforge.content import get_content
 from oathforge.database.models import Character, User
 from oathforge.database.session import session_scope
-from oathforge.services import achievements
 from oathforge.i18n import t
-from oathforge.content import get_content
+from oathforge.services import achievements
 
 log = logging.getLogger(__name__)
 

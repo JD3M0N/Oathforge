@@ -10,7 +10,7 @@ Not to be mixed up with ``services/specializations.py``, the branches of the fie
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from oathforge.content import get_content
-from oathforge.content.schemas import ClassSpecialization, Modifier
+from oathforge.content.schemas import ClassSpecialization, Modifier, Training
 from oathforge.database.models import Character
 from oathforge.engine import class_build
 from oathforge.services import achievements, characters, quests
@@ -31,7 +31,7 @@ def pending(char: Character) -> tuple[class_build.Choice, ...]:
     return characters.effective(char).pending
 
 
-def options(char: Character, choice: class_build.Choice) -> dict[str, object]:
+def options(char: Character, choice: class_build.Choice) -> dict[str, Training] | dict[str, Modifier]:
     """What the hero may pick for a choice: both training packages, or the two modifiers of that level."""
     c = get_content()
     if choice.kind == class_build.TRAINING:

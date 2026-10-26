@@ -5,15 +5,14 @@ from telegram import Update
 from telegram.ext import CallbackQueryHandler, ContextTypes
 
 from oathforge.bot.handlers import achievements
-from oathforge.bot.handlers.common import answer, answered, current_view, edit_or_send, load, rate_ok
-from oathforge.bot.keyboards import parse
-from oathforge.database.session import session_scope
-from oathforge.i18n import t
 from oathforge.bot.handlers.callbacks.acts import ACTS, _act
 from oathforge.bot.handlers.callbacks.combat import _combat
 from oathforge.bot.handlers.callbacks.rolls import do_roll, set_manual_rolls, settings
 from oathforge.bot.handlers.callbacks.views import _view
-
+from oathforge.bot.handlers.common import answer, answered, current_view, edit_or_send, load, rate_ok
+from oathforge.bot.keyboards import parse
+from oathforge.database.session import session_scope
+from oathforge.i18n import t
 
 # verbs that only show something (no nonce, no state change)
 VIEWS = {

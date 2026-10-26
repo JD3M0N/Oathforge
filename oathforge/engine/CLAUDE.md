@@ -1,6 +1,6 @@
 # engine/ — reglas puras
 
-- **Sin E/S**: aquí no se importa nada de `database`, `services`, `bot`, `ai` ni Telegram. Solo datos de entrada y resultados.
+- **Sin E/S**: aquí no se importa nada de `database`, `services`, `bot`, `ai` ni Telegram. Solo datos de entrada y resultados. Lo comprueba `lint-imports` (contratos en `pyproject.toml`).
 - **Todo azar pasa por `dice.py`** con un `random.Random` inyectado. Nunca uses `random` a nivel de módulo: los tests y el simulador fijan la semilla.
 - El estado de un combate es un modelo Pydantic serializable (`EncounterState`). Lo guarda `services/combat_service.py`, no el motor.
 - **`combat/`** es un paquete, un módulo por etapa: `state` (constantes, modelos y consultas), `resolve` (salvaciones, ataques, daño, estados y curación), `entities` (invocaciones y formas), `turns` (inicio, flujo de turnos y turno de los enemigos) y `actions` (el turno del jugador). Las dependencias van en ese orden y nunca hacia atrás.

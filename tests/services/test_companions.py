@@ -14,7 +14,8 @@ from oathforge.content.schemas import ClassAbility, ClassSpecialization, Modifie
 from oathforge.database.models import Character, Encounter
 from oathforge.database.session import session_scope
 from oathforge.engine.combat import Action, EncounterState
-from oathforge.services import characters, class_specializations as paths, combat_service, companions
+from oathforge.services import characters, combat_service, companions
+from oathforge.services import class_specializations as paths
 from oathforge.services.events import Outcome
 
 pytestmark = pytest.mark.usefixtures("database")

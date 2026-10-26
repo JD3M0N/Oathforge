@@ -2,8 +2,8 @@
 
 from typing import TYPE_CHECKING
 
-from oathforge.engine.gathering import GATHER_SKILLS
 from oathforge.content.validation.common import collector
+from oathforge.engine.gathering import GATHER_SKILLS
 
 if TYPE_CHECKING:
     from oathforge.content.loader import Content

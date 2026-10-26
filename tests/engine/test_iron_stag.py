@@ -8,10 +8,8 @@ import pytest
 from oathforge.content import get_content
 from oathforge.engine import combat as cb
 from oathforge.engine import combat_help
-from oathforge.engine.combat import Action
 from oathforge.services import combat_service
 from oathforge.tools import simulate as sim
-
 from tests.engine.test_combat import ABILITIES, encounter, player
 
 

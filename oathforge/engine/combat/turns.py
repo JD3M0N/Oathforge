@@ -2,21 +2,20 @@
 
 import random
 
-from oathforge.engine.dice import d20, roll
 from oathforge.engine.combat.entities import _run_entities
 from oathforge.engine.combat.resolve import _apply_damage, _attack
 from oathforge.engine.combat.state import (
-    Combatant,
     DOT,
+    SKIP_TURN,
+    Combatant,
     EncounterState,
     LogEntry,
-    SKIP_TURN,
     _append,
     _check_end,
     gain_resource,
     valid_targets,
 )
-
+from oathforge.engine.dice import d20, roll
 
 # ---------------------------------------------------------------- setup
 
@@ -182,6 +181,7 @@ def _pattern_turn(state: EncounterState, me: Combatant, target: Combatant, rng) 
     """A boss that aimed last turn fires its heavy attack; the turn after, it reloads and is exposed.
     ``defend`` is the answer anyone has: it gives the shot disadvantage."""
     if me.pattern_state == "aiming":
+        assert me.heavy is not None  # only a boss with a pattern (and its heavy attack) aims
         me.pattern_state = "reloading"
         logs = [LogEntry(key="combat.boss_fire", params={"actor": me.id})]
         logs += _attack(state, me, target, me.heavy, rng, None, weapon=False)

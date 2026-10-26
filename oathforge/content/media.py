@@ -49,8 +49,11 @@ class MediaCatalog:
     def class_images(self, class_key: str, gender: str | None = None) -> list[MediaAsset]:
         """One portrait: the character's gender, else a neutral one, else whatever the class has."""
         assets = self.classes.get(class_key, ())
-        for match in ([a for a in assets if gender and a.gender == gender], [a for a in assets if a.gender is None],
-                      list(assets)):
+        for match in (
+            [a for a in assets if gender and a.gender == gender],
+            [a for a in assets if a.gender is None],
+            list(assets),
+        ):
             if match:
                 return match[:1]
         return []

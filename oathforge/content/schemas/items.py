@@ -1,6 +1,6 @@
 """Items: weapons, effects, combat use, tools."""
 
-from typing import Annotated, Literal, Union
+from typing import Annotated, Literal
 
 from pydantic import Field
 
@@ -45,7 +45,7 @@ class ShortRest(Strict):
     cooldown_seconds: int = 4 * 3600
 
 
-ItemEffect = Annotated[Union[RestoreHp, RestoreSpellCharge, ShortRest], Field(discriminator="type")]
+ItemEffect = Annotated[RestoreHp | RestoreSpellCharge | ShortRest, Field(discriminator="type")]
 
 
 class ItemCombat(Strict):
@@ -75,8 +75,17 @@ class ItemCombat(Strict):
     targets_type: None = None
 
 
-TYPE_ICONS = {"weapon": "⚔️", "armor": "🛡️", "shield": "🛡️", "consumable": "🧪", "tool": "🧰", "quest": "📜",
-              "material": "🧱", "trinket": "💍", "blueprint": "📘"}  # an item without its own icon shows its type's
+TYPE_ICONS = {
+    "weapon": "⚔️",
+    "armor": "🛡️",
+    "shield": "🛡️",
+    "consumable": "🧪",
+    "tool": "🧰",
+    "quest": "📜",
+    "material": "🧱",
+    "trinket": "💍",
+    "blueprint": "📘",
+}  # an item without its own icon shows its type's
 
 
 class ToolProfile(Strict):
@@ -118,7 +127,7 @@ class Item(Strict):
     sellable: bool = True
 
     def label(self, lang: str) -> str:
-        """"🪨 Mena de hierro": its icon (or its type's) and its name."""
+        """ "🪨 Mena de hierro": its icon (or its type's) and its name."""
         return f"{self.icon or TYPE_ICONS[self.type]} {self.name.get(lang)}"
 
     def labelled(self) -> dict:

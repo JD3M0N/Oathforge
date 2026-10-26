@@ -124,6 +124,8 @@ async def tell(llm: LLM, activity_id: int, lang: str) -> Chronicle | None:
         if act is None or act.status != "done":
             return None
         char = await session.get(Character, act.character_id)
+        if char is None:
+            return None
         used = await chronicles_today(session, char.id)
         if act.chronicle:
             return Chronicle(act.chronicle, act.chronicle_ai, used, limit)
@@ -138,7 +140,9 @@ async def tell(llm: LLM, activity_id: int, lang: str) -> Chronicle | None:
         )
     async with session_scope() as session:
         act = await session.scalar(select(WorldActivity).where(WorldActivity.id == activity_id).with_for_update())
-        char = await session.get(Character, act.character_id)
+        char = await session.get(Character, act.character_id) if act is not None else None
+        if act is None or char is None:  # deleted while the chronicler was writing
+            return None
         if not act.chronicle:  # another press may have written it meanwhile: keep that one
             act.chronicle = text or generic(act, char, lang)
             act.chronicle_ai = text is not None

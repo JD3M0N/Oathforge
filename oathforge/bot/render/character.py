@@ -8,14 +8,6 @@ from telegram import InlineKeyboardMarkup
 from oathforge.ai.client import usage_today
 from oathforge.bot import achievement_views
 from oathforge.bot.keyboards import btn, cb, grid, markup, nonce
-from oathforge.config import get_settings
-from oathforge.content import get_content
-from oathforge.database.models import Character
-from oathforge.engine.checks import modifier, proficiency_bonus
-from oathforge.engine.progression import skill_rank
-from oathforge.i18n import t
-from oathforge.services import achievements, characters, chronicles, class_specializations, npcs, specializations
-from oathforge.services.events import Outcome, render_event
 from oathforge.bot.render.common import (
     ABILITY_ICON,
     LEVEL_KEYS,
@@ -27,6 +19,14 @@ from oathforge.bot.render.common import (
     rule_numbers,
 )
 from oathforge.bot.render.crafting import hobby_lines, mastery_lines, professions_line, specializations_view
+from oathforge.config import get_settings
+from oathforge.content import get_content
+from oathforge.database.models import Character
+from oathforge.engine.checks import modifier, proficiency_bonus
+from oathforge.engine.progression import skill_rank
+from oathforge.i18n import t
+from oathforge.services import achievements, characters, chronicles, class_specializations, npcs, specializations
+from oathforge.services.events import Outcome, render_event
 
 
 def ability_tags(a, lang: str) -> str:
@@ -184,7 +184,6 @@ def skill_page(key: str, lang: str, char: Character | None = None) -> tuple[str,
 
 def level_up_cards(outcome: Outcome, lang: str) -> list[str]:
     """One message per level gained: HP before → after, attribute boost and each new ability explained."""
-    c = get_content()
     cards: list[str] = []
     pending: list = []
     for ev in outcome.events:
@@ -236,7 +235,7 @@ def _branch_path_lines(branch, lang: str) -> list[str]:
     """What a branch gives, level by level, from the data and nowhere else."""
     prog = get_content().progression
     lines = []
-    for key, a in sorted(branch.abilities.items(), key=lambda kv: kv[1].level):
+    for a in sorted(branch.abilities.values(), key=lambda a: a.level):
         lines.append(
             f"• {t(lang, 'classes.level', level=a.level)} · {escape(a.name.get(lang))} ({ability_tags(a, lang)})"
         )

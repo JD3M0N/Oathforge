@@ -1,20 +1,35 @@
 """Typed achievement conditions and catalog validation."""
-from typing import Literal
+
 from string import Formatter
+from typing import Literal
+
 from pydantic import Field, model_validator
+
 from oathforge.content.schemas import Strict, Text
 
 EDITION = "v0_9"  # a fixed content edition: an expansion adds a new one instead of changing these
 
 EVENT_FIELDS = {
-    "visit": {"location", "outside"}, "flag": {"key"}, "discovery": {"key"},
+    "visit": {"location", "outside"},
+    "flag": {"key"},
+    "discovery": {"key"},
     "combat": {"status", "eligible", "hp", "consumed", "enemies", "location", "period", "hunt"},
-    "kill": {"monster"}, "scene": {"key"}, "craft": {"recipe"},
-    "activity": {"skill", "tool"}, "mastery": {"rank", "skill"}, "quest": {"quest"},
-    "decision": {"key"}, "reputation": {"faction", "value"},
-    "seen": {"monster"}, "secrets": {"monster"}, "unlock": {"key"},
-    "level": {"level"}, "profession": {"key", "rank"}, "blueprint": {"recipe"},
+    "kill": {"monster"},
+    "scene": {"key"},
+    "craft": {"recipe"},
+    "activity": {"skill", "tool"},
+    "mastery": {"rank", "skill"},
+    "quest": {"quest"},
+    "decision": {"key"},
+    "reputation": {"faction", "value"},
+    "seen": {"monster"},
+    "secrets": {"monster"},
+    "unlock": {"key"},
+    "level": {"level"},
+    "profession": {"key", "rank"},
+    "blueprint": {"recipe"},
 }
+
 
 class AchievementCondition(Strict):
     kind: Literal["event", "counter", "distinct", "threshold", "sequence", "all", "any"]
@@ -46,6 +61,7 @@ class AchievementCondition(Strict):
                 raise ValueError("event target must be one")
         return self
 
+
 class Achievement(Strict):
     edition: Literal["v0_9"] = EDITION
     category: Literal["exploration", "combat", "crafting", "field", "story", "knowledge", "curiosity"]
@@ -72,23 +88,34 @@ class Achievement(Strict):
             raise ValueError("hint text required")
         return self
 
+
 # quest flags that are also achievement events, and the written decisions a flag stands for
 FLAG_EVENTS = {"valley_open"}
-DECISION_FLAGS = {"rumor_believed": "believed", "rumor_checked": "checked",
-                  "valley_water_smuggler": "smuggler", "valley_water_kellan": "kellan"}
+DECISION_FLAGS = {
+    "rumor_believed": "believed",
+    "rumor_checked": "checked",
+    "valley_water_smuggler": "smuggler",
+    "valley_water_kellan": "kellan",
+}
 
 
 def validate_catalog(content):
     catalog = content.achievements
     edges = {key: set() for key in catalog}
-    pools = {("visit", "location"): content.locations, ("combat", "location"): content.locations,
-             ("craft", "recipe"): content.recipes, ("quest", "quest"): content.quests,
-             ("reputation", "faction"): content.factions, ("unlock", "key"): catalog}
+    pools = {
+        ("visit", "location"): content.locations,
+        ("combat", "location"): content.locations,
+        ("craft", "recipe"): content.recipes,
+        ("quest", "quest"): content.quests,
+        ("reputation", "faction"): content.factions,
+        ("unlock", "key"): catalog,
+    }
     for event in ("kill", "seen", "secrets"):
         pools[event, "monster"] = content.monsters
     pools["flag", "key"] = FLAG_EVENTS
     pools["discovery", "key"] = {f"{k}:{d}" for k, loc in content.locations.items() for d in loc.discoveries}
     from oathforge.engine.gathering import GATHER_SKILLS, MASTERIES
+
     pools["activity", "skill"] = GATHER_SKILLS
     pools["mastery", "skill"] = MASTERIES
     pools["decision", "key"] = set(DECISION_FLAGS.values())
@@ -108,11 +135,13 @@ def validate_catalog(content):
                 edges[key].add(condition.match["key"])
         for child in condition.children:
             walk(key, child)
+
     for key, achievement in catalog.items():
         if not key.isascii() or len(key) > 32 or not key.replace("_", "").isalnum():
             raise ValueError(f"invalid achievement id: {key}")
         walk(key, achievement.condition)
     visited, visiting = set(), set()
+
     def visit(key):
         if key in visiting:
             raise ValueError("cyclic achievement dependencies")
@@ -123,5 +152,6 @@ def validate_catalog(content):
             visit(dependency)
         visiting.remove(key)
         visited.add(key)
+
     for key in edges:
         visit(key)

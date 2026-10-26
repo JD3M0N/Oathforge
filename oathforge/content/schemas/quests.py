@@ -4,7 +4,6 @@ from typing import Literal
 
 from oathforge.content.schemas.common import Strict, Text, Tier
 
-
 Effect = dict[str, object]  # validated by quests.apply_effect at load time
 
 
@@ -57,9 +56,28 @@ class QuestObjective(Strict):
     # hunt: location (or "any"): a fight won from 🏹 Hunt or 🐾 Track there, any creature, day or night
     # equip / buy / sell / stash / take: item (or "any") · learn_profession: profession · blueprint: the blueprint item
     # smoke: a fight left with a smoke bomb ("any") · branch: the class branch taken (or "any")
-    kind: Literal["kill", "hunt", "talk", "visit", "gather", "skin", "craft", "rest", "heal", "read",
-                  "equip", "learn_profession", "stash", "take", "buy", "sell", "smoke", "branch", "blueprint",
-                  "short_rest"]
+    kind: Literal[
+        "kill",
+        "hunt",
+        "talk",
+        "visit",
+        "gather",
+        "skin",
+        "craft",
+        "rest",
+        "heal",
+        "read",
+        "equip",
+        "learn_profession",
+        "stash",
+        "take",
+        "buy",
+        "sell",
+        "smoke",
+        "branch",
+        "blueprint",
+        "short_rest",
+    ]
     target: str  # monster, npc, location, item or rulebook section key ("any" for hunt / rest / heal)
     count: int = 1
 

@@ -2,8 +2,8 @@
 
 from typing import TYPE_CHECKING
 
-from oathforge.engine.gathering import GATHER_SKILLS, MASTERIES
 from oathforge.content.validation.common import collector
+from oathforge.engine.gathering import GATHER_SKILLS, MASTERIES
 
 if TYPE_CHECKING:
     from oathforge.content.loader import Content
@@ -18,8 +18,9 @@ def crafting_errors(c: "Content") -> list[str]:
             errors.append(f"recipe {key}: '{recipe.profession}' is neither a profession nor a field mastery")
         elif recipe.profession in MASTERIES and recipe.station is None:
             errors.append(f"recipe {key}: a mastery recipe needs its own station")
-        station = recipe.station or (c.professions[recipe.profession].station
-                                     if recipe.profession in c.professions else None)
+        station = recipe.station or (
+            c.professions[recipe.profession].station if recipe.profession in c.professions else None
+        )
         if station is None:
             errors.append(f"recipe {key}: no station (neither its own nor its discipline's)")
         elif station not in stations:
@@ -37,8 +38,10 @@ def crafting_errors(c: "Content") -> list[str]:
             if recipe.technique not in techniques:
                 errors.append(f"recipe {key}: unknown technique '{recipe.technique}' for {recipe.profession}")
             elif techniques[recipe.technique].rank > recipe.min_rank:
-                errors.append(f"recipe {key}: its technique unlocks at rank {techniques[recipe.technique].rank}, "
-                              f"after the recipe's own {recipe.min_rank}")
+                errors.append(
+                    f"recipe {key}: its technique unlocks at rank {techniques[recipe.technique].rank}, "
+                    f"after the recipe's own {recipe.min_rank}"
+                )
         if recipe.special and recipe.technique is not None:
             errors.append(f"recipe {key}: a special recipe comes from a blueprint, not from a technique")
         if recipe.special and not any(i.teaches == key for i in c.items.values()):

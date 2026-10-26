@@ -260,8 +260,8 @@ def test_broken_progression_is_rejected():
 def test_a_class_branch_pointing_nowhere_is_caught():
     import pytest
 
-    from oathforge.content.validation.classes import _class_progression_errors
     from oathforge.content.schemas import ClassSpecialization
+    from oathforge.content.validation.classes import _class_progression_errors
 
     c = load_content()
     text = {"es": "x", "en": "x"}
@@ -282,8 +282,8 @@ def test_a_class_branch_pointing_nowhere_is_caught():
 
 
 def test_entities_and_forms_are_validated():
-    from oathforge.content.validation.classes import _entity_errors
     from oathforge.content.schemas import ClassAbility, ClassSpecialization, EntityDef
+    from oathforge.content.validation.classes import _entity_errors
 
     c = load_content()
     assert len(c.entities) == 15 and len(c.forms) == 4 and _entity_errors(c) == []
@@ -341,6 +341,7 @@ def test_entities_and_forms_are_validated():
 
 def test_a_typo_in_an_entity_dice_stops_the_game_from_starting():
     import pytest
+
     from oathforge.content.schemas import EntityDef
 
     text = {"es": "x", "en": "x"}

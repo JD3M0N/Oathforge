@@ -49,6 +49,9 @@ Si la tarea es ordenar el proyecto («sigue con structura», «la siguiente fase
 .venv\Scripts\oath simulate --level 1-5   # simulador de combates para el balance
 .venv\Scripts\oath tutorial-stats        # minutos por misión del tutorial y dónde se atasca cada jugador
 .venv\Scripts\oath tgtest send "/start"   # jugar con el bot desde la cuenta de prueba (también press, show)
+.venv\Scripts\python -m ruff check . --fix  # lint (y ruff format .); también lo pasan pre-commit y la CI
+.venv\Scripts\lint-imports              # invariantes por imports
+.venv\Scripts\pyright                   # tipos de engine/ y services/
 ```
 
 `oath help` lista los comandos de consola (`oathforge/cli.py`; `oathforge` es el nombre largo); si añades uno, añádelo a su grupo en `COMMANDS`.

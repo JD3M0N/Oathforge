@@ -8,9 +8,7 @@ from oathforge.content.schemas.common import CreatureType, DamageType, Row, Stri
 
 
 class StatusApply(Strict):
-    status: Literal[
-        "bleeding", "burning", "poisoned", "frightened", "stunned", "vulnerable",
-    ]
+    status: Literal["bleeding", "burning", "poisoned", "frightened", "stunned", "vulnerable"]
     turns: int
     chance: float = 1.0
 
@@ -64,7 +62,9 @@ class Monster(Strict):
     loot: list[LootEntry] = []
     harvest: list[HarvestEntry] = []
     skin_seconds: int = 10
-    indefinite: Text | None = None  # "un murciélago de cueva" / "a cave bat", for generic texts  # how long /skin takes for one of these (small prey 10 s, more for big ones)
+    indefinite: Text | None = (
+        None  # "un murciélago de cueva" / "a cave bat", for generic texts  # how long /skin takes for one of these (small prey 10 s, more for big ones)
+    )
     cowardly: bool = False
     immune: list[str] = []  # statuses
     # a boss never goes down to a control chain: hard control lasts one turn on it and the rest of the

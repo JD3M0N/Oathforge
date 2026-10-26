@@ -7,12 +7,11 @@ from telegram import InlineKeyboardMarkup
 
 from oathforge.bot import achievement_views
 from oathforge.bot.keyboards import btn, cb, markup, nonce
+from oathforge.bot.render.common import ACTIVITY_ICON, MAX_MESSAGE, RULE, _go_button, journal_tabs
 from oathforge.content import get_content
 from oathforge.database.models import Character
 from oathforge.i18n import t
 from oathforge.services import achievements, activities, characters, chronicle_log, exploration, quests, world_map
-from oathforge.bot.render.common import ACTIVITY_ICON, MAX_MESSAGE, RULE, _go_button, journal_tabs
-
 
 QUEST_ICONS = {"locked": "🔒", "available": "❔", "active": "📜", "ready": "✅", "completed": "✅", "failed": "❌"}
 

@@ -4,7 +4,6 @@ import random
 
 from oathforge.engine import combat as cb
 from oathforge.engine.combat import Action, AttackProfile
-
 from tests.engine.test_combat import ABILITIES, encounter, monster, player
 
 HEAVY = AttackProfile(

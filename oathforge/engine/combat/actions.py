@@ -3,17 +3,16 @@
 import random
 
 from oathforge.engine.checks import check, dc_for
-from oathforge.engine.dice import roll
 from oathforge.engine.combat.entities import _command, _converge, _shift, _summon
 from oathforge.engine.combat.resolve import _apply_damage, _apply_status, _attack, _heal, _resolve_target, _save
 from oathforge.engine.combat.state import (
-    Action,
-    AttackProfile,
-    CombatError,
-    Combatant,
-    EncounterState,
     FLEE_DC_BASE,
     FLEE_DC_PER_FOE,
+    Action,
+    AttackProfile,
+    Combatant,
+    CombatError,
+    EncounterState,
     LogEntry,
     _append,
     _check_end,
@@ -22,7 +21,7 @@ from oathforge.engine.combat.state import (
     valid_targets,
 )
 from oathforge.engine.combat.turns import _end_turn, _run_enemies
-
+from oathforge.engine.dice import roll
 
 # ---------------------------------------------------------------- player turn
 
