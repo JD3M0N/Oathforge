@@ -22,6 +22,7 @@ Versionado `0.x.y`: **y** (parche) en arreglos y cambios pequeños; **x** (menor
 | 0.8.3 | Planning reorganizado: Possibilium, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md`, `content/officina/` |
 | 0.9.0 | Logros e identidad: 30 logros, dos metalogros, títulos, destacados, objetivos seguidos y reconocimiento retroactivo verificable |
 | 0.9.1 | Hoja de ruta de 0.10 (consolidación) y 0.11 (multijugador): `planning/roadmap.md` |
+| 0.10.50 | Structura, fase 2: `bot/handlers/callbacks/` por verbo y dominio; `test_handlers.py` y `test_services.py` partidos por dominio |
 | 0.10.49 | Structura, fase 2: la validación del contenido pasa de `loader.py` a `content/validation/`, una función por dominio |
 | 0.10.48 | Structura, fase 2: `content/schemas.py` partido por dominio en `content/schemas/` |
 | 0.10.47 | Structura, fase 2: `engine/combat.py` partido en el paquete `engine/combat/` (`state`, `resolve`, `entities`, `turns`, `actions`) |

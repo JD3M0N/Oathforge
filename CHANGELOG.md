@@ -4,6 +4,17 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.50] - 2026-10-26
+
+Structura, fase 2: los botones y los tests grandes, partidos por dominio.
+
+### Cambiado
+- `oathforge/bot/handlers/callbacks.py` pasa a `oathforge/bot/handlers/callbacks/`: `router` (entrada y verbos que solo muestran), `views`, `acts` (lo que cambia estado), `rolls` (la 🎲 manual y los ajustes) y `combat`.
+- `tests/bot/test_handlers.py` (1.100 líneas) se parte en `helpers.py`, `conftest.py` (sin límite de frecuencia) y `test_flow`, `test_creation`, `test_combat_buttons`, `test_views` y `test_activities`.
+- `tests/services/test_services.py` (877 líneas) se parte en `helpers.py` (`new_character`, `get_char`, `fight`) y `test_characters`, `test_exploration`, `test_inventory`, `test_combat_service`, `test_quests`, `test_npcs` y `test_hunting`.
+- Los tests que cambian `rate_ok` o `DICE_SECONDS` parchean el submódulo donde viven.
+- `oathforge/bot/CLAUDE.md` explica el reparto de los botones.
+
 ## [0.10.49] - 2026-10-26
 
 Structura, fase 2: la validación del contenido sale del loader.

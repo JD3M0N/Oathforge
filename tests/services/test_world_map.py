@@ -5,7 +5,7 @@ import pytest
 from oathforge.database.session import session_scope
 from oathforge.content import get_content
 from oathforge.services import characters, exploration, world_map
-from tests.services.test_services import get_char, new_character
+from tests.services.helpers import get_char, new_character
 
 pytestmark = pytest.mark.usefixtures("database")
 
