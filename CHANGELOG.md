@@ -4,6 +4,19 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.46] - 2026-10-25
+
+Structura, fase 2: `render.py` partido en un paquete.
+
+### Cambiado
+- `oathforge/bot/render.py` (2.339 líneas) pasa a `oathforge/bot/render/`, un módulo por familia de pantallas: `common`, `character`, `crafting`, `world`, `inventory`, `quests` y `combat`. Ninguno pasa de 610 líneas.
+- `render/__init__.py` reexporta todo: quien llama sigue usando `render.x` y nada cambia para el jugador.
+- Las piezas que usaban varias pantallas (iconos, `RULE`, `item_stats`, `journal_tabs`, `rule_numbers`, `_go_button`) suben a `render/common.py`, y las dependencias entre módulos van en un solo sentido.
+- `AGENTS.md` y `oathforge/bot/CLAUDE.md` explican el reparto.
+
+### Eliminado
+- El import sin usar de `engine.progression` en `render`.
+
 ## [0.10.45] - 2026-10-25
 
 Structura: grafo del código con graphify.

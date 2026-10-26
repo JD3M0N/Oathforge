@@ -22,6 +22,7 @@ Versionado `0.x.y`: **y** (parche) en arreglos y cambios pequeños; **x** (menor
 | 0.8.3 | Planning reorganizado: Possibilium, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md`, `content/officina/` |
 | 0.9.0 | Logros e identidad: 30 logros, dos metalogros, títulos, destacados, objetivos seguidos y reconocimiento retroactivo verificable |
 | 0.9.1 | Hoja de ruta de 0.10 (consolidación) y 0.11 (multijugador): `planning/roadmap.md` |
+| 0.10.46 | Structura, fase 2: `bot/render.py` partido en el paquete `bot/render/` (un módulo por familia de pantallas) |
 | 0.10.45 | Structura: grafo de `oathforge/` y `tests/` con graphify (`.graphifyignore`), sin tokens de IA |
 | 0.10.44 | Structura: el plan se enlaza desde `CLAUDE.md` y explica cómo cerrar cada fase en otro chat |
 | 0.10.43 | Structura, fase 0: `CLAUDE.md` por carpeta, `.claude/` con permisos y hook de contenido, `oath validate`, `oath content-index` (`content/INDEX.md`), regla de nombres en inglés; proyecto de una sola persona |
