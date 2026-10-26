@@ -4,6 +4,26 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.43] - 2026-10-25
+
+Structura, fase 0: **el proyecto se prepara para crecer.** Reglas cerca de donde se trabaja, contenido comprobado al editarlo y un índice para encontrar cualquier id sin abrir YAML grandes. Oathforge pasa a ser un proyecto de una sola persona.
+
+### Añadido
+- `planning/structura.md`: la checklist por fases para crecer ordenado (contenido en una carpeta por entidad, archivos grandes partidos, calidad automática, protocolos para crear objetos, monstruos y ciudades, y herramientas para agentes).
+- **`oath validate`**: carga `content/` como al arrancar el bot y dice qué falla, sin Telegram ni BD.
+- **`oath content-index`** y `content/INDEX.md`: una línea por id de contenido con su nombre en inglés y su archivo. Un test comprueba que está al día.
+- `CLAUDE.md` por zona (`content/`, `oathforge/engine/`, `oathforge/services/`, `oathforge/bot/`, `tests/`), con sus reglas; solo se cargan al trabajar allí.
+- `.claude/settings.json`: permisos para las pruebas y los comandos de consola habituales; leer `artifacts/` y `content/officina/` pide confirmación; `.venv/`, `.env` y `.telegram/` no se leen.
+- Hook de Claude Code (`.claude/hooks/validate_content.py`): al editar un `content/*.yaml`, ejecuta `oath validate`, devuelve los errores y actualiza `content/INDEX.md`.
+- `AGENTS.md`, «Nombres e idiomas»: la base (ids, código, archivos, claves) va en inglés y todo texto visible en es y en. Un test exige ids y rutas de `content/` en ASCII.
+
+### Cambiado
+- `CLAUDE.md`: una sola rama, `josue-development`; desaparecen la tabla de ramas por persona y la excepción de los testers. `CODEOWNERS`, `README.md`, `TODO.md` y `planning/README.md` dejan de mencionar los TODO de testers.
+- `.gitignore`: `graphify-out/` (grafo local del código).
+
+### Eliminado
+- `TODO-rayko.md` y `TODO-edian.md`, que estaban vacíos.
+
 ## [0.10.42] - 2026-10-25
 
 0.10-I (B13 cerrado, B14 en marcha): **ensayo del reinicio de lanzamiento en staging** y primer repaso jugado de `tests/features.md`.

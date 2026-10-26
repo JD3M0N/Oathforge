@@ -1,0 +1,53 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.venv/Scripts/python -m pytest *)",
+      "Bash(.venv/Scripts/python.exe -m pytest *)",
+      "Bash(.venv/Scripts/oath validate)",
+      "Bash(.venv/Scripts/oath content-index)",
+      "Bash(.venv/Scripts/oath simulate *)",
+      "Bash(.venv/Scripts/oath balance *)",
+      "Bash(.venv/Scripts/oath help)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git show *)",
+      "Bash(git branch --show-current)",
+      "PowerShell(.venv\\Scripts\\python -m pytest *)",
+      "PowerShell(.venv\\Scripts\\oath validate)",
+      "PowerShell(.venv\\Scripts\\oath content-index)",
+      "PowerShell(.venv\\Scripts\\oath simulate *)",
+      "PowerShell(.venv\\Scripts\\oath balance *)",
+      "PowerShell(.venv\\Scripts\\oath help)",
+      "PowerShell(git status *)",
+      "PowerShell(git diff *)",
+      "PowerShell(git log *)",
+      "PowerShell(git show *)",
+      "PowerShell(git branch --show-current)"
+    ],
+    "ask": [
+      "Read(./artifacts/**)",
+      "Read(./content/officina/**)"
+    ],
+    "deny": [
+      "Read(./.venv/**)",
+      "Read(./.env)",
+      "Read(./.telegram/**)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/.venv/Scripts/python.exe\" \"$CLAUDE_PROJECT_DIR/.claude/hooks/validate_content.py\"",
+            "timeout": 60,
+            "statusMessage": "Validating content/"
+          }
+        ]
+      }
+    ]
+  }
+}

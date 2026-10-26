@@ -14,6 +14,9 @@ artifacts/
 # PID of the running bot (oath stop / oath restart)
 .run/
 
+# graphify: local knowledge graph of the code, rebuilt on each machine
+graphify-out/
+
 # image lab: only its README is tracked (planning/ars.md)
 content/officina/*
 !content/officina/README.md

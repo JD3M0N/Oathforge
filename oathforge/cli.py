@@ -20,6 +20,10 @@ COMMANDS = [
         ("backup", "FILE", "Write the whole database to a JSON file."),
         ("restore", "FILE [--yes]", "Replace the whole database with a backup (stop the bot)."),
     ]),
+    ("Content", [
+        ("validate", "", "Load and cross-check content/ (what the bot does at startup); exit 1 on errors."),
+        ("content-index", "", "Rewrite content/INDEX.md: one line per content id with its file."),
+    ]),
     ("Testing", [
         ("tgtest", "send|press|show|login", "Play the bot from the Telegram test account."),
         ("simulate", "[--level 1-5]", "Simulate fights for balance (--help)."),
@@ -267,6 +271,33 @@ async def tutorial_stats() -> None:
         print(f"  {r.name:20} level {r.level}  {len(r.minutes)}/{len(tut)} missions in {total:.0f} min · {where}")
 
 
+def validate_content() -> None:
+    """Load content/ like the bot does at startup; print the counts, or the errors and exit 1."""
+    from oathforge.content import load_content
+
+    try:
+        c = load_content()
+    except Exception as exc:  # pydantic, YAML or cross-reference errors: all say what is wrong
+        print(f"content/ is invalid:\n{exc}")
+        sys.exit(1)
+    print(f"content/ ok: {len(c.items)} items, {len(c.monsters)} monsters, {len(c.locations)} places, "
+          f"{len(c.npcs)} NPCs, {len(c.quests)} quests, {len(c.classes)} classes")
+
+
+def write_content_index() -> None:
+    from oathforge.config import CONTENT_DIR
+    from oathforge.content import load_content
+    from oathforge.content.index import build_index
+
+    path = CONTENT_DIR / "INDEX.md"
+    text = build_index(load_content(), CONTENT_DIR)
+    if path.is_file() and path.read_text(encoding="utf-8") == text:
+        print(f"{path} is up to date")
+        return
+    path.write_text(text, encoding="utf-8", newline="\n")
+    print(f"wrote {path}")
+
+
 def stop_bot() -> bool:
     """Stop the bot started with `oath bot` (found by its PID file). True if one was running."""
     from oathforge import pidfile
@@ -334,6 +365,10 @@ def main(argv: list[str] | None = None) -> None:
         from oathforge.tools.achievements_backfill import main as backfill
 
         backfill(rest)
+    elif command == "validate":
+        validate_content()
+    elif command == "content-index":
+        write_content_index()
     elif command == "tutorial-stats":
         asyncio.run(tutorial_stats())
     elif command == "reset-players":

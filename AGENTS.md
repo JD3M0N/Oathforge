@@ -1,6 +1,6 @@
 # AGENTS.md — cómo trabajar en Oathforge
 
-Guía para cualquier agente de código (y para personas). Objetivo: cambios correctos con el mínimo de lectura. Las reglas de ramas y de commit de cada persona están en `CLAUDE.md`.
+Guía para cualquier agente de código (y para personas). Objetivo: cambios correctos con el mínimo de lectura. Las reglas de rama y de commit están en `CLAUDE.md`.
 
 Oathforge es un RPG narrativo para Telegram: **un motor d20 determinista decide y Gemini narra.**
 
@@ -45,6 +45,8 @@ Flujo de una acción libre: `leer contexto (tx corta) → Gemini interpreta → 
 ## Leer barato
 
 - **Busca antes de abrir.** Grep o Glob por el símbolo, la clave i18n o el id de contenido; abre solo el archivo que aparece.
+- **Grafo del código**: si existe `graphify-out/` (graphify, solo sobre `oathforge/` y `tests/`), consúltalo para saber quién llama a qué antes de hacer Grep por todo el repo.
+- **Contenido**: `content/INDEX.md` tiene una línea por id (nombre en inglés y archivo). Lo escribe `oath content-index` y un test comprueba que está al día.
 - **Lee por rangos** los archivos grandes: `bot/render.py`, `bot/handlers/callbacks.py`, `engine/combat.py`, `i18n/locales/*.yaml`, `content/quests.yaml`, `CHANGELOG.md` y `planning/Possibilium.md`. Localiza la función con Grep y lee unas decenas de líneas alrededor.
 - **No releas** un archivo que acabas de editar, ni uno que ya tienes en contexto.
 - **CHANGELOG**: lee solo las primeras entradas (las últimas versiones) para saber qué cambió hace poco.
@@ -62,7 +64,7 @@ Flujo de una acción libre: `leer contexto (tx corta) → Gemini interpreta → 
 ## planning/
 
 - `Possibilium.md`: libro de ideas, alternativas y preguntas, con IDs (`CLA-01`, `MIN-01`, `COO-01`…).
-- Resúmenes por tema con nombre latino: `ordines` (clases), `progressio` (personaje y juramentos), `pugna` (combate y descanso), `opificia` (actividades y oficios), `mercatura` (comercio y equipo), `mundus` (mundo, viaje y misiones), `bestiarium`, `societas` (multijugador), `narratio` (IA), `facies` (interfaz Telegram), `ars` (audiovisual).
+- Resúmenes por tema con nombre latino: `ordines` (clases), `progressio` (personaje y juramentos), `pugna` (combate y descanso), `opificia` (actividades y oficios), `mercatura` (comercio y equipo), `mundus` (mundo, viaje y misiones), `bestiarium`, `societas` (multijugador), `narratio` (IA), `facies` (interfaz Telegram), `ars` (audiovisual), `structura` (orden del proyecto y herramientas).
 - `iter.md`: la hoja de ruta por versión.
 - Cuando implementes o decidas algo, actualiza el **Estado actual** del resumen latino y, si cambia el plan, `iter.md`. Possibilium solo cambia si cambia una idea o su estado.
 
@@ -75,10 +77,17 @@ Flujo de una acción libre: `leer contexto (tx corta) → Gemini interpreta → 
 - **BD**: cualquier cambio de modelo lleva su migración de Alembic.
 - **Comandos de consola**: un comando nuevo va a su grupo en `COMMANDS` de `oathforge/cli.py`.
 
+## Nombres e idiomas
+
+- **La base va en inglés**: ids, variables, funciones, archivos y carpetas, claves de YAML y de i18n, plantillas, skills y subagentes, subcomandos de `oath` y sus flags. Los ids y las rutas de `content/` son ASCII en minúsculas (`[a-z0-9_]`); lo comprueba `tests/test_content.py`.
+- **Todo texto que ve el jugador está en los dos idiomas**: `{es: …, en: …}` en el contenido y `i18n/locales/{es,en}.yaml` en la interfaz. Sin excepciones.
+- El diseño en `planning/` sigue en español, con sus nombres latinos.
+
 ## Probar
 
 ```powershell
 .venv\Scripts\python -m pytest tests/<área> -q     # lo que tocaste (engine, services, ai, bot)
+.venv\Scripts\oath validate                        # carga content/ como al arrancar el bot (segundos)
 .venv\Scripts\python -m pytest tests/test_content.py -q   # siempre que toques content/
 .venv\Scripts\python -m pytest -q                  # suite completa antes del commit
 .venv\Scripts\oath simulate --level 1-5            # balance de combate

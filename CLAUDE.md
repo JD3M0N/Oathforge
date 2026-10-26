@@ -6,23 +6,20 @@ RPG narrativo para Telegram: un motor d20 determinista decide y Gemini narra. La
 
 ## Ramas (obligatorio)
 
-Antes de editar nada, comprueba la rama (`git branch --show-current`) y el usuario (`git config user.name`, `git config user.email`). Cada persona trabaja **solo** en su rama:
+Josue (JD3M0N) es el único desarrollador. Se trabaja en `josue-development`; compruébalo con `git branch --show-current` antes de editar.
 
-| Usuario de git | Rama |
-|---|---|
-| JD3M0N / josuedeki21@gmail.com (Josue) | `josue-development` |
-| Rayko | `rayko-development` |
-| Edian | `edian-development` |
-
-- Si no estás en esa rama, cámbiate (`git switch <rama>`; si no existe, créala desde `origin/main`). Si hay cambios sin commitear, llévalos contigo.
-- Nunca hagas commit de código directamente en `main`. Solo se lleva trabajo a `main` cuando Josue lo pide.
+- Si no estás en esa rama, cámbiate (`git switch josue-development`). Si hay cambios sin commitear, llévalos contigo.
+- Nunca hagas commit directamente en `main`. Solo se lleva trabajo a `main` cuando Josue lo pide.
 - Antes de empezar, trae lo nuevo: `git fetch` y `git merge origin/main`.
-- Los testers apuntan bugs e ideas en su `TODO-<nombre>.md` y lo editan y empujan **directamente en `main`**: el ruleset deja pasar a quien tiene permiso de escritura. Es la única excepción.
 
-## Commits y PR
+## Commits
 
-- No añadas `Co-Authored-By` ni ninguna atribución a Claude en commits ni en PR.
-- Versionado obligatorio en cada commit (ver `AGENTS.md`). Los commits automáticos de la Action de TODO no suben versión.
+- No añadas `Co-Authored-By` ni ninguna atribución a Claude en los commits.
+- Versionado obligatorio en cada commit (ver `AGENTS.md`).
+
+## Cerca de lo que tocas
+
+Cada zona tiene su `CLAUDE.md` con sus reglas, que se carga al trabajar allí: `content/`, `oathforge/engine/`, `oathforge/services/`, `oathforge/bot/` y `tests/`. Para encontrar un id de contenido, lee `content/INDEX.md` (una línea por id) antes de abrir los YAML. Al editar `content/*.yaml`, un hook ejecuta `oath validate` y actualiza el índice; si devuelve errores, arréglalos antes de seguir.
 
 ## Serie 0.10-I (clases, progresión 1–20 y campaña)
 
@@ -42,6 +39,8 @@ Si la tarea es seguir esta serie, empieza por `planning/plan_implementacion_0.10
 .venv\Scripts\oath reset-players       # borrar todos los jugadores (--yes para confirmar)
 .venv\Scripts\oath delete-player Aldric # borrar un jugador por nombre o id de Telegram (--yes para confirmar)
 .venv\Scripts\alembic upgrade head      # migraciones
+.venv\Scripts\oath validate             # comprobar content/ sin arrancar el bot
+.venv\Scripts\oath content-index        # reescribir content/INDEX.md
 .venv\Scripts\oath simulate --level 1-5   # simulador de combates para el balance
 .venv\Scripts\oath tutorial-stats        # minutos por misión del tutorial y dónde se atasca cada jugador
 .venv\Scripts\oath tgtest send "/start"   # jugar con el bot desde la cuenta de prueba (también press, show)

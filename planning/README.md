@@ -21,11 +21,12 @@ Qué queremos construir y por qué. No es documentación del código (eso está 
 | [narratio.md](narratio.md) | Qué hace Gemini y qué nunca debe hacer |
 | [facies.md](facies.md) | Interfaz en Telegram: escenas, botones y comandos |
 | [ars.md](ars.md) | Dirección audiovisual: arte, música, voces, mapas, prompts y licencias |
+| [structura.md](structura.md) | Orden del proyecto: carpetas, protocolos, herramientas para agentes y calidad automática |
 
 ## Cómo usarla
 
 - Cada resumen latino tiene **Estado actual**, **Decidido**, **Próximo** (IDs de Possibilium) y **Preguntas abiertas**. Lee primero el resumen; abre Possibilium solo para el capítulo que enlaza.
 - Estados de una idea: implementado, decidido, propuesta, alternativa, pregunta abierta, histórico (Possibilium §1).
 - Cuando una idea se implementa, pásala a *Estado actual* del resumen, anota la versión en `iter.md` y el cambio en el CHANGELOG.
-- Las ideas de los testers llegan por `TODO-<nombre>.md`; las aceptadas se copian aquí. La lista de tareas general está en [`TODO.md`](../TODO.md).
+- La lista de tareas general está en [`TODO.md`](../TODO.md).
 - Los anexos de Possibilium (texto íntegro de los PDF retirados) son archivo: no hace falta leerlos.

@@ -23,7 +23,7 @@
 - Canal en español: https://t.me/OathForge_es
 - Canal en inglés: https://t.me/OathForge
 
-Estamos en beta y cada partida de prueba hace mejor el juego. Si juegas, apunta lo que veas en tu `TODO-<nombre>.md`.
+Estamos en beta y cada partida de prueba hace mejor el juego. Si juegas, cuéntanos lo que veas en los canales.
 
 ## Para quien construye
 

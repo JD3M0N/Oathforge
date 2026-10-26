@@ -320,3 +320,25 @@ def test_a_typo_in_an_entity_dice_stops_the_game_from_starting():
     text = {"es": "x", "en": "x"}
     with pytest.raises(ValueError):
         EntityDef(name=text, description=text, kind="summon", role="damage", hp=5, damage="two dice", duration=2)
+
+
+def test_content_index_is_up_to_date():
+    """content/INDEX.md is what `oath content-index` writes; run it after adding or renaming content."""
+    from oathforge.config import CONTENT_DIR
+    from oathforge.content.index import build_index
+
+    assert (CONTENT_DIR / "INDEX.md").read_text(encoding="utf-8") == build_index(load_content(), CONTENT_DIR), \
+        "content/INDEX.md is stale: run `oath content-index`"
+
+
+def test_ids_and_paths_are_plain_english_ascii():
+    """Ids, folders and file names are the base of the code: English, lowercase ASCII (texts carry es/en)."""
+    from oathforge.config import CONTENT_DIR
+    from oathforge.content.index import FLAT_FILES, WORLD_KINDS
+
+    c = load_content()
+    bad = [f"{kind}:{key}" for kind in (*WORLD_KINDS, *FLAT_FILES) for key in getattr(c, kind)
+           if not re.fullmatch(r"[a-z0-9_]+", key)]
+    bad += [p.relative_to(CONTENT_DIR).as_posix() for p in CONTENT_DIR.rglob("*")
+            if "officina" not in p.parts and not re.fullmatch(r"[A-Za-z0-9_.-]+", p.name)]
+    assert not bad, bad

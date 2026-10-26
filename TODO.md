@@ -1,6 +1,6 @@
 # TODO de Oathforge
 
-Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada punto están en [`planning/`](planning/README.md) (libro principal: [Possibilium](planning/Possibilium.md)); los bugs de los testers, en sus `TODO-<nombre>.md`.
+Lista general de tareas e ideas del proyecto. El detalle y el porqué de cada punto están en [`planning/`](planning/README.md) (libro principal: [Possibilium](planning/Possibilium.md)).
 
 > **En marcha: 0.10-I, la revisión de clases, progresión 1–20 y campaña.** Su contrato está en [`planning/roadmap_balance.md`](planning/roadmap_balance.md) (fases B00–B14, una o varias por parche 0.10.x). Donde un punto de esta lista lo contradiga, manda el contrato.
 

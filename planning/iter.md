@@ -22,6 +22,7 @@ Versionado `0.x.y`: **y** (parche) en arreglos y cambios pequeños; **x** (menor
 | 0.8.3 | Planning reorganizado: Possibilium, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md`, `content/officina/` |
 | 0.9.0 | Logros e identidad: 30 logros, dos metalogros, títulos, destacados, objetivos seguidos y reconocimiento retroactivo verificable |
 | 0.9.1 | Hoja de ruta de 0.10 (consolidación) y 0.11 (multijugador): `planning/roadmap.md` |
+| 0.10.43 | Structura, fase 0: `CLAUDE.md` por carpeta, `.claude/` con permisos y hook de contenido, `oath validate`, `oath content-index` (`content/INDEX.md`), regla de nombres en inglés; proyecto de una sola persona |
 | 0.10.42 | 0.10-I (B13 cerrado, B14 en marcha): ensayo del reinicio en staging con una copia de la base local; primer repaso jugado de `tests/features.md` |
 | 0.10.41 | 0.10-I (B13): se retira la cripta (zona, criaturas, relicario, misiones y logros); reinicio de lanzamiento (`oath launch-reset`, `backup`, `restore`) implementado y ensayado en pruebas |
 | 0.10.40 | 0.10-I (B12): `oath balance`, simulador con políticas/kit/secuencias, tres criaturas de nivel 6–9, informe de balance y primeros ajustes |
@@ -76,6 +77,7 @@ El detalle de 0.10 y 0.11 (fichas por sistema, hitos, puerta de salida y trazabi
   - economía auditada ([mercatura](mercatura.md));
   - **la revisión de clases, progresión y campaña** (hito 0.10-I, su [contrato](roadmap_balance.md), desde 0.10.21): catorce clases con recurso propio, 41 ramas elegidas al nivel 10, XP más hitos hasta el 20, entrega de misiones al dador, campaña nueva con el Recaudador y el Ciervo, región cercana para 11–20, tiempos sin atajos de beta y reinicio limpio antes de abrir ([ordines](ordines.md), [progressio](progressio.md), [mundus](mundus.md)). *Sustituye a las especializaciones al nivel 5 y al arco de nivel 5 que figuraban aquí.*
 - **0.11, multijugador por incrementos** ([societas](societas.md)): grupo de 2 en la cripta (PKG-01 + PKG-02), grupos de 2–4 con ausencias (PKG-03), misiones y encargos con custodia (PKG-05), gremio mínimo y duelo consentido; después, eventos como la crisis del hierro (PKG-08).
+- **Orden del proyecto en paralelo** ([structura](structura.md)): calidad automática (ruff, import-linter, CI), contenido en una carpeta por entidad, archivos grandes partidos y protocolos para crear objetos, monstruos y ciudades. Una fase por parche.
 - **Producción audiovisual en paralelo** (no bloquea lo anterior): estilo, tres portadas de lugar, un retrato de NPC y una pista ([ars](ars.md) §16).
 - **Expediciones** (fase 2 del viaje: escenas, estilos, atajos, favoritos) cuando haya contenido que las merezca.
 - **Más adelante**: más regiones (Frosthold o Stormport) después de la del hito 0.10-I, Mini App, TTS.
