@@ -4,6 +4,13 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.55] - 2026-10-26
+
+Registro del hook de ruff.
+
+### Cambiado
+- `.claude/settings.json`: el hook `ruff_python.py` queda registrado junto al de contenido (pendiente de la fase 3).
+
 ## [0.10.54] - 2026-10-26
 
 Structura, fase 1: **una carpeta por cosa.** Clases, criaturas, objetos, PNJ y misiones salen de los YAML planos y los textos de la interfaz se reparten por dominio. El volcado de `load_content()` sale idéntico al de antes.

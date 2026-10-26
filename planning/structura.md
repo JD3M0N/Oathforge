@@ -7,7 +7,6 @@ Checklist para que Oathforge aguante el crecimiento (ciudades, clases, objetos) 
 - **Fase 0** hecha en 0.10.43, con el plan enlazado desde `CLAUDE.md` (0.10.44) y graphify (0.10.45). Solo queda de parte de Josue borrar las ramas antiguas de los testers (los pasos están en la propia fase).
 - **Fase 2** hecha en 0.10.46–0.10.51, adelantada a petición de Josue: los cinco archivos grandes de código y los dos de tests son paquetes, y `tests/test_sizes.py` vigila el tamaño. Se verificó con la suite completa, el volcado de `load_content()` idéntico, los mismos números en `oath simulate` y `oath balance` y los mismos errores de validación sobre contenido roto a propósito.
 - **Fase 3** hecha en 0.10.52–0.10.53: ruff (con un commit que solo formatea), import-linter, pyright, pre-commit, CI y tests de capas y de coherencia. Quedan de parte de Josue:
-  - registrar el hook de ruff en `.claude/settings.json` (el agente no puede tocar sus propios permisos ni hooks; el texto está en la fase);
   - instalar pre-commit una vez y, si quiere, `git config blame.ignoreRevsFile .git-blame-ignore-revs`;
   - ver la CI en verde en el primer push y, en GitHub, exigirla para `main`;
   - decidir los rangos de estadísticas de los monstruos por nivel (ver la fase).
