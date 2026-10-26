@@ -1,0 +1,19 @@
+name: {es: "Contrabandista de ceniza", en: "Ash smuggler"}
+indefinite: {es: "contrabandista de ceniza", en: "ash smuggler"}
+icon: 🥷
+description: {es: "Mueve las cargas del valle sin papeles y sin preguntas. Deja una marca de ceniza en todo lo que toca.", en: "Moves the vale's cargo without papers or questions. He leaves an ash mark on everything he touches."}
+hp: 75
+ac: 14
+dex: 1
+wis: 1
+row: front
+attacks:
+  - {name: {es: "Machete", en: "Cleaver"}, to_hit: 7, damage: 2d6+4, damage_type: slashing}
+xp: 260
+gold: "3d10"
+type: humanoid
+habitat: {es: "Cruce de los Carreteros", en: "Carters' Crossing"}
+lore:
+  es: "Mueve las cargas del valle sin papeles y sin preguntas. Deja una marca de ceniza en todo lo que toca."
+  en: "Moves the vale's cargo without papers or questions. He leaves an ash mark on everything he touches."
+order: 11

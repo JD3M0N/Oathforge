@@ -1,0 +1,6 @@
+name: {es: Pez de río, en: River fish}
+icon: "🐟"
+description: {es: "Un pez plateado de las aguas frías de Silverbrook.", en: "A silvery fish from the cold waters of Silverbrook."}
+type: material
+value: 3
+stackable: true

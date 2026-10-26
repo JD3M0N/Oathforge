@@ -1,0 +1,7 @@
+name: {es: Bomba de humo, en: Smoke bomb}
+icon: "💨"
+description: {es: "Una nube gris y espesa: sales del combate sin tirada.", en: "A thick grey cloud: you leave the fight without a roll."}
+type: consumable
+value: 12
+stackable: true
+combat: {kind: escape}

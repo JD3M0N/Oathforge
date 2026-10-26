@@ -1,0 +1,6 @@
+name: {es: Trucha de escamas de plata, en: Silverscale trout}
+icon: "🐠"
+description: {es: "Una trucha enorme y esquiva. Los cocineros de la ciudad se la disputan.", en: "A huge, elusive trout. The city's cooks fight over it."}
+type: material
+value: 20
+stackable: true

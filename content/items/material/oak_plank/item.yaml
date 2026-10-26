@@ -1,0 +1,6 @@
+name: {es: Tablón de roble, en: Oak plank}
+icon: "🪚"
+description: {es: "Madera cepillada y recta para empuñaduras y mangos.", en: "Planed straight wood for grips and hafts."}
+type: material
+value: 5
+stackable: true

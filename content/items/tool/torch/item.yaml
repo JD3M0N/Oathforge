@@ -1,0 +1,6 @@
+name: {es: Antorcha, en: Torch}
+icon: "🔥"
+description: {es: Ilumina lugares oscuros y asusta a las bestias., en: Lights dark places and scares beasts.}
+type: tool
+value: 1
+stackable: true

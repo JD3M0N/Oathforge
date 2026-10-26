@@ -1,0 +1,6 @@
+name: {es: Pico de prospector, en: Prospector's pickaxe}
+icon: "⛏️"
+description: {es: "Punta afilada y templada para seguir la veta buena sin romperla.", en: "A hardened point for following the good seam without shattering it."}
+type: tool
+value: 120
+tool: {skill: mining, base: pickaxe, min_rank: 3, rare_rel: 0.05}

@@ -1,0 +1,6 @@
+name: {es: Hilo, en: Thread}
+icon: "🧶"
+description: {es: "Hilo fino y resistente, hilado en el telar.", en: "Fine strong thread, spun at the loom."}
+type: material
+value: 6
+stackable: true

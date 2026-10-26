@@ -7,12 +7,7 @@ MAX_LINES = 800  # per .py file in oathforge/ and tests/
 MAX_YAML = 40 * 1024  # per .yaml file in content/ and the locales
 # still too big, each with its way out; take a file off the list the day it shrinks
 BIG_YAML = {
-    "content/classes.yaml",  # structura phase 1: content/classes/<class>/class.yaml
-    "content/class_specializations.yaml",  # structura phase 1: content/classes/<class>/specializations.yaml
-    "content/quests.yaml",  # structura phase 1: world/<cont>/<zone>/quests/<quest>.yaml
-    "content/fallbacks/chronicles.yaml",  # 12 texts per outcome and language: one file per mastery
-    "oathforge/i18n/locales/es.yaml",  # structura phase 1: locales/es/<domain>.yaml
-    "oathforge/i18n/locales/en.yaml",  # structura phase 1: locales/en/<domain>.yaml
+    "content/fallbacks/chronicles.yaml"  # 12 texts per outcome and language: one file per mastery
 }
 
 

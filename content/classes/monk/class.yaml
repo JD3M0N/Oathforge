@@ -1,0 +1,126 @@
+name: {es: Monje, en: Monk}
+description:
+  es: 'Técnicas del cuerpo: golpes cortos y precisos, y una disciplina que sustituye a la armadura.'
+  en: 'Techniques of the body: short, precise blows and a discipline that stands in for armor.'
+hit_die: 8
+primary: dex
+casting: wis
+array: {dex: 15, wis: 14, con: 13, str: 12, cha: 10, int: 8}
+skills: [acrobatics, insight]
+items: {hand_wraps: 1, healing_potion: 1}
+equip: [hand_wraps]
+signature: [flurry, stunning_blow]
+resource: focus
+resource_on_attack: 1
+abilities:
+  unarmored_defense:
+    name: {es: Defensa sin Armadura, en: Unarmored Defense}
+    description: {es: +3 a la CA mientras no lleves armadura., en: +3 AC while you wear no armor.}
+    details:
+      es: Tu disciplina es tu armadura. Si no llevas armadura, tienes +3 a la CA siempre, sin gastar acciones.
+      en: Your discipline is your armor. If you wear no armor, you always have +3 AC, with no action needed.
+    level: 1
+    kind: passive
+    action: none
+    ac_bonus_unarmored: 3
+  flurry:
+    name: {es: Ráfaga de Golpes, en: Flurry of Blows}
+    description:
+      es: Un ataque con las vendas que añade 1d6 de daño contundente. Cuesta 4 de Foco.
+      en: An attack with your wraps that adds 1d6 bludgeoning damage. Costs 4 Focus.
+    details:
+      es: 'Tres golpes donde otros dan uno. Es tu ataque normal, pero si acierta suma 1d6. El Foco vuelve con cada ataque y cada turno: no te quedes sin él en el peor momento.'
+      en: 'Three blows where others land one. It is your normal attack, but on a hit it adds 1d6. Focus comes back with every attack and every turn: do not run out at the worst moment.'
+    level: 1
+    kind: strike
+    cost: 4
+    extra_damage: 1d6
+    damage_type: bludgeoning
+  stunning_blow:
+    name: {es: Golpe Aturdidor, en: Stunning Blow}
+    description:
+      es: 'El objetivo tira SAB: si falla, recibe 1d6 y queda aturdido un turno. Cuesta 5 de Foco.'
+      en: 'The target rolls a WIS save: on a fail it takes 1d6 and is stunned for a turn. Costs 5 Focus.'
+    details:
+      es: Un golpe a un punto exacto que corta el hilo entre el rival y su voluntad. Un turno sin actuar vale más que cualquier daño.
+      en: A blow to an exact point that cuts the thread between the foe and its will. A turn without acting is worth more than any damage.
+    level: 2
+    kind: save
+    cost: 5
+    cooldown: 3
+    damage: 1d6
+    damage_type: bludgeoning
+    save: wis
+    status: stunned
+  deflect_blows:
+    name: {es: Desviar Golpes, en: Deflect Blows}
+    description:
+      es: El primer golpe que recibes en cada ronda hace la mitad de daño.
+      en: The first blow you take each round does half damage.
+    details:
+      es: Ves llegar el golpe y lo empujas a un lado. El primer impacto que recibes cada ronda hace la mitad de daño.
+      en: You see the blow coming and push it aside. The first hit you take each round does half damage.
+    level: 3
+    kind: passive
+    action: none
+    halve_first_hit: true
+  centering_breath:
+    name: {es: Respiración Serena, en: Centering Breath}
+    description:
+      es: 'Acción adicional: recuperas 1d8 + tu nivel en PV. Cuesta 4 de Foco.'
+      en: 'Bonus action: recover 1d8 + your level in HP. Costs 4 Focus.'
+    details:
+      es: Un respiro hondo y el cuerpo se ordena. Como es una acción adicional, puedes curarte y atacar en el mismo turno.
+      en: One deep breath and the body falls into order. As a bonus action, you can heal and attack in the same turn.
+    level: 4
+    kind: heal
+    action: bonus
+    cost: 4
+    cooldown: 3
+    heal_dice: 1d8
+    heal_add: level
+  flurry_of_blows:
+    name: {es: Mil Puños, en: A Thousand Fists}
+    description: {es: Atacas dos veces con tu acción de ataque., en: You attack twice with your attack action.}
+    details:
+      es: 'Tus manos no se detienen: golpeas dos veces en la misma acción, cada golpe con su tirada.'
+      en: 'Your hands do not stop: you strike twice in the same action, each blow with its own roll.'
+    level: 5
+    kind: passive
+    action: none
+    extra_attack: true
+  iron_body:
+    name: {es: Cuerpo de Hierro, en: Iron Body}
+    description: {es: +1 a la CA mientras no lleves armadura., en: +1 AC while you wear no armor.}
+    details:
+      es: Años de disciplina endurecen la carne. Si no llevas armadura, tienes +1 a la CA más, sin gastar acciones.
+      en: Years of discipline harden the flesh. If you wear no armor, you have a further +1 AC, with no action needed.
+    level: 6
+    kind: passive
+    action: none
+    ac_bonus_unarmored: 1
+  crashing_wave:
+    name: {es: Ola Arrolladora, en: Crashing Wave}
+    description:
+      es: Un ataque con las vendas que añade 2d6 de daño contundente. Cuesta 6 de Foco.
+      en: An attack with your wraps that adds 2d6 bludgeoning damage. Costs 6 Focus.
+    details:
+      es: Tu fuerza interior, soltada de golpe. Es tu mejor remate y pide unos turnos de calma antes de repetirse.
+      en: Your inner strength, released at once. It is your best finisher and asks a few calm turns before it can be repeated.
+    level: 7
+    kind: strike
+    cost: 6
+    cooldown: 2
+    extra_damage: 2d6
+    damage_type: bludgeoning
+  perfect_focus:
+    name: {es: Foco Perfecto, en: Perfect Focus}
+    description: {es: Haces crítico con un 19 o un 20., en: You score a critical hit on a 19 or 20.}
+    details:
+      es: 'Tu atención no falla: tus golpes son críticos también con un 19 natural.'
+      en: 'Your attention never wavers: your blows are critical on a natural 19 too.'
+    level: 9
+    kind: passive
+    action: none
+    crit_range: 19
+order: 5

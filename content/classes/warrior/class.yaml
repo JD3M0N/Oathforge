@@ -1,0 +1,126 @@
+name: {es: Guerrero, en: Warrior}
+description:
+  es: Maestro de las armas y la armadura; aguanta en primera línea y remata cuando cuenta.
+  en: Master of arms and armor; holds the front line and finishes the fight when it counts.
+hit_die: 10
+primary: str
+array: {str: 15, con: 14, dex: 13, wis: 12, cha: 10, int: 8}
+skills: [athletics, intimidation]
+items: {warhammer: 1, handaxe: 1, chain_mail: 1, shield: 1, healing_potion: 1}
+equip: [warhammer, handaxe, chain_mail, shield]
+signature: [power_strike, action_surge, second_wind]
+resource: focus
+resource_on_attack: 1
+abilities:
+  second_wind:
+    name: {es: Segundo Aliento, en: Second Wind}
+    description:
+      es: 'Acción adicional: recuperas 1d10 + tu nivel en PV. Cuesta 4 de Foco.'
+      en: 'Bonus action: recover 1d10 + your level in HP. Costs 4 Focus.'
+    details:
+      es: 'Respiras hondo y te obligas a seguir. Como acción adicional recuperas 1d10 + tu nivel en PV, así que puedes curarte y atacar en el mismo turno. Gasta Foco y tarda un par de turnos en volver a estar lista: guárdala para cuando la pelea se tuerza.'
+      en: 'You take a deep breath and force yourself on. As a bonus action you recover 1d10 + your level in HP, so you can heal and attack in the same turn. It spends Focus and takes a couple of turns to be ready again: keep it for when the fight turns.'
+    level: 1
+    kind: heal
+    action: bonus
+    cost: 4
+    cooldown: 2
+    heal_dice: 1d10
+    heal_add: level
+  power_strike:
+    name: {es: Golpe Poderoso, en: Power Strike}
+    description:
+      es: Un ataque con arma que añade 1d8 de daño contundente. Cuesta 4 de Foco.
+      en: A weapon attack that adds 1d8 bludgeoning damage. Costs 4 Focus.
+    details:
+      es: Descargas todo tu peso en un solo golpe. Es tu ataque normal con el arma, pero si acierta suma 1d8 de daño extra. Atacar te devuelve Foco; esto lo gasta.
+      en: You put all your weight into a single blow. It is your normal weapon attack, but on a hit it adds 1d8 extra damage. Attacking gives Focus back; this spends it.
+    level: 1
+    kind: strike
+    cost: 4
+    extra_damage: 1d8
+    damage_type: bludgeoning
+  defense_style:
+    name: {es: 'Estilo de combate: Defensa', en: 'Fighting Style: Defense'}
+    description: {es: +1 a la CA., en: +1 AC.}
+    details:
+      es: Te entrenaron para no dejar huecos en la guardia. Siempre tienes +1 a la CA, sin hacer nada.
+      en: You were trained to leave no gaps in your guard. You always have +1 AC, with no action needed.
+    level: 1
+    kind: passive
+    action: none
+    ac_bonus: 1
+  action_surge:
+    name: {es: Oleada de Acción, en: Action Surge}
+    description:
+      es: 'Acción adicional, tras usar tu acción: recuperas la acción y puedes actuar otra vez. Cuesta 5 de Foco.'
+      en: 'Bonus action, after using your action: you get your action back and can act again. Costs 5 Focus.'
+    details:
+      es: 'Cuando la batalla lo exige, sacas fuerzas de donde no hay. Después de usar tu acción, gastas tu acción adicional en recuperarla y vuelves a actuar: dos ataques, o atacar y beber una poción. Gasta mucho Foco y necesita unos turnos para repetirse.'
+      en: 'When the battle demands it, you find strength from nowhere. After using your action, you spend your bonus action to get it back and act again: two attacks, or attack and drink a potion. It spends a lot of Focus and needs a few turns before it can be done again.'
+    level: 2
+    kind: surge
+    action: bonus
+    cost: 5
+    cooldown: 3
+  improved_critical:
+    name: {es: Crítico Mejorado, en: Improved Critical}
+    description: {es: Tus ataques son críticos con 19 o 20., en: Your attacks score a critical hit on a 19 or 20.}
+    details:
+      es: Conoces los puntos débiles de cualquier armadura. Tus ataques son críticos con un 19 o un 20 natural, y un crítico dobla los dados de daño.
+      en: You know the weak points of any armor. Your attacks are critical hits on a natural 19 or 20, and a critical doubles the damage dice.
+    level: 3
+    kind: passive
+    action: none
+    crit_range: 19
+  shield_bash:
+    name: {es: Embestida de Escudo, en: Shield Bash}
+    description:
+      es: 'El objetivo tira DES: si falla, recibe 1d6 y queda aturdido un turno. Cuesta 4 de Foco.'
+      en: 'The target rolls a DEX save: on a fail it takes 1d6 and is stunned for a turn. Costs 4 Focus.'
+    details:
+      es: 'Cargas con el escudo para romperle el ritmo al rival. No es un golpe fuerte, es un golpe que desequilibra: un turno sin actuar vale más que daño.'
+      en: 'You charge with the shield to break the foe''s rhythm. It is not a strong blow but one that unbalances: a turn without acting is worth more than damage.'
+    level: 4
+    kind: save
+    cost: 4
+    cooldown: 3
+    damage: 1d6
+    damage_type: bludgeoning
+    save: dex
+    status: stunned
+  extra_attack:
+    name: {es: Ataque Extra, en: Extra Attack}
+    description: {es: Atacas dos veces con tu acción de ataque., en: You attack twice with your attack action.}
+    details:
+      es: La disciplina de mil combates hace que tu arma no se detenga. Cuando atacas, golpeas dos veces en la misma acción, cada golpe con su tirada.
+      en: The discipline of a thousand fights keeps your weapon moving. When you attack, you strike twice in the same action, each with its own roll.
+    level: 5
+    kind: passive
+    action: none
+    extra_attack: true
+  veteran_guard:
+    name: {es: Guardia de Veterano, en: Veteran's Guard}
+    description: {es: +1 a la CA., en: +1 AC.}
+    details:
+      es: Años de combate te enseñaron dónde va el siguiente golpe. Siempre tienes +1 a la CA, sin hacer nada.
+      en: Years of fighting taught you where the next blow lands. You always have +1 AC, with no action needed.
+    level: 7
+    kind: passive
+    action: none
+    ac_bonus: 1
+  finishing_blow:
+    name: {es: Golpe de Gracia, en: Finishing Blow}
+    description:
+      es: Un ataque con arma que añade 3d6 de daño contundente. Cuesta 7 de Foco.
+      en: A weapon attack that adds 3d6 bludgeoning damage. Costs 7 Focus.
+    details:
+      es: Todo lo aprendido en cada pelea, en un solo golpe. Es tu mejor remate, y por eso necesita varios turnos de preparación para repetirse.
+      en: Everything you learned in every fight, in one blow. It is your best finisher, so it needs several turns of preparation before it can be repeated.
+    level: 9
+    kind: strike
+    cost: 7
+    cooldown: 3
+    extra_damage: 3d6
+    damage_type: bludgeoning
+order: 1

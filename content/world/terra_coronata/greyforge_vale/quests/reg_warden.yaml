@@ -1,0 +1,34 @@
+order: 69
+giver: iwen
+after: reg_repair
+name: {es: "Los guardianes de la loma", en: "The Hill's Wardens"}
+summary:
+  es: "Los vigilantes de las torres creen que la baliza sigue encendida y defienden un fuego que ya no existe. Hay que calmarlos antes de la prueba final."
+  en: "The tower watchmen believe the beacon is still lit and defend a fire that no longer exists. They must be quieted before the final test."
+hint:
+  es: "Derrota a dos guardianes de baliza en el Alto de las Balizas. Su luz avisa antes de barrer: defiéndete y responde."
+  en: "Defeat two beacon wardens at Beacon Height. Their light warns before it sweeps: defend and answer."
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: kill, target: beacon_warden, count: 2}
+rewards:
+  - {xp: 2500}
+  - {give_item: {greater_healing_potion: 2}}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Iwen mira hacia lo alto."
+      en: "Iwen looks up the hill."
+  active:
+    journal:
+      es: "Dos guardianes de baliza en el Alto de las Balizas."
+      en: "Two beacon wardens at Beacon Height."
+  done:
+    state: completed
+    journal:
+      es: "Los guardianes callan. Por fin pueden dejar el fuego que defendían."
+      en: "The wardens fall silent. At last they can leave the fire they defended."

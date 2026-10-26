@@ -1,0 +1,28 @@
+name: {es: "Guardián de baliza", en: "Beacon warden"}
+indefinite: {es: "guardián de baliza", en: "beacon warden"}
+icon: 🕯️
+description: {es: "Un vigilante de las torres que cree que la baliza sigue encendida. Defiende un fuego que ya no existe.", en: "A tower watchman who believes the beacon is still lit. He defends a fire that no longer exists."}
+hp: 140
+ac: 18
+dex: 1
+wis: 1
+row: front
+attacks:
+  - {name: {es: "Alabarda", en: "Halberd"}, to_hit: 11, damage: 3d10+3, damage_type: slashing}
+pattern:
+  plate: 20
+  cycle: 2
+  cycle_broken: 2
+  heavy: {name: {es: "Barrido de luz", en: "Sweep of light"}, to_hit: 12, damage: 4d8+5, damage_type: radiant}
+boss: true
+xp: 900
+gold: "6d10"
+loot:
+  - {item: regulator_core, chance: 0.4}
+immune: [frightened]
+type: humanoid
+habitat: {es: "Alto de las Balizas", en: "Beacon Height"}
+lore:
+  es: "Un vigilante de las torres que cree que la baliza sigue encendida. Defiende un fuego que ya no existe."
+  en: "A tower watchman who believes the beacon is still lit. He defends a fire that no longer exists."
+order: 21

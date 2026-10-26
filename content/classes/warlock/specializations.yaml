@@ -1,0 +1,320 @@
+demonologist:
+  class_key: warlock
+  name: {es: Demonólogo, en: Demonologist}
+  description:
+    es: 'Un servidor poderoso con nombre propio que es siempre el mismo: alimentas el vínculo, le ordenas una técnica y te proteges tras él. Evoluciona, no se reemplaza.'
+    en: 'One powerful servant with a name of its own, always the same: you feed the bond, order a technique and shelter behind it. It evolves; it is never swapped.'
+  roles: [dmg, deff]
+  ready: true
+  abilities:
+    pact_bond:
+      name: {es: Vínculo del Pacto, en: Pact Bond}
+      description:
+        es: Tu Servidor del Pacto combate a tu lado en cada pelea, siempre el mismo, y tienes +1 a la CA.
+        en: Your Pact Servant fights beside you in every fight, always the same one, and you have +1 AC.
+      level: 10
+      kind: passive
+      action: none
+      entity: pact_servant
+      ac_bonus: 1
+    infernal_order:
+      name: {es: Orden Infernal, en: Infernal Order}
+      description:
+        es: Tu servidor golpea ya a la presa marcada con 3d8 extra.
+        en: Your servant strikes the marked quarry now with 3d8 extra.
+      level: 10
+      kind: command
+      cost: 6
+      cooldown: 1
+      entity: pact_servant
+      extra_damage: 3d8
+    feed_the_bond:
+      name: {es: Alimentar el Vínculo, en: Feed the Bond}
+      description:
+        es: 'Acción adicional: tu servidor pega más fuerte y mejor 3 turnos.'
+        en: 'Bonus action: your servant hits harder and truer for 3 turns.'
+      level: 10
+      kind: converge
+      action: bonus
+      cost: 5
+      cooldown: 3
+      boost_turns: 3
+    servant_shield:
+      name: {es: Escudo del Servidor, en: Servant's Shield}
+      description:
+        es: 'Acción adicional: tu servidor te cubre y ganas 4d8 PV temporales.'
+        en: 'Bonus action: your servant covers you and you gain 4d8 temporary HP.'
+      level: 10
+      kind: buff
+      action: bonus
+      cost: 5
+      cooldown: 3
+      temp_hp: 4d8
+    lasting_pact:
+      name: {es: Pacto Duradero, en: Lasting Pact}
+      description:
+        es: El primer golpe que recibes cada ronda hace la mitad de daño.
+        en: The first blow you take each round does half damage.
+      level: 15
+      kind: passive
+      action: none
+      halve_first_hit: true
+    infernal_apex:
+      name: {es: Cima Infernal, en: Infernal Apex}
+      description:
+        es: Tu servidor golpea ya a la presa marcada con 9d8 extra.
+        en: Your servant strikes the marked quarry now with 9d8 extra.
+      level: 20
+      kind: command
+      cost: 24
+      cooldown: 4
+      entity: pact_servant
+      extra_damage: 9d8
+  modifiers:
+    fierce_servant:
+      level: 13
+      name: {es: Servidor Feroz, en: Fierce Servant}
+      description: {es: La Orden infernal añade 5d8 en lugar de 3d8., en: Infernal Order adds 5d8 instead of 3d8.}
+      patches:
+        infernal_order:
+          extra_damage: 5d8
+    thicker_shield:
+      level: 13
+      name: {es: Escudo Más Grueso, en: Thicker Shield}
+      description:
+        es: El Escudo del servidor da 6d8 PV temporales en lugar de 4d8.
+        en: Servant's Shield gives 6d8 temporary HP instead of 4d8.
+      patches:
+        servant_shield:
+          temp_hp: 6d8
+    cheap_bond:
+      level: 17
+      name: {es: Vínculo Barato, en: Cheap Bond}
+      description:
+        es: Alimentar el vínculo cuesta 2 menos y se recupera un turno antes.
+        en: Feed the Bond costs 2 less and recovers a turn sooner.
+      patches:
+        feed_the_bond:
+          cost: -2
+          cooldown: -1
+    grander_apex:
+      level: 17
+      name: {es: Cima Mayor, en: Grander Apex}
+      description: {es: La Cima infernal añade 12d8 en lugar de 9d8., en: Infernal Apex adds 12d8 instead of 9d8.}
+      patches:
+        infernal_apex:
+          extra_damage: 12d8
+
+hexblade:
+  class_key: warlock
+  name: {es: Filo Maldito, en: Hexblade}
+  description:
+    es: Maldices y peleas de cerca. Tus golpes desarrollan la maldición y consumirla sirve para dañar o para debilitar.
+    en: You curse and fight up close. Your blows grow the curse, and spending it either hurts or weakens.
+  roles: [dmg, control]
+  ready: true
+  abilities:
+    hex_warrior:
+      name: {es: Guerrero Maldito, en: Hex Warrior}
+      description:
+        es: Una vez por turno, tu golpe con arma suma 1d8 necrótico, y tienes +1 a la CA.
+        en: Once per turn, your weapon hit adds 1d8 necrotic, and you have +1 AC.
+      level: 10
+      kind: passive
+      action: none
+      bonus_damage: 1d8
+      bonus_damage_type: necrotic
+      ac_bonus: 1
+      attack_with: cha
+    pact_slash:
+      name: {es: Tajo del Pacto, en: Pact Slash}
+      description:
+        es: Un ataque con arma que añade 3d8 necrótico; si el objetivo está maldito, gasta el maleficio por otros 4d8.
+        en: A weapon attack that adds 3d8 necrotic; if the target is hexed, it spends the hex for another 4d8.
+      level: 10
+      kind: strike
+      cost: 8
+      cooldown: 2
+      extra_damage: 3d8
+      damage_type: necrotic
+      consumes: hexed
+      consume_damage: 4d8
+    cursed_guard:
+      name: {es: Guardia Maldita, en: Cursed Guard}
+      description:
+        es: 'Acción adicional: ganas 3d8 + tu modificador de conjuro de PV temporales.'
+        en: 'Bonus action: you gain 3d8 + your spellcasting modifier in temporary HP.'
+      level: 10
+      kind: buff
+      action: bonus
+      cost: 5
+      cooldown: 3
+      temp_hp: 3d8
+      heal_add: casting
+    pact_edge:
+      name: {es: Filo del Pacto, en: Pact Edge}
+      description: {es: Haces crítico con un 19 o un 20., en: You score a critical hit on a 19 or 20.}
+      level: 15
+      kind: passive
+      action: none
+      crit_range: 19
+    blade_of_the_pact:
+      name: {es: Hoja del Pacto, en: Blade of the Pact}
+      description:
+        es: Un ataque con arma que añade 8d8 necrótico; si el objetivo está maldito, gasta el maleficio por otros 6d8.
+        en: A weapon attack that adds 8d8 necrotic; if the target is hexed, it spends the hex for another 6d8.
+      level: 20
+      kind: strike
+      cost: 22
+      cooldown: 4
+      extra_damage: 8d8
+      damage_type: necrotic
+      consumes: hexed
+      consume_damage: 6d8
+  modifiers:
+    deeper_curse:
+      level: 13
+      name: {es: Maldición Profunda, en: Deeper Curse}
+      description:
+        es: El Tajo del pacto hace 6d8 en lugar de 4d8 al gastar el maleficio.
+        en: Pact Slash deals 6d8 instead of 4d8 when it spends the hex.
+      patches:
+        pact_slash:
+          consume_damage: 6d8
+    sturdier_guard:
+      level: 13
+      name: {es: Guardia Más Firme, en: Sturdier Guard}
+      description: {es: La Guardia maldita da 5d8 PV temporales en lugar de 3d8., en: Cursed Guard gives 5d8 temporary HP instead of 3d8.}
+      patches:
+        cursed_guard:
+          temp_hp: 5d8
+    cheap_slash:
+      level: 17
+      name: {es: Tajo Barato, en: Cheap Slash}
+      description: {es: El Tajo del pacto cuesta 3 menos., en: Pact Slash costs 3 less.}
+      patches:
+        pact_slash:
+          cost: -3
+    blade_unbound:
+      level: 17
+      name: {es: Hoja sin Ataduras, en: Unbound Blade}
+      description: {es: La Hoja del pacto añade 10d8 en lugar de 8d8., en: Blade of the Pact adds 10d8 instead of 8d8.}
+      patches:
+        blade_of_the_pact:
+          extra_damage: 10d8
+
+necromancer:
+  class_key: warlock
+  name: {es: Nigromante, en: Necromancer}
+  description:
+    es: Tus técnicas generan vestigios y los gastas en poder funerario o en un sirviente temporal. No necesitas un cadáver ajeno.
+    en: Your techniques leave remnants, spent either on funerary power or on a temporary servant. You need nobody else's corpse.
+  roles: [dmg, control]
+  ready: true
+  abilities:
+    funerary_power:
+      name: {es: Poder Funerario, en: Funerary Power}
+      description:
+        es: Tus conjuros suman tu modificador de conjuro al daño y cada golpe que te hiere de verdad te da 3 de recurso.
+        en: Your spells add your spellcasting modifier to damage and every blow that really hurts you gives 3 resource.
+      level: 10
+      kind: passive
+      action: none
+      spell_damage_bonus: true
+      resource_on_hurt: 3
+    raise_thrall:
+      name: {es: Levantar un Siervo, en: Raise a Thrall}
+      description:
+        es: Un cuerpo levantado combate a tu lado 5 turnos y golpea a la presa marcada.
+        en: A risen body fights beside you for 5 turns and strikes the marked quarry.
+      level: 10
+      kind: summon
+      cost: 6
+      entity: risen_thrall
+    grave_touch:
+      name: {es: Toque de Tumba, en: Grave Touch}
+      description:
+        es: 'Ataque de conjuro a distancia: 3d8 necrótico, y te cura la mitad del daño que hace.'
+        en: 'Ranged spell attack: 3d8 necrotic, and it heals you for half the damage it deals.'
+      level: 10
+      kind: spell
+      cost: 6
+      cooldown: 1
+      damage: 3d8
+      damage_type: necrotic
+      leech_pct: 50
+    dark_rite:
+      name: {es: Rito Oscuro, en: Dark Rite}
+      description:
+        es: 'Acción adicional: tus siervos pegan más fuerte y mejor 3 turnos.'
+        en: 'Bonus action: your thralls hit harder and truer for 3 turns.'
+      level: 10
+      kind: converge
+      action: bonus
+      cost: 5
+      cooldown: 3
+      boost_turns: 3
+    raise_bone_horde:
+      name: {es: Levantar la Horda, en: Raise the Horde}
+      description:
+        es: Un enjambre de esqueletos desgasta a toda una fila durante 4 turnos.
+        en: A swarm of skeletons wears down a whole row for 4 turns.
+      level: 15
+      kind: summon
+      cost: 10
+      entity: bone_horde
+    legion_of_the_dead:
+      name: {es: Legión de los Muertos, en: Legion of the Dead}
+      description:
+        es: 'Toda la fila tira DES: 10d8 necrótico, la mitad si la supera, y te cura el 40 % del daño que hace.'
+        en: 'The whole row rolls a DEX save: 10d8 necrotic, half on a success, and it heals you for 40% of the damage it deals.'
+      level: 20
+      kind: save
+      cost: 30
+      cooldown: 5
+      damage: 10d8
+      damage_type: necrotic
+      save: dex
+      area: row
+      half_on_save: true
+      leech_pct: 40
+  modifiers:
+    hungrier_touch:
+      level: 13
+      name: {es: Toque Voraz, en: Hungrier Touch}
+      description:
+        es: El Toque de tumba te cura el 80 % del daño en lugar del 50 %.
+        en: Grave Touch heals 80% of the damage instead of 50%.
+      patches:
+        grave_touch:
+          leech_pct: 80
+    quicker_rite:
+      level: 13
+      name: {es: Rito Veloz, en: Quick Rite}
+      description: {es: El Rito oscuro se recupera un turno antes., en: Dark Rite recovers a turn sooner.}
+      patches:
+        dark_rite:
+          cooldown: -1
+    ordered_thrall:
+      level: 17
+      name: {es: Siervo Obediente, en: Obedient Thrall}
+      description:
+        es: Puedes ordenar a tu siervo que golpee ya, con 4d8 extra.
+        en: You can order your thrall to strike now, with 4d8 extra.
+      grants:
+        order_thrall:
+          name: {es: Ordenar al Siervo, en: Order the Thrall}
+          description: {es: El siervo golpea ya a la presa marcada con 4d8 extra., en: The thrall strikes the marked quarry now with 4d8 extra.}
+          level: 17
+          kind: command
+          cost: 6
+          cooldown: 1
+          entity: risen_thrall
+          extra_damage: 4d8
+    grander_legion:
+      level: 17
+      name: {es: Legión Mayor, en: Grander Legion}
+      description: {es: La Legión de los muertos hace 12d8 en lugar de 10d8., en: Legion of the Dead deals 12d8 instead of 10d8.}
+      patches:
+        legion_of_the_dead:
+          damage: 12d8

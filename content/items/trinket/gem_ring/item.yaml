@@ -1,0 +1,6 @@
+name: {es: Anillo con gema, en: Gem ring}
+icon: "💍"
+description: {es: "Cobre trabajado con una gema tallada. Una pequeña fortuna en el mercado.", en: "Worked copper set with a cut gem. A small fortune at the market."}
+type: trinket
+value: 110
+stackable: true

@@ -1,0 +1,38 @@
+order: 6
+tutorial: true
+giver: vale
+after: tut_herbs
+legacy_done: [night_wings]
+name: {es: Guiso del cazador, en: Hunter's Stew}
+summary:
+  es: «Un soldado con hambre es un soldado muerto». Vale quiere que aprendas a cocinar lo que cazas.
+  en: "\"A hungry soldier is a dead soldier.\" Vale wants you to learn to cook what you hunt."
+hint:
+  es: "En la taberna La Corona Rota está el fogón. En «⚒ Actividades», pulsa «🔨 Fabricar» y prepara un estofado del cazador (2 de carne cruda + 1 raíz de sangre). La Cocina es una afición: no ocupa plaza de oficio."
+  en: "The hearth is at the Broken Crown Tavern. In \"⚒ Activities\", press \"🔨 Craft\" and make a Hunter's stew (2 raw meat + 1 bloodroot). Cooking is a hobby: it takes no profession slot."
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: craft, target: hunter_stew}
+rewards:
+  - xp: 50
+  - give_item: {pickaxe: 1}
+stages:
+  locked:
+    state: locked
+    journal: {es: Se acerca la hora de comer., en: Mealtime is coming.}
+  active:
+    journal:
+      es: Cocina un estofado del cazador en el fogón de La Corona Rota.
+      en: Cook a Hunter's stew at the hearth of The Broken Crown.
+    location_text:
+      broken_crown_tavern:
+        es: "El fogón crepita al fondo. Bram te señala la olla con el trapo: «Es toda tuya, mientras no la quemes»."
+        en: The hearth crackles at the back. Bram points his rag at the pot, "All yours, as long as you don't burn it."
+  done:
+    state: completed
+    journal:
+      es: El guiso olía tan bien que medio salón te pidió la receta. Vale te dio un pico y otro encargo.
+      en: The stew smelled so good half the room asked for the recipe. Vale gave you a pickaxe and another job.

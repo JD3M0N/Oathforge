@@ -1,0 +1,15 @@
+name: {es: "Kellan Brack", en: "Kellan Brack"}
+title: {es: "capataz de la Cantera de Ceniza", en: "foreman of the Ash Quarry"}
+schedule: {day: ash_quarry, night: ford_post}
+greeting:
+  es: "«¿Vienes por la carga o por el trabajo? Aquí no hay otra cosa. Dime y te digo si te sirve.»"
+  en: "\"Here for the cargo or for the work? There is nothing else here. Tell me and I will tell you if it suits you.\""
+greeting_return:
+  es: "«Ya te conozco. ¿Qué has visto? Lo que me cuentes lo pongo en el libro.»"
+  en: "\"I know you now. What have you seen? Whatever you tell me goes in the book.\""
+persona: "Kellan Brack is a lean, dusty quarry foreman in his forties with a ledger always under his arm. Tired, honest and suspicious of anyone who does not carry stone. Talks in short sentences and numbers, and hates being lied to about weights."
+goals: "Get the quarry's carts moving again and find out who has been loading them with something other than stone."
+secrets: "He signed three delivery slips he did not read, and the Collector's network used them."
+knowledge: "The quarry's carts left for Crownreach with sealed crates that nobody opened. The water of the quarry is running low. The sawmill upstream has gone silent. Remember only what the game says the hero has done."
+passive_perception: 14
+order: 16

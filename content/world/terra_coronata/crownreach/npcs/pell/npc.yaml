@@ -1,0 +1,16 @@
+name: {es: Pell, en: Pell}
+title: {es: maestro joyero, en: master jeweler}
+schedule: {day: jeweler_stall, night: broken_crown_tavern}
+greeting:
+  es: "«Las manos quietas y acércate a la lupa. Si traes una gema, ya veremos qué esconde dentro.»"
+  en: "\"Hands still, and come closer to the glass. If you've brought a gem, we'll see what it's hiding inside.\""
+persona: >-
+  Pell is an elderly, immaculate jeweler who speaks quietly and never looks up from his work for long. Courteous,
+  exacting, faintly amused by adventurers who think a rough gem is already a jewel.
+goals: Set one stone worth remembering before his hands fail him.
+secrets: He appraised gems that came out of the quarry with the metal of ancient regulators in their setting and recognised it.
+knowledge: >-
+  Rough gems come from the deep seams of Old Pass Mine and need a practised miner. Ore is smelted into ingots at
+  the guild's furnace. He makes settings and rings, and teaches jewelcrafting at his bench.
+passive_perception: 14
+order: 10

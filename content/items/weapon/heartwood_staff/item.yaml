@@ -1,0 +1,8 @@
+name: {es: Bastón de corazón de roble, en: Heartwood staff}
+icon: "🪄"
+description: {es: "Madera densa y veteada que sostiene bien lo que se canaliza por ella.", en: "Dense grained wood that holds what is channelled through it."}
+type: weapon
+slot: main_hand
+min_level: 10
+value: 150
+weapon: {damage: 1d8, damage_type: bludgeoning}

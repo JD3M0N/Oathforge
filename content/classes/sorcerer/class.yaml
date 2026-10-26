@@ -1,0 +1,151 @@
+name: {es: Hechicero, en: Sorcerer}
+description:
+  es: Moldea la magia a voluntad; frágil de cerca, devastador a distancia con fuego y hechizos de control.
+  en: Shapes magic at will; frail up close, devastating from afar with fire and control spells.
+hit_die: 6
+primary: int
+casting: int
+array: {int: 15, con: 14, dex: 13, wis: 12, cha: 10, str: 8}
+skills: [arcana, history]
+items: {quarterstaff: 1, dagger: 1, healing_potion: 1}
+equip: [quarterstaff]
+signature: [fire_bolt]
+resource: mana
+abilities:
+  fire_bolt:
+    name: {es: Rayo de Fuego, en: Fire Bolt}
+    description: {es: 'Ataque de conjuro a distancia (INT): 1d10 de daño de fuego.', en: 'Ranged spell attack (INT): 1d10 fire damage.'}
+    details:
+      es: 'Una chispa en la punta de los dedos que estalla en llamas. Es un ataque de conjuro a distancia con tu INT que hace 1d10 de daño de fuego. No cuesta nada: es tu ataque de siempre, también desde la retaguardia.'
+      en: 'A spark at your fingertips that bursts into flame. It is a ranged spell attack with your INT that deals 1d10 fire damage. It costs nothing: it is your everyday attack, from the back row too.'
+    level: 1
+    kind: spell
+    damage: 1d10
+    damage_type: fire
+    damage_tiers: {5: 2d10, 11: 3d10, 17: 4d10}
+  mage_armor:
+    name: {es: Armadura de Mago, en: Mage Armor}
+    description: {es: +3 a la CA si no llevas armadura., en: +3 AC while you wear no armor.}
+    details:
+      es: Una fuerza invisible te envuelve como una coraza. Si no llevas armadura, tienes +3 a la CA siempre, sin gastar acciones.
+      en: An invisible force wraps you like a breastplate. If you wear no armor, you always have +3 AC, with no action needed.
+    level: 1
+    kind: passive
+    action: none
+    ac_bonus_unarmored: 3
+  sleep:
+    name: {es: Dormir, en: Sleep}
+    description:
+      es: Un enemigo hace una salvación de SAB; si falla, se duerme 2 turnos (ventaja contra él; despierta al recibir daño).
+      en: One enemy makes a WIS save; on a failure it falls asleep for 2 turns (advantage against it; it wakes when damaged).
+    details:
+      es: 'Un susurro y los párpados del enemigo pesan como el plomo. Hace una salvación de SAB; si falla, se duerme 2 turnos: no actúa y tus ataques tienen ventaja, pero despierta si recibe daño. Gasta Maná.'
+      en: 'A whisper and the enemy''s eyelids weigh like lead. It makes a WIS save; on a failure it falls asleep for 2 turns: it does not act and your attacks have advantage, but it wakes up if it takes damage. It spends Mana.'
+    level: 2
+    kind: save
+    cost: 3
+    save: wis
+    status: asleep
+    status_turns: 2
+  fireball:
+    name: {es: Bola de Fuego, en: Fireball}
+    description:
+      es: 'Toda la fila del objetivo hace una salvación de DES: 3d6 de fuego, la mitad si la supera.'
+      en: 'The target''s whole row makes a DEX save: 3d6 fire, half on a success.'
+    details:
+      es: 'Una perla de fuego que vuela hasta el enemigo y revienta. Toda su fila hace una salvación de DES: 3d6 de daño de fuego, la mitad si la supera. Ideal contra grupos en primera línea. Gasta Maná.'
+      en: 'A bead of fire that flies to the enemy and bursts. Its whole row makes a DEX save: 3d6 fire damage, half on a success. Ideal against groups in the front line. It spends Mana.'
+    level: 3
+    kind: save
+    cost: 6
+    cooldown: 2
+    area: row
+    save: dex
+    damage: 3d6
+    damage_type: fire
+    half_on_save: true
+  magic_missile:
+    name: {es: Proyectil Mágico, en: Magic Missile}
+    description: {es: 'Tres dardos que nunca fallan: 3d4+3 de daño de fuerza.', en: 'Three darts that never miss: 3d4+3 force damage.'}
+    details:
+      es: 'Tres dardos de luz que buscan su blanco solos. No hay tirada: siempre aciertan y hacen 3d4+3 de daño de fuerza. Perfecto para rematar a un enemigo con CA alta. Gasta Maná.'
+      en: 'Three darts of light that find their mark on their own. There is no roll: they always hit and deal 3d4+3 force damage. Perfect to finish off an enemy with high AC. It spends Mana.'
+    level: 5
+    kind: spell
+    cost: 4
+    auto_hit: true
+    damage: 3d4+3
+    damage_type: force
+  ice_lance:
+    name: {es: Lanza de Hielo, en: Ice Lance}
+    description:
+      es: 'Ataque de conjuro a distancia: 3d6 de daño de frío. Cuesta 4 de Maná.'
+      en: 'Ranged spell attack: 3d6 cold damage. Costs 4 Mana.'
+    details:
+      es: Una lanza de hielo que atraviesa la guardia. Más cara que el rayo de fuego pero mucho más fuerte, para cuando un solo enemigo importa.
+      en: A lance of ice that pierces the guard. Dearer than the fire bolt but much stronger, for when a single enemy matters.
+    level: 4
+    kind: spell
+    cost: 4
+    damage: 3d6
+    damage_type: cold
+  spell_mastery:
+    name: {es: Maestría Arcana, en: Spell Mastery}
+    description: {es: Tus conjuros suman tu modificador de conjuro al daño., en: Your spells add your spellcasting modifier to damage.}
+    details:
+      es: 'Ya no solo lanzas la magia: la moldeas. Tus conjuros suman tu modificador de conjuro al daño.'
+      en: 'You no longer just cast magic: you shape it. Your spells add your spellcasting modifier to damage.'
+    level: 6
+    kind: passive
+    action: none
+    spell_damage_bonus: true
+  frost_nova:
+    name: {es: Nova Gélida, en: Frost Nova}
+    description:
+      es: 'Toda la fila tira DES: 3d6 de frío y queda enredada un turno si falla. Cuesta 8 de Maná.'
+      en: 'The whole row rolls a DEX save: 3d6 cold and restrained for a turn on a fail. Costs 8 Mana.'
+    details:
+      es: Un anillo de frío estalla a tus pies y atrapa a todo lo que toca. Control y daño de área, a un precio alto.
+      en: A ring of cold bursts at your feet and traps everything it touches. Control and area damage, at a high price.
+    level: 7
+    kind: save
+    cost: 8
+    cooldown: 3
+    damage: 3d6
+    damage_type: cold
+    save: dex
+    area: row
+    status: restrained
+  arcane_ward:
+    name: {es: Resguardo Arcano, en: Arcane Ward}
+    description:
+      es: 'Acción adicional: ganas 3d6 + tu modificador de conjuro de PV temporales. Cuesta 6 de Maná.'
+      en: 'Bonus action: you gain 3d6 + your spellcasting modifier in temporary HP. Costs 6 Mana.'
+    details:
+      es: 'Un escudo de magia pura que absorbe golpes antes que tu cuerpo. Es una acción adicional: lánzalo y sigue hechizando.'
+      en: 'A shield of pure magic that soaks up blows before your body does. It is a bonus action: cast it and keep spelling.'
+    level: 8
+    kind: buff
+    action: bonus
+    cost: 6
+    cooldown: 4
+    temp_hp: 3d6
+    heal_add: casting
+  cone_of_cold:
+    name: {es: Cono de Frío, en: Cone of Cold}
+    description:
+      es: 'Toda la fila tira DES: 8d6 de frío, la mitad si la supera. Cuesta 14 de Maná.'
+      en: 'The whole row rolls a DEX save: 8d6 cold, half on a success. Costs 14 Mana.'
+    details:
+      es: 'Tu conjuro más destructivo: un cono de frío absoluto sobre la fila entera. Casi toda tu reserva, y casi siempre decide el combate.'
+      en: 'Your most destructive spell: a cone of absolute cold over the whole row. Nearly all your reserve, and it almost always decides the fight.'
+    level: 9
+    kind: save
+    cost: 14
+    cooldown: 4
+    damage: 8d6
+    damage_type: cold
+    save: dex
+    area: row
+    half_on_save: true
+order: 7

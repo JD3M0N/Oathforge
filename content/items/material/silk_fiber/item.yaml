@@ -1,0 +1,6 @@
+name: {es: Fibra sedosa, en: Silk fiber}
+icon: "🧵"
+description: {es: "Fibra larga y brillante que casi se hila sola.", en: "Long bright fiber that almost spins itself."}
+type: material
+value: 16
+stackable: true

@@ -1,0 +1,42 @@
+order: 10
+tutorial: true
+giver: bram
+after: tut_chapel
+name: {es: El Viejo Colmillo, en: Old Tusk}
+summary:
+  es: Bram te cuenta la leyenda del jabalí que ningún cazador ha logrado abatir. Es la última prueba de Vale.
+  en: Bram tells you the legend of the boar no hunter has ever brought down. It is Vale's last test.
+hint:
+  es: "Descansa antes (vida y habilidades llenas) y ve al Prado de los Colmillos. En «⚒ Actividades», pulsa «🏹 Cazar»: el Viejo Colmillo te estará esperando. Lleva pociones."
+  en: 'Rest first (full health and abilities) and go to Tusk Meadow. In "⚒ Activities", press "🏹 Hunt": Old Tusk will be waiting for you. Bring potions.'
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+turn_in_stage: told          # abatirlo no paga: hay que volver a contárselo a Bram
+complete_stage: done
+objectives:
+  - {kind: kill, target: old_tusk}
+rewards:
+  - xp: 300
+stages:
+  locked:
+    state: locked
+    journal: {es: Una leyenda del prado espera a alguien digno., en: A meadow legend awaits someone worthy.}
+  active:
+    journal:
+      es: Abate al Viejo Colmillo en el Prado de los Colmillos.
+      en: Bring down Old Tusk in Tusk Meadow.
+    location_text:
+      tusk_meadow:
+        es: La tierra tiembla. Unas huellas enormes cruzan el prado, más profundas que las de cualquier jabalí.
+        en: The ground trembles. Huge tracks cross the meadow, deeper than any boar's.
+  told:
+    state: ready
+    journal:
+      es: "El Viejo Colmillo ha caído. Vuelve a La Corona Rota y cuéntaselo a Bram: te debe una recompensa."
+      en: "Old Tusk is down. Go back to the Broken Crown and tell Bram: he owes you a reward."
+  done:
+    state: completed
+    journal:
+      es: "El Viejo Colmillo ha caído y su cabeza ya cuelga sobre la barra de La Corona Rota. Vale te da por formado. Bram baja la voz: «Dicen que en el Bosque de los Susurros desaparecen patrullas. Si encuentras algo, llévaselo al sargento Holt»."
+      en: "Old Tusk has fallen and its head now hangs above the bar of the Broken Crown. Vale calls you trained. Bram lowers his voice: \"Word is patrols keep vanishing in the Whispering Woods. If you find anything, bring it to Sergeant Holt.\""

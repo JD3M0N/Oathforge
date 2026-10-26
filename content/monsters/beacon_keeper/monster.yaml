@@ -1,0 +1,29 @@
+name: {es: "El Custodio de las Balizas", en: "The Beacon Keeper"}
+indefinite: {es: "el custodio de las balizas", en: "the beacon keeper"}
+icon: 🔆
+description: {es: "El último encargado de las balizas del valle. Su luz regula lo que el Taller del Regulador ya no puede: la prueba de quien quiera llamarse veterano.", en: "The last keeper of the vale's beacons. His light regulates what the Regulator Workshop no longer can: the test of whoever wants to call themselves a veteran."}
+hp: 200
+ac: 19
+dex: 2
+wis: 1
+row: front
+attacks:
+  - {name: {es: "Báculo del faro", en: "Lighthouse staff"}, to_hit: 11, damage: 2d8+6, damage_type: bludgeoning}
+pattern:
+  plate: 50
+  rearm: 25
+  cycle: 2
+  cycle_broken: 1
+  heavy: {name: {es: "Haz de la baliza", en: "Beacon beam"}, to_hit: 12, damage: 5d8+6, damage_type: radiant, ranged: true}
+boss: true
+xp: 6000
+gold: "12d10"
+loot:
+  - {item: greater_healing_potion, chance: 1.0, qty: 3}
+immune: [frightened]
+type: humanoid
+habitat: {es: "Alto de las Balizas", en: "Beacon Height"}
+lore:
+  es: "El último encargado de las balizas del valle. Su luz regula lo que el Taller del Regulador ya no puede: la prueba de quien quiera llamarse veterano."
+  en: "The last keeper of the vale's beacons. His light regulates what the Regulator Workshop no longer can: the test of whoever wants to call themselves a veteran."
+order: 22

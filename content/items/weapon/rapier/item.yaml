@@ -1,0 +1,7 @@
+name: {es: Estoque, en: Rapier}
+icon: "🤺"
+description: {es: "Hoja fina y rápida, más de duelista que de soldado.", en: "A thin and quick blade, more a duelist's than a soldier's."}
+type: weapon
+slot: main_hand
+value: 25
+weapon: {damage: 1d8, damage_type: piercing, finesse: true}

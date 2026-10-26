@@ -1,0 +1,7 @@
+name: {es: Ración del pescador, en: Fisher's ration}
+icon: "🍱"
+description: {es: "Pescado ahumado envuelto en hojas. Recupera 2d4+1 PV fuera de combate.", en: "Smoked fish wrapped in leaves. Restores 2d4+1 HP outside combat."}
+type: consumable
+value: 10
+stackable: true
+heal: 2d4+1

@@ -1,0 +1,6 @@
+name: {es: Cuero de jabalí, en: Boar hide}
+icon: "🐗"
+description: {es: "Piel dura y de cerdas ásperas.", en: "Tough hide with coarse bristles."}
+type: material
+value: 7
+stackable: true

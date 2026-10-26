@@ -1,0 +1,6 @@
+name: {es: Hacha ancha, en: Broad axe}
+icon: "🪓"
+description: {es: "Pesada y sin remilgos: de cada tronco sale algo más.", en: "Heavy and unfussy: every log gives a little more."}
+type: tool
+value: 110
+tool: {skill: woodcutting, base: woodaxe, min_rank: 2, extra_chance: 0.05}

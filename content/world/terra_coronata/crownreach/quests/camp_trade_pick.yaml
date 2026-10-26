@@ -1,0 +1,37 @@
+order: 23
+giver: tamsin
+after: camp_roof
+name: {es: "Elige tu mano", en: "Choose Your Hand"}
+summary:
+  es: "Toda orden falsa necesita manos que fabriquen lo que se mueve. Tamsin te pide que aprendas un oficio, el que quieras."
+  en: "Every forged order needs hands that make what gets moved. Tamsin asks you to learn a trade, any trade."
+hint:
+  es: "Ve al Barrio de Oficios y aprende uno de los oficios con su maestro (🛠️ Oficios). No importa cuál: tu clase no te obliga a ninguno."
+  en: "Go to Craftsmen's Row and learn one of the trades from its master (🛠️ Professions). It does not matter which: your class forces none on you."
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: learn_profession, target: any}
+rewards:
+  - {xp: 100}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Tamsin quiere saber qué sabes hacer con las manos."
+      en: "Tamsin wants to know what you can do with your hands."
+  active:
+    journal:
+      es: "Aprende un oficio con su maestro, en el Barrio de Oficios. Herrería, alquimia, carpintería, peletería, joyería, escribanía, ingeniería o sastrería: cualquiera sirve."
+      en: "Learn a trade from its master on Craftsmen's Row. Blacksmithing, alchemy, carpentry, leatherworking, jewelcrafting, scribing, engineering or tailoring: any will do."
+    location_text:
+      crownreach_workshops:
+        es: "Cada puesto es de un maestro. Entra en el que te llame y habla con él: 🛠️ Oficios."
+        en: "Each stall belongs to a master. Step into the one that calls to you and talk to them: 🛠️ Professions."
+  done:
+    state: completed
+    journal:
+      es: "Ya tienes un oficio. Tamsin sonríe: «Ahora habrá que ganárselo»."
+      en: "You have a trade now. Tamsin smiles: \"Now you will have to earn it.\""

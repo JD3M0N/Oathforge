@@ -1,0 +1,206 @@
+battle_master:
+  class_key: warrior
+  name: {es: Maestro de Batalla, en: Battle Master}
+  description:
+    es: Un repertorio corto de maniobras para abrir una defensa, interrumpir o preparar el remate. La respuesta correcta al patrón del rival, no un árbol de combos.
+    en: A short set of manoeuvres to open a defence, interrupt or set up the finisher. The right answer to the enemy's pattern, not a combo tree.
+  roles: [dmg, control]
+  ready: true
+  abilities:
+    tactical_eye:
+      name: {es: Ojo Táctico, en: Tactical Eye}
+      description: {es: Haces crítico con un 19 o un 20., en: You score a critical hit on a 19 or 20.}
+      level: 10
+      kind: passive
+      action: none
+      crit_range: 19
+    trip_attack:
+      name: {es: Derribo, en: Trip Attack}
+      description:
+        es: 'El objetivo tira DES: si falla, recibe 3d6 contundente y queda trabado un turno.'
+        en: 'The target rolls a DEX save: on a fail it takes 3d6 bludgeoning and is restrained for a turn.'
+      level: 10
+      kind: save
+      cost: 6
+      cooldown: 2
+      damage: 3d6
+      damage_type: bludgeoning
+      save: dex
+      status: restrained
+    exploit_opening:
+      name: {es: Aprovechar la Apertura, en: Exploit the Opening}
+      description:
+        es: Un ataque con arma que añade 3d8 cortante. Si el objetivo está trabado, gasta la traba por otros 3d8.
+        en: A weapon attack that adds 3d8 slashing. If the target is restrained, it spends that for another 3d8.
+      level: 10
+      kind: strike
+      cost: 7
+      cooldown: 2
+      extra_damage: 3d8
+      damage_type: slashing
+      consumes: restrained
+      consume_damage: 3d8
+    battle_instinct:
+      name: {es: Instinto de Batalla, en: Battle Instinct}
+      description:
+        es: El primer golpe que recibes cada ronda hace la mitad de daño.
+        en: The first blow you take each round does half damage.
+      level: 15
+      kind: passive
+      action: none
+      halve_first_hit: true
+    martial_supremacy:
+      name: {es: Superioridad Marcial, en: Martial Supremacy}
+      description:
+        es: Un ataque con arma que añade 7d8 cortante; si el objetivo está trabado, gasta la traba por otros 5d8.
+        en: A weapon attack that adds 7d8 slashing; if the target is restrained, it spends that for another 5d8.
+      level: 20
+      kind: strike
+      cost: 18
+      cooldown: 4
+      extra_damage: 7d8
+      damage_type: slashing
+      consumes: restrained
+      consume_damage: 5d8
+  modifiers:
+    quick_maneuver:
+      level: 13
+      name: {es: Maniobra Rápida, en: Quick Manoeuvre}
+      description: {es: El Derribo cuesta 2 menos., en: Trip Attack costs 2 less.}
+      patches:
+        trip_attack:
+          cost: -2
+    crushing_opening:
+      level: 13
+      name: {es: Apertura Aplastante, en: Crushing Opening}
+      description:
+        es: Aprovechar la apertura hace 5d8 en lugar de 3d8 al gastar la traba.
+        en: Exploit the Opening deals 5d8 instead of 3d8 when it spends the hold.
+      patches:
+        exploit_opening:
+          consume_damage: 5d8
+    long_hold:
+      level: 17
+      name: {es: Presa Larga, en: Long Hold}
+      description:
+        es: El Derribo traba 1 turno más y se recupera un turno antes.
+        en: Trip Attack holds 1 turn longer and recovers a turn sooner.
+      patches:
+        trip_attack:
+          status_turns: 1
+          cooldown: -1
+    masters_edge:
+      level: 17
+      name: {es: Filo del Maestro, en: Master's Edge}
+      description: {es: La Superioridad marcial añade 9d8 en lugar de 7d8., en: Martial Supremacy adds 9d8 instead of 7d8.}
+      patches:
+        martial_supremacy:
+          extra_damage: 9d8
+
+bulwark:
+  class_key: warrior
+  name: {es: Baluarte, en: Bulwark}
+  description:
+    es: Escudo, aplomo y golpes que desequilibran. Bloquear prepara una intervención física; no dependes de magia ni de curarte.
+    en: Shield, footing and blows that unbalance. Blocking sets up a physical intervention; you lean on no magic and no healing.
+  roles: [deff, control]
+  ready: true
+  abilities:
+    shield_wall:
+      name: {es: Muro de Escudos, en: Shield Wall}
+      description:
+        es: +2 a la CA; cuando un golpe te hiere de verdad ganas 2 de Foco y quien te hirió recibe 1d6 contundente.
+        en: +2 AC; when a blow really hurts you, you gain 2 Focus and whoever hurt you takes 1d6 bludgeoning.
+      level: 10
+      kind: passive
+      action: none
+      ac_bonus: 2
+      thorns: 1d6
+      bonus_damage_type: bludgeoning
+      resource_on_hurt: 2
+    brace:
+      name: {es: Afirmar los Pies, en: Brace}
+      description: {es: 'Acción adicional: ganas 3d8 PV temporales.', en: 'Bonus action: you gain 3d8 temporary HP.'}
+      level: 10
+      kind: buff
+      action: bonus
+      cost: 4
+      cooldown: 3
+      temp_hp: 3d8
+    shield_charge:
+      name: {es: Carga de Escudo, en: Shield Charge}
+      description:
+        es: 'El objetivo tira DES: si falla, recibe 3d6 contundente y queda aturdido un turno.'
+        en: 'The target rolls a DEX save: on a fail it takes 3d6 bludgeoning and is stunned for a turn.'
+      level: 10
+      kind: save
+      cost: 8
+      cooldown: 3
+      damage: 3d6
+      damage_type: bludgeoning
+      save: dex
+      status: stunned
+    immovable:
+      name: {es: Inamovible, en: Immovable}
+      description:
+        es: +1 a la CA, y el primer golpe de cada ronda hace la mitad de daño.
+        en: +1 AC, and the first blow each round does half damage.
+      level: 15
+      kind: passive
+      action: none
+      ac_bonus: 1
+      halve_first_hit: true
+    unbreakable_line:
+      name: {es: Línea Inquebrantable, en: Unbreakable Line}
+      description:
+        es: 'Acción adicional: ganas 10d8 PV temporales y bendición 3 turnos.'
+        en: 'Bonus action: you gain 10d8 temporary HP and a blessing for 3 turns.'
+      level: 20
+      kind: buff
+      action: bonus
+      cost: 16
+      cooldown: 5
+      status: blessed
+      status_turns: 3
+      temp_hp: 10d8
+  modifiers:
+    heavier_wall:
+      level: 13
+      name: {es: Muro Más Pesado, en: Heavier Wall}
+      description: {es: Afirmar los pies da 5d8 PV temporales en lugar de 3d8., en: Brace gives 5d8 temporary HP instead of 3d8.}
+      patches:
+        brace:
+          temp_hp: 5d8
+    bash_back:
+      level: 13
+      name: {es: Empujón de Respuesta, en: Bash Back}
+      description:
+        es: 'Aprendes el Empujón: un ataque con arma que añade 2d8 contundente.'
+        en: 'You learn Shield Bash: a weapon attack that adds 2d8 bludgeoning.'
+      grants:
+        shield_bash_strike:
+          name: {es: Empujón, en: Shield Bash}
+          description: {es: Un ataque con arma que añade 2d8 de daño contundente., en: A weapon attack that adds 2d8 bludgeoning damage.}
+          level: 13
+          kind: strike
+          cost: 5
+          cooldown: 2
+          extra_damage: 2d8
+          damage_type: bludgeoning
+    lasting_line:
+      level: 17
+      name: {es: Línea Sostenida, en: Sustained Line}
+      description:
+        es: La Línea inquebrantable dura 2 turnos más y se recupera un turno antes.
+        en: Unbreakable Line lasts 2 turns longer and recovers a turn sooner.
+      patches:
+        unbreakable_line:
+          status_turns: 2
+          cooldown: -1
+    crushing_charge:
+      level: 17
+      name: {es: Carga Aplastante, en: Crushing Charge}
+      description: {es: La Carga de escudo hace 5d6 en lugar de 3d6., en: Shield Charge deals 5d6 instead of 3d6.}
+      patches:
+        shield_charge:
+          damage: 5d6

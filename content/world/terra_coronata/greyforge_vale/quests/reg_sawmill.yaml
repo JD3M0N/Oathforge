@@ -1,0 +1,40 @@
+order: 65
+giver: kellan
+after: reg_wood
+name: {es: "El aserradero que calló", en: "The Sawmill That Fell Silent"}
+summary:
+  es: "Nadie ha oído sierras en el Aserradero Silencioso desde antes del invierno. Kellan sospecha que lo que se detuvo se está moviendo otra vez."
+  en: "Nobody has heard saws at the Silent Sawmill since before winter. Kellan suspects what stopped is moving again."
+hint:
+  es: "Ve al Aserradero Silencioso, derrota a dos leñadores desbocados y a dos autómatas de sierra."
+  en: "Go to the Silent Sawmill, defeat two runaway lumberjacks and two sawblade automatons."
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: visit, target: silent_sawmill}
+  - {kind: kill, target: lumber_brute, count: 2}
+  - {kind: kill, target: sawblade_automaton, count: 2}
+rewards:
+  - {xp: 1250}
+  - {gold: 80}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Kellan escucha el silencio del río."
+      en: "Kellan listens to the river's silence."
+  active:
+    journal:
+      es: "Despeja el Aserradero Silencioso: dos leñadores desbocados y dos autómatas de sierra."
+      en: "Clear the Silent Sawmill: two runaway lumberjacks and two sawblade automatons."
+    location_text:
+      silent_sawmill:
+        es: "Las sierras están quietas y el río represado. Las cadenas se mueven solas cuando no las miras."
+        en: "The saws are still and the river dammed. The chains move by themselves when you are not looking."
+  done:
+    state: completed
+    journal:
+      es: "El río volvió a pasar bajo la rueda. Entre los papeles del despacho hay un nombre repetido: Taller del Regulador."
+      en: "The river passed under the wheel again. Among the papers in the office a name repeats: Regulator Workshop."

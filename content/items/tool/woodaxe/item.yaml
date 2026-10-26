@@ -1,0 +1,5 @@
+name: {es: Hacha de leñador, en: Woodcutter's axe}
+icon: "🪓"
+description: {es: "Hoja ancha y pesada, hecha para troncos y no para cráneos.", en: "A broad heavy blade made for logs, not skulls."}
+type: tool
+value: 15

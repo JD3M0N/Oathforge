@@ -1,0 +1,37 @@
+order: 1
+tutorial: true
+giver: vale
+legacy_done: [night_wings]
+name: {es: Alistamiento, en: Mustering In}
+summary:
+  es: La sargenta Vale alista a los recién llegados en el Gremio de Aventureros, junto a la plaza. Dice que la ciudad necesita manos… y que las tuyas parecen servir.
+  en: Sergeant Vale signs newcomers up at the Adventurers' Guild, just off the plaza. She says the city needs hands… and yours look useful.
+hint:
+  es: Ve al Gremio de Aventureros (desde la plaza, con «🧭 Viajar»). Pulsa «💬 Hablar» y elige a la sargenta Vale. Luego abre el /rulebook y lee «🧺 Actividades».
+  en: Go to the Adventurers' Guild (from the plaza, with "🧭 Travel"). Press "💬 Talk" and pick Sergeant Vale. Then open the /rulebook and read "🧺 Activities".
+start_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: talk, target: vale}
+  - {kind: read, target: activities}
+rewards:
+  - xp: 25
+  - give_item: {skinning_knife: 1}
+stages:
+  active:
+    journal:
+      es: "Preséntate a la sargenta Vale en el Gremio de Aventureros. «Antes de salir, lee el reglamento», te dice: el /rulebook explica cómo funciona todo, y «🧺 Actividades», qué es minar, talar, recolectar o desollar."
+      en: "Report to Sergeant Vale at the Adventurers' Guild. \"Read the rulebook before you head out,\" she tells you: the /rulebook explains how everything works, and \"🧺 Activities\" what mining, woodcutting, gathering or skinning are."
+    location_text:
+      crownreach_plaza:
+        es: "Al este de la plaza, sobre una puerta de piedra, cuelga el escudo del Gremio de Aventureros. Allí dentro alistan a los recién llegados: 🧭 ve al gremio y habla con la sargenta Vale."
+        en: "East of the plaza, above a stone door, hangs the crest of the Adventurers' Guild. That is where newcomers are signed up: 🧭 go to the guild and talk to Sergeant Vale."
+      adventurers_guild:
+        es: "Una sargenta de la Guardia de Plata, con la voz de quien ha gritado a mil reclutas, llama a los recién llegados desde el tablón: «¡Eh, cara nueva! Ven aquí». 🗨️ Habla con ella para empezar."
+        en: "A Silver Guard sergeant, with the voice of someone who has shouted at a thousand recruits, calls to the newcomers from the notice board: \"Hey, new face! Over here.\" 🗨️ Talk to her to begin."
+  done:
+    state: completed
+    journal:
+      es: Vale te apuntó en su lista y te dio un cuchillo de desollar. «Primero, conoce la ciudad».
+      en: Vale put you on her list and handed you a skinning knife. "First, learn the city."

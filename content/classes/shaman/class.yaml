@@ -1,0 +1,138 @@
+name: {es: Chamán, en: Shaman}
+description:
+  es: 'Voz de los espíritus: pide prestada la fuerza de los elementos para golpear, sanar y proteger.'
+  en: 'Voice of the spirits: borrows the strength of the elements to strike, heal and protect.'
+hit_die: 8
+primary: wis
+casting: wis
+array: {wis: 15, con: 14, str: 13, dex: 12, int: 10, cha: 8}
+skills: [survival, medicine]
+items: {quarterstaff: 1, leather_armor: 1, healing_potion: 1}
+equip: [quarterstaff, leather_armor]
+signature: [elemental_spark]
+resource: mana
+abilities:
+  elemental_spark:
+    name: {es: Chispa Elemental, en: Elemental Spark}
+    description: {es: 'Ataque de conjuro a distancia (SAB): 1d8 de daño de fuego.', en: 'Ranged spell attack (WIS): 1d8 fire damage.'}
+    details:
+      es: Una chispa que un espíritu del fuego te presta un instante. Es tu ataque de siempre y no cuesta Maná.
+      en: A spark that a fire spirit lends you for a moment. It is your everyday attack and costs no Mana.
+    level: 1
+    kind: spell
+    damage: 1d8
+    damage_type: fire
+    damage_tiers: {5: 2d8, 11: 3d8, 17: 4d8}
+  stoneskin:
+    name: {es: Piel de Piedra, en: Stoneskin}
+    description:
+      es: 'Acción adicional: ganas 2d4 + tu modificador de conjuro de PV temporales. Cuesta 3 de Maná.'
+      en: 'Bonus action: you gain 2d4 + your spellcasting modifier in temporary HP. Costs 3 Mana.'
+    details:
+      es: Un espíritu de la tierra endurece tu piel por un rato. Es una acción adicional barata para encajar el siguiente golpe.
+      en: A spirit of the earth hardens your skin for a while. A cheap bonus action to soak up the next blow.
+    level: 1
+    kind: buff
+    action: bonus
+    cost: 3
+    cooldown: 3
+    temp_hp: 2d4
+    heal_add: casting
+  tidal_mending:
+    name: {es: Marea Sanadora, en: Tidal Mending}
+    description:
+      es: Recuperas 1d10 + tu modificador de conjuro en PV. Cuesta 4 de Maná.
+      en: You recover 1d10 + your spellcasting modifier in HP. Costs 4 Mana.
+    details:
+      es: El agua que cura sube por tus manos. Usa tu acción, así que cúrate cuando el combate te lo permita.
+      en: The water that heals rises through your hands. It uses your action, so heal when the fight lets you.
+    level: 2
+    kind: heal
+    cost: 4
+    heal_dice: 1d10
+    heal_add: casting
+  earth_grasp:
+    name: {es: Agarre de Tierra, en: Earth Grasp}
+    description:
+      es: 'Toda la fila tira DES: quien falla queda enredado 2 turnos. Cuesta 5 de Maná.'
+      en: 'The whole row rolls a DEX save: whoever fails is restrained for 2 turns. Costs 5 Mana.'
+    details:
+      es: La tierra misma sujeta los pies de la fila entera. No hace daño, pero un enemigo atrapado ya no es un problema.
+      en: The earth itself holds the feet of the whole row. It does no damage, but a trapped enemy is no longer a problem.
+    level: 3
+    kind: save
+    cost: 5
+    cooldown: 3
+    save: dex
+    area: row
+    status: restrained
+    status_turns: 2
+  frost_lash:
+    name: {es: Latigazo de Escarcha, en: Frost Lash}
+    description:
+      es: 'Ataque de conjuro a distancia: 3d6 de daño de frío. Cuesta 4 de Maná.'
+      en: 'Ranged spell attack: 3d6 cold damage. Costs 4 Mana.'
+    details:
+      es: Un látigo de hielo que un espíritu del invierno hace restallar por ti. Más caro que la chispa, pero mucho más fuerte.
+      en: A whip of ice that a winter spirit cracks for you. Dearer than the spark, but much stronger.
+    level: 4
+    kind: spell
+    cost: 4
+    damage: 3d6
+    damage_type: cold
+  spirit_ward:
+    name: {es: Resguardo de los Espíritus, en: Spirit Ward}
+    description: {es: Eres inmune al miedo., en: You are immune to fear.}
+    details:
+      es: 'Los espíritus te cuidan: ni el grito de un espectro ni un conjuro te hacen retroceder. Siempre activa.'
+      en: 'The spirits watch over you: neither a spectre''s wail nor a spell makes you flinch. Always on.'
+    level: 5
+    kind: passive
+    action: none
+    immune: [frightened]
+  storm_chain:
+    name: {es: Cadena de Tormenta, en: Storm Chain}
+    description:
+      es: 'Toda la fila tira DES: 4d6 de fuego, la mitad si la supera. Cuesta 8 de Maná.'
+      en: 'The whole row rolls a DEX save: 4d6 fire, half on a success. Costs 8 Mana.'
+    details:
+      es: El rayo salta de uno a otro por toda la fila. Es tu daño de área, y rinde más cuanto más juntos están.
+      en: Lightning leaps from one to the next along the whole row. It is your area damage, and it pays more the closer together they stand.
+    level: 6
+    kind: save
+    cost: 8
+    cooldown: 2
+    damage: 4d6
+    damage_type: fire
+    save: dex
+    area: row
+    half_on_save: true
+  earthen_hide:
+    name: {es: Cuero de Tierra, en: Earthen Hide}
+    description: {es: +1 a la CA., en: +1 AC.}
+    details:
+      es: La tierra te ha tomado cariño. Siempre tienes +1 a la CA, sin hacer nada.
+      en: The earth has grown fond of you. You always have +1 AC, with no action needed.
+    level: 8
+    kind: passive
+    action: none
+    ac_bonus: 1
+  tempest_call:
+    name: {es: Llamada de la Tempestad, en: Tempest Call}
+    description:
+      es: 'Toda la fila tira DES: 5d6 de frío y queda aturdida un turno si falla. Cuesta 12 de Maná.'
+      en: 'The whole row rolls a DEX save: 5d6 cold and stunned for a turn on a fail. Costs 12 Mana.'
+    details:
+      es: Llamas a la tormenta entera y la sueltas sobre la fila. Es tu gasto más grande y casi siempre decide el combate.
+      en: You call the whole storm and let it loose on the row. It is your biggest spend and it almost always decides the fight.
+    level: 9
+    kind: save
+    cost: 12
+    cooldown: 4
+    damage: 5d6
+    damage_type: cold
+    save: dex
+    area: row
+    half_on_save: true
+    status: stunned
+order: 13

@@ -1,0 +1,29 @@
+# Recetas de iniciación de la misión de la habitación: no piden oficio ni plaza, solo esa misión en curso,
+# y lo que hacen se queda instalado en el cuarto. No abren la puerta a fabricar muebles sin ser carpintero.
+starter_chest:
+  profession: carpentry
+  quest: tut_room
+  station: sawmill
+  ingredients: {oak_plank: 4}
+  outputs: {}
+  installs: chest
+  xp: 0
+
+starter_bed:
+  profession: tailoring
+  quest: tut_room
+  station: sawmill
+  ingredients: {oak_plank: 2, guild_cloth: 1}
+  outputs: {}
+  installs: bed
+  xp: 0
+
+chest_upgrade:  # amplía el cofre de tu cuarto; el carpintero se la hace, los demás se la compran
+  profession: carpentry
+  technique: woodwork
+  min_rank: 1
+  station: sawmill
+  ingredients: {oak_plank: 6, iron_ingot: 1}
+  installs: chest
+  outputs: {}
+  xp: 30

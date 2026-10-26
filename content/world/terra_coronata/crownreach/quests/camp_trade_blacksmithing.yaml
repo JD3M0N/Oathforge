@@ -1,0 +1,53 @@
+order: 25
+giver: tessa
+after: camp_trade_pick
+unlock_profession: blacksmithing
+name: {es: "Primeros encargos de herrería", en: "First blacksmithing jobs"}
+summary:
+  es: "Tu maestro te encarga tres tareas para ver si vales: fabricar una espada de hierro, usarlo o venderlo."
+  en: "Your master gives you three tasks to see if you are worth it: make an iron sword, then use or sell it."
+hint:
+  es: "Ve al puesto de tu maestro en el Barrio de Oficios y pide las primeras lecciones. Fabrica una espada de hierro y equípatelo."
+  en: "Go to your master's stall on Craftsmen's Row and ask for the first lessons. Make an iron sword and equip it."
+start_stage: locked
+unlock_stage: active
+objective_stage: working
+complete_stage: done
+objectives:
+  - {kind: craft, target: iron_sword}
+  - {kind: equip, target: any}
+rewards:
+  - {xp: 120}
+  - {gold: 10}
+actions:
+  start:
+    label: {es: "🎓 Primeras lecciones de herrería", en: "🎓 First lessons in blacksmithing"}
+    npc: tessa
+    location: forge_stall
+    stages: [active]
+    to_stage: working
+    text:
+      es: "Tu maestro te pone delante el material y un primer encargo: una espada de hierro. «Hazlo despacio y bien; lo rápido ya vendrá.»"
+      en: "Your master sets the material in front of you and a first job: an iron sword. \"Slow and right; fast comes later.\""
+    effects:
+      - {give_item: {iron_ingot: 2, oak_plank: 1}}
+      - {profession_xp: {blacksmithing: 80}}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Aún no practicas este oficio."
+      en: "You do not practise this trade yet."
+  active:
+    journal:
+      es: "Habla con tu maestro en su puesto y pide las primeras lecciones de herrería."
+      en: "Talk to your master at their stall and ask for the first blacksmithing lessons."
+  working:
+    journal:
+      es: "Fabrica una espada de hierro en la estación del puesto y equípatelo."
+      en: "Make an iron sword at the stall's station and equip it."
+  done:
+    state: completed
+    journal:
+      es: "Tu maestro examina tu trabajo y gruñe satisfecho. «Para ser el primero, no está mal»."
+      en: "Your master looks over your work and grunts, satisfied. \"For a first, that is not bad.\""

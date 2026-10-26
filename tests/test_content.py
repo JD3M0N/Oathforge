@@ -362,12 +362,12 @@ def test_content_index_is_up_to_date():
 def test_ids_and_paths_are_plain_english_ascii():
     """Ids, folders and file names are the base of the code: English, lowercase ASCII (texts carry es/en)."""
     from oathforge.config import CONTENT_DIR
-    from oathforge.content.index import FLAT_FILES, WORLD_KINDS
+    from oathforge.content.index import FLAT_FILES, FOLDER_KINDS, MERGED_KINDS, WORLD_KINDS
 
     c = load_content()
     bad = [
         f"{kind}:{key}"
-        for kind in (*WORLD_KINDS, *FLAT_FILES)
+        for kind in (*WORLD_KINDS, *FOLDER_KINDS, *MERGED_KINDS, *FLAT_FILES)
         for key in getattr(c, kind)
         if not re.fullmatch(r"[a-z0-9_]+", key)
     ]
@@ -377,3 +377,56 @@ def test_ids_and_paths_are_plain_english_ascii():
         if "officina" not in p.parts and not re.fullmatch(r"[A-Za-z0-9_.-]+", p.name)
     ]
     assert not bad, bad
+
+
+def test_every_ficha_lives_in_the_folder_its_kind_asks_for():
+    """items/<type>/<id>/item.yaml, quests in the zone of their giver, NPCs in the zone of their day place."""
+    from oathforge.config import CONTENT_DIR
+    from oathforge.content.index import FOLDER_KINDS, MERGED_KINDS
+
+    c = load_content()
+    for key, item in c.items.items():
+        assert (CONTENT_DIR / "items" / item.type / key / "item.yaml").is_file(), key
+    for key, npc in c.npcs.items():
+        loc = c.locations[npc.schedule["day"]]
+        assert (CONTENT_DIR / "world" / loc.continent / loc.zone / "npcs" / key / "npc.yaml").is_file(), key
+        assert (CONTENT_DIR / "world" / loc.continent / loc.zone / "npcs" / key / "dialogue.fallback.yaml").is_file(), (
+            key
+        )
+    for key, quest in c.quests.items():
+        loc = c.locations[c.npcs[quest.giver].schedule["day"]]
+        assert (CONTENT_DIR / "world" / loc.continent / loc.zone / "quests" / f"{key}.yaml").is_file(), key
+    for key, branch in c.class_specializations.items():
+        assert key in (CONTENT_DIR / "classes" / branch.class_key / "specializations.yaml").read_text(encoding="utf-8")
+    assert set(FOLDER_KINDS) | set(MERGED_KINDS) >= {"classes", "monsters", "items", "npcs", "quests", "recipes"}
+
+
+def test_load_folder_orders_ignores_templates_and_names_the_file(tmp_path):
+    import pytest
+
+    from oathforge.content.loader import load_files, load_folder
+    from oathforge.content.schemas import Faction
+
+    def ficha(path, name, order=None):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        extra = f"order: {order}\n" if order is not None else ""
+        path.write_text(f"name: {{es: {name}, en: {name}}}\ndescription: {{es: x, en: x}}\n{extra}", encoding="utf-8")
+
+    ficha(tmp_path / "b" / "beta" / "faction.yaml", "B")
+    ficha(tmp_path / "a" / "alpha" / "faction.yaml", "A")
+    ficha(tmp_path / "z" / "zeta" / "faction.yaml", "Z", order=1)
+    ficha(tmp_path / "_templates" / "faction" / "faction.yaml", "T")
+    assert list(load_folder(tmp_path, "faction.yaml", Faction)) == ["zeta", "alpha", "beta"]  # order first, then id
+
+    ficha(tmp_path / "c" / "alpha" / "faction.yaml", "again")
+    with pytest.raises(
+        ValueError, match=r"c/alpha/faction.yaml: duplicate id 'alpha' \(also in a/alpha/faction.yaml\)"
+    ):
+        load_folder(tmp_path, "faction.yaml", Faction)
+
+    (tmp_path / "c" / "alpha" / "faction.yaml").write_text("name: {es: x, en: x}\n", encoding="utf-8")
+    with pytest.raises(ValueError, match=r"c/alpha/faction.yaml"):
+        load_folder(tmp_path, "faction.yaml", Faction)
+
+    ficha(tmp_path / "zone" / "quests" / "first.yaml", "Q")
+    assert list(load_files(tmp_path / "zone", "quests", Faction)) == ["first"]

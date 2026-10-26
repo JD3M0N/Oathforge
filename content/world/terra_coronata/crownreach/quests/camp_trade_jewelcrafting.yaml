@@ -1,0 +1,52 @@
+order: 28
+giver: pell
+after: camp_trade_pick
+unlock_profession: jewelcrafting
+name: {es: "Primeros encargos de joyería", en: "First jewelcrafting jobs"}
+summary:
+  es: "Tu maestro te encarga tres tareas para ver si vales: fabricar dos anillos de cobre, usarlo o venderlo."
+  en: "Your master gives you three tasks to see if you are worth it: make two copper rings, then use or sell it."
+hint:
+  es: "Ve al puesto de tu maestro en el Barrio de Oficios y pide las primeras lecciones. Fabrica dos anillos de cobre y equípatelo."
+  en: "Go to your master's stall on Craftsmen's Row and ask for the first lessons. Make two copper rings and equip it."
+start_stage: locked
+unlock_stage: active
+objective_stage: working
+complete_stage: done
+objectives:
+  - {kind: craft, target: copper_ring, count: 2}
+  - {kind: equip, target: any}
+rewards:
+  - {xp: 120}
+  - {gold: 10}
+actions:
+  start:
+    label: {es: "🎓 Primeras lecciones de joyería", en: "🎓 First lessons in jewelcrafting"}
+    npc: pell
+    location: jeweler_stall
+    stages: [active]
+    to_stage: working
+    text:
+      es: "Tu maestro te pone delante el material y un primer encargo: dos anillos de cobre. «Hazlo despacio y bien; lo rápido ya vendrá.»"
+      en: "Your master sets the material in front of you and a first job: two copper rings. \"Slow and right; fast comes later.\""
+    effects:
+      - {give_item: {copper_ingot: 2}}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Aún no practicas este oficio."
+      en: "You do not practise this trade yet."
+  active:
+    journal:
+      es: "Habla con tu maestro en su puesto y pide las primeras lecciones de joyería."
+      en: "Talk to your master at their stall and ask for the first jewelcrafting lessons."
+  working:
+    journal:
+      es: "Fabrica dos anillos de cobre en la estación del puesto y equípatelo."
+      en: "Make two copper rings at the stall's station and equip it."
+  done:
+    state: completed
+    journal:
+      es: "Tu maestro examina tu trabajo y gruñe satisfecho. «Para ser el primero, no está mal»."
+      en: "Your master looks over your work and grunts, satisfied. \"For a first, that is not bad.\""

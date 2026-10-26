@@ -1,0 +1,21 @@
+name: {es: Lobo gris, en: Grey wolf}
+indefinite: {es: un lobo gris, en: a grey wolf}
+icon: 🐺
+description: {es: "Hambriento y nunca solo por mucho tiempo.", en: "Hungry, and never alone for long."}
+hp: 13
+ac: 13
+dex: 2
+wis: 1
+attacks:
+  - {name: {es: Mordisco, en: Bite}, to_hit: 4, damage: 2d4+2, damage_type: piercing, applies: {status: bleeding, turns: 2, chance: 0.25}}
+xp: 50
+skin_seconds: 20
+harvest:
+  - {item: wolf_pelt, chance: 0.7}
+  - {item: raw_meat, chance: 0.5}
+type: beast
+habitat: {es: Bosque de los Susurros y Arboleda Antigua, en: Whispering Woods and Elderwood Grove}
+lore:
+  es: Caza en manada. Su mordisco puede dejar al objetivo sangrando.
+  en: Hunts in packs. Its bite can leave its prey bleeding.
+order: 4

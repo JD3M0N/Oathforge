@@ -1,0 +1,33 @@
+order: 40
+giver: tamsin
+after: camp_trade_pick
+name: {es: "Rastros en el barro", en: "Tracks in the Mud"}
+summary:
+  es: "Hay huellas de carros donde no debería haber carros. Tamsin quiere que aprendas a leerlas."
+  en: "There are cart tracks where no carts should be. Tamsin wants you to learn to read them."
+hint:
+  es: "Caza o rastrea dos veces en el Camino del Viejo Rey o en el Prado de los Colmillos («🏹 Cazar», «🐾 Rastrear»)."
+  en: "Hunt or track twice on the Old King's Road or in Tusk Meadow (\"🏹 Hunt\", \"🐾 Track\")."
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: hunt, target: any, count: 2}
+rewards:
+  - {xp: 130}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Tamsin sospecha de los caminos."
+      en: "Tamsin distrusts the roads."
+  active:
+    journal:
+      es: "Caza o rastrea dos veces fuera de la ciudad y fíjate en las huellas."
+      en: "Hunt or track twice outside the city and pay attention to the tracks."
+  done:
+    state: completed
+    journal:
+      es: "«Cuatro ruedas, carga pesada y nada de mulas», resume Tamsin. «No es un carro de granja»."
+      en: "\"Four wheels, a heavy load and no mules,\" Tamsin sums up. \"That is no farm cart.\""

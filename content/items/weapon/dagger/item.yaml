@@ -1,0 +1,7 @@
+name: {es: Daga, en: Dagger}
+icon: "🗡️"
+description: {es: Ligera y fácil de esconder., en: Light and easy to hide.}
+type: weapon
+slot: main_hand
+value: 2
+weapon: {damage: 1d4, damage_type: piercing, finesse: true}

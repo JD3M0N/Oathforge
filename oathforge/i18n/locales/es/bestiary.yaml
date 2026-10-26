@@ -1,0 +1,49 @@
+monster:
+  no_image: "Aún no tiene ilustración."
+  err:
+    unknown: "No conozco esa criatura."
+
+creature:
+  beast: "Bestia"
+  undead: "No muerto"
+  humanoid: "Humanoide"
+
+report:
+  title: "📊 <b>Resumen de batalla</b> · {place}"
+  full_title: "📜 <b>Informe de batalla</b> · {place}"
+  none: "Todavía no has terminado ninguna batalla."
+  result:
+    victory: "Victoria"
+    defeat: "Derrota"
+    fled: "Huida"
+  rounds: "{n} rondas"
+  rounds_one: "1 ronda"
+  dealt: "🗡️ Daño hecho: <b>{dealt}</b> · 🎯 Aciertos {hits}/{attacks} · 💥 Críticos {crits}"
+  received: "🩸 Daño recibido: <b>{received}</b> · Te acertaron {hits}/{attacks}"
+  healed: "💚 Curación: {amount} PV"
+  defeated: "💀 Derrotados: {list}"
+  round: "Ronda {n} · página {page}/{pages}"
+  hint: "Recorre las rondas con los botones para ver cada tirada."
+
+bestiary:
+  title: "🐉 <b>Bestiario</b> · {seen}/{total} criaturas"
+  hint: "Toca una criatura. Cuantas más derrotes, más sabrás de ella."
+  empty: "Aún no te has cruzado con ninguna criatura. Sal a cazar."
+  unknown: "No sabes nada de esa criatura."
+  active:
+    day: "sale de día"
+    night: "sale de noche"
+    any: "a cualquier hora"
+  habitat: "🗺️ Hábitat: {place}"
+  record: "👁️ Vista {seen} veces · ⚔️ derrotada {killed}"
+  stats: "Estadísticas"
+  hp_ac: "❤️ {hp} PV · 🛡️ CA {ac}"
+  locked_stats: "Derrota una para conocer sus estadísticas."
+  secrets: "Puntos débiles"
+  locked_secrets: "Derrota {n} para descubrir sus puntos débiles y su botín."
+  vulnerable: "💥 Vulnerable a: {list}"
+  resist: "🛡️ Resiste: {list}"
+  immune: "🚫 Inmune al daño: {list}"
+  immune_status: "🚫 Inmune a: {list}"
+  xp: "✨ {xp} XP"
+  loot: "🎁 Botín: {list}"

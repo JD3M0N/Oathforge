@@ -1,0 +1,20 @@
+name: {es: Mira, en: Mira}
+title: {es: la encapuchada, en: the hooded woman}
+faction: crimson_syndicate
+schedule: {day: crownreach_market, night: broken_crown_tavern}
+greeting:
+  es: "«No te he visto antes. Eso es bueno... o muy malo.»"
+  en: "\"Haven't seen you before. That's good... or very bad.\""
+persona: >-
+  Mira is a sharp, soft-spoken informant of the Crimson Syndicate. Speaks in short, dry sentences,
+  answers questions with questions, never gives information for free, respects competence and despises
+  sanctimony.
+goals: Learn who is diverting the guild's carts on the Old King's Road before the Covenant does, and sell the answer to the best bidder.
+secrets: The Syndicate bought cargo from the toll post for a season and never asked what it was.
+knowledge: >-
+  Someone who signs "the Collector" runs the carts on the Old King's Road. Sergeant Holt is honest but rigid. Bram owes the Syndicate.
+passive_perception: 15
+shop:
+  items: [dagger, rope, healing_potion, mana_potion, water_flask]
+  buys: true
+order: 2

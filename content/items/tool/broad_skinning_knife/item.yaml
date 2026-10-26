@@ -1,0 +1,6 @@
+name: {es: Cuchillo ancho, en: Broad knife}
+icon: "🔪"
+description: {es: "Hoja ancha para aprovechar hasta el último trozo.", en: "A wide blade for using up every last piece."}
+type: tool
+value: 100
+tool: {skill: skinning, base: skinning_knife, min_rank: 2, extra_chance: 0.05}

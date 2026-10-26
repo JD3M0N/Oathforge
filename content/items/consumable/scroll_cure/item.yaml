@@ -1,0 +1,7 @@
+name: {es: Pergamino de curar heridas, en: Scroll of cure wounds}
+icon: "📜"
+description: {es: "Al leerlo en combate, recuperas 2d8+2 PV.", en: "Read in combat, you recover 2d8+2 HP."}
+type: consumable
+value: 22
+stackable: true
+combat: {kind: heal, heal_dice: 2d8+2}

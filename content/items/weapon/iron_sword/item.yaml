@@ -1,0 +1,7 @@
+name: {es: Espada de hierro, en: Iron sword}
+icon: "⚔️"
+description: {es: "Una espada recta forjada a mano. Igual de letal que una espada larga, y se vende mejor.", en: "A hand-forged straight sword. As deadly as a longsword, and it sells better."}
+type: weapon
+slot: main_hand
+value: 40
+weapon: {damage: 1d8, damage_type: slashing}

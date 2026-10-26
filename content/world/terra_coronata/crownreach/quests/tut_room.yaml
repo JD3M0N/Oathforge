@@ -1,0 +1,55 @@
+order: 8
+tutorial: true
+giver: vale
+after: tut_mine
+legacy_done: [night_wings]
+name: {es: Un cuarto propio, en: A Room of Your Own}
+summary:
+  es: «Los socios duermen aquí, no en el suelo de la taberna», dice Vale. Te asigna un cuarto vacío en el Gremio; lo que lleve dentro, lo pones tú.
+  en: "\"Members sleep here, not on the tavern floor,\" says Vale. She gives you an empty room at the guild; whatever goes in it, you put there."
+hint:
+  es: Tala robles en la Arboleda Antigua con el hacha (⚒ Actividades → 🪓 Talar) y asierra los troncos en el puesto de aserrado del Gremio de Aventureros. Con 4 tablones montas el cofre; luego pide la tela a Vale y, con 2 tablones más, la cama. Dormir en ella no cuesta oro.
+  en: Fell oaks at the Elderwood Grove with the axe (⚒ Activities → 🪓 Chop) and saw the logs at the Adventurers' Guild sawing station. Four planks build the chest; then ask Vale for the cloth and, with two more planks, the bed. Sleeping in it costs no gold.
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: craft, target: "furniture:chest"}
+  - {kind: craft, target: "furniture:bed"}
+rewards:
+  - xp: 60
+actions:
+  cloth:
+    label: {es: 🧻 Pedir la tela de la cama, en: 🧻 Ask for the bed's cloth}
+    npc: vale
+    location: adventurers_guild
+    stages: [active]
+    to_stage: active
+    unless_item: guild_cloth      # ya la llevas
+    unless_furniture: bed         # o ya la cosiste
+    text:
+      es: "Vale saca un fardo de tela del armario del gremio. «Para el colchón. Y no me la vendas, que la cuentan.»"
+      en: "Vale pulls a bundle of cloth from the guild's cupboard. \"For the mattress. And do not sell it on me, they count these.\""
+    effects:
+      - give_item: {guild_cloth: 1}
+stages:
+  locked:
+    state: locked
+    journal: {es: Vale habla de un cuarto libre en el piso de arriba., en: Vale mentions a free room upstairs.}
+  active:
+    journal:
+      es: "Tu cuarto en el Gremio de Aventureros está vacío. Consigue madera (🪓 Talar en la Arboleda Antigua), asiérrala en el gremio y monta el cofre y la cama; la tela te la da Vale."
+      en: "Your room at the Adventurers' Guild is empty. Get wood (🪓 Chop at the Elderwood Grove), saw it at the guild and build the chest and the bed; Vale gives you the cloth."
+    location_text:
+      adventurers_guild:
+        es: "Arriba te espera un cuarto con una ventana y nada más. El puesto de aserrado está junto a ella."
+        en: "Upstairs a room waits for you, with a window and nothing else. The sawing station is right by it."
+      elderwood_grove:
+        es: "Robles rectos, de los que dan buen tablón. Justo lo que tu cuarto necesita."
+        en: "Straight oaks, the kind that give a good plank. Exactly what your room needs."
+  done:
+    state: completed
+    journal:
+      es: Tienes cama y cofre. Dormir en el gremio no te cuesta una moneda, y lo que no llevas encima te espera allí.
+      en: You have a bed and a chest. Sleeping at the guild costs you nothing, and what you do not carry waits for you there.

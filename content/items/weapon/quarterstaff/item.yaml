@@ -1,0 +1,7 @@
+name: {es: Bastón, en: Quarterstaff}
+icon: "🦯"
+description: {es: "Una vara de roble endurecida al fuego; apoyo de magos y druidas.", en: "A fire-hardened oak staff; a mainstay of mages and druids."}
+type: weapon
+slot: main_hand
+value: 2
+weapon: {damage: 1d6, damage_type: bludgeoning}

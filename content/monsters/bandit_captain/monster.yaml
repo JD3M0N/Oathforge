@@ -1,0 +1,19 @@
+name: {es: Capitán bandido, en: Bandit captain}
+indefinite: {es: un capitán bandido, en: a bandit captain}
+icon: 🎖️
+description: {es: Lleva las cicatrices de cien emboscadas y las botas de un noble., en: Wears the scars of a hundred ambushes and a nobleman's boots.}
+hp: 26
+ac: 14
+dex: 2
+wis: 0
+attacks:
+  - {name: {es: Sable, en: Saber}, to_hit: 4, damage: 1d8+1, damage_type: slashing, applies: {status: bleeding, turns: 2, chance: 0.3}}
+xp: 200
+gold: 4d10
+loot:
+  - {item: healing_potion, chance: 0.5}
+habitat: {es: Camino del Viejo Rey, en: Old King's Road}
+lore:
+  es: Manda a los bandidos del camino. Sus golpes abren heridas que sangran durante varios turnos.
+  en: Leads the road bandits. Their cuts open wounds that keep bleeding for several turns.
+order: 2

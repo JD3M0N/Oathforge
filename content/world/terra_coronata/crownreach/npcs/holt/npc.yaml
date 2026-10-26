@@ -1,0 +1,20 @@
+name: {es: Sargento Holt, en: Sergeant Holt}
+title: {es: de la Guardia de Plata, en: of the Silver Guard}
+faction: silver_covenant
+schedule: {day: crownreach_plaza, night: broken_crown_tavern}
+greeting:
+  es: "«Ciudadano. Si tienes noticias del bosque, habla rápido. Si no, circula.»"
+  en: "\"Citizen. If you have news from the forest, speak quickly. If not, move along.\""
+greeting_return:
+  es: "«Ah, tú. La Guardia sabe quién cumple. Habla rápido: ¿qué traes?»"
+  en: "\"Ah, you. The Guard knows who delivers. Speak quickly: what do you bring?\""
+persona: >-
+  Sergeant Holt is a weathered, rigid but honest officer of the Silver Guard. Formal, terse, dutiful.
+  Grieves silently for missing soldiers. Values oaths and truth; distrusts thieves and the Syndicate.
+goals: Find out who forged the guild's orders and why three guild carts left Crownreach and never arrived.
+secrets: The Covenant fears that someone inside the Guard sold the old seal of the guild.
+knowledge: >-
+  Three guild carts left for the valley and none arrived. He receives proof against whoever signed the false
+  orders, and rewards those who bring it. Tamsin Harrow, the guild's scout, works with him.
+passive_perception: 14
+order: 4

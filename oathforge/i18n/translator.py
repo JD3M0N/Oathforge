@@ -27,13 +27,16 @@ def _flatten(prefix: str, node: dict, out: dict[str, str]) -> None:
 
 @lru_cache
 def flat(lang: str) -> dict[str, str]:
-    path = LOCALES_DIR / f"{lang}.yaml"
-    if not path.exists():
-        return {}
-    with open(path, encoding="utf-8") as fh:
-        out: dict[str, str] = {}
-        _flatten("", yaml.safe_load(fh) or {}, out)
-        return out
+    """Every file of locales/<lang>/ merged; a key defined in two files is an error."""
+    out: dict[str, str] = {}
+    for path in sorted((LOCALES_DIR / lang).glob("*.yaml")):
+        with open(path, encoding="utf-8") as fh:
+            part: dict[str, str] = {}
+            _flatten("", yaml.safe_load(fh) or {}, part)
+        if repeated := sorted(out.keys() & part.keys()):
+            raise ValueError(f"locales/{lang}/{path.name}: keys already defined in another file: {repeated[:5]}")
+        out.update(part)
+    return out
 
 
 def normalize_lang(code: str | None) -> str:

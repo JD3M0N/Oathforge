@@ -16,7 +16,7 @@ from oathforge.engine.combat import AttackProfile, Combatant, EncounterState
 from oathforge.tools import simulate as sim
 
 CLASSES = sorted(get_content().classes)
-BASE_MAX_LEVEL = 9  # the branch starts at 10 (class_specializations.yaml)
+BASE_MAX_LEVEL = 9  # the branch starts at 10 (classes/<class>/specializations.yaml)
 
 
 # ------------------------------------------------------------- what every class must have

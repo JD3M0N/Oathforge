@@ -1,0 +1,8 @@
+name: {es: Cota de escamas, en: Scale mail}
+icon: "🦺"
+description: {es: Escamas de acero cosidas sobre cuero., en: Steel scales sewn over leather.}
+type: armor
+slot: body
+value: 50
+base_ac: 14
+dex_cap: 2

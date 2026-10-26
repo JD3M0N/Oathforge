@@ -1,0 +1,7 @@
+name: {es: Bastón de roble, en: Oak staff}
+icon: "🪄"
+description: {es: "Un bastón tallado y equilibrado; los magos lo prefieren al del mercado.", en: "A carved, balanced staff; mages prefer it to the market ones."}
+type: weapon
+slot: main_hand
+value: 20
+weapon: {damage: 1d6, damage_type: bludgeoning}

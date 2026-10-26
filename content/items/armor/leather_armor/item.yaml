@@ -1,0 +1,8 @@
+name: {es: Armadura de cuero, en: Leather armor}
+icon: "🧥"
+description: {es: Cuero endurecido que no estorba al moverse., en: Hardened leather that does not hinder movement.}
+type: armor
+slot: body
+value: 10
+base_ac: 11
+dex_cap: 5

@@ -1,0 +1,88 @@
+start:
+  need_character: "You don't have a character yet. Use /start to create one."
+
+create:
+  welcome: |-
+    ⚔️ <b>Welcome to Aetherfall.</b>
+
+    A world that existed before you and will go on after you leave. Taverns remember, factions scheme, and your deeds leave marks.
+
+    📘 New to the game? The /rulebook explains rolls, AC, hit points, classes and everything you can do.
+  ask_name: "What is your character's name? (2–24 letters)"
+  bad_name: "That name won't do. Use 2 to 24 letters, spaces, apostrophes or hyphens."
+  ask_gender: "<b>{name}</b>, is your character a man or a woman? It sets their portrait and how the world speaks to them."
+  gender_btn:
+    male: "♂️ Man"
+    female: "♀️ Woman"
+  ask_lineage: "🧬 <b>{name}</b>, what lineage do you come from? <i>(ℹ️ /lineage)</i>"
+  ask_background: "📜 Who were you before you became an adventurer? <i>(ℹ️ /background)</i>"
+  ask_class: "⚔️ <b>Choose your class</b> <i>(ℹ️ /classes)</i>:"
+  ask_abilities: |-
+    🎲 <b>Assign your abilities</b> · {cls}
+    Everything starts at 8. You have <b>{left}</b> of {budget} points left. Raising to 14 or 15 costs 2 points. ★ = your class's main ability. Tap an ability's name to see what it does.
+  lineage_bonus: " · lineage {bonus}"
+  ability_hp: "❤️ HP at level 1: <b>{hp}</b>"
+  points_left: "You still have {left} points to assign."
+  points_left_one: "You still have 1 point to assign."
+  cannot_change: "You can't change that ability any further."
+  summary: |-
+    🦸 <b>{name}</b>
+    {gender} · {lineage} · {background} · {cls}
+
+    {stats}
+    ❤️ Hit points: <b>{hp}</b>
+
+    ✅ Confirm?
+  done: "✨ <b>{name}</b> enters Crownreach. May your oaths guide you."
+  cancelled: "Creation cancelled. Use /start whenever you like."
+  bg_more: "📜 More backgrounds ({n})…"
+  bg_basics: "◀ The basic ones"
+  bg_all: "<i>Every background: see what each one gives with /background.</i>"
+  custom_btn: "✍️ Write my own background"
+  custom_back: "◀ Back to the backgrounds"
+  custom_ask: |-
+    ✍️ <b>Your own background</b>
+    Write it in one message: on the <b>first line</b> its name (up to {title_max} characters) and <b>below</b> your story (up to {story_max}).
+
+    <b>Aetherfall:</b> {world}
+
+    <i>For example:
+    Lighthouse keeper's daughter
+    I grew up tending the beacon of a cliff that no ship visits any more…</i>
+
+    The AI reviews it before accepting it. If an idea does not fit the world, it will propose an adapted version for you to accept or edit. It never grants gold or powers. Then you choose 2 skills.
+  custom_bad: "That doesn't fit. First line: the name (2–{title_max} characters). Below it: your story ({story_min}–{story_max} characters)."
+  custom_checking: "🔎 Reviewing your background…"
+  custom_unavailable: "😔 The AI that reviews backgrounds isn't answering right now. You can retry or pick one from the list."
+  custom_retry: "🔄 Retry"
+  custom_rejected: "🚫 I can't preserve the central idea of that background: {reason}\nEdit it, or go back to the list."
+  custom_proposal: "🪶 <b>Proposal adapted to Aetherfall</b>\n{reason}\n\n<b>{title}</b>\n<i>{story}</i>\n\nReview it before continuing."
+  custom_accept: "✅ Accept proposal"
+  custom_edit: "✏️ Edit"
+  custom_edit_prompt: "✏️ Send the complete background again: name on the first line and story below it."
+  custom_outdated: "That proposal is no longer active."
+  custom_ok: "✅ <b>{title}</b> accepted."
+  custom_skills: "🎓 Choose <b>{n}</b> skills you mastered back then ({chosen}/{n}):"
+  custom_skills_left: "Choose {n} skills first."
+  custom_skills_full: "You already have {n}: tap one to drop it."
+
+lineages:
+  title: "🧬 <b>Lineages of Aetherfall</b>"
+  bonuses: "📈 {list}"
+
+backgrounds:
+  title: "📜 <b>Backgrounds</b>\nWho you were before adventuring: skills (🎓), starting gold (💰) and gear (🎒)."
+  custom: "✍️ Or write your own while creating your character: the AI reviews it and you choose 2 skills."
+
+classes:
+  title: "📚 <b>Oathforge classes</b>"
+  hint: "Tap a class or its command to see its abilities."
+  unknown: "That class doesn't exist."
+  hit_die: "🎲 Hit die: <b>d{die}</b>"
+  primary: "💪 Primary attribute: <b>{ability}</b>"
+  casting: "🔮 Casts with: <b>{ability}</b>"
+  skills: "🎓 Skills: {list}"
+  items: "🎒 Starting gear: {list}"
+  abilities: "✨ Class abilities"
+  level: "Lv {level}"
+  specializations: "🌟 <b>Branches (level {level})</b>"

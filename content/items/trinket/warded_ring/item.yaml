@@ -1,0 +1,6 @@
+name: {es: Anillo guardado, en: Warded ring}
+icon: "💍"
+description: {es: "Una gema engastada en acero, fría al tacto incluso al sol.", en: "A gem set in steel, cold to the touch even in the sun."}
+type: trinket
+min_level: 10
+value: 220

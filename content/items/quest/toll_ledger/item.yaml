@@ -1,0 +1,6 @@
+name: {es: Libro de cargas del peaje, en: Toll ledger}
+icon: "📒"
+description: {es: "Un libro de tapas manchadas con las cargas que pasaron por el peaje del camino, y los nombres que faltan en el del gremio.", en: "A stained ledger of the loads that passed the road's toll post, and the names missing from the guild's."}
+type: quest
+value: 0
+sellable: false

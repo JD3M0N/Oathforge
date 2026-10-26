@@ -1,0 +1,124 @@
+name: {es: Pícaro, en: Rogue}
+description:
+  es: Ágil y astuto, golpea donde más duele y desaparece antes de la respuesta.
+  en: Quick and cunning, strikes where it hurts and is gone before the answer.
+hit_die: 8
+primary: dex
+array: {dex: 15, con: 14, wis: 13, cha: 12, int: 10, str: 8}
+skills: [sleight_of_hand, perception]
+items: {dagger: 1, shortbow: 1, leather_armor: 1, healing_potion: 1}
+equip: [dagger, shortbow, leather_armor]
+signature: [cheap_shot, cunning_hide]
+abilities:
+  sneak_attack:
+    name: {es: Ataque Furtivo, en: Sneak Attack}
+    description:
+      es: Una vez por turno, daño extra con armas sutiles o a distancia si tienes ventaja o el objetivo sufre un estado.
+      en: Once per turn, extra damage with finesse or ranged weapons when you have advantage or the target has a condition.
+    details:
+      es: Sabes dónde duele. Una vez por turno, si atacas con un arma sutil (daga, estoque) o a distancia y tienes ventaja, o el objetivo está aturdido, envenenado, dormido o con otro estado, sumas dados de daño extra. Esconderte antes es la forma más fiable de conseguirlo.
+      en: You know where it hurts. Once per turn, if you attack with a finesse weapon (dagger, rapier) or a ranged one and you have advantage, or the target is stunned, poisoned, asleep or under another condition, you add extra damage dice. Hiding first is the surest way to get it.
+    level: 1
+    kind: passive
+    action: none
+    sneak_dice: {1: 1, 3: 2, 5: 3}
+  cunning_hide:
+    name: {es: Esconderse, en: Hide}
+    description:
+      es: 'Acción adicional: Sigilo contra su percepción; si sale, tu próximo ataque tiene ventaja. Cuesta 2 de Energía.'
+      en: 'Bonus action: a Stealth check against their perception; if it works, your next attack has advantage. Costs 2 Energy.'
+    details:
+      es: 'Te fundes con las sombras sin perder el ritmo. Como acción adicional haces una tirada de Sigilo; si la superas, tu próximo ataque tiene ventaja, y con ventaja llega el Ataque Furtivo. Cuesta un poco de Energía, que vuelve cada turno: puedes hacerlo casi siempre.'
+      en: 'You melt into the shadows without losing your stride. As a bonus action you make a Stealth roll; if it succeeds, your next attack has advantage, and with advantage comes Sneak Attack. It costs a little Energy, which comes back every turn: you can do it almost always.'
+    level: 1
+    kind: hide
+    action: bonus
+    cost: 2
+  cheap_shot:
+    name: {es: Golpe Bajo, en: Cheap Shot}
+    description:
+      es: Un ataque con arma que añade 1d6 de daño perforante. Cuesta 4 de Energía.
+      en: A weapon attack that adds 1d6 piercing damage. Costs 4 Energy.
+    details:
+      es: Donde no mira nadie y donde más duele. Es tu ataque con la daga, pero si acierta suma 1d6, y se combina con tu Ataque Furtivo.
+      en: Where nobody is looking and where it hurts most. It is your dagger attack, but on a hit it adds 1d6, and it stacks with your Sneak Attack.
+    level: 1
+    kind: strike
+    cost: 4
+    extra_damage: 1d6
+    damage_type: piercing
+  trip_up:
+    name: {es: Zancadilla, en: Trip Up}
+    description:
+      es: 'El objetivo tira DES: si falla, queda enredado un turno. Cuesta 4 de Energía.'
+      en: 'The target rolls a DEX save: on a fail it is restrained for a turn. Costs 4 Energy.'
+    details:
+      es: Un pie en el sitio justo y el rival se va al suelo. No hace daño, pero un enemigo trabado es un enemigo al que le acierta cualquiera.
+      en: A foot in just the right place and the foe goes down. It does no damage, but a hobbled enemy is one anyone can hit.
+    level: 2
+    kind: save
+    cost: 4
+    cooldown: 3
+    save: dex
+    status: restrained
+  uncanny_dodge:
+    name: {es: Esquiva Asombrosa, en: Uncanny Dodge}
+    description:
+      es: El primer golpe que recibes cada ronda hace la mitad de daño.
+      en: The first hit you take each round deals half damage.
+    details:
+      es: 'Ves venir el golpe y te apartas lo justo. El primer ataque que te acierta en cada ronda te hace solo la mitad de daño. Es automático: no gasta acciones.'
+      en: 'You see the blow coming and step aside just enough. The first attack that hits you each round deals only half damage. It is automatic: it costs no action.'
+    level: 3
+    kind: passive
+    action: none
+    halve_first_hit: true
+  nimble_feet:
+    name: {es: Pies Ligeros, en: Nimble Feet}
+    description: {es: +1 a la CA., en: +1 AC.}
+    details:
+      es: No te quedas quieto el tiempo suficiente para que te den. Siempre tienes +1 a la CA, sin hacer nada.
+      en: You never stand still long enough to be hit. You always have +1 AC, with no action needed.
+    level: 4
+    kind: passive
+    action: none
+    ac_bonus: 1
+  cunning_action:
+    name: {es: Acción Astuta, en: Cunning Action}
+    description:
+      es: 'Acción adicional, tras usar tu acción: recuperas la acción y puedes actuar otra vez. Cuesta 5 de Energía.'
+      en: 'Bonus action, after using your action: you get your action back and can act again. Costs 5 Energy.'
+    details:
+      es: 'Eres rápido y lo sabes usar: tras tu acción, gastas la acción adicional en volver a actuar. Cuesta mucha Energía, así que elige bien el momento.'
+      en: 'You are fast and know how to use it: after your action, you spend your bonus action to act again. It costs a lot of Energy, so choose the moment well.'
+    level: 5
+    kind: surge
+    action: bonus
+    cost: 5
+    cooldown: 3
+  deadly_edge:
+    name: {es: Filo Mortal, en: Deadly Edge}
+    description:
+      es: Un ataque con arma que añade 2d6 de daño perforante. Cuesta 6 de Energía.
+      en: A weapon attack that adds 2d6 piercing damage. Costs 6 Energy.
+    details:
+      es: Tu mejor estocada, preparada con calma. Si la pelea te ha dado una ventaja, aquí es donde se cobra.
+      en: Your best thrust, set up calmly. If the fight has given you an advantage, this is where it is cashed in.
+    level: 6
+    kind: strike
+    cost: 6
+    cooldown: 2
+    extra_damage: 2d6
+    damage_type: piercing
+  killer_instinct:
+    name: {es: Instinto Asesino, en: Killer Instinct}
+    description: {es: Haces crítico con un 19 o un 20., en: You score a critical hit on a 19 or 20.}
+    details:
+      es: Ves el punto débil antes de que el rival sepa que lo tiene. Tus golpes son críticos también con un 19 natural.
+      en: You see the weak spot before the foe knows it has one. Your blows are critical on a natural 19 too.
+    level: 8
+    kind: passive
+    action: none
+    crit_range: 19
+resource: energy
+order: 4

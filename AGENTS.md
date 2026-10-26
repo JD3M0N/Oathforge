@@ -10,7 +10,7 @@ Oathforge es un RPG narrativo para Telegram: **un motor d20 determinista decide 
 2. **Solo `oathforge/services/` escribe estado.** Los handlers seleccionan, llaman a un servicio y pintan. `engine/` es puro: sin BD, sin Telegram, sin IA y con RNG inyectable; todo azar pasa por `engine/dice.py`.
 3. **Nada de E/S lenta con un lock abierto.** Ni Gemini ni Telegram dentro de `session_scope` con filas bloqueadas (`SELECT … FOR UPDATE` + versión). El flujo es leer contexto → interpretar → bloquear, revalidar y resolver → commit → enviar o narrar.
 4. **Idempotencia.** Cada botón lleva nonce (`services/audit.py`); el combate usa `<encounter.version>.<turn_index>.<nonce>`. Un doble clic o un menú viejo no ejecuta dos veces.
-5. **Español e inglés siempre.** Textos de interfaz en `oathforge/i18n/locales/{es,en}.yaml`; textos de contenido como `{es: …, en: …}` en `content/*.yaml`. Mismos marcadores en ambos.
+5. **Español e inglés siempre.** Textos de interfaz en `oathforge/i18n/locales/{es,en}/<dominio>.yaml`; textos de contenido como `{es: …, en: …}` en las fichas de `content/`. Mismos marcadores en ambos.
 6. **Gemini** (`google-genai`, `ai/client.py`) es el único proveedor. No se cambia sin que Josue lo pida.
 7. Las excepciones de beta llevan la marca `# beta only` (sobre todo en `config.py`). No las extiendas sin marcarlas.
 
@@ -37,7 +37,7 @@ Flujo de una acción libre: `leer contexto (tx corta) → Gemini interpreta → 
 | Modelos de BD y migraciones | `oathforge/database/models.py`, `migrations/` (Alembic) |
 | Validación del contenido | `oathforge/content/schemas/` (Pydantic, un módulo por dominio), `loader.py` (lectura) y `validation/` (referencias cruzadas por dominio) |
 | Catálogo de imágenes | `oathforge/content/media.py` |
-| Contenido del juego | `content/*.yaml`; mundo en `content/world/<continente>/<zona>/<lugar>/place.yaml`; respaldos de IA en `content/fallbacks/` |
+| Contenido del juego | una carpeta por cosa: `content/classes/<clase>/`, `monsters/<id>/`, `items/<tipo>/<id>/`; mundo en `content/world/<continente>/<zona>/` (`<lugar>/place.yaml`, `npcs/<pnj>/`, `quests/<misión>.yaml`); lo demás en `content/*.yaml`; respaldos de IA en `content/fallbacks/` |
 | Comandos de consola | `oathforge/cli.py` (`COMMANDS`), simulador en `oathforge/tools/simulate.py`, `tgtest` en `oathforge/tools/tgtest.py` |
 | Configuración y flags de beta | `oathforge/config.py`, `.env.example` |
 | Diseño e ideas | `planning/` (ver abajo) |
@@ -47,7 +47,7 @@ Flujo de una acción libre: `leer contexto (tx corta) → Gemini interpreta → 
 - **Busca antes de abrir.** Grep o Glob por el símbolo, la clave i18n o el id de contenido; abre solo el archivo que aparece.
 - **Grafo del código**: si existe `graphify-out/`, consúltalo (`/graphify query "…"`, o `graphify-out/GRAPH_REPORT.md`) para saber quién llama a qué y qué test cubre qué antes de hacer Grep por todo el repo. Cubre solo `oathforge/` y `tests/` (lo limita `.graphifyignore`). Se regenera con `/graphify . --update` **después de cada merge a `main`** y tras cambios grandes de código; sale del AST y no gasta tokens de IA.
 - **Contenido**: `content/INDEX.md` tiene una línea por id (nombre en inglés y archivo). Lo escribe `oath content-index` y un test comprueba que está al día.
-- **Lee por rangos** los archivos grandes: `i18n/locales/*.yaml`, `content/quests.yaml`, `CHANGELOG.md` y `planning/Possibilium.md`. Localiza la función con Grep y lee unas decenas de líneas alrededor.
+- **Lee por rangos** los archivos grandes: `i18n/locales/*/*.yaml`, `CHANGELOG.md` y `planning/Possibilium.md`. Localiza la función con Grep y lee unas decenas de líneas alrededor.
 - **No releas** un archivo que acabas de editar, ni uno que ya tienes en contexto.
 - **CHANGELOG**: lee solo las primeras entradas (las últimas versiones) para saber qué cambió hace poco.
 - **No leas** salvo que la tarea lo pida:
@@ -80,7 +80,7 @@ Flujo de una acción libre: `leer contexto (tx corta) → Gemini interpreta → 
 ## Nombres e idiomas
 
 - **La base va en inglés**: ids, variables, funciones, archivos y carpetas, claves de YAML y de i18n, plantillas, skills y subagentes, subcomandos de `oath` y sus flags. Los ids y las rutas de `content/` son ASCII en minúsculas (`[a-z0-9_]`); lo comprueba `tests/test_content.py`.
-- **Todo texto que ve el jugador está en los dos idiomas**: `{es: …, en: …}` en el contenido y `i18n/locales/{es,en}.yaml` en la interfaz. Sin excepciones.
+- **Todo texto que ve el jugador está en los dos idiomas**: `{es: …, en: …}` en el contenido y `i18n/locales/{es,en}/<dominio>.yaml` en la interfaz. Sin excepciones.
 - El diseño en `planning/` sigue en español, con sus nombres latinos.
 
 ## Probar

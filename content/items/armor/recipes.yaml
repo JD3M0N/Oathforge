@@ -1,0 +1,33 @@
+reinforced_leather:
+  profession: leatherworking
+  technique: armour
+  min_rank: 1
+  ingredients: {treated_leather: 3, iron_ingot: 1}
+  outputs: {reinforced_leather: 1}
+  xp: 30
+
+padded_jerkin:
+  profession: tailoring
+  technique: garments
+  min_rank: 1
+  ingredients: {cloth: 2, thread: 1}
+  outputs: {padded_jerkin: 1}
+  xp: 28
+
+steel_breastplate:
+  profession: blacksmithing
+  technique: weapons
+  min_rank: 5
+  station: anvil
+  ingredients: {steel_ingot: 5, treated_leather: 2}
+  outputs: {steel_breastplate: 1}
+  xp: 120
+
+hardened_leather:
+  profession: leatherworking
+  technique: armour
+  min_rank: 3
+  station: tannery
+  ingredients: {treated_leather: 4, thread: 2}
+  outputs: {hardened_leather: 1}
+  xp: 70

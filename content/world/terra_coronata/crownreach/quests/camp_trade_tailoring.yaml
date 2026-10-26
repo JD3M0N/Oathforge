@@ -1,0 +1,53 @@
+order: 31
+giver: hedda
+after: camp_trade_pick
+unlock_profession: tailoring
+name: {es: "Primeros encargos de sastrería", en: "First tailoring jobs"}
+summary:
+  es: "Tu maestro te encarga tres tareas para ver si vales: fabricar un jubón acolchado, usarlo o venderlo."
+  en: "Your master gives you three tasks to see if you are worth it: make a padded jerkin, then use or sell it."
+hint:
+  es: "Ve al puesto de tu maestro en el Barrio de Oficios y pide las primeras lecciones. Fabrica un jubón acolchado y equípatelo."
+  en: "Go to your master's stall on Craftsmen's Row and ask for the first lessons. Make a padded jerkin and equip it."
+start_stage: locked
+unlock_stage: active
+objective_stage: working
+complete_stage: done
+objectives:
+  - {kind: craft, target: padded_jerkin}
+  - {kind: equip, target: any}
+rewards:
+  - {xp: 120}
+  - {gold: 10}
+actions:
+  start:
+    label: {es: "🎓 Primeras lecciones de sastrería", en: "🎓 First lessons in tailoring"}
+    npc: hedda
+    location: tailor_stall
+    stages: [active]
+    to_stage: working
+    text:
+      es: "Tu maestro te pone delante el material y un primer encargo: un jubón acolchado. «Hazlo despacio y bien; lo rápido ya vendrá.»"
+      en: "Your master sets the material in front of you and a first job: a padded jerkin. \"Slow and right; fast comes later.\""
+    effects:
+      - {give_item: {clean_fiber: 8}}
+      - {profession_xp: {tailoring: 80}}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Aún no practicas este oficio."
+      en: "You do not practise this trade yet."
+  active:
+    journal:
+      es: "Habla con tu maestro en su puesto y pide las primeras lecciones de sastrería."
+      en: "Talk to your master at their stall and ask for the first tailoring lessons."
+  working:
+    journal:
+      es: "Fabrica un jubón acolchado en la estación del puesto y equípatelo."
+      en: "Make a padded jerkin at the stall's station and equip it."
+  done:
+    state: completed
+    journal:
+      es: "Tu maestro examina tu trabajo y gruñe satisfecho. «Para ser el primero, no está mal»."
+      en: "Your master looks over your work and grunts, satisfied. \"For a first, that is not bad.\""

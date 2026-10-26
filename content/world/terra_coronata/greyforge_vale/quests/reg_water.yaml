@@ -1,0 +1,53 @@
+order: 63
+giver: kellan
+after: reg_quarry
+name: {es: "El agua de la cantera", en: "The Quarry's Water"}
+summary:
+  es: "El agua baja y hay dos formas de arreglarlo: con el capataz o a espaldas de él. Tú decides con quién tratas."
+  en: "The water is dropping and there are two ways to fix it: with the foreman or behind his back. You decide who you deal with."
+hint:
+  es: "Habla con Kellan en la cantera y elige: ayudarle a restablecer el reparto del agua, o aceptar el trato del contrabandista que la controla."
+  en: "Talk to Kellan at the quarry and choose: help him restore the water rota, or accept the smuggler's deal who controls it."
+start_stage: locked
+unlock_stage: active
+actions:
+  side_with_kellan:
+    label: {es: "💧 Ayudar a Kellan con el reparto", en: "💧 Help Kellan with the rota"}
+    npc: kellan
+    stages: [active]
+    to_stage: done
+    text:
+      es: "Pasas el día cargando barriles junto a los carreteros. Al final, Kellan abre el libro de turnos y escribe tu nombre en él. La Guardia de Plata lo sabrá."
+      en: "You spend the day hauling barrels beside the carters. At the end Kellan opens the shift book and writes your name in it. The Silver Guard will hear of it."
+    effects:
+      - {xp: 850}
+      - {reputation: {silver_covenant: 10}}
+      - {set_flag: valley_water_kellan}
+  side_with_smuggler:
+    label: {es: "🤝 Aceptar el trato del contrabandista", en: "🤝 Accept the smuggler’s deal"}
+    npc: kellan
+    stages: [active]
+    to_stage: done
+    text:
+      es: "Cierras un trato en voz baja: el agua volverá, pero a un precio que no figurará en ningún libro. Kellan no dice nada, pero deja de mirarte a los ojos."
+      en: "You strike a quiet deal: the water will return, but at a price that will appear in no ledger. Kellan says nothing, but stops meeting your eyes."
+    effects:
+      - {xp: 850}
+      - {gold: 80}
+      - {reputation: {crimson_syndicate: 10, silver_covenant: -5}}
+      - {set_flag: valley_water_smuggler}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "El agua de la cantera baja cada día."
+      en: "The quarry's water drops every day."
+  active:
+    journal:
+      es: "Decide con Kellan cómo se arregla el agua de la cantera."
+      en: "Decide with Kellan how to fix the quarry's water."
+  done:
+    state: completed
+    journal:
+      es: "El agua volvió a correr. Cómo y a qué precio es algo que el valle recordará."
+      en: "The water ran again. How and at what price is something the vale will remember."

@@ -1,0 +1,413 @@
+avenger:
+  class_key: paladin
+  name: {es: Vengador, en: Avenger}
+  description:
+    es: Marcas una presa y acumulas presión sobre ella. Los castigos gastan Convicción; cambiar de blanco te obliga a reconstruir parte de la ventaja.
+    en: You mark one quarry and pile pressure on it. Punishments spend Conviction; switching targets makes you rebuild part of your advantage.
+  roles: [dmg, control]
+  ready: true
+  abilities:
+    vengeful_oath:
+      name: {es: Juramento Vengativo, en: Vengeful Oath}
+      description:
+        es: Una vez por turno, tu golpe con arma suma 1d6 de daño radiante.
+        en: Once per turn, your weapon hit adds 1d6 radiant damage.
+      level: 10
+      kind: passive
+      action: none
+      bonus_damage: 1d6
+      bonus_damage_type: radiant
+    avenging_mark:
+      name: {es: Marca del Vengador, en: Avenger's Mark}
+      description:
+        es: 'Acción adicional: marcas a un enemigo 4 turnos; cada golpe tuyo le suma 1d6 perforante.'
+        en: 'Bonus action: you mark an enemy for 4 turns; every hit of yours adds 1d6 piercing to it.'
+      level: 10
+      kind: curse
+      action: bonus
+      cost: 3
+      status: marked
+      status_turns: 4
+    avenging_smite:
+      name: {es: Castigo Vengador, en: Avenging Smite}
+      description:
+        es: Un ataque con arma que añade 3d8 radiante. Si la presa está marcada, gasta la marca por otros 3d8.
+        en: A weapon attack that adds 3d8 radiant. If the quarry is marked, it spends the mark for another 3d8.
+      level: 10
+      kind: strike
+      cost: 8
+      cooldown: 2
+      extra_damage: 3d8
+      damage_type: radiant
+      consumes: marked
+      consume_damage: 3d8
+    relentless_pursuit:
+      name: {es: Perseguidor Implacable, en: Relentless Pursuer}
+      description: {es: Haces crítico con un 19 o un 20., en: You score a critical hit on a 19 or 20.}
+      level: 15
+      kind: passive
+      action: none
+      crit_range: 19
+    avengers_judgment:
+      name: {es: Juicio del Vengador, en: Avenger's Judgment}
+      description:
+        es: Un ataque con arma que añade 6d8 radiante; si la presa está marcada, gasta la marca por otros 6d8.
+        en: A weapon attack that adds 6d8 radiant; if the quarry is marked, it spends the mark for another 6d8.
+      level: 20
+      kind: strike
+      cost: 20
+      cooldown: 4
+      extra_damage: 6d8
+      damage_type: radiant
+      consumes: marked
+      consume_damage: 6d8
+  modifiers:
+    lingering_mark:
+      level: 13
+      name: {es: Marca Persistente, en: Lingering Mark}
+      description: {es: La Marca del Vengador dura 3 turnos más., en: Avenger's Mark lasts 3 turns longer.}
+      patches:
+        avenging_mark:
+          status_turns: 3
+    heavy_verdict:
+      level: 13
+      name: {es: Veredicto Pesado, en: Heavy Verdict}
+      description:
+        es: Gastar la marca con el Castigo vengador hace 5d8 en lugar de 3d8.
+        en: Spending the mark with Avenging Smite deals 5d8 instead of 3d8.
+      patches:
+        avenging_smite:
+          consume_damage: 5d8
+    swift_pursuit:
+      level: 17
+      name: {es: Persecución Ágil, en: Swift Pursuit}
+      description: {es: La Marca del Vengador cuesta 2 menos., en: Avenger's Mark costs 2 less.}
+      patches:
+        avenging_mark:
+          cost: -2
+    wrathful_finish:
+      level: 17
+      name: {es: Remate Colérico, en: Wrathful Finish}
+      description:
+        es: El Juicio del Vengador añade 8d8 en lugar de 6d8 al golpear.
+        en: Avenger's Judgment adds 8d8 instead of 6d8 on the blow.
+      patches:
+        avengers_judgment:
+          extra_damage: 8d8
+
+sacred_warden:
+  class_key: paladin
+  name: {es: Custodio Sagrado, en: Sacred Warden}
+  description:
+    es: Mantienes una guardia sagrada y conviertes los golpes que mitigas en respuesta. Protegerte es, en sí mismo, tu forma de atacar.
+    en: You hold a holy guard and turn the blows you blunt into an answer. Protecting yourself is, in itself, how you attack.
+  roles: [deff, dmg]
+  ready: true
+  abilities:
+    holy_guard:
+      name: {es: Guardia Sagrada, en: Holy Guard}
+      description:
+        es: Cuando un golpe te hiere de verdad ganas 2 de Convicción y quien te hirió recibe 1d8 radiante.
+        en: When a blow really hurts you, you gain 2 Conviction and whoever hurt you takes 1d8 radiant.
+      level: 10
+      kind: passive
+      action: none
+      thorns: 1d8
+      bonus_damage_type: radiant
+      resource_on_hurt: 2
+    bulwark_of_faith:
+      name: {es: Baluarte de Fe, en: Bulwark of Faith}
+      description:
+        es: 'Acción adicional: ganas 3d8 PV temporales y bendición 2 turnos.'
+        en: 'Bonus action: you gain 3d8 temporary HP and a blessing for 2 turns.'
+      level: 10
+      kind: buff
+      action: bonus
+      cost: 4
+      cooldown: 3
+      status: blessed
+      status_turns: 2
+      temp_hp: 3d8
+    sacred_slam:
+      name: {es: Embate Sagrado, en: Sacred Slam}
+      description: {es: Un ataque con arma que añade 2d8 de daño radiante., en: A weapon attack that adds 2d8 radiant damage.}
+      level: 10
+      kind: strike
+      cost: 7
+      cooldown: 2
+      extra_damage: 2d8
+      damage_type: radiant
+    unyielding_faith:
+      name: {es: Fe Inquebrantable, en: Unyielding Faith}
+      description:
+        es: +1 a la CA, y el primer golpe de cada ronda hace la mitad de daño.
+        en: +1 AC, and the first blow each round does half damage.
+      level: 15
+      kind: passive
+      action: none
+      ac_bonus: 1
+      halve_first_hit: true
+    sacred_bastion:
+      name: {es: Bastión Sagrado, en: Sacred Bastion}
+      description:
+        es: 'Acción adicional: ganas 10d8 PV temporales y bendición 4 turnos.'
+        en: 'Bonus action: you gain 10d8 temporary HP and a blessing for 4 turns.'
+      level: 20
+      kind: buff
+      action: bonus
+      cost: 18
+      cooldown: 5
+      status: blessed
+      status_turns: 4
+      temp_hp: 10d8
+  modifiers:
+    stalwart_guard:
+      level: 13
+      name: {es: Guardia Firme, en: Stalwart Guard}
+      description:
+        es: El Baluarte de fe da 5d8 PV temporales en lugar de 3d8.
+        en: Bulwark of Faith gives 5d8 temporary HP instead of 3d8.
+      patches:
+        bulwark_of_faith:
+          temp_hp: 5d8
+    retributive_blow:
+      level: 13
+      name: {es: Réplica Sagrada, en: Holy Retort}
+      description: {es: El Embate sagrado añade 4d8 en lugar de 2d8., en: Sacred Slam adds 4d8 instead of 2d8.}
+      patches:
+        sacred_slam:
+          extra_damage: 4d8
+    lasting_bastion:
+      level: 17
+      name: {es: Bastión Sostenido, en: Sustained Bastion}
+      description:
+        es: El Bastión sagrado dura 2 turnos más y se recupera un turno antes.
+        en: Sacred Bastion lasts 2 turns longer and recovers a turn sooner.
+      patches:
+        sacred_bastion:
+          status_turns: 2
+          cooldown: -1
+    stored_wrath:
+      level: 17
+      name: {es: Cólera Acumulada, en: Stored Wrath}
+      description:
+        es: 'Aprendes la Descarga de cólera: un ataque con arma que añade 5d8 radiante.'
+        en: 'You learn Wrath Release: a weapon attack that adds 5d8 radiant.'
+      grants:
+        wrath_release:
+          name: {es: Descarga de Cólera, en: Wrath Release}
+          description: {es: Un ataque con arma que añade 5d8 de daño radiante., en: A weapon attack that adds 5d8 radiant damage.}
+          level: 17
+          kind: strike
+          cost: 10
+          cooldown: 3
+          extra_damage: 5d8
+          damage_type: radiant
+
+redeemer:
+  class_key: paladin
+  name: {es: Redentor, en: Redeemer}
+  description:
+    es: Alternas ataques que preparan una curación y curaciones de daño real que preparan el siguiente ataque. Sanar es parte del cuerpo a cuerpo.
+    en: You alternate attacks that set up a healing and healings of real damage that set up the next attack. Mending is part of the melee.
+  roles: [heal, deff]
+  ready: true
+  abilities:
+    grace_of_mercy:
+      name: {es: Gracia de la Misericordia, en: Grace of Mercy}
+      description: {es: +1 a la CA., en: +1 AC.}
+      level: 10
+      kind: passive
+      action: none
+      ac_bonus: 1
+    redemptive_strike:
+      name: {es: Golpe Redentor, en: Redemptive Strike}
+      description:
+        es: Un ataque con arma que añade 2d8 radiante y te cura la mitad del daño que hace.
+        en: A weapon attack that adds 2d8 radiant and heals you for half the damage it deals.
+      level: 10
+      kind: strike
+      cost: 7
+      cooldown: 1
+      extra_damage: 2d8
+      damage_type: radiant
+      leech_pct: 50
+    mending_light:
+      name: {es: Luz Sanadora, en: Mending Light}
+      description:
+        es: Recuperas 4d8 + tu nivel en PV y dejas una barrera de 2d8 PV temporales.
+        en: You recover 4d8 + your level in HP and leave a barrier of 2d8 temporary HP.
+      level: 10
+      kind: heal
+      cost: 8
+      cooldown: 2
+      heal_dice: 4d8
+      heal_add: level
+      temp_hp: 2d8
+    shielding_mercy:
+      name: {es: Misericordia Protectora, en: Shielding Mercy}
+      description:
+        es: 'Acción adicional: ganas 5d8 PV temporales y bendición 2 turnos.'
+        en: 'Bonus action: you gain 5d8 temporary HP and a blessing for 2 turns.'
+      level: 15
+      kind: buff
+      action: bonus
+      cost: 6
+      cooldown: 3
+      temp_hp: 5d8
+      status: blessed
+      status_turns: 2
+    absolution:
+      name: {es: Absolución, en: Absolution}
+      description:
+        es: Recuperas 12d8 + tu nivel en PV y dejas una barrera de 8d8 PV temporales.
+        en: You recover 12d8 + your level in HP and leave a barrier of 8d8 temporary HP.
+      level: 20
+      kind: heal
+      cost: 22
+      cooldown: 5
+      heal_dice: 12d8
+      heal_add: level
+      temp_hp: 8d8
+  modifiers:
+    deeper_mercy:
+      level: 13
+      name: {es: Misericordia Profunda, en: Deeper Mercy}
+      description:
+        es: El Golpe redentor te cura el 80 % del daño en lugar del 50 %.
+        en: Redemptive Strike heals 80% of the damage instead of 50%.
+      patches:
+        redemptive_strike:
+          leech_pct: 80
+    brighter_light:
+      level: 13
+      name: {es: Luz Más Viva, en: Brighter Light}
+      description: {es: La Luz sanadora cura 6d8 en lugar de 4d8., en: Mending Light heals 6d8 instead of 4d8.}
+      patches:
+        mending_light:
+          heal_dice: 6d8
+    quick_mending:
+      level: 17
+      name: {es: Sanación Ágil, en: Quick Mending}
+      description:
+        es: La Luz sanadora cuesta 3 menos y se recupera un turno antes.
+        en: Mending Light costs 3 less and recovers a turn sooner.
+      patches:
+        mending_light:
+          cost: -3
+          cooldown: -1
+    greater_absolution:
+      level: 17
+      name: {es: Absolución Mayor, en: Greater Absolution}
+      description: {es: La Absolución cura 16d8 en lugar de 12d8., en: Absolution heals 16d8 instead of 12d8.}
+      patches:
+        absolution:
+          heal_dice: 16d8
+
+inquisitor:
+  class_key: paladin
+  name: {es: Inquisidor, en: Inquisitor}
+  description:
+    es: Impones sellos que castigan lo que el rival anuncia, debilitan su defensa o preparan una interrupción. Eliges qué sello y cuándo.
+    en: You lay seals that punish what the enemy telegraphs, weaken its defence or set up an interruption. You choose which seal, and when.
+  roles: [control, dmg]
+  ready: true
+  abilities:
+    closed_mind:
+      name: {es: Mente Cerrada, en: Closed Mind}
+      description: {es: Eres inmune al miedo y tienes +1 a la CA., en: You are immune to fear and have +1 AC.}
+      level: 10
+      kind: passive
+      action: none
+      ac_bonus: 1
+      immune: [frightened]
+    condemning_seal:
+      name: {es: Sello de Condena, en: Condemning Seal}
+      description:
+        es: 'Acción adicional: sellas a un enemigo 3 turnos; recibe más daño de todo.'
+        en: 'Bonus action: you seal an enemy for 3 turns; it takes more damage from everything.'
+      level: 10
+      kind: curse
+      action: bonus
+      cost: 3
+      status: vulnerable
+      status_turns: 3
+    seal_breaker:
+      name: {es: Romper el Sello, en: Break the Seal}
+      description:
+        es: Un ataque con arma que añade 3d8 radiante. Si el objetivo está sellado, gasta el sello por otros 3d8.
+        en: A weapon attack that adds 3d8 radiant. If the target is sealed, it spends the seal for another 3d8.
+      level: 10
+      kind: strike
+      cost: 7
+      cooldown: 2
+      extra_damage: 3d8
+      damage_type: radiant
+      consumes: vulnerable
+      consume_damage: 3d8
+    interdict:
+      name: {es: Interdicto, en: Interdict}
+      description:
+        es: 'El objetivo tira SAB: si falla, recibe 2d8 radiante y queda aturdido un turno.'
+        en: 'The target rolls a WIS save: on a fail it takes 2d8 radiant and is stunned for a turn.'
+      level: 10
+      kind: save
+      cost: 8
+      cooldown: 3
+      damage: 2d8
+      damage_type: radiant
+      save: wis
+      status: stunned
+    unshakable_law:
+      name: {es: Ley Inquebrantable, en: Unshakable Law}
+      description: {es: +1 a la CA., en: +1 AC.}
+      level: 15
+      kind: passive
+      action: none
+      ac_bonus: 1
+    final_verdict:
+      name: {es: Veredicto Final, en: Final Verdict}
+      description:
+        es: 'Toda la fila tira SAB: 6d8 radiante y aturdida 2 turnos si falla.'
+        en: 'The whole row rolls a WIS save: 6d8 radiant and stunned for 2 turns on a fail.'
+      level: 20
+      kind: save
+      cost: 20
+      cooldown: 5
+      damage: 6d8
+      damage_type: radiant
+      save: wis
+      area: row
+      status: stunned
+      status_turns: 2
+  modifiers:
+    lasting_seal:
+      level: 13
+      name: {es: Sello Duradero, en: Lasting Seal}
+      description: {es: El Sello de condena dura 2 turnos más., en: Condemning Seal lasts 2 turns longer.}
+      patches:
+        condemning_seal:
+          status_turns: 2
+    sharp_seal:
+      level: 13
+      name: {es: Sello Cortante, en: Sharp Seal}
+      description:
+        es: Romper el sello hace 5d8 en lugar de 3d8 al gastar el sello.
+        en: Break the Seal deals 5d8 instead of 3d8 when it spends the seal.
+      patches:
+        seal_breaker:
+          consume_damage: 5d8
+    firm_interdict:
+      level: 17
+      name: {es: Interdicto Firme, en: Firm Interdict}
+      description: {es: El Interdicto se recupera 1 turno antes., en: Interdict recovers 1 turn sooner.}
+      patches:
+        interdict:
+          cooldown: -1
+    harsh_verdict:
+      level: 17
+      name: {es: Veredicto Severo, en: Harsh Verdict}
+      description: {es: El Veredicto final hace 9d8 en lugar de 6d8., en: Final Verdict deals 9d8 instead of 6d8.}
+      patches:
+        final_verdict:
+          damage: 9d8

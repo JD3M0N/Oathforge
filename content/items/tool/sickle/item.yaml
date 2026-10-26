@@ -1,0 +1,5 @@
+name: {es: Hoz de herborista, en: Herbalist's sickle}
+icon: "🌾"
+description: {es: "Una hoja curva y pequeña para cortar raíces sin dañarlas.", en: "A small curved blade for cutting roots without bruising them."}
+type: tool
+value: 10

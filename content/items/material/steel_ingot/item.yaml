@@ -1,0 +1,6 @@
+name: {es: Lingote de acero, en: Steel ingot}
+icon: "⬜"
+description: {es: "Hierro profundo y carbón, fundidos juntos hasta que cantan al golpearlos.", en: "Deep iron and coal, smelted together until they ring when struck."}
+type: material
+value: 45
+stackable: true

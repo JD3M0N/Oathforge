@@ -1,0 +1,8 @@
+name: {es: Cota de malla, en: Chain mail}
+icon: "⛓️"
+description: {es: "Pesada y ruidosa, pero detiene casi cualquier hoja.", en: "Heavy and loud, but it stops almost any blade."}
+type: armor
+slot: body
+value: 75
+base_ac: 16
+dex_cap: 0

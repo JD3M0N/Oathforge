@@ -1,0 +1,134 @@
+name: {es: Clérigo, en: Cleric}
+description:
+  es: Canaliza la luz de su fe para sanar a los suyos y abrasar a los no-muertos.
+  en: Channels the light of their faith to heal allies and sear the undead.
+hit_die: 8
+primary: wis
+casting: wis
+array: {wis: 15, con: 14, str: 13, dex: 12, cha: 10, int: 8}
+skills: [medicine, religion]
+items: {mace: 1, scale_mail: 1, shield: 1, healing_potion: 1}
+equip: [mace, scale_mail, shield]
+signature: [sacred_flame]
+abilities:
+  sacred_flame:
+    name: {es: Llama Sagrada, en: Sacred Flame}
+    description: {es: 'Ataque de conjuro a distancia (SAB): 1d8 de daño radiante.', en: 'Ranged spell attack (WIS): 1d8 radiant damage.'}
+    details:
+      es: 'Una llama de luz cae sobre el enemigo desde lo alto. Es un ataque de conjuro a distancia con tu SAB que hace 1d8 de daño radiante, el doble contra no muertos. No cuesta nada: es tu ataque de siempre.'
+      en: 'A flame of light falls on the enemy from above. It is a ranged spell attack with your WIS that deals 1d8 radiant damage, double against undead. It costs nothing: it is your everyday attack.'
+    level: 1
+    kind: spell
+    damage: 1d8
+    damage_type: radiant
+    damage_tiers: {5: 2d8, 11: 3d8, 17: 4d8}
+  healing_word:
+    name: {es: Palabra Sanadora, en: Healing Word}
+    description: {es: 'Acción adicional: recuperas 2d4 + SAB PV.', en: 'Bonus action: recover 2d4 + WIS HP.'}
+    details:
+      es: Una palabra de tu fe basta para cerrar heridas. Como acción adicional recuperas 2d4 + SAB PV, y te queda la acción para atacar. Gasta Maná.
+      en: A word of your faith is enough to close wounds. As a bonus action you recover 2d4 + WIS HP, and you keep your action to attack. It spends Mana.
+    level: 1
+    kind: heal
+    action: bonus
+    heal_dice: 2d4
+    heal_add: casting
+    cost: 3
+  turn_undead:
+    name: {es: Expulsar No-muertos, en: Turn Undead}
+    description:
+      es: Todos los no-muertos enemigos sufren 2d6 de daño radiante y quedan aturdidos un turno.
+      en: Every undead enemy takes 2d6 radiant damage and is stunned for a turn.
+    details:
+      es: 'Alzas tu símbolo sagrado y los muertos recuerdan que deberían estar quietos. Todos los no muertos enemigos reciben 2d6 de daño radiante y quedan aturdidos un turno. Contra cualquier otra criatura no hace nada: úsalo contra los muertos que caminan.'
+      en: 'You raise your holy symbol and the dead remember they should lie still. Every undead enemy takes 2d6 radiant damage and is stunned for a turn. Against any other creature it does nothing: use it against the walking dead.'
+    level: 2
+    kind: turn
+    damage: 2d6
+    damage_type: radiant
+    status: stunned
+    status_turns: 1
+    targets_type: undead
+    cost: 5
+    cooldown: 2
+  bless:
+    name: {es: Bendición, en: Bless}
+    description: {es: +2 a tus tiradas de ataque durante 3 turnos., en: +2 to your attack rolls for 3 turns.}
+    details:
+      es: Tu dios guía tu mano. Durante 3 turnos sumas +2 a tus tiradas de ataque. Úsalo al principio de una pelea larga para sacarle todo el partido.
+      en: Your god guides your hand. For 3 turns you add +2 to your attack rolls. Use it at the start of a long fight to get the most out of it.
+    level: 3
+    kind: buff
+    status: blessed
+    status_turns: 3
+    cost: 4
+    cooldown: 3
+  divine_strike:
+    name: {es: Golpe Divino, en: Divine Strike}
+    description:
+      es: Una vez por turno, tus golpes con arma cuerpo a cuerpo añaden 1d8 de daño radiante.
+      en: Once per turn, your melee weapon hits add 1d8 radiant damage.
+    details:
+      es: Tu arma lleva la marca de tu dios. Una vez por turno, cuando aciertas con un arma cuerpo a cuerpo, sumas 1d8 de daño radiante. Es automático.
+      en: Your weapon bears your god's mark. Once per turn, when you hit with a melee weapon, you add 1d8 radiant damage. It is automatic.
+    level: 5
+    kind: passive
+    action: none
+    bonus_damage: 1d8
+    bonus_damage_type: radiant
+  mending_prayer:
+    name: {es: Plegaria Sanadora, en: Mending Prayer}
+    description:
+      es: Recuperas 2d8 + tu modificador de conjuro en PV. Cuesta 5 de Maná.
+      en: You recover 2d8 + your spellcasting modifier in HP. Costs 5 Mana.
+    details:
+      es: Una oración larga, de las que cierran heridas de verdad. Usa tu acción entera, así que cúrate cuando el combate te lo permita.
+      en: A long prayer, the kind that really closes wounds. It uses your whole action, so heal when the fight lets you.
+    level: 4
+    kind: heal
+    cost: 5
+    heal_dice: 2d8
+    heal_add: casting
+  guiding_bolt:
+    name: {es: Rayo Guía, en: Guiding Bolt}
+    description:
+      es: 'Ataque de conjuro a distancia: 4d6 de daño radiante. Cuesta 6 de Maná.'
+      en: 'Ranged spell attack: 4d6 radiant damage. Costs 6 Mana.'
+    details:
+      es: Un rayo de luz que el cielo envía por tu mano. Hace el doble contra los no muertos y es tu golpe más fuerte a distancia.
+      en: A bolt of light the sky sends through your hand. It hits twice as hard on undead and is your strongest ranged blow.
+    level: 6
+    kind: spell
+    cost: 6
+    cooldown: 2
+    damage: 4d6
+    damage_type: radiant
+  sanctified_ward:
+    name: {es: Resguardo Sagrado, en: Sanctified Ward}
+    description: {es: +1 a la CA., en: +1 AC.}
+    details:
+      es: Tu fe te rodea como una muralla delgada. Siempre tienes +1 a la CA, sin hacer nada.
+      en: Your faith surrounds you like a thin wall. You always have +1 AC, with no action needed.
+    level: 8
+    kind: passive
+    action: none
+    ac_bonus: 1
+  pillar_of_light:
+    name: {es: Columna de Luz, en: Pillar of Light}
+    description:
+      es: 'Toda la fila tira DES: 4d6 de daño radiante, la mitad si la supera. Cuesta 12 de Maná.'
+      en: 'The whole row rolls a DEX save: 4d6 radiant damage, half on a success. Costs 12 Mana.'
+    details:
+      es: Una columna de luz cae sobre la fila entera. Es el gasto más grande de tu reserva, y vale la pena cuando son varios.
+      en: A pillar of light falls on the whole row. It is the biggest spend of your reserve, and it is worth it when there are several.
+    level: 9
+    kind: save
+    cost: 12
+    cooldown: 3
+    damage: 4d6
+    damage_type: radiant
+    save: dex
+    area: row
+    half_on_save: true
+resource: mana
+order: 6

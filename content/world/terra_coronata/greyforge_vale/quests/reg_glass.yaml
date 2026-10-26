@@ -1,0 +1,35 @@
+order: 66
+giver: iwen
+after: reg_sawmill
+name: {es: "Hierbas y vidrio", en: "Herbs and Glass"}
+summary:
+  es: "Iwen necesita luz clara para la reparación y sólo la Ribera del Vidrio tiene lo que hace falta: hierbas raras y la anguila que las guarda."
+  en: "Iwen needs clear light for the repair and only the Glass Shore has what is needed: rare herbs and the eel that guards them."
+hint:
+  es: "Ve a la Ribera del Vidrio, derrota a tres anguilas de vidrio y recoge cuatro hojas de luna (⚒ Actividades → 🌿 Herboristería)."
+  en: "Go to the Glass Shore, defeat three glass eels and gather four moonleaf (⚒ Activities → 🌿 Herbalism)."
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: visit, target: glass_shore}
+  - {kind: kill, target: glass_eel, count: 3}
+  - {kind: gather, target: moonleaf, count: 4}
+rewards:
+  - {xp: 1400}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Iwen espera noticias de la orilla."
+      en: "Iwen waits for news from the shore."
+  active:
+    journal:
+      es: "Ribera del Vidrio: tres anguilas de vidrio y cuatro hojas de luna."
+      en: "Glass Shore: three glass eels and four moonleaf."
+  done:
+    state: completed
+    journal:
+      es: "Iwen examina las hojas a contraluz. «Con esto el taller puede hablar con las torres.»"
+      en: "Iwen examines the leaves against the light. \"With this the workshop can speak to the towers.\""

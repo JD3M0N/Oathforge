@@ -1,0 +1,20 @@
+name: {es: "Reptante de cantera", en: "Quarry crawler"}
+indefinite: {es: "reptante de cantera", en: "quarry crawler"}
+icon: 🪨
+description: {es: "Un mecanismo de extracción que sigue arrastrándose por la cantera aunque nadie le dé órdenes.", en: "An extraction mechanism that keeps crawling through the quarry though nobody gives it orders."}
+hp: 90
+ac: 15
+dex: 0
+wis: 1
+row: front
+attacks:
+  - {name: {es: "Mandíbulas de roca", en: "Rock jaws"}, to_hit: 8, damage: 2d8+3, damage_type: bludgeoning}
+xp: 340
+gold: "0"
+immune: [frightened]
+type: humanoid
+habitat: {es: "Cantera de Ceniza", en: "Ash Quarry"}
+lore:
+  es: "Un mecanismo de extracción que sigue arrastrándose por la cantera aunque nadie le dé órdenes."
+  en: "An extraction mechanism that keeps crawling through the quarry though nobody gives it orders."
+order: 13

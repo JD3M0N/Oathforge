@@ -1,0 +1,6 @@
+name: {es: Tronco de fresno, en: Ash log}
+icon: "🪵"
+description: {es: "Madera flexible y noble, buscada por los arqueros.", en: "Supple fine wood, prized by bowyers."}
+type: material
+value: 7
+stackable: true

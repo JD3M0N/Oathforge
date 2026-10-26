@@ -1,0 +1,53 @@
+order: 26
+giver: garrick
+after: camp_trade_pick
+unlock_profession: carpentry
+name: {es: "Primeros encargos de carpintería", en: "First carpentry jobs"}
+summary:
+  es: "Tu maestro te encarga tres tareas para ver si vales: fabricar un bastón de roble, usarlo o venderlo."
+  en: "Your master gives you three tasks to see if you are worth it: make an oak staff, then use or sell it."
+hint:
+  es: "Ve al puesto de tu maestro en el Barrio de Oficios y pide las primeras lecciones. Fabrica un bastón de roble y equípatelo."
+  en: "Go to your master's stall on Craftsmen's Row and ask for the first lessons. Make an oak staff and equip it."
+start_stage: locked
+unlock_stage: active
+objective_stage: working
+complete_stage: done
+objectives:
+  - {kind: craft, target: oak_staff}
+  - {kind: equip, target: any}
+rewards:
+  - {xp: 120}
+  - {gold: 10}
+actions:
+  start:
+    label: {es: "🎓 Primeras lecciones de carpintería", en: "🎓 First lessons in carpentry"}
+    npc: garrick
+    location: carpenter_stall
+    stages: [active]
+    to_stage: working
+    text:
+      es: "Tu maestro te pone delante el material y un primer encargo: un bastón de roble. «Hazlo despacio y bien; lo rápido ya vendrá.»"
+      en: "Your master sets the material in front of you and a first job: an oak staff. \"Slow and right; fast comes later.\""
+    effects:
+      - {give_item: {oak_plank: 2, clean_fiber: 1}}
+      - {profession_xp: {carpentry: 80}}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Aún no practicas este oficio."
+      en: "You do not practise this trade yet."
+  active:
+    journal:
+      es: "Habla con tu maestro en su puesto y pide las primeras lecciones de carpintería."
+      en: "Talk to your master at their stall and ask for the first carpentry lessons."
+  working:
+    journal:
+      es: "Fabrica un bastón de roble en la estación del puesto y equípatelo."
+      en: "Make an oak staff at the stall's station and equip it."
+  done:
+    state: completed
+    journal:
+      es: "Tu maestro examina tu trabajo y gruñe satisfecho. «Para ser el primero, no está mal»."
+      en: "Your master looks over your work and grunts, satisfied. \"For a first, that is not bad.\""

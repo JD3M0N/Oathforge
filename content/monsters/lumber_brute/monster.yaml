@@ -1,0 +1,19 @@
+name: {es: "Leñador desbocado", en: "Runaway lumberjack"}
+indefinite: {es: "leñador desbocado", en: "runaway lumberjack"}
+icon: 🪓
+description: {es: "Un leñador que quedó atrapado en el aserradero cuando se detuvo el valle, y que ya no distingue entre un tronco y una persona.", en: "A lumberjack trapped in the sawmill when the vale stopped, who no longer tells a log from a person."}
+hp: 110
+ac: 14
+dex: 0
+wis: 1
+row: front
+attacks:
+  - {name: {es: "Hacha de talar", en: "Felling axe"}, to_hit: 9, damage: 2d10+3, damage_type: slashing}
+xp: 520
+gold: "4d10"
+type: humanoid
+habitat: {es: "Aserradero Silencioso", en: "Silent Sawmill"}
+lore:
+  es: "Un leñador que quedó atrapado en el aserradero cuando se detuvo el valle, y que ya no distingue entre un tronco y una persona."
+  en: "A lumberjack trapped in the sawmill when the vale stopped, who no longer tells a log from a person."
+order: 16

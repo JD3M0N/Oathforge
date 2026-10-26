@@ -1,0 +1,6 @@
+name: {es: Cuerda de cáñamo, en: Hemp rope}
+icon: "🪢"
+description: {es: Quince metros de cuerda resistente., en: Fifty feet of sturdy rope.}
+type: tool
+value: 1
+stackable: true

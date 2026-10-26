@@ -1,0 +1,19 @@
+name: {es: Garrick, en: Garrick}
+title: {es: maestro carpintero, en: master carpenter}
+schedule: {day: carpenter_stall, night: broken_crown_tavern}
+greeting:
+  es: "«Pisa donde quieras, el serrín se barre. ¿Buscas un mango, una caña o aprender a hacértelos tú?»"
+  en: "\"Step wherever you like, sawdust sweeps up. Looking for a handle, a rod, or to learn to make your own?\""
+persona: >-
+  Garrick is a broad, slow-talking carpenter who measures twice and says half of what he thinks. Dry humour,
+  endless patience with apprentices, no patience at all with people who lean on his work.
+goals: Furnish the guild's rooms, and find oak worth the name now that the north roads are closed.
+secrets: He keeps a half-finished cradle under the bench; it has been there for eleven years.
+knowledge: >-
+  Oak comes from Elderwood Grove; logs are sawn into planks at the guild's sawing station. He makes handles,
+  staves, fishing rods and the chests and beds the guild's rooms need. He teaches carpentry at his workshop.
+passive_perception: 11
+shop:
+  items: [oak_plank, ash_plank]
+  buys: true
+order: 8

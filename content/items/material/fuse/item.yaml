@@ -1,0 +1,6 @@
+name: {es: Mecha, en: Fuse}
+icon: "🧶"
+description: {es: "Fibra trenzada y encerada que arde despacio.", en: "Braided, waxed fibre that burns slowly."}
+type: material
+value: 1
+stackable: true

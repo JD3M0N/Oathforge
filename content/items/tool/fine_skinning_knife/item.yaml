@@ -1,0 +1,6 @@
+name: {es: Cuchillo fino, en: Fine knife}
+icon: "🔪"
+description: {es: "Punta delgada para sacar entera la parte que siempre se rompe.", en: "A slender point for saving the part that always tears."}
+type: tool
+value: 110
+tool: {skill: skinning, base: skinning_knife, min_rank: 3, rare_rel: 0.05}

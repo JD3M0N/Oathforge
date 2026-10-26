@@ -1,0 +1,35 @@
+order: 64
+giver: orsa
+after: reg_water
+name: {es: "Astas en el bosque", en: "Antlers in the Wood"}
+summary:
+  es: "La fauna del Bosque de las Astas creció con el metal de las vetas. Orsa necesita el camino libre hasta el aserradero."
+  en: "The Antler Wood's fauna grew on the metal of the seams. Orsa needs the road to the sawmill clear."
+hint:
+  es: "Derrota a cuatro lobos astados y a dos cervatos de hierro en el Bosque de las Astas."
+  en: "Defeat four antler wolves and two iron harts in the Antler Wood."
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: kill, target: antler_wolf, count: 4}
+  - {kind: kill, target: antler_hart, count: 2}
+rewards:
+  - {xp: 1000}
+  - {give_item: {heartwood_log: 2}}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Orsa mira hacia el bosque."
+      en: "Orsa looks towards the wood."
+  active:
+    journal:
+      es: "Cuatro lobos astados y dos cervatos de hierro en el Bosque de las Astas."
+      en: "Four antler wolves and two iron harts in the Antler Wood."
+  done:
+    state: completed
+    journal:
+      es: "El camino al aserradero quedó libre. Orsa te paga con dos troncos de corazón de roble que había guardado."
+      en: "The road to the sawmill is clear. Orsa pays you with two heartwood logs she had set aside."

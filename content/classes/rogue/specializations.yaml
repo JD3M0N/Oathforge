@@ -1,0 +1,303 @@
+assassin:
+  class_key: rogue
+  name: {es: Asesino, en: Assassin}
+  description:
+    es: Preparas un objetivo y descargas el daño en una ventana. En un combate largo puedes abrir ventanas nuevas, no dependes del primer turno.
+    en: You prepare a target and dump damage in one window. In a long fight you can open fresh windows; you do not live off the first turn.
+  roles: [dmg]
+  ready: true
+  abilities:
+    deadly_precision:
+      name: {es: Precisión Mortal, en: Deadly Precision}
+      description: {es: Haces crítico con un 19 o un 20., en: You score a critical hit on a 19 or 20.}
+      level: 10
+      kind: passive
+      action: none
+      crit_range: 19
+    shadow_prep:
+      name: {es: Preparar la Sombra, en: Prepare the Shadow}
+      description:
+        es: 'Acción adicional: Sigilo contra su percepción; si sale, tu próximo ataque tiene ventaja.'
+        en: 'Bonus action: a Stealth check against their perception; if it works, your next attack has advantage.'
+      level: 10
+      kind: hide
+      action: bonus
+      cost: 3
+    lethal_strike:
+      name: {es: Golpe Letal, en: Lethal Strike}
+      description: {es: Un ataque con arma que añade 4d8 de daño perforante., en: A weapon attack that adds 4d8 piercing damage.}
+      level: 10
+      kind: strike
+      cost: 8
+      cooldown: 2
+      extra_damage: 4d8
+      damage_type: piercing
+    bleeding_wound:
+      name: {es: Herida Abierta, en: Open Wound}
+      description:
+        es: 'Acción adicional: el objetivo sangra 4 turnos, sin salvación.'
+        en: 'Bonus action: the target bleeds for 4 turns, no save.'
+      level: 15
+      kind: curse
+      action: bonus
+      cost: 4
+      status: bleeding
+      status_turns: 4
+    silent_sentence:
+      name: {es: Sentencia Silenciosa, en: Silent Sentence}
+      description:
+        es: Un ataque con arma que añade 8d8 perforante; si el objetivo sangra, gasta la herida por otros 4d8.
+        en: A weapon attack that adds 8d8 piercing; if the target bleeds, it spends the wound for another 4d8.
+      level: 20
+      kind: strike
+      cost: 20
+      cooldown: 4
+      extra_damage: 8d8
+      damage_type: piercing
+      consumes: bleeding
+      consume_damage: 4d8
+  modifiers:
+    quick_prep:
+      level: 13
+      name: {es: Preparación Veloz, en: Quick Preparation}
+      description: {es: Preparar la sombra cuesta 2 menos., en: Prepare the Shadow costs 2 less.}
+      patches:
+        shadow_prep:
+          cost: -2
+    deeper_cut:
+      level: 13
+      name: {es: Corte Profundo, en: Deeper Cut}
+      description: {es: El Golpe letal añade 6d8 en lugar de 4d8., en: Lethal Strike adds 6d8 instead of 4d8.}
+      patches:
+        lethal_strike:
+          extra_damage: 6d8
+    lasting_wound:
+      level: 17
+      name: {es: Herida Duradera, en: Lasting Wound}
+      description: {es: La Herida abierta dura 3 turnos más., en: Open Wound lasts 3 turns longer.}
+      patches:
+        bleeding_wound:
+          status_turns: 3
+    perfect_edge:
+      level: 17
+      name: {es: Filo Perfecto, en: Perfect Edge}
+      description:
+        es: Gastar la herida con la Sentencia silenciosa hace 7d8 en lugar de 4d8.
+        en: Spending the wound with Silent Sentence deals 7d8 instead of 4d8.
+      patches:
+        silent_sentence:
+          consume_damage: 7d8
+
+duelist:
+  class_key: rogue
+  name: {es: Duelista, en: Duelist}
+  description:
+    es: Fintas, paradas y réplicas contra un solo rival. Atacar y defender preparan oportunidades distintas, y siempre tienes una a mano.
+    en: Feints, parries and ripostes against one rival. Attacking and defending set up different openings, and one is always within reach.
+  roles: [dmg, deff]
+  ready: true
+  abilities:
+    fencers_poise:
+      name: {es: Porte de Esgrimista, en: Fencer's Poise}
+      description:
+        es: +2 a la CA, y el primer golpe de cada ronda hace la mitad de daño.
+        en: +2 AC, and the first blow each round does half damage.
+      level: 10
+      kind: passive
+      action: none
+      ac_bonus: 2
+      halve_first_hit: true
+    parry:
+      name: {es: Parada, en: Parry}
+      description: {es: 'Acción adicional: ganas 2d8 PV temporales.', en: 'Bonus action: you gain 2d8 temporary HP.'}
+      level: 10
+      kind: buff
+      action: bonus
+      cost: 3
+      cooldown: 2
+      temp_hp: 2d8
+    riposte_thrust:
+      name: {es: Estocada de Réplica, en: Riposte Thrust}
+      description: {es: Un ataque con arma que añade 3d8 de daño perforante., en: A weapon attack that adds 3d8 piercing damage.}
+      level: 10
+      kind: strike
+      cost: 7
+      cooldown: 1
+      extra_damage: 3d8
+      damage_type: piercing
+    feint:
+      name: {es: Finta, en: Feint}
+      description:
+        es: 'El objetivo tira SAB: si falla, recibe 2d8 psíquico y queda vulnerable 2 turnos.'
+        en: 'The target rolls a WIS save: on a fail it takes 2d8 psychic and is vulnerable for 2 turns.'
+      level: 10
+      kind: save
+      cost: 6
+      cooldown: 2
+      damage: 2d8
+      damage_type: psychic
+      save: wis
+      status: vulnerable
+      status_turns: 2
+    fluid_blade:
+      name: {es: Hoja Fluida, en: Fluid Blade}
+      description: {es: Haces crítico con un 19 o un 20., en: You score a critical hit on a 19 or 20.}
+      level: 15
+      kind: passive
+      action: none
+      crit_range: 19
+    perfect_duel:
+      name: {es: Duelo Perfecto, en: Perfect Duel}
+      description:
+        es: Un ataque con arma que añade 8d8 perforante; si el objetivo es vulnerable, gasta eso por otros 5d8.
+        en: A weapon attack that adds 8d8 piercing; if the target is vulnerable, it spends that for another 5d8.
+      level: 20
+      kind: strike
+      cost: 18
+      cooldown: 4
+      extra_damage: 8d8
+      damage_type: piercing
+      consumes: vulnerable
+      consume_damage: 5d8
+  modifiers:
+    sharper_parry:
+      level: 13
+      name: {es: Parada Afilada, en: Sharper Parry}
+      description: {es: La Parada da 4d8 PV temporales en lugar de 2d8., en: Parry gives 4d8 temporary HP instead of 2d8.}
+      patches:
+        parry:
+          temp_hp: 4d8
+    longer_feint:
+      level: 13
+      name: {es: Finta Larga, en: Long Feint}
+      description: {es: La Finta deja vulnerable 2 turnos más., en: Feint leaves the target vulnerable 2 turns longer.}
+      patches:
+        feint:
+          status_turns: 2
+    quick_riposte:
+      level: 17
+      name: {es: Réplica Rápida, en: Quick Riposte}
+      description: {es: La Estocada de réplica cuesta 3 menos., en: Riposte Thrust costs 3 less.}
+      patches:
+        riposte_thrust:
+          cost: -3
+    final_flourish:
+      level: 17
+      name: {es: Floritura Final, en: Final Flourish}
+      description: {es: El Duelo perfecto añade 10d8 en lugar de 8d8., en: Perfect Duel adds 10d8 instead of 8d8.}
+      patches:
+        perfect_duel:
+          extra_damage: 10d8
+
+saboteur:
+  class_key: rogue
+  name: {es: Saboteador, en: Saboteur}
+  description:
+    es: Trampas, humo y venenos propios. Preparas una ventaja y decides si la activas tú o dejas que el rival la desencadene.
+    en: Traps, smoke and poisons of your own. You set an advantage and decide whether to trigger it or let the enemy walk into it.
+  roles: [control, dmg]
+  ready: true
+  abilities:
+    cunning_craft:
+      name: {es: Ingenio de Saboteador, en: Saboteur's Craft}
+      description: {es: +1 a la CA., en: +1 AC.}
+      level: 10
+      kind: passive
+      action: none
+      ac_bonus: 1
+    caltrops:
+      name: {es: Abrojos, en: Caltrops}
+      description:
+        es: 'Toda la fila tira DES: 2d8 perforante y trabada un turno si falla.'
+        en: 'The whole row rolls a DEX save: 2d8 piercing and restrained for a turn on a fail.'
+      level: 10
+      kind: save
+      cost: 7
+      cooldown: 3
+      damage: 2d8
+      damage_type: piercing
+      save: dex
+      area: row
+      status: restrained
+    smoke_pot:
+      name: {es: Bote de Humo, en: Smoke Pot}
+      description:
+        es: 'Toda la fila tira SAB: quien falla queda con miedo 2 turnos.'
+        en: 'The whole row rolls a WIS save: whoever fails is frightened for 2 turns.'
+      level: 10
+      kind: save
+      cost: 5
+      cooldown: 3
+      save: wis
+      area: row
+      status: frightened
+      status_turns: 2
+    corrosive_poison:
+      name: {es: Veneno Corrosivo, en: Corrosive Poison}
+      description:
+        es: 'Acción adicional: envenenas a un enemigo 4 turnos, sin salvación.'
+        en: 'Bonus action: you poison an enemy for 4 turns, no save.'
+      level: 10
+      kind: curse
+      action: bonus
+      cost: 4
+      status: poisoned
+      status_turns: 4
+    pressure_trap:
+      name: {es: Trampa de Presión, en: Pressure Trap}
+      description:
+        es: 'El objetivo tira DES: 5d8 perforante; si estaba trabado, gasta la traba por otros 4d8.'
+        en: 'The target rolls a DEX save: 5d8 piercing; if it was restrained, it spends that for another 4d8.'
+      level: 15
+      kind: save
+      cost: 12
+      cooldown: 3
+      damage: 5d8
+      damage_type: piercing
+      save: dex
+      consumes: restrained
+      consume_damage: 4d8
+    chain_sabotage:
+      name: {es: Sabotaje Encadenado, en: Chained Sabotage}
+      description:
+        es: 'Toda la fila tira DES: 8d8 de fuego y aturdida 2 turnos si falla.'
+        en: 'The whole row rolls a DEX save: 8d8 fire and stunned for 2 turns on a fail.'
+      level: 20
+      kind: save
+      cost: 20
+      cooldown: 5
+      damage: 8d8
+      damage_type: fire
+      save: dex
+      area: row
+      status: stunned
+      status_turns: 2
+  modifiers:
+    wider_caltrops:
+      level: 13
+      name: {es: Abrojos Más Grandes, en: Bigger Caltrops}
+      description: {es: Los Abrojos hacen 4d8 en lugar de 2d8., en: Caltrops deal 4d8 instead of 2d8.}
+      patches:
+        caltrops:
+          damage: 4d8
+    thicker_smoke:
+      level: 13
+      name: {es: Humo Espeso, en: Thick Smoke}
+      description: {es: El Bote de humo asusta 2 turnos más., en: Smoke Pot frightens for 2 turns longer.}
+      patches:
+        smoke_pot:
+          status_turns: 2
+    cheap_trap:
+      level: 17
+      name: {es: Trampa Barata, en: Cheap Trap}
+      description: {es: La Trampa de presión cuesta 4 menos., en: Pressure Trap costs 4 less.}
+      patches:
+        pressure_trap:
+          cost: -4
+    bigger_chain:
+      level: 17
+      name: {es: Cadena Mayor, en: Bigger Chain}
+      description: {es: El Sabotaje encadenado hace 11d8 en lugar de 8d8., en: Chained Sabotage deals 11d8 instead of 8d8.}
+      patches:
+        chain_sabotage:
+          damage: 11d8

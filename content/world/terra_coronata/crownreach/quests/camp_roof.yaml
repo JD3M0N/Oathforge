@@ -1,0 +1,40 @@
+order: 22
+giver: tamsin
+after: camp_gear
+name: {es: "Lo que se guarda", en: "What You Keep"}
+summary:
+  es: "Un recluta que lo lleva todo encima tropieza. Tamsin te enseña a guardar y a recobrar el aliento."
+  en: "A recruit who carries everything trips. Tamsin shows you how to stash things and catch your breath."
+hint:
+  es: "En tu cuarto del Gremio, guarda un objeto en el cofre y vuelve a sacar algo (🗄️). Después toma un «💤 Descanso corto» en ⚒ Actividades."
+  en: "In your room at the Guild, stash an item in the chest and take something out again (🗄️). Then take a \"💤 Short rest\" from ⚒ Activities."
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: stash, target: any}
+  - {kind: take, target: any}
+  - {kind: short_rest, target: any}
+rewards:
+  - {xp: 80}
+  - {gold: 5}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Tamsin quiere verte organizado."
+      en: "Tamsin wants to see you organised."
+  active:
+    journal:
+      es: "Guarda algo en el cofre de tu cuarto, vuelve a sacarlo y haz un descanso corto. «Un respiro a tiempo vale más que una poción», dice Tamsin."
+      en: "Stash something in your room's chest, take it out again and take a short rest. \"A breather at the right time is worth more than a potion,\" says Tamsin."
+    location_text:
+      adventurers_guild:
+        es: "Arriba está tu cuarto con el cofre. Los descansos cortos no cuestan nada: solo dos entre dos descansos largos."
+        en: "Upstairs is your room with the chest. Short rests cost nothing: only two between long rests."
+  done:
+    state: completed
+    journal:
+      es: "Tu cuarto ya parece un cuarto. Tamsin te dice que lo de los descansos cortos se aprende a base de equivocarse… y de contar hasta dos."
+      en: "Your room finally looks like a room. Tamsin says short rests are learned by getting them wrong… and by counting to two."

@@ -1,0 +1,19 @@
+name: {es: "Lobo astado", en: "Antler wolf"}
+indefinite: {es: "lobo astado", en: "antler wolf"}
+icon: 🐕
+description: {es: "Un lobo cuyo hueso del cráneo se ha alargado en astas de metal gris. Caza en jauría y huele el hierro.", en: "A wolf whose skull bone has lengthened into grey metal antlers. He hunts in packs and smells iron."}
+hp: 85
+ac: 14
+dex: 2
+wis: 1
+row: front
+attacks:
+  - {name: {es: "Mordisco", en: "Bite"}, to_hit: 9, damage: 2d8+4, damage_type: piercing}
+xp: 360
+gold: "0"
+type: beast
+habitat: {es: "Bosque de las Astas", en: "Antler Wood"}
+lore:
+  es: "Un lobo cuyo hueso del cráneo se ha alargado en astas de metal gris. Caza en jauría y huele el hierro."
+  en: "A wolf whose skull bone has lengthened into grey metal antlers. He hunts in packs and smells iron."
+order: 14

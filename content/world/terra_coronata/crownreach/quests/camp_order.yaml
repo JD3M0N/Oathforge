@@ -1,0 +1,39 @@
+order: 20
+giver: vale
+after: tut_chapel
+name: {es: "Una entrega sospechosa", en: "A Suspicious Delivery"}
+summary:
+  es: "Vale te enseña una orden del gremio que no cuadra con su libro. Hay una exploradora que quiere hablar con alguien nuevo."
+  en: "Vale shows you a guild order that does not match her ledger. A scout wants to talk to someone new."
+hint:
+  es: "Habla con Tamsin Harrow en el Gremio de Aventureros (de noche, en la taberna). Luego sal al Camino del Viejo Rey y derrota a dos bandidos: «🏹 Cazar» o lo que salga al viajar."
+  en: "Talk to Tamsin Harrow at the Adventurers' Guild (at night, in the tavern). Then go out on the Old King's Road and beat two bandits: \"🏹 Hunt\" or whatever turns up on the way."
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: talk, target: tamsin}
+  - {kind: kill, target: bandit, count: 2}
+rewards:
+  - {xp: 100}
+  - {give_item: {leather_armor: 1}}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Vale tiene algo que enseñarte."
+      en: "Vale has something to show you."
+  active:
+    journal:
+      es: "Vale te enseña una orden con el sello del gremio que no está en su libro. «Habla con Tamsin Harrow, la Linterna. Lleva dos años buscando justo esto.» Después, demuestra que sabes defenderte en el Camino del Viejo Rey."
+      en: "Vale shows you an order stamped with the guild's seal that is not in her ledger. \"Talk to Tamsin Harrow, the Lantern. She has spent two years looking for exactly this.\" Then prove you can look after yourself on the Old King's Road."
+    location_text:
+      adventurers_guild:
+        es: "Una mujer de pelo gris, con un farol de latón colgado del cinto aunque sea de día, estudia un mapa. Es Tamsin. 🗨️ Habla con ella."
+        en: "A grey-haired woman with a brass lantern hanging from her belt even in daylight studies a map. That is Tamsin. 🗨️ Talk to her."
+  done:
+    state: completed
+    journal:
+      es: "Tamsin te escuchó sin interrumpir. «Un recluta que no ha sido señalado aún… justo lo que necesitaba», dijo, y te dio una armadura de cuero que había guardado. Tendrás que aprender a llevarla."
+      en: "Tamsin heard you out without interrupting. \"A recruit who has not been marked yet… exactly what I needed,\" she said, and handed you a leather armor she had put aside. You will have to learn to wear it."

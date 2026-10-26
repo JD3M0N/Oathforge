@@ -1,0 +1,6 @@
+name: {es: Pólvora, en: Black powder}
+icon: "🧂"
+description: {es: "Polvo gris que huele a azufre. Mejor lejos del fuego.", en: "Grey dust that smells of sulphur. Best kept far from fire."}
+type: material
+value: 5
+stackable: true

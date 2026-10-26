@@ -1,0 +1,6 @@
+name: {es: Pergamino, en: Parchment}
+icon: "📃"
+description: {es: "Piel de jabalí raspada y estirada hasta quedar fina como una hoja.", en: "Boar hide scraped and stretched until it is thin as a leaf."}
+type: material
+value: 5
+stackable: true

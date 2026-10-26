@@ -1,0 +1,6 @@
+name: {es: Hacha de monte, en: Forester's axe}
+icon: "🪓"
+description: {es: "Para desramar y elegir la pieza antes de tumbar el árbol.", en: "For limbing and picking the piece before the tree comes down."}
+type: tool
+value: 120
+tool: {skill: woodcutting, base: woodaxe, min_rank: 3, rare_rel: 0.05}

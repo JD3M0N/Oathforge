@@ -1,0 +1,6 @@
+name: {es: Caña ligera, en: Light rod}
+icon: "🎣"
+description: {es: "Fresno flexible y sedal corto: se lanza y se recoge rápido.", en: "Supple ash and a short line: quick to cast and quicker to reel."}
+type: tool
+value: 80
+tool: {skill: fishing, base: fishing_rod, min_rank: 2, time_pct: 0.10}

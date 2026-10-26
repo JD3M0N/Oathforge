@@ -1,0 +1,7 @@
+name: {es: Poción de curación mayor, en: Greater healing potion}
+icon: "🧪"
+description: {es: "Doble de raíz y la mitad de agua: cierra heridas que la corriente no cerraría.", en: "Twice the root and half the water: it closes wounds the common one would not."}
+type: consumable
+min_level: 10
+value: 90
+heal: 4d4+4

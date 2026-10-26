@@ -1,0 +1,7 @@
+name: {es: Daga de colmillo, en: Tusk dagger}
+icon: "🗡️"
+description: {es: "Hoja de hierro con la empuñadura tallada en el colmillo del Viejo Colmillo. Entra como un susurro.", en: "An iron blade hilted in Old Tusk's own tusk. It goes in like a whisper."}
+type: weapon
+slot: main_hand
+value: 45
+weapon: {damage: 1d6, damage_type: piercing, finesse: true}

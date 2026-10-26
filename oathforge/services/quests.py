@@ -1,4 +1,4 @@
-"""Data-driven quests: stages, player actions and triggers from quests.yaml.
+"""Data-driven quests: stages, player actions and triggers from world/<continent>/<zone>/quests/<quest>.yaml.
 
 Missions add counted objectives (kill / talk / visit / gather / skin / craft / rest / heal) that complete them
 on their own, and a

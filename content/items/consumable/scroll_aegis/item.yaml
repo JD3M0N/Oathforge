@@ -1,0 +1,7 @@
+name: {es: Pergamino de égida, en: Scroll of aegis}
+icon: "📜"
+description: {es: "Al leerlo en combate, una luz te envuelve: 2d6+3 PV temporales.", en: "Read in combat, a light wraps around you: 2d6+3 temporary HP."}
+type: consumable
+value: 20
+stackable: true
+combat: {kind: buff, temp_hp: 2d6+3}

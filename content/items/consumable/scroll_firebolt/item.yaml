@@ -1,0 +1,7 @@
+name: {es: Pergamino de dardo de fuego, en: Scroll of fire bolt}
+icon: "📜"
+description: {es: "Al leerlo en combate, lanza un dardo de fuego: ataque +5, 2d6 de fuego.", en: "Read in combat, it hurls a fire bolt: +5 to hit, 2d6 fire."}
+type: consumable
+value: 14
+stackable: true
+combat: {kind: spell, damage: 2d6, damage_type: fire, attack_bonus: 5}

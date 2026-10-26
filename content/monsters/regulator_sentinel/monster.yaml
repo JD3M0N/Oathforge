@@ -1,0 +1,28 @@
+name: {es: "Centinela del regulador", en: "Regulator sentinel"}
+indefinite: {es: "centinela del regulador", en: "regulator sentinel"}
+icon: 🛡️
+description: {es: "Guardián del mecanismo. Cuando carga su pulso se queda inmóvil y zumba, y después tarda en recuperarse.", en: "Guardian of the mechanism. When it charges its pulse it stands still and hums, and then takes a while to recover."}
+hp: 125
+ac: 18
+dex: 0
+wis: 1
+row: front
+attacks:
+  - {name: {es: "Puño de bronce", en: "Bronze fist"}, to_hit: 11, damage: 3d8+3, damage_type: bludgeoning}
+pattern:
+  plate: 15
+  cycle: 3
+  cycle_broken: 2
+  heavy: {name: {es: "Pulso del regulador", en: "Regulator pulse"}, to_hit: 12, damage: 3d8+6, damage_type: force}
+boss: true
+xp: 800
+gold: "0"
+loot:
+  - {item: regulator_core, chance: 1.0}
+immune: [frightened]
+type: humanoid
+habitat: {es: "Taller del Regulador", en: "Regulator Workshop"}
+lore:
+  es: "Guardián del mecanismo. Cuando carga su pulso se queda inmóvil y zumba, y después tarda en recuperarse."
+  en: "Guardian of the mechanism. When it charges its pulse it stands still and hums, and then takes a while to recover."
+order: 20

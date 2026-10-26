@@ -1,0 +1,6 @@
+name: {es: Fibra vegetal, en: Plant fiber}
+icon: "🧵"
+description: {es: "Tallos secos y trenzables para cuerdas y ataduras.", en: "Dry stalks that braid into cords and bindings."}
+type: material
+value: 1
+stackable: true

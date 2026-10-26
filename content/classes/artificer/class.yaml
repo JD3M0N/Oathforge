@@ -1,0 +1,135 @@
+name: {es: Artífice, en: Artificer}
+description:
+  es: 'Inventor de campo: un aparato que carga y descarga, con reactivos para curar, proteger o corroer.'
+  en: 'A field inventor: a device that charges and discharges, with reagents to mend, shield or corrode.'
+hit_die: 8
+primary: int
+casting: int
+array: {int: 15, con: 14, dex: 13, wis: 12, str: 10, cha: 8}
+skills: [arcana, investigation]
+items: {mace: 1, scale_mail: 1, healing_potion: 1}
+equip: [mace, scale_mail]
+signature: [arc_bolt]
+resource: charge
+abilities:
+  arc_bolt:
+    name: {es: Descarga del Aparato, en: Device Bolt}
+    description: {es: 'Ataque de conjuro a distancia (INT): 1d10 de daño de fuerza.', en: 'Ranged spell attack (INT): 1d10 force damage.'}
+    details:
+      es: Un pulso seco de energía sale de tu aparato. Es tu ataque de siempre y no cuesta Carga, también desde la retaguardia.
+      en: A dry pulse of energy leaves your device. It is your everyday attack and costs no Charge, from the back row too.
+    level: 1
+    kind: spell
+    damage: 1d10
+    damage_type: force
+    damage_tiers: {5: 2d10, 11: 3d10, 17: 4d10}
+  repair_pulse:
+    name: {es: Pulso Restaurador, en: Restoring Pulse}
+    description:
+      es: 'Acción adicional: recuperas 1d8 + tu modificador de conjuro en PV. Cuesta 3 de Carga.'
+      en: 'Bonus action: recover 1d8 + your spellcasting modifier in HP. Costs 3 Charge.'
+    details:
+      es: 'Tu aparato libera un pulso que cierra heridas. Gasta Carga, no pociones: no entra ni sale nada de tu mochila.'
+      en: 'Your device releases a pulse that closes wounds. It spends Charge, not potions: nothing enters or leaves your backpack.'
+    level: 1
+    kind: heal
+    action: bonus
+    cost: 3
+    cooldown: 2
+    heal_dice: 1d8
+    heal_add: casting
+  corrosive_flask:
+    name: {es: Reactivo Corrosivo, en: Corrosive Reagent}
+    description:
+      es: 'El objetivo tira DES: 2d6 de veneno, la mitad si la supera. Cuesta 4 de Carga.'
+      en: 'The target rolls a DEX save: 2d6 poison, half on a success. Costs 4 Charge.'
+    details:
+      es: 'Tu aparato rocía un reactivo que corroe lo que toca. No es una poción: sale de tu Carga y no se vende ni se guarda.'
+      en: 'Your device sprays a reagent that eats what it touches. It is not a potion: it comes from your Charge and can be neither sold nor stored.'
+    level: 2
+    kind: save
+    cost: 4
+    damage: 2d6
+    damage_type: poison
+    save: dex
+    half_on_save: true
+  foam_shield:
+    name: {es: Espuma Protectora, en: Protective Foam}
+    description:
+      es: 'Acción adicional: ganas 2d6 + tu modificador de conjuro de PV temporales. Cuesta 4 de Carga.'
+      en: 'Bonus action: you gain 2d6 + your spellcasting modifier in temporary HP. Costs 4 Charge.'
+    details:
+      es: 'Una espuma densa te cubre y amortigua el siguiente golpe. Es una acción adicional: protégete y sigue trabajando.'
+      en: 'A dense foam covers you and cushions the next blow. It is a bonus action: shield yourself and keep working.'
+    level: 3
+    kind: buff
+    action: bonus
+    cost: 4
+    cooldown: 3
+    temp_hp: 2d6
+    heal_add: casting
+  overcharge:
+    name: {es: Sobrecarga, en: Overcharge}
+    description:
+      es: 'Ataque de conjuro a distancia: 3d8 de daño de fuerza. Cuesta 5 de Carga.'
+      en: 'Ranged spell attack: 3d8 force damage. Costs 5 Charge.'
+    details:
+      es: Fuerzas el aparato más allá de lo seguro y descargas todo en un pulso. Caro, pero pega como nada de lo que llevas.
+      en: You push the device past what is safe and discharge it all in one pulse. Dear, but it hits like nothing else you carry.
+    level: 4
+    kind: spell
+    cost: 5
+    damage: 3d8
+    damage_type: force
+  arcane_armament:
+    name: {es: Armamento Arcano, en: Arcane Armament}
+    description: {es: Tus conjuros suman tu modificador de conjuro al daño., en: Your spells add your spellcasting modifier to damage.}
+    details:
+      es: 'Tu aparato ya no solo dispara: está afinado para ti. Tus conjuros suman tu modificador de conjuro al daño.'
+      en: 'Your device no longer just fires: it is tuned to you. Your spells add your spellcasting modifier to damage.'
+    level: 5
+    kind: passive
+    action: none
+    spell_damage_bonus: true
+  chain_reaction:
+    name: {es: Reacción en Cadena, en: Chain Reaction}
+    description:
+      es: 'Toda la fila tira DES: 4d6 de fuego, la mitad si la supera. Cuesta 8 de Carga.'
+      en: 'The whole row rolls a DEX save: 4d6 fire, half on a success. Costs 8 Charge.'
+    details:
+      es: Un reactivo prende a otro y ese a otro. Cuando son varios en fila, rinde mucho más que cualquier disparo.
+      en: One reagent lights another and that one another. When there are several in a row, it pays far more than any single shot.
+    level: 6
+    kind: save
+    cost: 8
+    cooldown: 3
+    damage: 4d6
+    damage_type: fire
+    save: dex
+    area: row
+    half_on_save: true
+  reinforced_plating:
+    name: {es: Blindaje Reforzado, en: Reinforced Plating}
+    description: {es: +1 a la CA., en: +1 AC.}
+    details:
+      es: Has ido reforzando tu coraza placa a placa. Siempre tienes +1 a la CA, sin hacer nada.
+      en: You have been reinforcing your armor plate by plate. You always have +1 AC, with no action needed.
+    level: 8
+    kind: passive
+    action: none
+    ac_bonus: 1
+  grand_discharge:
+    name: {es: Gran Descarga, en: Grand Discharge}
+    description:
+      es: 'Ataque de conjuro a distancia: 6d8 de daño de fuerza. Cuesta 10 de Carga.'
+      en: 'Ranged spell attack: 6d8 force damage. Costs 10 Charge.'
+    details:
+      es: Todo el aparato descargado a la vez. Es lo mayor que puedes soltar y tarda unos turnos en volver a cargarse.
+      en: The whole device discharged at once. It is the most you can release and it takes a few turns to charge again.
+    level: 9
+    kind: spell
+    cost: 10
+    cooldown: 3
+    damage: 6d8
+    damage_type: force
+order: 12

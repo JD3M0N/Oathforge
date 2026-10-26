@@ -1,0 +1,7 @@
+name: {es: Bomba cegadora, en: Flash bomb}
+icon: "⚡"
+description: {es: "Un fogonazo blanco: un enemigo hace una salvación de DES (CD 13); si falla, queda aturdido 1 turno.", en: "A white flash: one enemy makes a DEX save (DC 13); on a failure it is stunned for 1 turn."}
+type: consumable
+value: 20
+stackable: true
+combat: {kind: save, save: dex, save_dc: 13, status: stunned, status_turns: 1}

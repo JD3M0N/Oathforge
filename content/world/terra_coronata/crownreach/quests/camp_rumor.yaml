@@ -1,0 +1,54 @@
+order: 43
+giver: bram
+after: camp_fish
+name: {es: "Rumor o hecho", en: "Rumour or Fact"}
+summary:
+  es: "En la taberna ya se habla de los carros. Bram jura que es cosa de fantasmas; Holt dice que no."
+  en: "The tavern is already talking about the carts. Bram swears it is ghosts; Holt says otherwise."
+hint:
+  es: "Habla con Bram en la taberna y decide a quién crees: al rumor o a los hechos que te cuente Holt."
+  en: "Talk to Bram at the tavern and decide whom you believe: the rumour, or the facts Holt gives you."
+start_stage: locked
+unlock_stage: active
+actions:
+  believe:
+    label: {es: "🗣️ Creer el rumor de Bram", en: "🗣️ Believe Bram’s rumour"}
+    npc: bram
+    location: broken_crown_tavern
+    stages: [active]
+    to_stage: done
+    text:
+      es: "«Fantasmas, sí», repites. Bram sonríe y te invita a una cerveza. Holt, desde su mesa, no dice nada, pero te mira. Te quedas sin pista nueva y algo peor visto por la Guardia."
+      en: "\"Ghosts, yes,\" you repeat. Bram grins and buys you a beer. Holt, from his table, says nothing, but watches you. You get no new lead, and the Guard thinks a little less of you."
+    effects:
+      - {xp: 60}
+      - {reputation: {silver_covenant: -5}}
+      - {set_flag: rumor_believed}
+  check:
+    label: {es: "🔎 Contrastar con los hechos de Holt", en: "🔎 Check it against Holt’s facts"}
+    npc: bram
+    location: broken_crown_tavern
+    stages: [active]
+    to_stage: done
+    text:
+      es: "Dejas a Bram con sus fantasmas y vas a ver a Holt. Él te enseña un parte de la Guardia: tres carros del gremio salieron y ninguno llegó. Ni un cadáver, ni un fantasma. Te llevas una pista de verdad."
+      en: "You leave Bram to his ghosts and go to Holt. He shows you a Guard report: three guild carts left and none arrived. Not a body, not a ghost. You come away with a real lead."
+    effects:
+      - {xp: 120}
+      - {reputation: {silver_covenant: 5}}
+      - {set_flag: rumor_checked}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Algo se comenta en la taberna."
+      en: "Something is being said at the tavern."
+  active:
+    journal:
+      es: "Bram habla de fantasmas en el camino. Decide si le crees o contrastas los hechos con Holt."
+      en: "Bram talks of ghosts on the road. Decide whether to believe him or check the facts with Holt."
+  done:
+    state: completed
+    journal:
+      es: "Tomaste tu decisión y el pueblo lo supo: en Crownreach, lo que dices sobre un rumor también es un hecho."
+      en: "You made your choice and the town knew it: in Crownreach, what you say about a rumour is also a fact."

@@ -1,0 +1,19 @@
+name: {es: "Cervato de hierro", en: "Iron hart"}
+indefinite: {es: "cervato de hierro", en: "iron hart"}
+icon: 🫎
+description: {es: "Hijo menor de la fauna alterada. Embiste sin avisar, pero no resiste más de dos golpes duros seguidos.", en: "A lesser child of the altered fauna. It charges without warning, but cannot take more than two hard blows in a row."}
+hp: 110
+ac: 15
+dex: 1
+wis: 1
+row: front
+attacks:
+  - {name: {es: "Cornada", en: "Gore"}, to_hit: 8, damage: 2d8+4, damage_type: piercing}
+xp: 450
+gold: "0"
+type: beast
+habitat: {es: "Bosque de las Astas", en: "Antler Wood"}
+lore:
+  es: "Hijo menor de la fauna alterada. Embiste sin avisar, pero no resiste más de dos golpes duros seguidos."
+  en: "A lesser child of the altered fauna. It charges without warning, but cannot take more than two hard blows in a row."
+order: 15

@@ -1,0 +1,6 @@
+name: {es: Tinta, en: Ink}
+icon: "🖋️"
+description: {es: "Raíz de sangre machacada con hollín. Escribe rojo oscuro y no se borra.", en: "Bloodroot crushed with soot. It writes dark red and never fades."}
+type: material
+value: 4
+stackable: true

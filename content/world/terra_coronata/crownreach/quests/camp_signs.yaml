@@ -1,0 +1,43 @@
+order: 52
+giver: tamsin
+after: camp_kit
+name: {es: "Señales en la arboleda", en: "Signs in the Grove"}
+summary:
+  es: "Algo ha descortezado los robles más allá de la Arboleda Antigua. Tamsin cree que es la criatura que ronda el valle."
+  en: "Something has stripped the oaks beyond the Elderwood Grove. Tamsin thinks it is the creature that roams the vale."
+hint:
+  es: "Ve a la Arboleda Antigua y examina los troncos marcados."
+  en: "Go to the Elderwood Grove and examine the marked trunks."
+start_stage: locked
+unlock_stage: active
+actions:
+  read_bark:
+    label: {es: "🔍 Examinar los troncos descortezados", en: "🔍 Examine the stripped trunks"}
+    location: elderwood_grove
+    stages: [active]
+    to_stage: done
+    text:
+      es: "Los robles están descortezados a la altura de un hombre y en la madera hay incrustaciones grises, como de metal. Las pezuñas se internan hacia una hondonada. Lo que ronda aquí embiste con la cabeza gacha: se anuncia antes de golpear."
+      en: "The oaks are stripped of bark to a man’s height and the wood has grey, metallic inlays. The hoofprints lead on to a hollow. Whatever lurks here charges with its head lowered: it announces itself before it strikes."
+    effects:
+      - {xp: 150}
+      - {set_flag: stag_hunt}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Tamsin señala un mapa."
+      en: "Tamsin points at a map."
+  active:
+    journal:
+      es: "Examina los troncos descortezados de la Arboleda Antigua."
+      en: "Examine the stripped trunks of the Elderwood Grove."
+    location_text:
+      elderwood_grove:
+        es: "Entre los robles hay uno con la corteza arrancada y el tronco surcado de vetas grises. 🔍 Examínalo."
+        en: "Among the oaks one has its bark torn off and its trunk streaked with grey veins. 🔍 Examine it."
+  done:
+    state: completed
+    journal:
+      es: "Ya sabes dónde está: la Hondonada del Ciervo, al fondo de la arboleda. Y sabes lo que hace antes de cargar."
+      en: "You know where it is: Stag's Hollow, at the far end of the grove. And you know what it does before it charges."

@@ -1,0 +1,46 @@
+order: 47
+giver: tamsin
+after: camp_table
+name: {es: "El Recaudador de Ceniza", en: "The Ash Collector"}
+summary:
+  es: "Quien firma las órdenes falsas cobra peaje en un puesto del camino. Tamsin quiere su prueba, y que tú se la traigas."
+  en: "Whoever signs the forged orders charges a toll at a post on the road. Tamsin wants the proof, and for you to bring it."
+hint:
+  es: "Descansa y llévate pociones y humo. En el Puesto de Peaje Abandonado, «🏹 Cazar» te llevará hasta el Recaudador. Cuando cae, vuelve con Tamsin para entregar la prueba."
+  en: "Rest, and bring potions and smoke. At the Abandoned Toll Post, \"🏹 Hunt\" leads you to the Collector. Once he falls, go back to Tamsin and hand in the proof."
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+turn_in_stage: told
+complete_stage: done
+objectives:
+  - {kind: kill, target: ash_collector}
+rewards:
+  - {xp: 600}
+  - {gold: 40}
+  - {milestone: ash_collector}
+  - {give_item: {healing_potion: 2}}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Tamsin traza el plan."
+      en: "Tamsin draws up the plan."
+  active:
+    journal:
+      es: "Derrota al Recaudador de Ceniza en el Puesto de Peaje Abandonado. Es un tirador: cuando apunta, defiéndete; cuando recarga, ataca. Su placa se desgasta con cualquier daño."
+      en: "Defeat the Ash Collector at the Abandoned Toll Post. He is a marksman: when he aims, defend; when he reloads, attack. His plate wears down under any damage."
+    location_text:
+      toll_post:
+        es: "Las huellas de botas llevan a la garita del fondo. Alguien te espera con la ballesta cargada."
+        en: "The boot prints lead to the guardhouse at the back. Someone waits for you with a loaded crossbow."
+  told:
+    state: ready
+    journal:
+      es: "El Recaudador ha caído y llevas su prueba. Vuelve con Tamsin y entrégasela."
+      en: "The Collector is down and you carry his proof. Go back to Tamsin and hand it to her."
+  done:
+    state: completed
+    journal:
+      es: "Tamsin lee la prueba, la sella y se la lleva a Holt. «El gremio vuelve a tener su nombre limpio, y tú, recluta, ya no lo eres. Ahora decide qué clase de aventurero quieres ser.»"
+      en: "Tamsin reads the proof, seals it and takes it to Holt. \"The guild has its good name back, and you, recruit, are one no longer. Now decide what kind of adventurer you want to be.\""

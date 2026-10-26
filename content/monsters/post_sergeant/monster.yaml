@@ -1,0 +1,19 @@
+name: {es: "Sargento del peaje", en: "Post sergeant"}
+indefinite: {es: "sargento del peaje", en: "post sergeant"}
+icon: 🪖
+description: {es: "Manda a los cobradores del peaje. Cree que las órdenes falsas son órdenes de verdad.", en: "He commands the toll enforcers. He believes the forged orders are real ones."}
+hp: 62
+ac: 15
+dex: 1
+wis: 1
+row: front
+attacks:
+  - {name: {es: "Hacha de guardia", en: "Guard axe"}, to_hit: 7, damage: 2d6+4, damage_type: slashing}
+xp: 180
+gold: "3d10"
+type: humanoid
+habitat: {es: "Puesto de Peaje Abandonado", en: "Abandoned Toll Post"}
+lore:
+  es: "Manda a los cobradores del peaje. Cree que las órdenes falsas son órdenes de verdad."
+  en: "He commands the toll enforcers. He believes the forged orders are real ones."
+order: 25

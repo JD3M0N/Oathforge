@@ -1,0 +1,143 @@
+name: {es: Bardo, en: Bard}
+description:
+  es: Su voz es un arma; inspira, cura y desarma al enemigo con una burla o una melodía hipnótica.
+  en: Their voice is a weapon; they inspire, heal and undo foes with a jest or a hypnotic melody.
+hit_die: 8
+primary: cha
+casting: cha
+array: {cha: 15, dex: 14, con: 13, wis: 12, int: 10, str: 8}
+skills: [persuasion, deception]
+items: {rapier: 1, dagger: 1, leather_armor: 1, healing_potion: 1}
+equip: [rapier, leather_armor]
+signature: [vicious_mockery]
+abilities:
+  vicious_mockery:
+    name: {es: Burla Cruel, en: Vicious Mockery}
+    description:
+      es: 'Un enemigo hace una salvación de SAB: si falla, 1d4 de daño psíquico y miedo 1 turno.'
+      en: 'One enemy makes a WIS save: on a failure, 1d4 psychic damage and fear for 1 turn.'
+    details:
+      es: Una burla tan cruel que duele de verdad. El enemigo hace una salvación de SAB; si falla, recibe 1d4 de daño psíquico y queda con miedo un turno (ataca con desventaja). No cuesta nada.
+      en: A taunt so cruel it really hurts. The enemy makes a WIS save; on a failure it takes 1d4 psychic damage and is frightened for a turn (it attacks with disadvantage). It costs nothing.
+    level: 1
+    kind: save
+    save: wis
+    damage: 1d4
+    damage_type: psychic
+    status: frightened
+    status_turns: 1
+    generates: 2
+    damage_tiers: {5: 2d4, 11: 3d4, 17: 4d4}
+  bardic_inspiration:
+    name: {es: Inspiración Bárdica, en: Bardic Inspiration}
+    description: {es: 'Acción adicional: tu próxima tirada de ataque suma 1d6.', en: 'Bonus action: your next attack roll adds 1d6.'}
+    details:
+      es: Una nota que te recuerda por qué luchas. Como acción adicional, tu próxima tirada de ataque suma 1d6. Gasta Resonancia.
+      en: A note that reminds you why you fight. As a bonus action, your next attack roll adds 1d6. It spends Resonance.
+    level: 1
+    kind: buff
+    action: bonus
+    status: inspired
+    status_turns: 3
+    cost: 2
+    cooldown: 2
+  song_of_healing:
+    name: {es: Canción Sanadora, en: Song of Healing}
+    description: {es: 'Acción adicional: recuperas 1d4 + CAR PV.', en: 'Bonus action: recover 1d4 + CHA HP.'}
+    details:
+      es: Una canción suave que calma el dolor. Como acción adicional recuperas 1d4 + CAR PV, y te queda la acción. Gasta Resonancia.
+      en: A soft song that eases the pain. As a bonus action you recover 1d4 + CHA HP, and you keep your action. It spends Resonance.
+    level: 2
+    kind: heal
+    action: bonus
+    heal_dice: 1d4
+    heal_add: casting
+    cost: 3
+  hypnotic_pattern:
+    name: {es: Patrón Hipnótico, en: Hypnotic Pattern}
+    description:
+      es: Toda la fila del objetivo hace una salvación de SAB; quien falla queda aturdido 1 turno.
+      en: The target's whole row makes a WIS save; those who fail are stunned for 1 turn.
+    details:
+      es: Luces de colores giran en el aire y nadie puede apartar la mirada. Toda la fila del objetivo hace una salvación de SAB; quien falla queda aturdido un turno. Gasta Resonancia.
+      en: Colored lights whirl in the air and no one can look away. The target's whole row makes a WIS save; whoever fails is stunned for a turn. It spends Resonance.
+    level: 3
+    kind: save
+    area: row
+    save: wis
+    status: stunned
+    status_turns: 1
+    cost: 5
+    cooldown: 3
+  cutting_words:
+    name: {es: Palabras Cortantes, en: Cutting Words}
+    description:
+      es: El primer golpe que recibes cada ronda hace la mitad de daño.
+      en: The first hit you take each round deals half damage.
+    details:
+      es: Una palabra a tiempo hace que el golpe del enemigo pierda fuerza. El primer ataque que te acierta en cada ronda te hace la mitad de daño. Es automático.
+      en: A well-timed word makes the enemy's blow lose its strength. The first attack that hits you each round deals half damage. It is automatic.
+    level: 5
+    kind: passive
+    action: none
+    halve_first_hit: true
+  dissonant_whispers:
+    name: {es: Susurros Disonantes, en: Dissonant Whispers}
+    description:
+      es: 'El objetivo tira SAB: si falla, recibe 3d6 psíquico y queda con miedo un turno. Cuesta 4 de Resonancia.'
+      en: 'The target rolls a WIS save: on a fail it takes 3d6 psychic and is frightened for a turn. Costs 4 Resonance.'
+    details:
+      es: Una melodía que solo oye tu rival y que le roe la cabeza. Daño fuerte a un solo objetivo.
+      en: A tune only your rival hears and that gnaws at its head. Strong damage to a single target.
+    level: 4
+    kind: save
+    cost: 4
+    cooldown: 2
+    damage: 3d6
+    damage_type: psychic
+    save: wis
+    status: frightened
+  shatter_chord:
+    name: {es: Acorde Estremecedor, en: Shattering Chord}
+    description:
+      es: 'Toda la fila tira DES: 3d8 de fuerza, la mitad si la supera. Cuesta 7 de Resonancia.'
+      en: 'The whole row rolls a DEX save: 3d8 force, half on a success. Costs 7 Resonance.'
+    details:
+      es: 'Una nota tan aguda que rompe la piedra. Es tu estribillo: lo que has ido acumulando suena de golpe sobre toda la fila.'
+      en: 'A note so sharp it cracks stone. It is your refrain: everything you built up rings out at once over the whole row.'
+    level: 6
+    kind: save
+    cost: 7
+    cooldown: 2
+    damage: 3d8
+    damage_type: force
+    save: dex
+    area: row
+    half_on_save: true
+  encore:
+    name: {es: Bis, en: Encore}
+    description:
+      es: Recuperas 3d8 + tu modificador de conjuro en PV. Cuesta 8 de Resonancia.
+      en: You recover 3d8 + your spellcasting modifier in HP. Costs 8 Resonance.
+    details:
+      es: 'El público pide otra y tú se la das: una canción que te devuelve a la pelea.'
+      en: 'The audience asks for more and you give it: a song that puts you back in the fight.'
+    level: 8
+    kind: heal
+    cost: 8
+    cooldown: 3
+    heal_dice: 3d8
+    heal_add: casting
+  virtuoso:
+    name: {es: Virtuoso, en: Virtuoso}
+    description: {es: Tus conjuros suman tu modificador de conjuro al daño., en: Your spells add your spellcasting modifier to damage.}
+    details:
+      es: 'Dominas tu arte: cada nota golpea un poco más fuerte. Tus conjuros suman tu modificador de conjuro al daño.'
+      en: 'You have mastered your art: every note hits a little harder. Your spells add your spellcasting modifier to damage.'
+    level: 9
+    kind: passive
+    action: none
+    spell_damage_bonus: true
+resource: resonance
+resource_on_attack: 1
+order: 9

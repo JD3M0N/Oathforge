@@ -1,0 +1,34 @@
+order: 42
+giver: tamsin
+after: camp_herbs
+name: {es: "Una caña y una sartén", en: "A Rod and a Pan"}
+summary:
+  es: "Un grupo que no come no marcha. Tamsin te pide pescado y un guiso caliente."
+  en: "A group that does not eat does not march. Tamsin asks you for fish and a hot stew."
+hint:
+  es: "Pesca dos peces en la Orilla del Arroyo de Plata (necesitas la caña de Tessa) y cocina un estofado del cazador en el fogón de la taberna."
+  en: "Catch two fish at Silverbrook Bank (you need Tessa's rod) and cook a hunter's stew at the tavern hearth."
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: gather, target: river_fish, count: 2}
+  - {kind: craft, target: hunter_stew}
+rewards:
+  - {xp: 120}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Tamsin tiene hambre."
+      en: "Tamsin is hungry."
+  active:
+    journal:
+      es: "Pesca y cocina: dos peces y un estofado del cazador."
+      en: "Fish and cook: two fish and a hunter's stew."
+  done:
+    state: completed
+    journal:
+      es: "Tamsin se come el estofado sin decir nada y repite. Eso, de ella, es un elogio."
+      en: "Tamsin eats the stew without a word and asks for more. From her, that is praise."

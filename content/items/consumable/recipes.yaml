@@ -1,0 +1,108 @@
+healing_potion:
+  profession: alchemy
+  technique: potions
+  ingredients: {bloodroot: 2, water_flask: 1}
+  outputs: {healing_potion: 1}
+  xp: 12
+
+mana_potion:
+  profession: alchemy
+  technique: potions
+  min_rank: 1
+  ingredients: {moonleaf: 2, water_flask: 1}
+  outputs: {mana_potion: 1}
+  xp: 18
+
+mana_potion_bat:  # the same potion from what the bats drop
+  profession: alchemy
+  technique: potions
+  min_rank: 1
+  ingredients: {bat_wing: 2, water_flask: 1}
+  outputs: {mana_potion: 1}
+  xp: 18
+
+rest_draught:
+  profession: alchemy
+  technique: draughts
+  min_rank: 3
+  ingredients: {restmoss: 2, moonleaf: 1, water_flask: 1}
+  outputs: {rest_draught: 1}
+  xp: 35
+
+hunter_stew:
+  profession: cooking
+  technique: stews
+  ingredients: {raw_meat: 2, bloodroot: 1}
+  outputs: {hunter_stew: 1}
+  xp: 8
+
+fisher_ration:
+  profession: cooking
+  technique: rations
+  min_rank: 1
+  ingredients: {river_fish: 2, bloodroot: 1}
+  outputs: {fisher_ration: 2}
+  xp: 12
+
+scroll_firebolt:
+  profession: scribing
+  technique: scrolls
+  ingredients: {ink: 1, parchment: 1}
+  outputs: {scroll_firebolt: 1}
+  xp: 12
+
+scroll_cure:
+  profession: scribing
+  technique: scrolls
+  min_rank: 1
+  ingredients: {ink: 1, parchment: 1, bloodroot: 1}
+  outputs: {scroll_cure: 1}
+  xp: 18
+
+scroll_aegis:
+  profession: scribing
+  technique: scrolls
+  min_rank: 1
+  ingredients: {ink: 1, parchment: 1, moonleaf: 1}
+  outputs: {scroll_aegis: 1}
+  xp: 18
+
+scroll_sleep:
+  profession: scribing
+  technique: greater_scrolls
+  min_rank: 2
+  ingredients: {ink: 2, parchment: 1, moonleaf: 1}
+  outputs: {scroll_sleep: 1}
+  xp: 30
+
+smoke_bomb:
+  profession: engineering
+  technique: bombs
+  ingredients: {black_powder: 1, fuse: 1, plant_fiber: 1}
+  outputs: {smoke_bomb: 1}
+  xp: 10
+
+fire_bomb:
+  profession: engineering
+  technique: bombs
+  min_rank: 1
+  ingredients: {black_powder: 2, fuse: 1}
+  outputs: {fire_bomb: 1}
+  xp: 18
+
+flash_bomb:
+  profession: engineering
+  technique: devices
+  min_rank: 2
+  ingredients: {black_powder: 1, fuse: 1, copper_ore: 1}
+  outputs: {flash_bomb: 1}
+  xp: 30
+
+greater_healing_potion:
+  profession: alchemy
+  technique: draughts
+  min_rank: 4
+  station: alchemy_table
+  ingredients: {bloodroot: 4, restmoss: 1, water_flask: 1}
+  outputs: {greater_healing_potion: 1}
+  xp: 60

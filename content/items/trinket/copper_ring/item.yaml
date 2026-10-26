@@ -1,0 +1,6 @@
+name: {es: Anillo de cobre, en: Copper ring}
+icon: "💍"
+description: {es: "Un anillo sencillo y bien pulido. Los mercaderes lo compran.", en: "A simple, well-polished ring. Merchants buy them."}
+type: trinket
+value: 24
+stackable: true

@@ -1,0 +1,6 @@
+name: {es: Caña reforzada, en: Stout rod}
+icon: "🎣"
+description: {es: "Aguanta el cesto lleno y algún tirón de más.", en: "It takes a full basket and the odd extra tug."}
+type: tool
+value: 100
+tool: {skill: fishing, base: fishing_rod, min_rank: 2, extra_chance: 0.05}

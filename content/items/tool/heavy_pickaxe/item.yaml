@@ -1,0 +1,6 @@
+name: {es: Pico pesado, en: Heavy pickaxe}
+icon: "⛏️"
+description: {es: "Más hierro del necesario. Cada golpe arranca más roca.", en: "More iron than strictly needed. Every swing brings down more rock."}
+type: tool
+value: 110
+tool: {skill: mining, base: pickaxe, min_rank: 2, extra_chance: 0.05}

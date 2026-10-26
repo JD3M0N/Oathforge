@@ -1,0 +1,52 @@
+order: 29
+giver: lorent
+after: camp_trade_pick
+unlock_profession: scribing
+name: {es: "Primeros encargos de escribanía", en: "First scribing jobs"}
+summary:
+  es: "Tu maestro te encarga tres tareas para ver si vales: fabricar un pergamino de rayo ígneo, usarlo o venderlo."
+  en: "Your master gives you three tasks to see if you are worth it: make a firebolt scroll, then use or sell it."
+hint:
+  es: "Ve al puesto de tu maestro en el Barrio de Oficios y pide las primeras lecciones. Fabrica un pergamino de rayo ígneo y vende algo."
+  en: "Go to your master's stall on Craftsmen's Row and ask for the first lessons. Make a firebolt scroll and sell something."
+start_stage: locked
+unlock_stage: active
+objective_stage: working
+complete_stage: done
+objectives:
+  - {kind: craft, target: scroll_firebolt}
+  - {kind: sell, target: any}
+rewards:
+  - {xp: 120}
+  - {gold: 10}
+actions:
+  start:
+    label: {es: "🎓 Primeras lecciones de escribanía", en: "🎓 First lessons in scribing"}
+    npc: lorent
+    location: scribe_stall
+    stages: [active]
+    to_stage: working
+    text:
+      es: "Tu maestro te pone delante el material y un primer encargo: un pergamino de rayo ígneo. «Hazlo despacio y bien; lo rápido ya vendrá.»"
+      en: "Your master sets the material in front of you and a first job: a firebolt scroll. \"Slow and right; fast comes later.\""
+    effects:
+      - {give_item: {bloodroot: 1, coal: 1, boar_hide: 1}}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Aún no practicas este oficio."
+      en: "You do not practise this trade yet."
+  active:
+    journal:
+      es: "Habla con tu maestro en su puesto y pide las primeras lecciones de escribanía."
+      en: "Talk to your master at their stall and ask for the first scribing lessons."
+  working:
+    journal:
+      es: "Fabrica un pergamino de rayo ígneo en la estación del puesto y vende algo a un mercader."
+      en: "Make a firebolt scroll at the stall's station and sell something to a merchant."
+  done:
+    state: completed
+    journal:
+      es: "Tu maestro examina tu trabajo y gruñe satisfecho. «Para ser el primero, no está mal»."
+      en: "Your master looks over your work and grunts, satisfied. \"For a first, that is not bad.\""

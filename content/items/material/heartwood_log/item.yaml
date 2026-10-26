@@ -1,0 +1,6 @@
+name: {es: Tronco de corazón, en: Heartwood log}
+icon: "🪵"
+description: {es: "El corazón de un roble viejo: pesa el doble y no se astilla.", en: "The heart of an old oak: twice the weight and it will not splinter."}
+type: material
+value: 20
+stackable: true

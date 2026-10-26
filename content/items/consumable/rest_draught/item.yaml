@@ -1,0 +1,8 @@
+name: {es: Tónico del reposo, en: Resting draught}
+icon: "🍵"
+description: {es: "Huele a musgo tibio. Un descanso corto en un trago: recupera el 20 % de tus PV y un uso de una habilidad gastada. Una vez cada 4 horas; no cura heridas graves.", en: "It smells of warm moss. A short rest in one sip: restores 20% of your HP and one use of a spent ability. Once every 4 hours; it does not heal grave wounds."}
+type: consumable
+value: 80
+stackable: true
+effects:
+  - {type: short_rest, hp_percent: 0.20, charges: 1, pool: 3, cooldown_seconds: 14400}  # un uso, o 3 de la barra

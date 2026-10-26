@@ -1,0 +1,7 @@
+name: {es: Martillo de guerra, en: Warhammer}
+icon: "🔨"
+description: {es: "Hierro macizo: no corta, aplasta. Los huesos lo temen.", en: "Solid iron: it doesn't cut, it crushes. Bones fear it."}
+type: weapon
+slot: main_hand
+value: 15
+weapon: {damage: 1d8, damage_type: bludgeoning}

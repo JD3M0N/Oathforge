@@ -1,0 +1,6 @@
+name: {es: Fibra limpia, en: Clean fiber}
+icon: "🧵"
+description: {es: "Fibra peinada y sin brozas: ya se puede hilar o atar con ella.", en: "Fiber combed free of chaff: it can be spun or bound with now."}
+type: material
+value: 3
+stackable: true

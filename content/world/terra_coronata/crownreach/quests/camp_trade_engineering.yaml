@@ -1,0 +1,52 @@
+order: 30
+giver: dunn
+after: camp_trade_pick
+unlock_profession: engineering
+name: {es: "Primeros encargos de ingeniería", en: "First engineering jobs"}
+summary:
+  es: "Tu maestro te encarga tres tareas para ver si vales: fabricar dos bombas de humo, usarlo o venderlo."
+  en: "Your master gives you three tasks to see if you are worth it: make two smoke bombs, then use or sell it."
+hint:
+  es: "Ve al puesto de tu maestro en el Barrio de Oficios y pide las primeras lecciones. Fabrica dos bombas de humo y vende algo."
+  en: "Go to your master's stall on Craftsmen's Row and ask for the first lessons. Make two smoke bombs and sell something."
+start_stage: locked
+unlock_stage: active
+objective_stage: working
+complete_stage: done
+objectives:
+  - {kind: craft, target: smoke_bomb, count: 2}
+  - {kind: sell, target: any}
+rewards:
+  - {xp: 120}
+  - {gold: 10}
+actions:
+  start:
+    label: {es: "🎓 Primeras lecciones de ingeniería", en: "🎓 First lessons in engineering"}
+    npc: dunn
+    location: engineer_stall
+    stages: [active]
+    to_stage: working
+    text:
+      es: "Tu maestro te pone delante el material y un primer encargo: dos bombas de humo. «Hazlo despacio y bien; lo rápido ya vendrá.»"
+      en: "Your master sets the material in front of you and a first job: two smoke bombs. \"Slow and right; fast comes later.\""
+    effects:
+      - {give_item: {coal: 2, iron_ore: 1, plant_fiber: 4}}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Aún no practicas este oficio."
+      en: "You do not practise this trade yet."
+  active:
+    journal:
+      es: "Habla con tu maestro en su puesto y pide las primeras lecciones de ingeniería."
+      en: "Talk to your master at their stall and ask for the first engineering lessons."
+  working:
+    journal:
+      es: "Fabrica dos bombas de humo en la estación del puesto y vende algo a un mercader."
+      en: "Make two smoke bombs at the stall's station and sell something to a merchant."
+  done:
+    state: completed
+    journal:
+      es: "Tu maestro examina tu trabajo y gruñe satisfecho. «Para ser el primero, no está mal»."
+      en: "Your master looks over your work and grunts, satisfied. \"For a first, that is not bad.\""

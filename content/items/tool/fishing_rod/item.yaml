@@ -1,0 +1,5 @@
+name: {es: Caña de pescar, en: Fishing rod}
+icon: "🎣"
+description: {es: "Caña de sauce, sedal de crin y un anzuelo de hueso.", en: "A willow rod, horsehair line and a bone hook."}
+type: tool
+value: 10

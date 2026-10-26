@@ -1,0 +1,335 @@
+elementalist:
+  class_key: shaman
+  name: {es: Elementalista, en: Elementalist}
+  description:
+    es: Preparas con un elemento y activas la combinación con otro. Tu identidad es alternar, no especializarte en fuego ni en hielo.
+    en: You prime with one element and set it off with another. Your identity is alternating, not specialising in fire or ice.
+  roles: [dmg, control]
+  ready: true
+  abilities:
+    elemental_attunement:
+      name: {es: Sintonía Elemental, en: Elemental Attunement}
+      description:
+        es: Tus conjuros suman tu modificador de conjuro al daño, tienes +1 a la CA y cada golpe que te hiere de verdad te da 5 de recurso.
+        en: Your spells add your spellcasting modifier to damage, you have +1 AC and every blow that really hurts you gives 5 resource.
+      level: 10
+      kind: passive
+      action: none
+      spell_damage_bonus: true
+      ac_bonus: 1
+      resource_on_hurt: 5
+    fire_spirit:
+      name: {es: Espíritu de Fuego, en: Fire Spirit}
+      description:
+        es: 'El objetivo tira DES: si falla, recibe 3d8 de fuego y arde 3 turnos.'
+        en: 'The target rolls a DEX save: on a fail it takes 3d8 fire and burns for 3 turns.'
+      level: 10
+      kind: save
+      cost: 4
+      cooldown: 1
+      damage: 3d8
+      damage_type: fire
+      save: dex
+      status: burning
+      status_turns: 3
+    frost_spirit:
+      name: {es: Espíritu de Escarcha, en: Frost Spirit}
+      description:
+        es: 'El objetivo tira DES: si falla, recibe 3d8 de frío y queda trabado 2 turnos.'
+        en: 'The target rolls a DEX save: on a fail it takes 3d8 cold and is restrained for 2 turns.'
+      level: 10
+      kind: save
+      cost: 4
+      cooldown: 1
+      damage: 3d8
+      damage_type: cold
+      save: dex
+      status: restrained
+      status_turns: 2
+    steam_burst:
+      name: {es: Estallido de Vapor, en: Steam Burst}
+      description:
+        es: 'Ataque de conjuro a distancia: 3d8 de fuego. Si el objetivo arde, gasta el fuego por otros 4d8.'
+        en: 'Ranged spell attack: 3d8 fire. If the target is burning, it spends the fire for another 4d8.'
+      level: 10
+      kind: spell
+      cost: 7
+      cooldown: 2
+      damage: 3d8
+      damage_type: fire
+      consumes: burning
+      consume_damage: 4d8
+    thermal_shock:
+      name: {es: Choque Térmico, en: Thermal Shock}
+      description:
+        es: 'Ataque de conjuro a distancia: 4d8 de frío. Si el objetivo está trabado, rompe el hielo por otros 6d8.'
+        en: 'Ranged spell attack: 4d8 cold. If the target is restrained, it breaks the ice for another 6d8.'
+      level: 15
+      kind: spell
+      cost: 9
+      cooldown: 1
+      damage: 4d8
+      damage_type: cold
+      consumes: restrained
+      consume_damage: 6d8
+    elemental_confluence:
+      name: {es: Confluencia Elemental, en: Elemental Confluence}
+      description:
+        es: 'Toda la fila tira DES: 16d8 de fuego, la mitad si la supera, y arde 3 turnos si falla.'
+        en: 'The whole row rolls a DEX save: 16d8 fire, half on a success, and burning for 3 turns on a fail.'
+      level: 20
+      kind: save
+      cost: 18
+      cooldown: 2
+      damage: 16d8
+      damage_type: fire
+      save: dex
+      area: row
+      half_on_save: true
+      status: burning
+      status_turns: 3
+  modifiers:
+    longer_fire:
+      level: 13
+      name: {es: Fuego Duradero, en: Lasting Fire}
+      description: {es: El Espíritu de fuego hace arder 2 turnos más., en: Fire Spirit makes the target burn 2 turns longer.}
+      patches:
+        fire_spirit:
+          status_turns: 2
+    longer_frost:
+      level: 13
+      name: {es: Escarcha Duradera, en: Lasting Frost}
+      description: {es: El Espíritu de escarcha traba 2 turnos más., en: Frost Spirit restrains for 2 turns longer.}
+      patches:
+        frost_spirit:
+          status_turns: 2
+    hotter_steam:
+      level: 17
+      name: {es: Vapor Más Caliente, en: Hotter Steam}
+      description:
+        es: El Estallido de vapor hace 7d8 en lugar de 4d8 al gastar el fuego.
+        en: Steam Burst deals 7d8 instead of 4d8 when it spends the fire.
+      patches:
+        steam_burst:
+          consume_damage: 7d8
+    colder_shock:
+      level: 17
+      name: {es: Choque Más Frío, en: Colder Shock}
+      description:
+        es: El Choque térmico hace 9d8 en lugar de 6d8 al romper el hielo.
+        en: Thermal Shock deals 9d8 instead of 6d8 when it breaks the ice.
+      patches:
+        thermal_shock:
+          consume_damage: 9d8
+
+ancestral_guardian:
+  class_key: shaman
+  name: {es: Guardián Ancestral, en: Ancestral Guardian}
+  description:
+    es: Un tótem y una presencia ancestral te protegen y responden a las agresiones. La decisión es mantener el vínculo o consumirlo.
+    en: A totem and an ancestral presence shield you and answer aggression. The choice is to keep the bond or spend it.
+  roles: [deff, control]
+  ready: true
+  abilities:
+    ancestral_presence:
+      name: {es: Presencia Ancestral, en: Ancestral Presence}
+      description:
+        es: Quien te hiere de verdad recibe 1d6 de fuerza, y cada golpe así te da 3 de recurso.
+        en: Whoever really hurts you takes 1d6 force, and every such blow gives you 3 resource.
+      level: 10
+      kind: passive
+      action: none
+      thorns: 1d6
+      bonus_damage_type: force
+      resource_on_hurt: 3
+    raise_totem:
+      name: {es: Alzar el Tótem, en: Raise the Totem}
+      description:
+        es: Un tótem ancestral asusta al rival cada dos turnos. Solo cabe un tótem a la vez.
+        en: An ancestral totem frightens the foe every other turn. Only one totem fits at a time.
+      level: 10
+      kind: summon
+      cost: 6
+      entity: ancestral_totem
+    raise_warding_totem:
+      name: {es: Alzar el Tótem Protector, en: Raise the Warding Totem}
+      description:
+        es: Un tótem protector recibe los golpes por ti hasta quebrarse. Solo cabe un tótem a la vez.
+        en: A warding totem takes the blows for you until it cracks. Only one totem fits at a time.
+      level: 10
+      kind: summon
+      cost: 6
+      entity: warding_totem
+    ancestors_shield:
+      name: {es: Escudo de los Ancestros, en: Ancestors' Shield}
+      description: {es: 'Acción adicional: ganas 4d8 PV temporales.', en: 'Bonus action: you gain 4d8 temporary HP.'}
+      level: 10
+      kind: buff
+      action: bonus
+      cost: 5
+      cooldown: 3
+      temp_hp: 4d8
+    unbroken_line:
+      name: {es: Linaje Inquebrantable, en: Unbroken Line}
+      description:
+        es: El primer golpe que recibes cada ronda hace la mitad de daño.
+        en: The first blow you take each round does half damage.
+      level: 15
+      kind: passive
+      action: none
+      halve_first_hit: true
+    ancestral_wrath:
+      name: {es: Ira Ancestral, en: Ancestral Wrath}
+      description:
+        es: 'Ataque de conjuro a distancia: 5d8 de fuerza. Si el objetivo está asustado, gasta ese miedo por otros 10d8.'
+        en: 'Ranged spell attack: 5d8 force. If the target is frightened, it spends that fear for another 10d8.'
+      level: 20
+      kind: spell
+      cost: 22
+      cooldown: 3
+      damage: 5d8
+      damage_type: force
+      consumes: frightened
+      consume_damage: 10d8
+  modifiers:
+    deeper_roots:
+      level: 13
+      name: {es: Raíces Profundas, en: Deeper Roots}
+      description:
+        es: El Escudo de los ancestros da 6d8 PV temporales en lugar de 4d8.
+        en: Ancestors' Shield gives 6d8 temporary HP instead of 4d8.
+      patches:
+        ancestors_shield:
+          temp_hp: 6d8
+    rally_the_ancestors:
+      level: 13
+      name: {es: Reunir a los Ancestros, en: Rally the Ancestors}
+      description:
+        es: 'Aprendes a reforzar lo que has alzado: tu tótem rinde más 3 turnos.'
+        en: 'You learn to empower what you raised: your totem performs better for 3 turns.'
+      grants:
+        rally_ancestors:
+          name: {es: Reunir a los Ancestros, en: Rally the Ancestors}
+          description: {es: 'Acción adicional: tu tótem rinde más 3 turnos.', en: 'Bonus action: your totem performs better for 3 turns.'}
+          level: 13
+          kind: converge
+          action: bonus
+          cost: 5
+          cooldown: 3
+          boost_turns: 3
+    cheaper_wrath:
+      level: 17
+      name: {es: Ira Asequible, en: Affordable Wrath}
+      description: {es: La Ira ancestral cuesta 6 menos., en: Ancestral Wrath costs 6 less.}
+      patches:
+        ancestral_wrath:
+          cost: -6
+    ancestral_mending:
+      level: 17
+      name: {es: Sanación Ancestral, en: Ancestral Mending}
+      description: {es: Aprendes a curarte 5d8 + tu modificador de conjuro., en: You learn to heal 5d8 + your spellcasting modifier.}
+      grants:
+        mend_with_ancestors:
+          name: {es: Sanación Ancestral, en: Ancestral Mending}
+          description: {es: Recuperas 5d8 + tu modificador de conjuro en PV., en: You recover 5d8 + your spellcasting modifier in HP.}
+          level: 17
+          kind: heal
+          cost: 8
+          cooldown: 2
+          heal_dice: 5d8
+          heal_add: casting
+
+tideweaver:
+  class_key: shaman
+  name: {es: Tejedor de Mareas, en: Tideweaver}
+  description:
+    es: El flujo favorece restaurar y el reflujo descargar poder, y puedes adaptar el ciclo sin depender de nadie más.
+    en: The flow favours restoring and the ebb favours unleashing, and you can bend the cycle without leaning on anyone.
+  roles: [heal, dmg]
+  ready: true
+  abilities:
+    tidal_flow:
+      name: {es: Flujo de la Marea, en: Tidal Flow}
+      description:
+        es: Tus conjuros suman tu modificador de conjuro al daño y cada golpe que te hiere de verdad te da 2 de recurso.
+        en: Your spells add your spellcasting modifier to damage and every blow that really hurts you gives 2 resource.
+      level: 10
+      kind: passive
+      action: none
+      spell_damage_bonus: true
+      resource_on_hurt: 2
+    rising_tide:
+      name: {es: Marea Creciente, en: Rising Tide}
+      description: {es: Recuperas 5d8 + tu modificador de conjuro en PV., en: You recover 5d8 + your spellcasting modifier in HP.}
+      level: 10
+      kind: heal
+      cost: 6
+      cooldown: 1
+      heal_dice: 5d8
+      heal_add: casting
+    ebb_surge:
+      name: {es: Reflujo, en: Ebb Surge}
+      description:
+        es: 'Ataque de conjuro a distancia: 4d8 de frío, y te cura el 40 % del daño que hace.'
+        en: 'Ranged spell attack: 4d8 cold, and it heals you for 40% of the damage it deals.'
+      level: 10
+      kind: spell
+      cost: 5
+      cooldown: 1
+      damage: 4d8
+      damage_type: cold
+      leech_pct: 40
+    healing_rain:
+      name: {es: Lluvia Sanadora, en: Healing Rain}
+      description:
+        es: 'Acción adicional: recuperas 3d8 + tu modificador de conjuro en PV y dejas una barrera de 3d8 PV temporales.'
+        en: 'Bonus action: recover 3d8 + your spellcasting modifier in HP and leave a barrier of 3d8 temporary HP.'
+      level: 15
+      kind: heal
+      action: bonus
+      cost: 8
+      cooldown: 3
+      heal_dice: 3d8
+      heal_add: casting
+      temp_hp: 3d8
+    living_tide:
+      name: {es: Marea Viva, en: Living Tide}
+      description:
+        es: Recuperas 14d8 + tu modificador de conjuro en PV y dejas una barrera de 10d8 PV temporales.
+        en: You recover 14d8 + your spellcasting modifier in HP and leave a barrier of 10d8 temporary HP.
+      level: 20
+      kind: heal
+      cost: 32
+      cooldown: 5
+      heal_dice: 14d8
+      heal_add: casting
+      temp_hp: 10d8
+  modifiers:
+    deeper_tide:
+      level: 13
+      name: {es: Marea Profunda, en: Deeper Tide}
+      description: {es: La Marea creciente cura 7d8 en lugar de 5d8., en: Rising Tide heals 7d8 instead of 5d8.}
+      patches:
+        rising_tide:
+          heal_dice: 7d8
+    stronger_ebb:
+      level: 13
+      name: {es: Reflujo Fuerte, en: Stronger Ebb}
+      description: {es: El Reflujo te cura el 70 % del daño en lugar del 40 %., en: Ebb Surge heals 70% of the damage instead of 40%.}
+      patches:
+        ebb_surge:
+          leech_pct: 70
+    cheap_tide:
+      level: 17
+      name: {es: Marea Barata, en: Cheap Tide}
+      description: {es: La Marea creciente cuesta 3 menos., en: Rising Tide costs 3 less.}
+      patches:
+        rising_tide:
+          cost: -3
+    vaster_tide:
+      level: 17
+      name: {es: Marea Más Vasta, en: Vaster Tide}
+      description: {es: La Marea viva cura 18d8 en lugar de 14d8., en: Living Tide heals 18d8 instead of 14d8.}
+      patches:
+        living_tide:
+          heal_dice: 18d8

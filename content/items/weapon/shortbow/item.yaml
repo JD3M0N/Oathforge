@@ -1,0 +1,7 @@
+name: {es: Arco corto, en: Shortbow}
+icon: "🏹"
+description: {es: Un arco de tejo para atacar desde la distancia., en: A yew bow for striking from a distance.}
+type: weapon
+slot: ranged
+value: 25
+weapon: {damage: 1d6, damage_type: piercing, ranged: true}

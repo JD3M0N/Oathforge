@@ -1,0 +1,19 @@
+name: {es: Bandido, en: Bandit}
+indefinite: {es: un bandido, en: a bandit}
+icon: 🗡️
+description: {es: Un desertor con una espada mellada y pocas ganas de morir., en: A deserter with a notched sword and little wish to die.}
+hp: 7
+ac: 12
+dex: 1
+attacks:
+  - {name: {es: Cimitarra, en: Scimitar}, to_hit: 2, damage: 1d4, damage_type: slashing}
+xp: 25
+gold: 2d6
+loot:
+  - {item: dagger, chance: 0.2}
+cowardly: true
+habitat: {es: Camino del Viejo Rey, en: Old King's Road}
+lore:
+  es: Desertores y campesinos arruinados que viven de asaltar caravanas. Huyen en cuanto el combate se tuerce.
+  en: Deserters and ruined farmers who live off raiding caravans. They run as soon as a fight turns against them.
+order: 1

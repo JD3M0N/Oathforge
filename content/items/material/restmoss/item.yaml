@@ -1,0 +1,6 @@
+name: {es: Musgo del reposo, en: Restmoss}
+icon: "🌿"
+description: {es: "Un musgo raro y tibio. Dicen que su olor devuelve las fuerzas.", en: "A rare, warm moss. They say its scent brings strength back."}
+type: material
+value: 10
+stackable: true

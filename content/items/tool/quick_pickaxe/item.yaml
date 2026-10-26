@@ -1,0 +1,10 @@
+# --- Herramientas especializadas (T1): tres diseños por disciplina, cada uno con una ventaja.
+# Se elige una por disciplina (🧰 Herramientas, en Oficios); tener tres no suma sus efectos.
+# DESIGN-N04: diseños fijos; una herramienta acumulativa solo se valoraría si no anula estas elecciones.
+# DESIGN-N06: sin desgaste ni piedra de afilar; ver planning/roadmap-profesiones.md.
+name: {es: Pico ligero, en: Light pickaxe}
+icon: "⛏️"
+description: {es: "Cabeza estrecha y mango corto: cansa menos y se avanza antes.", en: "Narrow head, short haft: less tiring, and you get on faster."}
+type: tool
+value: 90
+tool: {skill: mining, base: pickaxe, min_rank: 2, time_pct: 0.10}

@@ -1,0 +1,18 @@
+name: {es: Bram, en: Bram}
+title: {es: tabernero de La Corona Rota, en: keeper of the Broken Crown}
+schedule: {day: broken_crown_tavern, night: broken_crown_tavern}
+greeting:
+  es: "«Bienvenido a La Corona Rota. ¿Trabajo? La sargenta Vale recluta en la plaza. ¿Hambre? El fogón del fondo es de quien sepa usarlo.»"
+  en: "\"Welcome to the Broken Crown. Work? Sergeant Vale recruits in the plaza. Hungry? The hearth at the back belongs to whoever can use it.\""
+persona: >-
+  Bram is a broad, bald, middle-aged tavern keeper. Warm with paying customers, gruff with troublemakers,
+  loves gossip and repeats every rumor he hears (often embellished). Speaks plainly with tavern humor.
+  Never forgets a thief.
+goals: Keep the tavern profitable and safe; hear every story first.
+secrets: Owes money to the Crimson Syndicate and lets Mira use the back room to settle the debt.
+knowledge: >-
+  Silver Guard carts have gone missing on the Old King's Road. Old folks say it is ghosts; the Guard says
+  otherwise. Mira sits in the corner at night. Tessa the smith is the best in the city.
+passive_perception: 13
+steal_gold: 2d6+4
+order: 1

@@ -1,0 +1,6 @@
+name: {es: Cuero curtido, en: Treated leather}
+icon: "🟫"
+description: {es: "Cuero flexible y resistente, listo para coser.", en: "Supple, tough leather, ready to stitch."}
+type: material
+value: 15
+stackable: true

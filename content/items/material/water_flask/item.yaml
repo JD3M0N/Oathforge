@@ -1,0 +1,6 @@
+name: {es: Frasco de agua, en: Water flask}
+icon: "💧"
+description: {es: "Un frasco de vidrio con agua limpia de pozo, listo para la alquimia.", en: "A glass flask of clean well water, ready for alchemy."}
+type: material
+value: 2
+stackable: true

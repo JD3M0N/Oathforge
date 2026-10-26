@@ -1,0 +1,6 @@
+name: {es: Gema en bruto, en: Rough gem}
+icon: "💎"
+description: {es: "Un cristal turbio que, tallado, vale una pequeña fortuna.", en: "A cloudy crystal that, once cut, is worth a small fortune."}
+type: material
+value: 25
+stackable: true

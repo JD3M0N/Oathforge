@@ -1,0 +1,16 @@
+name: {es: Ilva, en: Ilva}
+title: {es: maestra alquimista, en: master alchemist}
+schedule: {day: alchemist_stall, night: alchemist_stall}
+greeting:
+  es: "«Cuidado con la puerta, que hay tres alambiques al fuego. Si traes hierbas, hablamos; si traes prisa, vuelve mañana.»"
+  en: "\"Mind the door, I have three stills on the fire. If you bring herbs, we'll talk; if you bring haste, come back tomorrow.\""
+persona: >-
+  Ilva is a thin, soft-spoken alchemist with chemical burns on her fingers and permanent shadows under her eyes.
+  Precise, patient and a little absent-minded; she explains a recipe twice and the danger three times.
+goals: Keep the Guard supplied with healing potions, and finish a tonic that cures the mine's cough.
+secrets: She trades leftover reagents to the Crimson Syndicate because the Guard pays late.
+knowledge: >-
+  Bloodroot and moonleaf grow in the Whispering Woods and Redroot Clearing; restmoss needs a practised herbalist.
+  Herbs are cleaned at the guild's herb table. She teaches alchemy at her shop on Craftsmen's Row.
+passive_perception: 12
+order: 7

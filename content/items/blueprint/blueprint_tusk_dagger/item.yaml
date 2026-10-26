@@ -1,0 +1,7 @@
+name: {es: "Plano: daga de colmillo", en: "Blueprint: tusk dagger"}
+icon: "📘"
+description: {es: "Un pliego con el despiece de la daga, dibujado por quien la forjó la primera vez. Se consume al aprenderla.", en: "A sheet with the dagger's pattern, drawn by whoever forged the first one. Reading it uses it up."}
+type: blueprint
+teaches: tusk_dagger
+value: 30
+stackable: true

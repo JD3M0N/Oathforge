@@ -4,6 +4,29 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.54] - 2026-10-26
+
+Structura, fase 1: **una carpeta por cosa.** Clases, criaturas, objetos, PNJ y misiones salen de los YAML planos y los textos de la interfaz se reparten por dominio. El volcado de `load_content()` sale idéntico al de antes.
+
+### Añadido
+- `load_folder`, `load_files` y `load_merged` en `content/loader.py`: recorren las carpetas, comprueban que los ids son únicos, nombran el archivo en cada error e ignoran las carpetas que empiezan por `_` (plantillas). Una `order: N` opcional al final de una ficha fija su posición en los menús.
+- `README.md` en `content/classes/`, `content/monsters/`, `content/items/` y `content/world/` con el esquema de cada carpeta y las notas que estaban en las cabeceras de los YAML.
+- Tests: cada ficha vive en la carpeta que le toca (tipo del objeto, zona del PNJ y de quien da la misión, clase de la rama) y el comportamiento del cargador (orden, plantillas, ids repetidos, errores con ruta).
+
+### Cambiado
+- `classes.yaml` → `content/classes/<clase>/class.yaml`, y `class_specializations.yaml` → `content/classes/<clase>/specializations.yaml`.
+- `monsters.yaml` → `content/monsters/<id>/monster.yaml`.
+- `items.yaml` → `content/items/<tipo>/<id>/item.yaml`, y `recipes.yaml` → `content/items/<tipo>/recipes.yaml` (según el tipo de su primer producto; los muebles, en `furniture/`).
+- `npcs.yaml` → `content/world/<continente>/<zona>/npcs/<pnj>/npc.yaml`, con el diálogo de respaldo de cada uno en `dialogue.fallback.yaml` (en `fallbacks/dialogue.yaml` queda solo `default`).
+- `quests.yaml` → `content/world/<continente>/<zona>/quests/<misión>.yaml` (la zona es la de quien da la misión).
+- `oathforge/i18n/locales/{es,en}.yaml` → `locales/{es,en}/<dominio>.yaml` (`ui`, `creation`, `world`, `character`, `inventory`, `crafting`, `quests`, `combat`, `bestiary`, `activities`); `translator.flat` los une y falla si una clave está en dos archivos.
+- `content/INDEX.md` apunta a la ruta real de cada ficha.
+- Los mensajes de validación del diálogo de respaldo nombran el archivo del PNJ.
+- `tests/test_sizes.py`: salen de la lista de archivos grandes `classes`, `class_specializations`, `quests` y los dos locales.
+- `AGENTS.md` y los `CLAUDE.md` de `content/` y `bot/`: las rutas nuevas.
+- Dos cosas cambian de sitio sin que el contenido cambie: las misiones `tut_chapel` y `old_tusk` comparten `order: 10` y ahora el diario las lista por id; y las recetas del mismo oficio y rango van agrupadas por categoría en vez de por el orden del archivo antiguo.
+- Las tiendas siguen en el `shop` de su PNJ (el modelo ya las guarda ahí), no en el `place.yaml`.
+
 ## [0.10.53] - 2026-10-26
 
 Structura, fase 3: **la calidad se comprueba sola.** Linter, contratos de imports, tipos, pre-commit y CI.

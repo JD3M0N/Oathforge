@@ -1,0 +1,9 @@
+name: {es: Cuero endurecido, en: Hardened leather}
+icon: "🥋"
+description: {es: "Cuero hervido y moldeado: ligero como el de siempre y bastante más duro.", en: "Boiled and moulded leather: as light as ever and a good deal harder."}
+type: armor
+slot: body
+min_level: 10
+base_ac: 13
+dex_cap: 2
+value: 120

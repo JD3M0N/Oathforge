@@ -1,0 +1,6 @@
+name: {es: Piel de lobo, en: Wolf pelt}
+icon: "🐺"
+description: {es: "Pelaje gris y espeso. Los curtidores la convierten en cuero.", en: "Thick grey fur. Tanners turn it into leather."}
+type: material
+value: 10
+stackable: true

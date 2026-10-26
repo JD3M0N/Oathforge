@@ -1,0 +1,19 @@
+name: {es: "Ballestero de ceniza", en: "Ash crossbowman"}
+indefinite: {es: "ballestero de ceniza", en: "ash crossbowman"}
+icon: 🎯
+description: {es: "Vigila los caminos desde las rocas. Dispara a quien lleva carga, nunca a quien va vacío.", en: "Watches the roads from the rocks. He shoots whoever carries cargo, never whoever travels empty."}
+hp: 60
+ac: 13
+dex: 2
+wis: 1
+row: back
+attacks:
+  - {name: {es: "Ballesta", en: "Crossbow"}, to_hit: 8, damage: 2d8+3, damage_type: piercing, ranged: true}
+xp: 280
+gold: "3d10"
+type: humanoid
+habitat: {es: "Cruce de los Carreteros y Cantera de Ceniza", en: "Carters' Crossing and Ash Quarry"}
+lore:
+  es: "Vigila los caminos desde las rocas. Dispara a quien lleva carga, nunca a quien va vacío."
+  en: "Watches the roads from the rocks. He shoots whoever carries cargo, never whoever travels empty."
+order: 12

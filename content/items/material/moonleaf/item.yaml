@@ -1,0 +1,6 @@
+name: {es: Hoja de luna, en: Moonleaf}
+icon: "🍃"
+description: {es: "Hojas plateadas que brillan débilmente de noche. Los magos pagan bien por ellas.", en: "Silver leaves that glow faintly at night. Mages pay well for them."}
+type: material
+value: 7
+stackable: true

@@ -1,0 +1,39 @@
+order: 4
+tutorial: true
+giver: vale
+after: tut_market
+legacy_done: [night_wings]
+name: {es: Colmillos en el prado, en: Tusks in the Meadow}
+summary:
+  es: Los jabalíes destrozan los campos al sur de la ciudad. Vale quiere ver cómo peleas… y cómo aprovechas lo que cazas.
+  en: Boars are wrecking the fields south of the city. Vale wants to see how you fight… and how you use what you hunt.
+hint:
+  es: El Prado de los Colmillos sale directo de la plaza. Ve con la vida llena y una poción a mano y en «⚒ Actividades» pulsa «🏹 Cazar» (cuenta cualquier presa, de día o de noche). Al ganar, «🔪 Desollar» (también en Actividades) o /skin saca la carne.
+  en: Tusk Meadow leaves straight from the plaza. Go with full health and a potion at hand and in "⚒ Activities" press "🏹 Hunt" (any prey counts, day or night). When you win, "🔪 Skin" (also in Activities) or /skin takes the meat.
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: hunt, target: tusk_meadow, count: 2}
+  - {kind: skin, target: raw_meat, count: 2}
+rewards:
+  - xp: 100
+  - give_item: {sickle: 1}
+stages:
+  locked:
+    state: locked
+    journal: {es: Algo hoza en los campos del sur., en: Something is rooting in the southern fields.}
+  active:
+    journal:
+      es: Caza dos veces en el Prado de los Colmillos y consigue 2 de carne desollando. Te hará falta para el guiso.
+      en: Hunt twice in Tusk Meadow and get 2 raw meat by skinning. You'll need it for the stew.
+    location_text:
+      tusk_meadow:
+        es: "La hierba está removida a hozadas. Un recluta de la Guardia te grita desde la valla: «¡Cuidado con los colmillos, que no perdonan!»."
+        en: The grass is torn up by snouts. A Guard recruit shouts from the fence, "Mind the tusks, they don't forgive!"
+  done:
+    state: completed
+    journal:
+      es: El prado respira. Vale asintió al ver la carne («no está mal; guárdala») y te dio una hoz.
+      en: The meadow breathes again. Vale nodded at the meat ("not bad; keep it") and gave you a sickle.

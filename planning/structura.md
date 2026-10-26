@@ -11,7 +11,8 @@ Checklist para que Oathforge aguante el crecimiento (ciudades, clases, objetos) 
   - instalar pre-commit una vez y, si quiere, `git config blame.ignoreRevsFile .git-blame-ignore-revs`;
   - ver la CI en verde en el primer push y, en GitHub, exigirla para `main`;
   - decidir los rangos de estadísticas de los monstruos por nivel (ver la fase).
-- Siguiente: **Fase 1** (contenido en carpetas).
+- **Fase 1** hecha en 0.10.54: clases, criaturas, objetos, PNJ y misiones tienen su carpeta, el cargador es genérico (`load_folder`) y los locales van por dominio. El volcado de `load_content()` sale idéntico (comparado con las claves ordenadas), los textos de la interfaz son los mismos y la suite está en verde. Dos cambios de orden menores, en el CHANGELOG.
+- Siguiente: **Fase 4** (protocolos: plantillas, `oath new` y skills). Las plantillas van en `content/_templates/`, que el cargador ya ignora.
 - Orden: 0 → 2 → 3 → 1 → 4 → 5 (la 2 se adelantó; el resto sigue igual).
 - Después de cada merge a `main`: `/graphify . --update`.
 
@@ -69,20 +70,22 @@ Decisiones ya tomadas (no se reabren):
   - Regenerarlo con `/graphify . --update` después de cada merge a `main` y tras cambios grandes de código.
   - Con este tamaño el ahorro es moderado. Lo que más reduce tokens es la Fase 2.
 
-## Fase 1 — Contenido modular: «una carpeta por cosa»
+## Fase 1 — Contenido modular: «una carpeta por cosa» (0.10.54)
 
 La regla es la misma que ya sigue el mundo: cada entidad tiene su carpeta, con su ficha, sus imágenes y sus prompts.
 
-- [ ] **Clases**: `content/classes/<class>/class.yaml` (sale de `classes.yaml`) y `content/classes/<class>/specializations.yaml` (sale de `class_specializations.yaml`); `images/` ya existe.
-- [ ] **Monstruos**: `content/monsters/<id>/monster.yaml` (sale de `monsters.yaml`) junto a su `images/`.
-- [ ] **Objetos**: `content/items/<category>/<id>/item.yaml`, más `images/icon.jpg`, `icon.prompt.md` y `media.yaml` opcionales. Las recetas van junto al objeto que producen o en `content/items/<category>/recipes.yaml`.
-- [ ] **Ciudades autocontenidas**: todo lo de una zona vive dentro de su carpeta. Crear una ciudad es crear una carpeta.
-  - `world/<cont>/<zone>/npcs/<npc>/npc.yaml` y `dialogue.fallback.yaml` (sale de `fallbacks/dialogue.yaml`).
-  - `world/<cont>/<zone>/quests/<quest>.yaml` (sale de `quests.yaml`).
-  - Las tiendas, en el `place.yaml` de su lugar.
-- [ ] **Locales por dominio**: `oathforge/i18n/locales/{es,en}/<domain>.yaml`. `translator.py` los une y avisa si una clave se repite.
-- [ ] **Loader genérico**: una función `load_folder(root, filename, model)` que recorre carpetas, comprueba que los ids son únicos y señala la ruta en cada error. `media.py` usa la misma convención, y las carpetas que empiezan por `_` (como `_templates/`) se ignoran. `content/index.py` pasa a leer la ruta real de cada ficha.
-- [ ] **Seguridad del cambio**: antes de mover nada, se vuelca `load_content()` a JSON. Después de cada movimiento, el volcado tiene que salir idéntico.
+- [x] **Clases**: `content/classes/<class>/class.yaml` (sale de `classes.yaml`) y `content/classes/<class>/specializations.yaml` (sale de `class_specializations.yaml`); `images/` ya existía. `order: N` en la ficha conserva el orden de los menús.
+- [x] **Monstruos**: `content/monsters/<id>/monster.yaml` (sale de `monsters.yaml`) junto a su `images/`.
+- [x] **Objetos**: `content/items/<type>/<id>/item.yaml` (la categoría es el `type`; un test lo comprueba). Las recetas, en `content/items/<type>/recipes.yaml` según su primer producto (los muebles, en `furniture/`).
+  - [ ] Los iconos (`images/icon.jpg`, `icon.prompt.md`, `media.yaml`) se pueden poner junto a la ficha, pero el catálogo de imágenes todavía no los lee: no hay iconos de objetos que mostrar.
+- [x] **Ciudades autocontenidas**:
+  - [x] `world/<cont>/<zone>/npcs/<npc>/npc.yaml` y `dialogue.fallback.yaml` (en `fallbacks/dialogue.yaml` queda solo `default`).
+  - [x] `world/<cont>/<zone>/quests/<quest>.yaml`.
+  - Las tiendas se quedan en el `shop` del `npc.yaml`, no en el `place.yaml`: el modelo ya las guarda en el PNJ y moverlas habría sido un cambio de esquema, no de carpetas.
+- [x] **Locales por dominio**: `oathforge/i18n/locales/{es,en}/<domain>.yaml` (diez dominios). `translator.flat` los une y falla si una clave está en dos archivos.
+- [x] **Loader genérico**: `load_folder(root, filename, model)` (más `load_files` para `quests/<id>.yaml` y `load_merged` para los archivos con varios ids). Comprueba ids únicos, nombra la ruta en cada error e ignora las carpetas que empiezan por `_`. `content/index.py` lee la ruta real de cada ficha.
+  - `media.py` no cambia: las imágenes de clases y criaturas ya estaban junto a su ficha.
+- [x] **Seguridad del cambio**: el volcado de `load_content()` (con claves ordenadas) sale idéntico antes y después, y los dos locales aplanados son iguales a los de antes.
 
 ## Fase 2 — Código modular (0.10.46–0.10.51)
 

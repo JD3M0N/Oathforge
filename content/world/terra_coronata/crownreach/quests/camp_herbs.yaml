@@ -1,0 +1,34 @@
+order: 41
+giver: tamsin
+after: camp_tracks
+name: {es: "Hierbas para el camino", en: "Herbs for the Road"}
+summary:
+  es: "Antes de seguir los carros hacen falta provisiones. Tamsin te manda a por raíz de sangre y a por agua."
+  en: "Before following the carts you need supplies. Tamsin sends you for bloodroot and water."
+hint:
+  es: "Recoge raíz de sangre (⚒ Actividades en el Bosque de los Susurros o el Claro de Raíz Roja) y compra dos cantimploras a Mira."
+  en: "Gather bloodroot (⚒ Activities in the Whispering Woods or Redroot Clearing) and buy two water flasks from Mira."
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: gather, target: bloodroot, count: 6}
+  - {kind: buy, target: water_flask, count: 2}
+rewards:
+  - {xp: 120}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Falta preparar el viaje."
+      en: "The trip still needs preparing."
+  active:
+    journal:
+      es: "Reúne seis raíces de sangre y dos cantimploras para las pociones del camino."
+      en: "Collect six bloodroots and two water flasks for the road's potions."
+  done:
+    state: completed
+    journal:
+      es: "Tamsin guarda las hierbas como si fueran oro. «Con esto sobrevivimos a un par de emboscadas»."
+      en: "Tamsin stores the herbs as if they were gold. \"This gets us through a couple of ambushes.\""

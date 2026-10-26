@@ -1,0 +1,6 @@
+name: {es: Lingote de hierro, en: Iron ingot}
+icon: "🔩"
+description: {es: "Hierro fundido y limpio, listo para el yunque.", en: "Clean smelted iron, ready for the anvil."}
+type: material
+value: 18
+stackable: true

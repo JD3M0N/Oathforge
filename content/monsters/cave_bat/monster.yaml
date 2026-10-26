@@ -1,0 +1,20 @@
+name: {es: Murciélago de cueva, en: Cave bat}
+indefinite: {es: un murciélago de cueva, en: a cave bat}
+icon: 🦇
+description: {es: Un murciélago del tamaño de un halcón que anida en las galerías y caza al anochecer., en: A hawk-sized bat that roosts in mine tunnels and hunts at dusk.}
+hp: 5
+ac: 12
+dex: 2
+wis: 1
+attacks:
+  - {name: {es: Mordisco, en: Bite}, to_hit: 3, damage: 1d4, damage_type: piercing}
+xp: 15
+loot:
+  - {item: bat_wing, chance: 0.5}
+type: beast
+active: any
+habitat: {es: Mina del Paso Viejo (siempre) y Prado de los Colmillos (de noche), en: Old Pass Mine (always) and Tusk Meadow (at night)}
+lore:
+  es: Duerme a oscuras en la mina y, cuando cae el sol, sale por las grietas del prado. Débil por separado, peligroso en bandada.
+  en: Sleeps in the dark of the mine and, when the sun sets, pours out of the meadow's cracks. Weak alone, dangerous in a swarm.
+order: 6

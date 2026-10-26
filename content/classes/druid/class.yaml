@@ -1,0 +1,143 @@
+name: {es: Druida, en: Druid}
+description:
+  es: Guardián de lo salvaje; enreda a sus enemigos, cura con la savia del bosque y adopta forma de bestia.
+  en: Keeper of the wild; entangles foes, heals with the forest's sap and takes the shape of a beast.
+hit_die: 8
+primary: wis
+casting: wis
+array: {wis: 15, con: 14, dex: 13, int: 12, cha: 10, str: 8}
+skills: [survival, medicine]
+items: {quarterstaff: 1, leather_armor: 1, shield: 1, healing_potion: 1}
+equip: [quarterstaff, leather_armor, shield]
+signature: [thorn_whip]
+abilities:
+  thorn_whip:
+    name: {es: Látigo de Espinas, en: Thorn Whip}
+    description: {es: 'Ataque de conjuro a distancia (SAB): 1d6 de daño perforante.', en: 'Ranged spell attack (WIS): 1d6 piercing damage.'}
+    details:
+      es: Un látigo de enredaderas con espinas brota de tu mano. Es un ataque de conjuro a distancia con tu SAB que hace 1d6 de daño perforante. No cuesta nada.
+      en: A whip of thorny vines springs from your hand. It is a ranged spell attack with your WIS that deals 1d6 piercing damage. It costs nothing.
+    level: 1
+    kind: spell
+    damage: 1d6
+    damage_type: piercing
+    damage_tiers: {5: 2d6, 11: 3d6, 17: 4d6}
+  cure_wounds:
+    name: {es: Curar Heridas, en: Cure Wounds}
+    description: {es: Recuperas 1d8 + SAB PV., en: Recover 1d8 + WIS HP.}
+    details:
+      es: La savia de la tierra cierra tus heridas. Usas tu acción para recuperar 1d8 + SAB PV. Gasta Maná.
+      en: The sap of the earth closes your wounds. You use your action to recover 1d8 + WIS HP. It spends Mana.
+    level: 1
+    kind: heal
+    heal_dice: 1d8
+    heal_add: casting
+    cost: 3
+  entangle:
+    name: {es: Enredar, en: Entangle}
+    description:
+      es: Toda la fila del objetivo hace una salvación de DES; quien falla queda enredado 2 turnos (ventaja contra él, desventaja en sus ataques).
+      en: The target's whole row makes a DEX save; those who fail are entangled for 2 turns (advantage against them, disadvantage on their attacks).
+    details:
+      es: 'Las raíces brotan del suelo y atrapan a todo lo que pisa. Toda la fila del objetivo hace una salvación de DES; quien falla queda enredado 2 turnos: tus ataques tienen ventaja contra él y él ataca con desventaja. Gasta Maná.'
+      en: 'Roots burst from the ground and seize everything on it. The target''s whole row makes a DEX save; whoever fails is restrained for 2 turns: your attacks have advantage against it and it attacks with disadvantage. It spends Mana.'
+    level: 2
+    kind: save
+    area: row
+    save: dex
+    status: restrained
+    status_turns: 2
+    cost: 4
+    cooldown: 2
+  wild_shape:
+    name: {es: Forma Salvaje, en: Wild Shape}
+    description:
+      es: 'Acción adicional: adoptas forma de oso y ganas 2d8 + tu nivel en PV temporales.'
+      en: 'Bonus action: you take the shape of a bear and gain 2d8 + your level in temporary HP.'
+    details:
+      es: 'Tu cuerpo crece y se cubre de pelo: eres un oso. Como acción adicional ganas 2d8 + tu nivel en PV temporales, que se pierden antes que los tuyos. Gasta Maná.'
+      en: 'Your body grows and is covered in fur: you are a bear. As a bonus action you gain 2d8 + your level in temporary HP, lost before your own. It spends Mana.'
+    level: 3
+    kind: buff
+    action: bonus
+    temp_hp: 2d8
+    heal_add: level
+    status: wild_shape
+    status_turns: 3
+    cost: 5
+    cooldown: 4
+  elemental_fury:
+    name: {es: Furia Elemental, en: Elemental Fury}
+    description: {es: Sumas tu SAB al daño de tus conjuros., en: You add your WIS to the damage of your spells.}
+    details:
+      es: La naturaleza responde con rabia a tu llamada. Sumas tu SAB al daño de tus conjuros de ataque. Es automático.
+      en: Nature answers your call with fury. You add your WIS to the damage of your attack spells. It is automatic.
+    level: 5
+    kind: passive
+    action: none
+    spell_damage_bonus: true
+  barkskin:
+    name: {es: Piel de Corteza, en: Barkskin}
+    description:
+      es: 'Acción adicional: ganas 2d6 + tu modificador de conjuro de PV temporales. Cuesta 3 de Maná.'
+      en: 'Bonus action: you gain 2d6 + your spellcasting modifier in temporary HP. Costs 3 Mana.'
+    details:
+      es: Tu piel se endurece como la madera vieja. Es una acción adicional barata para encajar el siguiente golpe.
+      en: Your skin hardens like old wood. A cheap bonus action to soak up the next blow.
+    level: 4
+    kind: buff
+    action: bonus
+    cost: 3
+    cooldown: 3
+    temp_hp: 2d6
+    heal_add: casting
+  stinging_swarm:
+    name: {es: Enjambre Punzante, en: Stinging Swarm}
+    description:
+      es: 'Toda la fila tira DES: 3d6 de veneno, la mitad si la supera. Cuesta 6 de Maná.'
+      en: 'The whole row rolls a DEX save: 3d6 poison, half on a success. Costs 6 Mana.'
+    details:
+      es: Una nube de insectos cae sobre la fila entera. No mata de golpe, pero desgasta a todos a la vez.
+      en: A cloud of insects falls on the whole row. It does not kill in one go, but it wears everyone down at once.
+    level: 6
+    kind: save
+    cost: 6
+    cooldown: 2
+    damage: 3d6
+    damage_type: poison
+    save: dex
+    area: row
+    half_on_save: true
+  regrowth:
+    name: {es: Rebrote, en: Regrowth}
+    description:
+      es: Recuperas 4d8 + tu modificador de conjuro en PV. Cuesta 8 de Maná.
+      en: You recover 4d8 + your spellcasting modifier in HP. Costs 8 Mana.
+    details:
+      es: 'La vida brota donde la llamas. Tu mejor curación: usa la acción entera y casi toda la reserva de un buen rato.'
+      en: 'Life springs where you call it. Your best heal: it uses the whole action and most of a good stretch of your reserve.'
+    level: 8
+    kind: heal
+    cost: 8
+    cooldown: 3
+    heal_dice: 4d8
+    heal_add: casting
+  thorn_storm:
+    name: {es: Tormenta de Espinas, en: Thorn Storm}
+    description:
+      es: 'Toda la fila tira DES: 5d6 perforante, la mitad si la supera. Cuesta 12 de Maná.'
+      en: 'The whole row rolls a DEX save: 5d6 piercing, half on a success. Costs 12 Mana.'
+    details:
+      es: 'El bosque entero se alza contra ellos: una tormenta de espinas sobre toda la fila.'
+      en: 'The whole forest rises against them: a storm of thorns over the whole row.'
+    level: 9
+    kind: save
+    cost: 12
+    cooldown: 3
+    damage: 5d6
+    damage_type: piercing
+    save: dex
+    area: row
+    half_on_save: true
+resource: mana
+order: 8

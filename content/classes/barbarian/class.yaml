@@ -1,0 +1,123 @@
+name: {es: Bárbaro, en: Barbarian}
+description:
+  es: 'Furia y presión: golpea sin pausa y se hace más peligroso cuanto más pelea. Sin armadura, pero con una vitalidad enorme.'
+  en: 'Fury and pressure: strikes without pause and grows more dangerous the longer the fight goes. No armor, but a huge pool of life.'
+hit_die: 12
+primary: str
+array: {str: 15, con: 14, dex: 13, wis: 12, cha: 10, int: 8}
+skills: [athletics, survival]
+items: {warhammer: 1, handaxe: 1, healing_potion: 1}
+equip: [warhammer, handaxe]
+signature: [reckless_strike, rage]
+resource: fury
+resource_on_attack: 2
+abilities:
+  unarmored_defense:
+    name: {es: Defensa sin Armadura, en: Unarmored Defense}
+    description: {es: +2 a la CA mientras no lleves armadura., en: +2 AC while you wear no armor.}
+    details:
+      es: 'No necesitas una coraza: tu cuerpo es la coraza. Si no llevas armadura, tienes +2 a la CA siempre, sin gastar acciones.'
+      en: 'You need no cuirass: your body is the cuirass. If you wear no armor, you always have +2 AC, with no action needed.'
+    level: 1
+    kind: passive
+    action: none
+    ac_bonus_unarmored: 2
+  reckless_strike:
+    name: {es: Golpe Temerario, en: Reckless Strike}
+    description:
+      es: Un ataque con arma que añade 1d10 de daño contundente. Cuesta 3 de Furia.
+      en: A weapon attack that adds 1d10 bludgeoning damage. Costs 3 Fury.
+    details:
+      es: 'Te lanzas sin guardia sobre el rival. Es tu ataque con el arma, pero si acierta suma 1d10 de daño. La Furia se enciende atacando: sin golpes no hay Furia que gastar.'
+      en: 'You throw yourself at the foe with no guard. It is your weapon attack, but on a hit it adds 1d10 damage. Fury kindles by attacking: no blows, no Fury to spend.'
+    level: 1
+    kind: strike
+    cost: 3
+    extra_damage: 1d10
+    damage_type: bludgeoning
+  rage:
+    name: {es: Furia, en: Rage}
+    description:
+      es: 'Acción adicional: ganas bendición 3 turnos y 1d6 + tu nivel de PV temporales. Cuesta 2 de Furia.'
+      en: 'Bonus action: you gain a blessing for 3 turns and 1d6 + your level in temporary HP. Costs 2 Fury.'
+    details:
+      es: La rabia te endurece y te vuelve certero. Como acción adicional ganas +2 a atacar durante 3 turnos y una reserva de PV temporales, y puedes seguir golpeando en el mismo turno.
+      en: Rage hardens you and sharpens your aim. As a bonus action you gain +2 to attack for 3 turns and a reserve of temporary HP, and you can keep striking the same turn.
+    level: 2
+    kind: buff
+    action: bonus
+    cost: 2
+    cooldown: 4
+    status: blessed
+    status_turns: 3
+    temp_hp: 1d6
+    heal_add: level
+  sweeping_blow:
+    name: {es: Golpe de Barrido, en: Sweeping Blow}
+    description:
+      es: 'Toda la fila del objetivo tira DES: recibe 1d8 (la mitad si la supera). Cuesta 5 de Furia.'
+      en: 'The target''s whole row rolls a DEX save: it takes 1d8 (half on a success). Costs 5 Fury.'
+    details:
+      es: Un tajo ancho que alcanza a varios a la vez. No es el golpe más fuerte, pero ninguno de los de la fila se libra del todo.
+      en: A wide sweep that reaches several at once. It is not your hardest blow, but nobody in the row gets off entirely.
+    level: 3
+    kind: save
+    cost: 5
+    cooldown: 2
+    damage: 1d8
+    damage_type: bludgeoning
+    save: dex
+    area: row
+    half_on_save: true
+  relentless_assault:
+    name: {es: Asalto Implacable, en: Relentless Assault}
+    description: {es: Atacas dos veces con tu acción de ataque., en: You attack twice with your attack action.}
+    details:
+      es: 'Cuando te enciendes no sueltas el arma: golpeas dos veces en la misma acción, cada golpe con su tirada.'
+      en: 'Once you are lit you do not let go of the weapon: you strike twice in the same action, each blow with its own roll.'
+    level: 5
+    kind: passive
+    action: none
+    extra_attack: true
+  brutal_instinct:
+    name: {es: Instinto Brutal, en: Brutal Instinct}
+    description: {es: Haces crítico con un 19 o un 20., en: You score a critical hit on a 19 or 20.}
+    details:
+      es: Sabes dónde duele. Tus golpes son críticos también con un 19 natural.
+      en: You know where it hurts. Your blows are critical on a natural 19 too.
+    level: 6
+    kind: passive
+    action: none
+    crit_range: 19
+  savage_blow:
+    name: {es: Golpe Salvaje, en: Savage Blow}
+    description:
+      es: Un ataque con arma que añade 3d6 de daño contundente. Cuesta 8 de Furia.
+      en: A weapon attack that adds 3d6 bludgeoning damage. Costs 8 Fury.
+    details:
+      es: Descargas toda la Furia acumulada en un solo golpe devastador. Cuanto más has peleado, más a mano lo tienes.
+      en: You pour all the Fury you built into one devastating blow. The longer you have fought, the closer it is to hand.
+    level: 7
+    kind: strike
+    cost: 8
+    cooldown: 2
+    extra_damage: 3d6
+    damage_type: bludgeoning
+  thunder_stomp:
+    name: {es: Pisotón Atronador, en: Thunder Stomp}
+    description:
+      es: 'Toda la fila tira DES: recibe 2d8 y queda aturdida un turno si falla. Cuesta 12 de Furia.'
+      en: 'The whole row rolls a DEX save: it takes 2d8 and is stunned for a turn on a fail. Costs 12 Fury.'
+    details:
+      es: Golpeas el suelo y la tierra responde. Es la mayor descarga de Furia que puedes hacer, y deja a la fila sin saber dónde está.
+      en: You strike the ground and the earth answers. It is the biggest outpouring of Fury you can make, and it leaves the row not knowing which way is up.
+    level: 9
+    kind: save
+    cost: 12
+    cooldown: 3
+    damage: 2d8
+    damage_type: bludgeoning
+    save: dex
+    area: row
+    status: stunned
+order: 2

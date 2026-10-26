@@ -1,0 +1,52 @@
+order: 24
+giver: ilva
+after: camp_trade_pick
+unlock_profession: alchemy
+name: {es: "Primeros encargos de alquimia", en: "First alchemy jobs"}
+summary:
+  es: "Tu maestro te encarga tres tareas para ver si vales: fabricar dos pociones de curación, usarlo o venderlo."
+  en: "Your master gives you three tasks to see if you are worth it: make two healing potions, then use or sell it."
+hint:
+  es: "Ve al puesto de tu maestro en el Barrio de Oficios y pide las primeras lecciones. Fabrica dos pociones de curación y vende algo."
+  en: "Go to your master's stall on Craftsmen's Row and ask for the first lessons. Make two healing potions and sell something."
+start_stage: locked
+unlock_stage: active
+objective_stage: working
+complete_stage: done
+objectives:
+  - {kind: craft, target: healing_potion, count: 2}
+  - {kind: sell, target: any}
+rewards:
+  - {xp: 120}
+  - {gold: 10}
+actions:
+  start:
+    label: {es: "🎓 Primeras lecciones de alquimia", en: "🎓 First lessons in alchemy"}
+    npc: ilva
+    location: alchemist_stall
+    stages: [active]
+    to_stage: working
+    text:
+      es: "Tu maestro te pone delante el material y un primer encargo: dos pociones de curación. «Hazlo despacio y bien; lo rápido ya vendrá.»"
+      en: "Your master sets the material in front of you and a first job: two healing potions. \"Slow and right; fast comes later.\""
+    effects:
+      - {give_item: {bloodroot: 4, water_flask: 2}}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Aún no practicas este oficio."
+      en: "You do not practise this trade yet."
+  active:
+    journal:
+      es: "Habla con tu maestro en su puesto y pide las primeras lecciones de alquimia."
+      en: "Talk to your master at their stall and ask for the first alchemy lessons."
+  working:
+    journal:
+      es: "Fabrica dos pociones de curación en la estación del puesto y vende algo a un mercader."
+      en: "Make two healing potions at the stall's station and sell something to a merchant."
+  done:
+    state: completed
+    journal:
+      es: "Tu maestro examina tu trabajo y gruñe satisfecho. «Para ser el primero, no está mal»."
+      en: "Your master looks over your work and grunts, satisfied. \"For a first, that is not bad.\""

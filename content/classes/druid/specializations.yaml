@@ -1,0 +1,341 @@
+shapeshifter:
+  class_key: druid
+  name: {es: Cambiaformas, en: Shapeshifter}
+  description:
+    es: Peleas casi siempre transformado. Una forma resistente y otra ofensiva sustituyen tus acciones principales, y cambiar cuesta.
+    en: You fight mostly transformed. A tough form and an aggressive one replace your main actions, and switching costs you.
+  roles: [dmg, deff]
+  ready: true
+  abilities:
+    wild_hide:
+      name: {es: Piel Salvaje, en: Wild Hide}
+      description: {es: '+1 a la CA, dentro y fuera de las formas.', en: '+1 AC, in and out of your shapes.'}
+      level: 10
+      kind: passive
+      action: none
+      ac_bonus: 1
+    take_bear_form:
+      name: {es: Tomar Forma de Oso, en: Take Bear Form}
+      description:
+        es: 'Acción adicional: tomas la forma de oso (zarpazos pesados y PV temporales la primera vez).'
+        en: 'Bonus action: you take bear form (heavy claws and temporary HP the first time).'
+      level: 10
+      kind: shift
+      action: bonus
+      cost: 4
+      form: bear
+    take_panther_form:
+      name: {es: Tomar Forma de Pantera, en: Take Panther Form}
+      description:
+        es: 'Acción adicional: tomas la forma de pantera (mordiscos veloces y letales).'
+        en: 'Bonus action: you take panther form (quick, deadly bites).'
+      level: 10
+      kind: shift
+      action: bonus
+      cost: 4
+      form: panther
+    leave_form:
+      name: {es: Recuperar la Forma Humana, en: Return to Human Form}
+      description:
+        es: 'Acción adicional: vuelves a tu forma y a tus conjuros.'
+        en: 'Bonus action: you return to your own shape and your spells.'
+      level: 10
+      kind: shift
+      action: bonus
+      form: none
+    take_treant_form:
+      name: {es: Tomar Forma de Ent, en: Take Treant Form}
+      description:
+        es: 'Acción adicional: tomas la forma de ent (casi inamovible, golpes lentos).'
+        en: 'Bonus action: you take treant form (nearly immovable, slow blows).'
+      level: 15
+      kind: shift
+      action: bonus
+      cost: 6
+      form: treant
+    take_primal_form:
+      name: {es: Tomar Forma Primigenia, en: Take Primal Form}
+      description:
+        es: 'Acción adicional: tomas la forma de bestia primigenia (garra de 2d8 y muchos PV temporales).'
+        en: 'Bonus action: you take primal beast form (a 2d8 claw and lots of temporary HP).'
+      level: 20
+      kind: shift
+      action: bonus
+      cost: 14
+      form: primal_beast
+  modifiers:
+    economical_shape:
+      level: 13
+      name: {es: Forma Económica, en: Economical Shape}
+      description: {es: Tomar forma de oso o de pantera cuesta 2 menos., en: Taking bear or panther form costs 2 less.}
+      patches:
+        take_bear_form:
+          cost: -2
+        take_panther_form:
+          cost: -2
+    rending_roar:
+      level: 13
+      name: {es: Rugido Desgarrador, en: Rending Roar}
+      description:
+        es: Aprendes un ataque con arma que añade 3d8 cortante, también en forma.
+        en: You learn a weapon attack that adds 3d8 slashing, in shape too.
+      grants:
+        rending_strike:
+          name: {es: Desgarrón, en: Rend}
+          description: {es: Un ataque con arma que añade 3d8 de daño cortante., en: A weapon attack that adds 3d8 slashing damage.}
+          level: 13
+          kind: strike
+          cost: 8
+          cooldown: 1
+          extra_damage: 3d8
+          damage_type: slashing
+    forest_mending:
+      level: 17
+      name: {es: Savia Curativa, en: Healing Sap}
+      description:
+        es: Aprendes a curarte 5d8 + tu modificador de conjuro como acción adicional.
+        en: You learn to heal 5d8 + your spellcasting modifier as a bonus action.
+      grants:
+        sap_mending:
+          name: {es: Savia Curativa, en: Healing Sap}
+          description:
+            es: 'Acción adicional: recuperas 5d8 + tu modificador de conjuro en PV.'
+            en: 'Bonus action: recover 5d8 + your spellcasting modifier in HP.'
+          level: 17
+          kind: heal
+          action: bonus
+          cost: 8
+          cooldown: 2
+          heal_dice: 5d8
+          heal_add: casting
+    cheap_titan:
+      level: 17
+      name: {es: Formas Asequibles, en: Affordable Shapes}
+      description: {es: Las formas de ent y primigenia cuestan 3 y 5 menos., en: Treant and primal forms cost 3 and 5 less.}
+      patches:
+        take_treant_form:
+          cost: -3
+        take_primal_form:
+          cost: -5
+
+grove_warden:
+  class_key: druid
+  name: {es: Guardián del Bosque, en: Grove Warden}
+  description:
+    es: Corteza, raíces y regeneración te mantienen en pie, y puedes consumir parte de esa protección para atacar.
+    en: Bark, roots and regrowth keep you standing, and you can spend part of that protection to strike.
+  roles: [deff, heal]
+  ready: true
+  abilities:
+    barkskin_aura:
+      name: {es: Aura de Corteza, en: Barkskin Aura}
+      description: {es: +2 a la CA., en: +2 AC.}
+      level: 10
+      kind: passive
+      action: none
+      ac_bonus: 2
+    thorn_barrier:
+      name: {es: Barrera de Espinas, en: Thorn Barrier}
+      description:
+        es: 'Acción adicional: ganas 4d8 + tu modificador de conjuro de PV temporales.'
+        en: 'Bonus action: you gain 4d8 + your spellcasting modifier in temporary HP.'
+      level: 10
+      kind: buff
+      action: bonus
+      cost: 5
+      cooldown: 3
+      temp_hp: 4d8
+      heal_add: casting
+    regenerative_growth:
+      name: {es: Crecimiento Regenerador, en: Regenerative Growth}
+      description:
+        es: Recuperas 4d8 + tu modificador de conjuro en PV y dejas una barrera de 2d8 PV temporales.
+        en: You recover 4d8 + your spellcasting modifier in HP and leave a barrier of 2d8 temporary HP.
+      level: 10
+      kind: heal
+      cost: 9
+      cooldown: 2
+      heal_dice: 4d8
+      heal_add: casting
+      temp_hp: 2d8
+    entangling_roots:
+      name: {es: Raíces Enredadoras, en: Entangling Roots}
+      description:
+        es: 'Toda la fila tira DES: 2d8 perforante y trabada 2 turnos si falla.'
+        en: 'The whole row rolls a DEX save: 2d8 piercing and restrained for 2 turns on a fail.'
+      level: 10
+      kind: save
+      cost: 8
+      cooldown: 3
+      damage: 2d8
+      damage_type: piercing
+      save: dex
+      area: row
+      status: restrained
+      status_turns: 2
+    living_bark:
+      name: {es: Corteza Viva, en: Living Bark}
+      description: {es: Quien te hiere de verdad recibe 1d8 perforante., en: Whoever really hurts you takes 1d8 piercing.}
+      level: 15
+      kind: passive
+      action: none
+      thorns: 1d8
+      bonus_damage_type: piercing
+    heart_of_the_forest:
+      name: {es: Corazón del Bosque, en: Heart of the Forest}
+      description:
+        es: 'Acción adicional: ganas 12d8 PV temporales y bendición 4 turnos.'
+        en: 'Bonus action: you gain 12d8 temporary HP and a blessing for 4 turns.'
+      level: 20
+      kind: buff
+      action: bonus
+      cost: 28
+      cooldown: 5
+      temp_hp: 12d8
+      status: blessed
+      status_turns: 4
+  modifiers:
+    thicker_bark:
+      level: 13
+      name: {es: Corteza Más Gruesa, en: Thicker Bark}
+      description:
+        es: La Barrera de espinas da 6d8 PV temporales en lugar de 4d8.
+        en: Thorn Barrier gives 6d8 temporary HP instead of 4d8.
+      patches:
+        thorn_barrier:
+          temp_hp: 6d8
+    quicker_growth:
+      level: 13
+      name: {es: Crecimiento Rápido, en: Quicker Growth}
+      description: {es: El Crecimiento regenerador cuesta 3 menos., en: Regenerative Growth costs 3 less.}
+      patches:
+        regenerative_growth:
+          cost: -3
+    tangled_roots:
+      level: 17
+      name: {es: Raíces Tupidas, en: Tangled Roots}
+      description:
+        es: Las Raíces enredadoras traban 2 turnos más y hacen 4d8 en lugar de 2d8.
+        en: Entangling Roots restrain 2 turns longer and deal 4d8 instead of 2d8.
+      patches:
+        entangling_roots:
+          status_turns: 2
+          damage: 4d8
+    forest_heart_power:
+      level: 17
+      name: {es: Corazón Poderoso, en: Mighty Heart}
+      description:
+        es: El Corazón del bosque da 16d8 PV temporales en lugar de 12d8.
+        en: Heart of the Forest gives 16d8 temporary HP instead of 12d8.
+      patches:
+        heart_of_the_forest:
+          temp_hp: 16d8
+
+circle_of_spores:
+  class_key: druid
+  name: {es: Círculo de Esporas, en: Circle of Spores}
+  description:
+    es: Siembras esporas y eliges propagarlas, mantenerlas o hacerlas florecer. Un desgaste que se acelera con una decisión.
+    en: You sow spores and choose to spread them, keep them or make them bloom. Attrition that one decision can hasten.
+  roles: [dmg, control]
+  ready: true
+  abilities:
+    fungal_touch:
+      name: {es: Toque Fúngico, en: Fungal Touch}
+      description:
+        es: Tus conjuros suman tu modificador de conjuro al daño y cada golpe que te hiere de verdad te da 3 de recurso.
+        en: Your spells add your spellcasting modifier to damage and every blow that really hurts you gives 3 resource.
+      level: 10
+      kind: passive
+      action: none
+      spell_damage_bonus: true
+      resource_on_hurt: 3
+    sow_spores:
+      name: {es: Sembrar Esporas, en: Sow Spores}
+      description:
+        es: 'Toda la fila tira DES: 2d6 de veneno y envenenada 4 turnos si falla.'
+        en: 'The whole row rolls a DEX save: 2d6 poison and poisoned for 4 turns on a fail.'
+      level: 10
+      kind: save
+      cost: 4
+      cooldown: 1
+      damage: 2d6
+      damage_type: poison
+      save: dex
+      area: row
+      status: poisoned
+      status_turns: 4
+    bloom:
+      name: {es: Florecer, en: Bloom}
+      description:
+        es: 'Ataque de conjuro a distancia: 3d8 de veneno. Si el objetivo está envenenado, gasta las esporas por otros 5d8.'
+        en: 'Ranged spell attack: 3d8 poison. If the target is poisoned, it spends the spores for another 5d8.'
+      level: 10
+      kind: spell
+      cost: 6
+      cooldown: 2
+      damage: 3d8
+      damage_type: poison
+      consumes: poisoned
+      consume_damage: 5d8
+    spreading_decay:
+      name: {es: Descomposición, en: Spreading Decay}
+      description:
+        es: 'Toda la fila tira DES: 5d8 de veneno, la mitad si la supera.'
+        en: 'The whole row rolls a DEX save: 5d8 poison, half on a success.'
+      level: 15
+      kind: save
+      cost: 13
+      cooldown: 3
+      damage: 5d8
+      damage_type: poison
+      save: dex
+      area: row
+      half_on_save: true
+    fungal_bloom:
+      name: {es: Floración Fúngica, en: Fungal Bloom}
+      description:
+        es: 'Toda la fila tira DES: 9d8 de veneno, la mitad si la supera, y envenenada 5 turnos si falla.'
+        en: 'The whole row rolls a DEX save: 9d8 poison, half on a success, and poisoned for 5 turns on a fail.'
+      level: 20
+      kind: save
+      cost: 32
+      cooldown: 5
+      damage: 9d8
+      damage_type: poison
+      save: dex
+      area: row
+      half_on_save: true
+      status: poisoned
+      status_turns: 5
+  modifiers:
+    longer_spores:
+      level: 13
+      name: {es: Esporas Duraderas, en: Lasting Spores}
+      description: {es: Sembrar esporas envenena 2 turnos más., en: Sow Spores poisons for 2 turns longer.}
+      patches:
+        sow_spores:
+          status_turns: 2
+    violent_bloom:
+      level: 13
+      name: {es: Floración Violenta, en: Violent Bloom}
+      description:
+        es: Florecer hace 8d8 en lugar de 5d8 al gastar las esporas.
+        en: Bloom deals 8d8 instead of 5d8 when it spends the spores.
+      patches:
+        bloom:
+          consume_damage: 8d8
+    cheap_spores:
+      level: 17
+      name: {es: Esporas Baratas, en: Cheap Spores}
+      description: {es: Sembrar esporas cuesta 3 menos., en: Sow Spores costs 3 less.}
+      patches:
+        sow_spores:
+          cost: -3
+    larger_bloom:
+      level: 17
+      name: {es: Floración Mayor, en: Larger Bloom}
+      description: {es: La Floración fúngica hace 11d8 en lugar de 9d8., en: Fungal Bloom deals 11d8 instead of 9d8.}
+      patches:
+        fungal_bloom:
+          damage: 11d8

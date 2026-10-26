@@ -1,0 +1,15 @@
+name: {es: "Iwen Sorrel", en: "Iwen Sorrel"}
+title: {es: "guardiana de las balizas", en: "keeper of the beacons"}
+schedule: {day: ford_post, night: ford_post}
+greeting:
+  es: "«Las balizas llevan años apagadas. Si has venido a verlas, te advierto que no están vacías.»"
+  en: "\"The beacons have been dark for years. If you came to see them, I warn you they are not empty.\""
+greeting_return:
+  es: "«Cuéntame cómo va. Las torres hablan, pero tú me lo dices mejor.»"
+  en: "\"Tell me how it goes. The towers talk, but you tell it better.\""
+persona: "Iwen Sorrel is a quiet, sharp-eyed woman in her sixties who inherited the duty of watching the vale's beacons from her mother. Patient, dry and exact; she explains mechanisms with a teacher's calm and never tells anyone what to choose."
+goals: "Relight the beacons so the vale can be seen from Crownreach again, and prove the valley is worth defending."
+secrets: "She knows what the Beacon Keeper is and who set him there. She has not decided yet whether to tell."
+knowledge: "The Regulator Workshop's sentinels carry cores that fit the beacons. The Beacon Keeper guards the height and tests those who want to call themselves veterans. Remember only what the game says the hero has done."
+passive_perception: 14
+order: 17

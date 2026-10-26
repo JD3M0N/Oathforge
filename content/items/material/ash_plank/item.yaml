@@ -1,0 +1,6 @@
+name: {es: Tablón de fresno, en: Ash plank}
+icon: "🪵"
+description: {es: "Tablón flexible de fresno, el que buscan los arqueros.", en: "A supple ash plank, the kind bowyers look for."}
+type: material
+value: 10
+stackable: true

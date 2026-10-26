@@ -1,0 +1,7 @@
+name: {es: Bomba de fuego, en: Fire bomb}
+icon: "💣"
+description: {es: "Toda la fila del objetivo hace una salvación de DES (CD 13): 2d6 de fuego (la mitad si la supera) y quien falla, arde.", en: "The target's whole row makes a DEX save (DC 13): 2d6 fire (half on a success), and whoever fails burns."}
+type: consumable
+value: 18
+stackable: true
+combat: {kind: save, save: dex, save_dc: 13, area: row, damage: 2d6, damage_type: fire, half_on_save: true, status: burning, status_turns: 2}

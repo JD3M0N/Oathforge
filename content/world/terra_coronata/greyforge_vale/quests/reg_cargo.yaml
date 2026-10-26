@@ -1,0 +1,35 @@
+order: 61
+giver: kellan
+after: reg_arrive
+name: {es: "Carga sin papeles", en: "Cargo Without Papers"}
+summary:
+  es: "Contrabandistas y ballesteros de ceniza cuidan lo que sale del valle. Kellan quiere que los pares antes de que la cantera se quede sin carreteros."
+  en: "Smugglers and ash crossbowmen guard what leaves the vale. Kellan wants them stopped before the quarry runs out of carters."
+hint:
+  es: "Derrota a cuatro contrabandistas de ceniza y a dos ballesteros de ceniza en el Cruce o en la cantera («🏹 Cazar»)."
+  en: "Defeat four ash smugglers and two ash crossbowmen at the Crossing or the quarry (\"🏹 Hunt\")."
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: kill, target: ash_smuggler, count: 4}
+  - {kind: kill, target: ash_crossbowman, count: 2}
+rewards:
+  - {xp: 650}
+  - {gold: 60}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Kellan tiene cuentas pendientes."
+      en: "Kellan has accounts to settle."
+  active:
+    journal:
+      es: "Despeja el Cruce y la cantera: cuatro contrabandistas y dos ballesteros."
+      en: "Clear the Crossing and the quarry: four smugglers and two crossbowmen."
+  done:
+    state: completed
+    journal:
+      es: "Kellan anota algo en el libro y por primera vez no mira el peso. «Dos carros cruzaron esta semana. Es un comienzo.»"
+      en: "Kellan writes something in the ledger and for once does not look at the weight. \"Two carts crossed this week. It is a start.\""

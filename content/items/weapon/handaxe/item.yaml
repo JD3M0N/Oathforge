@@ -1,0 +1,7 @@
+name: {es: Hacha de mano, en: Handaxe}
+icon: "🪓"
+description: {es: Ligera y equilibrada para lanzarla., en: Light and balanced for throwing.}
+type: weapon
+slot: ranged
+value: 5
+weapon: {damage: 1d6, damage_type: slashing, ranged: true}

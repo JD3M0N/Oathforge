@@ -1,0 +1,6 @@
+name: {es: Carne cruda, en: Raw meat}
+icon: "🥩"
+description: {es: "Carne fresca de caza. Hay que cocinarla pronto.", en: "Fresh game meat. Best cooked soon."}
+type: material
+value: 2
+stackable: true

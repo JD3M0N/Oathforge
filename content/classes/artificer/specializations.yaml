@@ -1,0 +1,435 @@
+runic_armorer:
+  class_key: artificer
+  name: {es: Armero Rúnico, en: Runic Armorer}
+  description:
+    es: Una armadura con modo defensivo y modo ofensivo. Repartes la Carga entre protegerte y golpear.
+    en: Armour with a defensive mode and an offensive one. You split your Charge between shielding and striking.
+  roles: [deff, dmg]
+  ready: true
+  abilities:
+    runic_plating:
+      name: {es: Blindaje Rúnico, en: Runic Plating}
+      description: {es: +2 a la CA; quien te hiere de verdad recibe 1d6 de fuerza., en: +2 AC; whoever really hurts you takes 1d6 force.}
+      level: 10
+      kind: passive
+      action: none
+      ac_bonus: 2
+      thorns: 1d6
+      bonus_damage_type: force
+    defensive_mode:
+      name: {es: Modo Defensivo, en: Defensive Mode}
+      description: {es: 'Acción adicional: ganas 5d8 PV temporales.', en: 'Bonus action: you gain 5d8 temporary HP.'}
+      level: 10
+      kind: buff
+      action: bonus
+      cost: 6
+      cooldown: 3
+      temp_hp: 5d8
+    offensive_mode:
+      name: {es: Modo Ofensivo, en: Offensive Mode}
+      description: {es: 'Acción adicional: ganas bendición 3 turnos.', en: 'Bonus action: you gain a blessing for 3 turns.'}
+      level: 10
+      kind: buff
+      action: bonus
+      cost: 5
+      cooldown: 3
+      status: blessed
+      status_turns: 3
+    runic_strike:
+      name: {es: Golpe Rúnico, en: Runic Strike}
+      description: {es: Un ataque con arma que añade 4d8 de daño de fuerza., en: A weapon attack that adds 4d8 force damage.}
+      level: 10
+      kind: strike
+      cost: 9
+      cooldown: 1
+      extra_damage: 4d8
+      damage_type: force
+    overcharged_plating:
+      name: {es: Blindaje Sobrecargado, en: Overcharged Plating}
+      description:
+        es: El primer golpe que recibes cada ronda hace la mitad de daño.
+        en: The first blow you take each round does half damage.
+      level: 15
+      kind: passive
+      action: none
+      halve_first_hit: true
+    runic_overload:
+      name: {es: Sobrecarga Rúnica, en: Runic Overload}
+      description: {es: Un ataque con arma que añade 10d8 de daño de fuerza., en: A weapon attack that adds 10d8 force damage.}
+      level: 20
+      kind: strike
+      cost: 28
+      cooldown: 4
+      extra_damage: 10d8
+      damage_type: force
+  modifiers:
+    thicker_plate:
+      level: 13
+      name: {es: Placa Más Gruesa, en: Thicker Plate}
+      description: {es: El Modo defensivo da 7d8 PV temporales en lugar de 5d8., en: Defensive Mode gives 7d8 temporary HP instead of 5d8.}
+      patches:
+        defensive_mode:
+          temp_hp: 7d8
+    longer_mode:
+      level: 13
+      name: {es: Modo Prolongado, en: Prolonged Mode}
+      description: {es: El Modo ofensivo dura 2 turnos más., en: Offensive Mode lasts 2 turns longer.}
+      patches:
+        offensive_mode:
+          status_turns: 2
+    cheap_runes:
+      level: 17
+      name: {es: Runas Económicas, en: Cheap Runes}
+      description: {es: El Golpe rúnico cuesta 3 menos., en: Runic Strike costs 3 less.}
+      patches:
+        runic_strike:
+          cost: -3
+    greater_overload:
+      level: 17
+      name: {es: Sobrecarga Mayor, en: Greater Overload}
+      description: {es: La Sobrecarga rúnica añade 12d8 en lugar de 10d8., en: Runic Overload adds 12d8 instead of 10d8.}
+      patches:
+        runic_overload:
+          extra_damage: 12d8
+
+artillerist:
+  class_key: artificer
+  name: {es: Artillero, en: Artillerist}
+  description:
+    es: Un arma desplegada dispara sola. Tú administras munición abstracta, recargas o aprovechas el blanco que deja abierto.
+    en: A deployed weapon fires on its own. You manage abstract ammunition, reload, or exploit the target it leaves open.
+  roles: [dmg, control]
+  ready: true
+  abilities:
+    field_calibration:
+      name: {es: Calibración de Campo, en: Field Calibration}
+      description:
+        es: Tus conjuros suman tu modificador de conjuro al daño y tienes +1 a la CA.
+        en: Your spells add your spellcasting modifier to damage and you have +1 AC.
+      level: 10
+      kind: passive
+      action: none
+      spell_damage_bonus: true
+      ac_bonus: 1
+    deploy_cannon:
+      name: {es: Desplegar el Cañón, en: Deploy the Cannon}
+      description:
+        es: Un cañón de asedio dispara solo a la presa marcada mientras dure el combate.
+        en: A siege cannon fires on its own at the marked quarry for as long as the fight lasts.
+      level: 10
+      kind: summon
+      cost: 7
+      entity: siege_cannon
+    focused_fire:
+      name: {es: Fuego Concentrado, en: Focused Fire}
+      description:
+        es: 'Acción adicional: tu cañón dispara más fuerte y mejor 3 turnos.'
+        en: 'Bonus action: your cannon fires harder and truer for 3 turns.'
+      level: 10
+      kind: converge
+      action: bonus
+      cost: 5
+      cooldown: 3
+      boost_turns: 3
+    tracer_round:
+      name: {es: Proyectil Trazador, en: Tracer Round}
+      description:
+        es: 'El objetivo tira DES: si falla, recibe 2d8 perforante y queda vulnerable 3 turnos.'
+        en: 'The target rolls a DEX save: on a fail it takes 2d8 piercing and is vulnerable for 3 turns.'
+      level: 10
+      kind: save
+      cost: 5
+      cooldown: 2
+      damage: 2d8
+      damage_type: piercing
+      save: dex
+      status: vulnerable
+      status_turns: 3
+    exploit_gap:
+      name: {es: Aprovechar el Hueco, en: Exploit the Opening}
+      description:
+        es: 'Ataque de conjuro a distancia: 3d8 perforante. Si el objetivo está vulnerable, gasta esa grieta por otros 5d8.'
+        en: 'Ranged spell attack: 3d8 piercing. If the target is vulnerable, it spends that opening for another 5d8.'
+      level: 10
+      kind: spell
+      cost: 8
+      cooldown: 1
+      damage: 3d8
+      damage_type: piercing
+      consumes: vulnerable
+      consume_damage: 5d8
+    ballistic_tables:
+      name: {es: Tablas Balísticas, en: Ballistic Tables}
+      description: {es: Haces crítico con un 19 o un 20., en: You score a critical hit on a 19 or 20.}
+      level: 15
+      kind: passive
+      action: none
+      crit_range: 19
+    siege_volley:
+      name: {es: Salva de Asedio, en: Siege Volley}
+      description:
+        es: Tu cañón dispara ya a la presa marcada con 9d8 extra.
+        en: Your cannon fires at the marked quarry now with 9d8 extra.
+      level: 20
+      kind: command
+      cost: 24
+      cooldown: 4
+      entity: siege_cannon
+      extra_damage: 9d8
+  modifiers:
+    heavier_shells:
+      level: 13
+      name: {es: Proyectiles Pesados, en: Heavier Shells}
+      description:
+        es: Aprovechar el hueco hace 8d8 en lugar de 5d8 al gastar la grieta.
+        en: Exploit the Opening deals 8d8 instead of 5d8 when it spends the opening.
+      patches:
+        exploit_gap:
+          consume_damage: 8d8
+    longer_tracer:
+      level: 13
+      name: {es: Traza Duradera, en: Lasting Tracer}
+      description: {es: El Proyectil trazador deja vulnerable 2 turnos más., en: Tracer Round leaves the target vulnerable 2 turns longer.}
+      patches:
+        tracer_round:
+          status_turns: 2
+    cheap_volley:
+      level: 17
+      name: {es: Salva Barata, en: Cheap Volley}
+      description: {es: La Salva de asedio cuesta 6 menos., en: Siege Volley costs 6 less.}
+      patches:
+        siege_volley:
+          cost: -6
+    faster_focus:
+      level: 17
+      name: {es: Foco Rápido, en: Fast Focus}
+      description:
+        es: El Fuego concentrado cuesta 2 menos y se recupera un turno antes.
+        en: Focused Fire costs 2 less and recovers a turn sooner.
+      patches:
+        focused_fire:
+          cost: -2
+          cooldown: -1
+
+catalyst:
+  class_key: artificer
+  name: {es: Catalizador, en: Catalyst}
+  description:
+    es: Un aparato aplica reactivos —corrosivo, espuma protectora, pulso restaurador— y cataliza los residuos. Usa Carga, no pociones ni oficio de Alquimia.
+    en: A device applies reagents — corrosive, protective foam, restoring pulse — and catalyses the residue. It runs on Charge, not on potions or the Alchemy trade.
+  roles: [heal, dmg]
+  ready: true
+  abilities:
+    reactive_vials:
+      name: {es: Viales Reactivos, en: Reactive Vials}
+      description:
+        es: Tus conjuros suman tu modificador de conjuro al daño, y tienes +1 a la CA.
+        en: Your spells add your spellcasting modifier to damage, and you have +1 AC.
+      level: 10
+      kind: passive
+      action: none
+      spell_damage_bonus: true
+      ac_bonus: 1
+    restorative_reagent:
+      name: {es: Reactivo Restaurador, en: Restorative Reagent}
+      description:
+        es: 'Acción adicional: recuperas 3d8 + tu modificador de conjuro en PV y dejas una barrera de 2d8 PV temporales.'
+        en: 'Bonus action: recover 3d8 + your spellcasting modifier in HP and leave a barrier of 2d8 temporary HP.'
+      level: 10
+      kind: heal
+      action: bonus
+      cost: 6
+      cooldown: 1
+      heal_dice: 3d8
+      heal_add: casting
+      temp_hp: 2d8
+    corrosive_reaction:
+      name: {es: Reacción Corrosiva, en: Corrosive Reaction}
+      description:
+        es: 'El objetivo tira DES: si falla, recibe 4d8 de veneno y queda vulnerable 3 turnos.'
+        en: 'The target rolls a DEX save: on a fail it takes 4d8 poison and is vulnerable for 3 turns.'
+      level: 10
+      kind: save
+      cost: 8
+      cooldown: 2
+      damage: 4d8
+      damage_type: poison
+      save: dex
+      status: vulnerable
+      status_turns: 3
+    catalyze:
+      name: {es: Catalizar, en: Catalyse}
+      description:
+        es: 'Ataque de conjuro a distancia: 3d8 de fuego. Si el objetivo está vulnerable, consume los residuos por otros 5d8.'
+        en: 'Ranged spell attack: 3d8 fire. If the target is vulnerable, it burns off the residue for another 5d8.'
+      level: 10
+      kind: spell
+      cost: 10
+      cooldown: 2
+      damage: 3d8
+      damage_type: fire
+      consumes: vulnerable
+      consume_damage: 5d8
+    stabilizing_foam:
+      name: {es: Espuma Estabilizadora, en: Stabilising Foam}
+      description: {es: 'Acción adicional: ganas 6d8 PV temporales.', en: 'Bonus action: you gain 6d8 temporary HP.'}
+      level: 15
+      kind: buff
+      action: bonus
+      cost: 8
+      cooldown: 3
+      temp_hp: 6d8
+    master_reaction:
+      name: {es: Reacción Maestra, en: Master Reaction}
+      description:
+        es: 'Toda la fila tira DES: 10d8 de fuego, la mitad si la supera; si el objetivo está vulnerable, gasta eso por otros 6d8.'
+        en: 'The whole row rolls a DEX save: 10d8 fire, half on a success; if the target is vulnerable, it spends that for another 6d8.'
+      level: 20
+      kind: save
+      cost: 32
+      cooldown: 5
+      damage: 10d8
+      damage_type: fire
+      save: dex
+      area: row
+      half_on_save: true
+      consumes: vulnerable
+      consume_damage: 6d8
+  modifiers:
+    richer_reagent:
+      level: 13
+      name: {es: Reactivo Más Rico, en: Richer Reagent}
+      description: {es: El Reactivo restaurador cura 5d8 en lugar de 3d8., en: Restorative Reagent heals 5d8 instead of 3d8.}
+      patches:
+        restorative_reagent:
+          heal_dice: 5d8
+    harsher_reaction:
+      level: 13
+      name: {es: Reacción Más Dura, en: Harsher Reaction}
+      description:
+        es: La Reacción corrosiva deja vulnerable 2 turnos más.
+        en: Corrosive Reaction leaves the target vulnerable 2 turns longer.
+      patches:
+        corrosive_reaction:
+          status_turns: 2
+    cheap_catalyst:
+      level: 17
+      name: {es: Catálisis Barata, en: Cheap Catalysis}
+      description: {es: Catalizar cuesta 3 menos., en: Catalyse costs 3 less.}
+      patches:
+        catalyze:
+          cost: -3
+    bigger_reaction:
+      level: 17
+      name: {es: Reacción Mayor, en: Bigger Reaction}
+      description: {es: La Reacción maestra hace 12d8 en lugar de 10d8., en: Master Reaction deals 12d8 instead of 10d8.}
+      patches:
+        master_reaction:
+          damage: 12d8
+
+construct_master:
+  class_key: artificer
+  name: {es: Maestro de Constructos, en: Construct Master}
+  description:
+    es: Un autómata que configuras antes del combate protege e interviene. Hace algo distinto de un cañón quieto.
+    en: An automaton you configure before the fight protects and intervenes. It does a different job from a stationary gun.
+  roles: [deff, control]
+  ready: true
+  abilities:
+    plated_chassis:
+      name: {es: Chasis Blindado, en: Plated Chassis}
+      description: {es: +2 a la CA., en: +2 AC.}
+      level: 10
+      kind: passive
+      action: none
+      ac_bonus: 2
+    assemble_guardian:
+      name: {es: Montar el Guardián, en: Assemble the Guardian}
+      description:
+        es: Un autómata guardián recibe los golpes por ti hasta romperse. Solo cabe un constructo a la vez.
+        en: A guardian automaton takes the blows for you until it breaks. Only one construct fits at a time.
+      level: 10
+      kind: summon
+      cost: 7
+      entity: guardian_construct
+    assemble_arc_construct:
+      name: {es: Montar el Autómata de Arco, en: Assemble the Arc Automaton}
+      description:
+        es: Un autómata de arco traba al rival con descargas cada dos turnos. Solo cabe un constructo a la vez.
+        en: An arc automaton pins the foe with discharges every other turn. Only one construct fits at a time.
+      level: 10
+      kind: summon
+      cost: 7
+      entity: arc_construct
+    overclock:
+      name: {es: Sobreimpulso, en: Overclock}
+      description: {es: 'Acción adicional: tu constructo rinde más 3 turnos.', en: 'Bonus action: your construct performs better for 3 turns.'}
+      level: 10
+      kind: converge
+      action: bonus
+      cost: 5
+      cooldown: 3
+      boost_turns: 3
+    field_repairs:
+      name: {es: Reparaciones de Campo, en: Field Repairs}
+      description:
+        es: 'Acción adicional: recuperas 3d8 + tu modificador de conjuro en PV.'
+        en: 'Bonus action: recover 3d8 + your spellcasting modifier in HP.'
+      level: 10
+      kind: heal
+      action: bonus
+      cost: 6
+      cooldown: 2
+      heal_dice: 3d8
+      heal_add: casting
+    reinforced_frame:
+      name: {es: Armazón Reforzado, en: Reinforced Frame}
+      description:
+        es: El primer golpe que recibes cada ronda hace la mitad de daño.
+        en: The first blow you take each round does half damage.
+      level: 15
+      kind: passive
+      action: none
+      halve_first_hit: true
+    assemble_titan:
+      name: {es: Montar el Titán, en: Assemble the Titan}
+      description:
+        es: Un autómata titán recibe los golpes por ti. Solo cabe un constructo a la vez.
+        en: A titan automaton takes the blows for you. Only one construct fits at a time.
+      level: 20
+      kind: summon
+      cost: 26
+      entity: titan_automaton
+  modifiers:
+    cheap_assembly:
+      level: 13
+      name: {es: Montaje Económico, en: Economical Assembly}
+      description:
+        es: Montar el guardián o el autómata de arco cuesta 2 menos.
+        en: Assembling the guardian or the arc automaton costs 2 less.
+      patches:
+        assemble_guardian:
+          cost: -2
+        assemble_arc_construct:
+          cost: -2
+    better_repairs:
+      level: 13
+      name: {es: Mejores Reparaciones, en: Better Repairs}
+      description: {es: Las Reparaciones de campo curan 5d8 en lugar de 3d8., en: Field Repairs heals 5d8 instead of 3d8.}
+      patches:
+        field_repairs:
+          heal_dice: 5d8
+    swift_overclock:
+      level: 17
+      name: {es: Sobreimpulso Ágil, en: Swift Overclock}
+      description: {es: El Sobreimpulso se recupera un turno antes., en: Overclock recovers a turn sooner.}
+      patches:
+        overclock:
+          cooldown: -1
+    cheaper_titan:
+      level: 17
+      name: {es: Titán Asequible, en: Affordable Titan}
+      description: {es: Montar el titán cuesta 8 menos., en: Assembling the Titan costs 8 less.}
+      patches:
+        assemble_titan:
+          cost: -8

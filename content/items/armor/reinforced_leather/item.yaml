@@ -1,0 +1,8 @@
+name: {es: Cuero reforzado, en: Reinforced leather}
+icon: "🧥"
+description: {es: "Cuero curtido con remaches de hierro. Protege más que el cuero simple sin estorbar.", en: "Treated leather with iron rivets. Better protection than plain leather without the bulk."}
+type: armor
+slot: body
+value: 60
+base_ac: 12
+dex_cap: 5

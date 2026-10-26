@@ -1,0 +1,6 @@
+name: {es: Prueba de falsificación, en: Forgery proof}
+icon: "📜"
+description: {es: "Órdenes con el sello viejo del gremio y la letra del Recaudador. Con esto, la Guardia de Plata no podrá mirar a otro lado.", en: "Orders bearing the guild's old seal and the Collector's hand. With this, the Silver Guard cannot look the other way."}
+type: quest
+value: 0
+sellable: false

@@ -1,0 +1,6 @@
+name: {es: Mena de hierro, en: Iron ore}
+icon: "🪨"
+description: {es: "Roca rojiza con vetas de hierro. La base de toda herrería.", en: "Reddish rock veined with iron. The base of all smithing."}
+type: material
+value: 4
+stackable: true

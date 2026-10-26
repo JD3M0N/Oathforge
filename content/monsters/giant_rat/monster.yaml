@@ -1,0 +1,18 @@
+name: {es: Rata gigante, en: Giant rat}
+indefinite: {es: una rata gigante, en: a giant rat}
+icon: 🐀
+description: {es: "Una rata del tamaño de un perro, con los ojos rojos y el pelo apelmazado de hollín.", en: A dog-sized rat with red eyes and soot-matted fur.}
+hp: 7
+ac: 11
+dex: 1
+attacks:
+  - {name: {es: Mordisco, en: Bite}, to_hit: 3, damage: 1d4+1, damage_type: piercing, applies: {status: poisoned, turns: 2, chance: 0.15}}
+xp: 15
+loot:
+  - {item: coal, chance: 0.3}
+type: beast
+habitat: {es: Mina del Paso Viejo, en: Old Pass Mine}
+lore:
+  es: Anida en las galerías abandonadas y roe todo lo que los mineros dejan atrás. Su mordisco puede infectarse.
+  en: Nests in abandoned tunnels and gnaws whatever the miners leave behind. Its bite can fester.
+order: 8

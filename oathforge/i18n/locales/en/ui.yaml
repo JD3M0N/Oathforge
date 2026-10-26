@@ -1,0 +1,175 @@
+# Event templates (check, combat, loot, ...) are escaped before sending: no HTML there.
+# View templates (create, scene, sheet, help) may use Telegram HTML.
+
+cmd:
+  activities: "Activities: what you can do here"
+  masteries: "Field masteries"
+  path: "Your path: branch and choices"
+  hobbies: "Hobbies: cooking and fishing"
+  achievements: Achievements, titles and objectives
+  start: "Start or return to the scene"
+  look: "Look around"
+  map: "Map: where you are and where to go"
+  hero: "Hero summary"
+  sheet: "Full sheet with portrait"
+  inventory: "Inventory"
+  journal: "Adventure journal"
+  quests: "Missions and progress"
+  lineage: "Lineages: bonuses and traits"
+  background: "Backgrounds: skills, gold and gear"
+  classes: "Classes and their abilities"
+  report: "Report of the last battle"
+  professions: "Professions and masteries"
+  recipes: "Recipes: what you can craft"
+  room: "Your room: bed and chest"
+  rulebook: "Rulebook: how the game works"
+  settings: "Settings: language and manual rolls"
+  language: "Change language"
+  help: "How to play"
+
+help:
+  text: |-
+    <b>How to play Oathforge</b>
+
+    Use the buttons to travel, investigate, talk and fight.
+    You can also <b>type whatever you want to do</b>: "I hide behind the bar and listen", "I try to lift the keeper's purse", "I push the cart onto the bandit".
+    The Dungeon Master interprets your action, the engine rolls the dice, and you see what really happened.
+
+    Commands: /look /activities /map /hero /sheet /inventory /journal /quests /classes /report /professions /recipes /room /masteries /hobbies /rulebook /settings
+  version: "<i>Oathforge v{version}</i>"
+
+settings:
+  text: |-
+    ⚙️ <b>Settings</b>
+
+    🌐 Language: {language}
+    🎲 Manual rolls: {rolls}
+
+    <i>With manual rolls, when a skill check needs a roll (investigating, quest actions or written actions) you are asked to press "🎲 Roll the die". The animation is decoration: the result always comes from the engine.</i>
+  language_name: "English"
+
+lang:
+  choose: "Choose your language:"
+  changed: "Language set to English."
+
+gender:
+  male: "Man"
+  female: "Woman"
+
+kb:
+  place: "📍 Here"
+  activities: "⚒ Activities"
+  hero: "🧝 Hero"
+  map: "🗺 Map"
+  inventory: "🎒 Inventory"
+  journal: "📖 Journal"
+  ready: "⌨️ Below the chat you have fixed shortcuts: 📍 Here (where you are and who is around), ⚒ Activities (what you can do here), 🗺 Map, 🧝 Hero, 🎒 Inventory and 📖 Journal."
+  placeholder: "Type what you do…"
+
+btn:
+  activities: "⚒ Activities ({n})"
+  buy_tool: "🛒 Buy {tool}"
+  buy_tool_at: "🛒 {tool} · go to {place}"
+  rulebook: "📘 Rulebook"
+  full_sheet: "📜 Full sheet"
+  report: "📜 Report"
+  summary_report: "📊 Summary"
+  full_report: "📜 Report"
+  powers: "✨ Actions"
+  summary: "📜 Summary"
+  round_next: "Round {n} ▶"
+  round_prev: "◀ Round {n}"
+  classes: "📚 Classes"
+  hero_summary: "🧝 Summary"
+  continue_trip: "▶️ Carry on to {place}"
+  see_activity: "⏳ See the activity"
+  zone: "{icon} {zone} ({n}) ›"
+  stalls: "🛠️ Stalls ({n}) ›"
+  travel: "🧭 Travel"
+  investigate: "🔎 Investigate"
+  talk: "💬 Talk"
+  turn_in: "📜 Hand in: {quest}"
+  path: "🧭 Your path ({n})"
+  path_plain: "🧭 Your path"
+  shop: "🛒 Trade"
+  rest: "🛏️ Long rest ({cost} 🪙)"
+  rest_free: "🛏️ Long rest (free)"
+  short_rest: "💤 Short rest"
+  heal: "🙏 Cure wounds ({cost} 🪙)"
+  wake: "☀️ Get up"
+  inventory: "🎒 Inventory"
+  sheet: "🧝 Hero"
+  journal: "📖 Journal"
+  hunt: "🏹 Hunt"
+  roll: "🎲 Roll the die"
+  roll_on: "✅ Turn manual rolls on"
+  roll_off: "❌ Turn manual rolls off"
+  hunt_night: "🦇 Hunt by night"
+  gather_mining: "⛏️ Mine · {minutes} min"
+  gather_woodcutting: "🪓 Chop wood · {minutes} min"
+  gather_herbalism: "🌿 Gather herbs · {minutes} min"
+  gather_fishing: "🎣 Fish · {minutes} min"
+  stay: "🏕️ Long expedition · {minutes} min"
+  track: "🐾 Track · {minutes} min"
+  claim: "🎁 Collect"
+  refresh: "🔄 Refresh"
+  abandon: "✖️ Abandon"
+  professions: "🛠️ Professions"
+  craft: "🔨 Craft"
+  learn: "📘 Learn {prof}"
+  swap_for: "🔁 Swap for {prof} ({cost} 🪙)"
+  replace: "Drop {prof}"
+  make: "🔨 {item}"
+  make_n: "🔨 ×{n}"
+  recipes: "📜 Recipes"
+  room: "🏠 Your room"
+  specializations: "🌿 Specializations"
+  tools: "🧰 Tools"
+  stash: "📦 Store in the chest"
+  learn_recipe: "📘 Learn the recipe"
+  missions: "📜 Missions"
+  quest_log: "📚 Log"
+  stats: "📈 Statistics"
+  tab_professions: "🛠️ Professions"
+  skin: "🔪 Skin · {seconds} s"
+  tab_masteries: "⛏️ Masteries"
+  tab_hobbies: "🍲 Hobbies"
+  bestiary: "🐉 Bestiary"
+  creature_art: "🖼️ View illustration"
+  rumors: "🗣️ Rumors"
+  recommended: "⭐ Recommended ({cls})"
+  reset_points: "🔄 Reset"
+  view_place: "🖼️ View place"
+  back: "⬅️ Back"
+  leave: "👋 Say goodbye"
+  sell: "💰 Sell"
+  equip: "Equip {item}"
+  unequip: "Unequip {item}"
+  use: "Use {item}"
+  use_on: "🔮 {item} → {ability} ({uses}/{max})"
+  confirm: "✅ Confirm"
+  restart: "🔄 Start over"
+  continue: "▶️ Continue"
+  defend: "🛡️ Defend"
+  help: "💡 What do I do?"
+  potion: "🧪 Potion"
+  items: "🎒 Items"
+  move_back: "↩️ To the back"
+  move_front: "↪️ To the front"
+  flee: "🏃 Flee"
+  end_turn: "⏭️ End turn"
+
+ai:
+  budget_exhausted: "🤖 The Dungeon Master is spent for today. Keep playing with the buttons; it recovers at midnight."
+
+freetext:
+  stale: "The situation changed while you were thinking. Try again."
+  not_here: "That isn't here."
+  no_effect: "Nothing changes in the world."
+  ooc: "Out-of-character question: use /help to see how to play."
+
+err:
+  generic: "Something went wrong. Please try again."
+  rate: "Slow down, adventurer."
+  stale_popup: "That menu is out of date: here is the current one."
+  unknown: "I don't understand that action."

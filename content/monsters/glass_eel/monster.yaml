@@ -1,0 +1,19 @@
+name: {es: "Anguila de vidrio", en: "Glass eel"}
+indefinite: {es: "anguila de vidrio", en: "glass eel"}
+icon: 🐍
+description: {es: "Una anguila de cuerpo transparente que vive entre las placas de vidrio de la orilla. Cuanto más clara el agua, más cerca está.", en: "An eel with a transparent body that lives between the shore's glass plates. The clearer the water, the closer it is."}
+hp: 80
+ac: 16
+dex: 3
+wis: 1
+row: front
+attacks:
+  - {name: {es: "Descarga", en: "Discharge"}, to_hit: 10, damage: 2d8+5, damage_type: piercing}
+xp: 600
+gold: "0"
+type: beast
+habitat: {es: "Ribera del Vidrio", en: "Glass Shore"}
+lore:
+  es: "Una anguila de cuerpo transparente que vive entre las placas de vidrio de la orilla. Cuanto más clara el agua, más cerca está."
+  en: "An eel with a transparent body that lives between the shore's glass plates. The clearer the water, the closer it is."
+order: 18

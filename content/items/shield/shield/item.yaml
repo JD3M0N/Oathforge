@@ -1,0 +1,7 @@
+name: {es: Escudo, en: Shield}
+icon: "🛡️"
+description: {es: Roble reforzado con hierro., en: Oak reinforced with iron.}
+type: shield
+slot: off_hand
+value: 10
+ac_bonus: 2

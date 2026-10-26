@@ -1,0 +1,22 @@
+name: {es: Goblin explorador, en: Goblin scout}
+indefinite: {es: un goblin explorador, en: a goblin scout}
+icon: 👺
+description: {es: "Pequeño, rápido y armado con un arco que robó a alguien más grande.", en: "Small, quick and armed with a bow it stole from someone bigger."}
+hp: 9
+ac: 13
+dex: 2
+row: back
+attacks:
+  - {name: {es: Arco corto, en: Shortbow}, to_hit: 4, damage: 1d6+2, damage_type: piercing, ranged: true}
+  - {name: {es: Cuchillo, en: Knife}, to_hit: 4, damage: 1d4+2, damage_type: piercing}
+xp: 50
+gold: 1d6
+loot:
+  - {item: shortbow, chance: 0.1}
+  - {item: torch, chance: 0.4}
+cowardly: true
+habitat: {es: Camino del Viejo Rey y Bosque de los Susurros, en: Old King's Road and Whispering Woods}
+lore:
+  es: Dispara desde la retaguardia. Ataca primero a quien lo amenaza de cerca.
+  en: Shoots from the back row. Strike it first if you can reach it.
+order: 3

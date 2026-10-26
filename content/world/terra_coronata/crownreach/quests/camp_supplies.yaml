@@ -1,0 +1,35 @@
+order: 44
+giver: tamsin
+after: camp_rumor
+name: {es: "Pociones para el camino", en: "Potions for the Road"}
+summary:
+  es: "Antes del puesto del peaje, Tamsin quiere que lleves humo y curación de sobra."
+  en: "Before the toll post, Tamsin wants you carrying smoke and healing to spare."
+hint:
+  es: "Compra una bomba de humo en la forja de Tessa (o fabrícala si eres ingeniero) y una poción de curación a Mira."
+  en: "Buy a smoke bomb at Tessa's forge (or make one if you are an engineer) and a healing potion from Mira."
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: buy, target: smoke_bomb}
+  - {kind: buy, target: healing_potion}
+rewards:
+  - {xp: 100}
+  - {give_item: {healing_potion: 1}}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Tamsin repasa la lista de equipo."
+      en: "Tamsin goes over the gear list."
+  active:
+    journal:
+      es: "Compra una bomba de humo y una poción de curación para el viaje."
+      en: "Buy a smoke bomb and a healing potion for the trip."
+  done:
+    state: completed
+    journal:
+      es: "«Ahora sí parece que sabes a dónde vas», dice Tamsin, y repasa tu mochila bolsillo por bolsillo."
+      en: "\"Now you look like someone who knows where they are going,\" says Tamsin, and goes through your pack pocket by pocket."

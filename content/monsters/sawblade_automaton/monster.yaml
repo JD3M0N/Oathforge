@@ -1,0 +1,20 @@
+name: {es: "Autómata de sierra", en: "Sawblade automaton"}
+indefinite: {es: "autómata de sierra", en: "sawblade automaton"}
+icon: ⚙️
+description: {es: "Una sierra de cadena montada en un armazón de bronce. Sigue cortando lo que se mueva.", en: "A chain saw mounted on a bronze frame. It keeps cutting whatever moves."}
+hp: 105
+ac: 17
+dex: 0
+wis: 1
+row: front
+attacks:
+  - {name: {es: "Disco de sierra", en: "Saw disc"}, to_hit: 9, damage: 2d8+6, damage_type: slashing}
+xp: 560
+gold: "0"
+immune: [frightened]
+type: humanoid
+habitat: {es: "Aserradero Silencioso", en: "Silent Sawmill"}
+lore:
+  es: "Una sierra de cadena montada en un armazón de bronce. Sigue cortando lo que se mueva."
+  en: "A chain saw mounted on a bronze frame. It keeps cutting whatever moves."
+order: 17

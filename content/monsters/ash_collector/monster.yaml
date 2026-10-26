@@ -1,0 +1,28 @@
+name: {es: El Recaudador de Ceniza, en: The Ash Collector}
+indefinite: {es: "el Recaudador de Ceniza", en: "the Ash Collector"}
+icon: 🏹
+description: {es: "Un hombre alto con una capa gris de ceniza y una ballesta de repetición que lleva a la espalda como un cobrador lleva su libro.", en: "A tall man in an ash-grey cloak with a repeating crossbow slung on his back the way a collector carries his ledger."}
+hp: 75
+ac: 14
+dex: 2
+wis: 2
+attacks:
+  - {name: {es: Daga de cobrador, en: Collector's dagger}, to_hit: 5, damage: 1d6+3, damage_type: piercing}
+pattern:
+  plate: 30
+  cycle: 2
+  cycle_broken: 1
+  heavy: {name: {es: Descarga de ballesta, en: Crossbow volley}, to_hit: 9, damage: 4d6+5, damage_type: piercing, ranged: true}
+boss: true
+xp: 600
+gold: 6d10
+loot:
+  - {item: forgery_proof, chance: 1.0}
+  - {item: healing_potion, chance: 1.0, qty: 2}
+immune: [frightened]
+type: humanoid
+habitat: {es: Puesto de Peaje Abandonado, en: Abandoned Toll Post}
+lore:
+  es: Cobra peaje a los carros del gremio y los deja pasar con otra carga. Nadie sabe su nombre; en el libro firma solo «el Recaudador».
+  en: He charges the guild's carts a toll and lets them through with a different load. Nobody knows his name; in the ledger he signs only "the Collector".
+order: 9

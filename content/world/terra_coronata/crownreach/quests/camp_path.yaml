@@ -1,0 +1,37 @@
+order: 50
+giver: tamsin
+after: camp_collector
+name: {es: "Tu camino", en: "Your Path"}
+summary:
+  es: "Con la prueba entregada, Tamsin te lleva ante el tablón del gremio: ahora toca elegir qué clase de aventurero quieres ser de verdad."
+  en: "With the proof handed in, Tamsin takes you to the guild board: now you choose what kind of adventurer you truly want to be."
+hint:
+  es: "Necesitas nivel 10. Si te falta experiencia, completa encargos y caza hasta reunirla (se suma sola). Con nivel 10, abre /path en el Gremio de Aventureros, compara las ramas de tu clase y confirma una."
+  en: "You need level 10. If you lack experience, take jobs and hunt until you have it (it adds up by itself). At level 10, open /path at the Adventurers' Guild, compare your class's branches and confirm one."
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: branch, target: any}
+rewards:
+  - {xp: 400}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Tamsin tiene una decisión que no es suya."
+      en: "Tamsin has a decision that is not hers."
+  active:
+    journal:
+      es: "Alcanza el nivel 10 y elige tu rama en el Gremio de Aventureros (/path). No hay cambio libre: lee bien la ficha de cada una antes de confirmar."
+      en: "Reach level 10 and choose your branch at the Adventurers' Guild (/path). There is no free change: read each branch's sheet carefully before confirming."
+    location_text:
+      adventurers_guild:
+        es: "El tablón del gremio ofrece las ramas de tu clase. Compáralas con calma: tu elección es para siempre."
+        en: "The guild board lists your class's branches. Compare them calmly: your choice is for good."
+  done:
+    state: completed
+    journal:
+      es: "Elegiste tu camino. Tamsin, apoyada en la pared, lo celebra a su manera: «Ahora sí eres alguien»."
+      en: "You chose your path. Tamsin, leaning on the wall, celebrates in her own way: \"Now you are somebody.\""

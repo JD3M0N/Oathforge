@@ -1,0 +1,8 @@
+name: {es: Poción de maná, en: Mana potion}
+icon: "🔮"
+description: {es: "Un líquido azul que brilla como la hoja de luna. Devuelve un uso de un conjuro gastado (solo clases que lanzan conjuros, fuera de combate).", en: "A blue liquid that glows like moonleaf. Gives back one use of a spent spell (spellcasting classes only, outside combat)."}
+type: consumable
+value: 60
+stackable: true
+effects:
+  - {type: restore_spell_charge, amount: 1, pool: 4}  # un uso, o 4 de la barra si la clase tiene una

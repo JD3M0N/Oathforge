@@ -1,0 +1,74 @@
+order: 68
+giver: iwen
+after: reg_workshop
+name: {es: "Encender la primera baliza", en: "Lighting the First Beacon"}
+summary:
+  es: "Con los núcleos, la lente y el aceite, la primera baliza puede encenderse. Hay que hacerlo en orden, y a mano."
+  en: "With the cores, the lens and the oil, the first beacon can be lit. It must be done in order, and by hand."
+hint:
+  es: "Ve al Alto de las Balizas y repara la primera torre siguiendo los tres pasos con Iwen."
+  en: "Go to Beacon Height and repair the first tower following the three steps with Iwen."
+start_stage: locked
+unlock_stage: active
+actions:
+  clean:
+    label: {es: "🔧 Limpiar el engranaje de la torre", en: "🔧 Clean the tower’s gear"}
+    location: beacon_height
+    stages: [active]
+    to_stage: fit
+    requires_item: regulator_core
+    text:
+      es: "Retiras el óxido con un paño y el hueco de la baliza queda limpio. Encajarás el núcleo en cuanto termines."
+      en: "You wipe the rust off with a cloth and the beacon’s socket is clean. You will fit the core as soon as you are done."
+    effects:
+      - {xp: 200}
+  fit:
+    label: {es: "🔩 Encajar el núcleo", en: "🔩 Fit the core"}
+    location: beacon_height
+    stages: [fit]
+    to_stage: light
+    requires_item: regulator_core
+    text:
+      es: "El núcleo entra con un chasquido y el engranaje de la torre gira una vuelta entera, por primera vez en años."
+      en: "The core clicks in and the tower’s gear turns a full revolution, for the first time in years."
+    effects:
+      - {take_item: {regulator_core: 1}}
+      - {xp: 200}
+  light:
+    label: {es: "🔥 Encender la baliza", en: "🔥 Light the beacon"}
+    location: beacon_height
+    stages: [light]
+    to_stage: done
+    text:
+      es: "Una llama blanca sube por la torre y se ve desde Crownreach. Abajo, el viento cambia. Algo grande se mueve en lo alto del Alto: el Custodio ha despertado."
+      en: "A white flame climbs the tower and can be seen from Crownreach. Below, the wind changes. Something big moves on the Height: the Keeper has awakened."
+    effects:
+      - {xp: 1250}
+      - {set_flag: beacon_trial}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Iwen reúne herramientas."
+      en: "Iwen gathers tools."
+  active:
+    journal:
+      es: "En el Alto de las Balizas, limpia el engranaje de la torre (necesitas un núcleo de regulador)."
+      en: "At Beacon Height, clean the tower's gear (you need a regulator core)."
+    location_text:
+      beacon_height:
+        es: "Una hilera de torres de piedra con balizas apagadas. La primera tiene un hueco vacío a la altura de tu pecho."
+        en: "A row of stone towers with unlit beacons. The first has an empty socket at chest height."
+  fit:
+    journal:
+      es: "Encaja el núcleo de regulador en el hueco de la torre."
+      en: "Fit the regulator core into the tower's socket."
+  light:
+    journal:
+      es: "Enciende la baliza."
+      en: "Light the beacon."
+  done:
+    state: completed
+    journal:
+      es: "La baliza ardió. Iwen, desde el Vado, vio la luz por primera vez en su vida. Aún hay algo en lo alto del Alto que quiere probarte."
+      en: "The beacon burned. Iwen, from the Ford, saw the light for the first time in her life. Something on the Height still wants to test you."

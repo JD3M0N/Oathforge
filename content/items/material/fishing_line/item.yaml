@@ -1,0 +1,6 @@
+name: {es: Sedal, en: Fishing line}
+icon: "🪢"
+description: {es: "Hilo trenzado y encerado, el alma de una buena caña.", en: "Braided waxed line, the soul of a good rod."}
+type: material
+value: 45
+stackable: true

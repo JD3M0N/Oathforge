@@ -1,0 +1,627 @@
+pyromancer:
+  class_key: sorcerer
+  name: {es: Piromante, en: Pyromancer}
+  description:
+    es: Aplicas quemaduras y decides entre mantenerlas ardiendo o consumirlas para detonar. Puedes preparar varios blancos a la vez.
+    en: You lay burns and choose between letting them burn or spending them to detonate. You can prime several targets at once.
+  roles: [dmg]
+  ready: true
+  abilities:
+    inner_flame:
+      name: {es: Llama Interior, en: Inner Flame}
+      description: {es: Tus conjuros suman tu modificador de conjuro al daño., en: Your spells add your spellcasting modifier to damage.}
+      level: 10
+      kind: passive
+      action: none
+      spell_damage_bonus: true
+    ignite:
+      name: {es: Ignición, en: Ignite}
+      description:
+        es: 'Toda la fila tira DES: 2d6 de fuego y arde 3 turnos si falla.'
+        en: 'The whole row rolls a DEX save: 2d6 fire and burning for 3 turns on a fail.'
+      level: 10
+      kind: save
+      cost: 6
+      cooldown: 1
+      damage: 2d6
+      damage_type: fire
+      save: dex
+      area: row
+      status: burning
+      status_turns: 3
+    detonate:
+      name: {es: Detonación, en: Detonate}
+      description:
+        es: 'Ataque de conjuro a distancia: 3d8 de fuego. Si el objetivo arde, gasta el fuego por otros 5d8.'
+        en: 'Ranged spell attack: 3d8 fire. If the target is burning, it spends the fire for another 5d8.'
+      level: 10
+      kind: spell
+      cost: 10
+      cooldown: 2
+      damage: 3d8
+      damage_type: fire
+      consumes: burning
+      consume_damage: 5d8
+    flame_wall:
+      name: {es: Muro de Llamas, en: Wall of Flames}
+      description:
+        es: 'Toda la fila tira DES: 4d8 de fuego, la mitad si la supera.'
+        en: 'The whole row rolls a DEX save: 4d8 fire, half on a success.'
+      level: 15
+      kind: save
+      cost: 12
+      cooldown: 3
+      damage: 4d8
+      damage_type: fire
+      save: dex
+      area: row
+      half_on_save: true
+    conflagration:
+      name: {es: Conflagración, en: Conflagration}
+      description:
+        es: 'Toda la fila tira DES: 8d8 de fuego, la mitad si la supera, y arde 4 turnos si falla.'
+        en: 'The whole row rolls a DEX save: 8d8 fire, half on a success, and burning for 4 turns on a fail.'
+      level: 20
+      kind: save
+      cost: 28
+      cooldown: 5
+      damage: 8d8
+      damage_type: fire
+      save: dex
+      area: row
+      half_on_save: true
+      status: burning
+      status_turns: 4
+  modifiers:
+    longer_burn:
+      level: 13
+      name: {es: Combustión Larga, en: Long Burn}
+      description: {es: La Ignición hace arder 2 turnos más., en: Ignite makes the target burn 2 turns longer.}
+      patches:
+        ignite:
+          status_turns: 2
+    hotter_blast:
+      level: 13
+      name: {es: Estallido Más Caliente, en: Hotter Blast}
+      description:
+        es: La Detonación hace 8d8 en lugar de 5d8 al gastar el fuego.
+        en: Detonate deals 8d8 instead of 5d8 when it spends the fire.
+      patches:
+        detonate:
+          consume_damage: 8d8
+    cheap_ignition:
+      level: 17
+      name: {es: Ignición Barata, en: Cheap Ignition}
+      description: {es: La Ignición cuesta 3 menos., en: Ignite costs 3 less.}
+      patches:
+        ignite:
+          cost: -3
+    wider_inferno:
+      level: 17
+      name: {es: Infierno Mayor, en: Greater Inferno}
+      description: {es: La Conflagración hace 10d8 en lugar de 8d8., en: Conflagration deals 10d8 instead of 8d8.}
+      patches:
+        conflagration:
+          damage: 10d8
+
+cryomancer:
+  class_key: sorcerer
+  name: {es: Criomante, en: Cryomancer}
+  description:
+    es: Acumulas frío para limitar, congelar o volver frágil al rival, y consumes esa preparación al quebrarlo.
+    en: You stack cold to limit, freeze or make the enemy brittle, then spend that build-up to shatter it.
+  roles: [control, dmg]
+  ready: true
+  abilities:
+    cold_heart:
+      name: {es: Corazón Helado, en: Cold Heart}
+      description: {es: Eres inmune al miedo y tienes +1 a la CA., en: You are immune to fear and have +1 AC.}
+      level: 10
+      kind: passive
+      action: none
+      ac_bonus: 1
+      immune: [frightened]
+    frostbite:
+      name: {es: Congelación, en: Frostbite}
+      description:
+        es: 'El objetivo tira DES: si falla, recibe 3d8 de frío y queda trabado 2 turnos.'
+        en: 'The target rolls a DEX save: on a fail it takes 3d8 cold and is restrained for 2 turns.'
+      level: 10
+      kind: save
+      cost: 8
+      cooldown: 2
+      damage: 3d8
+      damage_type: cold
+      save: dex
+      status: restrained
+      status_turns: 2
+    shatter:
+      name: {es: Quebrar, en: Shatter}
+      description:
+        es: 'Ataque de conjuro a distancia: 3d8 de frío. Si el objetivo está trabado, rompe el hielo por otros 6d8.'
+        en: 'Ranged spell attack: 3d8 cold. If the target is restrained, it breaks the ice for another 6d8.'
+      level: 10
+      kind: spell
+      cost: 9
+      cooldown: 2
+      damage: 3d8
+      damage_type: cold
+      consumes: restrained
+      consume_damage: 6d8
+    ice_wall:
+      name: {es: Muro de Hielo, en: Ice Wall}
+      description: {es: 'Acción adicional: ganas 5d8 PV temporales.', en: 'Bonus action: you gain 5d8 temporary HP.'}
+      level: 15
+      kind: buff
+      action: bonus
+      cost: 8
+      cooldown: 3
+      temp_hp: 5d8
+    absolute_zero:
+      name: {es: Cero Absoluto, en: Absolute Zero}
+      description:
+        es: 'Toda la fila tira DES: 8d8 de frío, la mitad si la supera, y trabada 3 turnos si falla.'
+        en: 'The whole row rolls a DEX save: 8d8 cold, half on a success, and restrained for 3 turns on a fail.'
+      level: 20
+      kind: save
+      cost: 30
+      cooldown: 5
+      damage: 8d8
+      damage_type: cold
+      save: dex
+      area: row
+      half_on_save: true
+      status: restrained
+      status_turns: 3
+  modifiers:
+    deeper_freeze:
+      level: 13
+      name: {es: Helada Profunda, en: Deep Freeze}
+      description: {es: La Congelación traba 2 turnos más., en: Frostbite restrains for 2 turns longer.}
+      patches:
+        frostbite:
+          status_turns: 2
+    brittle_ice:
+      level: 13
+      name: {es: Hielo Quebradizo, en: Brittle Ice}
+      description: {es: Quebrar hace 9d8 en lugar de 6d8 al romper el hielo., en: Shatter deals 9d8 instead of 6d8 when it breaks the ice.}
+      patches:
+        shatter:
+          consume_damage: 9d8
+    broader_frost:
+      level: 17
+      name: {es: Escarcha Extensa, en: Broader Frost}
+      description: {es: El Cero absoluto hace 10d8 en lugar de 8d8., en: Absolute Zero deals 10d8 instead of 8d8.}
+      patches:
+        absolute_zero:
+          damage: 10d8
+    cheap_frostbite:
+      level: 17
+      name: {es: Congelación Barata, en: Cheap Frostbite}
+      description: {es: La Congelación cuesta 3 menos., en: Frostbite costs 3 less.}
+      patches:
+        frostbite:
+          cost: -3
+
+arcanist:
+  class_key: sorcerer
+  name: {es: Arcanista, en: Arcanist}
+  description:
+    es: Las cargas arcanas suben tu potencia y la presión sobre tu Maná. Puedes descargarlas o invertirlas en una barrera.
+    en: Arcane charges raise both your power and the pressure on your Mana. Discharge them, or spend them on a barrier.
+  roles: [dmg, deff]
+  ready: true
+  abilities:
+    arcane_surge:
+      name: {es: Oleada Arcana, en: Arcane Surge}
+      description:
+        es: Tus conjuros suman tu modificador de conjuro al daño, y tienes +1 a la CA.
+        en: Your spells add your spellcasting modifier to damage, and you have +1 AC.
+      level: 10
+      kind: passive
+      action: none
+      spell_damage_bonus: true
+      ac_bonus: 1
+    arcane_bolt:
+      name: {es: Descarga Arcana, en: Arcane Bolt}
+      description: {es: 'Un conjuro que nunca falla: 5d8 de daño de fuerza.', en: 'A spell that never misses: 5d8 force damage.'}
+      level: 10
+      kind: spell
+      cost: 8
+      cooldown: 1
+      damage: 5d8
+      damage_type: force
+      auto_hit: true
+    arcane_barrier:
+      name: {es: Barrera Arcana, en: Arcane Barrier}
+      description:
+        es: 'Acción adicional: ganas 4d8 + tu modificador de conjuro de PV temporales.'
+        en: 'Bonus action: you gain 4d8 + your spellcasting modifier in temporary HP.'
+      level: 10
+      kind: buff
+      action: bonus
+      cost: 6
+      cooldown: 3
+      temp_hp: 4d8
+      heal_add: casting
+    overpower:
+      name: {es: Potencia Desbordada, en: Overpower}
+      description: {es: 'Ataque de conjuro a distancia: 8d8 de daño de fuerza.', en: 'Ranged spell attack: 8d8 force damage.'}
+      level: 15
+      kind: spell
+      cost: 14
+      cooldown: 3
+      damage: 8d8
+      damage_type: force
+    arcane_ascendance:
+      name: {es: Ascendencia Arcana, en: Arcane Ascendance}
+      description: {es: 'Un conjuro que nunca falla: 14d8 de daño de fuerza.', en: 'A spell that never misses: 14d8 force damage.'}
+      level: 20
+      kind: spell
+      cost: 32
+      cooldown: 5
+      damage: 14d8
+      damage_type: force
+      auto_hit: true
+  modifiers:
+    stronger_barrier:
+      level: 13
+      name: {es: Barrera Reforzada, en: Reinforced Barrier}
+      description: {es: La Barrera arcana da 6d8 PV temporales en lugar de 4d8., en: Arcane Barrier gives 6d8 temporary HP instead of 4d8.}
+      patches:
+        arcane_barrier:
+          temp_hp: 6d8
+    deeper_bolt:
+      level: 13
+      name: {es: Descarga Profunda, en: Deeper Bolt}
+      description: {es: La Descarga arcana hace 7d8 en lugar de 5d8., en: Arcane Bolt deals 7d8 instead of 5d8.}
+      patches:
+        arcane_bolt:
+          damage: 7d8
+    cheaper_overpower:
+      level: 17
+      name: {es: Potencia Económica, en: Efficient Overpower}
+      description: {es: La Potencia desbordada cuesta 5 menos., en: Overpower costs 5 less.}
+      patches:
+        overpower:
+          cost: -5
+    ascendant_force:
+      level: 17
+      name: {es: Fuerza Ascendente, en: Ascendant Force}
+      description: {es: La Ascendencia arcana hace 17d8 en lugar de 14d8., en: Arcane Ascendance deals 17d8 instead of 14d8.}
+      patches:
+        arcane_ascendance:
+          damage: 17d8
+
+stormcaller:
+  class_key: sorcerer
+  name: {es: Tempestario, en: Stormcaller}
+  description:
+    es: Marcas conductividad y encadenas descargas. Contra un solo rival concentras la tormenta en vez de perder tu identidad.
+    en: You mark conductivity and chain discharges. Against a lone rival you focus the storm instead of losing your identity.
+  roles: [dmg, control]
+  ready: true
+  abilities:
+    static_charge:
+      name: {es: Carga Estática, en: Static Charge}
+      description: {es: Quien te hiere de verdad recibe 1d6 de daño de fuerza., en: Whoever really hurts you takes 1d6 force damage.}
+      level: 10
+      kind: passive
+      action: none
+      thorns: 1d6
+      bonus_damage_type: force
+    conduct:
+      name: {es: Conducción, en: Conduct}
+      description:
+        es: 'Toda la fila tira DES: 2d6 de fuerza y queda vulnerable 3 turnos si falla.'
+        en: 'The whole row rolls a DEX save: 2d6 force and vulnerable for 3 turns on a fail.'
+      level: 10
+      kind: save
+      cost: 6
+      cooldown: 2
+      damage: 2d6
+      damage_type: force
+      save: dex
+      area: row
+      status: vulnerable
+      status_turns: 3
+    chain_lightning:
+      name: {es: Relámpago Encadenado, en: Chain Lightning}
+      description:
+        es: 'Ataque de conjuro a distancia: 4d8 de fuerza. Si el objetivo es vulnerable, gasta eso por otros 4d8.'
+        en: 'Ranged spell attack: 4d8 force. If the target is vulnerable, it spends that for another 4d8.'
+      level: 10
+      kind: spell
+      cost: 10
+      cooldown: 2
+      damage: 4d8
+      damage_type: force
+      consumes: vulnerable
+      consume_damage: 4d8
+    thunder_clap:
+      name: {es: Trueno, en: Thunder Clap}
+      description:
+        es: 'El objetivo tira SAB: si falla, recibe 4d8 de fuerza y queda aturdido un turno.'
+        en: 'The target rolls a WIS save: on a fail it takes 4d8 force and is stunned for a turn.'
+      level: 15
+      kind: save
+      cost: 12
+      cooldown: 3
+      damage: 4d8
+      damage_type: force
+      save: wis
+      status: stunned
+    eye_of_the_storm:
+      name: {es: Ojo de la Tormenta, en: Eye of the Storm}
+      description:
+        es: 'Toda la fila tira DES: 9d8 de fuerza, la mitad si la supera, y aturdida un turno si falla.'
+        en: 'The whole row rolls a DEX save: 9d8 force, half on a success, and stunned for a turn on a fail.'
+      level: 20
+      kind: save
+      cost: 30
+      cooldown: 5
+      damage: 9d8
+      damage_type: force
+      save: dex
+      area: row
+      half_on_save: true
+      status: stunned
+  modifiers:
+    longer_conduction:
+      level: 13
+      name: {es: Conducción Larga, en: Long Conduction}
+      description: {es: La Conducción deja vulnerable 2 turnos más., en: Conduct leaves the targets vulnerable 2 turns longer.}
+      patches:
+        conduct:
+          status_turns: 2
+    forked_lightning:
+      level: 13
+      name: {es: Rayo Bifurcado, en: Forked Lightning}
+      description:
+        es: El Relámpago encadenado hace 7d8 en lugar de 4d8 al gastar la vulnerabilidad.
+        en: Chain Lightning deals 7d8 instead of 4d8 when it spends the vulnerability.
+      patches:
+        chain_lightning:
+          consume_damage: 7d8
+    swift_thunder:
+      level: 17
+      name: {es: Trueno Veloz, en: Swift Thunder}
+      description: {es: El Trueno cuesta 4 menos y se recupera un turno antes., en: Thunder Clap costs 4 less and recovers a turn sooner.}
+      patches:
+        thunder_clap:
+          cost: -4
+          cooldown: -1
+    wider_storm:
+      level: 17
+      name: {es: Tormenta Mayor, en: Greater Storm}
+      description: {es: El Ojo de la tormenta hace 11d8 en lugar de 9d8., en: Eye of the Storm deals 11d8 instead of 9d8.}
+      patches:
+        eye_of_the_storm:
+          damage: 11d8
+
+summoner:
+  class_key: sorcerer
+  name: {es: Invocador, en: Summoner}
+  description:
+    es: Dos entidades de un repertorio mixto actúan solas sobre la presa marcada; una orden conjunta te cuesta la acción. Nunca hay una tercera.
+    en: Two entities from a mixed roster act on their own against the marked quarry; a joint order costs you your action. There is never a third.
+  roles: [dmg, control]
+  ready: true
+  abilities:
+    bond_of_the_called:
+      name: {es: Vínculo de Lo Llamado, en: Bond of the Called}
+      description:
+        es: Tus conjuros suman tu modificador de conjuro al daño y tienes +1 a la CA.
+        en: Your spells add your spellcasting modifier to damage and you have +1 AC.
+      level: 10
+      kind: passive
+      action: none
+      spell_damage_bonus: true
+      ac_bonus: 1
+    call_astral_blade:
+      name: {es: Llamar a la Espada Astral, en: Call the Astral Blade}
+      description:
+        es: Una hoja de luz fría combate a tu lado 4 turnos y corta a la presa marcada.
+        en: A blade of cold light fights beside you for 4 turns and cuts the marked quarry.
+      level: 10
+      kind: summon
+      cost: 6
+      entity: astral_blade
+    call_wandering_ember:
+      name: {es: Llamar al Ascua Errante, en: Call the Wandering Ember}
+      description:
+        es: Una brasa viva desgasta a toda una fila durante 4 turnos, sin fallar.
+        en: A living coal wears down a whole row for 4 turns, never missing.
+      level: 10
+      kind: summon
+      cost: 6
+      entity: wandering_ember
+    grand_convergence:
+      name: {es: Convergencia, en: Convergence}
+      description:
+        es: 'Acción adicional: todo lo que has llamado pega más fuerte y mejor 3 turnos.'
+        en: 'Bonus action: everything you have called hits harder and truer for 3 turns.'
+      level: 10
+      kind: converge
+      action: bonus
+      cost: 5
+      cooldown: 3
+      boost_turns: 3
+    call_stone_guardian:
+      name: {es: Llamar al Guardián de Piedra, en: Call the Stone Guardian}
+      description:
+        es: Un coloso de roca recibe los golpes por ti durante 5 turnos.
+        en: A rock colossus takes the blows for you for 5 turns.
+      level: 15
+      kind: summon
+      cost: 8
+      entity: stone_guardian
+    call_storm_spirit:
+      name: {es: Llamar al Espíritu de la Tormenta, en: Call the Storm Spirit}
+      description:
+        es: Un relámpago con voluntad descarga sobre la presa marcada durante 4 turnos.
+        en: A lightning bolt with a will discharges on the marked quarry for 4 turns.
+      level: 20
+      kind: summon
+      cost: 20
+      entity: storm_spirit
+  modifiers:
+    moth_in_the_sleeve:
+      level: 13
+      name: {es: Polilla en la Manga, en: Moth in the Sleeve}
+      description:
+        es: Aprendes a llamar a la Polilla del Velo, que asusta al rival cada dos turnos.
+        en: You learn to call the Veil Moth, which frightens the foe every other turn.
+      grants:
+        call_veil_moth:
+          name: {es: Llamar a la Polilla del Velo, en: Call the Veil Moth}
+          description:
+            es: La Polilla del Velo asusta al rival cada dos turnos durante 5 turnos.
+            en: The Veil Moth frightens the foe every other turn for 5 turns.
+          level: 13
+          kind: summon
+          cost: 6
+          entity: veil_moth
+    tighter_convergence:
+      level: 13
+      name: {es: Convergencia Ceñida, en: Tighter Convergence}
+      description:
+        es: La Convergencia cuesta 2 menos y se recupera un turno antes.
+        en: Convergence costs 2 less and recovers a turn sooner.
+      patches:
+        grand_convergence:
+          cost: -2
+          cooldown: -1
+    ordered_blade:
+      level: 17
+      name: {es: Hoja a Tus Órdenes, en: Blade at Your Command}
+      description:
+        es: Puedes ordenar a la Espada Astral que golpee ya, con 4d8 de fuerza extra.
+        en: You can order the Astral Blade to strike now, with 4d8 extra force.
+      grants:
+        order_astral_blade:
+          name: {es: Ordenar a la Espada Astral, en: Order the Astral Blade}
+          description:
+            es: La Espada Astral golpea ya a la presa marcada con 4d8 extra.
+            en: The Astral Blade strikes the marked quarry now with 4d8 extra.
+          level: 17
+          kind: command
+          cost: 6
+          cooldown: 1
+          entity: astral_blade
+          extra_damage: 4d8
+    cheaper_spirit:
+      level: 17
+      name: {es: Espíritu Asequible, en: Affordable Spirit}
+      description: {es: Llamar al Espíritu de la tormenta cuesta 6 menos., en: Calling the Storm Spirit costs 6 less.}
+      patches:
+        call_storm_spirit:
+          cost: -6
+
+chronomancer:
+  class_key: sorcerer
+  name: {es: Cronomante, en: Chronomancer}
+  description:
+    es: Retrasas una amenaza que viene y alteras, dentro de un límite, cuándo vuelve a estar lista una técnica. Anticipar vale más que pegar fuerte.
+    en: You delay an oncoming threat and shift, within limits, when a technique comes back. Anticipating beats hitting hard.
+  roles: [control, deff]
+  ready: true
+  abilities:
+    temporal_calm:
+      name: {es: Calma Temporal, en: Temporal Calm}
+      description: {es: '+2 a la CA: ves venir lo que viene.', en: '+2 AC: you see what is coming.'}
+      level: 10
+      kind: passive
+      action: none
+      ac_bonus: 2
+    stuttering_time:
+      name: {es: Tiempo Entrecortado, en: Stuttering Time}
+      description:
+        es: 'El objetivo tira SAB: si falla, recibe 3d8 de fuerza y queda trabado 2 turnos.'
+        en: 'The target rolls a WIS save: on a fail it takes 3d8 force and is restrained for 2 turns.'
+      level: 10
+      kind: save
+      cost: 7
+      cooldown: 2
+      damage: 3d8
+      damage_type: force
+      save: wis
+      status: restrained
+      status_turns: 2
+    rewind:
+      name: {es: Rebobinar, en: Rewind}
+      description:
+        es: 'Acción adicional: ganas 2d8 PV temporales y adelantas 2 turnos el resto de tus enfriamientos.'
+        en: 'Bonus action: you gain 2d8 temporary HP and take 2 turns off the rest of your cooldowns.'
+      level: 10
+      kind: buff
+      action: bonus
+      cost: 6
+      cooldown: 3
+      temp_hp: 2d8
+      reduces_cooldowns: 2
+    time_bolt:
+      name: {es: Dardo Temporal, en: Time Bolt}
+      description: {es: 'Ataque de conjuro a distancia: 4d8 de fuerza.', en: 'Ranged spell attack: 4d8 force.'}
+      level: 10
+      kind: spell
+      cost: 8
+      cooldown: 1
+      damage: 4d8
+      damage_type: force
+    foreseen_blow:
+      name: {es: Golpe Previsto, en: Foreseen Blow}
+      description:
+        es: El primer golpe que recibes cada ronda hace la mitad de daño.
+        en: The first blow you take each round does half damage.
+      level: 15
+      kind: passive
+      action: none
+      halve_first_hit: true
+    temporal_collapse:
+      name: {es: Colapso Temporal, en: Temporal Collapse}
+      description:
+        es: 'Toda la fila tira SAB: 9d8 de fuerza, la mitad si la supera, y aturdida 2 turnos si falla; adelantas 3 turnos tus enfriamientos.'
+        en: 'The whole row rolls a WIS save: 9d8 force, half on a success, and stunned for 2 turns on a fail; you take 3 turns off your cooldowns.'
+      level: 20
+      kind: save
+      cost: 30
+      cooldown: 5
+      damage: 9d8
+      damage_type: force
+      save: wis
+      area: row
+      half_on_save: true
+      status: stunned
+      status_turns: 2
+      reduces_cooldowns: 3
+  modifiers:
+    quicker_rewind:
+      level: 13
+      name: {es: Rebobinado Ágil, en: Quick Rewind}
+      description: {es: Rebobinar se recupera 1 turno antes., en: Rewind recovers 1 turn sooner.}
+      patches:
+        rewind:
+          cooldown: -1
+    deeper_slow:
+      level: 13
+      name: {es: Lentitud Profunda, en: Deeper Slowness}
+      description: {es: El Tiempo entrecortado hace 5d8 y traba 1 turno más., en: Stuttering Time deals 5d8 and restrains 1 turn longer.}
+      patches:
+        stuttering_time:
+          damage: 5d8
+          status_turns: 1
+    cheap_bolt:
+      level: 17
+      name: {es: Dardo Económico, en: Cheap Bolt}
+      description: {es: El Dardo temporal cuesta 3 menos., en: Time Bolt costs 3 less.}
+      patches:
+        time_bolt:
+          cost: -3
+    grander_collapse:
+      level: 17
+      name: {es: Colapso Mayor, en: Grander Collapse}
+      description: {es: El Colapso temporal hace 12d8 en lugar de 9d8., en: Temporal Collapse deals 12d8 instead of 9d8.}
+      patches:
+        temporal_collapse:
+          damage: 12d8

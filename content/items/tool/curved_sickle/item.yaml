@@ -1,0 +1,6 @@
+name: {es: Hoz afilada, en: Keen sickle}
+icon: "🌾"
+description: {es: "Corte limpio al primer pase: se recoge en menos tiempo.", en: "A clean cut first time: gathering takes less of the day."}
+type: tool
+value: 80
+tool: {skill: herbalism, base: sickle, min_rank: 2, time_pct: 0.10}

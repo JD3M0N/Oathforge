@@ -1,0 +1,205 @@
+iron_fist:
+  class_key: monk
+  name: {es: Puño de Hierro, en: Iron Fist}
+  description:
+    es: Una técnica abre un remate que golpea, desequilibra o interrumpe. El panel te enseña la oportunidad mientras dura.
+    en: One technique opens a finisher that hits, unbalances or interrupts. The panel shows you the opening while it lasts.
+  roles: [dmg, control]
+  ready: true
+  abilities:
+    iron_palm:
+      name: {es: Palma de Hierro, en: Iron Palm}
+      description: {es: 'Una vez por turno, tu golpe suma 1d8 de daño contundente.', en: 'Once per turn, your hit adds 1d8 bludgeoning damage.'}
+      level: 10
+      kind: passive
+      action: none
+      bonus_damage: 1d8
+      bonus_damage_type: bludgeoning
+    opening_strike:
+      name: {es: Golpe de Apertura, en: Opening Strike}
+      description:
+        es: 'El objetivo tira SAB: si falla, recibe 2d8 contundente y queda vulnerable 2 turnos.'
+        en: 'The target rolls a WIS save: on a fail it takes 2d8 bludgeoning and is vulnerable for 2 turns.'
+      level: 10
+      kind: save
+      cost: 6
+      cooldown: 2
+      damage: 2d8
+      damage_type: bludgeoning
+      save: wis
+      status: vulnerable
+      status_turns: 2
+    finisher_palm:
+      name: {es: Palma de Remate, en: Finishing Palm}
+      description:
+        es: Un ataque con las vendas que añade 3d8 contundente; si el objetivo es vulnerable, gasta eso por otros 4d8.
+        en: An attack with your wraps that adds 3d8 bludgeoning; if the target is vulnerable, it spends that for another 4d8.
+      level: 10
+      kind: strike
+      cost: 8
+      cooldown: 2
+      extra_damage: 3d8
+      damage_type: bludgeoning
+      consumes: vulnerable
+      consume_damage: 4d8
+    inner_calm:
+      name: {es: Calma Interior, en: Inner Calm}
+      description:
+        es: Haces crítico con un 19 o un 20 y tienes +1 a la CA sin armadura.
+        en: You score a critical hit on a 19 or 20 and have +1 AC while unarmored.
+      level: 15
+      kind: passive
+      action: none
+      crit_range: 19
+      ac_bonus_unarmored: 1
+    horizon_strike:
+      name: {es: Golpe del Horizonte, en: Horizon Strike}
+      description:
+        es: Un ataque con las vendas que añade 8d8 contundente; si el objetivo es vulnerable, gasta eso por otros 6d8.
+        en: An attack with your wraps that adds 8d8 bludgeoning; if the target is vulnerable, it spends that for another 6d8.
+      level: 20
+      kind: strike
+      cost: 20
+      cooldown: 4
+      extra_damage: 8d8
+      damage_type: bludgeoning
+      consumes: vulnerable
+      consume_damage: 6d8
+  modifiers:
+    wider_opening:
+      level: 13
+      name: {es: Apertura Amplia, en: Wide Opening}
+      description: {es: El Golpe de apertura deja vulnerable 2 turnos más., en: Opening Strike leaves the target vulnerable 2 turns longer.}
+      patches:
+        opening_strike:
+          status_turns: 2
+    heavier_palm:
+      level: 13
+      name: {es: Palma Pesada, en: Heavy Palm}
+      description:
+        es: La Palma de remate hace 6d8 en lugar de 4d8 al gastar la vulnerabilidad.
+        en: Finishing Palm deals 6d8 instead of 4d8 when it spends the vulnerability.
+      patches:
+        finisher_palm:
+          consume_damage: 6d8
+    swift_opening:
+      level: 17
+      name: {es: Apertura Veloz, en: Swift Opening}
+      description: {es: El Golpe de apertura cuesta 3 menos., en: Opening Strike costs 3 less.}
+      patches:
+        opening_strike:
+          cost: -3
+    horizon_reach:
+      level: 17
+      name: {es: Alcance del Horizonte, en: Horizon Reach}
+      description: {es: El Golpe del Horizonte añade 10d8 en lugar de 8d8., en: Horizon Strike adds 10d8 instead of 8d8.}
+      patches:
+        horizon_strike:
+          extra_damage: 10d8
+
+shadow_dancer:
+  class_key: monk
+  name: {es: Danzante de Sombras, en: Shadow Dancer}
+  description:
+    es: Evasión y desplazamiento preparan tus contraataques, y tienes una técnica alterna para crear la oportunidad sin depender de esquivar.
+    en: Evasion and movement set up your counters, and a second technique creates the opening without relying on a dodge.
+  roles: [deff, dmg]
+  ready: true
+  abilities:
+    shadow_poise:
+      name: {es: Porte de Sombra, en: Shadow Poise}
+      description:
+        es: +2 a la CA sin armadura, y el primer golpe de cada ronda hace la mitad de daño.
+        en: +2 AC while unarmored, and the first blow each round does half damage.
+      level: 10
+      kind: passive
+      action: none
+      ac_bonus_unarmored: 2
+      halve_first_hit: true
+    evasive_dance:
+      name: {es: Danza Evasiva, en: Evasive Dance}
+      description: {es: 'Acción adicional: ganas 3d8 PV temporales.', en: 'Bonus action: you gain 3d8 temporary HP.'}
+      level: 10
+      kind: buff
+      action: bonus
+      cost: 4
+      cooldown: 3
+      temp_hp: 3d8
+    shadow_strike:
+      name: {es: Golpe de Sombra, en: Shadow Strike}
+      description:
+        es: Un ataque con las vendas que añade 3d8 de daño necrótico.
+        en: An attack with your wraps that adds 3d8 necrotic damage.
+      level: 10
+      kind: strike
+      cost: 7
+      cooldown: 1
+      extra_damage: 3d8
+      damage_type: necrotic
+    crescent_kick:
+      name: {es: Patada Creciente, en: Crescent Kick}
+      description:
+        es: 'Toda la fila tira DES: 3d6 contundente, la mitad si la supera.'
+        en: 'The whole row rolls a DEX save: 3d6 bludgeoning, half on a success.'
+      level: 10
+      kind: save
+      cost: 8
+      cooldown: 2
+      damage: 3d6
+      damage_type: bludgeoning
+      save: dex
+      area: row
+      half_on_save: true
+    veil_of_shadows:
+      name: {es: Velo de Sombras, en: Veil of Shadows}
+      description:
+        es: +1 a la CA sin armadura, y cada golpe que te hiere de verdad te da 2 de Foco.
+        en: +1 AC while unarmored, and every blow that really hurts you gives 2 Focus.
+      level: 15
+      kind: passive
+      action: none
+      ac_bonus_unarmored: 1
+      resource_on_hurt: 2
+    eclipse_dance:
+      name: {es: Danza del Eclipse, en: Eclipse Dance}
+      description:
+        es: 'Toda la fila tira DES: 7d8 necrótico, la mitad si la supera.'
+        en: 'The whole row rolls a DEX save: 7d8 necrotic, half on a success.'
+      level: 20
+      kind: save
+      cost: 20
+      cooldown: 4
+      damage: 7d8
+      damage_type: necrotic
+      save: dex
+      area: row
+      half_on_save: true
+  modifiers:
+    lasting_dance:
+      level: 13
+      name: {es: Danza Duradera, en: Lasting Dance}
+      description: {es: La Danza evasiva da 5d8 PV temporales en lugar de 3d8., en: Evasive Dance gives 5d8 temporary HP instead of 3d8.}
+      patches:
+        evasive_dance:
+          temp_hp: 5d8
+    sharper_shadow:
+      level: 13
+      name: {es: Sombra Afilada, en: Sharper Shadow}
+      description: {es: El Golpe de sombra añade 5d8 en lugar de 3d8., en: Shadow Strike adds 5d8 instead of 3d8.}
+      patches:
+        shadow_strike:
+          extra_damage: 5d8
+    wide_kick:
+      level: 17
+      name: {es: Patada Ancha, en: Wide Kick}
+      description: {es: La Patada creciente hace 5d6 en lugar de 3d6., en: Crescent Kick deals 5d6 instead of 3d6.}
+      patches:
+        crescent_kick:
+          damage: 5d6
+    deeper_eclipse:
+      level: 17
+      name: {es: Eclipse Profundo, en: Deeper Eclipse}
+      description: {es: La Danza del eclipse hace 9d8 en lugar de 7d8., en: Eclipse Dance deals 9d8 instead of 7d8.}
+      patches:
+        eclipse_dance:
+          damage: 9d8

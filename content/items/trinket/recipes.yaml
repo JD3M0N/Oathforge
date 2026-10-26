@@ -1,0 +1,23 @@
+copper_ring:
+  profession: jewelcrafting
+  technique: rings
+  ingredients: {copper_ingot: 1}
+  outputs: {copper_ring: 1}
+  xp: 10
+
+gem_ring:
+  profession: jewelcrafting
+  technique: gemwork
+  min_rank: 2
+  ingredients: {copper_ring: 1, rough_gem: 1}
+  outputs: {gem_ring: 1}
+  xp: 30
+
+warded_ring:
+  profession: jewelcrafting
+  technique: gemwork
+  min_rank: 4
+  station: jeweler_bench
+  ingredients: {steel_ingot: 1, rough_gem: 2}
+  outputs: {warded_ring: 1}
+  xp: 85

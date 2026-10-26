@@ -1,0 +1,7 @@
+name: {es: Tela del gremio, en: Guild cloth}
+icon: "🧻"
+description: {es: "Un fardo de tela basta con el sello del gremio: es para tu cama, y nadie te la va a comprar.", en: "A bundle of plain cloth stamped by the guild: it is for your bed, and nobody will buy it off you."}
+type: quest
+value: 0
+sellable: false
+stackable: true

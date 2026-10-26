@@ -1,0 +1,6 @@
+name: {es: Lingote de cobre, en: Copper ingot}
+icon: "🟠"
+description: {es: "Cobre fundido en barra, listo para el banco del joyero.", en: "Copper smelted into a bar, ready for the jeweler's bench."}
+type: material
+value: 15
+stackable: true

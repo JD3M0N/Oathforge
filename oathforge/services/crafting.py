@@ -1,7 +1,7 @@
 """Crafting and refining: the right discipline, its station here and every ingredient, or nothing is spent.
 
 The request only carries a recipe id and a quantity; ingredients, outputs and XP always come from
-content/recipes.yaml. A recipe's discipline may be a profession, a hobby or a field mastery: refining
+content/items/<category>/recipes.yaml. A recipe's discipline may be a profession, a hobby or a field mastery: refining
 (ore -> ingot, log -> plank) belongs to the mastery, so anyone can do it and its XP goes there.
 """
 

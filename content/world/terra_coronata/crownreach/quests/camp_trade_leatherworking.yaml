@@ -1,0 +1,53 @@
+order: 27
+giver: oda
+after: camp_trade_pick
+unlock_profession: leatherworking
+name: {es: "Primeros encargos de peletería", en: "First leatherworking jobs"}
+summary:
+  es: "Tu maestro te encarga tres tareas para ver si vales: fabricar un cuero reforzado, usarlo o venderlo."
+  en: "Your master gives you three tasks to see if you are worth it: make a reinforced leather, then use or sell it."
+hint:
+  es: "Ve al puesto de tu maestro en el Barrio de Oficios y pide las primeras lecciones. Fabrica un cuero reforzado y vende algo."
+  en: "Go to your master's stall on Craftsmen's Row and ask for the first lessons. Make a reinforced leather and sell something."
+start_stage: locked
+unlock_stage: active
+objective_stage: working
+complete_stage: done
+objectives:
+  - {kind: craft, target: reinforced_leather}
+  - {kind: sell, target: any}
+rewards:
+  - {xp: 120}
+  - {gold: 10}
+actions:
+  start:
+    label: {es: "🎓 Primeras lecciones de peletería", en: "🎓 First lessons in leatherworking"}
+    npc: oda
+    location: tannery_stall
+    stages: [active]
+    to_stage: working
+    text:
+      es: "Tu maestro te pone delante el material y un primer encargo: un cuero reforzado. «Hazlo despacio y bien; lo rápido ya vendrá.»"
+      en: "Your master sets the material in front of you and a first job: a reinforced leather. \"Slow and right; fast comes later.\""
+    effects:
+      - {give_item: {treated_leather: 3, iron_ingot: 1}}
+      - {profession_xp: {leatherworking: 80}}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Aún no practicas este oficio."
+      en: "You do not practise this trade yet."
+  active:
+    journal:
+      es: "Habla con tu maestro en su puesto y pide las primeras lecciones de peletería."
+      en: "Talk to your master at their stall and ask for the first leatherworking lessons."
+  working:
+    journal:
+      es: "Fabrica un cuero reforzado en la estación del puesto y vende algo a un mercader."
+      en: "Make a reinforced leather at the stall's station and sell something to a merchant."
+  done:
+    state: completed
+    journal:
+      es: "Tu maestro examina tu trabajo y gruñe satisfecho. «Para ser el primero, no está mal»."
+      en: "Your master looks over your work and grunts, satisfied. \"For a first, that is not bad.\""

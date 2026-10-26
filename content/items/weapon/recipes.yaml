@@ -1,0 +1,41 @@
+iron_sword:
+  profession: blacksmithing
+  technique: weapons
+  min_rank: 1
+  ingredients: {iron_ingot: 2, oak_plank: 1}
+  outputs: {iron_sword: 1}
+  xp: 25
+
+oak_staff:
+  profession: carpentry
+  technique: woodwork
+  min_rank: 1
+  ingredients: {oak_plank: 2, clean_fiber: 1}
+  outputs: {oak_staff: 1}
+  xp: 20
+
+tusk_dagger:  # especial: se aprende de su plano, no por rango
+  profession: blacksmithing
+  special: true
+  min_rank: 1
+  ingredients: {iron_ingot: 1, boar_tusk: 2, treated_leather: 1}
+  outputs: {tusk_dagger: 1}
+  xp: 40
+
+steel_sword:
+  profession: blacksmithing
+  technique: weapons
+  min_rank: 4
+  station: anvil
+  ingredients: {steel_ingot: 3, treated_leather: 1}
+  outputs: {steel_sword: 1}
+  xp: 90
+
+heartwood_staff:
+  profession: carpentry
+  technique: woodwork
+  min_rank: 4
+  station: carpenter_bench
+  ingredients: {heartwood_log: 2, clean_fiber: 2}
+  outputs: {heartwood_staff: 1}
+  xp: 80

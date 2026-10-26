@@ -1,0 +1,140 @@
+name: {es: Explorador, en: Ranger}
+description:
+  es: 'Cazador paciente: observa, marca a su presa y la derriba con flechas certeras desde lejos.'
+  en: 'A patient hunter: observes, marks the quarry and brings it down with true arrows from afar.'
+hit_die: 10
+primary: dex
+casting: wis
+array: {dex: 15, wis: 14, con: 13, str: 12, int: 10, cha: 8}
+skills: [stealth, survival]
+items: {shortbow: 1, dagger: 1, leather_armor: 1, healing_potion: 1}
+equip: [shortbow, dagger, leather_armor]
+signature: [aimed_shot, prey_mark]
+resource: focus
+resource_on_attack: 1
+abilities:
+  aimed_shot:
+    name: {es: Disparo Certero, en: Aimed Shot}
+    description:
+      es: Un disparo con el arco que añade 1d8 de daño perforante. Cuesta 4 de Foco.
+      en: A shot with the bow that adds 1d8 piercing damage. Costs 4 Focus.
+    details:
+      es: Respiras, apuntas y sueltas. Es tu disparo normal, pero si acierta suma 1d8 de daño. Atacar te devuelve Foco; este disparo lo gasta.
+      en: You breathe, aim and loose. It is your normal shot, but on a hit it adds 1d8 damage. Attacking gives Focus back; this shot spends it.
+    level: 1
+    kind: strike
+    cost: 4
+    ranged: true
+    extra_damage: 1d8
+    damage_type: piercing
+  prey_mark:
+    name: {es: Marca de Presa, en: Prey Mark}
+    description:
+      es: 'Acción adicional: marcas a un enemigo 3 turnos, sin salvación; cada golpe tuyo le suma 1d6 perforante. Cuesta 2 de Foco.'
+      en: 'Bonus action: you mark an enemy for 3 turns, no save; every hit of yours adds 1d6 piercing to it. Costs 2 Focus.'
+    details:
+      es: 'Lees su rastro y ya sabes dónde duele. Marca primero y dispara después: cada impacto sobre la presa marcada pega un poco más fuerte.'
+      en: 'You read its tracks and already know where it hurts. Mark first, shoot after: every hit on the marked quarry lands a little harder.'
+    level: 1
+    kind: curse
+    action: bonus
+    cost: 2
+    status: marked
+    status_turns: 3
+  woodland_step:
+    name: {es: Paso del Bosque, en: Woodland Step}
+    description:
+      es: 'Acción adicional: Sigilo contra su percepción; si sale, tu próximo ataque tiene ventaja. Cuesta 2 de Foco.'
+      en: 'Bonus action: a Stealth check against their perception; if it works, your next attack has advantage. Costs 2 Focus.'
+    details:
+      es: Te mueves sin ruido entre la maleza. Si te pierden de vista, tu siguiente disparo llega con ventaja.
+      en: You move without a sound through the undergrowth. If they lose sight of you, your next shot comes with advantage.
+    level: 2
+    kind: hide
+    action: bonus
+    cost: 2
+  volley:
+    name: {es: Lluvia de Flechas, en: Volley}
+    description:
+      es: 'Toda la fila tira DES: 2d6 perforante, la mitad si la supera. Cuesta 5 de Foco.'
+      en: 'The whole row rolls a DEX save: 2d6 piercing, half on a success. Costs 5 Focus.'
+    details:
+      es: Sueltas varias flechas a la vez sobre la fila entera. Ninguna pega fuerte, pero no se libra nadie del todo.
+      en: You loose several arrows at once over the whole row. None hits hard, but nobody gets off entirely.
+    level: 3
+    kind: save
+    cost: 5
+    cooldown: 2
+    damage: 2d6
+    damage_type: piercing
+    save: dex
+    area: row
+    half_on_save: true
+  natures_balm:
+    name: {es: Bálsamo del Bosque, en: Nature's Balm}
+    description:
+      es: 'Acción adicional: recuperas 1d8 + tu modificador de conjuro en PV. Cuesta 3 de Foco.'
+      en: 'Bonus action: recover 1d8 + your spellcasting modifier in HP. Costs 3 Focus.'
+    details:
+      es: Hierbas que conoces de memoria, mascadas y aplicadas en un segundo. Como es una acción adicional, curas y sigues disparando.
+      en: Herbs you know by heart, chewed and applied in a second. As a bonus action, you heal and keep shooting.
+    level: 4
+    kind: heal
+    action: bonus
+    cost: 3
+    cooldown: 3
+    heal_dice: 1d8
+    heal_add: casting
+  twin_shots:
+    name: {es: Disparo Doble, en: Twin Shots}
+    description: {es: Atacas dos veces con tu acción de ataque., en: You attack twice with your attack action.}
+    details:
+      es: 'Cuando ya has leído la presa, no necesitas más de un respiro: disparas dos veces en la misma acción, cada disparo con su tirada.'
+      en: 'Once you have read the quarry you need no more than a breath: you shoot twice in the same action, each shot with its own roll.'
+    level: 5
+    kind: passive
+    action: none
+    extra_attack: true
+  poison_arrow:
+    name: {es: Flecha Envenenada, en: Poison Arrow}
+    description:
+      es: Un disparo con el arco que añade 2d6 de daño de veneno. Cuesta 5 de Foco.
+      en: A shot with the bow that adds 2d6 poison damage. Costs 5 Focus.
+    details:
+      es: Una punta untada con algo que ya conoces bien. Cuesta más que el disparo certero, pero muerde de verdad.
+      en: A tip smeared with something you know well. It costs more than the aimed shot, but it really bites.
+    level: 6
+    kind: strike
+    cost: 5
+    cooldown: 2
+    ranged: true
+    extra_damage: 2d6
+    damage_type: poison
+  hawk_eye:
+    name: {es: Ojo de Halcón, en: Hawk's Eye}
+    description: {es: Haces crítico con un 19 o un 20., en: You score a critical hit on a 19 or 20.}
+    details:
+      es: Ves el punto débil desde lejos. Tus disparos son críticos también con un 19 natural.
+      en: You see the weak spot from afar. Your shots are critical on a natural 19 too.
+    level: 8
+    kind: passive
+    action: none
+    crit_range: 19
+  storm_of_arrows:
+    name: {es: Tormenta de Flechas, en: Storm of Arrows}
+    description:
+      es: 'Toda la fila tira DES: 4d6 perforante, la mitad si la supera. Cuesta 10 de Foco.'
+      en: 'The whole row rolls a DEX save: 4d6 piercing, half on a success. Costs 10 Focus.'
+    details:
+      es: El cielo se oscurece con tus flechas. Es lo más grande que puedes hacer con el arco, y pide varios turnos para repetirse.
+      en: The sky darkens with your arrows. It is the biggest thing you can do with the bow, and it takes several turns to repeat.
+    level: 9
+    kind: save
+    cost: 10
+    cooldown: 3
+    damage: 4d6
+    damage_type: piercing
+    save: dex
+    area: row
+    half_on_save: true
+order: 11

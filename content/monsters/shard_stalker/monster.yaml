@@ -1,0 +1,19 @@
+name: {es: "Acechador de esquirlas", en: "Shard stalker"}
+indefinite: {es: "acechador de esquirlas", en: "shard stalker"}
+icon: 🦎
+description: {es: "Una criatura de patas largas cubierta de esquirlas que rebotan la luz. Cada herida que recibe le deja un filo nuevo.", en: "A long-legged creature covered in shards that bounce light. Every wound it takes leaves it a new edge."}
+hp: 105
+ac: 16
+dex: 2
+wis: 1
+row: front
+attacks:
+  - {name: {es: "Garras de vidrio", en: "Glass claws"}, to_hit: 10, damage: 2d10+4, damage_type: slashing}
+xp: 700
+gold: "0"
+type: beast
+habitat: {es: "Ribera del Vidrio", en: "Glass Shore"}
+lore:
+  es: "Una criatura de patas largas cubierta de esquirlas que rebotan la luz. Cada herida que recibe le deja un filo nuevo."
+  en: "A long-legged creature covered in shards that bounce light. Every wound it takes leaves it a new edge."
+order: 19

@@ -1,0 +1,49 @@
+monster:
+  no_image: "No illustration yet."
+  err:
+    unknown: "I do not know that creature."
+
+creature:
+  beast: "Beast"
+  undead: "Undead"
+  humanoid: "Humanoid"
+
+report:
+  title: "📊 <b>Battle summary</b> · {place}"
+  full_title: "📜 <b>Battle report</b> · {place}"
+  none: "You haven't finished any battle yet."
+  result:
+    victory: "Victory"
+    defeat: "Defeat"
+    fled: "Escaped"
+  rounds: "{n} rounds"
+  rounds_one: "1 round"
+  dealt: "🗡️ Damage dealt: <b>{dealt}</b> · 🎯 Hits {hits}/{attacks} · 💥 Crits {crits}"
+  received: "🩸 Damage taken: <b>{received}</b> · They hit you {hits}/{attacks}"
+  healed: "💚 Healing: {amount} HP"
+  defeated: "💀 Defeated: {list}"
+  round: "Round {n} · page {page}/{pages}"
+  hint: "Step through the rounds with the buttons to see every roll."
+
+bestiary:
+  title: "🐉 <b>Bestiary</b> · {seen}/{total} creatures"
+  hint: "Tap a creature. The more you defeat, the more you learn about it."
+  empty: "You haven't met any creature yet. Go hunting."
+  unknown: "You know nothing about that creature."
+  active:
+    day: "comes out by day"
+    night: "comes out at night"
+    any: "at any hour"
+  habitat: "🗺️ Habitat: {place}"
+  record: "👁️ Seen {seen} times · ⚔️ defeated {killed}"
+  stats: "Stats"
+  hp_ac: "❤️ {hp} HP · 🛡️ AC {ac}"
+  locked_stats: "Defeat one to learn its stats."
+  secrets: "Weak points"
+  locked_secrets: "Defeat {n} to discover its weak points and loot."
+  vulnerable: "💥 Vulnerable to: {list}"
+  resist: "🛡️ Resists: {list}"
+  immune: "🚫 Immune to damage: {list}"
+  immune_status: "🚫 Immune to: {list}"
+  xp: "✨ {xp} XP"
+  loot: "🎁 Loot: {list}"

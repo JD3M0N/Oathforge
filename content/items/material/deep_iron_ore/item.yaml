@@ -1,0 +1,6 @@
+name: {es: Mena de hierro profundo, en: Deep iron ore}
+icon: "🪨"
+description: {es: "Mena oscura de la veta honda, mucho más densa que la de la boca de la mina.", en: "Dark ore from the deep seam, far denser than what the mine mouth gives."}
+type: material
+value: 18
+stackable: true

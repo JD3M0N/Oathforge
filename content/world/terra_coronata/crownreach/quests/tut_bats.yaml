@@ -1,0 +1,33 @@
+order: 9
+tutorial: true
+giver: vale
+after: tut_room
+legacy_done: [night_wings]
+name: {es: Alas al anochecer, en: Wings at Dusk}
+summary:
+  es: Cada anochecer, una bandada de murciélagos sale de la Mina del Paso Viejo y ataca al ganado del prado. Vale quiere cortarla de raíz, en su nido.
+  en: Every dusk, a swarm of bats pours out of Old Pass Mine and attacks the meadow's livestock. Vale wants it stopped at the root, in its nest.
+hint:
+  es: Ve a la Mina del Paso Viejo y en «⚒ Actividades» pulsa «🏹 Cazar» tres veces. Cuenta cualquier presa de las galerías (murciélagos o ratas), de día o de noche.
+  en: Go to Old Pass Mine and in "⚒ Activities" press "🏹 Hunt" three times. Any prey in the tunnels counts (bats or rats), day or night.
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: hunt, target: ironvein_mine, count: 3}
+rewards:
+  - xp: 75
+stages:
+  locked:
+    state: locked
+    journal: {es: Algo sale de la mina cuando oscurece., en: Something comes out of the mine after dark.}
+  active:
+    journal:
+      es: "Limpia el nido: caza tres veces en la Mina del Paso Viejo."
+      en: "Clear the nest: hunt three times in Old Pass Mine."
+  done:
+    state: completed
+    journal:
+      es: Las noches del prado vuelven a ser tranquilas. En la taberna ya se habla de ti.
+      en: The meadow nights are quiet again. The tavern is already talking about you.

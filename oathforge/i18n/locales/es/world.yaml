@@ -1,0 +1,165 @@
+scene:
+  day: "☀️ {clock} · anochece en {minutes} min"
+  night: "🌙 {clock} · amanece en {minutes} min"
+  status: "{time} · ❤️ {hp}/{max_hp} · 🪙 {gold}"
+  people: "👥 Aquí:"
+  no_image: "🎨 Ningún pintor ha plantado aún su caballete en {place}. Por ahora, tendrás que imaginarlo."
+  hint: "Escribe cualquier acción o usa los botones."
+
+map:
+  title: "🗺️ <b>Mapa</b> · {zone} ({kind})"
+  kind:
+    city: "ciudad"
+    wilds: "tierras salvajes"
+    dungeon: "mazmorra"
+  here: "📍 Estás en <b>{place}</b>"
+  nothing: "Aquí no hay nada especial que hacer."
+  near:
+    city: "🏙️ <b>Por la ciudad</b> <i>(a pie, sin peligro)</i>"
+    wilds: "🧭 <b>Por aquí</b>"
+    dungeon: "🕯️ <b>En la mazmorra</b>"
+  objective: "📜 <b>Tu objetivo</b>"
+  objective_line: "• {quest} → <b>{place}</b>"
+  street_title: "🛠️ <b>{street}</b> · puestos"
+  zone_title: "{icon} <b>{zone}</b>"
+  busy: "⏳ Estás ocupado: espera a que termine tu tarea o abandónala para viajar."
+  beyond: "🌫️ <b>Sin explorar</b> <i>(se llega camino a camino)</i>"
+  route: "{yards} yd"
+  via: "por {places}"
+  gate: "🚪 salida de la ciudad"
+  cleared: "✅ despejada"
+  hint:
+    city: "A cualquier lugar que ya conozcas vas en un toque, también fuera de la ciudad: el camino lo pone el juego. Lo nuevo se explora camino a camino."
+    wilds: "A lo que ya conoces vas en un toque; lo nuevo, camino a camino. ⚠️ es el peligro del peor tramo: cada viaje tira una sola vez por emboscada."
+    dungeon: "Las salas nuevas se exploran una a una y lo que guardan te espera al entrar. Por las ya despejadas pasas sin pararte."
+  do:
+    shop: "🛒 Tienda de {npc}"
+    heal: "✨ Curar heridas ({cost} 🪙)"
+    heal_free: "✨ Curar heridas (gratis)"
+    rest: "🛏️ Descanso largo ({cost} 🪙)"
+    rest_free: "🛏️ Descanso largo (gratis)"
+    gather_mining: "⛏️ Minar"
+    gather_woodcutting: "🪓 Talar"
+    gather_herbalism: "🌿 Hierbas"
+    gather_fishing: "🎣 Pescar"
+    hunt: "🏹 Cazar y rastrear"
+    craft: "🔨 Fabricar"
+    guild: "📜 Aprender {prof}"
+    npc: "💬 {npc}"
+
+talk:
+  quest_hint: "{npc} te recuerda lo que toca: «{hint}»"
+  title: "💬 ¿Con quién quieres hablar?"
+  hint: "Escribe lo que le dices a {npc}."
+  trust_up: "{npc} confía más en ti ({trust})."
+  trust_down: "{npc} confía menos en ti ({trust})."
+  err:
+    not_here: "Esa persona no está aquí."
+
+shop:
+  choose: "🛒 ¿Con quién quieres comerciar?"
+  title: "🛒 <b>Tienda de {npc}</b> · tienes {gold} 🪙"
+  pick_group: "¿Qué buscas?"
+  sell_title: "💰 ¿Qué quieres vender?"
+  nothing_to_sell: "No tienes nada que este comerciante quiera comprar."
+  bought: "Compras {item} por {price} de oro. Te quedan {gold}."
+  sold: "Vendes {item} por {price} de oro. Ahora tienes {gold}."
+  err:
+    not_sold: "Eso no se vende aquí."
+    no_gold: "No tienes suficiente oro (necesitas {price})."
+    no_buy: "Este comerciante no compra nada."
+    cant_sell: "No puedes vender eso (¿está equipado?)."
+    tool_in_use: "Esa herramienta la estás usando ahora mismo: véndela cuando termines."
+  group:
+    weapons: "⚔️ Armas"
+    armor: "🛡️ Armaduras y escudos"
+    consumables: "🧪 Consumibles"
+    tools: "🧰 Herramientas"
+    other: "📦 Otros"
+  stat:
+    ranged: "a distancia"
+    finesse: "sutil"
+    ac: "CA {ac}"
+    ac_dex: "CA {ac} + DES"
+    ac_dex_cap: "CA {ac} + DES (máx. {cap})"
+    ac_bonus: "+{bonus} CA"
+    heal: "❤️ {dice} PV"
+    restore_hp: "❤️ cura PV"
+    restore_spell_charge: "🔮 +1 uso de conjuro"
+    short_rest: "💤 descanso corto"
+    combat: "⚔️ para usar en combate"
+
+check:
+  result: "🎲 {skill}: {roll} {bonus} = {total} vs CD {dc} · {result} {verdict}"
+  success: "Éxito"
+  failure: "Fallo"
+  already_tried: "Ya intentaste {skill} aquí hoy. Tendrás que volver mañana o cuando hayas mejorado."
+
+explore:
+  arrived: "Llegas a {place} ({yards} yd de camino)."
+  arrived_via: "Llegas a {place} por {via} ({yards} yd de camino)."
+  trip_stopped: "De camino a {dest}, a la altura de {place} ({yards} yd)..."
+  ambush: "¡Emboscada!"
+  low_hp: "⚠️ Vas con poca vida ({hp}/{max_hp}) y puede haber pelea. Cúrate antes: la hermana Ysolde, una poción o un descanso."
+  nothing_more: "Ya no queda nada que descubrir aquí."
+  found_nothing: "No encuentras nada fuera de lo común."
+  already_tried: "Ya has registrado este lugar hoy. Mañana, o cuando hayas mejorado, quizá veas algo nuevo."
+  new_route: "Has descubierto un nuevo camino."
+  hunt_day: "🏹 Rastreas la zona y das con tu presa."
+  hunt_night: "🦇 Te adentras en la oscuridad. Algo se mueve cerca."
+  hunt_boss: "🐗 La tierra tiembla. Algo enorme se abre paso entre la hierba."
+  rested: "☀️ Te levantas descansado. Recuperas todas tus fuerzas: {hp} PV y todos tus usos."
+  short_rested: "💤 Recobras el aliento."
+  healed: "🙏 La hermana Ysolde murmura una plegaria y te venda: recuperas {amount} PV ({hp}/{max_hp}). Dejas {cost} de oro en la caja de la capilla."
+  healed_injured: "✨ Su plegaria cierra también tus heridas graves: ya no estás herido."
+  err:
+    in_combat: "¡Estás en pleno combate!"
+    no_route: "No puedes ir allí desde aquí."
+    no_rest: "Aquí no hay dónde descansar."
+    no_healer: "Aquí no hay quien cure heridas."
+    injured_cap: "Las pociones no cierran heridas graves: cúrate con la hermana Ysolde o descansa en la posada."
+    no_hunting: "Aquí no hay nada que cazar."
+
+rep:
+  changed: "Reputación con {faction}: {delta} (ahora {value})."
+
+steal:
+  success: "Le quitas {gold} de oro a {npc} sin que lo note."
+  suspected: "{npc} frunce el ceño y se palpa la bolsa. Sospecha algo."
+  caught: "¡{npc} te pilla con la mano en su bolsa!"
+  err:
+    nothing: "No hay nada que robar ahí."
+
+roll:
+  prompt: "🎲 Esta acción necesita una tirada de <b>{skill}</b>. Lanza el dado con el botón."
+  warning: |-
+    ⚠️ <b>Tiradas manuales activadas.</b> El dado animado de Telegram es solo decoración: es un d6 y su número <b>no</b> es tu tirada. El motor tira un d20 (más tu bonificador contra la CD) y el resultado real sale debajo del dado.
+  "on": "activadas"
+  "off": "desactivadas"
+  changed: "🎲 Tiradas manuales {state}."
+  stale: "Esa tirada ya no tiene sentido aquí: te has movido."
+
+home:
+  title: "🏠 <b>Tu cuarto</b> · {place}"
+  none: "<i>Todavía no tienes cuarto. El Gremio de Aventureros da uno a sus socios.</i>"
+  no_bed: "🛏️ Falta la cama."
+  bed: "🛏️ Tu cama: dormir aquí no cuesta oro."
+  no_chest: "📦 Falta el cofre."
+  chest: "📦 Cofre: {used}/{capacity} huecos."
+  chest_empty: "<i>El cofre está vacío.</i>"
+  line: "{item} ×{qty} · /take_{key}"
+  bag_line: "{item} ×{qty} · /stash_{key}"
+  bag_title: "<b>En la mochila</b>"
+  furniture:
+    bed: "la cama"
+    chest: "el cofre"
+  installed_bed: "🛏️ Montas la cama. Dormir aquí ya no cuesta oro."
+  installed_chest: "📦 Montas el cofre: {capacity} huecos."
+  deposited: "📦 Guardas {item} ×{qty}. Cofre: {used}/{capacity}."
+  withdrew: "🎒 Sacas {item} ×{qty}. Cofre: {used}/{capacity}."
+  err:
+    no_chest: "No tienes cofre donde guardarlo."
+    away: "Tu cofre está en tu cuarto, no aquí."
+    full: "El cofre está lleno ({capacity} huecos)."
+    not_enough: "No llevas tanto {item}."
+    not_stored: "No tienes tanto {item} en el cofre."

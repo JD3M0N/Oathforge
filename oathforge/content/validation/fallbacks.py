@@ -29,14 +29,16 @@ def fallback_errors(c: "Content") -> list[str]:
             errors.append(f"fallbacks/{category}.yaml: unknown category")
             continue
         for key, texts in by_key.items():
+            where = f"fallbacks/{category}.yaml"
             if category == "dialogue" and key != "default":
-                need("npc", key, c.npcs, "fallbacks/dialogue.yaml")
+                need("npc", key, c.npcs, where)
+                where = f"npc '{key}' dialogue.fallback.yaml"
             if category not in ("dialogue", "chronicles") and key not in FALLBACK_KEYS[category]:
                 errors.append(f"fallbacks/{category}.yaml: unknown key '{key}'")
             for lang in ("es", "en"):
                 variants = [getattr(text, lang).strip() for text in texts]
                 if not all(variants) or len(set(variants)) < 12:
-                    errors.append(f"fallbacks/{category}.yaml {key}: need 12 distinct nonempty {lang} texts")
+                    errors.append(f"{where}: need 12 distinct nonempty {lang} texts")
             for text in texts:
                 placeholders = []
                 for lang in ("es", "en"):
@@ -44,16 +46,16 @@ def fallback_errors(c: "Content") -> list[str]:
                         fields = list(Formatter().parse(getattr(text, lang)))
                         used = {field for _, field, _, _ in fields if field is not None}
                         if any(spec or conversion for _, _, spec, conversion in fields):
-                            errors.append(f"fallbacks/{category}.yaml {key}: formatting modifiers forbidden")
+                            errors.append(f"{where}: formatting modifiers forbidden")
                     except ValueError:
-                        errors.append(f"fallbacks/{category}.yaml {key}: malformed placeholders")
+                        errors.append(f"{where}: malformed placeholders")
                         used = set()
                     placeholders.append(used)
                     if used - allowed:
-                        errors.append(f"fallbacks/{category}.yaml {key}: unknown placeholders {sorted(used - allowed)}")
+                        errors.append(f"{where}: unknown placeholders {sorted(used - allowed)}")
                 if placeholders[0] != placeholders[1]:
-                    errors.append(f"fallbacks/{category}.yaml {key}: es/en placeholders differ")
+                    errors.append(f"{where}: es/en placeholders differ")
     for npc_key in c.npcs:
         if not c.fallbacks.get("dialogue", {}).get(npc_key):
-            errors.append(f"fallbacks/dialogue.yaml: no texts for '{npc_key}'")
+            errors.append(f"fallbacks/dialogue: npc '{npc_key}' has no texts in dialogue.fallback.yaml")
     return errors

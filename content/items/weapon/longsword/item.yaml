@@ -1,0 +1,7 @@
+name: {es: Espada larga, en: Longsword}
+icon: "⚔️"
+description: {es: Acero fiable de las forjas de Crownreach., en: Reliable steel from the forges of Crownreach.}
+type: weapon
+slot: main_hand
+value: 15
+weapon: {damage: 1d8, damage_type: slashing}

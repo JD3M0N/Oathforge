@@ -1,0 +1,118 @@
+name: {es: Paladín, en: Paladin}
+description:
+  es: Combatiente de primera línea con armadura pesada, juramentos y magia sagrada.
+  en: Front-line fighter in heavy armor, bound by oaths and holy magic.
+hit_die: 10
+primary: str
+array: {str: 15, con: 14, cha: 13, wis: 12, dex: 10, int: 8}
+skills: [athletics, persuasion]
+items: {longsword: 1, chain_mail: 1, shield: 1, healing_potion: 1}
+equip: [longsword, chain_mail, shield]
+signature: [consecrated_strike]
+abilities:
+  consecrated_strike:
+    name: {es: Castigo Divino, en: Divine Smite}
+    description:
+      es: Un ataque con arma que añade 1d8 de daño radiante. Cuesta 3 de Convicción.
+      en: A weapon attack that adds 1d8 radiant damage. Costs 3 Conviction.
+    level: 1
+    kind: strike
+    extra_damage: 1d8
+    damage_type: radiant
+    details:
+      es: 'Invocas tu juramento al golpear y el arma arde con luz sagrada. Es tu ataque normal con el arma, pero si acierta suma 1d8 de daño radiante, que hace el doble a los no muertos que temen la luz. La Convicción crece cumpliendo tu juramento en combate: golpea para ganarla y gástala donde importa.'
+      en: 'You call on your oath as you strike and the weapon burns with holy light. It is your normal weapon attack, but on a hit it adds 1d8 radiant damage, which hits twice as hard on undead that fear the light. Conviction grows as you keep your oath in battle: strike to earn it and spend it where it matters.'
+    cost: 3
+  lay_on_hands:
+    name: {es: Imposición de Manos, en: Lay on Hands}
+    description:
+      es: 'Acción adicional: recuperas 5 PV por nivel. Cuesta 4 de Convicción.'
+      en: 'Bonus action: recover 5 HP per level. Costs 4 Conviction.'
+    level: 2
+    kind: heal
+    action: bonus
+    heal_per_level: 5
+    details:
+      es: Posas las manos sobre tus heridas y el juramento las cierra. Como es una acción adicional, puedes curarte y atacar en el mismo turno. A nivel 2 recuperas 10 PV; a nivel 5, 25. Gasta Convicción y tarda unos turnos en volver a estar lista.
+      en: You lay your hands on your wounds and your oath closes them. As a bonus action, you can heal and attack in the same turn. At level 2 you recover 10 HP; at level 5, 25. It spends Conviction and takes a few turns to be ready again.
+    cost: 4
+    cooldown: 3
+  aura_of_resolve:
+    name: {es: Aura de Resolución, en: Aura of Resolve}
+    description: {es: +1 a la CA e inmunidad al miedo., en: +1 AC and immunity to fear.}
+    level: 3
+    kind: passive
+    action: none
+    ac_bonus: 1
+    immune: [frightened]
+    details:
+      es: Tu fe es una muralla. Siempre activa, sin gastar acciones, te da +1 a la CA y hace que el miedo no te afecte, ni el de los gritos de un espectro ni el de un conjuro.
+      en: Your faith is a wall. Always on, with no action needed, it gives you +1 AC and makes you immune to fear, whether from a spectre's wail or a spell.
+  divine_favor:
+    name: {es: Favor Divino, en: Divine Favor}
+    description:
+      es: 'Acción adicional: ganas bendición 3 turnos. Cuesta 3 de Convicción.'
+      en: 'Bonus action: you gain a blessing for 3 turns. Costs 3 Conviction.'
+    details:
+      es: Pides a tu fe un empujón y te lo da. Como acción adicional ganas +2 a atacar durante 3 turnos, y puedes seguir golpeando en el mismo turno.
+      en: You ask your faith for a push and it gives it. As a bonus action you gain +2 to attack for 3 turns, and you can keep striking the same turn.
+    level: 4
+    kind: buff
+    action: bonus
+    cost: 3
+    cooldown: 3
+    status: blessed
+    status_turns: 3
+  extra_attack:
+    name: {es: Ataque Extra, en: Extra Attack}
+    description: {es: Atacas dos veces con tu acción de ataque., en: You attack twice with your attack action.}
+    details:
+      es: 'Años de juramento y entrenamiento hacen que tu brazo no descanse. Cuando atacas con el arma, golpeas dos veces en la misma acción, cada golpe con su tirada. Combínalo con Golpe Consagrado: el daño radiante se suma al golpe que acierte.'
+      en: 'Years of oath and training keep your arm from resting. When you attack with your weapon, you strike twice in the same action, each with its own roll. Pair it with Consecrated Strike: the radiant damage joins the blow that lands.'
+    level: 5
+    kind: passive
+    action: none
+    extra_attack: true
+  holy_wrath:
+    name: {es: Cólera Sagrada, en: Holy Wrath}
+    description:
+      es: Un ataque con arma que añade 2d8 de daño radiante. Cuesta 6 de Convicción.
+      en: A weapon attack that adds 2d8 radiant damage. Costs 6 Conviction.
+    details:
+      es: Tu castigo, llevado al límite. Sirve para cuando el rival ya no es un estorbo sino la razón de la pelea.
+      en: Your smite, pushed to the limit. It is for when the foe is no longer a nuisance but the reason for the fight.
+    level: 6
+    kind: strike
+    cost: 6
+    cooldown: 2
+    extra_damage: 2d8
+    damage_type: radiant
+  cleansing_light:
+    name: {es: Luz Purificadora, en: Cleansing Light}
+    description:
+      es: Los no muertos reciben 2d8 radiante y quedan aturdidos 1 turno. Cuesta 6 de Convicción.
+      en: Undead take 2d8 radiant and are stunned for 1 turn. Costs 6 Conviction.
+    details:
+      es: Alzas tu símbolo y la luz quema lo que no debería caminar. Solo afecta a los no muertos, pero a todos a la vez.
+      en: You raise your symbol and the light burns what should not walk. It only affects the undead, but all of them at once.
+    level: 8
+    kind: turn
+    cost: 6
+    cooldown: 3
+    damage: 2d8
+    damage_type: radiant
+    status: stunned
+    targets_type: undead
+  sacred_vow:
+    name: {es: Voto Sagrado, en: Sacred Vow}
+    description: {es: +1 a la CA., en: +1 AC.}
+    details:
+      es: Un juramento cumplido te protege más que una armadura. Siempre tienes +1 a la CA, sin hacer nada.
+      en: A kept oath protects you better than armor. You always have +1 AC, with no action needed.
+    level: 9
+    kind: passive
+    action: none
+    ac_bonus: 1
+resource: conviction
+resource_on_attack: 1
+order: 3

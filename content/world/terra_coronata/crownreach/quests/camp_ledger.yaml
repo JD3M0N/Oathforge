@@ -1,0 +1,53 @@
+order: 45
+giver: tamsin
+after: camp_supplies
+name: {es: "Volver también es vencer", en: "Coming Back Is Winning Too"}
+summary:
+  es: "En un peaje abandonado del camino hay un libro de cargas. Cogerlo es fácil; salir con él, no."
+  en: "In an abandoned toll post on the road there is a ledger. Taking it is easy; getting out with it is not."
+hint:
+  es: "Ve al Puesto de Peaje Abandonado (Camino del Viejo Rey) y coge el libro. Los guardias te verán: sal del combate con una bomba de humo y cúrate con Ysolde."
+  en: "Go to the Abandoned Toll Post (Old King's Road) and take the ledger. The guards will see you: leave the fight with a smoke bomb and get healed by Ysolde."
+start_stage: locked
+unlock_stage: active
+objective_stage: escape
+complete_stage: done
+objectives:
+  - {kind: smoke, target: any}
+  - {kind: heal, target: any}
+rewards:
+  - {xp: 300}
+actions:
+  take_ledger:
+    label: {es: "📒 Coger el libro de cargas", en: "📒 Take the ledger"}
+    location: toll_post
+    stages: [active]
+    to_stage: escape
+    text:
+      es: "Entre las tablas de una garita encuentras un libro con las cargas del peaje, y los nombres que faltan en el del gremio. Lo escondes bajo la capa justo cuando una voz grita: «¡Ahí hay alguien!»"
+      en: "Between the planks of a guardhouse you find a ledger with the toll loads, and the names missing from the guild’s. You hide it under your cloak just as a voice shouts: \"Someone is there!\""
+    effects:
+      - {give_item: {toll_ledger: 1}}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Tamsin tiene un destino en mente."
+      en: "Tamsin has a destination in mind."
+  active:
+    journal:
+      es: "Ve al Puesto de Peaje Abandonado y coge el libro de cargas."
+      en: "Go to the Abandoned Toll Post and take the ledger."
+    location_text:
+      toll_post:
+        es: "Una garita de tablas y una barrera rota. Hay huellas de carros y de botas nuevas: el sitio no está tan abandonado como parece. 📒 Hay un libro entre las tablas."
+        en: "A plank guardhouse and a broken barrier. There are cart tracks and fresh boot prints: the place is not as abandoned as it looks. 📒 There is a ledger among the planks."
+  escape:
+    journal:
+      es: "Los guardias del peaje te han visto. Sal del combate con una bomba de humo y cúrate: Ysolde te espera en la Capilla del Alba."
+      en: "The toll guards have seen you. Leave the fight with a smoke bomb and get healed: Ysolde waits at the Chapel of the Dawn."
+  done:
+    state: completed
+    journal:
+      es: "Volviste con el libro y con el aliento. Tamsin lo abre y, por primera vez, sonríe de verdad: «Los nombres que faltan»."
+      en: "You came back with the ledger and your breath. Tamsin opens it and, for the first time, truly smiles: \"The missing names.\""

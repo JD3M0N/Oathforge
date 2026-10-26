@@ -1,0 +1,67 @@
+order: 46
+giver: tamsin
+after: camp_ledger
+name: {es: "La mesa de Tamsin", en: "Tamsin’s Table"}
+summary:
+  es: "Con el libro en la mano, Tamsin extiende sus mapas y te pide ayuda para atar tres cabos."
+  en: "With the ledger in hand, Tamsin spreads her maps and asks for help tying up three loose ends."
+hint:
+  es: "Habla con Tamsin (Gremio de día, taberna de noche) y examina tres pistas: el sello, la letra y la ruta."
+  en: "Talk to Tamsin (Guild by day, tavern by night) and examine three clues: the seal, the handwriting and the route."
+start_stage: locked
+unlock_stage: active
+actions:
+  seal:
+    label: {es: "🔍 Comparar el sello", en: "🔍 Compare the seal"}
+    npc: tamsin
+    stages: [active]
+    to_stage: hand
+    text:
+      es: "El sello de la orden es auténtico… y robado. Es el que usaba Vale hace dos años, antes de renovarlo. Quien firma tiene acceso al viejo cuño."
+      en: "The order’s seal is genuine… and stolen. It is the one Vale used two years ago, before it was replaced. Whoever signs has access to the old die."
+    effects:
+      - {xp: 30}
+  hand:
+    label: {es: "🔍 Comparar la letra", en: "🔍 Compare the handwriting"}
+    npc: tamsin
+    stages: [hand]
+    to_stage: route
+    text:
+      es: "La letra del libro de cargas es de una mano que firma «el Recaudador», sin nombre. Cobra peaje a los carros del gremio, y a cambio los deja pasar con otra carga."
+      en: "The ledger’s handwriting belongs to a hand that signs “the Collector”, with no name. They charge the guild carts a toll, and in return let them through with a different load."
+    effects:
+      - {xp: 30}
+  route:
+    label: {es: "🔍 Seguir la ruta de los carros", en: "🔍 Follow the carts’ route"}
+    npc: tamsin
+    stages: [route]
+    to_stage: done
+    text:
+      es: "Todas las rutas acaban en el mismo peaje. «Ahí está», dice Tamsin, y marca el sitio con el dedo. «Vamos a cobrarle lo que nos debe.»"
+      en: "Every route ends at the same toll post. \"There,\" says Tamsin, marking the spot with her finger. \"Let us collect what he owes us.\""
+    effects:
+      - {xp: 40}
+      - {set_flag: collector_hunt}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Tamsin aún no ha abierto el libro."
+      en: "Tamsin has not opened the ledger yet."
+  active:
+    journal:
+      es: "Examina con Tamsin el sello del libro de cargas."
+      en: "Examine the ledger’s seal with Tamsin."
+  hand:
+    journal:
+      es: "Compara con Tamsin la letra del libro."
+      en: "Compare the ledger’s handwriting with Tamsin."
+  route:
+    journal:
+      es: "Sigue con Tamsin la ruta de los carros en el mapa."
+      en: "Follow the carts’ route on the map with Tamsin."
+  done:
+    state: completed
+    journal:
+      es: "Tres cabos atados: sello robado, un cobrador sin nombre y un peaje en el camino. Falta ir a por él."
+      en: "Three loose ends tied: a stolen seal, a nameless collector and a toll post on the road. All that remains is going after them."

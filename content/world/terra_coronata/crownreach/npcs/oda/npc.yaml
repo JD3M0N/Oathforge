@@ -1,0 +1,19 @@
+name: {es: Oda, en: Oda}
+title: {es: maestra curtidora, en: master tanner}
+schedule: {day: tannery_stall, night: broken_crown_tavern}
+greeting:
+  es: "«Respira por la boca, se acostumbra uno. Trae pieles y te enseño a sacarles provecho.»"
+  en: "\"Breathe through your mouth, you get used to it. Bring hides and I'll teach you to make them worth something.\""
+persona: >-
+  Oda is a wiry, loud tanner with forearms stained to the elbow. Jokes about the smell before anyone else can,
+  and judges a hunter entirely by how they skin their kill.
+goals: Buy the vat next door and stop renting it; train someone who skins properly.
+secrets: She knows which Guard sergeant sells confiscated pelts, and says nothing.
+knowledge: >-
+  Hides come from skinning what you hunt; they are cured at the guild's curing rack before anyone works them.
+  She makes straps, cases and light armour, and teaches leatherworking at the tannery.
+passive_perception: 12
+shop:
+  items: [treated_leather]
+  buys: true
+order: 9

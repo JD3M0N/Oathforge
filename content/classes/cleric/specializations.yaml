@@ -1,0 +1,298 @@
+life_domain:
+  class_key: cleric
+  name: {es: Dominio de la Vida, en: Life Domain}
+  description:
+    es: Mantienes bendiciones y eliges entre recuperación inmediata o sostenida. Tus ataques devocionales preparan la siguiente curación.
+    en: You keep blessings up and choose between immediate or sustained recovery. Your devotional attacks set up the next healing.
+  roles: [heal, deff]
+  ready: true
+  abilities:
+    life_blessing:
+      name: {es: Bendición de Vida, en: Life Blessing}
+      description: {es: +1 a la CA., en: +1 AC.}
+      level: 10
+      kind: passive
+      action: none
+      ac_bonus: 1
+    radiant_mending:
+      name: {es: Curación Radiante, en: Radiant Mending}
+      description:
+        es: 'Acción adicional: recuperas 3d8 + tu modificador de conjuro en PV.'
+        en: 'Bonus action: recover 3d8 + your spellcasting modifier in HP.'
+      level: 10
+      kind: heal
+      action: bonus
+      cost: 3
+      cooldown: 1
+      heal_dice: 3d8
+      heal_add: casting
+    lifes_embrace:
+      name: {es: Abrazo de Vida, en: Life's Embrace}
+      description:
+        es: Recuperas 6d8 + tu modificador de conjuro en PV y dejas una barrera de 3d8 PV temporales.
+        en: You recover 6d8 + your spellcasting modifier in HP and leave a barrier of 3d8 temporary HP.
+      level: 10
+      kind: heal
+      cost: 8
+      cooldown: 2
+      heal_dice: 6d8
+      heal_add: casting
+      temp_hp: 3d8
+    devotional_ray:
+      name: {es: Rayo Devoto, en: Devotional Ray}
+      description:
+        es: 'Ataque de conjuro a distancia: 3d8 radiante, y te cura el 40 % del daño que hace.'
+        en: 'Ranged spell attack: 3d8 radiant, and it heals you for 40% of the damage it deals.'
+      level: 10
+      kind: spell
+      cost: 3
+      damage: 3d8
+      damage_type: radiant
+      leech_pct: 40
+    blessed_vitality:
+      name: {es: Vitalidad Bendita, en: Blessed Vitality}
+      description:
+        es: El primer golpe que recibes cada ronda hace la mitad de daño.
+        en: The first blow you take each round does half damage.
+      level: 15
+      kind: passive
+      action: none
+      halve_first_hit: true
+    sanctuary_of_life:
+      name: {es: Santuario de Vida, en: Sanctuary of Life}
+      description:
+        es: Recuperas 14d8 + tu modificador de conjuro en PV y dejas una barrera de 10d8 PV temporales.
+        en: You recover 14d8 + your spellcasting modifier in HP and leave a barrier of 10d8 temporary HP.
+      level: 20
+      kind: heal
+      cost: 30
+      cooldown: 5
+      heal_dice: 14d8
+      heal_add: casting
+      temp_hp: 10d8
+  modifiers:
+    swift_mending:
+      level: 13
+      name: {es: Curación Veloz, en: Swift Mending}
+      description: {es: La Curación radiante cuesta 2 menos., en: Radiant Mending costs 2 less.}
+      patches:
+        radiant_mending:
+          cost: -2
+    richer_embrace:
+      level: 13
+      name: {es: Abrazo Más Rico, en: Richer Embrace}
+      description: {es: El Abrazo de vida deja una barrera de 6d8 en lugar de 3d8., en: Life's Embrace leaves a 6d8 barrier instead of 3d8.}
+      patches:
+        lifes_embrace:
+          temp_hp: 6d8
+    devout_leech:
+      level: 17
+      name: {es: Devoción Que Cura, en: Healing Devotion}
+      description:
+        es: El Rayo devoto te cura el 70 % del daño en lugar del 40 %.
+        en: Devotional Ray heals 70% of the damage instead of 40%.
+      patches:
+        devotional_ray:
+          leech_pct: 70
+    vaster_sanctuary:
+      level: 17
+      name: {es: Santuario Más Vasto, en: Vaster Sanctuary}
+      description: {es: El Santuario de Vida cura 18d8 en lugar de 14d8., en: Sanctuary of Life heals 18d8 instead of 14d8.}
+      patches:
+        sanctuary_of_life:
+          heal_dice: 18d8
+
+light_domain:
+  class_key: cleric
+  name: {es: Dominio de la Luz, en: Light Domain}
+  description:
+    es: Acumulas fulgor para quemar, revelar o desorientar, y alternas entre concentrarlo en uno y repartirlo.
+    en: You gather radiance to burn, reveal or dazzle, alternating between concentrating it on one and spreading it.
+  roles: [dmg, control]
+  ready: true
+  abilities:
+    radiant_mastery:
+      name: {es: Maestría Radiante, en: Radiant Mastery}
+      description: {es: Tus conjuros suman tu modificador de conjuro al daño., en: Your spells add your spellcasting modifier to damage.}
+      level: 10
+      kind: passive
+      action: none
+      spell_damage_bonus: true
+    blinding_light:
+      name: {es: Luz Cegadora, en: Blinding Light}
+      description:
+        es: 'Toda la fila tira SAB: 2d8 radiante y queda deslumbrada (miedo) 2 turnos si falla.'
+        en: 'The whole row rolls a WIS save: 2d8 radiant and dazzled (frightened) for 2 turns on a fail.'
+      level: 10
+      kind: save
+      cost: 8
+      cooldown: 2
+      damage: 2d8
+      damage_type: radiant
+      save: wis
+      area: row
+      status: frightened
+      status_turns: 2
+    searing_light:
+      name: {es: Luz Abrasadora, en: Searing Light}
+      description:
+        es: 'Ataque de conjuro a distancia: 4d8 radiante. Si el objetivo está deslumbrado, gasta eso por otros 4d8.'
+        en: 'Ranged spell attack: 4d8 radiant. If the target is dazzled, it spends that for another 4d8.'
+      level: 10
+      kind: spell
+      cost: 9
+      cooldown: 1
+      damage: 4d8
+      damage_type: radiant
+      consumes: frightened
+      consume_damage: 4d8
+    purifying_flame:
+      name: {es: Llama Purificadora, en: Purifying Flame}
+      description:
+        es: 'Toda la fila tira DES: 5d8 radiante, la mitad si la supera.'
+        en: 'The whole row rolls a DEX save: 5d8 radiant, half on a success.'
+      level: 15
+      kind: save
+      cost: 14
+      cooldown: 3
+      damage: 5d8
+      damage_type: radiant
+      save: dex
+      area: row
+      half_on_save: true
+    radiant_dawn:
+      name: {es: Amanecer Radiante, en: Radiant Dawn}
+      description:
+        es: 'Toda la fila tira DES: 10d8 radiante, la mitad si la supera, y deslumbrada 3 turnos si falla.'
+        en: 'The whole row rolls a DEX save: 10d8 radiant, half on a success, and dazzled for 3 turns on a fail.'
+      level: 20
+      kind: save
+      cost: 34
+      cooldown: 5
+      damage: 10d8
+      damage_type: radiant
+      save: dex
+      area: row
+      half_on_save: true
+      status: frightened
+      status_turns: 3
+  modifiers:
+    longer_dazzle:
+      level: 13
+      name: {es: Deslumbre Largo, en: Long Dazzle}
+      description: {es: La Luz cegadora deslumbra 2 turnos más., en: Blinding Light dazzles for 2 turns longer.}
+      patches:
+        blinding_light:
+          status_turns: 2
+    hotter_light:
+      level: 13
+      name: {es: Luz Más Ardiente, en: Hotter Light}
+      description:
+        es: La Luz abrasadora hace 7d8 en lugar de 4d8 al gastar el deslumbre.
+        en: Searing Light deals 7d8 instead of 4d8 when it spends the dazzle.
+      patches:
+        searing_light:
+          consume_damage: 7d8
+    cheap_flame:
+      level: 17
+      name: {es: Llama Económica, en: Cheap Flame}
+      description: {es: La Llama purificadora cuesta 4 menos., en: Purifying Flame costs 4 less.}
+      patches:
+        purifying_flame:
+          cost: -4
+    brighter_dawn:
+      level: 17
+      name: {es: Amanecer Más Brillante, en: Brighter Dawn}
+      description: {es: El Amanecer radiante hace 12d8 en lugar de 10d8., en: Radiant Dawn deals 12d8 instead of 10d8.}
+      patches:
+        radiant_dawn:
+          damage: 12d8
+
+war_domain:
+  class_key: cleric
+  name: {es: Dominio de la Guerra, en: War Domain}
+  description:
+    es: Arma y plegaria se preparan la una a la otra. Combate ritual, distinto de la Convicción del Paladín.
+    en: Weapon and prayer set each other up. Ritual warfare, a different thing from the Paladin's Conviction.
+  roles: [dmg, deff]
+  ready: true
+  abilities:
+    war_priest:
+      name: {es: Sacerdote de Guerra, en: War Priest}
+      description:
+        es: Una vez por turno, tu golpe con arma suma 1d8 radiante, tienes +1 a la CA y cada golpe que te hiere de verdad te da 2 de recurso.
+        en: Once per turn, your weapon hit adds 1d8 radiant, you have +1 AC and every blow that really hurts you gives 2 resource.
+      level: 10
+      kind: passive
+      action: none
+      bonus_damage: 1d8
+      bonus_damage_type: radiant
+      ac_bonus: 1
+      resource_on_hurt: 2
+    war_prayer:
+      name: {es: Plegaria de Guerra, en: War Prayer}
+      description:
+        es: 'Acción adicional: ganas bendición 3 turnos y 2d8 PV temporales.'
+        en: 'Bonus action: you gain a blessing for 3 turns and 2d8 temporary HP.'
+      level: 10
+      kind: buff
+      action: bonus
+      cost: 3
+      cooldown: 3
+      status: blessed
+      status_turns: 3
+      temp_hp: 2d8
+    smiting_blow:
+      name: {es: Golpe Sagrado, en: Smiting Blow}
+      description: {es: Un ataque con arma que añade 3d8 de daño radiante., en: A weapon attack that adds 3d8 radiant damage.}
+      level: 10
+      kind: strike
+      cost: 5
+      cooldown: 1
+      extra_damage: 3d8
+      damage_type: radiant
+    battle_blessing:
+      name: {es: Bendición de Batalla, en: Battle Blessing}
+      description: {es: Haces crítico con un 19 o un 20., en: You score a critical hit on a 19 or 20.}
+      level: 15
+      kind: passive
+      action: none
+      crit_range: 19
+    liturgy_of_war:
+      name: {es: Liturgia de Guerra, en: Liturgy of War}
+      description: {es: Un ataque con arma que añade 9d8 de daño radiante., en: A weapon attack that adds 9d8 radiant damage.}
+      level: 20
+      kind: strike
+      cost: 28
+      cooldown: 4
+      extra_damage: 9d8
+      damage_type: radiant
+  modifiers:
+    longer_prayer:
+      level: 13
+      name: {es: Plegaria Larga, en: Long Prayer}
+      description: {es: La Plegaria de guerra dura 2 turnos más., en: War Prayer lasts 2 turns longer.}
+      patches:
+        war_prayer:
+          status_turns: 2
+    heavier_blow:
+      level: 13
+      name: {es: Golpe Más Pesado, en: Heavier Blow}
+      description: {es: El Golpe sagrado añade 5d8 en lugar de 3d8., en: Smiting Blow adds 5d8 instead of 3d8.}
+      patches:
+        smiting_blow:
+          extra_damage: 5d8
+    cheap_prayer:
+      level: 17
+      name: {es: Plegaria Barata, en: Cheap Prayer}
+      description: {es: La Plegaria de guerra cuesta 2 menos., en: War Prayer costs 2 less.}
+      patches:
+        war_prayer:
+          cost: -2
+    grander_liturgy:
+      level: 17
+      name: {es: Liturgia Mayor, en: Grander Liturgy}
+      description: {es: La Liturgia de guerra añade 11d8 en lugar de 9d8., en: Liturgy of War adds 11d8 instead of 9d8.}
+      patches:
+        liturgy_of_war:
+          extra_damage: 11d8

@@ -1,0 +1,38 @@
+order: 67
+giver: iwen
+after: reg_glass
+name: {es: "Los centinelas del taller", en: "The Workshop's Sentinels"}
+summary:
+  es: "Las balizas se encendían con núcleos de los centinelas del Taller del Regulador. Iwen necesita tres."
+  en: "The beacons were lit with cores from the Regulator Workshop's sentinels. Iwen needs three."
+hint:
+  es: "Ve al Taller del Regulador y derrota a tres centinelas: cada uno suelta un núcleo de regulador. Cuando apunten (el panel te avisa), defiéndete; cuando recarguen, golpea."
+  en: "Go to the Regulator Workshop and defeat three sentinels: each drops a regulator core. When they aim (the panel warns you), defend; when they reload, strike."
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: visit, target: regulator_workshop}
+  - {kind: kill, target: regulator_sentinel, count: 3}
+rewards:
+  - {xp: 2250}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Iwen enseña el hueco vacío de una baliza."
+      en: "Iwen shows the empty socket of a beacon."
+  active:
+    journal:
+      es: "Taller del Regulador: tres núcleos de regulador, de los centinelas."
+      en: "Regulator Workshop: three regulator cores, from the sentinels."
+    location_text:
+      regulator_workshop:
+        es: "Engranajes del tamaño de carretas parados a medio giro. Algo zumba al fondo de la nave."
+        en: "Gears the size of carts stopped mid-turn. Something hums at the far end of the hall."
+  done:
+    state: completed
+    journal:
+      es: "Tienes tres núcleos tibios en la mochila. Iwen los guarda en un paño sin tocarlos."
+      en: "You have three warm cores in your pack. Iwen wraps them in a cloth without touching them."

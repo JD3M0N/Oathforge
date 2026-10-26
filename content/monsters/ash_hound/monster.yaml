@@ -1,0 +1,19 @@
+name: {es: "Sabueso de ceniza", en: "Ash hound"}
+indefinite: {es: "sabueso de ceniza", en: "ash hound"}
+icon: 🐩
+description: {es: "Perro de guardia de los peajes, entrenado para seguir el olor del hierro. Muerde y se retira.", en: "A toll-post guard dog trained to follow the smell of iron. It bites and backs off."}
+hp: 34
+ac: 13
+dex: 1
+wis: 1
+row: front
+attacks:
+  - {name: {es: "Mordisco", en: "Bite"}, to_hit: 6, damage: 1d8+3, damage_type: piercing}
+xp: 90
+gold: "0"
+type: beast
+habitat: {es: "Puesto de Peaje Abandonado", en: "Abandoned Toll Post"}
+lore:
+  es: "Perro de guardia de los peajes, entrenado para seguir el olor del hierro. Muerde y se retira."
+  en: "A toll-post guard dog trained to follow the smell of iron. It bites and backs off."
+order: 23

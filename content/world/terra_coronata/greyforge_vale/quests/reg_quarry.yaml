@@ -1,0 +1,35 @@
+order: 62
+giver: kellan
+after: reg_cargo
+name: {es: "Lo que se mueve en la cantera", en: "What Moves in the Quarry"}
+summary:
+  es: "Algo arrastra la veta por la cantera sin que nadie lo mande. Kellan quiere saber si aún hay cargas dentro."
+  en: "Something drags the seam through the quarry with nobody commanding it. Kellan wants to know if there is still cargo inside."
+hint:
+  es: "Ve a la Cantera de Ceniza, destruye tres reptantes de cantera y recoge seis de carbón (⚒ Actividades → ⛏️ Minar)."
+  en: "Go to Ash Quarry, destroy three quarry crawlers and gather six coal (⚒ Activities → ⛏️ Mine)."
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: visit, target: ash_quarry}
+  - {kind: kill, target: quarry_crawler, count: 3}
+  - {kind: gather, target: coal, count: 6}
+rewards:
+  - {xp: 750}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Kellan señala la cantera con el lápiz."
+      en: "Kellan points at the quarry with his pencil."
+  active:
+    journal:
+      es: "Cantera de Ceniza: tres reptantes destruidos y seis de carbón."
+      en: "Ash Quarry: three crawlers destroyed and six coal."
+  done:
+    state: completed
+    journal:
+      es: "Los reptantes dejaron de arrastrar. En el hueco que dejaron hay cajas selladas con el viejo sello del gremio."
+      en: "The crawlers stopped dragging. In the hollow they left there are crates sealed with the guild's old seal."

@@ -1,0 +1,7 @@
+name: {es: Jubón acolchado, en: Padded jerkin}
+icon: "🛡️"
+description: {es: "Capas de tela cosidas y rellenas: estorba poco y detiene algo.", en: "Layers of stitched, padded cloth: light to wear and it stops something."}
+type: armor
+slot: body
+base_ac: 11
+value: 30

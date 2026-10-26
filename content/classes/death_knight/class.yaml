@@ -1,0 +1,131 @@
+name: {es: Caballero de la Muerte, en: Death Knight}
+description:
+  es: 'Guerrero atado a runas de muerte y escarcha: sus golpes cargan el poder que luego descarga.'
+  en: 'A warrior bound to runes of death and frost: his blows charge the power he later unleashes.'
+hit_die: 10
+primary: str
+array: {str: 15, con: 14, cha: 13, wis: 12, dex: 10, int: 8}
+skills: [athletics, intimidation]
+items: {longsword: 1, chain_mail: 1, healing_potion: 1}
+equip: [longsword, chain_mail]
+signature: [death_strike]
+resource: runic_power
+resource_on_attack: 2
+abilities:
+  death_strike:
+    name: {es: Golpe de Muerte, en: Death Strike}
+    description:
+      es: Un ataque con arma que añade 1d8 de daño necrótico. Cuesta 3 de Poder rúnico.
+      en: A weapon attack that adds 1d8 necrotic damage. Costs 3 Runic Power.
+    details:
+      es: Las runas de tu hoja beben vida con cada golpe. Es tu ataque normal, pero si acierta suma 1d8 de daño necrótico. Tus golpes cargan el Poder rúnico; este lo descarga.
+      en: The runes on your blade drink life with every blow. It is your normal attack, but on a hit it adds 1d8 necrotic damage. Your blows charge Runic Power; this one discharges it.
+    level: 1
+    kind: strike
+    cost: 3
+    extra_damage: 1d8
+    damage_type: necrotic
+  rune_ward:
+    name: {es: Runa Protectora, en: Rune Ward}
+    description: {es: +1 a la CA., en: +1 AC.}
+    details:
+      es: Una runa grabada en tu armadura la vuelve más dura de lo que debería. Siempre tienes +1 a la CA, sin hacer nada.
+      en: A rune carved on your armor makes it harder than it should be. You always have +1 AC, with no action needed.
+    level: 1
+    kind: passive
+    action: none
+    ac_bonus: 1
+  blood_tap:
+    name: {es: Sorber Vitalidad, en: Blood Tap}
+    description:
+      es: 'Acción adicional: recuperas 1d10 + tu nivel en PV. Cuesta 4 de Poder rúnico.'
+      en: 'Bonus action: recover 1d10 + your level in HP. Costs 4 Runic Power.'
+    details:
+      es: Tomas para ti la vitalidad que tu hoja ha ido bebiendo. Como es una acción adicional, curas y sigues golpeando.
+      en: You take for yourself the vitality your blade has been drinking. As a bonus action you heal and keep striking.
+    level: 2
+    kind: heal
+    action: bonus
+    cost: 4
+    cooldown: 2
+    heal_dice: 1d10
+    heal_add: level
+  frost_chains:
+    name: {es: Cadenas de Escarcha, en: Frost Chains}
+    description:
+      es: 'El objetivo tira DES: si falla, recibe 1d6 de frío y queda enredado 2 turnos. Cuesta 4 de Poder rúnico.'
+      en: 'The target rolls a DEX save: on a fail it takes 1d6 cold and is restrained for 2 turns. Costs 4 Runic Power.'
+    details:
+      es: Cadenas de hielo salen de tu hoja y atan al rival al suelo. Daño pequeño, pero un enemigo trabado es un enemigo al que le acierta cualquiera.
+      en: Chains of ice leap from your blade and bind the foe to the ground. Small damage, but a bound enemy is one anyone can hit.
+    level: 3
+    kind: save
+    cost: 4
+    cooldown: 3
+    damage: 1d6
+    damage_type: cold
+    save: dex
+    status: restrained
+    status_turns: 2
+  rune_blade:
+    name: {es: Hoja Rúnica, en: Rune Blade}
+    description: {es: Atacas dos veces con tu acción de ataque., en: You attack twice with your attack action.}
+    details:
+      es: 'Las runas aceleran tu brazo: golpeas dos veces en la misma acción, cada golpe con su tirada, y cada golpe carga tu Poder rúnico.'
+      en: 'The runes quicken your arm: you strike twice in the same action, each blow with its own roll, and each blow charges your Runic Power.'
+    level: 5
+    kind: passive
+    action: none
+    extra_attack: true
+  obliterate:
+    name: {es: Aniquilar, en: Obliterate}
+    description:
+      es: Un ataque con arma que añade 2d8 de daño de frío. Cuesta 6 de Poder rúnico.
+      en: A weapon attack that adds 2d8 cold damage. Costs 6 Runic Power.
+    details:
+      es: 'Tu golpe más frío: la escarcha de la runa estalla al impactar. Pide unos turnos para volver a cargarse.'
+      en: 'Your coldest blow: the rune''s frost bursts on impact. It asks a few turns to charge again.'
+    level: 6
+    kind: strike
+    cost: 6
+    cooldown: 2
+    extra_damage: 2d8
+    damage_type: cold
+  unholy_will:
+    name: {es: Voluntad Impía, en: Unholy Will}
+    description: {es: Eres inmune al miedo., en: You are immune to fear.}
+    details:
+      es: Lo que te ata a las runas ya no conoce el miedo. Siempre activa, sin gastar acciones.
+      en: What binds you to the runes no longer knows fear. Always on, with no action needed.
+    level: 7
+    kind: passive
+    action: none
+    immune: [frightened]
+  merciless:
+    name: {es: Despiadado, en: Merciless}
+    description: {es: Haces crítico con un 19 o un 20., en: You score a critical hit on a 19 or 20.}
+    details:
+      es: No dudas, no sueltas, no fallas por piedad. Tus golpes son críticos también con un 19 natural.
+      en: You do not hesitate, do not let go, do not miss out of mercy. Your blows are critical on a natural 19 too.
+    level: 8
+    kind: passive
+    action: none
+    crit_range: 19
+  howling_blast:
+    name: {es: Ráfaga Aullante, en: Howling Blast}
+    description:
+      es: 'Toda la fila tira DES: 4d6 de frío, la mitad si la supera. Cuesta 10 de Poder rúnico.'
+      en: 'The whole row rolls a DEX save: 4d6 cold, half on a success. Costs 10 Runic Power.'
+    details:
+      es: Todo el Poder rúnico que has ido cargando sale de golpe en una ráfaga helada sobre la fila. Es lo mayor que puedes soltar.
+      en: All the Runic Power you have charged leaves at once in an icy blast over the row. It is the most you can release.
+    level: 9
+    kind: save
+    cost: 10
+    cooldown: 3
+    damage: 4d6
+    damage_type: cold
+    save: dex
+    area: row
+    half_on_save: true
+order: 14

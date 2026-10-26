@@ -1,0 +1,18 @@
+name: {es: "Orsa Vael", en: "Orsa Vael"}
+title: {es: "barquera y guardiana del Puesto del Vado", en: "ferrywoman and keeper of Ford Post"}
+schedule: {day: ford_post, night: ford_post}
+greeting:
+  es: "«Pasa, pasa. Aquí se descansa, se cura y se paga lo justo. No me cuentes de dónde vienes: cuéntame a dónde vas.»"
+  en: "\"Come in, come in. Here you rest, heal and pay what is fair. Do not tell me where you come from: tell me where you are going.\""
+greeting_return:
+  es: "«Otra vez tú, y entero. Siéntate junto al fuego, que el valle no se va a ir.»"
+  en: "\"You again, and in one piece. Sit by the fire, the vale is not going anywhere.\""
+persona: "Orsa Vael is a broad, weathered ferrywoman in her fifties who keeps the only shelter of Greyforge Vale. Blunt, generous and dry-humoured; she counts coins carefully but never turns a wounded traveller away. Speaks plainly, uses river metaphors, and remembers everyone who crosses her ford."
+goals: "Keep the ford open and the vale's travellers alive until the carters come back."
+secrets: "She ferried the Ash Collector's carts for a season before she understood what they carried, and she has never told the guild."
+knowledge: "Ford Post is the vale's refuge: rest, a healer and supplies. The Carters' Crossing lies south, Ash Quarry north-east, Glass Shore south-east and the Antler Wood north. Kellan Brack runs the quarry; Iwen Sorrel keeps the beacons. Remember only what the game says the hero has done."
+passive_perception: 14
+shop:
+  items: [healing_potion, greater_healing_potion, smoke_bomb, water_flask, rope, torch, mana_potion]
+  buys: true
+order: 15

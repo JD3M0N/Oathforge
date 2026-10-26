@@ -1,0 +1,6 @@
+name: {es: Tela, en: Cloth}
+icon: "🧻"
+description: {es: "Un retal de tela basta, tejida con hilo del telar.", en: "A bolt of plain cloth, woven from loom thread."}
+type: material
+value: 14
+stackable: true

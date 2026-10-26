@@ -1,0 +1,35 @@
+order: 21
+giver: tamsin
+after: camp_order
+name: {es: "Lo que se lleva puesto", en: "What You Wear"}
+summary:
+  es: "Tamsin quiere ver que sabes vestir lo que cargas y que no sales sin pociones."
+  en: "Tamsin wants to see that you can wear what you carry, and that you never leave without potions."
+hint:
+  es: "Abre tu inventario (🎒) y equípate una pieza. Compra una poción de curación a Mira, en el mercado."
+  en: "Open your inventory (🎒) and equip a piece of gear. Buy a healing potion from Mira at the market."
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: equip, target: any}
+  - {kind: buy, target: healing_potion}
+rewards:
+  - {xp: 70}
+  - {give_item: {smoke_bomb: 1}}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Tamsin tiene otra lección."
+      en: "Tamsin has another lesson."
+  active:
+    journal:
+      es: "Equípate una pieza de equipo y compra una poción de curación en el mercado. «El camino no perdona a quien lleva el equipo en la mochila», dice Tamsin."
+      en: "Equip a piece of gear and buy a healing potion at the market. \"The road does not forgive anyone who carries their gear in the pack,\" says Tamsin."
+  done:
+    state: completed
+    journal:
+      es: "Tamsin asiente al verte la armadura puesta y te da una bomba de humo: «Para el día que no puedas ganar. Sal siempre con una»."
+      en: "Tamsin nods at the armor you now wear and hands you a smoke bomb: \"For the day you cannot win. Never leave without one.\""

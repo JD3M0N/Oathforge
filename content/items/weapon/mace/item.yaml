@@ -1,0 +1,7 @@
+name: {es: Maza, en: Mace}
+icon: "🏏"
+description: {es: Una maza sencilla con el símbolo de la fe grabado., en: A plain mace engraved with a holy symbol.}
+type: weapon
+slot: main_hand
+value: 5
+weapon: {damage: 1d6, damage_type: bludgeoning}

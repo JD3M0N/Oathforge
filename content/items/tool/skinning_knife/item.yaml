@@ -1,0 +1,5 @@
+name: {es: Cuchillo de desollar, en: Skinning knife}
+icon: "🔪"
+description: {es: "Hoja corta y fina. Con él aprovechas la piel y la carne de las bestias que abates.", en: "A short thin blade. With it you take the hide and meat of the beasts you bring down."}
+type: tool
+value: 8

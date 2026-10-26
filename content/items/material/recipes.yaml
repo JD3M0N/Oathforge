@@ -1,0 +1,120 @@
+iron_ingot:
+  profession: mining
+  station: furnace
+  ingredients: {iron_ore: 3, coal: 1}
+  outputs: {iron_ingot: 1}
+  xp: 10
+
+copper_ingot:
+  profession: mining
+  station: furnace
+  min_rank: 1
+  ingredients: {copper_ore: 2, coal: 1}
+  outputs: {copper_ingot: 1}
+  xp: 12
+
+oak_plank:
+  profession: woodcutting
+  station: sawmill
+  ingredients: {oak_log: 3}
+  outputs: {oak_plank: 2}
+  xp: 8
+
+ash_plank:
+  profession: woodcutting
+  station: sawmill
+  min_rank: 2
+  ingredients: {ash_log: 3}
+  outputs: {ash_plank: 2}
+  xp: 14
+
+clean_fiber:
+  profession: herbalism
+  station: herb_table
+  ingredients: {plant_fiber: 3}
+  outputs: {clean_fiber: 2}
+  xp: 6
+
+treated_leather:
+  profession: skinning
+  station: curing_rack
+  ingredients: {boar_hide: 2}
+  outputs: {treated_leather: 1}
+  xp: 10
+
+wolf_leather:  # el mismo cuero, de una piel de lobo
+  profession: skinning
+  station: curing_rack
+  ingredients: {wolf_pelt: 1}
+  outputs: {treated_leather: 1}
+  xp: 10
+
+ink:
+  profession: scribing
+  technique: inks
+  ingredients: {bloodroot: 1, coal: 1}
+  outputs: {ink: 2}
+  xp: 6
+
+parchment:
+  profession: scribing
+  technique: inks
+  ingredients: {boar_hide: 1}
+  outputs: {parchment: 2}
+  xp: 6
+
+black_powder:
+  profession: engineering
+  technique: powder
+  ingredients: {coal: 2, iron_ore: 1}
+  outputs: {black_powder: 2}
+  xp: 6
+
+fuse:
+  profession: engineering
+  technique: powder
+  ingredients: {plant_fiber: 2}
+  outputs: {fuse: 2}
+  xp: 4
+
+thread:
+  profession: tailoring
+  technique: spinning
+  ingredients: {clean_fiber: 2}
+  outputs: {thread: 2}
+  xp: 8
+
+cloth:
+  profession: tailoring
+  technique: spinning
+  min_rank: 1
+  ingredients: {thread: 3}
+  outputs: {cloth: 1}
+  xp: 16
+
+fishing_line:
+  profession: tailoring
+  technique: cordage
+  min_rank: 2
+  ingredients: {thread: 2, clean_fiber: 1}
+  outputs: {fishing_line: 1}
+  xp: 24
+
+# --- Catálogo T1 (rango 3-5). El equipo de combate pide nivel 10 para llevarse: se fabrica ya, se equipa
+# cuando el mundo llegue ahí. Lo demás (refinado, herramientas, muebles) se usa por rango.
+steel_ingot:
+  profession: mining
+  station: furnace
+  min_rank: 4
+  ingredients: {deep_iron_ore: 2, coal: 2}
+  outputs: {steel_ingot: 1}
+  xp: 30
+
+silk_cloth:
+  profession: tailoring
+  technique: spinning
+  min_rank: 3
+  station: loom
+  ingredients: {silk_fiber: 3, thread: 2}
+  outputs: {cloth: 3}
+  xp: 45

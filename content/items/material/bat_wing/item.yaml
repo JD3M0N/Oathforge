@@ -1,0 +1,6 @@
+name: {es: Ala de murciélago, en: Bat wing}
+icon: "🦇"
+description: {es: Membrana correosa que usan los alquimistas para la poción de maná., en: A leathery membrane alchemists use for mana potions.}
+type: material
+value: 4
+stackable: true

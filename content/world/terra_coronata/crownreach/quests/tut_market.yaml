@@ -1,0 +1,36 @@
+order: 3
+tutorial: true
+giver: vale
+after: tut_town
+legacy_done: [tut_boars, night_wings]
+name: {es: El mercado, en: The Market}
+summary:
+  es: «Nadie sale de la ciudad sin pociones», dice Vale. Quiere que conozcas a quienes las venden.
+  en: "\"Nobody leaves the city without potions,\" says Vale. She wants you to meet the people who sell them."
+hint:
+  es: Habla con Mira en el Mercado de Crownreach y con Tessa en su forja, el primer puesto del Barrio de Oficios («💬 Hablar»). Con «🛒 Comerciar» ves sus tiendas.
+  en: Talk to Mira at Crownreach Market and to Tessa at her forge, the first stall on Craftsmen's Row ("💬 Talk"). "🛒 Trade" opens their shops.
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: talk, target: mira}
+  - {kind: talk, target: tessa}
+rewards:
+  - xp: 25
+  - gold: 5
+  - give_item: {healing_potion: 1}
+stages:
+  locked:
+    state: locked
+    journal: {es: Vale habla de pociones., en: Vale is talking about potions.}
+  active:
+    journal:
+      es: Habla con Mira, en el Mercado de Crownreach, y con Tessa, en su forja del Barrio de Oficios. De día están en sus puestos; de noche, en la taberna.
+      en: Talk to Mira, at Crownreach Market, and to Tessa, at her forge on Craftsmen's Row. By day they are at their stalls; at night, in the tavern.
+  done:
+    state: completed
+    journal:
+      es: Mira te guiñó un ojo y Tessa te miró las manos («blandas»). Vale te regaló una poción «para el prado».
+      en: Mira winked at you and Tessa looked at your hands ("soft"). Vale gave you a potion "for the meadow".

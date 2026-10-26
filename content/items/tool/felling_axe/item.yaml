@@ -1,0 +1,6 @@
+name: {es: Hacha de tala rápida, en: Felling axe}
+icon: "🪓"
+description: {es: "Hoja fina y bien equilibrada: el roble cae en menos golpes.", en: "A thin, well-balanced blade: the oak falls in fewer strokes."}
+type: tool
+value: 90
+tool: {skill: woodcutting, base: woodaxe, min_rank: 2, time_pct: 0.10}

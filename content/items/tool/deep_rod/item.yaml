@@ -1,0 +1,6 @@
+name: {es: Caña de fondo, en: Deep rod}
+icon: "🎣"
+description: {es: "Sedal largo y plomada: llega donde están las piezas buenas.", en: "Long line and a sinker: it reaches where the good fish are."}
+type: tool
+value: 120
+tool: {skill: fishing, base: fishing_rod, min_rank: 3, rare_rel: 0.05}

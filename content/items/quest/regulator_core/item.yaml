@@ -1,0 +1,7 @@
+name: {es: Núcleo de regulador, en: Regulator core}
+icon: "🔩"
+description: {es: "Un cilindro de bronce todavía tibio, con muescas que encajan en las balizas del valle.", en: "A bronze cylinder still warm, with notches that fit the vale's beacons."}
+type: quest
+value: 0
+sellable: false
+stackable: true

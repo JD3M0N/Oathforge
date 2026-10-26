@@ -1,0 +1,138 @@
+name: {es: Brujo, en: Warlock}
+description:
+  es: Selló un pacto con un poder oscuro; maldice a sus enemigos y los quiebra con energía sobrenatural.
+  en: Bound by a pact with a dark power; curses foes and breaks them with eldritch energy.
+hit_die: 8
+primary: cha
+casting: cha
+array: {cha: 15, con: 14, dex: 13, wis: 12, int: 10, str: 8}
+skills: [arcana, intimidation]
+items: {quarterstaff: 1, dagger: 1, leather_armor: 1, healing_potion: 1}
+equip: [quarterstaff, leather_armor]
+signature: [eldritch_blast]
+abilities:
+  eldritch_blast:
+    name: {es: Estallido Sobrenatural, en: Eldritch Blast}
+    description: {es: 'Ataque de conjuro a distancia (CAR): 1d10 de daño de fuerza.', en: 'Ranged spell attack (CHA): 1d10 force damage.'}
+    details:
+      es: 'Un rayo de energía crepitante, regalo de tu patrón. Es un ataque de conjuro a distancia con tu CAR que hace 1d10 de daño de fuerza. No cuesta nada: es tu ataque de siempre.'
+      en: 'A beam of crackling energy, a gift from your patron. It is a ranged spell attack with your CHA that deals 1d10 force damage. It costs nothing: it is your everyday attack.'
+    level: 1
+    kind: spell
+    damage: 1d10
+    damage_type: force
+    damage_tiers: {5: 2d10, 11: 3d10, 17: 4d10}
+  hex:
+    name: {es: Maleficio, en: Hex}
+    description:
+      es: 'Acción adicional: maldices a un enemigo 3 turnos, sin salvación; cada golpe que le das suma 1d6 de daño necrótico.'
+      en: 'Bonus action: you curse one enemy for 3 turns, no save; each hit you land on it adds 1d6 necrotic damage.'
+    details:
+      es: 'Señalas al enemigo y tu patrón lo marca. Como acción adicional lo maldices 3 turnos, sin salvación: cada golpe que le das suma 1d6 de daño necrótico. Úsalo primero y ataca después. Gasta Esencia.'
+      en: 'You point at the enemy and your patron marks it. As a bonus action you curse it for 3 turns, with no save: every hit you land adds 1d6 necrotic damage. Cast it first, then attack. It spends Essence.'
+    level: 1
+    kind: curse
+    action: bonus
+    status: hexed
+    status_turns: 3
+    cost: 2
+  shadow_armor:
+    name: {es: Armadura de Sombras, en: Shadow Armor}
+    description:
+      es: 'Acción adicional: las sombras te envuelven y ganas 2d4 + CAR PV temporales.'
+      en: 'Bonus action: shadows wrap around you and you gain 2d4 + CHA temporary HP.'
+    details:
+      es: Las sombras se te pegan como una segunda piel. Como acción adicional ganas 2d4 + CAR PV temporales, que se pierden antes que los tuyos. Gasta Esencia.
+      en: The shadows cling to you like a second skin. As a bonus action you gain 2d4 + CHA temporary HP, lost before your own. It spends Essence.
+    level: 2
+    kind: buff
+    action: bonus
+    temp_hp: 2d4
+    heal_add: casting
+    cost: 3
+    cooldown: 3
+  void_whispers:
+    name: {es: Susurros del Vacío, en: Void Whispers}
+    description:
+      es: 'Toda la fila del objetivo hace una salvación de SAB: 2d6 de daño psíquico, la mitad si la supera; quien falla queda con miedo 1 turno.'
+      en: 'The target''s whole row makes a WIS save: 2d6 psychic damage, half on a success; those who fail are frightened for 1 turn.'
+    details:
+      es: 'Voces del vacío llenan la cabeza de tus enemigos. Toda la fila del objetivo hace una salvación de SAB: 2d6 de daño psíquico, la mitad si la supera, y quien falla queda con miedo un turno. Gasta Esencia.'
+      en: 'Voices from the void fill your enemies'' heads. The target''s whole row makes a WIS save: 2d6 psychic damage, half on a success, and whoever fails is frightened for a turn. It spends Essence.'
+    level: 3
+    kind: save
+    area: row
+    save: wis
+    damage: 2d6
+    damage_type: psychic
+    half_on_save: true
+    status: frightened
+    status_turns: 1
+    cost: 5
+    cooldown: 2
+  agonizing_blast:
+    name: {es: Estallido Agónico, en: Agonizing Blast}
+    description: {es: Sumas tu CAR al daño de tus conjuros., en: You add your CHA to the damage of your spells.}
+    details:
+      es: Tu patrón afila tu poder. Sumas tu CAR al daño de tus conjuros de ataque, también al Estallido Sobrenatural. Es automático.
+      en: Your patron sharpens your power. You add your CHA to the damage of your attack spells, Eldritch Blast included. It is automatic.
+    level: 5
+    kind: passive
+    action: none
+    spell_damage_bonus: true
+  life_drain:
+    name: {es: Drenar Vida, en: Life Drain}
+    description:
+      es: 'Ataque de conjuro a distancia: 3d6 de daño necrótico. Cuesta 4 de Esencia.'
+      en: 'Ranged spell attack: 3d6 necrotic damage. Costs 4 Essence.'
+    details:
+      es: Tu patrón arranca la vida de tu rival y te la presta. Más caro que el rayo, pero con un buen empujón de daño.
+      en: Your patron tears the life from your rival and lends it to you. Dearer than the blast, but with a good shove of damage.
+    level: 4
+    kind: spell
+    cost: 4
+    damage: 3d6
+    damage_type: necrotic
+  shadow_skin:
+    name: {es: Piel de Sombra, en: Shadow Skin}
+    description: {es: +1 a la CA., en: +1 AC.}
+    details:
+      es: 'Las sombras ya no te cubren por ratos: son tu piel. Siempre tienes +1 a la CA, sin hacer nada.'
+      en: 'The shadows no longer cover you in turns: they are your skin. You always have +1 AC, with no action needed.'
+    level: 6
+    kind: passive
+    action: none
+    ac_bonus: 1
+  hunger_of_the_void:
+    name: {es: Hambre del Vacío, en: Hunger of the Void}
+    description:
+      es: 'Toda la fila tira DES: 4d6 de frío, la mitad si la supera. Cuesta 8 de Esencia.'
+      en: 'The whole row rolls a DEX save: 4d6 cold, half on a success. Costs 8 Essence.'
+    details:
+      es: Un vacío helado se abre bajo la fila y se traga el calor de todos. Daño de área a cambio de una buena parte de tu pacto.
+      en: A freezing void opens beneath the row and swallows everyone's warmth. Area damage in exchange for a good part of your pact.
+    level: 7
+    kind: save
+    cost: 8
+    cooldown: 3
+    damage: 4d6
+    damage_type: cold
+    save: dex
+    area: row
+    half_on_save: true
+  soul_rend:
+    name: {es: Desgarro de Alma, en: Soul Rend}
+    description:
+      es: 'Ataque de conjuro a distancia: 6d6 de daño necrótico. Cuesta 9 de Esencia.'
+      en: 'Ranged spell attack: 6d6 necrotic damage. Costs 9 Essence.'
+    details:
+      es: Lo que tu patrón te dio, devuelto de golpe. Tu mayor castigo a un solo objetivo.
+      en: What your patron gave you, returned at once. Your greatest punishment on a single target.
+    level: 9
+    kind: spell
+    cost: 9
+    cooldown: 3
+    damage: 6d6
+    damage_type: necrotic
+resource: essence
+order: 10

@@ -1,0 +1,27 @@
+name: {es: Sargenta Vale, en: Sergeant Vale}
+title: {es: instructora de reclutas del Gremio de Aventureros, en: recruit instructor of the Adventurers' Guild}
+faction: silver_covenant
+schedule: {day: adventurers_guild, night: adventurers_guild}
+greeting:
+  es: "«¡Eh, cara nueva! Crownreach necesita manos y las tuyas parecen servir. Te enseño lo básico y te pago por aprenderlo. ¿Trato?»"
+  en: "\"Hey, new face! Crownreach needs hands and yours look useful. I'll teach you the basics and pay you to learn them. Deal?\""
+greeting_return:
+  es: "«¡Mira quién vuelve entero! Ya no eres una cara nueva, recluta. Dime qué necesitas… o ve a ganarte el pan.»"
+  en: "\"Look who came back in one piece! You're no new face any more, recruit. Tell me what you need… or go earn your keep.\""
+persona: >-
+  Sergeant Vale is a stocky, sunburnt veteran of the border wars who, on loan from the Silver Guard, now signs up
+  and trains the Adventurers' Guild's recruits in its hall off the plaza, day and night. Loud, blunt and impatient, but warm underneath: she jokes, teases, and is
+  proud of every recruit who comes back alive. Explains things simply and practically, like a drill instructor.
+goals: >-
+  Turn newcomers into adventurers who can look after themselves: hunting, gathering, cooking, mining, fighting
+  at night and knowing when to rest or get healed. Then send the best to Sergeant Holt.
+secrets: She and Holt served together; she thinks he carries the missing courier's fate on his shoulders.
+knowledge: >-
+  Tusk Meadow (south, safe road) has boars by day and bats at night. Bloodroot grows in the Whispering Woods and
+  Redroot Clearing. Iron is in the Old Pass Mine. Bram's tavern has a hearth for cooking; the guild hall has the
+  furnace, the sawing station, the curing rack and the herb table, where anyone may refine what they bring back.
+  Craftsmen's Row, behind the market, has one stall per trade, each with its master: Tessa's forge, the
+  alchemist's shop, the carpenter, the tannery, the jeweler, the scribe and the engineer. Sister Ysolde heals at
+  the Chapel of the Dawn. Tessa the smith sells tools at her forge.
+passive_perception: 14
+order: 3

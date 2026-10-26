@@ -1,0 +1,278 @@
+sheet:
+  specialization: "🎖️ {name}"
+  hit_die: "🎲 Dado de golpe d{die}"
+  class_link: "📖 Tu clase: {cmd}"
+  combat: "⚔️ Combate"
+  attack: "{name}: {to_hit} al impacto · {damage} {type}"
+  spellcasting: "Conjuros ({ability}): {to_hit} al impacto · CD {dc}"
+  passive_perception: "👁️ Percepción pasiva {value}"
+  immune: "🛡️ Inmune a: {list}"
+  origins: "🧬 Orígenes"
+  identity: "{cls} · nivel {level}"
+  hp: "❤️ PV {hp}/{max_hp}  {bar}"
+  xp: "✨ XP {cur}/{need} hacia el nivel {level} ({xp} en total)  {bar}"
+  xp_max: "✨ XP {xp} · nivel máximo"
+  level_gate: "🔒 Tienes la XP del siguiente nivel; te falta: {milestone}."
+  resource: "🔹 {resource} {cur}/{max}  {bar}"
+  vitals: "🛡️ CA {ac} · 🎯 Competencia +{pb} · 🪙 {gold}"
+  injured: "🩹 Herido (descansa en una posada)"
+  attributes: "⚖️ Atributos"
+  gear: "⚔️ Equipo"
+  no_gear: "Nada equipado."
+  armor_ac: "CA base {ac}"
+  shield_ac: "+{ac} CA"
+  skills: "🎓 Competencias"
+  skills_legend: "<i>● competente · ○ practicada · · sin entrenar · ★ rango de práctica</i>"
+  abilities: "✨ Habilidades de clase"
+  locked: "Nivel {level}: {name}"
+  reputation: "🏛️ Reputación"
+  rep:
+    hated: "odiado"
+    hostile: "hostil"
+    neutral: "neutral"
+    friendly: "amistoso"
+    honored: "venerado"
+  ai_usage: "🤖 Dungeon Master hoy: {calls}/{limit} · quedan {left}  {bar}"
+  masteries: "Maestrías de campo"
+  hobbies: "Aficiones (opcionales)"
+  chronicles: "📜 Crónicas de hoy: {used}/{limit} · quedan {left}  {bar}"
+  professions: "🛠️ Oficios {used}/{slots}: {list}"
+  no_professions: "ninguno (cada maestro enseña el suyo en el Barrio de Oficios)"
+
+stats:
+  title: "📈 <b>Estadísticas</b>"
+  distance: "🥾 Distancia recorrida: {yards} yardas"
+  places: "🗺 Lugares visitados: {places} · ciudades: {cities}"
+  battles: "⚔️ Combates: {won} ganados · {lost} perdidos · {fled} huidas"
+  kills: "💀 Monstruos derrotados: {n}"
+  dodges: "💨 Esquivas: {n} ataques enemigos fallados"
+  dodges_one: "💨 Esquivas: 1 ataque enemigo fallado"
+  crits: "💥 Golpes críticos: {n}"
+  activities: "🧺 Actividades terminadas: {n}"
+  since: "Los monstruos cuentan desde siempre; lo demás, desde la v0.7.23."
+  chronicle_title: "🕯️ <b>Del Libro del Héroe</b>"
+  quests: "📜 Misiones terminadas: {n}"
+  quests_one: "📜 Misiones terminadas: 1"
+  crafts: "🔨 Fabricaciones: {n} · recetas distintas: {recipes}"
+  discoveries: "🔍 Secretos descubiertos: {n}"
+  monsters_known: "🐉 Criaturas conocidas: {n} · especies abatidas: {killed}"
+  levels: "⬆️ Niveles ganados: {n}"
+  achievements: "🏆 Logros: {n} · {points} puntos"
+  since_chronicle: "Cada una de estas cifras es un hecho que el motor registró, desde la v0.10.7."
+
+book:
+  title: "🕯️ <b>El Libro del Héroe</b>"
+  day: "Día {day}"
+  by: "de {name}, <b>{title}</b>"
+  before: "Antes de este libro"
+  empty: "Tu libro está en blanco. Sal, pelea, fabrica y descubre: se irá escribiendo solo."
+  visit: "🥾 Pisaste {what} por primera vez."
+  quest_start: "📜 Aceptaste «{what}»."
+  quest: "✅ Terminaste «{what}»."
+  decision: "⚖️ {what}"
+  decision_text:
+    checked: "Contrastaste el rumor de la taberna con los hechos de la Guardia."
+    believed: "Creíste el rumor de Bram sobre los carros fantasma."
+    smuggler: "Aceptaste el trato del contrabandista por el agua de la cantera."
+    kellan: "Ayudaste a Kellan con el reparto del agua de la cantera."
+  unlock: "🏆 Logro: {what}"
+  level: "⬆️ Alcanzaste el nivel {what}."
+  kill: "⚔️ Abatiste tu primer {what}."
+  seen: "👁️ Viste {what} por primera vez."
+  secrets: "📖 Aprendiste los secretos de {what}."
+  craft: "🔨 Fabricaste {what} por primera vez."
+  discovery: "🔍 Descubriste un secreto en {what}."
+  profession: "🛠️ {what}: rango {rank}."
+  mastery: "🧺 {what}: rango {rank}."
+  combat: "💀 Caíste en combate en {what}."
+  combat_nowhere: "💀 Caíste en combate."
+
+progress:
+  xp: "✨ +{amount} XP."
+  level_up: "🎉 ¡Subes a nivel {level}! PV máximos: {max_hp}."
+  new_ability: "🌟 Nueva habilidad: {ability}."
+  skill_rank: "Tu dominio de {skill} mejora (rango {rank})."
+  path_open: "🧭 Has llegado al nivel 10: ya puedes elegir tu rama en el Gremio. Mira /path."
+  choice: "🧭 Tienes una elección pendiente. Mira /path."
+  milestone: "🏅 Un paso que no se olvida: {milestone}."
+
+level_card:
+  title: "🎉 <b>¡NIVEL {level}!</b>"
+  hp: "❤️ PV máximos: {prev} → <b>{max_hp}</b> (+{gain})"
+  new: "<b>Nueva habilidad</b>"
+  class: "📖 Tu clase: {cmd}"
+
+ability:
+  passive: "pasiva"
+  action:
+    action: "acción"
+    bonus: "acción adicional"
+  uses_one: "1 uso por descanso"
+  uses: "{n} usos por descanso"
+  unlimited: "gratis"
+  cost: "🔹 {n}"
+
+skill:
+  unknown: "Esa habilidad no existe."
+  mechanics: "⚙️ Cómo funciona"
+  yours: "✅ La tienes desde el nivel {level}."
+  locked: "🔒 La desbloqueas a nivel {level}."
+  kind:
+    strike: "Ataque con tu arma"
+    spell: "Ataque de conjuro a distancia (tu modificador de conjuro para acertar)"
+    turn: "Afecta a todos los enemigos del tipo indicado"
+    buff: "Te da un estado favorable"
+    surge: "Te devuelve la acción para actuar otra vez"
+    heal: "Curación"
+    hide: "Prueba de Sigilo: si sale, tu próximo ataque tiene ventaja"
+    save: "El objetivo tira una salvación contra tu CD de conjuro"
+    curse: "Maldición sobre un enemigo, sin salvación"
+    passive: "Pasiva: siempre activa"
+    summon: "Invoca a un aliado que actúa solo"
+    command: "Ordena a un aliado que ataque ahora, en lugar de esperar a que termine tu turno"
+    converge: "Potencia a todos tus aliados durante unos turnos, sin añadir ninguno"
+    shift: "Te transformas: cambia tus ataques"
+  damage: "💥 Daño: {dice} {type}"
+  extra_damage: "💥 +{dice} de daño {type} si aciertas"
+  auto_hit: "🎯 Nunca falla"
+  save: "🌀 Salvación de {ability}"
+  half_on_save: "½ Mitad de daño si la supera"
+  entity: "{icon} Aliado: {name} ({role})"
+  consumes: "🔥 Si el objetivo tiene {status}, lo gasta: +{dice} de daño"
+  leech: "🩸 Te curas el {n} % del daño que hace"
+  reduces_cooldowns: "⏩ Acorta {n} turnos el resto de tus enfriamientos"
+  thorns: "⚡ Quien te hiere recibe {dice} de daño {type}"
+  resource_on_hurt: "🔹 Recibir un golpe te da {n} de tu barra"
+  boost: "🌟 Los potencia {turns} turnos"
+  form: "{icon} Forma: {name}"
+  form_none: "↩️ Vuelves a tu forma"
+  cost: "🔹 Cuesta {n} de tu barra de clase"
+  cooldown: "⏳ Tarda {n} turnos en volver a estar lista"
+  role:
+    damage: "ataca"
+    area: "daña a toda una fila"
+    guard: "te protege"
+    disrupt: "acosa"
+  row: "↔️ Alcanza a toda la fila del objetivo"
+  targets: "🎯 Solo contra: {type}"
+  heal_per_level: "💚 Cura {n} PV por nivel"
+  heal_dice: "💚 Cura {dice}"
+  plus_level: " + tu nivel"
+  plus_casting: " + tu modificador de conjuro"
+  temp_hp: "🛡️ {dice} PV temporales"
+  status: "🌀 Aplica {status} ({turns} turnos)"
+  status_one: "🌀 Aplica {status} (1 turno)"
+  ac: "🛡️ +{n} a la CA"
+  ac_unarmored: "🛡️ +{n} a la CA sin armadura"
+  immune: "🚫 Inmune a: {list}"
+  spell_damage_bonus: "🔮 Suma tu modificador de conjuro al daño de tus conjuros"
+  sneak: "🗡️ Daño furtivo: {list}"
+  sneak_level: "{n}d6 a nivel {level}"
+  extra_attack: "⚔️ Dos ataques con la acción de atacar"
+  halve_first_hit: "🛡️ El primer golpe que recibes en cada ronda hace la mitad"
+  crit_range: "💥 Crítico con {n}–20"
+  bonus_damage: "💥 Una vez por turno, +{dice} {type} al acertar cuerpo a cuerpo"
+
+rulebook:
+  title: "📘 <b>Reglamento de Aetherfall</b>"
+  intro: "Lo que necesitas para jugar, sección a sección. Toca una para abrirla."
+  index: "📘 Índice"
+
+spec:
+  title: "🌿 <b>Especializaciones</b>"
+  intro: "<i>Cada maestría tiene dos ramas. A rango {rank} eliges una; la otra queda pausada, con lo aprendido, y volver a ella cuesta {cost} de oro. Solo la activa cuenta.</i>"
+  locked: "{icon} <b>{skill}</b> · <i>rango {rank} para elegir (vas por {yours})</i>"
+  open: "{icon} <b>{skill}</b> · rango {yours}"
+  branch_on: "   • <b>{spec}</b> ✅ {effect}"
+  branch_off: "   • {spec} {effect} <i>{state}</i>"
+  paused_tag: "(pausada)"
+  effect_rare: "raro ×{factor}"
+  effect_extra: "{pct} % de una unidad extra por actividad"
+  effect_time: "−{pct} % de tiempo"
+  confirm: "¿Cambias a <b>{spec}</b> ({skill})? Cuesta {cost} de oro; tienes {gold}. {old} queda pausada, sin perderse."
+  chosen: "🌿 Tu {skill} sigue ahora {spec}. ({cost} de oro)"
+  paused: "⏸️ {spec} queda pausada; puedes volver cuando quieras."
+  err:
+    unknown: "Esa rama no existe."
+    not_guild: "Las ramas se eligen en el Gremio de Aventureros."
+    rank: "Necesitas {skill} de rango {rank}."
+    already: "Ya sigues {spec}."
+
+achievements:
+  heading: 🏆 <b>Logros</b>
+  summary: '{count} logros obtenidos · {points} puntos de logro'
+  summary_one: '1 logro obtenido · {points} puntos de logro'
+  mystery: Hazaña por descubrir
+  progress: 'Progreso: {current}/{target}'
+  reward: 'Recompensa: {points} puntos de logro'
+  title_reward: 'Título: {title}'
+  date: Reconocido el {date}
+  retroactive: Reconocido a partir de tu progreso anterior.
+  feature: Destacar
+  unfeature: Quitar destacado
+  equip: Equipar título
+  untitle: Quitar título
+  track: Seguir objetivo
+  untrack: Dejar de seguir
+  reveal: Revelar condición
+  replace: 'Ya tienes tres. Elige cuál sustituir:'
+  categories_title: Categorías
+  empty: Todavía no hay logros en esta vista.
+  latest: Tu último logro
+  near: Cerca de conseguir
+  earned: Obtenidos
+  pending: Pendientes
+  featured: Destacados
+  tracked: 🎯 Objetivos seguidos
+  invalid: Esta elección no está disponible para tu personaje.
+  stale: Este menú ya cambió. Vuelve a abrir Logros.
+  full: Ya tienes tres. Elige cuál sustituir.
+  saved: Preferencias de logros guardadas.
+  announcement: "🏆 <b>Logros conseguidos: {count}</b>"
+  open: Ver logros
+  categories:
+    exploration: 🧭 Exploración
+    combat: ⚔️ Combate
+    crafting: 🔨 Oficios
+    field: 🌿 Vida de campo
+    story: 📜 Historia
+    knowledge: 📚 Conocimiento
+    curiosity: 🎭 Curiosidades
+
+path:
+  title: "🧭 <b>Tu camino</b>"
+  yours: "Tu rama: <b>{branch}</b> · {roles}"
+  reroll_hint: "El Gremio revisó esta rama y cambió cómo se juega. Puedes elegir otra, una sola vez y gratis."
+  open: "Has llegado al nivel {level}: es hora de elegir tu rama. Es para siempre."
+  open_where: "Se elige en el Gremio de Aventureros. Ve allí y vuelve a abrir esto."
+  open_here: "Estás en el Gremio. Mira las ramas de tu clase:"
+  none_ready: "Ninguna rama de tu clase está lista todavía. El Gremio aún las está terminando; vuelve en una actualización próxima."
+  locked: "Tu rama se elige al nivel {level}. Ahora eres de nivel {level_now}."
+  owed: "Elecciones pendientes"
+  taken: "Lo que has elegido"
+  modifier: "modificador"
+  pick:
+    training: "🎯 Entrenamiento (nivel {level})"
+    modifier: "✨ Modificador (nivel {level})"
+  ask:
+    training: "🎯 <b>Entrenamiento del nivel {level}</b>. Elige uno; es definitivo."
+    modifier: "✨ <b>Modificador del nivel {level}</b>. Elige uno; es definitivo."
+  role:
+    dmg: "daño"
+    deff: "defensa"
+    heal: "recuperación"
+    control: "control"
+  confirm_branch: "¿Tomar el camino de <b>{branch}</b>?"
+  confirm_reroll: "¿Cambiar a <b>{branch}</b>? Pierdes los modificadores de tu rama anterior y conservas los entrenamientos."
+  confirm_pick: "¿Elegir <b>{name}</b>?"
+  final: "⚠️ No se puede deshacer."
+  chosen: "🧭 Tomas el camino de {branch}."
+  picked: "✅ Elegiste: {name}."
+  err:
+    unknown: "Esa opción no existe para ti."
+    level: "Tu rama se elige al nivel {level}."
+    not_guild: "Eso se decide en el Gremio de Aventureros."
+    already: "Ya tomaste tu camino. No se cambia."
+    not_ready: "Esa rama todavía no está lista."
+    no_reroll: "No tienes una segunda elección disponible."
+    no_choice: "No tienes esa elección pendiente."

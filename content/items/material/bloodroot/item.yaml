@@ -1,0 +1,6 @@
+name: {es: Raíz de sangre, en: Bloodroot}
+icon: "🌺"
+description: {es: "Una raíz roja que, machacada, cierra heridas. La base de las pociones de curación.", en: "A red root that closes wounds when crushed. The base of healing potions."}
+type: material
+value: 4
+stackable: true

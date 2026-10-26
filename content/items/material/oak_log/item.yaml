@@ -1,0 +1,6 @@
+name: {es: Tronco de roble, en: Oak log}
+icon: "🪵"
+description: {es: "Madera dura y recta de los robles de Thornwood.", en: "Hard straight wood from the Thornwood oaks."}
+type: material
+value: 3
+stackable: true

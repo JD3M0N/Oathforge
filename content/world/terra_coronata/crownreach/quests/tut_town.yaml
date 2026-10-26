@@ -1,0 +1,40 @@
+order: 2
+tutorial: true
+giver: vale
+after: tut_muster
+legacy_done: [night_wings]
+name: {es: Calles de Crownreach, en: Streets of Crownreach}
+summary:
+  es: «Un recluta que se pierde en su propia ciudad no me sirve», dice Vale. Quiere que conozcas la taberna y el Barrio de Oficios, donde cada oficio tiene su puesto.
+  en: "\"A recruit who gets lost in their own city is no use to me,\" says Vale. She wants you to know the tavern and Craftsmen's Row, where every trade has its own stall."
+hint:
+  es: Abre /map (o «🧭 Viajar»). En la ciudad vas directo a cualquier lugar. Ve al Barrio de Oficios (de él salen los puestos de cada oficio) y luego a la taberna La Corona Rota, y habla allí con Bram.
+  en: Open /map (or "🧭 Travel"). In the city you go straight anywhere. Visit Craftsmen's Row (the stalls of each trade hang off it), then the Broken Crown Tavern, and talk to Bram there.
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: visit, target: crownreach_workshops}
+  - {kind: visit, target: broken_crown_tavern}
+  - {kind: talk, target: bram}
+rewards:
+  - xp: 25
+  - gold: 5
+stages:
+  locked:
+    state: locked
+    journal: {es: La sargenta Vale tiene algo que enseñarte., en: Sergeant Vale has something to show you.}
+  active:
+    journal:
+      es: Visita el Barrio de Oficios (un puesto por oficio) y la taberna La Corona Rota, y habla allí con Bram, el tabernero.
+      en: Visit Craftsmen's Row (one stall per trade) and the Broken Crown Tavern, and talk to Bram, the tavern keeper, there.
+    location_text:
+      crownreach_workshops:
+        es: "Yunques, alambiques y tinteros, cada cosa en su puesto: la forja de Tessa, la botica, el carpintero, la curtiduría, el joyero, el escriba y el ingeniero. Cada maestro enseña su oficio (🛠️ Oficios)."
+        en: "Anvils, stills and inkwells, each in its own stall: Tessa's forge, the alchemist's shop, the carpenter, the tannery, the jeweler, the scribe and the engineer. Each master teaches their trade (🛠️ Professions)."
+  done:
+    state: completed
+    journal:
+      es: Ya sabes moverte por Crownreach. Bram te invitó a una cerveza «para la próxima».
+      en: You know your way around Crownreach now. Bram offered you a beer "for next time".

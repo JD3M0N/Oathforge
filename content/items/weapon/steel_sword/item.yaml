@@ -1,0 +1,10 @@
+# --- Equipo T1: se fabrica por rango y se lleva por nivel (min_level). Mientras el techo sea el 5,
+# se puede forjar, vender y guardar, pero no equipar: lo dice su ficha y lo rechaza el servicio.
+name: {es: Espada de acero, en: Steel sword}
+icon: "⚔️"
+description: {es: "Acero del hierro profundo, con el filo que aguanta una campaña entera.", en: "Steel from deep iron, with an edge that lasts a whole campaign."}
+type: weapon
+slot: main_hand
+min_level: 10
+value: 180
+weapon: {damage: 1d10, damage_type: slashing}

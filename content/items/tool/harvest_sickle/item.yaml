@@ -1,0 +1,6 @@
+name: {es: Hoz de siega, en: Harvest sickle}
+icon: "🌾"
+description: {es: "Mango largo y hoja ancha: se barre el claro entero.", en: "Long handle, wide blade: it sweeps the whole glade."}
+type: tool
+value: 100
+tool: {skill: herbalism, base: sickle, min_rank: 2, extra_chance: 0.05}

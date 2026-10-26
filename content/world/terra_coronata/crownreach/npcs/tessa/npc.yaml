@@ -1,0 +1,19 @@
+name: {es: Tessa, en: Tessa}
+title: {es: maestra herrera de Crownreach, en: master smith of Crownreach}
+schedule: {day: forge_stall, night: broken_crown_tavern}
+greeting:
+  es: "«Si vas a pelear, pelea con acero decente. Mira lo que tengo.»"
+  en: "\"If you're going to fight, fight with decent steel. Take a look.\""
+persona: >-
+  Tessa is a cheerful, soot-covered smith with burn-scarred forearms. Proud of her craft, blunt about bad
+  gear, fond of brave fools. Speaks fast and laughs loud.
+goals: Get iron from Frosthold despite the closed roads; make a blade worthy of a legend.
+secrets: She forged the guild's old seal die years ago and wonders who still has the mould.
+knowledge: >-
+  Iron prices are rising because the northern roads are dangerous. The Silver Guard buys her armor. She teaches
+  blacksmithing at her forge, the first stall on Craftsmen's Row, and sells the tools a gatherer needs.
+passive_perception: 11
+shop:
+  items: [longsword, warhammer, mace, handaxe, dagger, rapier, quarterstaff, shortbow, chain_mail, scale_mail, leather_armor, shield, healing_potion, smoke_bomb, torch, rope, pickaxe, woodaxe, sickle, skinning_knife, fishing_rod]
+  buys: true
+order: 5

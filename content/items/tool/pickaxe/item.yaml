@@ -1,0 +1,5 @@
+name: {es: Pico de minero, en: Miner's pickaxe}
+icon: "⛏️"
+description: {es: "Hierro templado y mango de fresno. Sin él no se arranca mena de la roca.", en: "Tempered iron on an ash handle. You can't pry ore from rock without one."}
+type: tool
+value: 15

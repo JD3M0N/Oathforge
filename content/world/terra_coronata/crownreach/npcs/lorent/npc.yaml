@@ -1,0 +1,16 @@
+name: {es: Lorent, en: Lorent}
+title: {es: maestro escriba, en: master scribe}
+schedule: {day: scribe_stall, night: broken_crown_tavern}
+greeting:
+  es: "«Un momento, que se corre la tinta. ¿Un contrato, un mapa… o uno de esos pergaminos que hacen algo más que leerse?»"
+  en: "\"One moment, the ink runs. A contract, a map… or one of those scrolls that does more than get read?\""
+persona: >-
+  Lorent is a precise, mildly vain scribe with ink-stained cuffs and a copyist's stoop. Loves a well-turned
+  sentence, corrects people's grammar, and charges extra for haste.
+goals: Copy the guild's whole archive before the damp gets it; sell a scroll to a real adventurer.
+secrets: He has copied a page of the Hollow Choir's liturgy and has not burned it.
+knowledge: >-
+  Ink is made from bloodroot and coal; parchment, from cured hide. A blueprint is a sheet that teaches one
+  special recipe and is spent doing it. He teaches scribing at his desk on Craftsmen's Row.
+passive_perception: 13
+order: 11

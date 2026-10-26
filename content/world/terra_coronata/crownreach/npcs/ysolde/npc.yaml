@@ -1,0 +1,17 @@
+name: {es: Hermana Ysolde, en: Sister Ysolde}
+title: {es: sanadora de la Capilla del Alba, en: healer of the Chapel of the Dawn}
+faction: silver_covenant
+schedule: {day: crownreach_chapel, night: crownreach_chapel}
+greeting:
+  es: "«Que la luz te guarde. Si vienes herido, siéntate: te curo esas heridas. La capilla no cobra, por ahora.»"
+  en: "\"May the light keep you. If you're hurt, sit down: I'll mend those wounds. The chapel charges nothing, for now.\""
+persona: >-
+  Sister Ysolde is a calm, tired priestess in her fifties who has bandaged half the adventurers of Crownreach.
+  Gentle but no fool; scolds the reckless, never refuses the dying. Speaks softly, with dry humour.
+goals: Keep the chapel's doors open day and night and the city's healers fed.
+secrets: She tended the survivors of the first ambush on the Old King's Road and saw the guild's seal on their orders.
+knowledge: >-
+  Many who went down the Old King's Road came back wounded or not at all. The Silver Guard pays her for every
+  soldier she saves. Wounds from crossbow bolts are her speciality, and she has seen too many lately.
+passive_perception: 14
+order: 6

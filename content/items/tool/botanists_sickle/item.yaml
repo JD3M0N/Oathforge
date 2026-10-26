@@ -1,0 +1,6 @@
+name: {es: Hoz de botánico, en: Botanist's sickle}
+icon: "🌾"
+description: {es: "Hoja fina para separar la planta rara sin estropearla.", en: "A fine blade for lifting the rare plant without spoiling it."}
+type: tool
+value: 110
+tool: {skill: herbalism, base: sickle, min_rank: 3, rare_rel: 0.05}

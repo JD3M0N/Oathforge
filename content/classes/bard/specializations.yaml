@@ -1,0 +1,217 @@
+war_chanter:
+  class_key: bard
+  name: {es: Cantor de Guerra, en: War Chanter}
+  description:
+    es: Mantienes una melodía ofensiva o restauradora mientras construyes Resonancia para un estribillo. Cambiar de melodía no te cuesta un turno perdido.
+    en: You hold an aggressive or a restoring melody while building Resonance for a refrain. Switching melodies costs you no wasted turn.
+  roles: [dmg, heal]
+  ready: true
+  abilities:
+    martial_verse:
+      name: {es: Verso Marcial, en: Martial Verse}
+      description:
+        es: Una vez por turno, tu golpe con arma suma 1d6 psíquico, y tus conjuros suman tu modificador de conjuro.
+        en: Once per turn, your weapon hit adds 1d6 psychic, and your spells add your spellcasting modifier.
+      level: 10
+      kind: passive
+      action: none
+      bonus_damage: 1d6
+      bonus_damage_type: psychic
+      spell_damage_bonus: true
+    war_melody:
+      name: {es: Melodía de Guerra, en: War Melody}
+      description:
+        es: 'Acción adicional: tu siguiente ataque suma 1d6 (inspiración), durante 4 turnos.'
+        en: 'Bonus action: your next attack adds 1d6 (inspiration), for 4 turns.'
+      level: 10
+      kind: buff
+      action: bonus
+      cost: 4
+      cooldown: 2
+      status: inspired
+      status_turns: 4
+    healing_melody:
+      name: {es: Melodía Restauradora, en: Restoring Melody}
+      description:
+        es: 'Acción adicional: recuperas 3d8 + tu modificador de conjuro en PV.'
+        en: 'Bonus action: recover 3d8 + your spellcasting modifier in HP.'
+      level: 10
+      kind: heal
+      action: bonus
+      cost: 6
+      cooldown: 2
+      heal_dice: 3d8
+      heal_add: casting
+    battle_refrain:
+      name: {es: Estribillo de Batalla, en: Battle Refrain}
+      description:
+        es: Un ataque con arma que añade 4d8 de fuerza y te cura el 30 % del daño que hace.
+        en: A weapon attack that adds 4d8 force and heals you for 30% of the damage it deals.
+      level: 10
+      kind: strike
+      cost: 10
+      cooldown: 2
+      extra_damage: 4d8
+      damage_type: force
+      leech_pct: 30
+    steady_cadence:
+      name: {es: Cadencia Firme, en: Steady Cadence}
+      description: {es: Haces crítico con un 19 o un 20., en: You score a critical hit on a 19 or 20.}
+      level: 15
+      kind: passive
+      action: none
+      crit_range: 19
+    grand_refrain:
+      name: {es: Gran Estribillo, en: Grand Refrain}
+      description:
+        es: 'Toda la fila tira DES: 10d8 de fuerza, la mitad si la supera, y te cura el 40 % del daño que hace.'
+        en: 'The whole row rolls a DEX save: 10d8 force, half on a success, and it heals you for 40% of the damage it deals.'
+      level: 20
+      kind: save
+      cost: 32
+      cooldown: 5
+      damage: 10d8
+      damage_type: force
+      save: dex
+      area: row
+      half_on_save: true
+      leech_pct: 40
+  modifiers:
+    longer_melody:
+      level: 13
+      name: {es: Melodía Larga, en: Long Melody}
+      description: {es: La Melodía de guerra dura 2 turnos más., en: War Melody lasts 2 turns longer.}
+      patches:
+        war_melody:
+          status_turns: 2
+    warmer_melody:
+      level: 13
+      name: {es: Melodía Cálida, en: Warmer Melody}
+      description: {es: La Melodía restauradora cura 5d8 en lugar de 3d8., en: Restoring Melody heals 5d8 instead of 3d8.}
+      patches:
+        healing_melody:
+          heal_dice: 5d8
+    cheap_refrain:
+      level: 17
+      name: {es: Estribillo Barato, en: Cheap Refrain}
+      description: {es: El Estribillo de batalla cuesta 4 menos., en: Battle Refrain costs 4 less.}
+      patches:
+        battle_refrain:
+          cost: -4
+    grander_refrain:
+      level: 17
+      name: {es: Estribillo Mayor, en: Grander Refrain}
+      description: {es: El Gran estribillo hace 12d8 en lugar de 10d8., en: Grand Refrain deals 12d8 instead of 10d8.}
+      patches:
+        grand_refrain:
+          damage: 12d8
+
+illusionist:
+  class_key: bard
+  name: {es: Ilusionista, en: Illusionist}
+  description:
+    es: Señuelos, distracción y réplicas. Decides entre bajar la amenaza que tienes encima o preparar el castigo.
+    en: Decoys, distraction and doubles. You choose between lowering the threat on you and setting up the punishment.
+  roles: [control, deff]
+  ready: true
+  abilities:
+    mirrored_step:
+      name: {es: Paso Reflejado, en: Mirrored Step}
+      description: {es: +2 a la CA., en: +2 AC.}
+      level: 10
+      kind: passive
+      action: none
+      ac_bonus: 2
+    decoy:
+      name: {es: Señuelo, en: Decoy}
+      description:
+        es: 'Acción adicional: un doble absorbe el siguiente golpe: ganas 5d8 PV temporales.'
+        en: 'Bonus action: a double soaks up the next blow: you gain 5d8 temporary HP.'
+      level: 10
+      kind: buff
+      action: bonus
+      cost: 5
+      cooldown: 3
+      temp_hp: 5d8
+    maddening_double:
+      name: {es: Doble Enloquecedor, en: Maddening Double}
+      description:
+        es: 'El objetivo tira SAB: si falla, recibe 3d8 psíquico y queda aterrado (miedo) 2 turnos.'
+        en: 'The target rolls a WIS save: on a fail it takes 3d8 psychic and is terrified (frightened) for 2 turns.'
+      level: 10
+      kind: save
+      cost: 8
+      cooldown: 2
+      damage: 3d8
+      damage_type: psychic
+      save: wis
+      status: frightened
+      status_turns: 2
+    punishing_illusion:
+      name: {es: Ilusión Castigadora, en: Punishing Illusion}
+      description:
+        es: 'Ataque de conjuro a distancia: 3d8 psíquico. Si el objetivo está aterrado, gasta el miedo por otros 5d8.'
+        en: 'Ranged spell attack: 3d8 psychic. If the target is terrified, it spends the fear for another 5d8.'
+      level: 10
+      kind: spell
+      cost: 9
+      cooldown: 2
+      damage: 3d8
+      damage_type: psychic
+      consumes: frightened
+      consume_damage: 5d8
+    veil_of_lies:
+      name: {es: Velo de Mentiras, en: Veil of Lies}
+      description:
+        es: Eres inmune al miedo y el primer golpe de cada ronda hace la mitad de daño.
+        en: You are immune to fear and the first blow each round does half damage.
+      level: 15
+      kind: passive
+      action: none
+      immune: [frightened]
+      halve_first_hit: true
+    theater_of_mirrors:
+      name: {es: Teatro de Espejos, en: Theatre of Mirrors}
+      description:
+        es: 'Toda la fila tira SAB: 8d8 psíquico, la mitad si la supera, y aturdida 2 turnos si falla.'
+        en: 'The whole row rolls a WIS save: 8d8 psychic, half on a success, and stunned for 2 turns on a fail.'
+      level: 20
+      kind: save
+      cost: 30
+      cooldown: 5
+      damage: 8d8
+      damage_type: psychic
+      save: wis
+      area: row
+      half_on_save: true
+      status: stunned
+      status_turns: 2
+  modifiers:
+    fatter_decoy:
+      level: 13
+      name: {es: Señuelo Más Grande, en: Bigger Decoy}
+      description: {es: El Señuelo da 7d8 PV temporales en lugar de 5d8., en: Decoy gives 7d8 temporary HP instead of 5d8.}
+      patches:
+        decoy:
+          temp_hp: 7d8
+    longer_madness:
+      level: 13
+      name: {es: Locura Larga, en: Long Madness}
+      description: {es: El Doble enloquecedor aterra 2 turnos más., en: Maddening Double terrifies for 2 turns longer.}
+      patches:
+        maddening_double:
+          status_turns: 2
+    cheap_illusion:
+      level: 17
+      name: {es: Ilusión Barata, en: Cheap Illusion}
+      description: {es: La Ilusión castigadora cuesta 3 menos., en: Punishing Illusion costs 3 less.}
+      patches:
+        punishing_illusion:
+          cost: -3
+    grander_theater:
+      level: 17
+      name: {es: Teatro Mayor, en: Grander Theatre}
+      description: {es: El Teatro de espejos hace 10d8 en lugar de 8d8., en: Theatre of Mirrors deals 10d8 instead of 8d8.}
+      patches:
+        theater_of_mirrors:
+          damage: 10d8

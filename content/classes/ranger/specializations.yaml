@@ -1,0 +1,214 @@
+sharpshooter:
+  class_key: ranger
+  name: {es: Tirador, en: Sharpshooter}
+  description:
+    es: Disparos rápidos frente a tiros preparados. Marcas un punto débil o interrumpes una amenaza que ya se ve venir.
+    en: Quick shots against prepared ones. You mark a weak point or interrupt a threat you can already see coming.
+  roles: [dmg, control]
+  ready: true
+  abilities:
+    steady_hands:
+      name: {es: Pulso Firme, en: Steady Hands}
+      description: {es: +1 a la CA., en: +1 AC.}
+      level: 10
+      kind: passive
+      action: none
+      ac_bonus: 1
+    expose_weakness:
+      name: {es: Punto Débil, en: Weak Point}
+      description:
+        es: 'Acción adicional: dejas vulnerable a un enemigo 3 turnos, sin salvación.'
+        en: 'Bonus action: you leave an enemy vulnerable for 3 turns, no save.'
+      level: 10
+      kind: curse
+      action: bonus
+      cost: 3
+      status: vulnerable
+      status_turns: 3
+    steady_shot:
+      name: {es: Tiro Firme, en: Steady Shot}
+      description:
+        es: Un disparo que añade 4d8 perforante; si el objetivo es vulnerable, gasta eso por otros 3d8.
+        en: A shot that adds 4d8 piercing; if the target is vulnerable, it spends that for another 3d8.
+      level: 10
+      kind: strike
+      cost: 8
+      cooldown: 2
+      ranged: true
+      extra_damage: 4d8
+      damage_type: piercing
+      consumes: vulnerable
+      consume_damage: 3d8
+    pinning_shot:
+      name: {es: Tiro Clavado, en: Pinning Shot}
+      description:
+        es: 'El objetivo tira DES: si falla, recibe 2d8 perforante y queda trabado un turno.'
+        en: 'The target rolls a DEX save: on a fail it takes 2d8 piercing and is restrained for a turn.'
+      level: 10
+      kind: save
+      cost: 6
+      cooldown: 3
+      damage: 2d8
+      damage_type: piercing
+      save: dex
+      status: restrained
+    rain_of_arrows:
+      name: {es: Lluvia de Saetas, en: Rain of Arrows}
+      description:
+        es: 'Toda la fila tira DES: 5d8 perforante, la mitad si la supera.'
+        en: 'The whole row rolls a DEX save: 5d8 piercing, half on a success.'
+      level: 15
+      kind: save
+      cost: 12
+      cooldown: 3
+      damage: 5d8
+      damage_type: piercing
+      save: dex
+      area: row
+      half_on_save: true
+    final_shot:
+      name: {es: Disparo Definitivo, en: Final Shot}
+      description:
+        es: Un disparo que añade 9d8 perforante; si el objetivo es vulnerable, gasta eso por otros 6d8.
+        en: A shot that adds 9d8 piercing; if the target is vulnerable, it spends that for another 6d8.
+      level: 20
+      kind: strike
+      cost: 20
+      cooldown: 4
+      ranged: true
+      extra_damage: 9d8
+      damage_type: piercing
+      consumes: vulnerable
+      consume_damage: 6d8
+  modifiers:
+    longer_exposure:
+      level: 13
+      name: {es: Exposición Larga, en: Long Exposure}
+      description: {es: El Punto débil dura 2 turnos más., en: Weak Point lasts 2 turns longer.}
+      patches:
+        expose_weakness:
+          status_turns: 2
+    heavier_shot:
+      level: 13
+      name: {es: Tiro Pesado, en: Heavy Shot}
+      description:
+        es: El Tiro firme hace 6d8 en lugar de 3d8 al gastar la vulnerabilidad.
+        en: Steady Shot deals 6d8 instead of 3d8 when it spends the vulnerability.
+      patches:
+        steady_shot:
+          consume_damage: 6d8
+    quick_pin:
+      level: 17
+      name: {es: Clavado Veloz, en: Quick Pin}
+      description: {es: El Tiro clavado cuesta 3 menos., en: Pinning Shot costs 3 less.}
+      patches:
+        pinning_shot:
+          cost: -3
+    final_power:
+      level: 17
+      name: {es: Potencia Final, en: Final Power}
+      description: {es: El Disparo definitivo añade 11d8 en lugar de 9d8., en: Final Shot adds 11d8 instead of 9d8.}
+      patches:
+        final_shot:
+          extra_damage: 11d8
+
+beastmaster:
+  class_key: ranger
+  name: {es: Señor de Bestias, en: Beastmaster}
+  description:
+    es: Una bestia compañera estable y ataques coordinados. Le ordenas atacar o ayudarte a resistir; no se compra ni se repone.
+    en: One steady animal companion and coordinated attacks. You order it to strike or to help you hold; it is never bought nor replaced.
+  roles: [dmg, deff]
+  ready: true
+  abilities:
+    beast_bond:
+      name: {es: Vínculo con la Bestia, en: Beast Bond}
+      description:
+        es: Tu lobo compañero combate a tu lado en cada pelea, siempre el mismo, y tienes +1 a la CA.
+        en: Your wolf companion fights beside you in every fight, always the same one, and you have +1 AC.
+      level: 10
+      kind: passive
+      action: none
+      entity: wolf_companion
+      ac_bonus: 1
+    coordinated_attack:
+      name: {es: Ataque Coordinado, en: Coordinated Attack}
+      description: {es: Tu bestia ataca ya a la presa marcada con 2d8 extra., en: Your beast attacks the marked quarry now with 2d8 extra.}
+      level: 10
+      kind: command
+      cost: 4
+      cooldown: 1
+      entity: wolf_companion
+      extra_damage: 2d8
+    beast_guard:
+      name: {es: Bestia Protectora, en: Guardian Beast}
+      description:
+        es: 'Acción adicional: tu bestia se interpone y ganas 3d8 PV temporales.'
+        en: 'Bonus action: your beast steps in and you gain 3d8 temporary HP.'
+      level: 10
+      kind: buff
+      action: bonus
+      cost: 4
+      cooldown: 3
+      temp_hp: 3d8
+    pack_hunt:
+      name: {es: Caza en Manada, en: Pack Hunt}
+      description:
+        es: 'Acción adicional: tu bestia pega más fuerte y mejor 3 turnos.'
+        en: 'Bonus action: your beast hits harder and truer for 3 turns.'
+      level: 10
+      kind: converge
+      action: bonus
+      cost: 4
+      cooldown: 3
+      boost_turns: 3
+    pack_instinct:
+      name: {es: Instinto de Manada, en: Pack Instinct}
+      description: {es: Haces crítico con un 19 o un 20., en: You score a critical hit on a 19 or 20.}
+      level: 15
+      kind: passive
+      action: none
+      crit_range: 19
+    savage_charge:
+      name: {es: Embestida Salvaje, en: Savage Charge}
+      description: {es: Tu bestia ataca ya a la presa marcada con 8d8 extra., en: Your beast attacks the marked quarry now with 8d8 extra.}
+      level: 20
+      kind: command
+      cost: 14
+      cooldown: 3
+      entity: wolf_companion
+      extra_damage: 8d8
+  modifiers:
+    sharper_orders:
+      level: 13
+      name: {es: Órdenes Afiladas, en: Sharper Orders}
+      description: {es: El Ataque coordinado añade 4d8 en lugar de 2d8., en: Coordinated Attack adds 4d8 instead of 2d8.}
+      patches:
+        coordinated_attack:
+          extra_damage: 4d8
+    thicker_hide:
+      level: 13
+      name: {es: Piel Más Gruesa, en: Thicker Hide}
+      description:
+        es: La Bestia protectora da 5d8 PV temporales en lugar de 3d8.
+        en: Guardian Beast gives 5d8 temporary HP instead of 3d8.
+      patches:
+        beast_guard:
+          temp_hp: 5d8
+    cheap_hunt:
+      level: 17
+      name: {es: Caza Barata, en: Cheap Hunt}
+      description:
+        es: La Caza en manada cuesta 2 menos y se recupera un turno antes.
+        en: Pack Hunt costs 2 less and recovers a turn sooner.
+      patches:
+        pack_hunt:
+          cost: -2
+          cooldown: -1
+    grander_charge:
+      level: 17
+      name: {es: Embestida Mayor, en: Grander Charge}
+      description: {es: La Embestida salvaje añade 10d8 en lugar de 8d8., en: Savage Charge adds 10d8 instead of 8d8.}
+      patches:
+        savage_charge:
+          extra_damage: 10d8

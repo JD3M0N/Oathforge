@@ -1,0 +1,23 @@
+name: {es: Jabalí, en: Boar}
+indefinite: {es: un jabalí, en: a boar}
+icon: 🐗
+description: {es: Una bestia de cerdas negras y colmillos curvos que no retrocede., en: A black-bristled beast with curved tusks that never backs down.}
+hp: 7
+ac: 11
+dex: 0
+attacks:
+  - {name: {es: Colmillo, en: Tusk}, to_hit: 2, damage: 1d4, damage_type: slashing}
+xp: 25
+loot:
+  - {item: boar_tusk, chance: 0.6}
+skin_seconds: 15
+harvest:
+  - {item: boar_hide, chance: 0.7}
+  - {item: raw_meat, chance: 0.8, qty: 2}
+type: beast
+active: day
+habitat: {es: Prado de los Colmillos (de día y de noche), en: Tusk Meadow (day and night)}
+lore:
+  es: Hoza en los campos al sur de Crownreach y embiste a quien se acerque. Sus colmillos se venden bien en el mercado.
+  en: Roots through the fields south of Crownreach and charges anyone who comes close. Its tusks sell well at the market.
+order: 5

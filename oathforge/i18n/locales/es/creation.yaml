@@ -1,0 +1,88 @@
+start:
+  need_character: "Aún no tienes personaje. Usa /start para crearlo."
+
+create:
+  welcome: |-
+    ⚔️ <b>Bienvenido a Aetherfall.</b>
+
+    Un mundo que existía antes de ti y que seguirá existiendo cuando te marches. Las tabernas recuerdan, las facciones conspiran y tus actos dejan huella.
+
+    📘 ¿Primera vez? El /rulebook explica las tiradas, la CA, los puntos de vida, las clases y todo lo que puedes hacer.
+  ask_name: "¿Cómo se llama tu personaje? (2–24 letras)"
+  bad_name: "Ese nombre no sirve. Usa entre 2 y 24 letras, espacios, apóstrofos o guiones."
+  ask_gender: "<b>{name}</b>, ¿tu personaje es hombre o mujer? Decide su retrato y cómo le habla el mundo."
+  gender_btn:
+    male: "♂️ Hombre"
+    female: "♀️ Mujer"
+  ask_lineage: "🧬 <b>{name}</b>, ¿de qué linaje procedes? <i>(ℹ️ /lineage)</i>"
+  ask_background: "📜 ¿Quién eras antes de convertirte en aventurero? <i>(ℹ️ /background)</i>"
+  ask_class: "⚔️ <b>Elige tu clase</b> <i>(ℹ️ /classes)</i>:"
+  ask_abilities: |-
+    🎲 <b>Reparte tus atributos</b> · {cls}
+    Todos empiezan en 8. Te quedan <b>{left}</b> de {budget} puntos. Subir a 14 o a 15 cuesta 2 puntos. ★ = atributo principal de tu clase. Pulsa el nombre de un atributo para ver qué hace.
+  lineage_bonus: " · linaje {bonus}"
+  ability_hp: "❤️ Vida a nivel 1: <b>{hp}</b>"
+  points_left: "Aún te quedan {left} puntos por repartir."
+  points_left_one: "Aún te queda 1 punto por repartir."
+  cannot_change: "No puedes cambiar más ese atributo."
+  summary: |-
+    🦸 <b>{name}</b>
+    {gender} · {lineage} · {background} · {cls}
+
+    {stats}
+    ❤️ Puntos de vida: <b>{hp}</b>
+
+    ✅ ¿Confirmas?
+  done: "✨ <b>{name}</b> entra en Crownreach. Que tus juramentos te guíen."
+  cancelled: "Creación cancelada. Usa /start cuando quieras."
+  bg_more: "📜 Más trasfondos ({n})…"
+  bg_basics: "◀ Los básicos"
+  bg_all: "<i>Todos los trasfondos: mira qué da cada uno con /background.</i>"
+  custom_btn: "✍️ Escribir mi propio trasfondo"
+  custom_back: "◀ Volver a los trasfondos"
+  custom_ask: |-
+    ✍️ <b>Tu propio trasfondo</b>
+    Escríbelo en un mensaje: en la <b>primera línea</b>, su nombre (hasta {title_max} caracteres), y <b>debajo</b>, tu historia (hasta {story_max}).
+
+    <b>Aetherfall:</b> {world}
+
+    <i>Por ejemplo:
+    Hija del farero
+    Crecí cuidando la lámpara de un acantilado al que ya no llega ningún barco…</i>
+
+    La IA lo revisa antes de aceptarlo. Si una idea no encaja con el mundo, te propondrá una versión adaptada para que la aceptes o edites. Nunca da oro ni poderes. Después eliges 2 habilidades.
+  custom_bad: "Así no encaja. Primera línea: el nombre (2–{title_max} caracteres). Debajo: tu historia ({story_min}–{story_max} caracteres)."
+  custom_checking: "🔎 Revisando tu trasfondo…"
+  custom_unavailable: "😔 La IA que revisa los trasfondos no responde ahora. Puedes reintentarlo o elegir uno de la lista."
+  custom_retry: "🔄 Reintentar"
+  custom_rejected: "🚫 No puedo conservar la idea central de ese trasfondo: {reason}\nEdítalo o vuelve a la lista."
+  custom_proposal: "🪶 <b>Propuesta adaptada a Aetherfall</b>\n{reason}\n\n<b>{title}</b>\n<i>{story}</i>\n\nRevísala antes de continuar."
+  custom_accept: "✅ Aceptar propuesta"
+  custom_edit: "✏️ Editar"
+  custom_edit_prompt: "✏️ Envía el trasfondo completo otra vez: nombre en la primera línea e historia debajo."
+  custom_outdated: "Esa propuesta ya no está activa."
+  custom_ok: "✅ <b>{title}</b> aceptado."
+  custom_skills: "🎓 Elige <b>{n}</b> habilidades que dominabas entonces ({chosen}/{n}):"
+  custom_skills_left: "Elige primero {n} habilidades."
+  custom_skills_full: "Ya tienes {n}: toca una para quitarla."
+
+lineages:
+  title: "🧬 <b>Linajes de Aetherfall</b>"
+  bonuses: "📈 {list}"
+
+backgrounds:
+  title: "📜 <b>Trasfondos</b>\nQuién eras antes de la aventura: habilidades (🎓), oro inicial (💰) y equipo (🎒)."
+  custom: "✍️ O escribe el tuyo al crear el personaje: la IA lo revisa y eliges 2 habilidades."
+
+classes:
+  title: "📚 <b>Clases de Oathforge</b>"
+  hint: "Toca una clase o su comando para ver sus habilidades."
+  unknown: "Esa clase no existe."
+  hit_die: "🎲 Dado de golpe: <b>d{die}</b>"
+  primary: "💪 Atributo principal: <b>{ability}</b>"
+  casting: "🔮 Magia con: <b>{ability}</b>"
+  skills: "🎓 Competencias: {list}"
+  items: "🎒 Equipo inicial: {list}"
+  abilities: "✨ Habilidades de clase"
+  level: "Nv {level}"
+  specializations: "🌟 <b>Ramas (nivel {level})</b>"

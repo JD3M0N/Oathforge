@@ -1,0 +1,6 @@
+name: {es: Carbón, en: Coal}
+icon: "⚫"
+description: {es: "Negro y ligero; arde caliente en la fragua.", en: "Black and light; it burns hot in the forge."}
+type: material
+value: 3
+stackable: true

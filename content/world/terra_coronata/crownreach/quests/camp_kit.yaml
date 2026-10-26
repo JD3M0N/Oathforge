@@ -1,0 +1,79 @@
+order: 51
+giver: tamsin
+after: camp_path
+name: {es: "Equipo para la hondonada", en: "Kit for the Hollow"}
+summary:
+  es: "Antes de la hondonada, el gremio te presta una pieza de equipo de nivel 10. Solo una: el resto, con tus manos."
+  en: "Before the hollow, the guild lends you one level-10 piece of gear. Just one: the rest, with your own hands."
+hint:
+  es: "Habla con Tamsin, elige una pieza (armadura o arma) y equípatela. No hace falta un conjunto completo."
+  en: "Talk to Tamsin, pick one piece (armor or weapon) and equip it. You do not need a full set."
+start_stage: locked
+unlock_stage: active
+objective_stage: kit
+complete_stage: done
+objectives:
+  - {kind: equip, target: any}
+rewards:
+  - {xp: 200}
+  - {give_item: {greater_healing_potion: 1, smoke_bomb: 1}}
+actions:
+  pick_steel_breastplate:
+    label: {es: "🛡️ Coraza de acero", en: "🛡️ Steel breastplate"}
+    npc: tamsin
+    stages: [active]
+    to_stage: kit
+    text:
+      es: "Tamsin te echa la coraza sobre los hombros. «Pesa, pero el Ciervo pesa más.»"
+      en: "Tamsin drops the breastplate over your shoulders. \"It is heavy, but the Stag is heavier.\""
+    effects:
+      - {give_item: {steel_breastplate: 1}}
+  pick_hardened_leather:
+    label: {es: "🥋 Cuero endurecido", en: "🥋 Hardened leather"}
+    npc: tamsin
+    stages: [active]
+    to_stage: kit
+    text:
+      es: "Tamsin te tiende el cuero hervido. «Ligero para quien necesita moverse.»"
+      en: "Tamsin hands you the boiled leather. \"Light, for someone who needs to move.\""
+    effects:
+      - {give_item: {hardened_leather: 1}}
+  pick_steel_sword:
+    label: {es: "⚔️ Espada de acero", en: "⚔️ Steel sword"}
+    npc: tamsin
+    stages: [active]
+    to_stage: kit
+    text:
+      es: "Tamsin te da la espada por el pomo. «Un buen filo no sustituye a la cabeza, pero ayuda.»"
+      en: "Tamsin passes you the sword by the pommel. \"A good edge is no substitute for a head, but it helps.\""
+    effects:
+      - {give_item: {steel_sword: 1}}
+  pick_heartwood_staff:
+    label: {es: "🪄 Bastón de corazón de roble", en: "🪄 Heartwood staff"}
+    npc: tamsin
+    stages: [active]
+    to_stage: kit
+    text:
+      es: "Tamsin te pone el bastón en la mano. «La madera aguanta lo que tú le cantes.»"
+      en: "Tamsin puts the staff in your hand. \"The wood holds whatever you channel through it.\""
+    effects:
+      - {give_item: {heartwood_staff: 1}}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Tamsin rebusca en el armario del gremio."
+      en: "Tamsin rummages in the guild cupboard."
+  active:
+    journal:
+      es: "Habla con Tamsin y elige una pieza de equipo de nivel 10 del gremio."
+      en: "Talk to Tamsin and pick a level-10 piece of gear from the guild."
+  kit:
+    journal:
+      es: "Equípate la pieza que te dio Tamsin (🎒 Inventario)."
+      en: "Equip the piece Tamsin gave you (🎒 Inventory)."
+  done:
+    state: completed
+    journal:
+      es: "Con la pieza puesta y una poción mayor en la mochila, Tamsin te da una última palmada en el hombro."
+      en: "With the piece on and a greater potion in your pack, Tamsin gives you one last clap on the shoulder."

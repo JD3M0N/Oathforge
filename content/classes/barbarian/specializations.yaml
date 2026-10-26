@@ -1,0 +1,196 @@
+berserker:
+  class_key: barbarian
+  name: {es: Berserker, en: Berserker}
+  description:
+    es: Sostienes el frenesí atacando. Gastas Furia en un remate o la guardas para seguir presionando; exponerte es una decisión, no un castigo.
+    en: You keep the frenzy alive by attacking. Spend Fury on a finisher or hold it to keep pressing; exposing yourself is a choice, not a penalty.
+  roles: [dmg]
+  ready: true
+  abilities:
+    frenzied_blows:
+      name: {es: Golpes Frenéticos, en: Frenzied Blows}
+      description:
+        es: Una vez por turno, tu golpe con arma suma 1d6 contundente, y haces crítico con un 19 o un 20.
+        en: Once per turn, your weapon hit adds 1d6 bludgeoning, and you score a critical hit on a 19 or 20.
+      level: 10
+      kind: passive
+      action: none
+      bonus_damage: 1d6
+      bonus_damage_type: bludgeoning
+      crit_range: 19
+    frenzy:
+      name: {es: Frenesí, en: Frenzy}
+      description:
+        es: 'Acción adicional: ganas bendición 4 turnos y 2d8 PV temporales.'
+        en: 'Bonus action: you gain a blessing for 4 turns and 2d8 temporary HP.'
+      level: 10
+      kind: buff
+      action: bonus
+      cost: 6
+      cooldown: 4
+      status: blessed
+      status_turns: 4
+      temp_hp: 2d8
+    rampage:
+      name: {es: Arrasar, en: Rampage}
+      description: {es: Un ataque con arma que añade 4d8 de daño contundente., en: A weapon attack that adds 4d8 bludgeoning damage.}
+      level: 10
+      kind: strike
+      cost: 12
+      cooldown: 1
+      extra_damage: 4d8
+      damage_type: bludgeoning
+    savage_cleave:
+      name: {es: Tajo Salvaje, en: Savage Cleave}
+      description:
+        es: 'Toda la fila tira DES: 4d8 contundente, la mitad si la supera.'
+        en: 'The whole row rolls a DEX save: 4d8 bludgeoning, half on a success.'
+      level: 15
+      kind: save
+      cost: 14
+      cooldown: 3
+      damage: 4d8
+      damage_type: bludgeoning
+      save: dex
+      area: row
+      half_on_save: true
+    unleashed_fury:
+      name: {es: Furia Desatada, en: Unleashed Fury}
+      description: {es: Un ataque con arma que añade 12d8 de daño contundente., en: A weapon attack that adds 12d8 bludgeoning damage.}
+      level: 20
+      kind: strike
+      cost: 40
+      cooldown: 4
+      extra_damage: 12d8
+      damage_type: bludgeoning
+  modifiers:
+    efficient_frenzy:
+      level: 13
+      name: {es: Frenesí Eficiente, en: Efficient Frenzy}
+      description: {es: El Frenesí cuesta 3 menos., en: Frenzy costs 3 less.}
+      patches:
+        frenzy:
+          cost: -3
+    reckless_frenzy:
+      level: 13
+      name: {es: Frenesí Temerario, en: Reckless Frenzy}
+      description: {es: El Frenesí dura 2 turnos más y da 4d8 PV temporales., en: Frenzy lasts 2 turns longer and gives 4d8 temporary HP.}
+      patches:
+        frenzy:
+          status_turns: 2
+          temp_hp: 4d8
+    lasting_rampage:
+      level: 17
+      name: {es: Arrasar sin Pausa, en: Relentless Rampage}
+      description: {es: Arrasar cuesta 4 menos., en: Rampage costs 4 less.}
+      patches:
+        rampage:
+          cost: -4
+    fury_unchained:
+      level: 17
+      name: {es: Furia sin Cadenas, en: Fury Unchained}
+      description: {es: La Furia desatada añade 14d8 en lugar de 12d8., en: Unleashed Fury adds 14d8 instead of 12d8.}
+      patches:
+        unleashed_fury:
+          extra_damage: 14d8
+
+colossus:
+  class_key: barbarian
+  name: {es: Coloso, en: Colossus}
+  description:
+    es: Aguantas, cargas los impactos y desestabilizas. Conviertes la Furia en resistencia o en un solo golpe pesado.
+    en: You endure, soak the hits and unbalance. You turn Fury into toughness or into one heavy blow.
+  roles: [deff, control]
+  ready: true
+  abilities:
+    thick_hide:
+      name: {es: Piel Gruesa, en: Thick Hide}
+      description:
+        es: +2 a la CA sin armadura, el primer golpe de cada ronda hace la mitad y cada golpe que te hiere de verdad te da 3 de Furia.
+        en: +2 AC with no armor, the first blow each round does half, and every blow that really hurts you gives 3 Fury.
+      level: 10
+      kind: passive
+      action: none
+      ac_bonus_unarmored: 2
+      halve_first_hit: true
+      resource_on_hurt: 3
+    bone_shaker:
+      name: {es: Sacudida de Huesos, en: Bone Shaker}
+      description:
+        es: 'El objetivo tira DES: si falla, recibe 3d8 contundente y queda aturdido un turno.'
+        en: 'The target rolls a DEX save: on a fail it takes 3d8 bludgeoning and is stunned for a turn.'
+      level: 10
+      kind: save
+      cost: 12
+      cooldown: 3
+      damage: 3d8
+      damage_type: bludgeoning
+      save: dex
+      status: stunned
+    titan_guard:
+      name: {es: Guardia del Titán, en: Titan's Guard}
+      description: {es: 'Acción adicional: ganas 5d8 PV temporales.', en: 'Bonus action: you gain 5d8 temporary HP.'}
+      level: 10
+      kind: buff
+      action: bonus
+      cost: 8
+      cooldown: 3
+      temp_hp: 5d8
+    crushing_weight:
+      name: {es: Peso Aplastante, en: Crushing Weight}
+      description: {es: Un ataque con arma que añade 4d8 de daño contundente., en: A weapon attack that adds 4d8 bludgeoning damage.}
+      level: 15
+      kind: strike
+      cost: 15
+      cooldown: 2
+      extra_damage: 4d8
+      damage_type: bludgeoning
+    titans_stride:
+      name: {es: Paso del Titán, en: Titan's Stride}
+      description:
+        es: 'Toda la fila tira DES: 8d8 contundente y aturdida 2 turnos si falla.'
+        en: 'The whole row rolls a DEX save: 8d8 bludgeoning and stunned for 2 turns on a fail.'
+      level: 20
+      kind: save
+      cost: 35
+      cooldown: 5
+      damage: 8d8
+      damage_type: bludgeoning
+      save: dex
+      area: row
+      status: stunned
+      status_turns: 2
+  modifiers:
+    heavier_guard:
+      level: 13
+      name: {es: Guardia Más Pesada, en: Heavier Guard}
+      description:
+        es: La Guardia del titán da 7d8 PV temporales en lugar de 5d8.
+        en: Titan's Guard gives 7d8 temporary HP instead of 5d8.
+      patches:
+        titan_guard:
+          temp_hp: 7d8
+    faster_shake:
+      level: 13
+      name: {es: Sacudida Veloz, en: Quick Shake}
+      description:
+        es: La Sacudida de huesos cuesta 4 menos y se recupera un turno antes.
+        en: Bone Shaker costs 4 less and recovers a turn sooner.
+      patches:
+        bone_shaker:
+          cost: -4
+          cooldown: -1
+    wider_stride:
+      level: 17
+      name: {es: Zancada Más Ancha, en: Wider Stride}
+      description: {es: El Paso del Titán hace 10d8 en lugar de 8d8., en: Titan's Stride deals 10d8 instead of 8d8.}
+      patches:
+        titans_stride:
+          damage: 10d8
+    lasting_weight:
+      level: 17
+      name: {es: Peso Sostenido, en: Sustained Weight}
+      description: {es: El Peso aplastante cuesta 5 menos., en: Crushing Weight costs 5 less.}
+      patches:
+        crushing_weight:
+          cost: -5

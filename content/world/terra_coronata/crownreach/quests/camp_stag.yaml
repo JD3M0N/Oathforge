@@ -1,0 +1,47 @@
+order: 53
+giver: tamsin
+after: camp_signs
+name: {es: "El Ciervo de Hierro", en: "The Iron Stag"}
+summary:
+  es: "Un ciervo endurecido por el metal de los reguladores arcanos embiste a quien se acerca a la hondonada. Es tu graduación."
+  en: "A stag hardened by the metal of the arcane regulators charges anyone who nears the hollow. It is your graduation."
+hint:
+  es: "Descansa, llévate pociones y humo. En la Hondonada del Ciervo, «🏹 Cazar» te lleva hasta él. Cuando baja la cabeza, defiéndete; tras la carga, ataca con todo; cuando su coraza cae, no te confíes: puede endurecerse una vez más. Usa 💡 ¿Qué hago? en el combate."
+  en: "Rest, and bring potions and smoke. At Stag's Hollow, \"🏹 Hunt\" leads you to it. When it lowers its head, defend; after the charge, hit with everything; when its armor falls, do not relax: it can harden once more. Use 💡 What do I do? in the fight."
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+turn_in_stage: told
+complete_stage: done
+objectives:
+  - {kind: kill, target: iron_stag}
+rewards:
+  - {xp: 2000}
+  - {gold: 100}
+  - {milestone: iron_stag}
+  - {set_flag: valley_open}
+  - {give_item: {greater_healing_potion: 2}}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Tamsin se ata el farol al cinto."
+      en: "Tamsin ties the lantern to her belt."
+  active:
+    journal:
+      es: "Derrota al Ciervo de Hierro en la Hondonada del Ciervo. Su coraza absorbe daño; avisa su carga bajando la cabeza; tras cargar queda expuesto; a media vida se endurece una vez más."
+      en: "Defeat the Iron Stag in Stag's Hollow. Its armor soaks damage; it announces its charge by lowering its head; after charging it is exposed; at half its life it hardens once more."
+    location_text:
+      stag_hollow:
+        es: "El aire huele a metal frío. Entre los robles pelados, algo enorme levanta la cabeza."
+        en: "The air smells of cold metal. Between the stripped oaks, something huge lifts its head."
+  told:
+    state: ready
+    journal:
+      es: "El Ciervo de Hierro ha caído. Vuelve con Tamsin y cuéntaselo: es tu graduación."
+      en: "The Iron Stag is down. Go back to Tamsin and tell her: it is your graduation."
+  done:
+    state: completed
+    journal:
+      es: "Tamsin te entrega la insignia del gremio sin ceremonia. «Ya no hay más lecciones. El valle está abierto: allí también faltan nombres.»"
+      en: "Tamsin hands you the guild's badge without ceremony. \"No more lessons. The vale is open: names are missing there too.\""

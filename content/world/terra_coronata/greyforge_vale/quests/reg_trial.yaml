@@ -1,0 +1,46 @@
+order: 70
+giver: iwen
+after: reg_warden
+name: {es: "La prueba de las balizas", en: "The Test of the Beacons"}
+summary:
+  es: "El Custodio de las Balizas pregunta a quien llega al nivel 20 si de verdad sabe lo que hace. La respuesta no es una frase: es un combate."
+  en: "The Beacon Keeper asks whoever reaches level 20 whether they really know what they are doing. The answer is not a phrase: it is a fight."
+hint:
+  es: "Alcanza el nivel 20 y llega al Alto de las Balizas con tu técnica final preparada. Descansa antes, lleva pociones y humo. Usa 💡 ¿Qué hago?; cuando se endurece de nuevo, aguanta y vuelve a golpear. Al caer, vuelve con Iwen."
+  en: "Reach level 20 and come to Beacon Height with your final technique ready. Rest first, bring potions and smoke. Use 💡 What do I do?; when it hardens again, hold on and strike once more. When he falls, go back to Iwen."
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+turn_in_stage: told
+complete_stage: done
+objectives:
+  - {kind: kill, target: beacon_keeper}
+rewards:
+  - {xp: 3500}
+  - {gold: 300}
+  - {give_item: {greater_healing_potion: 3}}
+  - {set_flag: vale_veteran}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "La baliza arde y el Custodio espera."
+      en: "The beacon burns and the Keeper waits."
+  active:
+    journal:
+      es: "Derrota al Custodio de las Balizas. Su placa absorbe daño y se endurece una vez más a media vida; avisa su haz de luz y se queda expuesto al recargar."
+      en: "Defeat the Beacon Keeper. His plate soaks damage and hardens once more at half life; he warns before his beam and is exposed as he reloads."
+    location_text:
+      beacon_height:
+        es: "La torre ya arde y, a sus pies, algo enorme se levanta con un báculo de bronce. «Muestra lo que sabes», dice."
+        en: "The tower burns now and at its foot something huge rises with a bronze staff. \"Show what you know,\" it says."
+  told:
+    state: ready
+    journal:
+      es: "El Custodio ha caído. Vuelve al Puesto del Vado con Iwen: lo que has hecho debe contarse."
+      en: "The Keeper is down. Return to Ford Post and Iwen: what you have done must be told."
+  done:
+    state: completed
+    journal:
+      es: "Iwen escribe tu nombre en el libro de las torres, el primero en dos generaciones. «Ya eres veterano del valle. Lo que hagas con ello, es tuyo.»"
+      en: "Iwen writes your name in the towers' book, the first in two generations. \"You are a veteran of the vale now. What you do with it is yours.\""

@@ -1,0 +1,196 @@
+blood:
+  class_key: death_knight
+  name: {es: Sangre, en: Blood}
+  description:
+    es: Absorbes vitalidad y respondes al daño reciente con protección o con recuperación propia. No curas a nadie más.
+    en: You drain vitality and answer recent damage with protection or with your own recovery. You mend nobody else.
+  roles: [deff, dmg]
+  ready: true
+  abilities:
+    blood_pact:
+      name: {es: Pacto de Sangre, en: Blood Pact}
+      description:
+        es: +1 a la CA, y cada golpe que te hiere de verdad te da 3 de Poder rúnico.
+        en: +1 AC, and every blow that really hurts you gives 3 Runic Power.
+      level: 10
+      kind: passive
+      action: none
+      ac_bonus: 1
+      resource_on_hurt: 3
+    blood_drain:
+      name: {es: Drenar Sangre, en: Blood Drain}
+      description:
+        es: Un ataque con arma que añade 3d8 necrótico y te cura la mitad del daño que hace.
+        en: A weapon attack that adds 3d8 necrotic and heals you for half the damage it deals.
+      level: 10
+      kind: strike
+      cost: 6
+      cooldown: 1
+      extra_damage: 3d8
+      damage_type: necrotic
+      leech_pct: 50
+    bone_shield:
+      name: {es: Escudo de Huesos, en: Bone Shield}
+      description: {es: 'Acción adicional: ganas 4d8 PV temporales.', en: 'Bonus action: you gain 4d8 temporary HP.'}
+      level: 10
+      kind: buff
+      action: bonus
+      cost: 6
+      cooldown: 3
+      temp_hp: 4d8
+    vampiric_blood:
+      name: {es: Sangre Vampírica, en: Vampiric Blood}
+      description:
+        es: El primer golpe que recibes cada ronda hace la mitad de daño.
+        en: The first blow you take each round does half damage.
+      level: 15
+      kind: passive
+      action: none
+      halve_first_hit: true
+    crimson_heart:
+      name: {es: Corazón Carmesí, en: Crimson Heart}
+      description:
+        es: Un ataque con arma que añade 8d8 necrótico y te cura todo el daño que hace.
+        en: A weapon attack that adds 8d8 necrotic and heals you for all the damage it deals.
+      level: 20
+      kind: strike
+      cost: 25
+      cooldown: 4
+      extra_damage: 8d8
+      damage_type: necrotic
+      leech_pct: 100
+  modifiers:
+    deeper_drain:
+      level: 13
+      name: {es: Drenaje Profundo, en: Deeper Drain}
+      description: {es: Drenar sangre te cura el 80 % del daño en lugar del 50 %., en: Blood Drain heals 80% of the damage instead of 50%.}
+      patches:
+        blood_drain:
+          leech_pct: 80
+    thicker_bone:
+      level: 13
+      name: {es: Hueso Más Grueso, en: Thicker Bone}
+      description: {es: El Escudo de huesos da 6d8 PV temporales en lugar de 4d8., en: Bone Shield gives 6d8 temporary HP instead of 4d8.}
+      patches:
+        bone_shield:
+          temp_hp: 6d8
+    cheap_drain:
+      level: 17
+      name: {es: Drenaje Barato, en: Cheap Drain}
+      description: {es: Drenar sangre cuesta 3 menos., en: Blood Drain costs 3 less.}
+      patches:
+        blood_drain:
+          cost: -3
+    fuller_heart:
+      level: 17
+      name: {es: Corazón Pleno, en: Fuller Heart}
+      description: {es: El Corazón carmesí añade 10d8 en lugar de 8d8., en: Crimson Heart adds 10d8 instead of 8d8.}
+      patches:
+        crimson_heart:
+          extra_damage: 10d8
+
+frost:
+  class_key: death_knight
+  name: {es: Escarcha, en: Frost}
+  description:
+    es: Tus ataques cercanos acumulan marcas rúnicas y los golpes de escarcha las rompen para presionar y debilitar.
+    en: Your close attacks stack runic marks and frost blows break them to press and weaken.
+  roles: [dmg, control]
+  ready: true
+  abilities:
+    frost_runes:
+      name: {es: Runas de Escarcha, en: Frost Runes}
+      description: {es: 'Una vez por turno, tu golpe con arma suma 1d8 de frío.', en: 'Once per turn, your weapon hit adds 1d8 cold.'}
+      level: 10
+      kind: passive
+      action: none
+      bonus_damage: 1d8
+      bonus_damage_type: cold
+    frost_mark:
+      name: {es: Marca de Escarcha, en: Frost Mark}
+      description:
+        es: 'Acción adicional: marcas a un enemigo 4 turnos; cada golpe tuyo le suma 1d6 perforante.'
+        en: 'Bonus action: you mark an enemy for 4 turns; every hit of yours adds 1d6 piercing to it.'
+      level: 10
+      kind: curse
+      action: bonus
+      cost: 3
+      status: marked
+      status_turns: 4
+    frost_strike:
+      name: {es: Golpe de Escarcha, en: Frost Strike}
+      description: {es: Un ataque con arma que añade 3d8 de frío., en: A weapon attack that adds 3d8 cold damage.}
+      level: 10
+      kind: strike
+      cost: 8
+      cooldown: 1
+      extra_damage: 3d8
+      damage_type: cold
+    rune_shatter:
+      name: {es: Romper Runas, en: Rune Shatter}
+      description:
+        es: Un ataque con arma que añade 3d8 de frío; si el objetivo está marcado, rompe la marca por otros 5d8.
+        en: A weapon attack that adds 3d8 cold; if the target is marked, it breaks the mark for another 5d8.
+      level: 10
+      kind: strike
+      cost: 10
+      cooldown: 2
+      extra_damage: 3d8
+      damage_type: cold
+      consumes: marked
+      consume_damage: 5d8
+    icy_grip:
+      name: {es: Garra Helada, en: Icy Grip}
+      description: {es: Haces crítico con un 19 o un 20 y tienes +1 a la CA., en: You score a critical hit on a 19 or 20 and have +1 AC.}
+      level: 15
+      kind: passive
+      action: none
+      crit_range: 19
+      ac_bonus: 1
+    winters_march:
+      name: {es: Marcha del Invierno, en: Winter's March}
+      description:
+        es: 'Toda la fila tira DES: 8d8 de frío, la mitad si la supera, y trabada 2 turnos si falla.'
+        en: 'The whole row rolls a DEX save: 8d8 cold, half on a success, and restrained for 2 turns on a fail.'
+      level: 20
+      kind: save
+      cost: 28
+      cooldown: 5
+      damage: 8d8
+      damage_type: cold
+      save: dex
+      area: row
+      half_on_save: true
+      status: restrained
+      status_turns: 2
+  modifiers:
+    longer_marks:
+      level: 13
+      name: {es: Marcas Largas, en: Long Marks}
+      description: {es: La Marca de escarcha dura 2 turnos más., en: Frost Mark lasts 2 turns longer.}
+      patches:
+        frost_mark:
+          status_turns: 2
+    cold_break:
+      level: 13
+      name: {es: Ruptura Helada, en: Cold Break}
+      description:
+        es: Romper runas hace 8d8 en lugar de 5d8 al romper la marca.
+        en: Rune Shatter deals 8d8 instead of 5d8 when it breaks the mark.
+      patches:
+        rune_shatter:
+          consume_damage: 8d8
+    cheap_strike:
+      level: 17
+      name: {es: Golpe Barato, en: Cheap Strike}
+      description: {es: El Golpe de escarcha cuesta 3 menos., en: Frost Strike costs 3 less.}
+      patches:
+        frost_strike:
+          cost: -3
+    harder_march:
+      level: 17
+      name: {es: Marcha Más Dura, en: Harder March}
+      description: {es: La Marcha del Invierno hace 10d8 en lugar de 8d8., en: Winter's March deals 10d8 instead of 8d8.}
+      patches:
+        winters_march:
+          damage: 10d8

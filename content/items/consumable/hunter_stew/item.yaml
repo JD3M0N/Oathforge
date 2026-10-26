@@ -1,0 +1,7 @@
+name: {es: Estofado del cazador, en: Hunter's stew}
+icon: "🍲"
+description: {es: "Carne guisada con raíz de sangre. Recupera 1d6+2 PV fuera de combate.", en: "Meat stewed with bloodroot. Restores 1d6+2 HP outside combat."}
+type: consumable
+value: 12
+stackable: true
+heal: 1d6+2

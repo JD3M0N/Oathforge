@@ -52,7 +52,7 @@ def ability_block(a, lang: str, prefix: str = "", key: str | None = None) -> lis
 
 
 def ability_mechanics(a, lang: str) -> list[str]:
-    """What the engine does with an ability, read from its data (classes.yaml)."""
+    """What the engine does with an ability, read from its data (classes/<class>/class.yaml)."""
     c = get_content()
     out = [t(lang, f"skill.kind.{a.kind}")]
     dmg = lambda typ: t(lang, "dmg." + typ) if typ else ""  # noqa: E731

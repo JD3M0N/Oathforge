@@ -1,0 +1,7 @@
+name: {es: Pergamino de sueño, en: Scroll of sleep}
+icon: "📜"
+description: {es: "Al leerlo en combate, un enemigo hace una salvación de SAB (CD 13); si falla, duerme 2 turnos.", en: "Read in combat, one enemy makes a WIS save (DC 13); on a failure it sleeps for 2 turns."}
+type: consumable
+value: 30
+stackable: true
+combat: {kind: save, save: wis, save_dc: 13, status: asleep, status_turns: 2}

@@ -1,0 +1,29 @@
+name: {es: El Ciervo de Hierro, en: The Iron Stag}
+indefinite: {es: "el Ciervo de Hierro", en: "the Iron Stag"}
+icon: 🦌
+description: {es: "Un ciervo enorme cuya cornamenta y cuya corteza de lomo se han endurecido como el metal de los reguladores arcanos que pisó.", en: "A huge stag whose antlers and bark-hard back have hardened like the metal of the arcane regulators it trod on."}
+hp: 85
+ac: 16
+dex: 1
+wis: 2
+attacks:
+  - {name: {es: Cornada, en: Gore}, to_hit: 7, damage: 1d10+4, damage_type: piercing, applies: {status: bleeding, turns: 2, chance: 0.3}}
+pattern:
+  plate: 24
+  rearm: 14
+  cycle: 2
+  cycle_broken: 1
+  heavy: {name: {es: Carga de hierro, en: Iron charge}, to_hit: 8, damage: 3d8+3, damage_type: bludgeoning}
+boss: true
+xp: 1500
+gold: 8d10
+loot:
+  - {item: healing_potion, chance: 1.0, qty: 2}
+  - {item: greater_healing_potion, chance: 1.0}
+immune: [frightened]
+type: beast
+habitat: {es: Hondonada del Ciervo, en: Stag's Hollow}
+lore:
+  es: Un ciervo del bosque que bebió en vetas alteradas por piezas de antiguos reguladores arcanos. Su cuerpo se endureció y su temple cambió; embiste anunciándose con la cabeza gacha.
+  en: A forest stag that drank from veins altered by pieces of ancient arcane regulators. Its body hardened and its temper changed; it charges with its head lowered, announcing itself.
+order: 10

@@ -22,6 +22,7 @@ Versionado `0.x.y`: **y** (parche) en arreglos y cambios pequeños; **x** (menor
 | 0.8.3 | Planning reorganizado: Possibilium, resúmenes en latín, `ars.md`, PDF retirados, `AGENTS.md`, `content/officina/` |
 | 0.9.0 | Logros e identidad: 30 logros, dos metalogros, títulos, destacados, objetivos seguidos y reconocimiento retroactivo verificable |
 | 0.9.1 | Hoja de ruta de 0.10 (consolidación) y 0.11 (multijugador): `planning/roadmap.md` |
+| 0.10.54 | Structura, fase 1: contenido en carpetas (clases, criaturas, objetos, PNJ y misiones), `load_folder` y locales por dominio |
 | 0.10.53 | Structura, fase 3: ruff, import-linter, pyright, pre-commit, CI en GitHub Actions y tests de capas y de coherencia |
 | 0.10.52 | Structura, fase 3: `ruff format` sobre todo el código, en un commit que solo formatea |
 | 0.10.51 | Structura, fase 2 cerrada: `tests/test_sizes.py` (800 líneas por `.py`, 40 KB por YAML) y `/graphify . --update` tras cada merge a `main` |

@@ -1,0 +1,8 @@
+name: {es: Coraza de acero, en: Steel breastplate}
+icon: "🛡️"
+description: {es: "Peto articulado sobre correas de cuero. Pesa, y se nota cuando algo te golpea.", en: "An articulated plate over leather straps. It weighs, and you notice when something hits you."}
+type: armor
+slot: body
+min_level: 10
+base_ac: 15
+value: 300

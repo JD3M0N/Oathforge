@@ -1,0 +1,165 @@
+scene:
+  day: "☀️ {clock} · dusk in {minutes} min"
+  night: "🌙 {clock} · dawn in {minutes} min"
+  status: "{time} · ❤️ {hp}/{max_hp} · 🪙 {gold}"
+  people: "👥 Here:"
+  no_image: "🎨 No painter has set up an easel in {place} yet. For now, you'll have to imagine it."
+  hint: "Type any action or use the buttons."
+
+map:
+  title: "🗺️ <b>Map</b> · {zone} ({kind})"
+  kind:
+    city: "city"
+    wilds: "wilds"
+    dungeon: "dungeon"
+  here: "📍 You are at <b>{place}</b>"
+  nothing: "Nothing special to do here."
+  near:
+    city: "🏙️ <b>Around the city</b> <i>(on foot, safe)</i>"
+    wilds: "🧭 <b>Around here</b>"
+    dungeon: "🕯️ <b>In the dungeon</b>"
+  objective: "📜 <b>Your objective</b>"
+  objective_line: "• {quest} → <b>{place}</b>"
+  street_title: "🛠️ <b>{street}</b> · stalls"
+  zone_title: "{icon} <b>{zone}</b>"
+  busy: "⏳ You are busy: wait for your task to end, or abandon it, to travel."
+  beyond: "🌫️ <b>Unexplored</b> <i>(reached one road at a time)</i>"
+  route: "{yards} yd"
+  via: "through {places}"
+  gate: "🚪 way out of the city"
+  cleared: "✅ cleared"
+  hint:
+    city: "Any place you already know is one tap away, outside the city too: the game finds the way. New places are explored one road at a time."
+    wilds: "Places you know are one tap away; new ones, one road at a time. ⚠️ is the danger of the worst road: each trip rolls for an ambush only once."
+    dungeon: "New rooms are explored one by one, and whatever guards them waits when you walk in. Cleared rooms you walk through without stopping."
+  do:
+    shop: "🛒 {npc}'s shop"
+    heal: "✨ Cure wounds ({cost} 🪙)"
+    heal_free: "✨ Cure wounds (free)"
+    rest: "🛏️ Long rest ({cost} 🪙)"
+    rest_free: "🛏️ Long rest (free)"
+    gather_mining: "⛏️ Mine"
+    gather_woodcutting: "🪓 Chop wood"
+    gather_herbalism: "🌿 Herbs"
+    gather_fishing: "🎣 Fish"
+    hunt: "🏹 Hunt and track"
+    craft: "🔨 Craft"
+    guild: "📜 Learn {prof}"
+    npc: "💬 {npc}"
+
+talk:
+  quest_hint: "{npc} reminds you what to do: \"{hint}\""
+  title: "💬 Who do you want to talk to?"
+  hint: "Type what you say to {npc}."
+  trust_up: "{npc} trusts you more ({trust})."
+  trust_down: "{npc} trusts you less ({trust})."
+  err:
+    not_here: "That person isn't here."
+
+shop:
+  choose: "🛒 Who do you want to trade with?"
+  title: "🛒 <b>{npc}'s shop</b> · you have {gold} 🪙"
+  pick_group: "What are you looking for?"
+  sell_title: "💰 What do you want to sell?"
+  nothing_to_sell: "You have nothing this merchant wants to buy."
+  bought: "You buy {item} for {price} gold. {gold} left."
+  sold: "You sell {item} for {price} gold. You now have {gold}."
+  err:
+    not_sold: "That isn't sold here."
+    no_gold: "You don't have enough gold (you need {price})."
+    no_buy: "This merchant doesn't buy anything."
+    cant_sell: "You can't sell that (is it equipped?)."
+    tool_in_use: "You are using that tool right now: sell it when you finish."
+  group:
+    weapons: "⚔️ Weapons"
+    armor: "🛡️ Armour and shields"
+    consumables: "🧪 Consumables"
+    tools: "🧰 Tools"
+    other: "📦 Other"
+  stat:
+    ranged: "ranged"
+    finesse: "finesse"
+    ac: "AC {ac}"
+    ac_dex: "AC {ac} + DEX"
+    ac_dex_cap: "AC {ac} + DEX (max {cap})"
+    ac_bonus: "+{bonus} AC"
+    heal: "❤️ {dice} HP"
+    restore_hp: "❤️ heals HP"
+    restore_spell_charge: "🔮 +1 spell use"
+    short_rest: "💤 short rest"
+    combat: "⚔️ for use in combat"
+
+check:
+  result: "🎲 {skill}: {roll} {bonus} = {total} vs DC {dc} · {result} {verdict}"
+  success: "Success"
+  failure: "Failure"
+  already_tried: "You already tried {skill} here today. Come back tomorrow, or once you have improved."
+
+explore:
+  arrived: "You reach {place} ({yards} yd on the road)."
+  arrived_via: "You reach {place} through {via} ({yards} yd on the road)."
+  trip_stopped: "On your way to {dest}, near {place} ({yards} yd)..."
+  ambush: "Ambush!"
+  low_hp: "⚠️ You are low on health ({hp}/{max_hp}) and there may be a fight. Heal first: Sister Ysolde, a potion or a rest."
+  nothing_more: "There is nothing left to discover here."
+  found_nothing: "You find nothing out of the ordinary."
+  already_tried: "You already searched this place today. Tomorrow, or once you have improved, you may spot something new."
+  new_route: "You have discovered a new path."
+  hunt_day: "🏹 You scout the area and find your prey."
+  hunt_night: "🦇 You step into the dark. Something moves nearby."
+  hunt_boss: "🐗 The ground trembles. Something huge pushes through the grass."
+  rested: "☀️ You get up rested. You recover all your strength: {hp} HP and every use."
+  short_rested: "💤 You catch your breath."
+  healed: "🙏 Sister Ysolde murmurs a prayer and bandages you: you recover {amount} HP ({hp}/{max_hp}). You leave {cost} gold in the chapel's box."
+  healed_injured: "✨ Her prayer closes your grave wounds too: you are no longer injured."
+  err:
+    in_combat: "You are in the middle of a fight!"
+    no_route: "You can't go there from here."
+    no_rest: "There is nowhere to rest here."
+    no_healer: "There is no one here to cure wounds."
+    injured_cap: "Potions don't close grave wounds: get healed by Sister Ysolde or rest at the inn."
+    no_hunting: "There is nothing to hunt here."
+
+rep:
+  changed: "Reputation with {faction}: {delta} (now {value})."
+
+steal:
+  success: "You lift {gold} gold from {npc} without being noticed."
+  suspected: "{npc} frowns and pats their purse. They suspect something."
+  caught: "{npc} catches you with your hand in their purse!"
+  err:
+    nothing: "There is nothing to steal there."
+
+roll:
+  prompt: "🎲 This action needs a <b>{skill}</b> roll. Roll the die with the button."
+  warning: |-
+    ⚠️ <b>Manual rolls on.</b> Telegram's animated die is only decoration: it is a d6 and its number is <b>not</b> your roll. The engine rolls a d20 (plus your bonus against the DC) and the real result appears below the die.
+  "on": "on"
+  "off": "off"
+  changed: "🎲 Manual rolls {state}."
+  stale: "That roll makes no sense here anymore: you have moved."
+
+home:
+  title: "🏠 <b>Your room</b> · {place}"
+  none: "<i>You have no room yet. The Adventurers' Guild gives one to its members.</i>"
+  no_bed: "🛏️ The bed is missing."
+  bed: "🛏️ Your bed: sleeping here costs no gold."
+  no_chest: "📦 The chest is missing."
+  chest: "📦 Chest: {used}/{capacity} slots."
+  chest_empty: "<i>The chest is empty.</i>"
+  line: "{item} ×{qty} · /take_{key}"
+  bag_line: "{item} ×{qty} · /stash_{key}"
+  bag_title: "<b>In your backpack</b>"
+  furniture:
+    bed: "the bed"
+    chest: "the chest"
+  installed_bed: "🛏️ You set up the bed. Sleeping here costs no gold now."
+  installed_chest: "📦 You build the chest: {capacity} slots."
+  deposited: "📦 You store {item} ×{qty}. Chest: {used}/{capacity}."
+  withdrew: "🎒 You take out {item} ×{qty}. Chest: {used}/{capacity}."
+  err:
+    no_chest: "You have no chest to keep it in."
+    away: "Your chest is in your room, not here."
+    full: "The chest is full ({capacity} slots)."
+    not_enough: "You are not carrying that much {item}."
+    not_stored: "You do not have that much {item} in the chest."

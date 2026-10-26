@@ -1,0 +1,43 @@
+order: 60
+giver: tamsin
+after: camp_stag
+name: {es: "El camino del valle", en: "The Road to the Vale"}
+summary:
+  es: "La carga que desviaban los falsos pedidos salía de un valle al norte. Tamsin te manda a seguirla hasta el Puesto del Vado."
+  en: "The cargo the forged orders diverted came from a vale to the north. Tamsin sends you to follow it to Ford Post."
+hint:
+  es: "El valle se abre al terminar «El Ciervo de Hierro»: desde el Camino del Viejo Rey sale la desviación al Cruce de los Carreteros."
+  en: "The vale opens once \"The Iron Stag\" is done: the diversion to Carters' Crossing leaves the Old King's Road."
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: visit, target: valley_crossing}
+  - {kind: visit, target: ford_post}
+  - {kind: talk, target: orsa}
+rewards:
+  - {xp: 400}
+  - {give_item: {greater_healing_potion: 1}}
+stages:
+  locked:
+    state: locked
+    journal:
+      es: "Tamsin traza una línea hacia el norte."
+      en: "Tamsin draws a line to the north."
+  active:
+    journal:
+      es: "Sigue la carga hasta el Valle de la Fragua Gris: Cruce de los Carreteros, Puesto del Vado y Orsa Vael."
+      en: "Follow the cargo to Greyforge Vale: Carters' Crossing, Ford Post and Orsa Vael."
+    location_text:
+      valley_crossing:
+        es: "Huellas de carros en todas direcciones y faroles apagados. El Puesto del Vado queda al este."
+        en: "Cart tracks in every direction and unlit lanterns. Ford Post lies to the east."
+      ford_post:
+        es: "Una hoguera que no se apaga y una barcaza amarrada. Aquí se descansa y se cura. 🗨️ Habla con Orsa."
+        en: "A fire that never goes out and a moored barge. Here you rest and heal. 🗨️ Talk to Orsa."
+  done:
+    state: completed
+    journal:
+      es: "Orsa te da una taza de caldo y un aviso: «Lo que buscas está en la cantera. Pregunta por Kellan»."
+      en: "Orsa hands you a cup of broth and a warning: \"What you are looking for is at the quarry. Ask for Kellan.\""

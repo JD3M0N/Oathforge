@@ -1,0 +1,6 @@
+name: {es: Cuchillo de desollador, en: Skinner's knife}
+icon: "🔪"
+description: {es: "Filo que no se va: la pieza se abre en la mitad de tiempo.", en: "An edge that holds: the carcass opens in half the time."}
+type: tool
+value: 70
+tool: {skill: skinning, base: skinning_knife, min_rank: 2, time_pct: 0.10}

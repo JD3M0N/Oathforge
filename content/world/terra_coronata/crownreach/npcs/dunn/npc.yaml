@@ -1,0 +1,16 @@
+name: {es: Dunn, en: Dunn}
+title: {es: maestro ingeniero, en: master engineer}
+schedule: {day: engineer_stall, night: broken_crown_tavern}
+greeting:
+  es: "«No traigas farol. Deja la puerta abierta y no toques los cajones de la izquierda. Dicho esto: bienvenido.»"
+  en: "\"Don't bring a lantern. Leave the door open and don't touch the crates on the left. That said: welcome.\""
+persona: >-
+  Dunn is a singed, fast-talking engineer missing half an eyebrow. Enthusiastic to the point of recklessness about
+  anything that clicks, winds or explodes, and oddly careful about everything else.
+goals: Sell the Guard a lock nobody can pick; build a fuse that burns the same every time.
+secrets: One of his smoke bombs failed in a Guard raid and he never reported it.
+knowledge: >-
+  Black powder needs coal and iron ore; fuses, plant fibre. Ore is smelted at the guild's furnace. He makes
+  mechanisms, locks and bombs, and teaches engineering at his workshop.
+passive_perception: 12
+order: 12

@@ -1,0 +1,38 @@
+order: 7
+tutorial: true
+giver: vale
+after: tut_stew
+legacy_done: [night_wings]
+name: {es: Hierro para la Guardia, en: Iron for the Guard}
+summary:
+  es: Los caminos del norte están cortados y la herrera Tessa no tiene hierro. Vale te manda a la mina con el pico.
+  en: The northern roads are cut off and Tessa the smith has no iron. Vale sends you to the mine with the pickaxe.
+hint:
+  es: Por el Camino del Viejo Rey llegas a la Mina del Paso Viejo. En «⚒ Actividades», pulsa «⛏️ Minar» (4 min, sin peligro); la «🏕️ Expedición larga» saca más, pero puede haber emboscada.
+  en: The Old King's Road takes you to the Old Pass Mine. In "⚒ Activities", press "⛏️ Mine" (4 min, no danger); a "🏕️ Long expedition" yields more, but you may be ambushed.
+start_stage: locked
+unlock_stage: active
+objective_stage: active
+complete_stage: done
+objectives:
+  - {kind: gather, target: iron_ore, count: 3}
+rewards:
+  - xp: 60
+  - give_item: {woodaxe: 1}
+stages:
+  locked:
+    state: locked
+    journal: {es: La herrería de Tessa está demasiado tranquila., en: Tessa's forge is too quiet.}
+  active:
+    journal:
+      es: Saca 3 menas de hierro en la Mina del Paso Viejo.
+      en: Dig out 3 iron ore at the Old Pass Mine.
+    location_text:
+      ironvein_mine:
+        es: Las vetas de hierro brillan a la luz de la antorcha. Al fondo, algo chilla y se aleja aleteando.
+        en: The iron veins gleam in the torchlight. Deep inside, something squeaks and flutters away.
+  done:
+    state: completed
+    journal:
+      es: "Tessa besó la mena (literalmente). Vale te dio un hacha: «Te has ganado un cuarto; ahora amuéblalo»."
+      en: "Tessa kissed the ore (literally). Vale handed you an axe: \"You have earned a room; now furnish it.\""
