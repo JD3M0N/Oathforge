@@ -4,6 +4,13 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.48] - 2026-10-26
+
+Structura, fase 2: los esquemas del contenido partidos por dominio.
+
+### Cambiado
+- `oathforge/content/schemas.py` (903 líneas) pasa a `oathforge/content/schemas/`: `common`, `classes`, `items`, `monsters`, `professions`, `world` y `quests`. `schemas/__init__.py` lo reexporta todo y `load_content()` da exactamente lo mismo.
+
 ## [0.10.47] - 2026-10-26
 
 Structura, fase 2: el combate del motor partido en un paquete.
