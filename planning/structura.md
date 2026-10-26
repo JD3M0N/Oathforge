@@ -5,8 +5,10 @@ Checklist para que Oathforge aguante el crecimiento (ciudades, clases, objetos) 
 ## Estado actual
 
 - **Fase 0** hecha en 0.10.43, con el plan enlazado desde `CLAUDE.md` (0.10.44) y graphify (0.10.45). Solo queda de parte de Josue borrar las ramas antiguas de los testers (los pasos están en la propia fase).
-- Siguiente: **Fase 3** (calidad automática). Las comprobaciones van primero para que los movimientos de las fases 1 y 2 sean seguros.
-- Orden: 0 → 3 → 1 → 2 → 4 → 5.
+- **Fase 2** hecha en 0.10.46–0.10.51, adelantada a petición de Josue: los cinco archivos grandes de código y los dos de tests son paquetes, y `tests/test_sizes.py` vigila el tamaño. Se verificó con la suite completa, el volcado de `load_content()` idéntico, los mismos números en `oath simulate` y `oath balance` y los mismos errores de validación sobre contenido roto a propósito.
+- Siguiente: **Fase 3** (calidad automática), y después la 1 (contenido en carpetas).
+- Orden: 0 → 2 → 3 → 1 → 4 → 5 (la 2 se adelantó; el resto sigue igual).
+- Después de cada merge a `main`: `/graphify . --update`.
 
 ## Cómo continuar (en otro chat)
 
@@ -24,7 +26,7 @@ Checklist para que Oathforge aguante el crecimiento (ciudades, clases, objetos) 
 Decisiones ya tomadas (no se reabren):
 - Proyecto de una sola persona: sin PR, sin testers y sin ramas por persona.
 - La base va en inglés (ids, código, archivos, claves, skills, subcomandos) y todo texto visible en es y en.
-- El orden es 0 → 3 → 1 → 2 → 4 → 5: primero las comprobaciones y después los movimientos.
+- El orden era 0 → 3 → 1 → 2 → 4 → 5 (primero las comprobaciones y después los movimientos); Josue adelantó la 2, que se hizo sin ruff ni CI y se verificó a mano.
 - Los permisos de `.claude/settings.json`:
   - **deny** para `.telegram/` (la sesión de Telethon equivale a una llave de la cuenta de prueba; `oath tgtest` la usa sin que el agente la lea), para `.env` (token del bot, clave de Gemini, contraseña de la BD; para saber qué variables hay está `.env.example`) y para `.venv/` (miles de archivos de terceros que solo gastan tokens; si hay que leer una librería, pasa a «ask»).
   - **ask** para `artifacts/` (partidas de jugadores reales: se abren solo para depurar y solo el archivo concreto) y para `content/officina/` (el laboratorio de Josue: solo si lo pide).
@@ -59,7 +61,7 @@ Decisiones ya tomadas (no se reabren):
 - [x] **graphify** (0.10.45): instalado con `uv tool install graphifyy` (el paquete lleva dos «y»; el comando es `graphify`, en `~/.local/bin`) y registrado con `graphify install`.
   - Un solo grafo de `oathforge/` y `tests/` juntos, para que cada test quede unido al código que prueba: 130 archivos, unos 2.660 nodos y 87 comunidades. Sale solo del AST y gasta 0 tokens de IA.
   - `.graphifyignore` deja fuera `content/`, `planning/`, `migrations/`, `tools/`, los locales y los `.md`. Los patrones llevan `/` delante para no tapar `oathforge/content/` ni `oathforge/tools/`.
-  - Regenerarlo con `/graphify . --update` tras cambios grandes de código o tras cada fase de la 2.
+  - Regenerarlo con `/graphify . --update` después de cada merge a `main` y tras cambios grandes de código.
   - Con este tamaño el ahorro es moderado. Lo que más reduce tokens es la Fase 2.
 
 ## Fase 1 — Contenido modular: «una carpeta por cosa»
@@ -77,17 +79,18 @@ La regla es la misma que ya sigue el mundo: cada entidad tiene su carpeta, con s
 - [ ] **Loader genérico**: una función `load_folder(root, filename, model)` que recorre carpetas, comprueba que los ids son únicos y señala la ruta en cada error. `media.py` usa la misma convención, y las carpetas que empiezan por `_` (como `_templates/`) se ignoran. `content/index.py` pasa a leer la ruta real de cada ficha.
 - [ ] **Seguridad del cambio**: antes de mover nada, se vuelca `load_content()` a JSON. Después de cada movimiento, el volcado tiene que salir idéntico.
 
-## Fase 2 — Código modular
+## Fase 2 — Código modular (0.10.46–0.10.51)
 
 Cada archivo grande pasa a ser un paquete con un `__init__.py` que reexporta lo de antes, para que quien llama siga usando `render.x`, `combat.y`…
 
-- [ ] `bot/render.py` → `bot/render/` (`character`, `combat`, `world`, `inventory`, `quests`, `crafting`, `common`).
-- [ ] `bot/handlers/callbacks.py` → un enrutador por `verb` y un módulo por dominio.
-- [ ] `engine/combat.py` → `engine/combat/` (`state`, `actions`, `effects`, `monster_ai`, `resolve`).
-- [ ] `content/schemas.py` → `content/schemas/<domain>.py`; `content/loader.py` → `loader.py` (lectura) + `validation/<domain>.py`.
-- [ ] Los tests siguen la misma forma: `tests/bot/test_handlers.py` y `tests/services/test_services.py` se parten por dominio.
-- [ ] **Límite de tamaño**: un test falla si un `.py` pasa de unas 800 líneas o un YAML de unos 40 KB (con una lista de excepciones explícita).
-- [ ] Mover con `git mv`, que conserva el historial, y hacer un commit por archivo partido.
+- [x] `bot/render.py` → `bot/render/` (`common`, `character`, `crafting`, `world`, `inventory`, `quests`, `combat`), 0.10.46. Lo que usaban varias pantallas sube a `common`, y las dependencias van en un solo sentido.
+- [x] `engine/combat.py` → `engine/combat/` (`state`, `resolve`, `entities`, `turns`, `actions`), 0.10.47. Los nombres cambian respecto al borrador (`effects` y `monster_ai` no existían como bloques: el daño y los estados van en `resolve`, el turno enemigo en `turns`, y las invocaciones y formas en `entities`). `__init__` reexporta también los pasos privados que usan los tests del motor.
+- [x] `content/schemas.py` → `content/schemas/` (`common`, `classes`, `items`, `monsters`, `professions`, `world`, `quests`), 0.10.48.
+- [x] `content/loader.py` → `loader.py` (lectura) + `validation/` (`classes`, `world`, `items`, `crafting`, `fallbacks`, `quests`), 0.10.49. `validate_references` las corre todas; solo cambia el orden en que se listan los errores.
+- [x] `bot/handlers/callbacks.py` → `callbacks/` (`router`, `views`, `acts`, `rolls`, `combat`), 0.10.50.
+- [x] Los tests siguen la misma forma (0.10.50): `tests/bot/test_handlers.py` → `helpers.py`, `conftest.py` y `test_flow`, `test_creation`, `test_combat_buttons`, `test_views`, `test_activities`; `tests/services/test_services.py` → `helpers.py` y `test_characters`, `test_exploration`, `test_inventory`, `test_combat_service`, `test_quests`, `test_npcs`, `test_hunting`.
+- [x] **Límite de tamaño** (0.10.51): `tests/test_sizes.py` falla si un `.py` de `oathforge/` o `tests/` pasa de 800 líneas o un YAML de 40 KB. Las excepciones (`classes`, `class_specializations`, `quests`, `fallbacks/chronicles` y los locales) esperan a la fase 1, y el test avisa cuando una ya cabe.
+- [x] Un commit por archivo partido. `git mv` no guarda nada en git (los renombres se deducen al comparar), así que la historia de un trozo se sigue con `git log --follow` o `git blame -C -C` sobre el archivo antiguo.
 
 ## Fase 3 — Calidad automática
 

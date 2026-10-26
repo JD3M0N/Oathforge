@@ -28,14 +28,14 @@ Flujo de una acción libre: `leer contexto (tx corta) → Gemini interpreta → 
 
 | Busco… | Está en |
 |---|---|
-| Reglas puras: dados, pruebas, combate, recolección, progresión, compra por puntos | `oathforge/engine/` (`combat.py` es el grande) |
+| Reglas puras: dados, pruebas, combate, recolección, progresión, compra por puntos | `oathforge/engine/` (el combate es el paquete `combat/`) |
 | Escrituras de estado por dominio | `oathforge/services/<dominio>.py` (`actions`, `combat_service`, `activities`, `quests`, `inventory`, `crafting`, `professions`, `exploration`, `world_map`, `npcs`, `chronicles`, `characters`, `media`, `audit`…) |
 | IA: cliente y presupuesto, intérprete, narrador, diálogo, moderación, respaldos | `oathforge/ai/` |
-| Handlers de Telegram | `oathforge/bot/handlers/` (`callbacks.py`, `commands.py`, `creation.py`, `text.py`, `common.py`) |
+| Handlers de Telegram | `oathforge/bot/handlers/` (`callbacks/`, `commands.py`, `creation.py`, `text.py`, `common.py`) |
 | Todo el HTML que ve el jugador | `oathforge/bot/render/` (un módulo por familia de pantallas; `render.x` sigue funcionando) |
 | Teclados | `oathforge/bot/keyboards.py` |
 | Modelos de BD y migraciones | `oathforge/database/models.py`, `migrations/` (Alembic) |
-| Validación del contenido | `oathforge/content/schemas.py` (Pydantic) y `loader.py` |
+| Validación del contenido | `oathforge/content/schemas/` (Pydantic, un módulo por dominio), `loader.py` (lectura) y `validation/` (referencias cruzadas por dominio) |
 | Catálogo de imágenes | `oathforge/content/media.py` |
 | Contenido del juego | `content/*.yaml`; mundo en `content/world/<continente>/<zona>/<lugar>/place.yaml`; respaldos de IA en `content/fallbacks/` |
 | Comandos de consola | `oathforge/cli.py` (`COMMANDS`), simulador en `oathforge/tools/simulate.py`, `tgtest` en `oathforge/tools/tgtest.py` |
@@ -45,9 +45,9 @@ Flujo de una acción libre: `leer contexto (tx corta) → Gemini interpreta → 
 ## Leer barato
 
 - **Busca antes de abrir.** Grep o Glob por el símbolo, la clave i18n o el id de contenido; abre solo el archivo que aparece.
-- **Grafo del código**: si existe `graphify-out/`, consúltalo (`/graphify query "…"`, o `graphify-out/GRAPH_REPORT.md`) para saber quién llama a qué y qué test cubre qué antes de hacer Grep por todo el repo. Cubre solo `oathforge/` y `tests/` (lo limita `.graphifyignore`). Se regenera con `/graphify . --update` tras cambios grandes de código; sale del AST y no gasta tokens de IA.
+- **Grafo del código**: si existe `graphify-out/`, consúltalo (`/graphify query "…"`, o `graphify-out/GRAPH_REPORT.md`) para saber quién llama a qué y qué test cubre qué antes de hacer Grep por todo el repo. Cubre solo `oathforge/` y `tests/` (lo limita `.graphifyignore`). Se regenera con `/graphify . --update` **después de cada merge a `main`** y tras cambios grandes de código; sale del AST y no gasta tokens de IA.
 - **Contenido**: `content/INDEX.md` tiene una línea por id (nombre en inglés y archivo). Lo escribe `oath content-index` y un test comprueba que está al día.
-- **Lee por rangos** los archivos grandes: `bot/handlers/callbacks.py`, `engine/combat.py`, `i18n/locales/*.yaml`, `content/quests.yaml`, `CHANGELOG.md` y `planning/Possibilium.md`. Localiza la función con Grep y lee unas decenas de líneas alrededor.
+- **Lee por rangos** los archivos grandes: `i18n/locales/*.yaml`, `content/quests.yaml`, `CHANGELOG.md` y `planning/Possibilium.md`. Localiza la función con Grep y lee unas decenas de líneas alrededor.
 - **No releas** un archivo que acabas de editar, ni uno que ya tienes en contexto.
 - **CHANGELOG**: lee solo las primeras entradas (las últimas versiones) para saber qué cambió hace poco.
 - **No leas** salvo que la tarea lo pida:
@@ -99,6 +99,7 @@ Flujo de una acción libre: `leer contexto (tx corta) → Gemini interpreta → 
 - Ronda de pruebas limpia: para el bot y `oath reset-players --yes`; un solo jugador, `oath delete-player <nombre|id> --yes`.
 - Tras una feature grande, repasa `tests/features.md` jugando con la cuenta de prueba y añade sus casillas.
 - Un cambio de texto no necesita tests nuevos; uno de economía, permisos o concurrencia sí.
+- **Tamaño**: `tests/test_sizes.py` falla si un `.py` pasa de 800 líneas o un YAML de 40 KB (con su lista de excepciones). Antes de llegar, parte el archivo en un paquete cuyo `__init__.py` reexporte lo de antes, como `bot/render/` o `engine/combat/`.
 
 ## Versionado y commits
 

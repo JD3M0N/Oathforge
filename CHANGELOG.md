@@ -4,6 +4,18 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.51] - 2026-10-26
+
+Structura, fase 2 cerrada: límite de tamaño y graphify tras cada merge.
+
+### Añadido
+- `tests/test_sizes.py`: falla si un `.py` de `oathforge/` o `tests/` pasa de 800 líneas o un YAML de 40 KB. Las excepciones (`classes`, `class_specializations`, `quests`, `fallbacks/chronicles` y los locales) esperan a la fase 1, y el test avisa cuando una ya cabe.
+
+### Cambiado
+- `CLAUDE.md` y `AGENTS.md`: después de cada merge a `main` se regenera el grafo del código con `/graphify . --update`.
+- `AGENTS.md` y `tests/CLAUDE.md`: el nuevo mapa (paquetes en vez de archivos grandes), dónde van los helpers de los tests, cómo parchear un paquete partido y el límite de tamaño.
+- `planning/structura.md`: fase 2 hecha (adelantada a la 3 y la 1); siguiente, la 3.
+
 ## [0.10.50] - 2026-10-26
 
 Structura, fase 2: los botones y los tests grandes, partidos por dominio.

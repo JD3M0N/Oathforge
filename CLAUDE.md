@@ -10,6 +10,7 @@ Josue (JD3M0N) es el único desarrollador. Se trabaja en `josue-development`; co
 
 - Si no estás en esa rama, cámbiate (`git switch josue-development`). Si hay cambios sin commitear, llévalos contigo.
 - Nunca hagas commit directamente en `main`. Solo se lleva trabajo a `main` cuando Josue lo pide.
+- Después de cada merge a `main`, regenera el grafo del código con `/graphify . --update` (sale del AST, no gasta tokens de IA).
 - Antes de empezar, trae lo nuevo: `git fetch` y `git merge origin/main`.
 
 ## Commits
@@ -27,7 +28,7 @@ Si la tarea es seguir esta serie, empieza por `planning/plan_implementacion_0.10
 
 ## Structura (orden del proyecto)
 
-Si la tarea es ordenar el proyecto («sigue con structura», «la siguiente fase», ruff, CI, mover el contenido a carpetas, partir `render.py`, skills de protocolo…), empieza por `planning/structura.md`: el **Estado actual** dice qué está hecho y cuál es la siguiente fase, y la sección «Cómo continuar» explica cómo cerrarla. Avanza una fase y para.
+Si la tarea es ordenar el proyecto («sigue con structura», «la siguiente fase», ruff, CI, mover el contenido a carpetas, partir archivos grandes, skills de protocolo…), empieza por `planning/structura.md`: el **Estado actual** dice qué está hecho y cuál es la siguiente fase, y la sección «Cómo continuar» explica cómo cerrarla. Avanza una fase y para.
 
 ## Josue
 
