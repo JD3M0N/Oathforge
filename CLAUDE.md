@@ -25,6 +25,10 @@ Cada zona tiene su `CLAUDE.md` con sus reglas, que se carga al trabajar allí: `
 
 Si la tarea es seguir esta serie, empieza por `planning/plan_implementacion_0.10.md` (estado, siguiente fase y reglas de cierre) y lee solo la fase que toca en `planning/roadmap_balance.md`, por rangos. Avanza una fase y para.
 
+## Structura (orden del proyecto)
+
+Si la tarea es ordenar el proyecto («sigue con structura», «la siguiente fase», ruff, CI, mover el contenido a carpetas, partir `render.py`, skills de protocolo…), empieza por `planning/structura.md`: el **Estado actual** dice qué está hecho y cuál es la siguiente fase, y la sección «Cómo continuar» explica cómo cerrarla. Avanza una fase y para.
+
 ## Josue
 
 - Suele poner ejemplos con el Paladín porque es la clase que prueba: salvo que diga lo contrario, el ejemplo vale para todas las clases.

@@ -4,6 +4,14 @@ Todos los cambios relevantes de Oathforge. Formato basado en [Keep a Changelog](
 
 Cada versión corresponde a un commit cuyo asunto es `vX.Y.Z: resumen` y cuyo cuerpo repite esta lista.
 
+## [0.10.44] - 2026-10-25
+
+Structura: el plan se puede retomar desde cualquier chat.
+
+### Cambiado
+- `CLAUDE.md`: sección «Structura», que manda a `planning/structura.md` cuando la tarea es ordenar el proyecto.
+- `planning/structura.md`: sección «Cómo continuar» (pasos para cerrar una fase) y las decisiones ya tomadas, con el porqué de cada permiso de `.claude/settings.json`.
+
 ## [0.10.43] - 2026-10-25
 
 Structura, fase 0: **el proyecto se prepara para crecer.** Reglas cerca de donde se trabaja, contenido comprobado al editarlo y un índice para encontrar cualquier id sin abrir YAML grandes. Oathforge pasa a ser un proyecto de una sola persona.

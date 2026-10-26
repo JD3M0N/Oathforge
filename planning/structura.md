@@ -4,9 +4,31 @@ Checklist para que Oathforge aguante el crecimiento (ciudades, clases, objetos) 
 
 ## Estado actual
 
-- **Fase 0** hecha en 0.10.43, salvo dos cosas que dependen de Josue: borrar las ramas antiguas de los testers e instalar graphify (los pasos están en la propia fase).
+- **Fase 0** hecha en 0.10.43 (y el plan enlazado desde `CLAUDE.md` en 0.10.44), salvo dos cosas que dependen de Josue: borrar las ramas antiguas de los testers e instalar graphify (los pasos están en la propia fase).
 - Siguiente: **Fase 3** (calidad automática). Las comprobaciones van primero para que los movimientos de las fases 1 y 2 sean seguros.
 - Orden: 0 → 3 → 1 → 2 → 4 → 5.
+
+## Cómo continuar (en otro chat)
+
+1. Rama `josue-development`, `git fetch` y `git merge origin/main`.
+2. Lee el **Estado actual** de arriba y solo la sección de la fase siguiente. No hace falta releer las fases cerradas.
+3. Implementa esa fase entera, sin adelantar trabajo de otras.
+4. Verifica (ver «Verificación de cada fase» al final). Si la fase mueve contenido o código, el volcado de `load_content()` y los números de `oath simulate` / `oath balance` tienen que salir iguales que antes.
+5. Cierra:
+   - marca las casillas y actualiza el **Estado actual** (fase hecha con su versión y la siguiente);
+   - añade la fila en `planning/iter.md`;
+   - escribe la entrada del CHANGELOG y sube la versión de parche;
+   - si cambian reglas de trabajo, actualiza `AGENTS.md` o el `CLAUDE.md` de la zona.
+6. Haz el commit `vX.Y.Z: structura fase N, …` y para para que Josue revise.
+
+Decisiones ya tomadas (no se reabren):
+- Proyecto de una sola persona: sin PR, sin testers y sin ramas por persona.
+- La base va en inglés (ids, código, archivos, claves, skills, subcomandos) y todo texto visible en es y en.
+- El orden es 0 → 3 → 1 → 2 → 4 → 5: primero las comprobaciones y después los movimientos.
+- Los permisos de `.claude/settings.json`:
+  - **deny** para `.telegram/` (la sesión de Telethon equivale a una llave de la cuenta de prueba; `oath tgtest` la usa sin que el agente la lea), para `.env` (token del bot, clave de Gemini, contraseña de la BD; para saber qué variables hay está `.env.example`) y para `.venv/` (miles de archivos de terceros que solo gastan tokens; si hay que leer una librería, pasa a «ask»).
+  - **ask** para `artifacts/` (partidas de jugadores reales: se abren solo para depurar y solo el archivo concreto) y para `content/officina/` (el laboratorio de Josue: solo si lo pide).
+  - Estas reglas frenan accidentes de las herramientas de lectura, no son una caja fuerte. Lo que protege de verdad los secretos es que `.env` y `.telegram/` estén en `.gitignore`.
 
 ## Diagnóstico (0.10.42)
 
